@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern SaaS Dashboard</title>
+    <style>
+      :root {
+        --primary: #3b82f6;
+        --secondary: #ef4444;
+        --success: #16a34a;
+        --warning: #f59e0b;
+        --dark: #1f2937;
+        --light: #fafafa;
+        --accent: #f87171;
+        --text: #111827;
+        --border: #e5e7eb;
+        --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--light);
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: var(--text);
+      }
+
+      /* Layout */
+      .layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
+        height: 100vh;
+        padding: 2rem;
+        transition: var(--transition);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        background: var(--dark);
+        color: white;
+        padding: 2rem;
+        overflow-y: auto;
+        transition: var(--transition);
+        transform: translateX(0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar.collapsed {
+        width: 72px;
+        transform: translateX(-100%);
+      }
+
+      .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 1.5rem;
+        color: var(--light);
+      }
+
+      .toggle-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: white;
+        transition: var(--transition);
+      }
+
+      .menu {
+        list-style: none;
+        padding: 0;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        transition: var(--transition);
+        cursor: pointer;
+      }
+
+      .menu-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .menu-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Main Content */
+      main {
+        padding: 2rem;
+        margin-left: 280px;
+        transition: var(--transition);
+        overflow-y: auto;
+      }
+
+      main.collapsed {
+        margin-left: 72px;
+      }
+
+      /* Cards */
+      .card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: var(--transition);
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Stats */
+      .stat-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+      }
+
+      .stat-card {
+        background: var(--light);
+        padding: 2rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: var(--transition);
+      }
+
+      .stat-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-icon {
+        background: var(--primary);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 0.5rem;
+        display: grid;
+        place-items: center;
+        font-size: 1.5rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        background: var(--light);
+        font-weight: 600;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 0.8rem 2rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-danger {
+        background: var(--secondary);
+        color: white;
+      }
+
+      /* Modals */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+      }
+
+      .modal-backdrop.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        max-width: 600px;
+        margin: 5% auto;
+        background: white;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+        font-size: 1.5rem;
+        transition: var(--transition);
+      }
+
+      /* Transitions */
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .layout {
+          grid-template-columns: 1fr;
+          padding: 1rem;
+        }
+        .sidebar {
+          width: 72px;
+          transform: translateX(-100%);
+        }
+        main {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="material-icons">dashboard</span>
+          <span>LuxStay</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleNav()">
+          <span class="material-icons">menu</span>
+        </button>
+      </div>
+      <nav class="menu">
+        <div class="menu-item active">
+          <span class="material-icons menu-icon">dashboard</span>
+          Dashboard
+        </div>
+        <div class="menu-item">
+          <span class="material-icons menu-icon">home</span>
+          Apartments
+        </div>
+        <div class="menu-item">
+          <span class="material-icons menu-icon">group</span>
+          Tenants
+        </div>
+        <div class="menu-item">
+          <span class="material-icons menu-icon">attach_money</span>
+          Transactions
+        </div>
+        <div class="menu-item">
+          <span class="material-icons menu-icon">build</span>
+          Maintenance
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div class="section dashboard">
+        <div class="stat-box">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-icons">home</span>
+            </div>
+            <div>
+              <p class="stat-value">48</p>
+              <p>Apartment Units</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-icons">group</span>
+            </div>
+            <div>
+              <p class="stat-value">120</p>
+              <p>Active Tenants</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-icons">attach_money</span>
+            </div>
+            <div>
+              <p class="stat-value">$12,000</p>
+              <p>Monthly Revenue</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Apartments List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Rent</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A001</td>
+              <td>Apt 101</td>
+              <td>1 Bedroom</td>
+              <td>$1,200</td>
+              <td class="badge badge-success">Occupied</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal -->
+      <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal">
+          <button class="modal-close" onclick="closeModal()">&times;</button>
+          <h4>Add Apartment</h4>
+          <form>
+            <input
+              type="text"
+              placeholder="Apartment Name"
+              class="form-input" />
+            <input type="number" placeholder="Rent Amount" class="form-input" />
+            <button class="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function toggleNav() {
+        const sidebar = document.querySelector(".sidebar");
+        const main = document.querySelector("main");
+        sidebar.classList.toggle("collapsed");
+        main.style.marginLeft = sidebar.classList.contains("collapsed")
+          ? "72px"
+          : "280px";
+      }
+
+      function openModal() {
+        document.getElementById("modalBackdrop").classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        document.getElementById("modalBackdrop").classList.remove("show");
+        document.body.style.overflow = "auto";
+      }
+    </script>
+  </body>
+</html>

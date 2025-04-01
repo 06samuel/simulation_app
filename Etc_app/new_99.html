@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxStay | Premium Apartment Rentals</title>
+    <style>
+      /* Base Styles */
+      :root {
+        --primary-color: #4a6cf7;
+        --primary-dark: #3a56d4;
+        --secondary-color: #ff6b6b;
+        --text-color: #333;
+        --text-light: #666;
+        --text-lighter: #999;
+        --bg-color: #fff;
+        --bg-light: #f9fafb;
+        --bg-dark: #1a1a2e;
+        --border-color: #e5e7eb;
+        --border-radius: 8px;
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --transition-speed: 0.3s;
+        --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        color: var(--text-color);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: color var(--transition-speed) var(--transition-timing);
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: inherit;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+        border: 2px solid var(--primary-color);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(74, 108, 247, 0.1);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+      }
+
+      section {
+        padding: 5rem 0;
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .section-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+      }
+
+      .section-header p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* Header & Navigation */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .header.scrolled {
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 80px;
+      }
+
+      .logo h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        font-weight: 500;
+        color: var(--text-color);
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--primary-color);
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary-color);
+        transition: width var(--transition-speed) var(--transition-timing);
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+      }
+
+      .menu-toggle span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background-color: var(--text-color);
+        border-radius: 3px;
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding-top: 120px;
+        padding-bottom: 80px;
+        background-color: var(--bg-light);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+      }
+
+      .hero-content {
+        flex: 1;
+        max-width: 600px;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+      }
+
+      .hero-content p {
+        font-size: 1.2rem;
+        color: var(--text-light);
+        margin-bottom: 2rem;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .hero-image {
+        flex: 1;
+        position: relative;
+      }
+
+      .image-container {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .image-container:hover {
+        transform: perspective(1000px) rotateY(0) rotateX(0);
+      }
+
+      .image-container img {
+        width: 100%;
+        height: auto;
+        transition: transform 0.5s ease;
+      }
+
+      .image-container:hover img {
+        transform: scale(1.05);
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.7;
+      }
+
+      .mouse {
+        width: 30px;
+        height: 50px;
+        border: 2px solid var(--text-color);
+        border-radius: 20px;
+        position: relative;
+      }
+
+      .mouse::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background-color: var(--text-color);
+        border-radius: 50%;
+        animation: scroll 2s infinite;
+      }
+
+      @keyframes scroll {
+        0% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+      }
+
+      .scroll-indicator p {
+        font-size: 0.9rem;
+        color: var(--text-light);
+      }
+
+      /* Apartments Section */
+      .apartments {
+        background-color: var(--bg-color);
+      }
+
+      .apartment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .apartment-card {
+        background-color: var(--bg-color);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: transform var(--transition-speed) var(--transition-timing),
+          box-shadow var(--transition-speed) var(--transition-timing);
+      }
+
+      .apartment-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .apartment-image {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+      }
+
+      .apartment-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .apartment-card:hover .apartment-image img {
+        transform: scale(1.1);
+      }
+
+      .apartment-tag {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .apartment-details {
+        padding: 1.5rem;
+      }
+
+      .apartment-details h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .apartment-location {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .apartment-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .apartment-features span {
+        background-color: var(--bg-light);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: var(--text-light);
+      }
+
+      .apartment-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .apartment-price p {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .apartment-price span {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--text-light);
+      }
+
+      .view-all-container {
+        text-align: center;
+      }
+
+      /* Features Section */
+      .features {
+        background-color: var(--bg-light);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background-color: var(--bg-color);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-md);
+        text-align: center;
+        transition: transform var(--transition-speed) var(--transition-timing),
+          box-shadow var(--transition-speed) var(--transition-timing);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(74, 108, 247, 0.1);
+        color: var(--primary-color);
+        border-radius: 50%;
+      }
+
+      .feature-icon svg {
+        width: 30px;
+        height: 30px;
+      }
+
+      .feature-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+
+      /* Pricing Section */
+      .pricing {
+        background-color: var(--bg-color);
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .pricing-card {
+        background-color: var(--bg-color);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: transform var(--transition-speed) var(--transition-timing),
+          box-shadow var(--transition-speed) var(--transition-timing);
+        position: relative;
+        border: 1px solid var(--border-color);
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .pricing-card.featured {
+        border-color: var(--primary-color);
+        transform: scale(1.05);
+      }
+
+      .pricing-card.featured:hover {
+        transform: scale(1.05) translateY(-10px);
+      }
+
+      .pricing-tag {
+        position: absolute;
+        top: 0;
+        right: 2rem;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+      }
+
+      .pricing-header {
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .pricing-header h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .price span {
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--text-light);
+      }
+
+      .pricing-features {
+        padding: 2rem;
+      }
+
+      .pricing-features ul {
+        margin-bottom: 2rem;
+      }
+
+      .pricing-features li {
+        margin-bottom: 0.75rem;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+      }
+
+      .pricing-features li::before {
+        content: "✓";
+        margin-right: 0.5rem;
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+
+      .pricing-cta {
+        padding: 0 2rem 2rem;
+        text-align: center;
+      }
+
+      /* Testimonials Section */
+      .testimonials {
+        background-color: var(--bg-light);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .testimonial-slider {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        height: 350px;
+      }
+
+      .testimonial-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.5s ease;
+        visibility: hidden;
+      }
+
+      .testimonial-slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        visibility: visible;
+      }
+
+      .testimonial-content {
+        background-color: var(--bg-color);
+        padding: 2.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-md);
+        position: relative;
+      }
+
+      .testimonial-quote {
+        position: absolute;
+        top: -15px;
+        left: 30px;
+        color: var(--primary-color);
+        opacity: 0.2;
+        transform: scale(2);
+      }
+
+      .testimonial-content p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+      }
+
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .testimonial-author img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-color);
+      }
+
+      .testimonial-author h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .testimonial-author p {
+        font-size: 0.9rem;
+        color: var(--text-lighter);
+        margin-bottom: 0;
+      }
+
+      .testimonial-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        gap: 1rem;
+      }
+
+      .testimonial-prev,
+      .testimonial-next {
+        background-color: var(--bg-color);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-color);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .testimonial-prev:hover,
+      .testimonial-next:hover {
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: var(--shadow-md);
+      }
+
+      .testimonial-prev svg,
+      .testimonial-next svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .testimonial-dots {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--border-color);
+        cursor: pointer;
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .dot.active {
+        background-color: var(--primary-color);
+        transform: scale(1.2);
+      }
+
+      /* Contact Section */
+      .contact {
+        background-color: var(--bg-color);
+      }
+
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 3rem;
+      }
+
+      .contact-info h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .contact-info > p {
+        color: var(--text-light);
+        margin-bottom: 2rem;
+      }
+
+      .contact-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .contact-item svg {
+        width: 24px;
+        height: 24px;
+        color: var(--primary-color);
+        flex-shrink: 0;
+        margin-top: 0.25rem;
+      }
+
+      .contact-item h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .contact-item p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+
+      .contact-form {
+        background-color: var(--bg-light);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-md);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        background-color: var(--bg-color);
+        transition: border-color var(--transition-speed)
+          var(--transition-timing);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      /* Footer */
+      .footer {
+        background-color: var(--bg-dark);
+        color: white;
+        padding: 5rem 0 2rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 3rem;
+        margin-bottom: 3rem;
+      }
+
+      .footer-info {
+        max-width: 300px;
+      }
+
+      .footer-info .logo h2 {
+        color: white;
+        margin-bottom: 1rem;
+      }
+
+      .footer-info p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .social-links a:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-3px);
+      }
+
+      .social-links svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .footer-links h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        color: white;
+      }
+
+      .footer-links ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.7);
+        transition: all var(--transition-speed) var(--transition-timing);
+      }
+
+      .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .footer-newsletter h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+
+      .footer-newsletter p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+      }
+
+      .newsletter-form {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .newsletter-form input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--border-radius);
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      .newsletter-form input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
+
+      .newsletter-form input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .newsletter-form button {
+        padding: 0.75rem 1rem;
+      }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+
+      .footer-bottom-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .footer-bottom-links a {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-bottom-links a:hover {
+        color: white;
+      }
+
+      /* Animation Classes */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .slide-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .scale-in {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .rotate-in {
+        opacity: 0;
+        transform: rotateY(40deg);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .skew-in {
+        opacity: 0;
+        transform: skewX(10deg);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+      }
+
+      .fade-in.active,
+      .slide-up.active,
+      .scale-in.active,
+      .rotate-in.active,
+      .skew-in.active {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateY(0) skewX(0);
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 1024px) {
+        .hero-content h1 {
+          font-size: 3rem;
+        }
+
+        .section-header h2 {
+          font-size: 2.2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero .container {
+          flex-direction: column;
+        }
+
+        .hero-content {
+          text-align: center;
+          max-width: 100%;
+        }
+
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-cta {
+          justify-content: center;
+        }
+
+        .menu-toggle {
+          display: flex;
+        }
+
+        .nav-links {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          width: 100%;
+          background-color: var(--bg-color);
+          flex-direction: column;
+          padding: 2rem;
+          box-shadow: var(--shadow-md);
+          transform: translateY(-100%);
+          opacity: 0;
+          visibility: hidden;
+          transition: all var(--transition-speed) var(--transition-timing);
+          z-index: 999;
+        }
+
+        .nav-links.active {
+          transform: translateY(0);
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .pricing-grid,
+        .contact-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .pricing-card.featured {
+          transform: scale(1);
+        }
+
+        .pricing-card.featured:hover {
+          transform: translateY(-10px);
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 576px) {
+        section {
+          padding: 3rem 0;
+        }
+
+        .hero-content h1 {
+          font-size: 2rem;
+        }
+
+        .hero-cta {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .hero-cta .btn-primary,
+        .hero-cta .btn-secondary {
+          width: 100%;
+        }
+
+        .section-header h2 {
+          font-size: 1.8rem;
+        }
+
+        .apartment-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .newsletter-form {
+          flex-direction: column;
+        }
+
+        .footer-bottom-links {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+
+      /* Dark Mode */
+      .dark {
+        --text-color: #f9fafb;
+        --text-light: #d1d5db;
+        --text-lighter: #9ca3af;
+        --bg-color: #1f2937;
+        --bg-light: #111827;
+        --bg-dark: #0f172a;
+        --border-color: #374151;
+      }
+
+      .dark .header {
+        background-color: rgba(31, 41, 55, 0.95);
+      }
+
+      .dark .apartment-card,
+      .dark .feature-card,
+      .dark .pricing-card,
+      .dark .testimonial-content,
+      .dark .testimonial-prev,
+      .dark .testimonial-next {
+        background-color: var(--bg-color);
+      }
+
+      .dark .apartment-features span {
+        background-color: var(--bg-light);
+      }
+
+      .dark .feature-icon {
+        background-color: rgba(74, 108, 247, 0.2);
+      }
+
+      .dark .contact-form {
+        background-color: var(--bg-light);
+      }
+
+      .dark .form-group input,
+      .dark .form-group select,
+      .dark .form-group textarea {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <nav class="nav">
+          <div class="logo">
+            <h1>LuxStay</h1>
+          </div>
+          <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#apartments">Apartments</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact" class="btn-primary">Contact Us</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <h1 class="fade-in">Find Your Perfect Apartment</h1>
+            <p class="slide-up">
+              Luxury living spaces designed for comfort and style
+            </p>
+            <div class="hero-cta slide-up">
+              <a href="#apartments" class="btn-primary">Browse Apartments</a>
+              <a href="#contact" class="btn-secondary">Schedule a Tour</a>
+            </div>
+          </div>
+          <div class="hero-image scale-in">
+            <div class="image-container">
+              <img
+                src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                alt="Luxury apartment interior" />
+            </div>
+          </div>
+        </div>
+        <div class="scroll-indicator">
+          <div class="mouse"></div>
+          <p>Scroll to explore</p>
+        </div>
+      </section>
+
+      <section id="apartments" class="apartments">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="fade-in">Featured Apartments</h2>
+            <p class="slide-up">
+              Discover our handpicked selection of premium living spaces
+            </p>
+          </div>
+          <div class="apartment-grid">
+            <div class="apartment-card scale-in">
+              <div class="apartment-image">
+                <img
+                  src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1980&q=80"
+                  alt="Modern Studio Apartment" />
+                <div class="apartment-tag">Popular</div>
+              </div>
+              <div class="apartment-details">
+                <h3>Modern Studio</h3>
+                <p class="apartment-location">Downtown District</p>
+                <div class="apartment-features">
+                  <span>1 Bedroom</span>
+                  <span>1 Bathroom</span>
+                  <span>550 sq ft</span>
+                </div>
+                <div class="apartment-price">
+                  <p>$1,200<span>/month</span></p>
+                  <a href="#" class="btn-secondary">View Details</a>
+                </div>
+              </div>
+            </div>
+            <div class="apartment-card scale-in">
+              <div class="apartment-image">
+                <img
+                  src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Luxury One Bedroom" />
+              </div>
+              <div class="apartment-details">
+                <h3>Luxury One Bedroom</h3>
+                <p class="apartment-location">Riverside Area</p>
+                <div class="apartment-features">
+                  <span>1 Bedroom</span>
+                  <span>1 Bathroom</span>
+                  <span>750 sq ft</span>
+                </div>
+                <div class="apartment-price">
+                  <p>$1,500<span>/month</span></p>
+                  <a href="#" class="btn-secondary">View Details</a>
+                </div>
+              </div>
+            </div>
+            <div class="apartment-card scale-in">
+              <div class="apartment-image">
+                <img
+                  src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                  alt="Premium Two Bedroom" />
+                <div class="apartment-tag">New</div>
+              </div>
+              <div class="apartment-details">
+                <h3>Premium Two Bedroom</h3>
+                <p class="apartment-location">Central Park</p>
+                <div class="apartment-features">
+                  <span>2 Bedrooms</span>
+                  <span>2 Bathrooms</span>
+                  <span>1100 sq ft</span>
+                </div>
+                <div class="apartment-price">
+                  <p>$2,200<span>/month</span></p>
+                  <a href="#" class="btn-secondary">View Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="view-all-container slide-up">
+            <a href="#" class="btn-primary">View All Apartments</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="fade-in">Premium Amenities</h2>
+            <p class="slide-up">
+              Enjoy the best in modern living with our exceptional features
+            </p>
+          </div>
+          <div class="features-grid">
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </div>
+              <h3>Smart Home</h3>
+              <p>
+                Control lighting, temperature, and security with our integrated
+                smart home system.
+              </p>
+            </div>
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+              <h3>Fitness Center</h3>
+              <p>
+                Stay fit with our state-of-the-art gym equipment and dedicated
+                workout spaces.
+              </p>
+            </div>
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                  <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                  <line x1="6" y1="1" x2="6" y2="4"></line>
+                  <line x1="10" y1="1" x2="10" y2="4"></line>
+                  <line x1="14" y1="1" x2="14" y2="4"></line>
+                </svg>
+              </div>
+              <h3>Rooftop Lounge</h3>
+              <p>
+                Relax and socialize with panoramic city views from our exclusive
+                rooftop area.
+              </p>
+            </div>
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                  <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg>
+              </div>
+              <h3>High-Speed WiFi</h3>
+              <p>
+                Stay connected with complimentary high-speed internet throughout
+                the building.
+              </p>
+            </div>
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <h3>24/7 Concierge</h3>
+              <p>
+                Our dedicated staff is available around the clock to assist with
+                all your needs.
+              </p>
+            </div>
+            <div class="feature-card rotate-in">
+              <div class="feature-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+              </div>
+              <h3>Pet Friendly</h3>
+              <p>
+                We welcome your furry friends with dedicated pet areas and
+                services.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="pricing">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="fade-in">Flexible Pricing Plans</h2>
+            <p class="slide-up">
+              Choose the perfect rental option that fits your lifestyle
+            </p>
+          </div>
+          <div class="pricing-grid">
+            <div class="pricing-card skew-in">
+              <div class="pricing-header">
+                <h3>Standard</h3>
+                <p class="price">$1,200<span>/month</span></p>
+              </div>
+              <div class="pricing-features">
+                <ul>
+                  <li>Studio apartment</li>
+                  <li>Basic amenities</li>
+                  <li>Utilities included</li>
+                  <li>6-month minimum lease</li>
+                  <li>Standard appliances</li>
+                </ul>
+              </div>
+              <div class="pricing-cta">
+                <a href="#contact" class="btn-secondary">Get Started</a>
+              </div>
+            </div>
+            <div class="pricing-card featured skew-in">
+              <div class="pricing-tag">Most Popular</div>
+              <div class="pricing-header">
+                <h3>Premium</h3>
+                <p class="price">$1,800<span>/month</span></p>
+              </div>
+              <div class="pricing-features">
+                <ul>
+                  <li>One bedroom apartment</li>
+                  <li>Premium amenities</li>
+                  <li>Utilities included</li>
+                  <li>Flexible lease terms</li>
+                  <li>Smart home features</li>
+                  <li>Dedicated parking spot</li>
+                </ul>
+              </div>
+              <div class="pricing-cta">
+                <a href="#contact" class="btn-primary">Get Started</a>
+              </div>
+            </div>
+            <div class="pricing-card skew-in">
+              <div class="pricing-header">
+                <h3>Luxury</h3>
+                <p class="price">$2,500<span>/month</span></p>
+              </div>
+              <div class="pricing-features">
+                <ul>
+                  <li>Two bedroom apartment</li>
+                  <li>All premium amenities</li>
+                  <li>All utilities included</li>
+                  <li>Flexible lease terms</li>
+                  <li>Full smart home integration</li>
+                  <li>Two parking spots</li>
+                  <li>Concierge priority service</li>
+                </ul>
+              </div>
+              <div class="pricing-cta">
+                <a href="#contact" class="btn-secondary">Get Started</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonials" class="testimonials">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="fade-in">What Our Residents Say</h2>
+            <p class="slide-up">
+              Hear from the people who call our apartments home
+            </p>
+          </div>
+          <div class="testimonial-slider" id="testimonialSlider">
+            <div class="testimonial-slide active">
+              <div class="testimonial-content">
+                <div class="testimonial-quote">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M10 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                    <path
+                      d="M21 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                  </svg>
+                </div>
+                <p>
+                  Living at LuxStay has been an incredible experience. The
+                  amenities are top-notch, and the staff is always responsive
+                  and friendly. I couldn't imagine living anywhere else!
+                </p>
+                <div class="testimonial-author">
+                  <img
+                    src="https://randomuser.me/api/portraits/women/32.jpg"
+                    alt="Sarah Johnson" />
+                  <div>
+                    <h4>Sarah Johnson</h4>
+                    <p>Resident since 2021</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-slide">
+              <div class="testimonial-content">
+                <div class="testimonial-quote">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M10 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                    <path
+                      d="M21 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                  </svg>
+                </div>
+                <p>
+                  The smart home features and modern design make this place feel
+                  like living in the future. The rooftop lounge has become my
+                  favorite spot to work remotely and relax in the evenings.
+                </p>
+                <div class="testimonial-author">
+                  <img
+                    src="https://randomuser.me/api/portraits/men/44.jpg"
+                    alt="Michael Chen" />
+                  <div>
+                    <h4>Michael Chen</h4>
+                    <p>Resident since 2022</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="testimonial-slide">
+              <div class="testimonial-content">
+                <div class="testimonial-quote">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M10 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                    <path
+                      d="M21 11h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1z"></path>
+                  </svg>
+                </div>
+                <p>
+                  As someone who works from home, having reliable high-speed
+                  internet and a quiet, comfortable space was essential. LuxStay
+                  delivers on all fronts, and the fitness center is an amazing
+                  bonus!
+                </p>
+                <div class="testimonial-author">
+                  <img
+                    src="https://randomuser.me/api/portraits/women/68.jpg"
+                    alt="Emily Rodriguez" />
+                  <div>
+                    <h4>Emily Rodriguez</h4>
+                    <p>Resident since 2020</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-controls">
+            <button class="testimonial-prev" id="testimonialPrev">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <div class="testimonial-dots" id="testimonialDots">
+              <span class="dot active" data-index="0"></span>
+              <span class="dot" data-index="1"></span>
+              <span class="dot" data-index="2"></span>
+            </div>
+            <button class="testimonial-next" id="testimonialNext">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <div class="container">
+          <div class="contact-grid">
+            <div class="contact-info fade-in">
+              <h2>Get in Touch</h2>
+              <p>
+                Interested in making LuxStay your new home? Contact us today to
+                schedule a tour or learn more about our available apartments.
+              </p>
+              <div class="contact-details">
+                <div class="contact-item">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <div>
+                    <h4>Address</h4>
+                    <p>123 Luxury Lane, Downtown<br />New York, NY 10001</p>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  <div>
+                    <h4>Phone</h4>
+                    <p>(555) 123-4567</p>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                  <div>
+                    <h4>Email</h4>
+                    <p>info@luxstay.com</p>
+                  </div>
+                </div>
+                <div class="contact-item">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <div>
+                    <h4>Office Hours</h4>
+                    <p>
+                      Monday - Friday: 9am - 6pm<br />Saturday: 10am - 4pm<br />Sunday:
+                      Closed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="contact-form slide-up">
+              <form id="contactForm">
+                <div class="form-group">
+                  <label for="name">Full Name</label>
+                  <input type="text" id="name" name="name" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email" required />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input type="tel" id="phone" name="phone" required />
+                </div>
+                <div class="form-group">
+                  <label for="interest">I'm interested in</label>
+                  <select id="interest" name="interest" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="studio">Studio Apartment</option>
+                    <option value="one-bedroom">One Bedroom</option>
+                    <option value="two-bedroom">Two Bedroom</option>
+                    <option value="tour">Scheduling a Tour</option>
+                    <option value="other">Other Inquiry</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Send Message</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-info">
+            <div class="logo">
+              <h2>LuxStay</h2>
+            </div>
+            <p>
+              Premium apartment rentals designed for modern living. Experience
+              luxury, convenience, and style.
+            </p>
+            <div class="social-links">
+              <a href="#" aria-label="Facebook">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Twitter">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.8z"></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Instagram">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path
+                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="#" aria-label="LinkedIn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="footer-links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#apartments">Apartments</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#testimonials">Testimonials</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-links">
+            <h3>Resources</h3>
+            <ul>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Resident Portal</a></li>
+              <li><a href="#">Maintenance Request</a></li>
+              <li><a href="#">Neighborhood Guide</a></li>
+              <li><a href="#">Lease Information</a></li>
+            </ul>
+          </div>
+          <div class="footer-newsletter">
+            <h3>Newsletter</h3>
+            <p>
+              Subscribe to our newsletter for the latest updates and special
+              offers.
+            </p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Your email address" required />
+              <button type="submit" class="btn-primary">Subscribe</button>
+            </form>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2023 LuxStay Apartments. All rights reserved.</p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Sitemap</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize animations
+        initAnimations();
+
+        // Mobile menu toggle
+        initMobileMenu();
+
+        // Header scroll effect
+        initHeaderScroll();
+
+        // Testimonial slider
+        initTestimonialSlider();
+
+        // Contact form submission
+        initContactForm();
+      });
+
+      // Animation on scroll
+      function initAnimations() {
+        const animatedElements = document.querySelectorAll(
+          ".fade-in, .slide-up, .scale-in, .rotate-in, .skew-in"
+        );
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        animatedElements.forEach((element) => {
+          observer.observe(element);
+        });
+      }
+
+      // Mobile menu functionality
+      function initMobileMenu() {
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        if (menuToggle && navLinks) {
+          menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+
+            // Toggle menu icon animation
+            const spans = menuToggle.querySelectorAll("span");
+            spans.forEach((span) => span.classList.toggle("active"));
+
+            if (navLinks.classList.contains("active")) {
+              document.body.style.overflow = "hidden";
+            } else {
+              document.body.style.overflow = "";
+            }
+          });
+
+          // Close menu when clicking on a link
+          const links = navLinks.querySelectorAll("a");
+          links.forEach((link) => {
+            link.addEventListener("click", () => {
+              navLinks.classList.remove("active");
+              document.body.style.overflow = "";
+
+              // Reset menu icon
+              const spans = menuToggle.querySelectorAll("span");
+              spans.forEach((span) => span.classList.remove("active"));
+            });
+          });
+        }
+      }
+
+      // Header scroll effect
+      function initHeaderScroll() {
+        const header = document.querySelector(".header");
+
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 50) {
+            header.classList.add("scrolled");
+          } else {
+            header.classList.remove("scrolled");
+          }
+        });
+      }
+
+      // Testimonial slider
+      function initTestimonialSlider() {
+        const slides = document.querySelectorAll(".testimonial-slide");
+        const dots = document.querySelectorAll(".dot");
+        const prevBtn = document.getElementById("testimonialPrev");
+        const nextBtn = document.getElementById("testimonialNext");
+
+        if (!slides.length || !dots.length || !prevBtn || !nextBtn) return;
+
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+
+        // Initialize first slide
+        slides[0].classList.add("active");
+        dots[0].classList.add("active");
+
+        // Function to change slide
+        function goToSlide(index) {
+          // Remove active class from all slides and dots
+          slides.forEach((slide) => slide.classList.remove("active"));
+          dots.forEach((dot) => dot.classList.remove("active"));
+
+          // Add active class to current slide and dot
+          slides[index].classList.add("active");
+          dots[index].classList.add("active");
+
+          currentSlide = index;
+        }
+
+        // Event listeners for prev and next buttons
+        prevBtn.addEventListener("click", () => {
+          currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+          goToSlide(currentSlide);
+        });
+
+        nextBtn.addEventListener("click", () => {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          goToSlide(currentSlide);
+        });
+
+        // Event listeners for dots
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", () => {
+            goToSlide(index);
+          });
+        });
+
+        // Auto slide change
+        let slideInterval = setInterval(() => {
+          currentSlide = (currentSlide + 1) % totalSlides;
+          goToSlide(currentSlide);
+        }, 5000);
+
+        // Pause auto slide on hover
+        const testimonialSlider = document.getElementById("testimonialSlider");
+        testimonialSlider.addEventListener("mouseenter", () => {
+          clearInterval(slideInterval);
+        });
+
+        testimonialSlider.addEventListener("mouseleave", () => {
+          slideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+          }, 5000);
+        });
+      }
+
+      // Contact form submission
+      function initContactForm() {
+        const contactForm = document.getElementById("contactForm");
+
+        if (contactForm) {
+          contactForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Get form data
+            const formData = new FormData(contactForm);
+            const formDataObj = {};
+
+            formData.forEach((value, key) => {
+              formDataObj[key] = value;
+            });
+
+            // Simulate form submission
+            const submitButton = contactForm.querySelector(
+              'button[type="submit"]'
+            );
+            const originalText = submitButton.textContent;
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Sending...";
+
+            // Simulate API call with timeout
+            setTimeout(() => {
+              console.log("Form submitted:", formDataObj);
+
+              // Show success message
+              contactForm.innerHTML = `
+                    <div class="success-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="success-icon">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <h3>Thank You!</h3>
+                        <p>Your message has been sent successfully. We'll get back to you shortly.</p>
+                    </div>
+                `;
+            }, 1500);
+          });
+        }
+      }
+
+      // Add smooth blur/unblur effect on apartment cards
+      document.querySelectorAll(".apartment-card").forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          // Add blur to other cards
+          document.querySelectorAll(".apartment-card").forEach((otherCard) => {
+            if (otherCard !== card) {
+              otherCard.style.filter = "blur(3px)";
+              otherCard.style.transform = "scale(0.95) translateY(0)";
+              otherCard.style.transition =
+                "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
+            }
+          });
+        });
+
+        card.addEventListener("mouseleave", () => {
+          // Remove blur from all cards
+          document.querySelectorAll(".apartment-card").forEach((otherCard) => {
+            otherCard.style.filter = "";
+            otherCard.style.transform = "";
+          });
+        });
+      });
+
+      // Dark mode toggle functionality
+      function initDarkModeToggle() {
+        // Check for saved theme preference or use system preference
+        const prefersDarkScheme = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        );
+        const storedTheme = localStorage.getItem("theme");
+
+        if (
+          storedTheme === "dark" ||
+          (!storedTheme && prefersDarkScheme.matches)
+        ) {
+          document.body.classList.add("dark");
+        }
+
+        // Add dark mode toggle button to the navigation
+        const navLinks = document.querySelector(".nav-links");
+        if (navLinks) {
+          const darkModeToggle = document.createElement("li");
+          darkModeToggle.innerHTML = `
+            <button id="darkModeToggle" aria-label="Toggle Dark Mode">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dark-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="light-icon">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        `;
+          navLinks.appendChild(darkModeToggle);
+
+          // Add event listener to toggle button
+          const toggleButton = document.getElementById("darkModeToggle");
+          if (toggleButton) {
+            toggleButton.addEventListener("click", () => {
+              document.body.classList.toggle("dark");
+
+              // Save preference to localStorage
+              if (document.body.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+              } else {
+                localStorage.setItem("theme", "light");
+              }
+            });
+          }
+        }
+      }
+
+      // Initialize dark mode toggle
+      initDarkModeToggle();
+
+      // Add 3D skew effect on scroll
+      window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY;
+        const maxSkew = 5; // Maximum skew angle in degrees
+
+        document.querySelectorAll(".skew-in.active").forEach((element) => {
+          const elementTop =
+            element.getBoundingClientRect().top + window.scrollY;
+          const distance = scrollY - elementTop;
+
+          if (Math.abs(distance) < 500) {
+            const skewAmount = (distance / 500) * maxSkew;
+            element.style.transform = `skewX(${skewAmount}deg)`;
+          }
+        });
+      });
+
+      // Add parallax effect to hero section
+      window.addEventListener("scroll", () => {
+        const heroImage = document.querySelector(".hero-image");
+        if (heroImage) {
+          const scrollY = window.scrollY;
+          heroImage.style.transform = `perspective(1000px) rotateY(${
+            -scrollY * 0.01
+          }deg) rotateX(${scrollY * 0.01}deg)`;
+        }
+      });
+
+      // Add smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute("href");
+          if (targetId === "#") return;
+
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            const headerHeight = document.querySelector(".header").offsetHeight;
+            const targetPosition =
+              targetElement.getBoundingClientRect().top +
+              window.scrollY -
+              headerHeight;
+
+            window.scrollTo({
+              top: targetPosition,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+
+      // Add active class to nav links based on scroll position
+      window.addEventListener("scroll", () => {
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-links a");
+
+        let currentSection = "";
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          const headerHeight = document.querySelector(".header").offsetHeight;
+
+          if (window.scrollY >= sectionTop - headerHeight - 100) {
+            currentSection = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href") === `#${currentSection}`) {
+            link.classList.add("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Web App</title>
+    <style>
+      /* CSS Variables - Theme Management */
+      :root {
+        --primary: #4a90e2;
+        --secondary: #f7f9fc;
+        --accent: #34c759;
+        --text-primary: #2c3e50;
+        --text-secondary: #7f8c8d;
+        --background: #ffffff;
+        --sidebar-bg: #2c3e50;
+        --card-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --border-radius: 12px;
+        --font-family: "Inter", sans-serif;
+      }
+
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: var(--font-family);
+      }
+
+      body {
+        background: var(--background);
+        color: var(--text-primary);
+        line-height: 1.6;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        color: white;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transition: transform var(--transition);
+        z-index: 1000;
+        backdrop-filter: blur(15px);
+      }
+
+      .sidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-menu {
+        padding: 1rem 0;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        gap: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        transition: var(--transition);
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        margin-left: 280px;
+        padding: 2rem;
+        flex: 1;
+        transition: margin-left var(--transition);
+      }
+
+      .main-content.collapsed {
+        margin-left: 0;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(135deg, var(--primary), #5b9fe2);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+        box-shadow: var(--card-shadow);
+      }
+
+      header h1 {
+        color: white;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      /* Grid System */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--background);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: var(--card-shadow);
+        transition: var(--transition);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .card:hover {
+        transform: translateY(-5px) scale(1.02) rotateX(5deg);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .card h2 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+      }
+
+      .card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #3b82f6;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--background);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        z-index: 1000;
+        display: none;
+      }
+
+      .modal.active {
+        display: block;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .modal-backdrop.active {
+        display: block;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 80px;
+          padding: 1rem 0.5rem;
+        }
+
+        .sidebar.collapsed {
+          transform: translateX(-80px);
+        }
+
+        .main-content {
+          margin-left: 80px;
+          padding: 1rem;
+        }
+
+        header {
+          padding: 1.5rem;
+        }
+
+        header h1 {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">🏢 ModernApp</div>
+      </div>
+      <nav class="nav-menu">
+        <div class="nav-item active" data-section="dashboard">📊 Dashboard</div>
+        <div class="nav-item" data-section="reports">📈 Reports</div>
+        <div class="nav-item" data-section="settings">⚙️ Settings</div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <header>
+        <h1>Modern Web Application</h1>
+      </header>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="fade-in">
+        <div class="grid">
+          <div class="card">
+            <h2>Dashboard Overview</h2>
+            <p>
+              Welcome to the admin dashboard. Manage your properties, tenants,
+              and reports here.
+            </p>
+          </div>
+          <div class="card">
+            <h2>Total Properties</h2>
+            <p>48</p>
+          </div>
+          <div class="card">
+            <h2>Monthly Revenue</h2>
+            <p>$86,400</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reports Section -->
+      <section id="reports" class="fade-in">
+        <div class="card">
+          <h2>Reports</h2>
+          <p>Analyze your data and generate reports to track performance.</p>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings" class="fade-in">
+        <div class="card">
+          <h2>Settings</h2>
+          <p>Customize your preferences and manage account settings.</p>
+        </div>
+      </section>
+
+      <!-- Modal -->
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal" id="propertyModal">
+        <h2>Add New Property</h2>
+        <form id="propertyForm">
+          <div class="form-group">
+            <label>Property Name</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Save Property</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 ModernApp. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Sidebar Toggle Functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+        sidebar.classList.toggle("collapsed");
+        mainContent.classList.toggle("collapsed");
+      }
+
+      // Intersection Observer for Animations
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".card").forEach((card) => {
+        observer.observe(card);
+      });
+
+      // Modal Handling
+      const modal = document.getElementById("propertyModal");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+
+      function showModal() {
+        modal.classList.add("active");
+        modalBackdrop.classList.add("active");
+      }
+
+      function hideModal() {
+        modal.classList.remove("active");
+        modalBackdrop.classList.remove("active");
+      }
+
+      document
+        .getElementById("propertyForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          alert("Property Saved!");
+          hideModal();
+        });
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          toggleSidebar();
+        }
+      });
+    </script>
+  </body>
+</html>

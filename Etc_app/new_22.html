@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LuxStay Admin Dashboard for managing properties, tenants, and financials." />
+    <title>LuxStay Admin | Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* CSS Variables - Theme Management */
+      :root {
+        --primary-color: #3a86ff;
+        --secondary-color: #ff006e;
+        --success-color: #38b000;
+        --warning-color: #ffbe0b;
+        --danger-color: #d90429;
+        --dark-color: #1d3557;
+        --text-color: #2b2d42;
+        --text-muted: #6c757d;
+        --light-text: #f8f9fa;
+        --background-color: #f8f9fa;
+        --sidebar-bg: #1d3557;
+        --card-bg: #ffffff;
+        --border-color: #e9ecef;
+        --animation-duration: 0.4s;
+        --animation-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --border-radius: 10px;
+        --font-family: "Segoe UI", system-ui, sans-serif;
+      }
+
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--background-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--light-text);
+        height: 100vh;
+        position: fixed;
+        transition: transform var(--animation-duration) var(--animation-easing);
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-menu {
+        padding: 1rem 0;
+      }
+
+      .nav-item {
+        padding: 1rem 1.5rem;
+        transition: background-color var(--animation-duration) ease;
+      }
+
+      .nav-item.active {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 2rem;
+        transition: margin-left var(--animation-duration) ease;
+      }
+
+      /* Dashboard Grid System */
+      .grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+
+      /* Data Visualization Cards */
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: transform var(--animation-duration) ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px) rotateX(5deg) scale(1.02);
+      }
+
+      /* Interactive Elements */
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        transition: all var(--animation-duration) ease;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      /* Advanced Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate {
+        animation: fadeIn 0.6s var(--animation-easing) forwards;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>LuxStay Admin</h2>
+      </div>
+      <nav class="nav-menu">
+        <div class="nav-item active" data-section="dashboard">
+          <span>📊 Dashboard</span>
+        </div>
+        <div class="nav-item" data-section="properties">
+          <span>🏠 Properties</span>
+        </div>
+        <div class="nav-item" data-section="tenants">
+          <span>👥 Tenants</span>
+        </div>
+        <div class="nav-item" data-section="financials">
+          <span>💰 Financials</span>
+        </div>
+        <div class="nav-item" data-section="analytics">
+          <span>📈 Analytics</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <!-- Dashboard Header -->
+      <header class="dashboard-header">
+        <h1 class="animate">Property Management Dashboard</h1>
+        <div class="user-controls">
+          <button class="btn btn-primary" id="newPropertyBtn">
+            + Add New Property
+          </button>
+        </div>
+      </header>
+
+      <!-- Key Metrics Section -->
+      <section class="grid animate" id="keyMetrics">
+        <div class="card">
+          <h3>Total Properties</h3>
+          <p class="metric-value">48</p>
+          <div class="progress-bar"></div>
+        </div>
+        <div class="card">
+          <h3>Occupancy Rate</h3>
+          <p class="metric-value">92%</p>
+          <div class="progress-bar"></div>
+        </div>
+        <div class="card">
+          <h3>Monthly Revenue</h3>
+          <p class="metric-value">$86,400</p>
+          <div class="progress-bar"></div>
+        </div>
+      </section>
+
+      <!-- Data Visualization Section -->
+      <section class="card animate" id="revenueChart">
+        <h3>Revenue Overview</h3>
+        <canvas id="revenueChartCanvas"></canvas>
+      </section>
+
+      <!-- Property Management Section -->
+      <section class="card animate" id="propertyTable">
+        <div class="table-header">
+          <h3>Managed Properties</h3>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search properties..." />
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Property ID</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Monthly Rent</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="propertyList">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- Modal System -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal" id="propertyModal">
+        <div class="modal-header">
+          <h3>Add New Property</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="propertyForm">
+            <div class="form-group">
+              <label>Property Name</label>
+              <input type="text" required />
+            </div>
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" required />
+            </div>
+            <div class="form-group">
+              <label>Monthly Rent</label>
+              <input type="number" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Save Property</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Dashboard Controller
+      class Dashboard {
+        constructor() {
+          this.initEventListeners();
+          this.loadInitialData();
+          this.initChart();
+        }
+
+        initEventListeners() {
+          // Sidebar navigation
+          document.querySelectorAll(".nav-item").forEach((item) => {
+            item.addEventListener("click", this.switchSection.bind(this));
+          });
+
+          // Property management
+          document
+            .getElementById("newPropertyBtn")
+            .addEventListener("click", this.showModal);
+          document
+            .querySelector(".modal-close")
+            .addEventListener("click", this.hideModal);
+          document
+            .getElementById("propertyForm")
+            .addEventListener("submit", this.saveProperty.bind(this));
+        }
+
+        loadInitialData() {
+          // Sample data - replace with API calls
+          const properties = [
+            {
+              id: "P001",
+              name: "Downtown Loft",
+              location: "City Center",
+              rent: 3200,
+              status: "Occupied",
+            },
+            {
+              id: "P002",
+              name: "Riverside Apartment",
+              location: "River District",
+              rent: 2800,
+              status: "Vacant",
+            },
+          ];
+
+          const tbody = document.getElementById("propertyList");
+          tbody.innerHTML = properties
+            .map(
+              (prop) => `
+                            <tr>
+                                <td>${prop.id}</td>
+                                <td>${prop.location}</td>
+                                <td><span class="status-badge">${prop.status}</span></td>
+                                <td>$${prop.rent}</td>
+                                <td>
+                                    <button class="btn btn-sm edit-btn">✏️ Edit</button>
+                                    <button class="btn btn-sm delete-btn">🗑️ Delete</button>
+                                </td>
+                            </tr>
+                        `
+            )
+            .join("");
+        }
+
+        initChart() {
+          // Revenue chart using Chart.js
+          const ctx = document
+            .getElementById("revenueChartCanvas")
+            .getContext("2d");
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+              datasets: [
+                {
+                  label: "Monthly Revenue",
+                  data: [65000, 79000, 82000, 78000, 86000, 90000],
+                  borderColor: getComputedStyle(document.documentElement)
+                    .getPropertyValue("--primary-color")
+                    .trim(),
+                  tension: 0.4,
+                },
+              ],
+            },
+          });
+        }
+
+        switchSection(e) {
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((item) => item.classList.remove("active"));
+          e.currentTarget.classList.add("active");
+          // Add section switching logic
+        }
+
+        showModal() {
+          document.getElementById("modalBackdrop").classList.add("active");
+        }
+
+        hideModal() {
+          document.getElementById("modalBackdrop").classList.remove("active");
+        }
+
+        saveProperty(e) {
+          e.preventDefault();
+          // Add property saving logic
+          this.hideModal();
+        }
+      }
+
+      // Initialize Dashboard
+      new Dashboard();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Management Dashboard</title>
+    <style>
+        :root {
+            --primary: #3A86FF;
+            --secondary: #FF006E;
+            --success: #38B000;
+            --warning: #FFBE0B;
+            --danger: #D90429;
+            --dark: #1D3557;
+            --text: #2B2D42;
+            --muted: #6C757D;
+            --light: #F8F9FA;
+            --card-bg: white;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --spacing-md: 24px;
+            --sidebar-width: 260px;
+            --navbar-height: 60px;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--dark);
+            color: var(--light);
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-md);
+            z-index: 1000;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--light);
+            margin-right: 20px;
+        }
+
+        .navbar-search {
+            flex: 1;
+            display: flex;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid var(--light);
+            border-radius: 4px;
+            margin-right: 10px;
+            color: var(--text);
+        }
+
+        .search-button {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .user-profile {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            display: none;
+            min-width: 200px;
+        }
+
+        .user-menu.show {
+            display: block;
+        }
+
+        .user-menu-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-menu-item:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .notification-badge {
+            background: var(--danger);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            display: none;
+            min-width: 300px;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--muted);
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--navbar-height));
+            background: var(--dark);
+            color: var(--light);
+            overflow-y: auto;
+            transition: width 0.3s;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-toggle {
+            padding: 12px;
+            cursor: pointer;
+            color: var(--light);
+        }
+
+        .sidebar-menu {
+            padding: 16px 0;
+        }
+
+        .sidebar-section {
+            margin: 16px 0;
+        }
+
+        .sidebar-section-title {
+            color: var(--light);
+            opacity: 0.7;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            padding: 8px 16px;
+        }
+
+        .sidebar-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--light);
+            transition: background 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: var(--navbar-height);
+            margin-left: var(--sidebar-width);
+            padding: 24px;
+            transition: margin-left 0.3s;
+        }
+
+        .main-content.collapsed {
+            margin-left: 70px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            margin-top: 24px;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .table th {
+            background: rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Modals */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .modal {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                transition: width 0.3s;
+            }
+
+            .sidebar.collapsed {
+                width: var(--sidebar-width);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .main-content.collapsed {
+                margin-left: 0;
+            }
+
+            .navbar-search {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-logo">ApartmentAI</div>
+        
+        <div class="navbar-search">
+            <input type="text" class="search-input" placeholder="Search...">
+            <button class="search-button">Search</button>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-icon" onclick="toggleUserMenu()">
+                <img src="https://picsum.photos/40" alt="User Avatar" class="avatar">
+                <span class="notification-badge">5</span>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-menu-item">Profile</div>
+                <div class="user-menu-item">Settings</div>
+                <div class="user-menu-item" style="color: var(--danger)">Logout</div>
+            </div>
+
+            <div class="notification-icon" onclick="toggleNotifications()">
+                <i class="fas fa-bell"></i>
+                <div class="notification-dropdown" id="notificationsDropdown">
+                    <div class="notification-item">New maintenance request</div>
+                    <div class="notification-item">Tenant payment overdue</div>
+                    <div class="notification-item">Review pending</div>
+                </div>
+            </div>
+        </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Core</div>
+                <div class="sidebar-item active" onclick="showDashboard()">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </div>
+                <div class="sidebar-item" onclick="showProperties()">
+                    <i class="fas fa-building"></i> Properties
+                </div>
+                <div class="sidebar-item" onclick="showTenants()">
+                    <i class="fas fa-users"></i> Tenants
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Management</div>
+                <div class="sidebar-item" onclick="showMaintenance()">
+                    <i class="fas fa-wrench"></i> Maintenance
+                </div>
+                <div class="sidebar-item" onclick="showReports()">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </div>
+                <div class="sidebar-item" onclick="showContent()">
+                    <i class="fas fa-pen"></i> Content Management
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard Section -->
+        <section class="content-section dashboard" id="dashboardSection">
+            <div class="card">
+                <h3>Recent Transactions</h3>
+                <div class="chart-container" id="transactionChart"></div>
+            </div>
+
+            <div class="card">
+                <h3>Maintenance Requests</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>M001</td>
+                            <td>Leaky faucet in Apt 102</td>
+                            <td><span class="badge" style="background: var(--warning)">Pending</span></td>
+                            <td>High</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Tenant Reviews</h3>
+                <div class="review-card">
+                    <p>"Great location and amenities!"</p>
+                    <div class="rating">⭐⭐⭐⭐</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Properties Section -->
+        <section class="content-section properties" id="propertiesSection" style="display: none">
+            <div class="card">
+                <h3>Properties Grid</h3>
+                <div class="property-grid">
+                    <div class="property-card">
+                        <img src="https://picsum.photos/300/200" alt="Property">
+                        <div class="property-details">
+                            <h4>Apt 101</h4>
+                            <p>1 Bedroom | $1,200/month</p>
+                            <p>Status: <span class="badge" style="background: var(--success)">Occupied</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tenants Section -->
+        <section class="content-section tenants" id="tenantsSection" style="display: none">
+            <div class="card">
+                <h3>Tenants List</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Apartment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>johndoe@example.com</td>
+                            <td>Apt 101</td>
+                            <td><span class="badge" style="background: var(--success)">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Maintenance Section -->
+        <section class="content-section maintenance" id="maintenanceSection" style="display: none">
+            <div class="card">
+                <h3>New Maintenance Request</h3>
+                <form class="maintenance-form">
+                    <input type="text" placeholder="Description" class="form-input">
+                    <select class="form-select">
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
+                    </select>
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal-backdrop" id="modalBackdrop">
+            <div class="modal">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <h4>Add New Tenant</h4>
+                <form>
+                    <input type="text" placeholder="Name" class="form-input" required>
+                    <input type="email" placeholder="Email" class="form-input" required>
+                    <select class="form-select">
+                        <option>Apt 101</option>
+                        <option>Apt 102</option>
+                    </select>
+                    <button class="btn btn-primary">Save Tenant</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('mainContent').classList.toggle('collapsed');
+        }
+
+        // User Menu
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('show');
+        }
+
+        // Notifications
+        function toggleNotifications() {
+            document.getElementById('notificationsDropdown').classList.toggle('show');
+        }
+
+        // Content Sections
+        function showDashboard() {
+            hideAllSections();
+            document.getElementById('dashboardSection').style.display = 'block';
+        }
+
+        function showProperties() {
+            hideAllSections();
+            document.getElementById('propertiesSection').style.display = 'block';
+        }
+
+        function showTenants() {
+            hideAllSections();
+            document.getElementById('tenantsSection').style.display = 'block';
+        }
+
+        function showMaintenance() {
+            hideAllSections();
+            document.getElementById('maintenanceSection').style.display = 'block';
+        }
+
+        function hideAllSections() {
+            document.querySelectorAll('.content-section').forEach(sec => sec.style.display = 'none');
+        }
+
+        // Modal
+        function openModal() {
+            document.getElementById('modalBackdrop').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalBackdrop').style.display = 'none';
+        }
+
+        // Chart (Mock)
+        function initChart() {
+            const ctx = document.getElementById('transactionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [3000, 4500, 6000, 7500],
+                        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary')
+                    }]
+                }
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        window.onload = function() {
+            initChart();
+        };
+    </script>
+</body>
+</html>

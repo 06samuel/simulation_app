@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apartment Rental - Smooth SPA</title>
+    <style>
+      /* Saas Variables */
+      :root {
+        /* Colors */
+        --primary: #2c3e50;
+        --secondary: #4ca1af;
+        --accent: #ff7675;
+        --text: #212529;
+        --bg: #f8f9fa;
+        --card-bg: white;
+        --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        --transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --spacing: 2rem;
+        --breakpoint: 768px;
+      }
+
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        scroll-behavior: smooth;
+      }
+
+      /* Global Styles */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--spacing);
+      }
+
+      /* Header */
+      header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: calc(var(--spacing) / 2);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transition: var(--transition);
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 2rem;
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 2rem;
+        margin: 0;
+      }
+
+      .nav-link {
+        color: var(--text);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .nav-link:hover {
+        color: var(--accent);
+        transform: skewX(-5deg);
+      }
+
+      /* Mobile Nav */
+      .nav-toggle {
+        display: none;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        background: linear-gradient(
+            rgba(255, 255, 255, 0.8),
+            rgba(255, 255, 255, 0.8)
+          ),
+          url("https://picsum.photos/1200/800") center/cover;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing);
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        color: var(--text);
+        animation: fadeIn 1s ease-in-out;
+      }
+
+      .hero .btn {
+        background: var(--primary);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 30px;
+        transition: var(--transition);
+        margin-top: 2rem;
+      }
+
+      .btn:hover {
+        transform: scale(1.1) rotate(-3deg);
+        box-shadow: var(--shadow);
+      }
+
+      /* Features */
+      .features {
+        padding: var(--spacing) 0;
+        text-align: center;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        background: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        margin: 1rem 0;
+        transition: var(--transition);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Apartment Grid */
+      .apartment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--spacing);
+        padding: var(--spacing) 0;
+      }
+
+      .apartment-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        transition: var(--transition);
+      }
+
+      .apartment-card img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        transition: var(--transition);
+      }
+
+      .apartment-card:hover img {
+        transform: scale(1.1);
+        filter: brightness(80%);
+      }
+
+      .card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1rem;
+        transform: translateY(100%);
+        transition: var(--transition);
+      }
+
+      .apartment-card:hover .card-content {
+        transform: translateY(0);
+      }
+
+      /* Testimonials */
+      .testimonials {
+        padding: var(--spacing) 0;
+        background: white;
+      }
+
+      .testimonial-slider {
+        perspective: 1000px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .slide {
+        width: 80%;
+        min-height: 200px;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        transform-origin: center;
+        transition: var(--transition);
+      }
+
+      .slide.active {
+        transform: scale(1.05) rotateX(0deg);
+      }
+
+      /* Contact */
+      .contact {
+        padding: var(--spacing);
+        background: var(--primary);
+        color: white;
+        text-align: center;
+      }
+
+      .contact input,
+      .contact textarea {
+        width: 100%;
+        padding: 1rem;
+        margin: 1rem 0;
+        border: 1px solid white;
+        border-radius: 8px;
+        transition: var(--transition);
+      }
+
+      .contact input:focus,
+      .contact textarea:focus {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .contact button {
+        background: var(--secondary);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 30px;
+        transition: var(--transition);
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+      }
+
+      /* Responsive */
+      @media (max-width: var(--breakpoint)) {
+        .nav-links {
+          flex-direction: column;
+          row-gap: 1rem;
+          position: fixed;
+          top: 0;
+          right: -100%;
+          background: white;
+          width: 100%;
+          transition: var(--transition);
+        }
+
+        .nav-links.active {
+          right: 0;
+        }
+
+        .nav-toggle {
+          display: block;
+        }
+
+        .apartment-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Keyframes */
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav-container">
+        <a href="#home" class="logo">LuxeRent</a>
+        <button class="nav-toggle">&#9776;</button>
+        <nav class="nav-links">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#apartments" class="nav-link">Apartments</a>
+          <a href="#testimonials" class="nav-link">Testimonials</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section id="home" class="hero container">
+        <h1>Find Your Dream Apartment</h1>
+        <a href="#apartments" class="btn">Explore Now</a>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="features container">
+        <h2>Our Features</h2>
+        <div class="feature-card">
+          <i class="fas fa-swimming-pool"></i>
+          <h3>Full Facilities</h3>
+          <p>Pool, gym, and BBQ area</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-lock"></i>
+          <h3>Professional Management</h3>
+          <p>24/7 security & maintenance</p>
+        </div>
+      </section>
+
+      <!-- Apartments -->
+      <section id="apartments" class="apartment-grid container">
+        <article class="apartment-card">
+          <img src="https://picsum.photos/300/200" alt="Apartment 1" />
+          <div class="card-content">
+            <h3>Deluxe Studio</h3>
+            <p>$1,200/month</p>
+          </div>
+        </article>
+        <!-- Duplicate for more apartments -->
+      </section>
+
+      <!-- Testimonials -->
+      <section id="testimonials" class="testimonials container">
+        <div class="testimonial-slider">
+          <article class="slide active">
+            <p>"Great location and amenities!"</p>
+            <cite>- John Doe</cite>
+          </article>
+          <article class="slide">
+            <p>"Comfortable living experience"</p>
+            <cite>- Jane Smith</cite>
+          </article>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="contact container">
+        <h2>Contact Us</h2>
+        <form>
+          <input type="text" placeholder="Name" required />
+          <input type="email" placeholder="Email" required />
+          <textarea placeholder="Message"></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 LuxeRent. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Mobile Nav Toggle
+      const navToggle = document.querySelector(".nav-toggle");
+      const navLinks = document.querySelector(".nav-links");
+      navToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+      });
+
+      // Testimonial Slider
+      let slideIndex = 0;
+      const slides = document.querySelectorAll(".slide");
+      const totalSlides = slides.length;
+
+      function showSlide() {
+        slides.forEach((slide) => slide.classList.remove("active"));
+        slides[slideIndex].classList.add("active");
+        slideIndex = (slideIndex + 1) % totalSlides;
+      }
+      setInterval(showSlide, 5000);
+
+      // Smooth Scroll
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Header Blur Effect
+      window.addEventListener("scroll", () => {
+        const header = document.querySelector("header");
+        header.style.backdropFilter = `blur(${window.scrollY / 8}px)`;
+      });
+    </script>
+  </body>
+</html>

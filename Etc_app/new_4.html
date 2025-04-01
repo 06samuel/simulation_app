@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxeRent | Premium Apartment Rentals</title>
+    <style>
+      /* SaaS Theme Variables */
+      :root {
+        /* Color System */
+        --primary-500: #2c3e50;
+        --secondary-500: #e74c3c;
+        --accent-500: #3498db;
+        --success-500: #2ecc71;
+        --text-900: #2c3e50;
+        --text-100: #f8f9fa;
+        --bg-light: #ecf0f1;
+        --bg-dark: #2c3e50;
+        --bg-white: #ffffff;
+
+        /* Interaction System */
+        --ease-elastic: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 1.2s;
+        --transition-medium: 0.6s;
+        --transition-fast: 0.3s;
+
+        /* Layout System */
+        --radius-lg: 1.6rem;
+        --radius-md: 0.8rem;
+        --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        /* 3D Perspective */
+        --perspective: 1200px;
+        --sidebar-width: 28rem;
+        --sidebar-mini-width: 8rem;
+      }
+
+      /* Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui;
+        background: var(--bg-light);
+        color: var(--text-900);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      /* App Layout */
+      .app-container {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1fr;
+        min-height: 100vh;
+        transition: grid-template-columns var(--transition-medium)
+          var(--ease-smooth);
+      }
+
+      .app-container.sidebar-mini {
+        grid-template-columns: var(--sidebar-mini-width) 1fr;
+      }
+
+      /* Enhanced Sidebar */
+      .sidebar {
+        background: var(--bg-white);
+        height: 100vh;
+        position: fixed;
+        width: var(--sidebar-width);
+        transition: all var(--transition-medium) var(--ease-smooth);
+        box-shadow: var(--shadow-md);
+        z-index: 100;
+        overflow-x: hidden;
+      }
+
+      .sidebar-mini .sidebar {
+        width: var(--sidebar-mini-width);
+      }
+
+      .nav__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .nav__logo {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-500);
+        transition: opacity var(--transition-fast) var(--ease-smooth);
+      }
+
+      .sidebar-mini .nav__logo {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      .sidebar-toggle {
+        background: transparent;
+        border: none;
+        color: var(--primary-500);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: transform var(--transition-medium) var(--ease-elastic);
+      }
+
+      .sidebar-mini .sidebar-toggle {
+        transform: rotate(180deg);
+      }
+
+      /* Navigation Menu */
+      .nav__menu {
+        padding: 2rem 1rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        color: var(--text-900);
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+        transition: all var(--transition-fast) var(--ease-smooth);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0.3rem;
+        background: var(--accent-500);
+        transform: translateX(-100%);
+        transition: transform var(--transition-fast) var(--ease-smooth);
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        background: rgba(52, 152, 219, 0.1);
+        transform: translateX(0.5rem);
+      }
+
+      .nav-link:hover:before,
+      .nav-link.active:before {
+        transform: translateX(0);
+      }
+
+      .nav-link__icon {
+        margin-right: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .nav-link__text {
+        transition: opacity var(--transition-fast) var(--ease-smooth);
+      }
+
+      .sidebar-mini .nav-link__text {
+        opacity: 0;
+        width: 0;
+        overflow: hidden;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        padding: 2rem;
+        margin-left: var(--sidebar-width);
+        transition: margin-left var(--transition-medium) var(--ease-smooth);
+      }
+
+      .sidebar-mini .main-content {
+        margin-left: var(--sidebar-mini-width);
+      }
+
+      /* Hero Section */
+      .hero-section {
+        height: 60vh;
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        margin-bottom: 3rem;
+      }
+
+      .hero-bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(5px);
+        transform: scale(1.1);
+        transition: all var(--transition-slow) var(--ease-smooth);
+      }
+
+      .hero-section:hover .hero-bg {
+        filter: blur(0);
+        transform: scale(1);
+      }
+
+      .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: var(--text-100);
+        z-index: 1;
+        width: 80%;
+        max-width: 800px;
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        opacity: 0;
+        animation: fadeIn 1s var(--ease-smooth) forwards 0.5s;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        transform: translateY(30px);
+        opacity: 0;
+        animation: slideUp 1s var(--ease-elastic) forwards 0.8s;
+      }
+
+      .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 1s var(--ease-elastic) forwards 1s;
+      }
+
+      /* Property Cards */
+      .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .property-card {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: all var(--transition-medium) var(--ease-smooth);
+        transform-style: preserve-3d;
+        perspective: var(--perspective);
+      }
+
+      .property-card:hover {
+        transform: translateY(-10px) rotateX(5deg);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .property-image {
+        height: 200px;
+        width: 100%;
+        object-fit: cover;
+        transition: all var(--transition-medium) var(--ease-smooth);
+        filter: saturate(0.8) brightness(0.9);
+      }
+
+      .property-card:hover .property-image {
+        transform: scale(1.05);
+        filter: saturate(1.2) brightness(1.1);
+      }
+
+      .property-details {
+        padding: 1.5rem;
+      }
+
+      .property-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-500);
+      }
+
+      .property-location {
+        color: var(--text-900);
+        opacity: 0.7;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .property-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--accent-500);
+      }
+
+      .property-features {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .feature {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all var(--transition-medium) var(--ease-smooth);
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background: var(--bg-white);
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: translateY(50px) scale(0.95);
+        transition: all var(--transition-medium) var(--ease-elastic);
+      }
+
+      .modal-overlay.active .modal-content {
+        transform: translateY(0) scale(1);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes rotate3d {
+        from {
+          transform: rotate3d(1, 0, 0, 15deg);
+        }
+        to {
+          transform: rotate3d(0, 0, 0, 0deg);
+        }
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 992px) {
+        :root {
+          --sidebar-width: 22rem;
+        }
+
+        .hero-title {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .app-container {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          z-index: 1000;
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+          padding: 1rem;
+        }
+
+        .mobile-toggle {
+          display: block;
+        }
+
+        .hero-section {
+          height: 50vh;
+        }
+
+        .hero-title {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container" id="app">
+      <aside class="sidebar" id="sidebar">
+        <nav aria-label="Main navigation">
+          <div class="nav__header">
+            <h2 class="nav__logo">LuxeRent</h2>
+            <button class="sidebar-toggle" aria-label="Toggle sidebar">
+              ◀
+            </button>
+          </div>
+          <ul class="nav__menu" role="list">
+            <li>
+              <a href="#home" class="nav-link active">
+                <span class="nav-link__icon">🏠</span>
+                <span class="nav-link__text">Home</span>
+              </a>
+            </li>
+            <li>
+              <a href="#properties" class="nav-link">
+                <span class="nav-link__icon">🏢</span>
+                <span class="nav-link__text">Properties</span>
+              </a>
+            </li>
+            <li>
+              <a href="#featured" class="nav-link">
+                <span class="nav-link__icon">⭐</span>
+                <span class="nav-link__text">Featured</span>
+              </a>
+            </li>
+            <li>
+              <a href="#about" class="nav-link">
+                <span class="nav-link__icon">ℹ️</span>
+                <span class="nav-link__text">About Us</span>
+              </a>
+            </li>
+            <li>
+              <a href="#contact" class="nav-link">
+                <span class="nav-link__icon">📞</span>
+                <span class="nav-link__text">Contact</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="main-header">
+          <button class="mobile-toggle" aria-label="Open menu">☰</button>
+          <div class="search-container">
+            <input
+              type="text"
+              placeholder="Search for apartments..."
+              class="search-input" />
+          </div>
+        </header>
+
+        <section class="hero-section" id="home">
+          <img
+            src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+            alt="Luxury Apartment"
+            class="hero-bg" />
+          <div class="hero-content">
+            <h1 class="hero-title">Find Your Dream Apartment</h1>
+            <p class="hero-subtitle">
+              Luxury living spaces with premium amenities
+            </p>
+            <button class="cta-button">Explore Properties</button>
+          </div>
+        </section>
+
+        <section id="properties">
+          <h2 class="section-title">Featured Properties</h2>
+          <div class="property-grid">
+            <!-- Property cards will be generated by JavaScript -->
+          </div>
+        </section>
+      </main>
+
+      <div class="modal-overlay" id="propertyModal">
+        <div class="modal-content">
+          <!-- Property details modal content -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      class LuxeRentApp {
+        constructor() {
+          this.app = document.getElementById("app");
+          this.sidebar = document.getElementById("sidebar");
+          this.propertyGrid = document.querySelector(".property-grid");
+          this.modal = document.getElementById("propertyModal");
+
+          this.properties = [
+            {
+              id: 1,
+              title: "Modern Downtown Loft",
+              location: "Downtown, City Center",
+              price: "$2,500/month",
+              image:
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+              beds: 2,
+              baths: 2,
+              area: "1,200 sqft",
+            },
+            {
+              id: 2,
+              title: "Luxury Penthouse Suite",
+              location: "Riverside, East End",
+              price: "$4,200/month",
+              image:
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+              beds: 3,
+              baths: 3,
+              area: "2,100 sqft",
+            },
+            {
+              id: 3,
+              title: "Cozy Studio Apartment",
+              location: "University District",
+              price: "$1,100/month",
+              image:
+                "https://images.unsplash.com/photo-1554995207-c18c203602cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+              beds: 1,
+              baths: 1,
+              area: "650 sqft",
+            },
+          ];
+
+          this.init();
+        }
+
+        init() {
+          this.renderProperties();
+          this.initEventListeners();
+          this.initScrollAnimations();
+        }
+
+        renderProperties() {
+          this.propertyGrid.innerHTML = this.properties
+            .map(
+              (property) => `
+            <article class="property-card" data-id="${property.id}">
+              <img src="${property.image}" alt="${property.title}" class="property-image">
+              <div class="property-details">
+                <h3 class="property-title">${property.title}</h3>
+                <p class="property-location">📍 ${property.location}</p>
+                <p class="property-price">${property.price}</p>
+                <div class="property-features">
+                  <span class="feature">🛏️ ${property.beds} Beds</span>
+                  <span class="feature">🚿 ${property.baths} Baths</span>
+                  <span class="feature">📏 ${property.area}</span>
+                </div>
+              </div>
+            </article>
+          `
+            )
+            .join("");
+        }
+
+        initEventListeners() {
+          // Sidebar toggle
+          document
+            .querySelector(".sidebar-toggle")
+            .addEventListener("click", () => {
+              this.app.classList.toggle("sidebar-mini");
+            });
+
+          // Mobile menu toggle
+          document
+            .querySelector(".mobile-toggle")
+            .addEventListener("click", () => {
+              this.sidebar.classList.add("active");
+            });
+
+          // Close sidebar when clicking outside on mobile
+          document.addEventListener("click", (e) => {
+            if (
+              window.innerWidth <= 768 &&
+              !e.target.closest(".sidebar") &&
+              !e.target.closest(".mobile-toggle") &&
+              this.sidebar.classList.contains("active")
+            ) {
+              this.sidebar.classList.remove("active");
+            }
+          });
+
+          // Navigation links
+          document.querySelectorAll(".nav-link").forEach((link) => {
+            link.addEventListener("click", (e) => {
+              // Set active link
+              document
+                .querySelectorAll(".nav-link")
+                .forEach((l) => l.classList.remove("active"));
+              link.classList.add("active");
+
+              // Close sidebar on mobile
+              if (window.innerWidth <= 768) {
+                this.sidebar.classList.remove("active");
+              }
+            });
+          });
+
+          // Property card click
+          document.querySelectorAll(".property-card").forEach((card) => {
+            card.addEventListener("click", () => {
+              const propertyId = card.dataset.id;
+              this.openPropertyModal(propertyId);
+            });
+          });
+
+          // Close modal
+          this.modal.addEventListener("click", (e) => {
+            if (e.target === this.modal) {
+              this.closePropertyModal();
+            }
+          });
+        }
+
+        initScrollAnimations() {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.style.opacity = "1";
+                  entry.target.style.transform =
+                    "translateY(0) rotate3d(0,0,0,0)";
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.1 }
+          );
+
+          document.querySelectorAll(".property-card").forEach((card, index) => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(50px) rotate3d(1,0,0,10deg)";
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+          });
+        }
+
+        openPropertyModal(propertyId) {
+          const property = this.properties.find((p) => p.id == propertyId);
+          if (!property) return;
+
+          this.modal.querySelector(".modal-content").innerHTML = `
+            <div class="modal-header">
+              <h2>${property.title}</h2>
+              <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+              <img src="${property.image}" alt="${property.title}" class="modal-image">
+              <div class="modal-details">
+                <p class="property-location">📍 ${property.location}</p>
+                <p class="property-price">${property.price}</p>
+                <div class="property-features">
+                  <span class="feature">🛏️ ${property.beds} Beds</span>
+                  <span class="feature">🚿 ${property.baths} Baths</span>
+                  <span class="feature">📏 ${property.area}</span>
+                </div>
+                <p class="property-description">
+                  This beautiful apartment features modern amenities, spacious rooms, and a prime location.
+                  Enjoy luxury living with access to a fitness center, rooftop pool, and 24/7 concierge service.
+                </p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-primary">Schedule Viewing</button>
+              <button class="btn-secondary">Contact Agent</button>
+            </div>
+          `;
+
+          this.modal.classList.add("active");
+
+          // Close button event
+          this.modal
+            .querySelector(".modal-close")
+            .addEventListener("click", () => {
+              this.closePropertyModal();
+            });
+        }
+
+        closePropertyModal() {
+          this.modal.classList.remove("active");
+        }
+      }
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", () => {
+        new LuxeRentApp();
+      });
+    </script>
+  </body>
+</html>

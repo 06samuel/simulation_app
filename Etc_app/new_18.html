@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LuxStay Admin Panel - Manage properties, tenants, and analytics with ease." />
+    <title>LuxStay Admin | Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* CSS Variables */
+      :root {
+        --primary: #3a86ff;
+        --secondary: #ff006e;
+        --success: #38b000;
+        --warning: #ffbe0b;
+        --danger: #d90429;
+        --dark: #1d3557;
+        --light: #f8f9fa;
+        --text: #2b2d42;
+        --muted: #6c757d;
+        --bg: #f8f9fa;
+        --card-bg: #ffffff;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --transition: all 0.3s ease;
+        --font-family: "Poppins", sans-serif;
+      }
+
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background: var(--bg);
+        color: var(--text);
+        display: flex;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 260px;
+        background: var(--dark);
+        color: var(--light);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transition: var(--transition);
+        z-index: 1000;
+        backdrop-filter: blur(15px);
+      }
+
+      .sidebar.collapsed {
+        width: 72px;
+      }
+
+      .sidebar-header {
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        transition: var(--transition);
+      }
+
+      .logo span:last-child {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .logo span:last-child {
+        opacity: 0;
+      }
+
+      .toggle-btn {
+        background: none;
+        border: none;
+        color: var(--light);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+
+      .menu {
+        padding: 24px 0;
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 24px;
+        color: rgba(255, 255, 255, 0.7);
+        transition: var(--transition);
+        gap: 12px;
+      }
+
+      .menu-item:hover,
+      .menu-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--light);
+      }
+
+      /* Main Content */
+      .main-content {
+        margin-left: 260px;
+        padding: 48px;
+        width: calc(100% - 260px);
+        transition: var(--transition);
+      }
+
+      .main-content.collapsed {
+        margin-left: 72px;
+        width: calc(100% - 72px);
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        transition: var(--transition);
+        margin-bottom: 24px;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Stats */
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        display: grid;
+        place-items: center;
+        border-radius: var(--radius);
+        font-size: 1.5rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      /* Charts */
+      .chart-container {
+        height: 300px;
+        margin-top: 24px;
+      }
+
+      /* Tables */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .table th,
+      .table td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .table th {
+        background: rgba(0, 0, 0, 0.02);
+        font-weight: 600;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 10px 24px;
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #2a75e6;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 72px;
+        }
+
+        .main-content {
+          margin-left: 72px;
+          width: calc(100% - 72px);
+        }
+
+        .sidebar.collapsed {
+          width: 0;
+        }
+
+        .main-content.collapsed {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .header h1 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span>🏨</span>
+          <span>LuxStay</span>
+        </div>
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+      </div>
+      <nav class="menu">
+        <a href="#dashboard" class="menu-item active">📊 Dashboard</a>
+        <a href="#apartments" class="menu-item">🏠 Apartments</a>
+        <a href="#tenants" class="menu-item">👥 Tenants</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="header">
+        <h1>Admin Dashboard</h1>
+        <div class="user-profile">
+          <img
+            src="https://picsum.photos/40"
+            class="user-avatar"
+            alt="User Avatar" />
+          <div>
+            <h5>John Doe</h5>
+            <small>Property Manager</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="fade-in">
+        <div class="card">
+          <div class="stat">
+            <div class="stat-icon" style="background: var(--primary)">🏢</div>
+            <div>
+              <p>Total Apartments</p>
+              <p class="stat-value">48</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <canvas id="occupancyChart" class="chart-container"></canvas>
+        </div>
+
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tenant</th>
+                <th>Apartment</th>
+                <th>Payment</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jane Doe</td>
+                <td>Apt 101</td>
+                <td>$1,200</td>
+                <td><span style="color: var(--success)">Paid</span></td>
+              </tr>
+              <tr>
+                <td>Mark Smith</td>
+                <td>Apt 202</td>
+                <td>$1,500</td>
+                <td><span style="color: var(--danger)">Due</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      // Sidebar Toggle
+      function toggleSidebar() {
+        document.querySelector(".sidebar").classList.toggle("collapsed");
+        document.querySelector(".main-content").classList.toggle("collapsed");
+      }
+
+      // Chart.js Initialization
+      const ctx = document.getElementById("occupancyChart").getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Occupied", "Vacant"],
+          datasets: [
+            {
+              data: [85, 15],
+              backgroundColor: ["#3a86ff", "#ff006e"],
+            },
+          ],
+        },
+      });
+
+      // Intersection Observer for Animations
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".card").forEach((card) => {
+        observer.observe(card);
+      });
+    </script>
+  </body>
+</html>

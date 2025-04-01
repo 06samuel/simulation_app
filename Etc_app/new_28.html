@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Property Management Dashboard</title>
+    <style>
+      :root {
+        --primary-dark: #1a1a1a;
+        --secondary-dark: #2d2d2d;
+        --primary-light: #ffffff;
+        --secondary-light: #f5f5f5;
+        --accent-green: #4caf50;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --spacing-md: 1rem;
+        --sidebar-width: 250px;
+        --navbar-height: 60px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--secondary-light);
+        color: var(--text-primary);
+      }
+
+      .dashboard-container {
+        display: grid;
+        grid-template-areas: "navbar navbar" "sidebar main";
+        grid-template-columns: var(--sidebar-width) 1fr;
+        grid-template-rows: var(--navbar-height) 1fr;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        grid-area: navbar;
+        background-color: var(--primary-light);
+        padding: var(--spacing-md);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
+
+      .navbar-search {
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-search input {
+        padding: var(--spacing-md);
+        border: 1px solid var(--secondary-dark);
+        border-radius: 4px;
+        margin-right: var(--spacing-md);
+      }
+
+      .navbar-search select {
+        padding: var(--spacing-md);
+        border: 1px solid var(--secondary-dark);
+        border-radius: 4px;
+        margin-right: var(--spacing-md);
+      }
+
+      .sidebar {
+        grid-area: sidebar;
+        background-color: var(--primary-dark);
+        color: var(--primary-light);
+        padding: var(--spacing-md);
+        position: fixed;
+        height: calc(100vh - var(--navbar-height));
+        width: var(--sidebar-width);
+        top: var(--navbar-height);
+        overflow-y: auto;
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .sidebar-nav-item {
+        padding: var(--spacing-md);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .sidebar-nav-item:hover {
+        background-color: var(--secondary-dark);
+      }
+
+      .main-content {
+        grid-area: main;
+        margin-top: var(--navbar-height);
+        margin-left: var(--sidebar-width);
+        padding: var(--spacing-md);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-md);
+      }
+
+      .stat-card {
+        background-color: var(--primary-light);
+        padding: var(--spacing-md);
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .analytics-section {
+        margin-top: var(--spacing-md);
+      }
+
+      .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .property-card {
+        background-color: var(--primary-light);
+        padding: var(--spacing-md);
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      footer {
+        text-align: center;
+        padding: var(--spacing-md);
+        background-color: var(--primary-light);
+      }
+    </style>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Navbar -->
+      <nav class="navbar">
+        <div class="navbar-brand">
+          <img src="logo.png" alt="Logo" />
+          <span>Property Management</span>
+        </div>
+        <div class="navbar-search">
+          <input
+            type="text"
+            id="property-search"
+            placeholder="Search properties..." />
+          <select id="price-range">
+            <option value="">All Prices</option>
+            <option value="0-1000">$0 - $1,000</option>
+            <option value="1000-2000">$1,000 - $2,000</option>
+            <option value="2000-3000">$2,000 - $3,000</option>
+          </select>
+          <button id="search-button">Search</button>
+        </div>
+        <div class="navbar-actions">
+          <i class="fas fa-bell"></i>
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </nav>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <div class="sidebar-nav-item active">Dashboard</div>
+          <div class="sidebar-nav-item">Properties</div>
+          <div class="sidebar-nav-item">Tenants</div>
+          <div class="sidebar-nav-item">Payments</div>
+          <div class="sidebar-nav-item">Settings</div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <h1>Dashboard Overview</h1>
+        <section class="overview-section">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <h3>Total Properties</h3>
+              <div class="stat-value" id="total-properties">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Active Tenants</h3>
+              <div class="stat-value" id="active-tenants">0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Monthly Revenue</h3>
+              <div class="stat-value" id="monthly-revenue">$0</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="analytics-section">
+          <h2>Revenue Trends</h2>
+          <canvas id="revenueChart" height="300"></canvas>
+        </section>
+
+        <section class="properties-section">
+          <h2>Property Overview</h2>
+          <div class="properties-grid" id="properties-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <footer>&copy; 2023 Property Management. All rights reserved.</footer>
+
+    <script>
+      class DashboardController {
+        constructor() {
+          this.properties = [
+            { name: "Sunset Apartments", price: 2500, id: 1 },
+            { name: "Ocean View Condo", price: 3000, id: 2 },
+            { name: "Downtown Loft", price: 1800, id: 3 },
+            { name: "Suburban House", price: 2200, id: 4 },
+          ];
+          this.init();
+        }
+
+        init() {
+          this.updateStats();
+          this.displayProperties(this.properties);
+          this.setupEventListeners();
+          this.setupChart();
+        }
+
+        updateStats() {
+          document.getElementById("total-properties").textContent =
+            this.properties.length;
+          document.getElementById("active-tenants").textContent = "10"; // Example value
+          document.getElementById("monthly-revenue").textContent = "$25,000"; // Example value
+        }
+
+        displayProperties(filteredProperties) {
+          const propertiesGrid = document.getElementById("properties-grid");
+          propertiesGrid.innerHTML = "";
+          filteredProperties.forEach((property) => {
+            const propertyCard = document.createElement("div");
+            propertyCard.className = "property-card";
+            propertyCard.innerHTML = `
+                <h3>${property.name}</h3>
+                <p>Price: $${property.price}/mo</p>
+                <button class="btn-outline">View Details</button>
+            `;
+            propertiesGrid.appendChild(propertyCard);
+          });
+        }
+
+        setupEventListeners() {
+          document
+            .getElementById("search-button")
+            .addEventListener("click", () => {
+              const searchTerm = document
+                .getElementById("property-search")
+                .value.toLowerCase();
+              const priceRange = document.getElementById("price-range").value;
+              const filteredProperties = this.properties.filter((property) => {
+                const matchesSearch = property.name
+                  .toLowerCase()
+                  .includes(searchTerm);
+                const matchesPrice = priceRange
+                  ? this.checkPriceRange(property.price, priceRange)
+                  : true;
+                return matchesSearch && matchesPrice;
+              });
+              this.displayProperties(filteredProperties);
+            });
+        }
+
+        checkPriceRange(price, range) {
+          const [min, max] = range.split("-").map(Number);
+          return price >= min && price <= max;
+        }
+
+        setupChart() {
+          const ctx = document.getElementById("revenueChart").getContext("2d");
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["January", "February", "March", "April", "May", "June"],
+              datasets: [
+                {
+                  label: "Monthly Revenue",
+                  data: [20000, 25000, 30000, 22000, 27000, 25000],
+                  borderColor: "#4CAF50",
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new DashboardController();
+      });
+    </script>
+  </body>
+</html>
