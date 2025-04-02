@@ -5,126 +5,662 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="LuxStay Admin Dashboard for managing properties, tenants, and financials." />
-    <title>LuxStay Admin | Dashboard</title>
+      content="Modern LuxStay Admin Dashboard with elegant design and smooth interactions" />
+    <title>LuxStay Admin | Modern Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      /* CSS Variables - Theme Management */
       :root {
-        --primary-color: #3a86ff;
-        --secondary-color: #ff006e;
-        --success-color: #38b000;
-        --warning-color: #ffbe0b;
-        --danger-color: #d90429;
-        --dark-color: #1d3557;
-        --text-color: #2b2d42;
-        --text-muted: #6c757d;
-        --light-text: #f8f9fa;
-        --background-color: #f8f9fa;
-        --sidebar-bg: #1d3557;
-        --card-bg: #ffffff;
-        --border-color: #e9ecef;
-        --animation-duration: 0.4s;
-        --animation-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        --border-radius: 10px;
-        --font-family: "Segoe UI", system-ui, sans-serif;
+        /* Modern Color Palette */
+        --primary: #6366f1;
+        --primary-light: #818cf8;
+        --secondary: #ec4899;
+        --success: #22c55e;
+        --warning: #eab308;
+        --danger: #ef4444;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-800: #1e293b;
+
+        /* Animations */
+        --transition-slow: 0.6s;
+        --transition-medium: 0.4s;
+        --transition-fast: 0.2s;
+        --cubic: cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Layout */
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 2rem;
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 1rem;
+
+        /* Shadows */
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
 
-      /* Reset and Base Styles */
-      * {
+      /* Modern Reset */
+      *,
+      *::before,
+      *::after {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
       }
 
       html {
-        scroll-behavior: smooth;
         font-size: 16px;
+        scroll-behavior: smooth;
       }
 
       body {
-        font-family: var(--font-family);
-        background-color: var(--background-color);
-        color: var(--text-color);
-        line-height: 1.6;
-        display: flex;
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--light);
+        color: var(--gray-800);
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      /* Modern Layout System */
+      .app-container {
+        display: grid;
+        grid-template-columns: auto 1fr;
         min-height: 100vh;
       }
 
-      /* Sidebar Navigation */
+      /* Enhanced Sidebar */
       .sidebar {
-        width: 250px;
-        background-color: var(--sidebar-bg);
-        color: var(--light-text);
-        height: 100vh;
+        width: 280px;
+        background: var(--dark);
+        padding: var(--spacing-lg);
+        transition: transform var(--transition-medium) var(--cubic);
         position: fixed;
-        transition: transform var(--animation-duration) var(--animation-easing);
-        z-index: 1000;
+        height: 100vh;
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
 
-      .sidebar-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .nav-menu {
-        padding: 1rem 0;
+      .sidebar-brand {
+        font-size: 1.5rem;
+        color: var(--light);
+        margin-bottom: var(--spacing-lg);
+        opacity: 0;
+        animation: slideInLeft 0.6s var(--cubic) forwards;
       }
 
       .nav-item {
-        padding: 1rem 1.5rem;
-        transition: background-color var(--animation-duration) ease;
+        padding: var(--spacing-md);
+        margin: var(--spacing-sm) 0;
+        border-radius: var(--radius-md);
+        color: var(--gray-200);
+        transition: all var(--transition-medium) var(--cubic);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(var(--spacing-sm));
       }
 
       .nav-item.active {
-        background-color: rgba(255, 255, 255, 0.1);
+        background: var(--primary);
+        color: var(--light);
+        box-shadow: var(--shadow-md);
       }
 
       /* Main Content Area */
       .main-content {
-        flex: 1;
-        margin-left: 250px;
-        padding: 2rem;
-        transition: margin-left var(--animation-duration) ease;
+        margin-left: 280px;
+        padding: var(--spacing-lg);
+        transition: all var(--transition-medium) var(--cubic);
       }
 
-      /* Dashboard Grid System */
-      .grid {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      }
-
-      /* Data Visualization Cards */
+      /* Modern Card Design */
       .card {
-        background: var(--card-bg);
-        border-radius: var(--border-radius);
-        padding: 1.5rem;
-        box-shadow: var(--shadow);
-        transition: transform var(--animation-duration) ease;
+        background: white;
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-lg);
+        box-shadow: var(--shadow-md);
+        transition: all var(--transition-medium) var(--cubic);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .card h3 {
+        color: var(--gray-800);
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .card-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .card-content .number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .card-content .label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .chart-card {
+        min-height: 300px;
+      }
+
+      .table-card {
+        overflow: auto;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.1)
+        );
+        transition: transform var(--transition-medium) var(--cubic);
       }
 
       .card:hover {
-        transform: translateY(-5px) rotateX(5deg) scale(1.02);
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--shadow-lg);
       }
 
-      /* Interactive Elements */
-      .btn {
-        padding: 0.75rem 1.5rem;
-        border-radius: var(--border-radius);
-        transition: all var(--animation-duration) ease;
-        cursor: pointer;
-        border: none;
+      .card:hover::before {
+        transform: translateX(100%);
       }
 
-      .btn-primary {
-        background-color: var(--primary-color);
+      /* Grid System */
+      .grid {
+        display: grid;
+        gap: var(--spacing-lg);
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        margin: var(--spacing-lg) 0;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .grid.animate-fade {
+        animation: fadeIn 0.8s var(--cubic) forwards;
+      }
+
+      /* Table Styles */
+      .table-responsive {
+        overflow-x: auto;
+        margin: 0 -var(--spacing-lg);
+        padding: 0 var(--spacing-lg);
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      .table th,
+      .table td {
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      .table th {
+        font-weight: 600;
+        color: var(--gray-800);
+        background: var(--gray-100);
+      }
+
+      .table tr:hover {
+        background: var(--gray-100);
+      }
+
+      .badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .badge.success {
+        background: var(--success);
         color: white;
       }
 
-      /* Advanced Animations */
+      .badge.warning {
+        background: var(--warning);
+        color: white;
+      }
+
+      /* Header Styles */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-800);
+      }
+
+      /* Form Styles */
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .form-group label {
+        font-weight: 500;
+        color: var(--gray-800);
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: var(--spacing-md);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        transition: all var(--transition-fast) var(--cubic);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+      }
+
+      .btn-secondary {
+        background: var(--gray-200);
+        color: var(--gray-800);
+      }
+
+      .btn-secondary:hover {
+        background: var(--gray-300);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Modern Button Styles */
+      .btn {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--radius-md);
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-medium) var(--cubic);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="sidebar-brand">LuxStay Admin</div>
+        <nav class="nav-list">
+          <div class="nav-item active">
+            <i class="nav-icon">📊</i>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">🏠</i>
+            <span>Properties</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">👥</i>
+            <span>Tenants</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">💰</i>
+            <span>Payments</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">⚙️</i>
+            <span>Settings</span>
+          </div>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="header animate-fade">
+          <h1>Dashboard Overview</h1>
+          <div class="header-actions">
+            <button class="btn btn-primary">New Property</button>
+          </div>
+        </header>
+
+        <div class="grid animate-fade">
+          <div class="card">
+            <h3>Total Properties</h3>
+            <div class="card-content">
+              <span class="number">128</span>
+              <span class="label">Active Listings</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Active Tenants</h3>
+            <div class="card-content">
+              <span class="number">96</span>
+              <span class="label">Current Occupancy</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Monthly Revenue</h3>
+            <div class="card-content">
+              <span class="number">$52,480</span>
+              <span class="label">This Month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid animate-fade">
+          <div class="card chart-card">
+            <h3>Occupancy Trends</h3>
+            <canvas id="occupancyChart"></canvas>
+          </div>
+          <div class="card chart-card">
+            <h3>Revenue Analysis</h3>
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+
+        <div class="grid animate-fade">
+          <div class="card table-card">
+            <h3>Recent Activities</h3>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Tenant</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Luxury Villa #A128</td>
+                    <td>John Doe</td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>2024-01-15</td>
+                  </tr>
+                  <tr>
+                    <td>Urban Loft #B256</td>
+                    <td>Jane Smith</td>
+                    <td><span class="badge warning">Pending</span></td>
+                    <td>2024-01-14</td>
+                  </tr>
+                  <tr>
+                    <td>Seaside Condo #C384</td>
+                    <td>Robert Johnson</td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>2024-01-13</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-content">
+          <h2>Add New Property</h2>
+          <form id="propertyForm" class="form">
+            <div class="form-group">
+              <label for="propertyName">Property Name</label>
+              <input type="text" id="propertyName" required>
+            </div>
+            <div class="form-group">
+              <label for="propertyType">Property Type</label>
+              <select id="propertyType" required>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+                <option value="villa">Villa</option>
+                <option value="condo">Condo</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelModal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Add Property</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // DOM Elements
+      const sidebar = document.querySelector('.sidebar');
+      const modalBackdrop = document.querySelector('.modal-backdrop');
+      const newPropertyBtn = document.querySelector('.btn-primary');
+      const cancelModalBtn = document.querySelector('#cancelModal');
+      const propertyForm = document.querySelector('#propertyForm');
+
+      // Modal Interactions
+      newPropertyBtn.addEventListener('click', () => {
+        modalBackdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+
+      cancelModalBtn.addEventListener('click', () => {
+        modalBackdrop.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) {
+          modalBackdrop.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        }
+      });
+
+      // Form Submission
+      propertyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Add your form submission logic here
+        modalBackdrop.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+
+      // Mobile Menu Toggle
+      let isSidebarActive = false;
+      document.addEventListener('click', (e) => {
+        const isClickInside = sidebar.contains(e.target);
+        if (!isClickInside && isSidebarActive && window.innerWidth <= 768) {
+          sidebar.classList.remove('active');
+          isSidebarActive = false;
+        }
+      });
+
+      // Charts
+      const occupancyCtx = document.getElementById('occupancyChart').getContext('2d');
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+
+      // Occupancy Chart
+      new Chart(occupancyCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Occupancy Rate',
+            data: [75, 82, 78, 85, 80, 88],
+            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim(),
+            tension: 0.4,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Revenue Chart
+      new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Revenue',
+            data: [45000, 48000, 42000, 49000, 47000, 52000],
+            backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--primary-light').trim(),
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Intersection Observer for animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.grid').forEach(grid => {
+        observer.observe(grid);
+      });
+    </script>
+  </body>
+</html>
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+      }
+
+      .btn-secondary {
+        background: var(--gray-200);
+        color: var(--gray-800);
+      }
+
+      .btn-secondary:hover {
+        background: var(--gray-300);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Modern Button Styles */
+      .btn {
+        padding: var(--spacing-md) var(--spacing-lg);
+        border-radius: var(--radius-md);
+        border: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-medium) var(--cubic);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Modern Animations */
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -136,14 +672,69 @@
         }
       }
 
-      .animate {
-        animation: fadeIn 0.6s var(--animation-easing) forwards;
+      .animate-fade {
+        opacity: 0;
+        animation: fadeIn 0.8s var(--cubic) forwards;
+      }
+
+      /* Enhanced Modal System */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        display: none;
+        place-items: center;
+        z-index: 1000;
+      }
+
+      .modal-backdrop.active {
+        display: grid;
+        animation: fadeIn 0.3s var(--cubic);
+      }
+
+      .modal {
+        background: white;
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 500px;
+        transform: scale(0.9);
+        opacity: 0;
+        transition: all var(--transition-medium) var(--cubic);
+      }
+
+      .modal-backdrop.active .modal {
+        transform: scale(1);
+        opacity: 1;
       }
 
       /* Responsive Design */
+      @media (max-width: 1024px) {
+        .sidebar {
+          width: 80px;
+        }
+
+        .main-content {
+          margin-left: 80px;
+        }
+
+        .sidebar-brand,
+        .nav-item span {
+          display: none;
+        }
+      }
+
       @media (max-width: 768px) {
+        .app-container {
+          grid-template-columns: 1fr;
+        }
+
         .sidebar {
           transform: translateX(-100%);
+          z-index: 100;
         }
 
         .sidebar.active {
@@ -153,237 +744,153 @@
         .main-content {
           margin-left: 0;
         }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <h2>LuxStay Admin</h2>
-      </div>
-      <nav class="nav-menu">
-        <div class="nav-item active" data-section="dashboard">
-          <span>📊 Dashboard</span>
-        </div>
-        <div class="nav-item" data-section="properties">
-          <span>🏠 Properties</span>
-        </div>
-        <div class="nav-item" data-section="tenants">
-          <span>👥 Tenants</span>
-        </div>
-        <div class="nav-item" data-section="financials">
-          <span>💰 Financials</span>
-        </div>
-        <div class="nav-item" data-section="analytics">
-          <span>📈 Analytics</span>
-        </div>
-      </nav>
-    </aside>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="sidebar-brand">LuxStay Admin</div>
+        <nav class="nav-list">
+          <div class="nav-item active">
+            <i class="nav-icon">📊</i>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">🏠</i>
+            <span>Properties</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">👥</i>
+            <span>Tenants</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">💰</i>
+            <span>Payments</span>
+          </div>
+          <div class="nav-item">
+            <i class="nav-icon">⚙️</i>
+            <span>Settings</span>
+          </div>
+        </nav>
+      </aside>
 
-    <!-- Main Content -->
-    <main class="main-content" id="mainContent">
-      <!-- Dashboard Header -->
-      <header class="dashboard-header">
-        <h1 class="animate">Property Management Dashboard</h1>
-        <div class="user-controls">
-          <button class="btn btn-primary" id="newPropertyBtn">
-            + Add New Property
-          </button>
-        </div>
-      </header>
+      <main class="main-content">
+        <header class="header animate-fade">
+          <h1>Dashboard Overview</h1>
+          <div class="header-actions">
+            <button class="btn btn-primary">New Property</button>
+          </div>
+        </header>
 
-      <!-- Key Metrics Section -->
-      <section class="grid animate" id="keyMetrics">
-        <div class="card">
-          <h3>Total Properties</h3>
-          <p class="metric-value">48</p>
-          <div class="progress-bar"></div>
+        <div class="grid animate-fade">
+          <div class="card">
+            <h3>Total Properties</h3>
+            <div class="card-content">
+              <span class="number">128</span>
+              <span class="label">Active Listings</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Active Tenants</h3>
+            <div class="card-content">
+              <span class="number">96</span>
+              <span class="label">Current Occupancy</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Monthly Revenue</h3>
+            <div class="card-content">
+              <span class="number">$52,480</span>
+              <span class="label">This Month</span>
+            </div>
+          </div>
         </div>
-        <div class="card">
-          <h3>Occupancy Rate</h3>
-          <p class="metric-value">92%</p>
-          <div class="progress-bar"></div>
-        </div>
-        <div class="card">
-          <h3>Monthly Revenue</h3>
-          <p class="metric-value">$86,400</p>
-          <div class="progress-bar"></div>
-        </div>
-      </section>
 
-      <!-- Data Visualization Section -->
-      <section class="card animate" id="revenueChart">
-        <h3>Revenue Overview</h3>
-        <canvas id="revenueChartCanvas"></canvas>
-      </section>
-
-      <!-- Property Management Section -->
-      <section class="card animate" id="propertyTable">
-        <div class="table-header">
-          <h3>Managed Properties</h3>
-          <input
-            type="text"
-            class="search-input"
-            placeholder="Search properties..." />
+        <div class="grid animate-fade">
+          <div class="card chart-card">
+            <h3>Occupancy Trends</h3>
+            <canvas id="occupancyChart"></canvas>
+          </div>
+          <div class="card chart-card">
+            <h3>Revenue Analysis</h3>
+            <canvas id="revenueChart"></canvas>
+          </div>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Property ID</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Monthly Rent</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="propertyList">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </section>
-    </main>
 
-    <!-- Modal System -->
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal" id="propertyModal">
-        <div class="modal-header">
-          <h3>Add New Property</h3>
-          <button class="modal-close">&times;</button>
+        <div class="grid animate-fade">
+          <div class="card table-card">
+            <h3>Recent Activities</h3>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Tenant</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Luxury Villa #A128</td>
+                    <td>John Doe</td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>2024-01-15</td>
+                  </tr>
+                  <tr>
+                    <td>Urban Loft #B256</td>
+                    <td>Jane Smith</td>
+                    <td><span class="badge warning">Pending</span></td>
+                    <td>2024-01-14</td>
+                  </tr>
+                  <tr>
+                    <td>Seaside Condo #C384</td>
+                    <td>Robert Johnson</td>
+                    <td><span class="badge success">Active</span></td>
+                    <td>2024-01-13</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="modal-body">
-          <form id="propertyForm">
+      </main>
+    </div>
+
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-content">
+          <h2>Add New Property</h2>
+          <form id="propertyForm" class="form">
             <div class="form-group">
-              <label>Property Name</label>
-              <input type="text" required />
+              <label for="propertyName">Property Name</label>
+              <input type="text" id="propertyName" required />
             </div>
             <div class="form-group">
-              <label>Location</label>
-              <input type="text" required />
+              <label for="propertyType">Property Type</label>
+              <select id="propertyType" required>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+                <option value="villa">Villa</option>
+                <option value="condo">Condo</option>
+              </select>
             </div>
-            <div class="form-group">
-              <label>Monthly Rent</label>
-              <input type="number" required />
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelModal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Add Property
+              </button>
             </div>
-            <button type="submit" class="btn btn-primary">Save Property</button>
           </form>
         </div>
       </div>
     </div>
-
-    <script>
-      // Dashboard Controller
-      class Dashboard {
-        constructor() {
-          this.initEventListeners();
-          this.loadInitialData();
-          this.initChart();
-        }
-
-        initEventListeners() {
-          // Sidebar navigation
-          document.querySelectorAll(".nav-item").forEach((item) => {
-            item.addEventListener("click", this.switchSection.bind(this));
-          });
-
-          // Property management
-          document
-            .getElementById("newPropertyBtn")
-            .addEventListener("click", this.showModal);
-          document
-            .querySelector(".modal-close")
-            .addEventListener("click", this.hideModal);
-          document
-            .getElementById("propertyForm")
-            .addEventListener("submit", this.saveProperty.bind(this));
-        }
-
-        loadInitialData() {
-          // Sample data - replace with API calls
-          const properties = [
-            {
-              id: "P001",
-              name: "Downtown Loft",
-              location: "City Center",
-              rent: 3200,
-              status: "Occupied",
-            },
-            {
-              id: "P002",
-              name: "Riverside Apartment",
-              location: "River District",
-              rent: 2800,
-              status: "Vacant",
-            },
-          ];
-
-          const tbody = document.getElementById("propertyList");
-          tbody.innerHTML = properties
-            .map(
-              (prop) => `
-                            <tr>
-                                <td>${prop.id}</td>
-                                <td>${prop.location}</td>
-                                <td><span class="status-badge">${prop.status}</span></td>
-                                <td>$${prop.rent}</td>
-                                <td>
-                                    <button class="btn btn-sm edit-btn">✏️ Edit</button>
-                                    <button class="btn btn-sm delete-btn">🗑️ Delete</button>
-                                </td>
-                            </tr>
-                        `
-            )
-            .join("");
-        }
-
-        initChart() {
-          // Revenue chart using Chart.js
-          const ctx = document
-            .getElementById("revenueChartCanvas")
-            .getContext("2d");
-          new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-              datasets: [
-                {
-                  label: "Monthly Revenue",
-                  data: [65000, 79000, 82000, 78000, 86000, 90000],
-                  borderColor: getComputedStyle(document.documentElement)
-                    .getPropertyValue("--primary-color")
-                    .trim(),
-                  tension: 0.4,
-                },
-              ],
-            },
-          });
-        }
-
-        switchSection(e) {
-          document
-            .querySelectorAll(".nav-item")
-            .forEach((item) => item.classList.remove("active"));
-          e.currentTarget.classList.add("active");
-          // Add section switching logic
-        }
-
-        showModal() {
-          document.getElementById("modalBackdrop").classList.add("active");
-        }
-
-        hideModal() {
-          document.getElementById("modalBackdrop").classList.remove("active");
-        }
-
-        saveProperty(e) {
-          e.preventDefault();
-          // Add property saving logic
-          this.hideModal();
-        }
-      }
-
-      // Initialize Dashboard
-      new Dashboard();
-    </script>
   </body>
 </html>

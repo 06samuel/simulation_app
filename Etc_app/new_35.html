@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxeApartments | Modern Rental</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      /* SaaS Design System */
+      :root {
+        /* Color Palette */
+        --primary: #3a86ff;
+        --secondary: #8338ec;
+        --accent: #ff006e;
+        --success: #06d6a0;
+        --warning: #ffbe0b;
+        --danger: #ef476f;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --radius: 12px;
+        --spacing: 24px;
+        --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        --perspective: 1000px;
+        --skew-intensity: 4deg;
+      }
+
+      /* Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--light);
+        min-height: 100vh;
+        overflow-x: hidden;
+        perspective: var(--perspective);
+      }
+
+      /* Cursor Animation */
+      .cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 0, 110, 0.3);
+        pointer-events: none;
+        transition: transform 0.15s, opacity 0.3s;
+        mix-blend-mode: multiply;
+        z-index: 1000;
+      }
+
+      /* Navigation Bar */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+      }
+
+      .logo {
+        font-size: 2rem;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        margin-left: auto;
+      }
+
+      .nav-link {
+        position: relative;
+        color: var(--dark);
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .nav-link:hover {
+        color: var(--primary);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -4px;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+      }
+
+      .nav-link:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 2rem;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        color: white;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.5rem;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+      }
+
+      .hero-button {
+        padding: 1rem 3rem;
+        background: var(--accent);
+        color: white;
+        border-radius: var(--radius);
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .hero-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(255, 0, 110, 0.3);
+      }
+
+      /* Apartment Cards */
+      .apartment-cards {
+        padding: 4rem 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+      }
+
+      .apartment-card {
+        background: white;
+        border-radius: var(--radius);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .apartment-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-image {
+        width: 100%;
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.3s;
+      }
+
+      .card-content {
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+
+      .card-price {
+        font-size: 1.2rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      /* Testimonials Section */
+      .testimonials {
+        background: var(--light);
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+
+      .testimonial-slider {
+        position: relative;
+        margin-top: 3rem;
+        overflow: hidden;
+      }
+
+      .slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+
+      .slide {
+        min-width: 100%;
+        padding: 2rem;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      .testimonial-text {
+        font-style: italic;
+        color: var(--dark);
+      }
+
+      .testimonial-author {
+        font-weight: 600;
+        margin-top: 1rem;
+      }
+
+      /* Contact Form */
+      .contact-section {
+        padding: 4rem 2rem;
+        background: var(--dark);
+        color: white;
+      }
+
+      .contact-form {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem;
+        margin: 1rem 0;
+        border: 1px solid var(--gray);
+        border-radius: var(--radius);
+        transition: border-color 0.3s;
+      }
+
+      .form-input:focus {
+        border-color: var(--primary);
+        outline: none;
+      }
+
+      .submit-button {
+        padding: 1rem 3rem;
+        background: var(--accent);
+        color: white;
+        border-radius: var(--radius);
+        font-weight: 600;
+        transition: transform 0.3s, background 0.3s;
+      }
+
+      .submit-button:hover {
+        transform: translateY(-2px);
+        background: var(--primary);
+      }
+
+      /* Cursor Following */
+      body {
+        cursor: none;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+          font-size: 1.5rem;
+          cursor: pointer;
+          margin-right: 1rem;
+        }
+
+        .apartment-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding: 1rem;
+        }
+      }
+
+      /* 3D Card Hover Effect */
+      .apartment-card:hover {
+        transform: translateZ(10px) rotateX(2deg) rotateY(2deg);
+      }
+
+      /* Fade-in Animation */
+      .animate {
+        animation: fade-in 0.5s ease-out;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Smooth Scroll */
+      .scroll-indicator {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 40px;
+        height: 40px;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+
+      .scroll-indicator:hover {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cursor Follower -->
+    <div class="cursor"></div>
+
+    <!-- Navigation Bar -->
+    <header>
+      <div class="logo">
+        <i class="fas fa-home"></i>
+        LuxeApartments
+      </div>
+      <nav>
+        <button class="mobile-menu-btn" onclick="toggleMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#apartments" class="nav-link">Apartments</a></li>
+          <li><a href="#testimonials" class="nav-link">Testimonials</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <h1 class="hero-title">Find Your Perfect Rental</h1>
+      <p class="hero-subtitle">Modern Apartments in Prime Locations</p>
+      <a href="#apartments" class="hero-button">Explore Apartments</a>
+    </section>
+
+    <!-- Apartment Listings -->
+    <section id="apartments" class="apartment-cards">
+      <div class="apartment-card animate">
+        <div
+          class="card-image"
+          style="
+            background-image: url('https://picsum.photos/seed/1/300/200');
+          "></div>
+        <div class="card-content">
+          <h3 class="card-title">Luxury Studio</h3>
+          <p class="card-price">$1,500/month</p>
+          <button class="btn btn-primary">View Details</button>
+        </div>
+      </div>
+      <div class="apartment-card animate">
+        <div
+          class="card-image"
+          style="
+            background-image: url('https://picsum.photos/seed/2/300/200');
+          "></div>
+        <div class="card-content">
+          <h3 class="card-title">Penthouse Suite</h3>
+          <p class="card-price">$3,200/month</p>
+          <button class="btn btn-primary">View Details</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+      <h2 class="section-title">What Our Residents Say</h2>
+      <div class="testimonial-slider">
+        <div class="slides">
+          <div class="slide active">
+            <p class="testimonial-text">
+              "The location is perfect and the amenities are top-notch!"
+            </p>
+            <p class="testimonial-author">- Sarah Johnson</p>
+          </div>
+          <div class="slide">
+            <p class="testimonial-text">"Best value for money in the city!"</p>
+            <p class="testimonial-author">- Michael Chen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact" class="contact-section">
+      <h2 class="section-title">Contact Us</h2>
+      <div class="contact-form">
+        <input type="text" class="form-input" placeholder="Your Name" />
+        <input type="email" class="form-input" placeholder="Email Address" />
+        <textarea class="form-input" placeholder="Message" rows="4"></textarea>
+        <button class="submit-button">Send Message</button>
+      </div>
+    </section>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" onclick="scrollToTop()">
+      <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+      // Cursor Following
+      const cursor = document.querySelector(".cursor");
+      document.addEventListener("mousemove", (e) => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      // Mobile Menu Toggle
+      function toggleMenu() {
+        const navLinks = document.querySelector(".nav-links");
+        navLinks.style.display =
+          navLinks.style.display === "flex" ? "none" : "flex";
+      }
+
+      // Smooth Scroll
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        });
+      });
+
+      // Testimonial Slider
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".slide");
+      const totalSlides = slides.length;
+
+      function showSlide(index) {
+        slides.forEach((slide) => slide.classList.remove("active"));
+        slides[index].classList.add("active");
+        currentSlide = index;
+      }
+
+      setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+      }, 5000);
+
+      // Scroll Indicator
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      // Responsive Menu
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+          document.querySelector(".nav-links").style.display = "flex";
+        }
+      });
+
+      // Card Hover Effects
+      document.querySelectorAll(".apartment-card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          card.style.transform = `rotateX(${y * 0.001}deg) rotateY(${
+            x * -0.001
+          }deg)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "none";
+        });
+      });
+    </script>
+  </body>
+</html>
