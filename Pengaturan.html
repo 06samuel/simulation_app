@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Penyewaan Properti</title>
     <link rel="stylesheet" href="styles.css" />
-    <!-- Add modern CSS libraries -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <!-- Custom CSS Variables -->
     <style>
       :root {
         --primary-color: #2563eb;
@@ -54,7 +52,7 @@
       }
 
       /* Responsive Sidebar */
-      .sidebar {
+      .c-sidebar {
         background: var(--primary-color);
         padding: var(--spacing-lg);
         position: fixed;
@@ -123,7 +121,7 @@
           grid-template-columns: 1fr;
         }
 
-        .sidebar {
+        .c-sidebar {
           transform: translateX(-100%);
         }
 
@@ -131,7 +129,7 @@
           margin-left: 0;
         }
 
-        .sidebar.active {
+        .c-sidebar.active {
           transform: translateX(0);
         }
       }
@@ -139,61 +137,130 @@
   </head>
   <body>
     <div class="dashboard-container">
-      <!-- Rest of your HTML content remains the same but with updated classes -->
-      <!-- ... -->
-    </div>
+      <aside class="c-sidebar" role="navigation" aria-label="Main navigation">
+        <h2 class="logo animate__animated animate__fadeIn">Dashboard Admin</h2>
+        <nav class="nav-menu">
+          <ul>
+            <li>
+              <a href="index.html" class="nav-link" data-aos="fade-right"
+                ><i class="fas fa-home"></i>Beranda</a
+              >
+            </li>
+            <li>
+              <a
+                href="properti.html"
+                class="nav-link"
+                data-aos="fade-right"
+                data-aos-delay="100"
+                ><i class="fas fa-building"></i>Properti</a
+              >
+            </li>
+            <li>
+              <a
+                href="penyewa.html"
+                class="nav-link"
+                data-aos="fade-right"
+                data-aos-delay="200"
+                ><i class="fas fa-users"></i>Penyewa</a
+              >
+            </li>
+            <!-- Other menu items with animations -->
+          </ul>
+        </nav>
+      </aside>
 
-    <!-- Modern JavaScript Libraries -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      // Initialize AOS
-      AOS.init();
+      <main class="main-content" role="main">
+        <header class="main-header" data-aos="fade-down">
+          <h1 class="page-title">Pengaturan Properti</h1>
+          <div class="header-actions">
+            <button class="btn notification-btn" aria-label="Notifications">
+              <span class="notification-badge">3</span>
+              <i class="fas fa-bell"></i>
+            </button>
+            <div class="user-profile">
+              <img
+                src="avatar.png"
+                alt="Profil Pengguna"
+                class="c-avatar"
+                loading="lazy" />
+            </div>
+          </div>
+        </header>
 
-      // Debounced Theme Toggle
-      function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
+        <div class="dashboard-grid">
+          <section class="form-section card" data-aos="fade-up">
+            <h2 class="section-title">Informasi Properti</h2>
+            <form class="form-grid" id="propertyForm">
+              <div class="form-group full-width">
+                <label class="form-label" for="property-name"
+                  >Nama Properti</label
+                >
+                <input
+                  class="form-input modern-input"
+                  type="text"
+                  id="property-name"
+                  required
+                  placeholder="Nama properti Anda"
+                  data-validate="required" />
+                <span class="form-feedback"></span>
+              </div>
+              <!-- Other form fields -->
+            </form>
+          </section>
+        </div>
+      </main>
+
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script>
+        // Initialize AOS
+        AOS.init();
+
+        // Debounced Theme Toggle
+        function debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
             clearTimeout(timeout);
-            func(...args);
+            timeout = setTimeout(later, wait);
           };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const themeSelector = document.getElementById("uiTheme");
-
-        // Theme Toggle with Debounce
-        const handleThemeChange = debounce((event) => {
-          const selectedTheme = event.target.value;
-          document.body.classList.toggle(
-            "dark-theme",
-            selectedTheme === "dark"
-          );
-          localStorage.setItem("theme", selectedTheme);
-        }, 250);
-
-        themeSelector.addEventListener("change", handleThemeChange);
-
-        // Initialize theme from localStorage
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-          document.body.classList.toggle("dark-theme", savedTheme === "dark");
-          themeSelector.value = savedTheme;
         }
 
-        // Add smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute("href")).scrollIntoView({
-              behavior: "smooth",
+        document.addEventListener("DOMContentLoaded", () => {
+          const themeSelector = document.getElementById("uiTheme");
+
+          // Theme Toggle with Debounce
+          const handleThemeChange = debounce((event) => {
+            const selectedTheme = event.target.value;
+            document.body.classList.toggle(
+              "dark-theme",
+              selectedTheme === "dark"
+            );
+            localStorage.setItem("theme", selectedTheme);
+          }, 250);
+
+          themeSelector.addEventListener("change", handleThemeChange);
+
+          // Initialize theme from localStorage
+          const savedTheme = localStorage.getItem("theme");
+          if (savedTheme) {
+            document.body.classList.toggle("dark-theme", savedTheme === "dark");
+            themeSelector.value = savedTheme;
+          }
+
+          // Add smooth scrolling
+          document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", function (e) {
+              e.preventDefault();
+              document.querySelector(this.getAttribute("href")).scrollIntoView({
+                behavior: "smooth",
+              });
             });
           });
         });
-      });
-    </script>
+      </script>
+    </div>
   </body>
 </html>
