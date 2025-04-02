@@ -3,163 +3,349 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rental Apartments Admin Dashboard</title>
+    <meta
+      name="description"
+      content="Modern responsive dashboard with intuitive UI and smooth interactions" />
+    <title>Modern Admin Dashboard</title>
+    <!-- Preload fonts for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet" />
     <style>
+      /* Modern color palette and variables */
       :root {
-        --primary: #3a86ff;
-        --secondary: #ff006e;
-        --success: #38b000;
-        --warning: #ffbe0b;
-        --danger: #d90429;
-        --dark: #1d3557;
-        --light: #f8f9fa;
+        /* Color Palette - Modern & Vibrant */
+        --primary: #2563eb;
+        --primary-light: #60a5fa;
+        --primary-dark: #1e40af;
+        --secondary: #ec4899;
+        --secondary-light: #f472b6;
+        --secondary-dark: #be185d;
+        --accent: #8b5cf6;
+        --accent-light: #a78bfa;
+        --accent-dark: #6d28d9;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #111827;
+        --light: #f3f4f6;
         --surface: #ffffff;
-        --text: #2b2d42;
-        --muted: #6c757d;
-        --duration: 0.6s;
-        --easing: cubic-bezier(0.23, 1, 0.32, 1);
-        --blur: 15px;
-        --perspective: 1200px;
+        --text: #1f2937;
+        --muted: #6b7280;
+
+        /* Animation & Transition Variables */
+        --duration-fast: 0.2s;
+        --duration: 0.4s;
+        --duration-slow: 0.8s;
+        --easing: cubic-bezier(0.4, 0, 0.2, 1);
+        --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        --easing-in: cubic-bezier(0.4, 0, 1, 1);
+        --easing-out: cubic-bezier(0, 0, 0.2, 1);
+
+        /* Effects Variables */
+        --blur: 10px;
+        --blur-strong: 20px;
+        --perspective: 1000px;
+        --rotate-hover: 5deg;
+        --scale-hover: 1.05;
+
+        /* Shadows & Elevation */
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+        --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        --shadow-glow: 0 0 15px rgba(43, 99, 235, 0.5);
       }
 
+      /* Modern reset and base styles */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
 
-      body {
-        font-family: "Poppins", sans-serif;
-        background: var(--light);
-        color: var(--text);
-        display: flex;
-        min-height: 100vh;
-        overflow-x: hidden;
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+        /* Enable smooth scrolling for all elements */
+        scroll-padding-top: 2rem;
       }
 
-      /* Sidebar */
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--light);
+        color: var(--text);
+        display: grid;
+        grid-template-columns: auto 1fr;
+        min-height: 100vh;
+        overflow-x: hidden;
+        line-height: 1.6;
+        /* Mobile-first approach */
+        font-size: 0.95rem;
+        position: relative;
+      }
+
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--light);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary-light);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+      }
+
+      /* Loading indicator */
+      .loading-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        z-index: 9999;
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: loading 2s var(--easing-out) infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: scaleX(0);
+        }
+        50% {
+          transform: scaleX(0.6);
+        }
+        100% {
+          transform: scaleX(0);
+          transform-origin: right;
+        }
+      }
+
+      /* Enhanced Sidebar with Glassmorphism */
       aside {
-        width: 250px;
-        background: var(--dark);
+        width: 280px;
+        background: rgba(17, 24, 39, 0.9);
         color: var(--light);
-        padding: 1rem;
+        padding: 1.5rem;
         position: fixed;
         height: 100vh;
-        transition: all 0.3s var(--easing);
+        transition: all var(--duration) var(--easing);
         backdrop-filter: blur(var(--blur));
         z-index: 1000;
+        box-shadow: var(--shadow-lg);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent) transparent;
+      }
+
+      aside.collapsed {
+        transform: translateX(-220px);
       }
 
       .sidebar-toggle {
         cursor: pointer;
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        display: none;
+        font-size: 1.25rem;
+        padding: 0.5rem;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        transition: transform var(--duration);
+      }
+
+      .sidebar-toggle:hover {
+        transform: rotate(180deg);
       }
 
       nav ul {
         list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
       }
 
       nav a {
         color: var(--light);
         text-decoration: none;
-        padding: 0.8rem 1rem;
-        border-radius: 8px;
+        padding: 1rem;
+        border-radius: 0.5rem;
         display: flex;
         align-items: center;
         gap: 1rem;
-        transition: all 0.3s;
+        transition: all var(--duration);
+        position: relative;
+        overflow: hidden;
+      }
+
+      nav a::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0.25rem;
+        background: var(--accent);
+        transform: scaleY(0);
+        transition: transform var(--duration);
       }
 
       nav a:hover {
         background: rgba(255, 255, 255, 0.1);
-        transform: translateX(10px);
+        transform: translateX(0.5rem);
       }
 
+      nav a:hover::before {
+        transform: scaleY(1);
+      }
+
+      /* Enhanced Main Content */
       main {
-        margin-left: 250px;
         padding: 2rem;
-        flex: 1;
-        transition: all 0.3s var(--easing);
+        transition: margin var(--duration) var(--easing);
+      }
+
+      main.collapsed {
+        margin-left: 60px;
       }
 
       header {
-        background: var(--primary);
+        background: linear-gradient(135deg, var(--primary), var(--accent));
         color: var(--light);
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 2rem;
+        border-radius: 1rem;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-lg);
+        transform-style: preserve-3d;
+        perspective: 1000px;
       }
 
-      /* Card Grid */
+      /* Enhanced Card Grid */
       .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        perspective: 1000px;
       }
 
       .card {
         background: var(--surface);
-        border-radius: 10px;
+        border-radius: 1rem;
         padding: 1.5rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: var(--shadow-md);
+        transition: all var(--duration);
+        transform-style: preserve-3d;
+        position: relative;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(45deg, var(--primary), var(--accent));
+        opacity: 0;
+        transition: opacity var(--duration);
+        z-index: -1;
       }
 
       .card:hover {
-        transform: translateY(-5px) rotate(-1deg);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-0.5rem) rotateX(10deg);
+        box-shadow: var(--shadow-lg);
       }
 
-      footer {
-        background: var(--dark);
+      .card:hover::before {
+        opacity: 0.1;
+      }
+
+      .btn {
+        background: var(--primary);
         color: var(--light);
-        text-align: center;
-        padding: 1rem;
-        border-radius: 10px;
-        margin-top: 2rem;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all var(--duration);
+        position: relative;
+        overflow: hidden;
       }
 
-      /* Animations */
-      @keyframes fadeInLeft {
+      .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transform: translateX(-100%);
+      }
+
+      .btn:hover::before {
+        transform: translateX(100%);
+        transition: transform 0.6s;
+      }
+
+      /* Enhanced Animations */
+      @keyframes slideIn {
         from {
           opacity: 0;
-          transform: translateX(-50px);
+          transform: translateY(2rem) rotateX(-10deg);
         }
         to {
           opacity: 1;
-          transform: translateX(0);
+          transform: translateY(0) rotateX(0);
         }
       }
 
-      @keyframes fadeInRight {
-        from {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+      .animate-slide-in {
+        animation: slideIn var(--duration) var(--easing) forwards;
       }
 
-      @media (max-width: 768px) {
+      /* Enhanced Responsive Design */
+      @media (max-width: 1024px) {
+        body {
+          grid-template-columns: 1fr;
+        }
+
         aside {
-          width: 70px;
+          transform: translateX(-100%);
+        }
+
+        aside.show {
+          transform: translateX(0);
         }
 
         main {
-          margin-left: 70px;
+          margin-left: 0;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .card-grid {
+          grid-template-columns: 1fr;
         }
 
-        .sidebar-toggle {
-          display: block;
-        }
-
-        nav a span {
-          display: none;
+        header {
+          padding: 1.5rem;
         }
       }
     </style>
@@ -170,94 +356,107 @@
       <nav>
         <ul>
           <li>
-            <a href="#dashboard"> 📊 <span>Dashboard</span> </a>
+            <a href="#dashboard" class="nav-link">📊 <span>Dashboard</span></a>
           </li>
           <li>
-            <a href="#properties"> 🏢 <span>Properties</span> </a>
+            <a href="#analytics" class="nav-link">📈 <span>Analytics</span></a>
           </li>
           <li>
-            <a href="#tenants"> 👥 <span>Tenants</span> </a>
+            <a href="#projects" class="nav-link">🎯 <span>Projects</span></a>
           </li>
           <li>
-            <a href="#reports"> 📈 <span>Reports</span> </a>
-          </li>
-          <li>
-            <a href="#settings"> ⚙️ <span>Settings</span> </a>
+            <a href="#settings" class="nav-link">⚙️ <span>Settings</span></a>
           </li>
         </ul>
       </nav>
     </aside>
 
     <main id="main-content">
-      <header>
-        <h1>ApartmentAI Admin Dashboard</h1>
+      <header class="animate-slide-in">
+        <h1>Modern Dashboard</h1>
+        <p>Welcome back, Admin</p>
       </header>
 
       <section id="dashboard" class="card-grid">
-        <div
-          class="card"
-          style="animation: fadeInLeft var(--duration) var(--easing)">
-          <h2>Total Properties</h2>
-          <p>125 <span class="muted">Active Listings</span></p>
+        <div class="card animate-slide-in">
+          <h2>Performance</h2>
+          <p class="metric">98% <span class="trend">↑ 2.4%</span></p>
         </div>
-        <div
-          class="card"
-          style="animation: fadeInRight var(--duration) var(--easing)">
-          <h2>Occupancy Rate</h2>
-          <p>87% <span class="muted">Occupied Units</span></p>
+        <div class="card animate-slide-in" style="animation-delay: 0.2s">
+          <h2>Revenue</h2>
+          <p class="metric">$52,389 <span class="trend">↑ 12%</span></p>
         </div>
-      </section>
-
-      <section id="properties" class="card-grid">
-        <div class="card">
-          <h3>Luxury Penthouse</h3>
-          <p>$4500/month | 3 Beds | 2 Baths</p>
-          <button class="btn">Manage</button>
-        </div>
-        <div class="card">
-          <h3>City Center Studio</h3>
-          <p>$2200/month | 1 Bed | 1 Bath</p>
-          <button class="btn">Manage</button>
+        <div class="card animate-slide-in" style="animation-delay: 0.4s">
+          <h2>Users</h2>
+          <p class="metric">1,259 <span class="trend">↑ 8.7%</span></p>
         </div>
       </section>
     </main>
 
-    <footer>
-      <p>&copy; 2025 ApartmentAI. All rights reserved.</p>
-    </footer>
-
     <script>
+      // Enhanced sidebar toggle with animation
       function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const main = document.getElementById("main-content");
+
         sidebar.classList.toggle("collapsed");
         main.classList.toggle("collapsed");
       }
 
-      document.querySelectorAll("nav a").forEach((link) => {
-        link.addEventListener("click", function (e) {
+      // Smooth scroll with enhanced behavior
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
           e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          target.scrollIntoView({ behavior: "smooth" });
+          const target = document.querySelector(e.target.getAttribute("href"));
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         });
       });
 
-      // Intersection Observer for animations
+      // Enhanced intersection observer with animation
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              entry.target.style.animation =
-                "fadeIn var(--duration) var(--easing) forwards";
+              entry.target.style.animation = `slideIn var(--duration) var(--easing) forwards ${
+                entry.target.dataset.delay || "0s"
+              }`;
             }
           });
         },
-        { threshold: 0.1 }
+        {
+          threshold: 0.1,
+          rootMargin: "50px",
+        }
       );
 
       document.querySelectorAll(".card").forEach((card) => {
         observer.observe(card);
       });
+
+      // Debounced resize handler
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+
+      const handleResize = debounce(() => {
+        if (window.innerWidth <= 1024) {
+          document.getElementById("sidebar").classList.remove("collapsed");
+          document.getElementById("main-content").classList.remove("collapsed");
+        }
+      }, 250);
+
+      window.addEventListener("resize", handleResize);
     </script>
   </body>
 </html>
