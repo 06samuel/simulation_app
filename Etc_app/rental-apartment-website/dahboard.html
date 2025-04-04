@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rental Apartment Dashboard</title>
+  <style>
+    /* ============================================= */
+    /* ============ DESIGN TOKENS SYSTEM =========== */
+    /* ============================================= */
+
+    :root {
+      /* ============ COLOR SYSTEM ============ */
+      /* Primary Greens */
+      --primary-100: #e8f5e9;
+      --primary-200: #c8e6c9;
+      --primary-300: #a5d6a7;
+      --primary-400: #81c784;
+      --primary-500: #4caf50;
+      --primary-600: #388e3c;
+      --primary-700: #2e7d32;
+      --primary-800: #1b5e20;
+      --primary-900: #0d470f;
+
+      /* Secondary Bright Greens */
+      --secondary-100: #f1f8e9;
+      --secondary-200: #dcedc8;
+      --secondary-300: #c5e1a5;
+      --secondary-400: #aed581;
+      --secondary-500: #8bc34a;
+      --secondary-600: #7cb342;
+      --secondary-700: #689f38;
+      --secondary-800: #558b2f;
+      --secondary-900: #33691e;
+
+      /* Neutrals */
+      --white: #ffffff;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212121;
+      --black: #000000;
+
+      /* Semantic Colors */
+      --success-500: #4caf50;
+      --danger-500: #f44336;
+      --warning-500: #ffa000;
+      --info-500: #2196f3;
+      --light-500: var(--white);
+      --dark-500: var(--gray-900);
+
+      /* Accents */
+      --accent1: #0d47a1;
+      --accent2: #ffa000;
+      --highlight: #388e3c;
+
+      /* Component Colors */
+      --background: var(--white);
+      --surface: var(--white);
+      --text: var(--gray-900);
+      --text-secondary: var(--gray-600);
+      --border: var(--gray-300);
+      --header: var(--secondary-500);
+      
+      /* ============ SPACING SYSTEM ============ */
+      --space-3xs: 0.25rem;  /* 4px */
+      --space-2xs: 0.5rem;   /* 8px */
+      --space-xs: 0.75rem;   /* 12px */
+      --space-sm: 1rem;      /* 16px */
+      --space-md: 1.5rem;    /* 24px */
+      --space-lg: 2rem;      /* 32px */
+      --space-xl: 3rem;      /* 48px */
+      --space-2xl: 4rem;     /* 64px */
+
+      /* ============ TYPOGRAPHY ============ */
+      --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-family-mono: 'Courier New', Courier, monospace;
+      
+      --font-size-xs: 0.75rem;   /* 12px */
+      --font-size-sm: 0.875rem;  /* 14px */
+      --font-size-base: 1rem;    /* 16px */
+      --font-size-lg: 1.125rem;  /* 18px */
+      --font-size-xl: 1.25rem;   /* 20px */
+      --font-size-2xl: 1.5rem;   /* 24px */
+      --font-size-3xl: 1.875rem; /* 30px */
+      --font-size-4xl: 2.25rem;  /* 36px */
+      --font-size-5xl: 3rem;     /* 48px */
+
+      --font-weight-light: 300;
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+
+      --line-height-none: 1;
+      --line-height-tight: 1.25;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.75;
+
+      /* ============ EFFECTS ============ */
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+      /* Border Radius */
+      --radius-none: 0;
+      --radius-sm: 0.25rem;  /* 4px */
+      --radius-md: 0.5rem;   /* 8px */
+      --radius-lg: 0.75rem;  /* 12px */
+      --radius-xl: 1rem;     /* 16px */
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-fast: all 0.15s ease-in-out;
+      --transition-normal: all 0.3s ease-in-out;
+      --transition-slow: all 0.5s ease-in-out;
+
+      /* Z-Index */
+      --z-0: 0;
+      --z-10: 10;
+      --z-20: 20;
+      --z-30: 30;
+      --z-40: 40;
+      --z-50: 50;
+      --z-auto: auto;
+      --z-max: 9999;
+
+      /* Container Sizes */
+      --container-sm: 640px;
+      --container-md: 768px;
+      --container-lg: 1024px;
+      --container-xl: 1280px;
+      --container-2xl: 1536px;
+    }
+
+    /* ============================================= */
+    /* ============= DARK THEME OVERRIDE =========== */
+    /* ============================================= */
+
+    [data-theme="dark"] {
+      --background: var(--gray-900);
+      --surface: var(--gray-800);
+      --text: var(--gray-100);
+      --text-secondary: var(--gray-400);
+      --border: var(--gray-700);
+      --header: linear-gradient(to right, var(--secondary-700), var(--primary-700));
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --background: var(--gray-900);
+        --surface: var(--gray-800);
+        --text: var(--gray-100);
+        --text-secondary: var(--gray-400);
+        --border: var(--gray-700);
+        --header: linear-gradient(to right, var(--secondary-700), var(--primary-700));
+        
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    /* ============================================= */
+    /* ============= BASE STYLES ================== */
+    /* ============================================= */
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family-sans);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--line-height-normal);
+      color: var(--text);
+      background-color: var(--background);
+      transition: var(--transition-normal);
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0;
+      margin-bottom: var(--space-sm);
+      font-weight: var(--font-weight-semibold);
+      line-height: var(--line-height-tight);
+    }
+
+    h1 { font-size: var(--font-size-4xl); }
+    h2 { font-size: var(--font-size-3xl); }
+    h3 { font-size: var(--font-size-2xl); }
+    h4 { font-size: var(--font-size-xl); }
+    h5 { font-size: var(--font-size-lg); }
+    h6 { font-size: var(--font-size-base); }
+
+    p {
+      margin-top: 0;
+      margin-bottom: var(--space-md);
+    }
+
+    a {
+      color: var(--primary-600);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    a:hover {
+      color: var(--primary-800);
+      text-decoration: underline;
+    }
+
+    /* Images */
+    img {
+      max-width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    /* Lists */
+    ul, ol {
+      padding-left: var(--space-lg);
+      margin-top: 0;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Horizontal Rule */
+    hr {
+      margin: var(--space-lg) 0;
+      border: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ============================================= */
+    /* ============= UTILITY CLASSES =============== */
+    /* ============================================= */
+
+    /* Spacing Utilities */
+    .m-0 { margin: 0 !important; }
+    .m-1 { margin: var(--space-xs) !important; }
+    .m-2 { margin: var(--space-sm) !important; }
+    .m-3 { margin: var(--space-md) !important; }
+    .m-4 { margin: var(--space-lg) !important; }
+    .m-5 { margin: var(--space-xl) !important; }
+
+    .mt-0 { margin-top: 0 !important; }
+    .mt-1 { margin-top: var(--space-xs) !important; }
+    .mt-2 { margin-top: var(--space-sm) !important; }
+    .mt-3 { margin-top: var(--space-md) !important; }
+    .mt-4 { margin-top: var(--space-lg) !important; }
+    .mt-5 { margin-top: var(--space-xl) !important; }
+
+    .mb-0 { margin-bottom: 0 !important; }
+    .mb-1 { margin-bottom: var(--space-xs) !important; }
+    .mb-2 { margin-bottom: var(--space-sm) !important; }
+    .mb-3 { margin-bottom: var(--space-md) !important; }
+    .mb-4 { margin-bottom: var(--space-lg) !important; }
+    .mb-5 { margin-bottom: var(--space-xl) !important; }
+
+    .ml-0 { margin-left: 0 !important; }
+    .ml-1 { margin-left: var(--space-xs) !important; }
+    .ml-2 { margin-left: var(--space-sm) !important; }
+    .ml-3 { margin-left: var(--space-md) !important; }
+    .ml-4 { margin-left: var(--space-lg) !important; }
+    .ml-5 { margin-left: var(--space-xl) !important; }
+
+    .mr-0 { margin-right: 0 !important; }
+    .mr-1 { margin-right: var(--space-xs) !important; }
+    .mr-2 { margin-right: var(--space-sm) !important; }
+    .mr-3 { margin-right: var(--space-md) !important; }
+    .mr-4 { margin-right: var(--space-lg) !important; }
+    .mr-5 { margin-right: var(--space-xl) !important; }
+
+    .mx-0 { margin-left: 0 !important; margin-right: 0 !important; }
+    .mx-1 { margin-left: var(--space-xs) !important; margin-right: var(--space-xs) !important; }
+    .mx-2 { margin-left: var(--space-sm) !important; margin-right: var(--space-sm) !important; }
+    .mx-3 { margin-left: var(--space-md) !important; margin-right: var(--space-md) !important; }
+    .mx-4 { margin-left: var(--space-lg) !important; margin-right: var(--space-lg) !important; }
+    .mx-5 { margin-left: var(--space-xl) !important; margin-right: var(--space-xl) !important; }
+
+    .my-0 { margin-top: 0 !important; margin-bottom: 0 !important; }
+    .my-1 { margin-top: var(--space-xs) !important; margin-bottom: var(--space-xs) !important; }
+    .my-2 { margin-top: var(--space-sm) !important; margin-bottom: var(--space-sm) !important; }
+    .my-3 { margin-top: var(--space-md) !important; margin-bottom: var(--space-md) !important; }
+    .my-4 { margin-top: var(--space-lg) !important; margin-bottom: var(--space-lg) !important; }
+    .my-5 { margin-top: var(--space-xl) !important; margin-bottom: var(--space-xl) !important; }
+
+    .p-0 { padding: 0 !important; }
+    .p-1 { padding: var(--space-xs) !important; }
+    .p-2 { padding: var(--space-sm) !important; }
+    .p-3 { padding: var(--space-md) !important; }
+    .p-4 { padding: var(--space-lg) !important; }
+    .p-5 { padding: var(--space-xl) !important; }
+
+    .pt-0 { padding-top: 0 !important; }
+    .pt-1 { padding-top: var(--space-xs) !important; }
+    .pt-2 { padding-top: var(--space-sm) !important; }
+    .pt-3 { padding-top: var(--space-md) !important; }
+    .pt-4 { padding-top: var(--space-lg) !important; }
+    .pt-5 { padding-top: var(--space-xl) !important; }
+
+    .pb-0 { padding-bottom: 0 !important; }
+    .pb-1 { padding-bottom: var(--space-xs) !important; }
+    .pb-2 { padding-bottom: var(--space-sm) !important; }
+    .pb-3 { padding-bottom: var(--space-md) !important; }
+    .pb-4 { padding-bottom: var(--space-lg) !important; }
+    .pb-5 { padding-bottom: var(--space-xl) !important; }
+
+    .pl-0 { padding-left: 0 !important; }
+    .pl-1 { padding-left: var(--space-xs) !important; }
+    .pl-2 { padding-left: var(--space-sm) !important; }
+    .pl-3 { padding-left: var(--space-md) !important; }
+    .pl-4 { padding-left: var(--space-lg) !important; }
+    .pl-5 { padding-left: var(--space-xl) !important; }
+
+    .pr-0 { padding-right: 0 !important; }
+    .pr-1 { padding-right: var(--space-xs) !important; }
+    .pr-2 { padding-right: var(--space-sm) !important; }
+    .pr-3 { padding-right: var(--space-md) !important; }
+    .pr-4 { padding-right: var(--space-lg) !important; }
+    .pr-5 { padding-right: var(--space-xl) !important; }
+
+    .px-0 { padding-left: 0 !important; padding-right: 0 !important; }
+    .px-1 { padding-left: var(--space-xs) !important; padding-right: var(--space-xs) !important; }
+    .px-2 { padding-left: var(--space-sm) !important; padding-right: var(--space-sm) !important; }
+    .px-3 { padding-left: var(--space-md) !important; padding-right: var(--space-md) !important; }
+    .px-4 { padding-left: var(--space-lg) !important; padding-right: var(--space-lg) !important; }
+    .px-5 { padding-left: var(--space-xl) !important; padding-right: var(--space-xl) !important; }
+
+    .py-0 { padding-top: 0 !important; padding-bottom: 0 !important; }
+    .py-1 { padding-top: var(--space-xs) !important; padding-bottom: var(--space-xs) !important; }
+    .py-2 { padding-top: var(--space-sm) !important; padding-bottom: var(--space-sm) !important; }
+    .py-3 { padding-top: var(--space-md) !important; padding-bottom: var(--space-md) !important; }
+    .py-4 { padding-top: var(--space-lg) !important; padding-bottom: var(--space-lg) !important; }
+    .py-5 { padding-top: var(--space-xl) !important; padding-bottom: var(--space-xl) !important; }
+
+    /* Text Utilities */
+    .text-left { text-align: left !important; }
+    .text-right { text-align: right !important; }
+    .text-center { text-align: center !important; }
+    .text-justify { text-align: justify !important; }
+
+    .text-primary { color: var(--primary-500) !important; }
+    .text-secondary { color: var(--secondary-500) !important; }
+    .text-success { color: var(--success-500) !important; }
+    .text-danger { color: var(--danger-500) !important; }
+    .text-warning { color: var(--warning-500) !important; }
+    .text-info { color: var(--info-500) !important; }
+    .text-light { color: var(--light-500) !important; }
+    .text-dark { color: var(--dark-500) !important; }
+
+    .font-weight-light { font-weight: var(--font-weight-light) !important; }
+    .font-weight-normal { font-weight: var(--font-weight-normal) !important; }
+    .font-weight-medium { font-weight: var(--font-weight-medium) !important; }
+    .font-weight-semibold { font-weight: var(--font-weight-semibold) !important; }
+    .font-weight-bold { font-weight: var(--font-weight-bold) !important; }
+
+    /* Display Utilities */
+    .d-none { display: none !important; }
+    .d-inline { display: inline !important; }
+    .d-inline-block { display: inline-block !important; }
+    .d-block { display: block !important; }
+    .d-flex { display: flex !important; }
+    .d-grid { display: grid !important; }
+
+    @media (min-width: 768px) {
+      .d-md-none { display: none !important; }
+      .d-md-inline { display: inline !important; }
+      .d-md-inline-block { display: inline-block !important; }
+      .d-md-block { display: block !important; }
+      .d-md-flex { display: flex !important; }
+      .d-md-grid { display: grid !important; }
+    }
+
+    /* Flex Utilities */
+    .flex-row { flex-direction: row !important; }
+    .flex-column { flex-direction: column !important; }
+    .flex-wrap { flex-wrap: wrap !important; }
+    .flex-nowrap { flex-wrap: nowrap !important; }
+    .justify-content-start { justify-content: flex-start !important; }
+    .justify-content-end { justify-content: flex-end !important; }
+    .justify-content-center { justify-content: center !important; }
+    .justify-content-between { justify-content: space-between !important; }
+    .justify-content-around { justify-content: space-around !important; }
+    .align-items-start { align-items: flex-start !important; }
+    .align-items-end { align-items: flex-end !important; }
+    .align-items-center { align-items: center !important; }
+    .align-items-baseline { align-items: baseline !important; }
+    .align-items-stretch { align-items: stretch !important; }
+
+    /* Visibility Utilities */
+    .visible { visibility: visible !important; }
+    .invisible { visibility: hidden !important; }
+
+    /* ============================================= */
+    /* ============= COMPONENTS ==================== */
+    /* ============================================= */
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-md);
+      font-family: inherit;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      line-height: var(--line-height-normal);
+      color: var(--white);
+      text-align: center;
+      text-decoration: none;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      background-color: var(--primary-500);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      transition: var(--transition-fast);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-600);
+      text-decoration: none;
+    }
+
+    .btn:focus {
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem rgba(27, 94, 32, 0.25);
+    }
+
+    .btn:disabled,
+    .btn.disabled {
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    /* Button Variants */
+    .btn-primary {
+      background-color: var(--primary-500);
+      border-color: var(--primary-500);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-600);
+      border-color: var(--primary-600);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-500);
+      border-color: var(--secondary-500);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-600);
+      border-color: var(--secondary-600);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary-500);
+      background-color: transparent;
+      border-color: var(--primary-500);
+    }
+
+    .btn-outline-primary:hover {
+      color: var(--white);
+      background-color: var(--primary-500);
+      border-color: var(--primary-500);
+    }
+
+    /* Button Sizes */
+    .btn-sm {
+      padding: var(--space-2xs) var(--space-xs);
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-lg {
+      padding: var(--space-md) var(--space-lg);
+      font-size: var(--font-size-lg);
+      border-radius: var(--radius-lg);
+    }
+
+    /* Button Groups */
+    .btn-group {
+      position: relative;
+      display: inline-flex;
+      vertical-align: middle;
+    }
+
+    .btn-group > .btn {
+      position: relative;
+      flex: 1 1 auto;
+    }
+
+    .btn-group > .btn:not(:first-child) {
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .btn-group > .btn:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    /* Cards */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: var(--surface);
+      background-clip: border-box;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-normal);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-body {
+      flex: 1 1 auto;
+      padding: var(--space-md);
+    }
+
+    .card-title {
+      margin-bottom: var(--space-sm);
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .card-subtitle {
+      margin-top: -0.25rem;
+      margin-bottom: 0;
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+
+    .card-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-header {
+      padding: var(--space-sm) var(--space-md);
+      margin-bottom: 0;
+      background-color: rgba(0, 0, 0, 0.03);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header:first-child {
+      border-radius: calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0 0;
+    }
+
+    .card-footer {
+      padding: var(--space-sm) var(--space-md);
+      background-color: rgba(0, 0, 0, 0.03);
+      border-top: 1px solid var(--border);
+    }
+
+    .card-footer:last-child {
+      border-radius: 0 0 calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px);
+    }
+
+    /* Forms */
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: var(--space-sm);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--line-height-normal);
+      color: var(--text);
+      background-color: var(--surface);
+      background-clip: padding-box;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: var(--transition-fast);
+    }
+
+    .form-control:focus {
+      color: var(--text);
+      background-color: var(--surface);
+      border-color: var(--primary-500);
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(27, 94, 32, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 1;
+    }
+
+    .form-control:disabled,
+    .form-control[readonly] {
+      background-color: var(--gray-200);
+      opacity: 1;
+    }
+    /* Navbar Styles */
+    .navbar {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-md);
+      background-color: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .navbar-brand {
+      display: inline-block;
+      padding: 0.3125rem 0;
+      margin-right: var(--space-md);
+      font-size: var(--font-size-xl);
+      font-weight: 500;
+      line-height: inherit;
+      white-space: nowrap;
+      color: var(--primary-500);
+      text-decoration: none;
+    }
+
+    .navbar-brand:hover {
+      text-decoration: none;
+    }
+
+    .navbar-toggler {
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--font-size-lg);
+      line-height: 1;
+      background-color: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: block;
+    }
+
+    .navbar-toggler-icon {
+      display: inline-block;
+      width: 1.5em;
+      height: 1.5em;
+      vertical-align: middle;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 100%;
+    }
+
+    .navbar-nav {
+      display: flex;
+      flex-direction: column;
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+      width: 100%;
+    }
+
+    .nav-item {
+      text-align: center;
+    }
+
+    .nav-link {
+      display: block;
+      padding: var(--space-xs) var(--space-sm);
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.15s ease-in-out;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus {
+      color: var(--primary-500);
+      text-decoration: none;
+    }
+
+    .nav-link.disabled {
+      color: var(--text-secondary);
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .navbar-collapse {
+      flex-basis: 100%;
+      flex-grow: 1;
+      align-items: center;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .navbar-collapse.show {
+      max-height: 500px; /* Adjust based on your content */
+      transition: max-height 0.3s ease-in;
+    }
+
+    /* Desktop View */
+    @media (min-width: 768px) {
+      .navbar {
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+      }
+      
+      .navbar-toggler {
+        display: none;
+      }
+      
+      .navbar-nav {
+        flex-direction: row;
+        width: auto;
+      }
+      
+      .navbar-collapse {
+        display: flex !important;
+        max-height: none;
+      }
+      
+      .nav-item {
+        text-align: left;
+      }
+    }
+  
+    /* Grid System */
+    .container {
+      width: 100%;
+      padding-right: var(--space-md);
+      padding-left: var(--space-md);
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    @media (min-width: 576px) {
+      .container {
+        max-width: 540px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 720px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .container {
+        max-width: 960px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1140px;
+      }
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: calc(var(--space-md) * -0.5);
+      margin-left: calc(var(--space-md) * -0.5);
+    }
+
+    .col {
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+      padding-right: calc(var(--space-md) * 0.5);
+      padding-left: calc(var(--space-md) * 0.5);
+    }
+
+    /* Responsive columns... */
+
+    /* ============================================= */
+    /* ============= RESPONSIVE BREAKPOINTS ======== */
+    /* ============================================= */
+
+    @media (max-width: 575.98px) {
+      /* X-Small devices */
+    }
+
+    @media (min-width: 576px) and (max-width: 767.98px) {
+      /* Small devices */
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+      /* Medium devices */
+    }
+
+    @media (min-width: 992px) and (max-width: 1199.98px) {
+      /* Large devices */
+    }
+
+    @media (min-width: 1200px) {
+      /* X-Large devices */
+    }
+
+    /* Print styles */
+    @media print {
+      *,
+      *::before,
+      *::after {
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      
+      a:not(.btn) {
+        text-decoration: underline;
+      }
+    }
+
+    /* ============================================= */
+    /* ============= CUSTOM COMPONENTS ============= */
+    /* ============================================= */
+
+    /* Hero Section */
+    .hero {
+      padding: var(--space-xl) 0;
+      background-color: var(--primary-500);
+      color: var(--light-500);
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: var(--space-lg);
+      opacity: 0.9;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      padding: var(--space-sm) var(--space-lg);
+      background-color: var(--light-500);
+      color: var(--primary-500);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-weight: bold;
+      transition: var(--transition-fast);
+    }
+
+    .hero-cta:hover {
+      background-color: var(--accent2);
+      color: var(--light-500);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Progress Bar */
+    .progress {
+      height: 0.5rem;
+      background-color: var(--gray-200);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: var(--primary-500);
+      transition: width 0.6s ease;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.35em 0.65em;
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: var(--radius-sm);
+    }
+
+    .bg-primary {
+      background-color: var(--primary-500) !important;
+    }
+
+    .bg-success {
+      background-color: var(--success-500) !important;
+    }
+
+    .bg-warning {
+      background-color: var(--warning-500) !important;
+    }
+
+    .bg-danger {
+      background-color: var(--danger-500) !important;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: var(--z-max);
+    }
+
+    .modal-content {
+      background-color: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: var(--space-md);
+    }
+
+    .modal-footer {
+      padding: var(--space-md);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-sm);
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* ============================================= */
+    /* ============= LAYOUT STYLES ================ */
+    /* ============================================= */
+
+    header {
+      background-color: var(--header);
+      padding: var(--space-md) 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    nav.container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    main {
+      min-height: calc(100vh - 200px);
+      padding: var(--space-xl) 0;
+    }
+
+    footer {
+      background-color: var(--gray-200);
+      padding: var(--space-md) 0;
+      text-align: center;
+    }
+
+    /* ============================================= */
+    /* ============= UTILITY CLASSES ============== */
+    /* ============================================= */
+
+    .gap-1 { gap: var(--space-xs); }
+    .gap-2 { gap: var(--space-sm); }
+    .gap-3 { gap: var(--space-md); }
+    .gap-4 { gap: var(--space-lg); }
+    .gap-5 { gap: var(--space-xl); }
+
+    .bg-light { background-color: var(--gray-200) !important; }
+    .bg-dark { background-color: var(--gray-900) !important; }
+    .bg-primary { background-color: var(--primary-500) !important; }
+    .bg-secondary { background-color: var(--secondary-500) !important; }
+
+    .shadow { box-shadow: var(--shadow-md) !important; }
+    .shadow-sm { box-shadow: var(--shadow-sm) !important; }
+    .shadow-lg { box-shadow: var(--shadow-lg) !important; }
+    .shadow-none { box-shadow: none !important; }
+
+    .rounded { border-radius: var(--radius-md) !important; }
+    .rounded-sm { border-radius: var(--radius-sm) !important; }
+    .rounded-lg { border-radius: var(--radius-lg) !important; }
+    .rounded-circle { border-radius: 50% !important; }
+    .rounded-pill { border-radius: var(--radius-full) !important; }
+
+    .w-100 { width: 100% !important; }
+    .h-100 { height: 100% !important; }
+
+    .display-4 {
+      font-size: calc(1.475rem + 2.7vw);
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    .lead {
+      font-size: 1.25rem;
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+ 
+ <nav class="navbar">
+    <a class="navbar-brand" href="#">Brand</a>
+    <button class="navbar-toggler" type="button" aria-label="Toggle navigation" onclick="toggleNavbar()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+    </div>
+  </nav> 
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Manage Your Properties with Ease</h1>
+        <p class="hero-subtitle">A comprehensive dashboard for property owners and managers to track rentals, tenants, and maintenance requests.</p>
+        <a href="#" class="hero-cta">Get Started</a>
+      </div>
+    </section>
+
+    <div class="container py-4">
+      <!-- Summary Cards Row -->
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3">Total Properties</h2>
+              <p class="display-5 mb-3">24</p>
+              <div class="progress mb-2">
+                <div class="progress-bar bg-success" style="width: 80%"></div>
+              </div>
+              <p class="text-secondary mb-0">80% Occupancy Rate</p>
+              <!-- Button Primary -->
+<button class="btn btn-primary" onclick="openModal('loginModal')">Primary Button</button>
+
+<!-- Button Secondary -->
+<button class="btn btn-secondary" onclick="openModal('loginModal')">Secondary Button</button>
+
+<!-- Button Outline -->
+<button class="btn btn-outline-primary" onclick="openModal('loginModal')">Outline Button</button>
+
+<!-- Button dengan Ukuran Berbeda -->
+<button class="btn btn-primary btn-sm" onclick="openModal('loginModal')">Small Button</button>
+<button class="btn btn-primary btn-lg" onclick="openModal('loginModal')">Large Button</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3">Monthly Revenue</h2>
+              <p class="display-5 mb-3">$48,350</p>
+              <div class="progress mb-2">
+                <div class="progress-bar bg-primary" style="width: 65%"></div>
+              </div>
+              <p class="text-secondary mb-0">65% of Target</p><!-- Button Group Horizontal -->
+<div class="btn-group">
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Left</button>
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Middle</button>
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Right</button>
+</div>
+
+<!-- Button Group Vertical -->
+<div class="btn-group-vertical">
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Top</button>
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Middle</button>
+  <button class="btn btn-primary" onclick="openModal('loginModal')">Bottom</button>
+</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3">Maintenance Requests</h2>
+              <p class="display-5 mb-3">7</p>
+              <div class="progress mb-2">
+                <div class="progress-bar bg-warning" style="width: 30%"></div>
+              </div>
+              <p class="text-secondary mb-0">3 High Priority</p><!-- Button untuk membuka modal -->
+<button class="btn btn-primary" onclick="openModal('loginModal')">Buka Modal Login</button>
+
+<!-- Modal (sudah ada di kode Anda) -->
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Login</h5>
+      <button type="button" class="btn-close" onclick="closeModal('loginModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- Konten modal -->
+       <div class="container">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque qui ipsam, reiciendis quibusdam voluptatibus nobis possimus tempora, quasi asperiores, illo quo corrupti.</p>
+       </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('loginModal')">Close</button>
+      <button type="button" class="btn btn-primary">Login</button>
+    </div>
+  </div>
+</div>
+            </div>
+          </div>
+        </div>
+      </div>
+<div class="container container-fluid">
+  <!-- Tambahkan di bawah tabel Recent Tenants -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <h2 class="h5 mb-0">Button Examples</h2>
+      </div>
+      <div class="card-body">
+        <h3 class="h6">Single Buttons</h3>
+        <div class="d-flex gap-2 mb-4">
+          <button class="btn btn-primary" onclick="openModal('loginModal')">Primary</button>
+          <button class="btn btn-secondary" onclick="openModal('loginModal')">Secondary</button>
+          <button class="btn btn-outline-primary" onclick="openModal('loginModal')">Outline</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal('loginModal')">Small</button>
+          <button class="btn btn-primary btn-lg" onclick="openModal('loginModal')">Large</button>
+        </div>
+        
+        <h3 class="h6">Button Groups</h3>
+        <div class="btn-group mb-4">
+          <button class="btn btn-primary" onclick="openModal('loginModal')">Option 1</button>
+          <button class="btn btn-primary" onclick="openModal('loginModal')">Option 2</button>
+          <button class="btn btn-primary" onclick="openModal('loginModal')">Option 3</button>
+        </div>
+        
+        <h3 class="h6">Modal Trigger</h3>
+        <button class="btn btn-success" onclick="openModal('loginModal')">
+          Klik untuk Membuka Modal
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+      <!-- Table Section -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light">
+              <h2 class="h5 mb-0">Recent Tenants</h2>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Property</th>
+                      <th>Move-in Date</th>
+                      <th>Rent</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>John Doe</td>
+                      <td>Sunset Apartments #301</td>
+                      <td>Jan 15, 2023</td>
+                      <td>$1,450</td>
+                      <td><span class="badge bg-success">Active</span></td>
+                      <td>
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-outline-primary">View</button>
+                          <button class="btn btn-sm btn-outline-danger">Contact</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Jane Smith</td>
+                      <td>Mountain View #205</td>
+                      <td>Feb 1, 2023</td>
+                      <td>$1,650</td>
+                      <td><span class="badge bg-success">Active</span></td>
+                      <td>
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-outline-primary">View</button>
+                          <button class="btn btn-sm btn-outline-danger">Contact</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Robert Johnson</td>
+                      <td>Lakeside Villa #12</td>
+                      <td>Mar 10, 2023</td>
+                      <td>$2,200</td>
+                      <td><span class="badge bg-warning">Pending</span></td>
+                      <td>
+                        <div class="btn-group">
+                          <button class="btn btn-sm btn-outline-primary">View</button>
+                          <button class="btn btn-sm btn-outline-danger">Contact</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forms Section -->
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light">
+              <h2 class="h5 mb-0">Add New Property</h2>
+            </div>
+            <div class="card-body">
+              <form id="propertyForm">
+                <div class="mb-3">
+                  <label class="form-label">Property Name</label>
+                  <input type="text" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Address</label>
+                  <div class="position-relative">
+                    <input type="text" class="form-control" required>
+                    <span class="position-absolute end-0 top-50 translate-middle-y pe-2">📍</span>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Monthly Rent</label>
+                  <input type="number" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Bedrooms</label>
+                  <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4+</option>
+                  </select>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" rows="3"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-success w-100">Add Property</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light">
+              <h2 class="h5 mb-0">Tenant Login</h2>
+            </div>
+            <div class="card-body">
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control" required>
+                </div>
+                
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="rememberMe">
+                  <label class="form-check-label" for="rememberMe">Remember me</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="btn-close" onclick="closeModal('loginModal')">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="modalLoginForm">
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('loginModal')">Close</button>
+          <button type="button" class="btn btn-primary">Login</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-5">
+    <p class="mb-0">&copy; 2023 Rental Apartment Management. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Dark Mode Toggle
+    function toggleTheme() {
+      const body = document.body;
+      const themeIcon = document.getElementById('theme-icon');
+      const isDark = body.getAttribute("data-theme") === "dark";
+      
+      body.setAttribute("data-theme", isDark ? "light" : "dark");
+      themeIcon.textContent = isDark ? "🌞" : "🌙";
+    }
+
+    // Modal Functions
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = "flex";  
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = "none";
+    }  
+    function toggleNavbar() {
+      const navbarCollapse = document.getElementById('navbarContent');
+      navbarCollapse.classList.toggle('show');
+    }
+  </script>
+</body>
+</html>
