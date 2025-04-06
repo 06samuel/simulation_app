@@ -1,3 +1,40 @@
+// Standardized selector constants
+const SELECTORS = {
+    dashboard: {
+        stats: {
+            totalProperties: '#totalProperties',
+            totalRenters: '#totalRenters',
+            totalBookings: '#totalBookings',
+            occupancyRate: '#occupancyRate',
+            totalRevenue: '#totalRevenue'
+        },
+        charts: {
+            bookingTrend: '#bookingTrendChart',
+            renterDistribution: '#renterDistributionChart',
+            revenue: '#revenueChart'
+        }
+    },
+    navigation: {
+        sidebar: '.c-sidebar',
+        sidebarToggle: '.c-sidebar__toggle',
+        themeToggle: '.c-navbar__theme-toggle',
+        navItems: '.c-sidebar__item'
+    },
+    forms: {
+        search: '.c-search__input',
+        filter: '.c-filter__select',
+        filterButton: '.c-filter__button'
+    },
+    modals: {
+        details: '.c-modal--details',
+        closeButton: '.c-modal__close'
+    },
+    notifications: {
+        container: '.c-notifications',
+        item: '.c-notification'
+    }
+};
+
 // Consolidated data for statistics
 const statistics = {
     properties: 10,
@@ -12,15 +49,15 @@ function updateDashboard() {
     try {
         // Update statistics with validation
         const elements = {
-            "totalProperties": statistics.properties,
-            "totalRenters": statistics.renters,
-            "totalBookings": statistics.bookings,
-            "occupancyRate": `${statistics.occupancyRate}%`,
-            "totalRevenue": `Rp ${statistics.revenue.toLocaleString('id-ID')}`
+            [SELECTORS.dashboard.stats.totalProperties]: statistics.properties,
+            [SELECTORS.dashboard.stats.totalRenters]: statistics.renters,
+            [SELECTORS.dashboard.stats.totalBookings]: statistics.bookings,
+            [SELECTORS.dashboard.stats.occupancyRate]: `${statistics.occupancyRate}%`,
+            [SELECTORS.dashboard.stats.totalRevenue]: `Rp ${statistics.revenue.toLocaleString('id-ID')}`
         };
 
-        Object.entries(elements).forEach(([id, value]) => {
-            const element = document.getElementById(id);
+        Object.entries(elements).forEach(([selector, value]) => {
+            const element = document.querySelector(selector);
             if (element) element.textContent = value;
         });
 
@@ -50,7 +87,7 @@ const chartDefaults = {
 };
 
 function drawBookingTrendChart() {
-    const ctx = document.getElementById('bookingTrendChart')?.getContext('2d');
+    const ctx = document.querySelector(SELECTORS.dashboard.charts.bookingTrend)?.getContext('2d');
     if (!ctx) return;
 
     new Chart(ctx, {
@@ -82,7 +119,7 @@ function drawBookingTrendChart() {
 }
 
 function drawRenterDistributionChart() {
-    const ctx = document.getElementById('renterDistributionChart')?.getContext('2d');
+    const ctx = document.querySelector(SELECTORS.dashboard.charts.renterDistribution)?.getContext('2d');
     if (!ctx) return;
 
     const colors = {
@@ -126,7 +163,7 @@ function drawRenterDistributionChart() {
 }
 
 function drawRevenueChart() {
-    const ctx = document.getElementById('revenueChart')?.getContext('2d');
+    const ctx = document.querySelector(SELECTORS.dashboard.charts.revenue)?.getContext('2d');
     if (!ctx) return;
 
     new Chart(ctx, {
@@ -199,8 +236,36 @@ const lazyLoadImages = () => {
     document.querySelectorAll("img[data-src]").forEach(img => imageObserver.observe(img));
 };
 
-// Initialize dashboard and lazy loading when DOM is loaded
+// Enhanced event listeners for common interactions
 document.addEventListener('DOMContentLoaded', () => {
+    // Sidebar toggle
+    const sidebarToggle = document.querySelector(SELECTORS.navigation.sidebarToggle);
+    const sidebar = document.querySelector(SELECTORS.navigation.sidebar);
+    
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('is-collapsed');
+        });
+    }
+
+    // Theme toggle
+    const themeToggle = document.querySelector(SELECTORS.navigation.themeToggle);
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+    }
+
+    // Initialize components
     updateDashboard();
     lazyLoadImages();
+
+    const searchInput = document.querySelector(SELECTORS.forms.search);
+    const filterButton = document.querySelector(SELECTORS.forms.filterButton);
+
+    filterButton.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        console.log(`Filter applied with query: ${query}`);
+    });
 });
