@@ -226,4 +226,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const query = searchInput.value.trim();
     console.log(`Filter applied with query: ${query}`);
   });
+
+  // Highlight active sidebar link
+  const sidebarLinks = document.querySelectorAll('.sidebar__item');
+  const currentPath = window.location.pathname;
+
+  sidebarLinks.forEach((link) => {
+    if (link.getAttribute('href') === currentPath.split('/').pop()) {
+      link.classList.add('sidebar__item--active');
+    } else {
+      link.classList.remove('sidebar__item--active');
+    }
+  });
 });
