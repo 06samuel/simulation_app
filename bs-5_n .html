@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Component</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"><style>
+        .calendar-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.calendar-view {
+    display: none;
+}
+
+.calendar-view.active {
+    display: block;
+}
+
+.time-slot {
+    transition: all 0.3s ease;
+}
+
+.time-slot:hover {
+    background-color: #f8f9fa;
+}
+
+.weekly-slot {
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.current-day {
+    background-color: #e3f2fd;
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day-cell:hover {
+    background: #e9ecef;
+}
+
+.day-cell.current-day {
+    background: #e3f2fd;
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .calendar-header .btn-group {
+        flex-direction: column;
+    }
+    
+    .calendar-header h2 {
+        font-size: 1.5rem;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="calendar-wrapper">
+            <div class="calendar-header mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group" role="group" aria-label="Calendar Navigation">
+                        <button type="button" class="btn btn-outline-primary" id="prevBtn">&lt; Prev</button>
+                        <button type="button" class="btn btn-outline-primary" id="nextBtn">Next &gt;</button>
+                    </div>
+                    <h2 class="current-date mb-0">December 2023</h2>
+                    <div class="btn-group" role="group" aria-label="View Options">
+                        <button type="button" class="btn btn-primary active" data-view="daily">Daily</button>
+                        <button type="button" class="btn btn-primary" data-view="weekly">Weekly</button>
+                        <button type="button" class="btn btn-primary" data-view="monthly">Monthly</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="dailyView" class="calendar-view active">
+                <div class="time-slots">
+                    <div class="time-slot card mb-2">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <span class="time">9:00 AM</span>
+                            <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#eventModal">+ Add Event</button>
+                        </div>
+                    </div>
+                    <div class="time-slot card mb-2">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <span class="time">10:00 AM</span>
+                            <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#eventModal">+ Add Event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="weeklyView" class="calendar-view">
+                <div class="row g-2">
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-header">Mon</div>
+                            <div class="card-body p-2">
+                                <div class="weekly-slot mb-1">9:00 AM</div>
+                                <div class="weekly-slot mb-1">10:00 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 current-day">
+                            <div class="card-header">Tue</div>
+                            <div class="card-body p-2">
+                                <div class="weekly-slot mb-1">9:00 AM</div>
+                                <div class="weekly-slot mb-1">10:00 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="monthlyView" class="calendar-view">
+                <div class="row row-cols-7 g-2">
+                    <div class="col"><div class="day-cell">1</div></div>
+                    <div class="col"><div class="day-cell current-day">2</div></div>
+                    <div class="col"><div class="day-cell">3</div></div>
+                    <div class="col"><div class="day-cell">4</div></div>
+                    <div class="col"><div class="day-cell">5</div></div>
+                    <div class="col"><div class="day-cell">6</div></div>
+                    <div class="col"><div class="day-cell">7</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="eventModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add New Event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Event Title</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save Event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

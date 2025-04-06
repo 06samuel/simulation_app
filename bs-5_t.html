@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature-Rich Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Arial', sans-serif;
+}
+
+.calendar-container {
+    padding: 20px;
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #007bff;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    width: 14.28%;
+    height: 50px;
+    border-radius: 10px;
+}
+
+.enabled-date {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.enabled-date:hover {
+    background-color: #e9ecef;
+    transform: scale(1.1);
+}
+
+.disabled-date {
+    color: #adb5bd;
+    cursor: not-allowed;
+}
+
+.selected-date {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.selected-date:hover {
+    background-color: #0056b3;
+}
+
+#bookSlot {
+    transition: all 0.3s ease;
+}
+
+#bookSlot:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .table th, .table td {
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    #bookSlot {
+        font-size: 1rem;
+    }
+}
+
+</style>    
+</head>
+<body>
+    <div class="container-fluid calendar-container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <button class="btn btn-outline-light" id="prevMonth">&lt;</button>
+                        <h2 class="mb-0" id="monthYear">June 2023</h2>
+                        <button class="btn btn-outline-light" id="nextMonth">&gt;</button>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendarBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button class="btn btn-success btn-lg" id="bookSlot" disabled>Book Slot</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const calendarBody = document.getElementById('calendarBody');
+        const monthYear = document.getElementById('monthYear');
+        const prevMonth = document.getElementById('prevMonth');
+        const nextMonth = document.getElementById('nextMonth');
+        const bookSlot = document.getElementById('bookSlot');
+
+        let currentDate = new Date();
+        let selectedDate = null;
+
+        function generateCalendar(year, month) {
+            calendarBody.innerHTML = '';
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            monthYear.textContent = `${firstDay.toLocaleString('default', { month: 'long' })} ${year}`;
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    if (i === 0 && j < firstDay.getDay()) {
+                        cell.textContent = '';
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        cell.textContent = date;
+                        cell.setAttribute('data-date', `${year}-${month + 1}-${date}`);
+                        if (date % 2 === 0) {
+                            cell.classList.add('enabled-date');
+                            cell.setAttribute('tabindex', '0');
+                            cell.setAttribute('role', 'button');
+                            cell.setAttribute('aria-label', `Select ${date} ${firstDay.toLocaleString('default', { month: 'long' })} ${year}`);
+                        } else {
+                            cell.classList.add('disabled-date');
+                            cell.setAttribute('aria-disabled', 'true');
+                        }
+                        date++;
+                    }
+                    row.appendChild(cell);
+                }
+                calendarBody.appendChild(row);
+            }
+        }
+
+        function selectDate(cell) {
+            if (selectedDate) {
+                selectedDate.classList.remove('selected-date');
+            }
+            cell.classList.add('selected-date');
+            selectedDate = cell;
+            bookSlot.disabled = false;
+        }
+
+        calendarBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('enabled-date')) {
+                selectDate(e.target);
+            }
+        });
+
+        calendarBody.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.classList.contains('enabled-date')) {
+                selectDate(e.target);
+            }
+        });
+
+        prevMonth.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        nextMonth.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        bookSlot.addEventListener('click', () => {
+            if (selectedDate) {
+                alert(`Slot booked for ${selectedDate.getAttribute('data-date')}`);
+            }
+        });
+
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+    </script>
+</body>
+</html>

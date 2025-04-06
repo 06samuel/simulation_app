@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Order Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>:root {
+    --primary: #0070f3;
+    --primary-foreground: #ffffff;
+    --secondary: #f5f5f5;
+    --secondary-foreground: #111111;
+    --accent: #00a8ff;
+    --accent-foreground: #ffffff;
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --popover: #ffffff;
+    --popover-foreground: #111111;
+    --muted: #f5f5f5;
+    --muted-foreground: #666666;
+    --destructive: #ff0000;
+    --destructive-foreground: #ffffff;
+    --border: #e5e5e5;
+    --input: #e5e5e5;
+    --ring: #0070f3;
+}
+
+body {
+    background-color: var(--secondary);
+    color: var(--foreground);
+}
+
+.card {
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.status-card {
+    border-radius: 10px;
+}
+
+.status-card.received {
+    background-color: #e3f2fd;
+    border-color: #90caf9;
+}
+
+.status-card.preparing {
+    background-color: #fff3e0;
+    border-color: #ffe0b2;
+}
+
+.status-card.ready {
+    background-color: #e8f5e9;
+    border-color: #a5d6a7;
+}
+
+.status-card.completed {
+    background-color: #e0f2f1;
+    border-color: #80cbc4;
+}
+
+.badge {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.status-received {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-preparing {
+    background-color: #fff3e0;
+    color: #f57c00;
+}
+
+.status-ready {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-completed {
+    background-color: #e0f2f1;
+    color: #00796b;
+}
+
+.status-cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn-group .btn {
+    border-color: var(--border);
+}
+
+.dropdown-menu {
+    border-color: var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table th {
+    background-color: var(--secondary);
+    border-bottom-width: 1px;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .status-card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        margin: 0 -1rem;
+    }
+}
+</style>    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">Order Management</h2>
+                    <div class="d-flex gap-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search orders...">
+                            <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Filter by Status
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">All Orders</a></li>
+                                <li><a class="dropdown-item" href="#">Received</a></li>
+                                <li><a class="dropdown-item" href="#">Preparing</a></li>
+                                <li><a class="dropdown-item" href="#">Ready for Pickup</a></li>
+                                <li><a class="dropdown-item" href="#">Completed</a></li>
+                                <li><a class="dropdown-item" href="#">Cancelled</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card status-card received">
+                    <div class="card-body">
+                        <h5>New Orders</h5>
+                        <h2>12</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card preparing">
+                    <div class="card-body">
+                        <h5>Preparing</h5>
+                        <h2>8</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card ready">
+                    <div class="card-body">
+                        <h5>Ready for Pickup</h5>
+                        <h2>5</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card completed">
+                    <div class="card-body">
+                        <h5>Completed Today</h5>
+                        <h2>45</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Order Details</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                                <th>Cancel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD001</td>
+                                <td>John Smith</td>
+                                <td>
+                                    <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#orderModal">View Details</button>
+                                </td>
+                                <td>10:30 AM</td>
+                                <td><span class="badge status-received">Received</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary">Update Status</button>
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Mark Preparing</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark Ready</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark Completed</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger">Cancel Order</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD002</td>
+                                <td>Sarah Johnson</td>
+                                <td>
+                                    <button class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#orderModal">View Details</button>
+                                </td>
+                                <td>10:45 AM</td>
+                                <td><span class="badge status-preparing">Preparing</span></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary">Update Status</button>
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Mark Ready</a></li>
+                                            <li><a class="dropdown-item" href="#">Mark Completed</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-danger">Cancel Order</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details #ORD001</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h6>Customer Information</h6>
+                        <p class="mb-1">Name: John Smith</p>
+                        <p class="mb-1">Phone: (555) 123-4567</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Order Items</h6>
+                        <ul class="list-unstyled">
+                            <li>1x Margherita Pizza - $12.99</li>
+                            <li>2x Coca Cola - $4.00</li>
+                            <li>1x Garlic Bread - $4.99</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6>Total Amount</h6>
+                        <p class="h4">$21.98</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

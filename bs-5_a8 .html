@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Refund Management</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<link rel="stylesheet" href="index.css">
+<style>
+  :root {
+--primary: #0070f3;
+--primary-foreground: #ffffff;
+--secondary: #f5f5f5;
+--secondary-foreground: #1f2937;
+--background: #ffffff;
+--foreground: #1f2937;
+--card: #ffffff;
+--card-foreground: #1f2937;
+--border: #e5e7eb;
+--input: #e5e7eb;
+--ring: #0070f3;
+}
+
+body {
+background-color: var(--secondary);
+color: var(--foreground);
+}
+
+.card {
+background-color: var(--card);
+color: var(--card-foreground);
+border-color: var(--border);
+}
+
+.profile-image {
+width: 120px;
+height: 120px;
+object-fit: cover;
+border: 4px solid var(--border);
+}
+
+.btn-primary {
+background-color: var(--primary);
+border-color: var(--primary);
+color: var(--primary-foreground);
+}
+
+.btn-primary:hover {
+opacity: 0.9;
+}
+
+.progress-bar {
+background-color: var(--primary);
+}
+
+.table {
+--bs-table-hover-bg: var(--secondary);
+}
+
+.card-img-top {
+height: 200px;
+object-fit: cover;
+}
+
+.chat-widget {
+background-color: var(--background);
+border: 1px solid var(--border);
+}
+
+.product-thumbnail {
+width: 60px;
+height: 60px;
+object-fit: cover;
+border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+.profile-image {
+width: 100px;
+height: 100px;
+}
+}
+
+.modal-content {
+background-color: var(--card);
+color: var(--card-foreground);
+border-color: var(--border);
+}
+
+.progress {
+background-color: var(--secondary);
+}
+
+.bg-light {
+background-color: var(--secondary) !important;
+}
+
+.table td, .table th {
+border-color: var(--border);
+}
+
+.badge {
+padding: 0.5em 0.8em;
+}
+
+.modal-header, .modal-footer {
+border-color: var(--border);
+}
+
+.btn-success {
+background-color: #10B981;
+border-color: #10B981;
+}
+
+.btn-danger {
+background-color: #EF4444;
+border-color: #EF4444;
+}
+
+.card h6 {
+color: var(--card-foreground);
+font-weight: 600;
+}
+
+.text-success {
+color: #10B981 !important;
+}
+
+.return-evidence {
+height: 200px;
+object-fit: cover;
+cursor: pointer;
+}
+
+.video-wrapper {
+height: 200px;
+background: #000;
+}
+
+.return-video {
+height: 100%;
+width: 100%;
+object-fit: contain;
+}
+
+.modal-xl .modal-body img,
+.modal-xl .modal-body video {
+max-height: 80vh;
+object-fit: contain;
+}
+</style>
+</head>
+<body>
+<div class="container-fluid py-4">
+<div class="row g-4">
+<div class="col-lg-4">
+<div class="card shadow-sm">
+<div class="card-body text-center">
+<div class="position-relative d-inline-block mb-3">
+<img src="https://images.unsplash.com/photo-1566753323558-f4e0952af115" class="rounded-circle profile-image" alt="Admin Profile">
+<span class="position-absolute bottom-0 end-0 p-1 bg-success rounded-circle"><span class="visually-hidden">Online Status</span></span>
+</div>
+<h4 class="mb-1">Admin Dashboard</h4>
+<p class="text-muted mb-3">Refund Management System</p>
+<div class="d-flex justify-content-center gap-2 mb-3">
+<button class="btn btn-primary"><i class="bi bi-gear"></i> Settings</button>
+<button class="btn btn-outline-primary"><i class="bi bi-box-arrow-right"></i> Logout</button>
+</div>
+<div class="border-top pt-3">
+<div class="row text-start">
+<div class="col-12 mb-2">
+<small class="text-muted">Total Refunds Pending</small>
+<p class="mb-0">15</p>
+</div>
+<div class="col-12 mb-2">
+<small class="text-muted">Processed Today</small>
+<p class="mb-0">5</p>
+</div>
+<div class="col-12">
+<small class="text-muted">Total Amount Refunded</small>
+<p class="mb-0">$2,450.00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card shadow-sm mt-4">
+<div class="card-body">
+<h5 class="card-title">Quick Stats</h5>
+<div class="row g-3">
+<div class="col-6">
+<div class="p-3 bg-light rounded text-center">
+<h6 class="mb-1">Success Rate</h6>
+<p class="mb-0 text-success">95%</p>
+</div>
+</div>
+<div class="col-6">
+<div class="p-3 bg-light rounded text-center">
+<h6 class="mb-1">Avg. Processing</h6>
+<p class="mb-0">2.5 days</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-8">
+<div class="card shadow-sm mb-4">
+<div class="card-body">
+<div class="d-flex justify-content-between align-items-center mb-4">
+<h5 class="card-title mb-0">Refund Requests</h5>
+<div class="d-flex gap-2">
+<input type="text" class="form-control" placeholder="Search refunds...">
+<select class="form-select" style="width: auto;">
+<option>All Status</option>
+<option>Pending</option>
+<option>Approved</option>
+<option>Rejected</option>
+</select>
+</div>
+</div>
+<div class="table-responsive">
+<table class="table align-middle">
+<thead>
+<tr>
+<th>Refund ID</th>
+<th>Order ID</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#REF-001</td>
+<td>#ORD-123</td>
+<td>$299.99</td>
+<td><span class="badge bg-warning">Pending</span></td>
+<td>2024-01-15</td>
+<td>
+<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#refundModal">View Details</button>
+</td>
+</tr>
+<tr>
+<td>#REF-002</td>
+<td>#ORD-124</td>
+<td>$149.99</td>
+<td><span class="badge bg-success">Approved</span></td>
+<td>2024-01-14</td>
+<td>
+<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#refundModal">View Details</button>
+</td>
+</tr>
+<tr>
+<td>#REF-003</td>
+<td>#ORD-125</td>
+<td>$89.99</td>
+<td><span class="badge bg-danger">Rejected</span></td>
+<td>2024-01-13</td>
+<td>
+<button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#refundModal">View Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="card shadow-sm">
+<div class="card-body">
+<h5 class="card-title mb-4">Refund Analytics</h5>
+<div class="row g-3">
+<div class="col-md-4">
+<div class="card h-100">
+<div class="card-body">
+<h6 class="card-title">Top Refund Reasons</h6>
+<div class="progress mb-2" style="height: 20px;">
+<div class="progress-bar" role="progressbar" style="width: 65%">Product Defect (65%)</div>
+</div>
+<div class="progress mb-2" style="height: 20px;">
+<div class="progress-bar bg-info" role="progressbar" style="width: 25%">Wrong Size (25%)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="card h-100">
+<div class="card-body">
+<h6 class="card-title">Processing Time</h6>
+<div class="d-flex justify-content-between align-items-center">
+<div class="text-center">
+<h3 class="mb-0">2.5</h3>
+<small class="text-muted">Avg. Days</small>
+</div>
+<div class="text-center">
+<h3 class="mb-0">85%</h3>
+<small class="text-muted">On Time</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="card h-100">
+<div class="card-body">
+<h6 class="card-title">Monthly Trend</h6>
+<div class="progress mb-2" style="height: 5px;">
+<div class="progress-bar" role="progressbar" style="width: 75%"></div>
+</div>
+<small class="text-muted">25% increase from last month</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="refundModal" tabindex="-1">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Refund Details #REF-001</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+<div class="row g-3">
+<div class="col-md-6">
+<h6>Customer Information</h6>
+<p class="mb-1">Name: John Smith</p>
+<p class="mb-1">Email: john.smith@example.com</p>
+<p class="mb-3">Phone: +1 234 567 890</p>
+<h6>Order Information</h6>
+<p class="mb-1">Order ID: #ORD-123</p>
+<p class="mb-1">Purchase Date: 2024-01-10</p>
+<p class="mb-1">Order Amount: $299.99</p>
+</div>
+<div class="col-md-6">
+<h6>Refund Information</h6>
+<p class="mb-1">Refund Amount: $299.99</p>
+<p class="mb-1">Request Date: 2024-01-15</p>
+<p class="mb-1">Status: Pending</p>
+<p class="mb-3">Reason: Product Defect</p>
+<h6>Additional Notes</h6>
+<p class="mb-1">Customer reported product not working as expected.</p>
+</div>
+<div class="col-12 mt-4">
+<h6>Refunded Items</h6>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Product Image</th>
+<th>Name</th>
+<th>Type</th>
+<th>Quantity</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" class="product-thumbnail" alt="Smart Watch"></td>
+<td>Smart Watch Pro</td>
+<td>Electronics</td>
+<td>1</td>
+<td>$199.99</td>
+</tr>
+<tr>
+<td><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" class="product-thumbnail" alt="Wireless Headphones"></td>
+<td>Premium Headphones</td>
+<td>Audio</td>
+<td>1</td>
+<td>$99.99</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="col-12 mt-4">
+<h6>Return Evidence</h6>
+<div class="row g-3">
+<div class="col-md-6">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" class="card-img-top return-evidence" alt="Product Defect Photo">
+<div class="card-body">
+<h6 class="card-title">Defect Photo</h6>
+<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal">View Full Image</button>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="card">
+<div class="video-wrapper">
+<video class="return-video w-100" controls>
+<source src="#" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+<div class="card-body">
+<h6 class="card-title">Demonstration Video</h6>
+<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal">View Full Video</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-success">Approve Refund</button>
+<button type="button" class="btn btn-danger">Reject Refund</button>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="imageModal" tabindex="-1">
+<div class="modal-dialog modal-xl">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Return Evidence - Photo</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body p-0">
+<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519" class="img-fluid w-100" alt="Product Defect Photo">
+</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="videoModal" tabindex="-1">
+<div class="modal-dialog modal-xl">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Return Evidence - Video</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body p-0">
+<video class="w-100" controls>
+<source src="#" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet"><style>
+      :root {
+    --primary: #6c8eef;
+    --primary-foreground: #ffffff;
+    --secondary: #f8f9fa;
+    --secondary-foreground: #495057;
+    --background: #f9fafb;
+    --foreground: #495057;
+    --card: #ffffff;
+    --card-foreground: #495057;
+    --border: #e9ecef;
+    --input: #e9ecef;
+    --ring: #6c8eef;
+    --radius: 0.5rem;
+    --shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.layout-wrapper {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar main";
+    grid-template-rows: 60px 1fr;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+}
+
+.main-header {
+    grid-area: header;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background: var(--secondary);
+    border-right: 1px solid var(--border);
+    min-height: 100%;
+}
+
+.sidebar .nav-link {
+    color: var(--secondary-foreground);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.sidebar .accordion-button {
+    background: transparent;
+    color: var(--secondary-foreground);
+    padding: 1rem 1.5rem;
+    border: none;
+}
+
+.sidebar .accordion-button:not(.collapsed) {
+    background: rgba(108, 142, 239, 0.1);
+    color: var(--primary);
+}
+
+.main-content {
+    grid-area: main;
+    padding: 1.5rem;
+    background: var(--background);
+}
+
+@media (max-width: 768px) {
+    .layout-wrapper {
+        grid-template-areas:
+            "header"
+            "main";
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 60px;
+        bottom: 0;
+        transition: left 0.3s;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+}
+
+.stat-card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.table th {
+    font-weight: 600;
+    background: var(--secondary);
+}
+
+.form-control, .form-select {
+    border-color: var(--input);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px rgba(108, 142, 239, 0.1);
+}
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper">
+        <header class="main-header">
+            <div class="d-flex justify-content-between align-items-center px-3 py-2">
+                <div class="d-flex align-items-center">
+                    <button class="btn" id="sidebarToggle"><i class="bi bi-list"></i></button>
+                    <h5 class="mb-0 ms-3">Admin Panel</h5>
+                </div>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-header p-3 text-center">
+                <img src="https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=100&h=100&fit=crop" alt="Admin Logo" class="img-fluid rounded-circle mb-3">
+            </div>
+            <div class="accordion custom-accordion" id="sidebarAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#customerManagement">
+                            <i class="bi bi-people me-2"></i> Customer Management
+                        </button>
+                    </h2>
+                    <div id="customerManagement" class="accordion-collapse collapse show" data-bs-parent="#sidebarAccordion">
+                        <div class="accordion-body">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="#">View Customers</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Add Customer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#postManagement">
+                            <i class="bi bi-file-post me-2"></i> Post Management
+                        </button>
+                    </h2>
+                    <div id="postManagement" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordion">
+                        <div class="accordion-body">
+                            <ul class="nav flex-column">
+                                <li class="nav-item"><a class="nav-link" href="#">Pending Posts</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#">Approved Posts</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main class="main-content">
+            <div class="container-fluid p-4">
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Customers</h5>
+                                <h2 class="mb-0">1,234</h2>
+                                <small class="text-success"><i class="bi bi-arrow-up"></i> 12% increase</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Posts</h5>
+                                <h2 class="mb-0">5,678</h2>
+                                <small class="text-primary"><i class="bi bi-graph-up"></i> Active</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Approvals</h5>
+                                <h2 class="mb-0">45</h2>
+                                <small class="text-warning"><i class="bi bi-clock"></i> Awaiting Review</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Customer Accounts</h5>
+                        <div class="d-flex gap-2">
+                            <select class="form-select form-select-sm">
+                                <option>All Status</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                            <input type="search" class="form-control form-control-sm" placeholder="Search customers...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Posts</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#12345</td>
+                                        <td>John Doe</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>23</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#12346</td>
+                                        <td>Jane Smith</td>
+                                        <td><span class="badge bg-danger">Inactive</span></td>
+                                        <td>15</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation" class="mt-3">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

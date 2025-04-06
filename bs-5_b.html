@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Gestão de Vendas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    :root {
+    --primary: #0d6efd;
+    --primary-foreground: #ffffff;
+    --secondary: #6c757d;
+    --secondary-foreground: #ffffff;
+    --accent: #e9ecef;
+    --accent-foreground: #212529;
+    --background: #ffffff;
+    --foreground: #212529;
+    --card: #ffffff;
+    --card-foreground: #212529;
+    --border: #dee2e6;
+    --input: #ced4da;
+    --ring: #0d6efd;
+    --radius: 0.5rem;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+[data-bs-theme="dark"] {
+    --primary: #0d6efd;
+    --primary-foreground: #ffffff;
+    --secondary: #6c757d;
+    --secondary-foreground: #ffffff;
+    --accent: #343a40;
+    --accent-foreground: #f8f9fa;
+    --background: #212529;
+    --foreground: #f8f9fa;
+    --card: #343a40;
+    --card-foreground: #f8f9fa;
+    --border: #495057;
+    --input: #495057;
+    --ring: #0d6efd;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+.card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.navbar {
+    box-shadow: var(--shadow);
+}
+
+.product-thumbnail {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.sales-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.revenue-card {
+    border-left: 4px solid #198754;
+}
+
+.orders-card {
+    border-left: 4px solid #dc3545;
+}
+
+.customers-card {
+    border-left: 4px solid #ffc107;
+}
+
+.product-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+    .col-md-3 {
+        margin-bottom: 1rem;
+    }
+}
+
+.modal-content {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-color: var(--border);
+}
+
+.modal-header {
+    border-bottom-color: var(--border);
+}
+
+.modal-footer {
+    border-top-color: var(--border);
+}
+
+.table {
+    color: var(--card-foreground);
+}
+
+.table thead th {
+    border-bottom-color: var(--border);
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.form-control, .form-select {
+    background-color: var(--input);
+    border-color: var(--border);
+    color: var(--card-foreground);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px rgba(var(--ring), 0.25);
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+</style>
+</head>
+<body data-bs-theme="light">
+    <nav class="navbar navbar-expand-lg bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Gestão de Vendas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-white active" href="#">Painel</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#productModal" data-bs-toggle="modal">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#">Relatórios</a></li>
+                </ul>
+                <div class="ms-auto">
+                    <button class="btn btn-outline-light" id="themeToggle">🌙</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Gerenciar Produtos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <input type="text" class="form-control w-75" placeholder="Buscar produtos...">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">Adicionar Produto</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" class="product-thumbnail me-2" alt="Relógio">
+                                            Relógio Premium
+                                        </div>
+                                    </td>
+                                    <td>Acessórios</td>
+                                    <td>R$ 12.490</td>
+                                    <td>15</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary me-1">Editar</button>
+                                        <button class="btn btn-sm btn-danger">Excluir</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Novo Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="mb-3">
+                            <label class="form-label">Nome do Produto</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categoria</label>
+                            <select class="form-select" required>
+                                <option value="">Selecione uma categoria</option>
+                                <option value="acessorios">Acessórios</option>
+                                <option value="eletronicos">Eletrônicos</option>
+                                <option value="vestimenta">Vestimenta</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Preço</label>
+                            <input type="number" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantidade em Estoque</label>
+                            <input type="number" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Imagem do Produto</label>
+                            <input type="file" class="form-control" accept="image/*" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="addProductForm" class="btn btn-primary">Salvar Produto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card sales-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Vendas Totais</h5>
+                        <h2 class="card-text">R$ 458.290</h2>
+                        <p class="text-success">↑ 12,5% vs mês anterior</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card revenue-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Receita Mensal</h5>
+                        <h2 class="card-text">R$ 85.420</h2>
+                        <p class="text-danger">↓ 3,2% vs mês anterior</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card orders-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Pedidos Pendentes</h5>
+                        <h2 class="card-text">142</h2>
+                        <p class="text-success">↑ 8,7% vs mês anterior</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card customers-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Clientes Ativos</h5>
+                        <h2 class="card-text">2.845</h2>
+                        <p class="text-success">↑ 5,3% vs mês anterior</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Análise de Vendas</h5>
+                        <canvas id="salesChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Produtos Mais Vendidos</h5>
+                        <div class="product-list">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" class="product-thumbnail" alt="Produto">
+                                    <span class="ms-2">Relógio Premium</span>
+                                </div>
+                                <span class="badge bg-success">R$ 12.490</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" class="product-thumbnail" alt="Produto">
+                                    <span class="ms-2">Fones de Ouvido</span>
+                                </div>
+                                <span class="badge bg-success">R$ 8.950</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" class="product-thumbnail" alt="Produto">
+                                    <span class="ms-2">Lente de Câmera</span>
+                                </div>
+                                <span class="badge bg-success">R$ 6.720</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
