@@ -1,11 +1,11 @@
 const SELECTORS = {
   sidebar: {
-    container: '.sidebar',
+    container: '.c-sidebar',
     toggle: '.js-sidebar-toggle',
   },
   navbar: {
-    menu: '.navbar__menu',
-    toggle: '.js-navbar-menu-toggle',
+    menu: '.c-navbar__menu',
+    toggle: '.js-navbar-toggle',
   },
   dashboard: {
     stats: {
@@ -16,14 +16,14 @@ const SELECTORS = {
       totalRevenue: '.js-total-revenue',
     },
     charts: {
-      bookingTrend: '#booking-trend-chart',
-      renterDistribution: '#renterDistributionChart',
-      revenue: '#revenueChart',
+      bookingTrend: '#js-booking-trend-chart',
+      renterDistribution: '#js-renter-distribution-chart',
+      revenue: '#js-revenue-chart',
     },
   },
   form: {
-    input: '.form__input',
-    button: '.btn',
+    input: '.c-form__input',
+    button: '.c-btn',
   },
 };
 
