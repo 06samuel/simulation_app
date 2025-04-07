@@ -1,392 +1,1488 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stunning Photo Gallery</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<style>
-  /* ===================
-   Design System Core
-=================== */
-:root {
-  /* Color System */
-  --color-primary: #2c3e50;
-  --color-secondary: #34495e;
-  --color-accent: #3498db;
-  --color-success: #27ae60;
-  --color-danger: #e74c3c;
-  --color-warning: #f1c40f;
-  --color-light: #f8f9fa;
-  --color-dark: #1a1a1a;
-  
-  /* Spacing System */
-  --space-unit: 1rem;
-  --space-xxs: calc(var(--space-unit) * 0.25);
-  --space-xs: calc(var(--space-unit) * 0.5);
-  --space-sm: calc(var(--space-unit) * 0.75);
-  --space-md: var(--space-unit);
-  --space-lg: calc(var(--space-unit) * 1.5);
-  --space-xl: calc(var(--space-unit) * 2);
-  
-  /* Typography */
-  --text-base: 1rem;
-  --text-scale: 1.25;
-  --text-xs: calc(var(--text-base) / var(--text-scale));
-  --text-sm: calc(var(--text-xs) * var(--text-scale));
-  --text-md: calc(var(--text-sm) * var(--text-scale));
-  --text-lg: calc(var(--text-md) * var(--text-scale));
-  --text-xl: calc(var(--text-lg) * var(--text-scale));
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
-  --shadow-lg: 0 10px 20px rgba(0,0,0,0.19);
-  
-  /* Transitions */
-  --transition-base: 0.3s ease;
-  --transition-fast: 0.15s ease;
-  --transition-slow: 0.6s ease;
-  
-  /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elegant Photo Gallery</title>
+    <meta name="description" content="A beautiful, responsive photo gallery" />
+    <meta name="author" content="Lovable" />
+    <style>
+      /* --------------------------------
+   CSS Variables & Base Styles
+-------------------------------- */
+      :root {
+        /* Light Mode Colors */
+        --background: #ffffff;
+        --foreground: #1a1f2c;
+        --card: #ffffff;
+        --card-foreground: #1a1f2c;
+        --primary: #6366f1;
+        --primary-foreground: #ffffff;
+        --secondary: #f3f4f6;
+        --secondary-foreground: #1a1f2c;
+        --muted: #f3f4f6;
+        --muted-foreground: #6b7280;
+        --accent: #f3f4f6;
+        --accent-foreground: #1a1f2c;
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+        --border: #e5e7eb;
+        --input: #e5e7eb;
+        --ring: #6366f1;
 
-/* ===================
-   Grid System
-=================== */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
+        /* Common Variables */
+        --radius: 0.5rem;
+        --transition-duration: 0.3s;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --container-width: 1280px;
+      }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: calc(var(--space-md) * -1);
-}
+      /* Dark Mode Colors */
+      .dark {
+        --background: #1a1f2c;
+        --foreground: #f3f4f6;
+        --card: #1a1f2c;
+        --card-foreground: #f3f4f6;
+        --primary: #818cf8;
+        --primary-foreground: #1a1f2c;
+        --secondary: #27303f;
+        --secondary-foreground: #f3f4f6;
+        --muted: #27303f;
+        --muted-foreground: #9ca3af;
+        --accent: #27303f;
+        --accent-foreground: #f3f4f6;
+        --destructive: #f87171;
+        --destructive-foreground: #f3f4f6;
+        --border: #27303f;
+        --input: #27303f;
+        --ring: #818cf8;
+      }
 
-[class*="col-"] {
-  padding: var(--space-md);
-  flex-grow: 1;
-}
+      /* Reset */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-/* Column System */
-.col-1 { flex: 0 0 8.333%; }
-.col-2 { flex: 0 0 16.666%; }
-.col-3 { flex: 0 0 25%; }
-.col-4 { flex: 0 0 33.333%; }
-.col-5 { flex: 0 0 41.666%; }
-.col-6 { flex: 0 0 50%; }
-.col-7 { flex: 0 0 58.333%; }
-.col-8 { flex: 0 0 66.666%; }
-.col-9 { flex: 0 0 75%; }
-.col-10 { flex: 0 0 83.333%; }
-.col-11 { flex: 0 0 91.666%; }
-.col-12 { flex: 0 0 100%; }
+      html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+      }
 
-@media (min-width: 768px) {
-  .col-md-1 { flex: 0 0 8.333%; }
-  .col-md-2 { flex: 0 0 16.666%; }
-  /* ... continue for other breakpoints */
-}
+      body {
+        font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        background-color: var(--background);
+        color: var(--foreground);
+        line-height: 1.6;
+        transition: background-color var(--transition-duration) ease,
+          color var(--transition-duration) ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-/* ===================
-   Components
-=================== */
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
-  font-size: var(--text-base);
-  border: 2px solid transparent;
-}
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
 
-.btn--primary {
-  background: var(--color-primary);
-  color: white;
-}
+      a {
+        color: inherit;
+        text-decoration: none;
+        transition: color var(--transition-duration) ease;
+      }
 
-.btn--outline {
-  background: transparent;
-  border-color: currentColor;
-}
+      ul,
+      ol {
+        list-style: none;
+      }
 
-/* Cards */
-.card {
-  background: white;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: transform var(--transition-base);
-}
+      button,
+      input,
+      textarea {
+        font: inherit;
+        background: none;
+        border: none;
+        outline: none;
+      }
 
-.card--hover:hover {
-  transform: translateY(-5px);
-}
+      main {
+        flex: 1;
+      }
 
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  padding: var(--space-md) 0;
-  background: var(--color-light);
-}
+      .container {
+        width: 100%;
+        max-width: var(--container-width);
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
 
-.navbar--dark {
-  background: var(--color-dark);
-  color: white;
-}
+      .hidden {
+        display: none !important;
+      }
 
-/* Dark Mode System */
-[data-theme="dark"] {
-  --color-background: var(--color-dark);
-  --color-text: var(--color-light);
-  --color-border: rgba(255,255,255,0.1);
-}
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
 
-/* Utility Classes */
-.mt-1 { margin-top: var(--space-xxs); }
-.mt-2 { margin-top: var(--space-xs); }
-/* ... spacing utilities */
+      /* --------------------------------
+   Header & Navigation
+-------------------------------- */
+      .main-header {
+        background-color: var(--background);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-sm);
+        transition: background-color var(--transition-duration) ease,
+          border-color var(--transition-duration) ease;
+      }
 
-.text-primary { color: var(--color-primary); }
-.bg-primary { background: var(--color-primary); }
-/* ... color utilities */
+      .main-header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 4rem;
+      }
 
-.text-center { text-align: center; }
-.text-uppercase { text-transform: uppercase; }
-/* ... text utilities */
-</style></head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Photo Gallery</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--foreground);
+        transition: color var(--transition-duration) ease;
+      }
 
-    <header id="home" class="vh-100 d-flex align-items-center">
-        <div class="container text-center">
-            <h1 class="display-1 fw-bold mb-4">Welcome to Our Photo Gallery</h1>
-            <p class="lead mb-5">Discover stunning images from around the world</p>
-            <a href="#gallery" class="btn btn-primary btn-lg">Explore Gallery</a>
-        </div>
+      .logo:hover {
+        color: var(--primary);
+      }
+
+      .main-nav {
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-list {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .nav-link {
+        position: relative;
+        font-weight: 500;
+        padding: 0.5rem 0;
+        color: var(--foreground);
+        transition: color var(--transition-duration) ease;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform var(--transition-duration) ease;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--primary);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 24px;
+        height: 18px;
+        cursor: pointer;
+        z-index: 200;
+      }
+
+      .menu-toggle span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: var(--foreground);
+        transition: transform 0.3s ease, opacity 0.3s ease,
+          background-color 0.3s ease;
+      }
+
+      .menu-toggle.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .menu-toggle.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      /* Theme Toggle Button */
+      .theme-toggle {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--foreground);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color var(--transition-duration) ease;
+      }
+
+      .theme-toggle:hover {
+        background-color: var(--accent);
+      }
+
+      .theme-toggle .moon-icon,
+      .theme-toggle .sun-icon {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        position: absolute;
+      }
+
+      .theme-toggle .sun-icon {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      .dark .theme-toggle .moon-icon {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      .dark .theme-toggle .sun-icon {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      /* --------------------------------
+   Hero Section
+-------------------------------- */
+      .hero {
+        padding: 5rem 0;
+        background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+        color: var(--primary-foreground);
+        text-align: center;
+      }
+
+      .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      /* --------------------------------
+   Buttons
+-------------------------------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition-duration) ease;
+      }
+
+      .btn-primary {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary);
+        filter: brightness(0.9);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-secondary {
+        background-color: var(--secondary);
+        color: var(--secondary-foreground);
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--secondary);
+        filter: brightness(0.95);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--border);
+        color: var(--foreground);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+      }
+
+      /* --------------------------------
+   Gallery Section
+-------------------------------- */
+      .gallery-section {
+        padding: 5rem 0;
+      }
+
+      .section-title {
+        font-size: 2.25rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary), #8b5cf6);
+        border-radius: 4px;
+      }
+
+      .search-container {
+        max-width: 600px;
+        margin: 0 auto 2rem;
+      }
+
+      .search-wrapper {
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid var(--input);
+        border-radius: var(--radius);
+        background-color: var(--background);
+        color: var(--foreground);
+        transition: border-color var(--transition-duration) ease,
+          box-shadow var(--transition-duration) ease;
+      }
+
+      .search-input:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted-foreground);
+        pointer-events: none;
+      }
+
+      /* Gallery Filter */
+      .filter-navigation {
+        margin-bottom: 2rem;
+      }
+
+      .filter-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .filter-button {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        background-color: var(--secondary);
+        color: var(--secondary-foreground);
+        cursor: pointer;
+        transition: all var(--transition-duration) ease;
+      }
+
+      .filter-button:hover {
+        background-color: var(--secondary);
+        filter: brightness(0.95);
+      }
+
+      .filter-button.active {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+      }
+
+      /* Gallery Grid */
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .gallery-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 768px) {
+        .gallery-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .gallery-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: transform var(--transition-duration) ease,
+          box-shadow var(--transition-duration) ease;
+        background-color: var(--card);
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 16rem;
+        object-fit: cover;
+        transition: transform var(--transition-duration) ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.7) 0%,
+          rgba(0, 0, 0, 0) 50%
+        );
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 1.5rem;
+        opacity: 0;
+        transition: opacity var(--transition-duration) ease;
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+      }
+
+      .gallery-overlay-content {
+        width: 100%;
+        text-align: center;
+        color: white;
+        transform: translateY(20px);
+        transition: transform var(--transition-duration) ease;
+      }
+
+      .gallery-item:hover .gallery-overlay-content {
+        transform: translateY(0);
+      }
+
+      .gallery-caption {
+        padding: 0.75rem;
+        font-weight: 500;
+        font-size: 1rem;
+        text-align: center;
+        color: var(--card-foreground);
+      }
+
+      .gallery-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+      }
+
+      .loader {
+        border: 3px solid var(--secondary);
+        border-top: 3px solid var(--primary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .gallery-empty {
+        text-align: center;
+        padding: 3rem 0;
+        color: var(--muted-foreground);
+        font-size: 1.25rem;
+      }
+
+      /* --------------------------------
+   About Section
+-------------------------------- */
+      .about-section {
+        background-color: var(--muted);
+        padding: 5rem 0;
+      }
+
+      .section-description {
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        text-align: center;
+        font-size: 1.125rem;
+        color: var(--muted-foreground);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .features-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .feature-card {
+        background-color: var(--card);
+        padding: 2rem;
+        border-radius: var(--radius);
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+        transition: transform var(--transition-duration) ease,
+          box-shadow var(--transition-duration) ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+      }
+
+      .feature-card h3 {
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        color: var(--card-foreground);
+      }
+
+      .feature-card p {
+        color: var(--muted-foreground);
+      }
+
+      /* --------------------------------
+   Contact Section
+-------------------------------- */
+      .contact-section {
+        padding: 5rem 0;
+      }
+
+      .contact-form {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--input);
+        border-radius: var(--radius);
+        background-color: var(--background);
+        color: var(--foreground);
+        transition: border-color var(--transition-duration) ease,
+          box-shadow var(--transition-duration) ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+      }
+
+      /* --------------------------------
+   Footer
+-------------------------------- */
+      .main-footer {
+        background-color: var(--secondary);
+        color: var(--secondary-foreground);
+        padding: 2rem 0;
+        text-align: center;
+      }
+
+      .main-footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .copyright {
+        color: var(--muted-foreground);
+      }
+
+      .footer-nav ul {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .footer-nav a {
+        color: var(--muted-foreground);
+        transition: color var(--transition-duration) ease;
+      }
+
+      .footer-nav a:hover {
+        color: var(--primary);
+      }
+
+      /* --------------------------------
+   Photo Modal
+-------------------------------- */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1rem;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .modal-content {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-radius: var(--radius);
+        overflow: hidden;
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        box-shadow: var(--shadow-lg);
+        animation: zoomIn 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .modal-image-container {
+        position: relative;
+        width: 100%;
+      }
+
+      #modal-image {
+        width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color var(--transition-duration) ease;
+      }
+
+      .modal-close:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal-details {
+        padding: 1.5rem;
+      }
+
+      .modal-details h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      #modal-category {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+        margin-bottom: 1rem;
+      }
+
+      #modal-description {
+        line-height: 1.6;
+      }
+
+      /* --------------------------------
+   Animations
+-------------------------------- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .animate-zoom-in {
+        animation: zoomIn 0.3s ease-in-out;
+      }
+
+      /* --------------------------------
+   Media Queries
+-------------------------------- */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero p {
+          font-size: 1.125rem;
+        }
+
+        .section-title {
+          font-size: 1.875rem;
+        }
+
+        .menu-toggle {
+          display: flex;
+        }
+
+        .nav-list {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 70%;
+          max-width: 300px;
+          height: 100vh;
+          background-color: var(--background);
+          box-shadow: var(--shadow-lg);
+          flex-direction: column;
+          padding: 6rem 2rem 2rem;
+          transition: right var(--transition-duration) ease;
+          z-index: 100;
+        }
+
+        .nav-list.active {
+          right: 0;
+        }
+
+        .nav-link {
+          display: block;
+          padding: 1rem 0;
+        }
+
+        .main-footer .container {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
+  </head>
+
+  <body>
+    <header class="main-header">
+      <div class="container">
+        <a href="/" class="logo">Elegant Gallery</a>
+        <nav class="main-nav">
+          <button class="menu-toggle" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul class="nav-list">
+            <li><a href="index.html" class="nav-link active">Home</a></li>
+            <li><a href="index2.html" class="nav-link">Gallery</a></li>
+            <li><a href="index5.html" class="nav-link">About</a></li>
+            <li><a href="index6.html" class="nav-link">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" aria-label="Toggle Dark Mode">
+          <svg
+            class="moon-icon"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg
+            class="sun-icon"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <section id="gallery" class="py-5">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Beautiful Photo Gallery</h1>
+          <p>
+            A responsive and modern photo gallery with elegant design and smooth
+            interactions.
+          </p>
+          <a href="#gallery" class="btn btn-primary">View Gallery</a>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section id="gallery" class="gallery-section">
         <div class="container">
-            <h2 class="text-center mb-5">Our Photo Collection</h2>
-            <div class="row g-4" data-masonry='{"percentPosition": true }'>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892" class="card-img-top" alt="Scenic landscape">
-                        <div class="card-body">
-                            <h5 class="card-title">Scenic Landscape</h5>
-                            <p class="card-text">A breathtaking view of mountains and lakes.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal1">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892" class="card-img-top" alt="Urban architecture">
-                        <div class="card-body">
-                            <h5 class="card-title">Urban Architecture</h5>
-                            <p class="card-text">Modern city skyline with impressive buildings.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal2">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top" alt="Wildlife photography">
-                        <div class="card-body">
-                            <h5 class="card-title">Wildlife Photography</h5>
-                            <p class="card-text">Majestic lion captured in its natural habitat.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal3">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687982183-c2937a74257c" class="card-img-top" alt="Aerial beach view">
-                        <div class="card-body">
-                            <h5 class="card-title">Aerial Beach View</h5>
-                            <p class="card-text">Stunning coastline captured from above.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal4">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687982183-c2937a74257c" class="card-img-top" alt="Cultural festival">
-                        <div class="card-body">
-                            <h5 class="card-title">Cultural Festival</h5>
-                            <p class="card-text">Vibrant colors of a traditional celebration.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal5">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-6 gallery-item">
-                    <div class="card">
-                        <img src="https://images.unsplash.com/photo-1682687982183-c2937a74257c" class="card-img-top" alt="Abstract art">
-                        <div class="card-body">
-                            <h5 class="card-title">Abstract Art</h5>
-                            <p class="card-text">Colorful and thought-provoking modern artwork.</p>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal6">View Large</button>
-                            <button class="btn btn-outline-primary share-btn"><i class="fas fa-share-alt"></i> Share</button>
-                        </div>
-                    </div>
-                </div>
+          <h2 class="section-title">Photo Gallery</h2>
+
+          <div class="search-container">
+            <div class="search-wrapper">
+              <input
+                type="text"
+                id="gallery-search"
+                placeholder="Search photos..."
+                class="search-input" />
+              <svg
+                class="search-icon"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                stroke="currentColor"
+                stroke-width="2"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
             </div>
-        </div>
-    </section>
+          </div>
 
-    <!-- Image Modals -->
-    <div class="modal fade" id="imageModal1" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682685796014-2f07fe595e15" class="img-fluid" alt="Scenic landscape">
-                </div>
+          <nav class="filter-navigation" aria-label="Gallery categories">
+            <ul class="filter-list">
+              <li class="filter-item">
+                <button class="filter-button active" data-category="all">
+                  All
+                </button>
+              </li>
+              <!-- Filter buttons will be added dynamically -->
+            </ul>
+          </nav>
+
+          <div class="gallery-loading">
+            <div class="loader"></div>
+          </div>
+
+          <div class="gallery-grid">
+            <!-- Gallery items will be added dynamically -->
+          </div>
+
+          <div class="gallery-empty hidden">
+            <p>No photos found matching your criteria.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="about-section">
+        <div class="container">
+          <h2 class="section-title">About This Gallery</h2>
+          <p class="section-description">
+            This photo gallery showcases a modern, component-based design with
+            responsive layouts and elegant interactions. It includes features
+            like filtering, search, and modal views with dark mode support.
+          </p>
+          <div class="features-grid">
+            <article class="feature-card">
+              <h3>Responsive Design</h3>
+              <p>
+                Fully responsive layout that works beautifully on all devices
+                and screen sizes.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Modern UI</h3>
+              <p>
+                Clean and modern user interface with smooth animations and
+                transitions.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Customizable</h3>
+              <p>
+                Easily customizable components and utilities to match your
+                design needs.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-section">
+        <div class="container">
+          <h2 class="section-title">Contact Us</h2>
+          <p class="section-description">
+            Have questions or feedback about our gallery? Get in touch with us.
+          </p>
+          <form class="contact-form">
+            <div class="form-group">
+              <input type="text" id="name" placeholder="Your Name" required />
             </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imageModal2" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892" class="img-fluid" alt="Urban architecture">
-                </div>
+            <div class="form-group">
+              <input
+                type="email"
+                id="email"
+                placeholder="Your Email"
+                required />
             </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imageModal3" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="img-fluid" alt="Wildlife photography">
-                </div>
+            <div class="form-group">
+              <textarea
+                id="message"
+                placeholder="Your Message"
+                rows="4"
+                required></textarea>
             </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
         </div>
-    </div>
+      </section>
+    </main>
 
-    <div class="modal fade" id="imageModal4" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="img-fluid" alt="Aerial beach view">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imageModal5" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682687982183-c2937a74257c" class="img-fluid" alt="Cultural festival">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imageModal6" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="https://images.unsplash.com/photo-1682687982183-c2937a74257c" class="img-fluid" alt="Abstract art">
-                </div>
-            </div>
-        </div>
-    </div>
- <section class="container py-5">
-        <h2>Color System</h2>
-        <div class="row g-4">
-            <div class="col-3">
-                <div class="card p-3 bg-primary text-white">
-                    Primary Color
-                </div>
-            </div>
-            <!-- Repeat for other colors -->
-        </div>
-
-        <h2 class="mt-5">Grid System</h2>
-        <div class="row">
-            <div class="col-4 border p-3">.col-4</div>
-            <div class="col-8 border p-3">.col-8</div>
-        </div>
-
-        <h2 class="mt-5">Components</h2>
-        <div class="btn btn--primary">Primary Button</div>
-        <div class="btn btn--outline text-primary">Outline Button</div>
-
-        <div class="card mt-3 p-3">
-            <h3>Card Example</h3>
-            <p>Card content with default styling</p>
-        </div>
-    </section>
-
-    <!-- Theme Toggle -->
-    <button class="btn btn--primary fixed-bottom-right" onclick="toggleTheme()">
-        Toggle Theme
-    </button>
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; 2023 Photo Gallery. All rights reserved.</p>
-        </div>
+    <footer class="main-footer">
+      <div class="container">
+        <p class="copyright">
+          © <span id="current-year"></span> Elegant Gallery. All rights
+          reserved.
+        </p>
+        <nav class="footer-nav">
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <div class="modal-backdrop hidden" id="photo-modal">
+      <div class="modal-content">
+        <div class="modal-image-container">
+          <img src="" alt="" id="modal-image" />
+          <button class="modal-close" aria-label="Close modal">
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-details">
+          <h3 id="modal-title"></h3>
+          <p id="modal-category"></p>
+          <p id="modal-description"></p>
+        </div>
+      </div>
+    </div>
     <script>
-          function toggleTheme() {
-        const html = document.documentElement;
-        const theme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }
-        document.addEventListener('DOMContentLoaded', function() {
-            var gallery = document.querySelector('.row');
-            var masonry = new Masonry(gallery, {
-                itemSelector: '.gallery-item',
-                columnWidth: '.gallery-item',
-                percentPosition: true
+      // Gallery Data
+      const galleryData = [
+        {
+          id: 1,
+          url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+          title: "Mountain Landscape",
+          category: "Nature",
+          description: "Beautiful mountain landscape with a lake reflection.",
+        },
+        {
+          id: 2,
+          url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
+          title: "Forest Path",
+          category: "Nature",
+          description: "A serene path through a dense forest.",
+        },
+        {
+          id: 3,
+          url: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86",
+          title: "Urban Architecture",
+          category: "Architecture",
+          description:
+            "Modern city buildings showcasing contemporary architecture.",
+        },
+        {
+          id: 4,
+          url: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131",
+          title: "Cute Cat",
+          category: "Animals",
+          description: "An adorable cat with vibrant eyes.",
+        },
+        {
+          id: 5,
+          url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
+          title: "Desert Sunset",
+          category: "Nature",
+          description: "A breathtaking sunset over desert sand dunes.",
+        },
+        {
+          id: 6,
+          url: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843",
+          title: "Waterfall",
+          category: "Nature",
+          description: "Powerful waterfall flowing through rocky cliffs.",
+        },
+        {
+          id: 7,
+          url: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b",
+          title: "City Skyline",
+          category: "Architecture",
+          description: "Night view of a city skyline with lights.",
+        },
+        {
+          id: 8,
+          url: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9",
+          title: "Playful Dog",
+          category: "Animals",
+          description: "A happy dog running in a field.",
+        },
+        {
+          id: 9,
+          url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625",
+          title: "Classic Car",
+          category: "Vehicles",
+          description: "A vintage classic car in pristine condition.",
+        },
+        {
+          id: 10,
+          url: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59",
+          title: "Modern Train",
+          category: "Vehicles",
+          description: "A high-speed train rushing through the countryside.",
+        },
+        {
+          id: 11,
+          url: "https://images.unsplash.com/photo-1529778873920-4da4926a72c2",
+          title: "Colorful Bird",
+          category: "Animals",
+          description: "An exotic colorful bird perched on a branch.",
+        },
+        {
+          id: 12,
+          url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625",
+          title: "Historic Building",
+          category: "Architecture",
+          description:
+            "A historic building with intricate architectural details.",
+        },
+      ];
+
+      // DOM Elements
+      const galleryGrid = document.querySelector(".gallery-grid");
+      const filterList = document.querySelector(".filter-list");
+      const searchInput = document.getElementById("gallery-search");
+      const loadingIndicator = document.querySelector(".gallery-loading");
+      const emptyIndicator = document.querySelector(".gallery-empty");
+      const photoModal = document.getElementById("photo-modal");
+      const modalImage = document.getElementById("modal-image");
+      const modalTitle = document.getElementById("modal-title");
+      const modalCategory = document.getElementById("modal-category");
+      const modalDescription = document.getElementById("modal-description");
+      const modalClose = document.querySelector(".modal-close");
+      const themeToggle = document.querySelector(".theme-toggle");
+      const menuToggle = document.querySelector(".menu-toggle");
+      const navList = document.querySelector(".nav-list");
+      const yearElement = document.getElementById("current-year");
+      const contactForm = document.querySelector(".contact-form");
+
+      // Set current year in footer
+      yearElement.textContent = new Date().getFullYear();
+
+      // Theme Management
+      function initTheme() {
+        const storedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+
+      function toggleTheme() {
+        if (document.documentElement.classList.contains("dark")) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+      }
+
+      // Mobile Menu Toggle
+      function toggleMenu() {
+        menuToggle.classList.toggle("active");
+        navList.classList.toggle("active");
+      }
+
+      // Gallery Initialization
+      function initGallery() {
+        // Simulate loading delay
+        setTimeout(() => {
+          loadingIndicator.classList.add("hidden");
+          renderGallery(galleryData);
+          initializeFilters();
+        }, 1000);
+      }
+
+      // Extract unique categories and create filter buttons
+      function initializeFilters() {
+        const categories = [
+          ...new Set(galleryData.map((photo) => photo.category)),
+        ];
+
+        categories.forEach((category) => {
+          const listItem = document.createElement("li");
+          listItem.className = "filter-item";
+
+          const button = document.createElement("button");
+          button.className = "filter-button";
+          button.setAttribute("data-category", category);
+          button.textContent = category;
+
+          button.addEventListener("click", () => {
+            filterGallery(category);
+          });
+
+          listItem.appendChild(button);
+          filterList.appendChild(listItem);
+        });
+      }
+
+      // Filter gallery items by category
+      function filterGallery(category) {
+        // Update active button state
+        document.querySelectorAll(".filter-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        document
+          .querySelector(`[data-category="${category}"]`)
+          .classList.add("active");
+
+        // Apply category and search filters
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        let filteredPhotos = [...galleryData];
+
+        if (category !== "all") {
+          filteredPhotos = filteredPhotos.filter(
+            (photo) => photo.category === category
+          );
+        }
+
+        if (searchTerm !== "") {
+          filteredPhotos = filteredPhotos.filter(
+            (photo) =>
+              photo.title.toLowerCase().includes(searchTerm) ||
+              photo.description.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        renderGallery(filteredPhotos);
+      }
+
+      // Apply search filter
+      function searchGallery() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const activeCategory = document
+          .querySelector(".filter-button.active")
+          .getAttribute("data-category");
+
+        let filteredPhotos = [...galleryData];
+
+        if (activeCategory !== "all") {
+          filteredPhotos = filteredPhotos.filter(
+            (photo) => photo.category === activeCategory
+          );
+        }
+
+        if (searchTerm !== "") {
+          filteredPhotos = filteredPhotos.filter(
+            (photo) =>
+              photo.title.toLowerCase().includes(searchTerm) ||
+              photo.description.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        renderGallery(filteredPhotos);
+      }
+
+      // Render gallery items
+      function renderGallery(photos) {
+        galleryGrid.innerHTML = "";
+
+        if (photos.length === 0) {
+          emptyIndicator.classList.remove("hidden");
+        } else {
+          emptyIndicator.classList.add("hidden");
+
+          photos.forEach((photo) => {
+            const galleryItem = document.createElement("div");
+            galleryItem.className = "gallery-item";
+            galleryItem.innerHTML = `
+        <img src="${photo.url}" alt="${photo.title}">
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-content">
+            <h3>${photo.title}</h3>
+            <p>${photo.category}</p>
+          </div>
+        </div>
+        <p class="gallery-caption">${photo.title}</p>
+      `;
+
+            galleryItem.addEventListener("click", () => {
+              openPhotoModal(photo);
             });
 
-            var shareBtns = document.querySelectorAll('.share-btn');
-            shareBtns.forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    alert('Sharing functionality to be implemented!');
-                });
-            });
+            galleryGrid.appendChild(galleryItem);
+          });
+        }
+      }
+
+      // Open photo modal
+      function openPhotoModal(photo) {
+        modalImage.src = photo.url;
+        modalImage.alt = photo.title;
+        modalTitle.textContent = photo.title;
+        modalCategory.textContent = `Category: ${photo.category}`;
+        modalDescription.textContent = photo.description;
+
+        photoModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      // Close photo modal
+      function closePhotoModal() {
+        photoModal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      // Form submission handling
+      function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const messageInput = document.getElementById("message");
+
+        // Simple validation
+        if (!nameInput.value || !emailInput.value || !messageInput.value) {
+          alert("Please fill out all fields");
+          return;
+        }
+
+        // In a real application, you would send this data to a server
+        console.log("Form submitted with:", {
+          name: nameInput.value,
+          email: emailInput.value,
+          message: messageInput.value,
         });
+
+        // Reset form and show confirmation
+        e.target.reset();
+        alert("Message sent successfully!");
+      }
+
+      // Event Listeners
+      document.addEventListener("DOMContentLoaded", () => {
+        initTheme();
+        initGallery();
+
+        // Theme toggle
+        themeToggle.addEventListener("click", toggleTheme);
+
+        // Mobile menu toggle
+        menuToggle.addEventListener("click", toggleMenu);
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+          if (
+            navList.classList.contains("active") &&
+            !e.target.closest(".main-nav") &&
+            !menuToggle.contains(e.target)
+          ) {
+            toggleMenu();
+          }
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.addEventListener("click", () => {
+            if (navList.classList.contains("active")) {
+              toggleMenu();
+            }
+          });
+        });
+
+        // Search input
+        searchInput.addEventListener("input", searchGallery);
+
+        // Modal close button
+        modalClose.addEventListener("click", closePhotoModal);
+
+        // Close modal when clicking outside
+        photoModal.addEventListener("click", (e) => {
+          if (e.target === photoModal) {
+            closePhotoModal();
+          }
+        });
+
+        // Close modal with escape key
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !photoModal.classList.contains("hidden")) {
+            closePhotoModal();
+          }
+        });
+
+        // Form submission
+        contactForm.addEventListener("submit", handleFormSubmit);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute("href");
+            if (targetId === "#") return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
