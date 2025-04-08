@@ -1,339 +1,1172 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painel de Gestão de Vendas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    :root {
-    --primary: #0d6efd;
-    --primary-foreground: #ffffff;
-    --secondary: #6c757d;
-    --secondary-foreground: #ffffff;
-    --accent: #e9ecef;
-    --accent-foreground: #212529;
-    --background: #ffffff;
-    --foreground: #212529;
-    --card: #ffffff;
-    --card-foreground: #212529;
-    --border: #dee2e6;
-    --input: #ced4da;
-    --ring: #0d6efd;
-    --radius: 0.5rem;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" />
+    <style>
+      :root {
+        --primary: #0d6efd;
+        --primary-hover: #0b5ed7;
+        --primary-foreground: #ffffff;
+        --secondary: #6c757d;
+        --secondary-foreground: #ffffff;
+        --accent: #e9ecef;
+        --accent-foreground: #212529;
+        --background: #ffffff;
+        --foreground: #212529;
+        --card: #ffffff;
+        --card-foreground: #212529;
+        --border: #dee2e6;
+        --input: #ced4da;
+        --ring: #0d6efd;
+        --radius: 0.5rem;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --online: #28a745;
+        --offline: #dc3545;
+        --syncing: #ffc107;
+      }
 
-[data-bs-theme="dark"] {
-    --primary: #0d6efd;
-    --primary-foreground: #ffffff;
-    --secondary: #6c757d;
-    --secondary-foreground: #ffffff;
-    --accent: #343a40;
-    --accent-foreground: #f8f9fa;
-    --background: #212529;
-    --foreground: #f8f9fa;
-    --card: #343a40;
-    --card-foreground: #f8f9fa;
-    --border: #495057;
-    --input: #495057;
-    --ring: #0d6efd;
-}
+      [data-bs-theme="dark"] {
+        --primary: #0d6efd;
+        --primary-hover: #1e88e5;
+        --primary-foreground: #ffffff;
+        --secondary: #6c757d;
+        --secondary-foreground: #ffffff;
+        --accent: #343a40;
+        --accent-foreground: #f8f9fa;
+        --background: #212529;
+        --foreground: #f8f9fa;
+        --card: #343a40;
+        --card-foreground: #f8f9fa;
+        --border: #495057;
+        --input: #495057;
+        --ring: #0d6efd;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+      }
 
-body {
-    background-color: var(--background);
-    color: var(--foreground);
-}
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        transition: var(--transition);
+      }
 
-.card {
-    background-color: var(--card);
-    color: var(--card-foreground);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: transform 0.2s;
-}
+      /* Improved card with sync status */
+      .card {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
 
-.card:hover {
-    transform: translateY(-5px);
-}
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
 
-.navbar {
-    box-shadow: var(--shadow);
-}
+      .card.syncing::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--syncing);
+        animation: pulse 2s infinite;
+      }
 
-.product-thumbnail {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    object-fit: cover;
-}
+      .card.offline::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--offline);
+      }
 
-.sales-card {
-    border-left: 4px solid #0d6efd;
-}
+      .card.online::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: var(--online);
+      }
 
-.revenue-card {
-    border-left: 4px solid #198754;
-}
+      @keyframes pulse {
+        0% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
 
-.orders-card {
-    border-left: 4px solid #dc3545;
-}
+      .navbar {
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
 
-.customers-card {
-    border-left: 4px solid #ffc107;
-}
+      .product-thumbnail {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        object-fit: cover;
+        transition: var(--transition);
+      }
 
-.product-list {
-    max-height: 300px;
-    overflow-y: auto;
-}
+      .sales-card {
+        border-left: 4px solid var(--primary);
+      }
 
-@media (max-width: 768px) {
-    .col-md-3 {
-        margin-bottom: 1rem;
-    }
-}
+      .revenue-card {
+        border-left: 4px solid #198754;
+      }
 
-.modal-content {
-    background-color: var(--card);
-    color: var(--card-foreground);
-    border-color: var(--border);
-}
+      .orders-card {
+        border-left: 4px solid #dc3545;
+      }
 
-.modal-header {
-    border-bottom-color: var(--border);
-}
+      .customers-card {
+        border-left: 4px solid #ffc107;
+      }
 
-.modal-footer {
-    border-top-color: var(--border);
-}
+      .product-list {
+        max-height: 300px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--accent);
+      }
 
-.table {
-    color: var(--card-foreground);
-}
+      .product-list::-webkit-scrollbar {
+        width: 6px;
+      }
 
-.table thead th {
-    border-bottom-color: var(--border);
-}
+      .product-list::-webkit-scrollbar-track {
+        background: var(--accent);
+        border-radius: 10px;
+      }
 
-.table td {
-    vertical-align: middle;
-}
+      .product-list::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+      }
 
-.form-control, .form-select {
-    background-color: var(--input);
-    border-color: var(--border);
-    color: var(--card-foreground);
-}
+      .connection-status {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        padding: 10px 15px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        transition: var(--transition);
+        transform: translateY(100px);
+        opacity: 0;
+      }
 
-.form-control:focus, .form-select:focus {
-    border-color: var(--ring);
-    box-shadow: 0 0 0 2px rgba(var(--ring), 0.25);
-}
+      .connection-status.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
 
-.btn-close {
-    filter: invert(1) grayscale(100%) brightness(200%);
-}
-</style>
-</head>
-<body data-bs-theme="light">
-    <nav class="navbar navbar-expand-lg bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#">Gestão de Vendas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link text-white active" href="#">Painel</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#productModal" data-bs-toggle="modal">Produtos</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Relatórios</a></li>
-                </ul>
-                <div class="ms-auto">
-                    <button class="btn btn-outline-light" id="themeToggle">🌙</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+      .connection-status.online {
+        background-color: var(--online);
+        color: white;
+      }
 
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Gerenciar Produtos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between mb-3">
-                        <input type="text" class="form-control w-75" placeholder="Buscar produtos...">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">Adicionar Produto</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th>Categoria</th>
-                                    <th>Preço</th>
-                                    <th>Estoque</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" class="product-thumbnail me-2" alt="Relógio">
-                                            Relógio Premium
-                                        </div>
-                                    </td>
-                                    <td>Acessórios</td>
-                                    <td>R$ 12.490</td>
-                                    <td>15</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary me-1">Editar</button>
-                                        <button class="btn btn-sm btn-danger">Excluir</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+      .connection-status.offline {
+        background-color: var(--offline);
+        color: white;
+      }
+
+      .connection-status.syncing {
+        background-color: var(--syncing);
+        color: var(--foreground);
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .status-dot.online {
+        background-color: white;
+        box-shadow: 0 0 0 2px var(--online);
+      }
+
+      .status-dot.offline {
+        background-color: white;
+        box-shadow: 0 0 0 2px var(--offline);
+      }
+
+      .status-dot.syncing {
+        background-color: var(--foreground);
+        box-shadow: 0 0 0 2px var(--syncing);
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Responsive breakpoints */
+      @media (max-width: 575.98px) {
+        .card-body h2 {
+          font-size: 1.5rem;
+        }
+        .product-thumbnail {
+          width: 30px;
+          height: 30px;
+        }
+        .navbar-brand {
+          font-size: 1.1rem;
+        }
+      }
+
+      @media (min-width: 576px) and (max-width: 767.98px) {
+        .card-body h2 {
+          font-size: 1.75rem;
+        }
+      }
+
+      @media (min-width: 768px) and (max-width: 991.98px) {
+        .col-md-3 {
+          margin-bottom: 1rem;
+        }
+      }
+
+      @media (min-width: 992px) and (max-width: 1199.98px) {
+        .product-thumbnail {
+          width: 35px;
+          height: 35px;
+        }
+      }
+
+      /* Touch-friendly elements */
+      button,
+      .btn,
+      [role="button"],
+      input[type="submit"],
+      input[type="button"] {
+        touch-action: manipulation;
+      }
+
+      .btn {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.375rem 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Debounced search input */
+      .search-input {
+        transition: var(--transition);
+      }
+
+      .search-input:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(var(--ring), 0.25);
+      }
+
+      /* Loading spinner */
+      .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-left: 8px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .btn.loading .spinner {
+        display: inline-block;
+      }
+
+      /* Lazy loading for images */
+      img.lazy {
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      img.lazy.loaded {
+        opacity: 1;
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .slide-up {
+        animation: slideUp 0.4s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Improved form controls */
+      .form-control,
+      .form-select {
+        background-color: var(--input);
+        border-color: var(--border);
+        color: var(--card-foreground);
+        transition: var(--transition);
+        padding: 0.5rem 0.75rem;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(var(--ring), 0.25);
+      }
+
+      /* Table improvements */
+      .table {
+        color: var(--card-foreground);
+      }
+
+      .table thead th {
+        border-bottom-color: var(--border);
+        position: sticky;
+        top: 0;
+        background-color: var(--card);
+        z-index: 10;
+      }
+
+      .table td {
+        vertical-align: middle;
+        transition: var(--transition);
+      }
+
+      .table tr {
+        transition: var(--transition);
+      }
+
+      .table tr:hover td {
+        background-color: var(--accent);
+      }
+
+      /* Modal improvements */
+      .modal-content {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-color: var(--border);
+        transition: var(--transition);
+      }
+
+      .modal-header {
+        border-bottom-color: var(--border);
+      }
+
+      .modal-footer {
+        border-top-color: var(--border);
+      }
+
+      /* Chart container */
+      .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+      }
+
+      /* Offline notification */
+      .offline-notification {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--offline);
+        color: white;
+        text-align: center;
+        padding: 10px;
+        z-index: 1050;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .offline-notification.show {
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body data-bs-theme="light">
+    <div class="offline-notification" id="offlineNotification">
+      Você está offline. As alterações serão sincronizadas quando a conexão for
+      restaurada.
     </div>
 
-    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Adicionar Novo Produto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addProductForm">
-                        <div class="mb-3">
-                            <label class="form-label">Nome do Produto</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Categoria</label>
-                            <select class="form-select" required>
-                                <option value="">Selecione uma categoria</option>
-                                <option value="acessorios">Acessórios</option>
-                                <option value="eletronicos">Eletrônicos</option>
-                                <option value="vestimenta">Vestimenta</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Preço</label>
-                            <input type="number" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Quantidade em Estoque</label>
-                            <input type="number" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Imagem do Produto</label>
-                            <input type="file" class="form-control" accept="image/*" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" form="addProductForm" class="btn btn-primary">Salvar Produto</button>
-                </div>
+    <nav class="navbar navbar-expand-lg bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-white" href="#">Gestão de Vendas</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link text-white active" href="#" aria-current="page"
+                >Painel</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link text-white"
+                href="#productModal"
+                data-bs-toggle="modal"
+                role="button"
+                >Produtos</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="#" role="button">Clientes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="#" role="button">Vendas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="#" role="button"
+                >Relatórios</a
+              >
+            </li>
+          </ul>
+          <div class="ms-auto d-flex align-items-center">
+            <div
+              class="connection-badge me-3 d-none d-md-flex align-items-center">
+              <span
+                class="status-dot online me-1"
+                id="connectionIndicator"></span>
+              <small class="text-white" id="connectionText">Conectado</small>
             </div>
+            <button
+              class="btn btn-outline-light"
+              id="themeToggle"
+              aria-label="Alternar tema">
+              <span id="themeIcon">🌙</span>
+            </button>
+          </div>
         </div>
+      </div>
+    </nav>
+
+    <div
+      class="modal fade"
+      id="productModal"
+      tabindex="-1"
+      aria-labelledby="productModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productModalLabel">
+              Gerenciar Produtos
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div
+              class="d-flex justify-content-between mb-3 flex-column flex-md-row">
+              <div class="w-100 me-md-3 mb-2 mb-md-0 position-relative">
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  id="productSearch"
+                  placeholder="Buscar produtos..."
+                  aria-label="Buscar produtos" />
+                <div
+                  class="position-absolute end-0 top-0 h-100 d-flex align-items-center pe-2">
+                  <div class="spinner" id="searchSpinner"></div>
+                </div>
+              </div>
+              <button
+                class="btn btn-primary flex-shrink-0"
+                data-bs-toggle="modal"
+                data-bs-target="#addProductModal">
+                <span class="d-none d-md-inline">Adicionar Produto</span>
+                <span class="d-md-none">+</span>
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="productTableBody">
+                  <tr class="animate__animated animate__fadeIn">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img
+                          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+                          class="product-thumbnail me-2 lazy"
+                          alt="Relógio"
+                          loading="lazy" />
+                        Relógio Premium
+                      </div>
+                    </td>
+                    <td>Acessórios</td>
+                    <td>R$ 12.490</td>
+                    <td>15</td>
+                    <td>
+                      <button class="btn btn-sm btn-primary me-1">
+                        Editar
+                      </button>
+                      <button class="btn btn-sm btn-danger">Excluir</button>
+                    </td>
+                  </tr>
+                  <tr class="animate__animated animate__fadeIn">
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img
+                          src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+                          class="product-thumbnail me-2 lazy"
+                          alt="Fones de Ouvido"
+                          loading="lazy" />
+                        Fones de Ouvido
+                      </div>
+                    </td>
+                    <td>Eletrônicos</td>
+                    <td>R$ 8.950</td>
+                    <td>32</td>
+                    <td>
+                      <button class="btn btn-sm btn-primary me-1">
+                        Editar
+                      </button>
+                      <button class="btn btn-sm btn-danger">Excluir</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="sync-status me-auto">
+              <small class="text-muted" id="lastSyncTime"
+                >Última sincronização: há 2 minutos</small
+              >
+            </div>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Fechar
+            </button>
+            <button type="button" class="btn btn-primary" id="syncProductsBtn">
+              <span>Sincronizar</span>
+              <div class="spinner d-none"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="addProductModal"
+      tabindex="-1"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Adicionar Novo Produto</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="addProductForm">
+              <div class="mb-3">
+                <label class="form-label">Nome do Produto</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  required
+                  aria-required="true" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Categoria</label>
+                <select class="form-select" required aria-required="true">
+                  <option value="">Selecione uma categoria</option>
+                  <option value="acessorios">Acessórios</option>
+                  <option value="eletronicos">Eletrônicos</option>
+                  <option value="vestimenta">Vestimenta</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Preço</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  required
+                  aria-required="true"
+                  min="0"
+                  step="0.01" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Quantidade em Estoque</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  required
+                  aria-required="true"
+                  min="0" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Imagem do Produto</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  accept="image/*"
+                  required
+                  aria-required="true" />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              form="addProductForm"
+              class="btn btn-primary"
+              id="saveProductBtn">
+              <span>Salvar Produto</span>
+              <div class="spinner d-none"></div>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="container-fluid mt-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card sales-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Vendas Totais</h5>
-                        <h2 class="card-text">R$ 458.290</h2>
-                        <p class="text-success">↑ 12,5% vs mês anterior</p>
-                    </div>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div
+            class="card sales-card online animate__animated animate__slideInUp">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title">Vendas Totais</h5>
+                  <h2 class="card-text">R$ 458.290</h2>
+                  <p class="text-success">↑ 12,5% vs mês anterior</p>
                 </div>
+                <span class="status-dot online"></span>
+              </div>
             </div>
-            <div class="col-md-3">
-                <div class="card revenue-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Receita Mensal</h5>
-                        <h2 class="card-text">R$ 85.420</h2>
-                        <p class="text-danger">↓ 3,2% vs mês anterior</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card orders-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Pedidos Pendentes</h5>
-                        <h2 class="card-text">142</h2>
-                        <p class="text-success">↑ 8,7% vs mês anterior</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card customers-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Clientes Ativos</h5>
-                        <h2 class="card-text">2.845</h2>
-                        <p class="text-success">↑ 5,3% vs mês anterior</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div
+            class="card revenue-card online animate__animated animate__slideInUp animate__delay-1s">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title">Receita Mensal</h5>
+                  <h2 class="card-text">R$ 85.420</h2>
+                  <p class="text-danger">↓ 3,2% vs mês anterior</p>
+                </div>
+                <span class="status-dot online"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div
+            class="card orders-card online animate__animated animate__slideInUp animate__delay-2s">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title">Pedidos Pendentes</h5>
+                  <h2 class="card-text">142</h2>
+                  <p class="text-success">↑ 8,7% vs mês anterior</p>
+                </div>
+                <span class="status-dot online"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
+          <div
+            class="card customers-card online animate__animated animate__slideInUp animate__delay-3s">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title">Clientes Ativos</h5>
+                  <h2 class="card-text">2.845</h2>
+                  <p class="text-success">↑ 5,3% vs mês anterior</p>
+                </div>
+                <span class="status-dot online"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div class="row mt-4">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Análise de Vendas</h5>
-                        <canvas id="salesChart" height="300"></canvas>
-                    </div>
+      <div class="row mt-4">
+        <div class="col-12 col-lg-8 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title mb-0">Análise de Vendas</h5>
+                <div class="dropdown">
+                  <button
+                    class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="chartRangeDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Últimos 30 dias
+                  </button>
+                  <ul
+                    class="dropdown-menu"
+                    aria-labelledby="chartRangeDropdown">
+                    <li>
+                      <button class="dropdown-item" data-range="7">
+                        Últimos 7 dias
+                      </button>
+                    </li>
+                    <li>
+                      <button class="dropdown-item" data-range="30">
+                        Últimos 30 dias
+                      </button>
+                    </li>
+                    <li>
+                      <button class="dropdown-item" data-range="90">
+                        Últimos 90 dias
+                      </button>
+                    </li>
+                  </ul>
                 </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="salesChart" height="300"></canvas>
+              </div>
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Produtos Mais Vendidos</h5>
-                        <div class="product-list">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" class="product-thumbnail" alt="Produto">
-                                    <span class="ms-2">Relógio Premium</span>
-                                </div>
-                                <span class="badge bg-success">R$ 12.490</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" class="product-thumbnail" alt="Produto">
-                                    <span class="ms-2">Fones de Ouvido</span>
-                                </div>
-                                <span class="badge bg-success">R$ 8.950</span>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex align-items-center">
-                                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f" class="product-thumbnail" alt="Produto">
-                                    <span class="ms-2">Lente de Câmera</span>
-                                </div>
-                                <span class="badge bg-success">R$ 6.720</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-12 col-lg-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Produtos Mais Vendidos</h5>
+              <div class="product-list">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3 animate__animated animate__fadeIn">
+                  <div class="d-flex align-items-center">
+                    <img
+                      src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+                      class="product-thumbnail lazy"
+                      alt="Relógio"
+                      loading="lazy" />
+                    <span class="ms-2">Relógio Premium</span>
+                  </div>
+                  <span class="badge bg-success">R$ 12.490</span>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3 animate__animated animate__fadeIn">
+                  <div class="d-flex align-items-center">
+                    <img
+                      src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+                      class="product-thumbnail lazy"
+                      alt="Fones de Ouvido"
+                      loading="lazy" />
+                    <span class="ms-2">Fones de Ouvido</span>
+                  </div>
+                  <span class="badge bg-success">R$ 8.950</span>
+                </div>
+                <div
+                  class="d-flex justify-content-between align-items-center animate__animated animate__fadeIn">
+                  <div class="d-flex align-items-center">
+                    <img
+                      src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f"
+                      class="product-thumbnail lazy"
+                      alt="Lente de Câmera"
+                      loading="lazy" />
+                    <span class="ms-2">Lente de Câmera</span>
+                  </div>
+                  <span class="badge bg-success">R$ 6.720</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connection-status" id="connectionStatus">
+      <span class="status-dot online" id="connectionStatusDot"></span>
+      <span id="connectionStatusText">Conectado e sincronizado</span>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+      // Connection monitoring and sync status
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize elements
+        const themeToggle = document.getElementById("themeToggle");
+        const themeIcon = document.getElementById("themeIcon");
+        const connectionStatus = document.getElementById("connectionStatus");
+        const connectionStatusDot = document.getElementById(
+          "connectionStatusDot"
+        );
+        const connectionStatusText = document.getElementById(
+          "connectionStatusText"
+        );
+        const connectionIndicator = document.getElementById(
+          "connectionIndicator"
+        );
+        const connectionText = document.getElementById("connectionText");
+        const offlineNotification = document.getElementById(
+          "offlineNotification"
+        );
+        const productSearch = document.getElementById("productSearch");
+        const searchSpinner = document.getElementById("searchSpinner");
+        const syncProductsBtn = document.getElementById("syncProductsBtn");
+        const saveProductBtn = document.getElementById("saveProductBtn");
+        const lastSyncTime = document.getElementById("lastSyncTime");
+
+        // Theme toggle
+        themeToggle.addEventListener("click", function () {
+          const currentTheme = document.body.getAttribute("data-bs-theme");
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          document.body.setAttribute("data-bs-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+          themeIcon.textContent = newTheme === "dark" ? "☀️" : "🌙";
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.body.setAttribute("data-bs-theme", savedTheme);
+        themeIcon.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+
+        // Connection monitoring
+        function updateConnectionStatus() {
+          const isOnline = navigator.onLine;
+
+          if (isOnline) {
+            // Show online status
+            connectionStatus.className = "connection-status online show";
+            connectionStatusDot.className = "status-dot online";
+            connectionStatusText.textContent = "Conectado e sincronizado";
+            connectionIndicator.className = "status-dot online";
+            connectionText.textContent = "Conectado";
+            offlineNotification.classList.remove("show");
+
+            // Update all cards to online status
+            document.querySelectorAll(".card").forEach((card) => {
+              card.classList.remove("offline", "syncing");
+              card.classList.add("online");
+            });
+
+            // Simulate sync completion after 2 seconds
+            setTimeout(() => {
+              connectionStatusText.textContent = "Conectado e sincronizado";
+              lastSyncTime.textContent = `Última sincronização: ${new Date().toLocaleTimeString()}`;
+            }, 2000);
+          } else {
+            // Show offline status
+            connectionStatus.className = "connection-status offline show";
+            connectionStatusDot.className = "status-dot offline";
+            connectionStatusText.textContent = "Você está offline";
+            connectionIndicator.className = "status-dot offline";
+            connectionText.textContent = "Offline";
+            offlineNotification.classList.add("show");
+
+            // Update all cards to offline status
+            document.querySelectorAll(".card").forEach((card) => {
+              card.classList.remove("online", "syncing");
+              card.classList.add("offline");
+            });
+          }
+        }
+
+        // Initial connection check
+        updateConnectionStatus();
+
+        // Listen for connection changes
+        window.addEventListener("online", updateConnectionStatus);
+        window.addEventListener("offline", updateConnectionStatus);
+
+        // Debounced search function
+        const debouncedSearch = _.debounce(function (searchTerm) {
+          // Simulate API call
+          searchSpinner.style.display = "block";
+
+          setTimeout(() => {
+            searchSpinner.style.display = "none";
+            // In a real app, you would update the table with search results
+            console.log("Searching for:", searchTerm);
+          }, 800);
+        }, 500);
+
+        productSearch.addEventListener("input", function (e) {
+          debouncedSearch(e.target.value);
+        });
+
+        // Sync button handler
+        syncProductsBtn.addEventListener("click", function () {
+          // Show syncing state
+          connectionStatus.className = "connection-status syncing show";
+          connectionStatusDot.className = "status-dot syncing";
+          connectionStatusText.textContent = "Sincronizando dados...";
+
+          const spinner = syncProductsBtn.querySelector(".spinner");
+          spinner.classList.remove("d-none");
+          syncProductsBtn.disabled = true;
+
+          // Update cards to syncing state
+          document.querySelectorAll(".card").forEach((card) => {
+            card.classList.remove("online", "offline");
+            card.classList.add("syncing");
+          });
+
+          // Simulate sync process
+          setTimeout(() => {
+            spinner.classList.add("d-none");
+            syncProductsBtn.disabled = false;
+            updateConnectionStatus();
+            lastSyncTime.textContent = `Última sincronização: ${new Date().toLocaleTimeString()}`;
+
+            // Show success animation
+            const cards = document.querySelectorAll(".card");
+            cards.forEach((card) => {
+              card.classList.add("animate__animated", "animate__pulse");
+              setTimeout(() => {
+                card.classList.remove("animate__animated", "animate__pulse");
+              }, 1000);
+            });
+          }, 2000);
+        });
+
+        // Save product handler
+        saveProductBtn.addEventListener("click", function () {
+          const spinner = saveProductBtn.querySelector(".spinner");
+          spinner.classList.remove("d-none");
+          saveProductBtn.disabled = true;
+
+          // Simulate save process
+          setTimeout(() => {
+            spinner.classList.add("d-none");
+            saveProductBtn.disabled = false;
+
+            // Show success message and close modal
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("addProductModal")
+            );
+            modal.hide();
+
+            // Show success notification
+            showToast("Produto adicionado com sucesso!", "success");
+          }, 1500);
+        });
+
+        // Initialize Chart.js
+        const salesChartCtx = document
+          .getElementById("salesChart")
+          .getContext("2d");
+        const salesChart = new Chart(salesChartCtx, {
+          type: "line",
+          data: {
+            labels: Array.from({ length: 30 }, (_, i) => `${i + 1}/06`),
+            datasets: [
+              {
+                label: "Vendas Diárias",
+                data: Array.from(
+                  { length: 30 },
+                  () => Math.floor(Math.random() * 10000) + 5000
+                ),
+                borderColor: "rgba(13, 110, 253, 1)",
+                backgroundColor: "rgba(13, 110, 253, 0.1)",
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                mode: "index",
+                intersect: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function (value) {
+                    return "R$ " + value.toLocaleString();
+                  },
+                },
+              },
+            },
+            interaction: {
+              mode: "nearest",
+              axis: "x",
+              intersect: false,
+            },
+          },
+        });
+
+        // Chart range selector
+        document.querySelectorAll("[data-range]").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            const range = parseInt(this.getAttribute("data-range"));
+            const newLabels = Array.from(
+              { length: range },
+              (_, i) => `${i + 1}/06`
+            );
+            const newData = Array.from(
+              { length: range },
+              () => Math.floor(Math.random() * 10000) + 5000
+            );
+
+            salesChart.data.labels = newLabels;
+            salesChart.data.datasets[0].data = newData;
+            salesChart.update();
+
+            document.getElementById("chartRangeDropdown").textContent =
+              range === 7
+                ? "Últimos 7 dias"
+                : range === 30
+                ? "Últimos 30 dias"
+                : "Últimos 90 dias";
+          });
+        });
+
+        // Lazy loading for images
+        const lazyLoadImages = function () {
+          const lazyImages = document.querySelectorAll("img.lazy");
+
+          const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.getAttribute("data-src") || img.src;
+                img.classList.add("loaded");
+                observer.unobserve(img);
+              }
+            });
+          });
+
+          lazyImages.forEach((img) => {
+            // Store original src in data-src
+            if (!img.hasAttribute("data-src")) {
+              img.setAttribute("data-src", img.src);
+              img.src = "";
+            }
+            observer.observe(img);
+          });
+        };
+
+        // Initialize lazy loading
+        lazyLoadImages();
+
+        // Toast notification function
+        function showToast(message, type = "success") {
+          const toast = document.createElement("div");
+          toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3`;
+          toast.setAttribute("role", "alert");
+          toast.setAttribute("aria-live", "assertive");
+          toast.setAttribute("aria-atomic", "true");
+
+          toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+
+          document.body.appendChild(toast);
+          const bsToast = new bootstrap.Toast(toast);
+          bsToast.show();
+
+          toast.addEventListener("hidden.bs.toast", function () {
+            toast.remove();
+          });
+        }
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      });
+    </script>
+  </body>
 </html>

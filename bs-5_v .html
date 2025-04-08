@@ -1,195 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Feature-rich Calendar Component</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-<style>.calendar-day {
-    height: 600px;
-    overflow-y: auto;
-}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
+    <style>
+      .calendar-day {
+        height: 600px;
+        overflow-y: auto;
+      }
 
-.hour-slot {
-    position: relative;
-    height: 60px;
-    border-bottom: 1px solid #e0e0e0;
-}
+      .hour-slot {
+        position: relative;
+        height: 60px;
+        border-bottom: 1px solid #e0e0e0;
+      }
 
-.time {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-    font-size: 0.8rem;
-    color: #888;
-}
-
-.event {
-    position: absolute;
-    left: 70px;
-    right: 10px;
-    top: 5px;
-    bottom: 5px;
-    padding: 5px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.event:hover {
-    transform: scale(1.02);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.event-title {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #fff;
-}
-
-@media (max-width: 768px) {
-    .calendar-day {
-        height: 400px;
-    }
-
-    .hour-slot {
-        height: 50px;
-    }
-
-    .event {
-        left: 50px;
-    }
-
-    .time {
-        font-size: 0.7rem;
-    }
-
-    .event-title {
+      .time {
+        position: absolute;
+        left: 5px;
+        top: 5px;
         font-size: 0.8rem;
-    }
-}
-</style>    <link rel="stylesheet" href="index.css">
-</head>
-<body>
+        color: #888;
+      }
+
+      .event {
+        position: absolute;
+        left: 70px;
+        right: 10px;
+        top: 5px;
+        bottom: 5px;
+        padding: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .event:hover {
+        transform: scale(1.02);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .event-title {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      @media (max-width: 768px) {
+        .calendar-day {
+          height: 400px;
+        }
+
+        .hour-slot {
+          height: 50px;
+        }
+
+        .event {
+          left: 50px;
+        }
+
+        .time {
+          font-size: 0.7rem;
+        }
+
+        .event-title {
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
     <div class="container-fluid py-4">
-        <div class="row justify-content-end mb-3">
-            <div class="col-auto">
-                <button class="btn btn-outline-primary me-2" id="prevDay"><i class="bi bi-chevron-left"></i></button>
-                <button class="btn btn-outline-primary" id="nextDay"><i class="bi bi-chevron-right"></i></button>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" id="prevWeek">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-primary" id="nextWeek">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+            <h3 class="mb-0" id="currentWeek"></h3>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#eventModal">
+                    <i class="bi bi-plus-lg"></i> New Event
+                </button>
             </div>
         </div>
-        <div class="row" id="calendarContainer">
-            <div class="col-md-4 mb-3" aria-label="Monday, June 5">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Mon, Jun 5</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="calendar-day">
-                            <div class="hour-slot" data-hour="9">
-                                <span class="time">9:00 AM</span>
-                                <div class="event bg-info" tabindex="0" role="button" aria-label="Meeting with Team A at 9:00 AM">
-                                    <span class="event-title">Meeting with Team A</span>
-                                </div>
-                            </div>
-                            <div class="hour-slot" data-hour="10">
-                                <span class="time">10:00 AM</span>
-                            </div>
-                            <div class="hour-slot" data-hour="11">
-                                <span class="time">11:00 AM</span>
-                                <div class="event bg-success" tabindex="0" role="button" aria-label="Project Review at 11:00 AM">
-                                    <span class="event-title">Project Review</span>
-                                </div>
-                            </div>
-                            <!-- More hour slots... -->
-                        </div>
-                    </div>
-                </div>
+
+      </div>
+      <div class="row" id="calendarContainer">
+        <div class="col-md-4 mb-3" aria-label="Monday, June 5">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Mon, Jun 5</h5>
             </div>
-            <div class="col-md-4 mb-3" aria-label="Tuesday, June 6">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Tue, Jun 6</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="calendar-day">
-                            <div class="hour-slot" data-hour="9">
-                                <span class="time">9:00 AM</span>
-                            </div>
-                            <div class="hour-slot" data-hour="10">
-                                <span class="time">10:00 AM</span>
-                                <div class="event bg-warning" tabindex="0" role="button" aria-label="Client Call at 10:00 AM">
-                                    <span class="event-title">Client Call</span>
-                                </div>
-                            </div>
-                            <div class="hour-slot" data-hour="11">
-                                <span class="time">11:00 AM</span>
-                            </div>
-                            <!-- More hour slots... -->
-                        </div>
-                    </div>
+            <div class="card-body p-0">
+              <div class="calendar-day">
+                <div class="hour-slot" data-hour="9">
+                  <span class="time">9:00 AM</span>
+                  <div
+                    class="event bg-info"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Meeting with Team A at 9:00 AM">
+                    <span class="event-title">Meeting with Team A</span>
+                  </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-3" aria-label="Wednesday, June 7">
-                <div class="card h-100">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Wed, Jun 7</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="calendar-day">
-                            <div class="hour-slot" data-hour="9">
-                                <span class="time">9:00 AM</span>
-                                <div class="event bg-danger" tabindex="0" role="button" aria-label="Team Building at 9:00 AM">
-                                    <span class="event-title">Team Building</span>
-                                </div>
-                            </div>
-                            <div class="hour-slot" data-hour="10">
-                                <span class="time">10:00 AM</span>
-                            </div>
-                            <div class="hour-slot" data-hour="11">
-                                <span class="time">11:00 AM</span>
-                                <div class="event bg-secondary" tabindex="0" role="button" aria-label="Lunch Meeting at 11:00 AM">
-                                    <span class="event-title">Lunch Meeting</span>
-                                </div>
-                            </div>
-                            <!-- More hour slots... -->
-                        </div>
-                    </div>
+                <div class="hour-slot" data-hour="10">
+                  <span class="time">10:00 AM</span>
                 </div>
+                <div class="hour-slot" data-hour="11">
+                  <span class="time">11:00 AM</span>
+                  <div
+                    class="event bg-success"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Project Review at 11:00 AM">
+                    <span class="event-title">Project Review</span>
+                  </div>
+                </div>
+                <!-- More hour slots... -->
+              </div>
             </div>
+          </div>
         </div>
+        <div class="col-md-4 mb-3" aria-label="Tuesday, June 6">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Tue, Jun 6</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="calendar-day">
+                <div class="hour-slot" data-hour="9">
+                  <span class="time">9:00 AM</span>
+                </div>
+                <div class="hour-slot" data-hour="10">
+                  <span class="time">10:00 AM</span>
+                  <div
+                    class="event bg-warning"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Client Call at 10:00 AM">
+                    <span class="event-title">Client Call</span>
+                  </div>
+                </div>
+                <div class="hour-slot" data-hour="11">
+                  <span class="time">11:00 AM</span>
+                </div>
+                <!-- More hour slots... -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3" aria-label="Wednesday, June 7">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Wed, Jun 7</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="calendar-day">
+                <div class="hour-slot" data-hour="9">
+                  <span class="time">9:00 AM</span>
+                  <div
+                    class="event bg-danger"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Team Building at 9:00 AM">
+                    <span class="event-title">Team Building</span>
+                  </div>
+                </div>
+                <div class="hour-slot" data-hour="10">
+                  <span class="time">10:00 AM</span>
+                </div>
+                <div class="hour-slot" data-hour="11">
+                  <span class="time">11:00 AM</span>
+                  <div
+                    class="event bg-secondary"
+                    tabindex="0"
+                    role="button"
+                    aria-label="Lunch Meeting at 11:00 AM">
+                    <span class="event-title">Lunch Meeting</span>
+                  </div>
+                </div>
+                <!-- More hour slots... -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="eventDetails"></p>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="eventModal"
+      tabindex="-1"
+      aria-labelledby="eventModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="eventDetails"></p>
+          </div>
         </div>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.querySelectorAll('.event').forEach(event => {
-            event.addEventListener('click', function() {
-                const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-                document.getElementById('eventDetails').textContent = this.getAttribute('aria-label');
-                eventModal.show();
-            });
+      document.querySelectorAll(".event").forEach((event) => {
+        event.addEventListener("click", function () {
+          const eventModal = new bootstrap.Modal(
+            document.getElementById("eventModal")
+          );
+          document.getElementById("eventDetails").textContent =
+            this.getAttribute("aria-label");
+          eventModal.show();
         });
+      });
 
-        document.getElementById('prevDay').addEventListener('click', function() {
-            // Logic for previous day navigation
-        });
+      document.getElementById("prevDay").addEventListener("click", function () {
+        // Logic for previous day navigation
+      });
 
-        document.getElementById('nextDay').addEventListener('click', function() {
-            // Logic for next day navigation
-        });
+      document.getElementById("nextDay").addEventListener("click", function () {
+        // Logic for next day navigation
+      }); class CalendarManager {
+            constructor() {
+                this.state = {
+                    events: JSON.parse(localStorage.getItem('calendarEvents')) || [],
+                    currentDate: new Date(),
+                    isOnline: navigator.onLine,
+                    isSyncing: false
+                };
+
+                this.init();
+                this.setupEventListeners();
+                this.syncData();
+            }
+
+            init() {
+                this.renderCalendar();
+                this.updateSyncStatus();
+            }
+
+            setupEventListeners() {
+                document.getElementById('prevWeek').addEventListener('click', () => this.changeWeek(-1));
+                document.getElementById('nextWeek').addEventListener('click', () => this.changeWeek(1));
+                document.getElementById('eventForm').addEventListener('submit', (e) => this.handleFormSubmit(e));
+                window.addEventListener('online', () => this.handleConnectivityChange(true));
+                window.addEventListener('offline', () => this.handleConnectivityChange(false));
+            }
+
+            async syncData() {
+                this.state.isSyncing = true;
+                this.updateSyncStatus();
+
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    localStorage.setItem('calendarEvents', JSON.stringify(this.state.events));
+                    this.state.isSyncing = false;
+                    this.updateSyncStatus();
+                } catch (error) {
+                    console.error('Sync failed:', error);
+                    this.state.isSyncing = false;
+                    this.updateSyncStatus();
+                }
+            }
+
+            updateSyncStatus() {
+                const indicator = document.querySelector('.status-indicator');
+                const text = document.querySelector('.status-text');
+                
+                if (!this.state.isOnline) {
+                    indicator.style.backgroundColor = '#e74c3c';
+                    text.textContent = 'Offline - Changes saved locally';
+                } else if (this.state.isSyncing) {
+                    indicator.style.backgroundColor = '#f1c40f';
+                    text.textContent = 'Syncing changes...';
+                } else {
+                    indicator.style.backgroundColor = '#2ecc71';
+                    text.textContent = 'All changes synced';
+                }
+            }
+
+            renderCalendar() {
+                const calendarGrid = document.getElementById('calendarGrid');
+                calendarGrid.innerHTML = '';
+                
+                const days = this.getWeekDays();
+                days.forEach(day => {
+                    const dayElement = this.createDayElement(day);
+                    calendarGrid.appendChild(dayElement);
+                });
+            }
+
+            createDayElement(date) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">${date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            ${this.generateHourSlots(date)}
+                        </div>
+                    </div>
+                `;
+                return dayElement;
+            }
+
+            generateHourSlots(date) {
+                let slots = '';
+                for (let hour = 0; hour < 24; hour++) {
+                    const events = this.getEventsForHour(date, hour);
+                    slots += `
+                        <div class="hour-slot">
+                            <span class="time">${hour.toString().padStart(2, '0')}:00</span>
+                            ${events.map(event => this.createEventElement(event)).join('')}
+                        </div>
+                    `;
+                }
+                return slots;
+            }
+
+            createEventElement(event) {
+                return `
+                    <div class="event" style="background-color: ${event.color}; top: ${event.start * 2.5}%; height: ${(event.end - event.start) * 2.5}%">
+                        <div class="event-actions">
+                            <button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-light"><i class="bi bi-trash"></i></button>
+                        </div>
+                        <span class="event-title text-white">${event.title}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize calendar
+        const calendar = new CalendarManager();
     </script>
-</body>
+  </body>
 </html>

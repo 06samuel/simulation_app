@@ -1,616 +1,2157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Luxury Supercar Showroom</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<style>
-    :root {
-    --primary: #1a1a1a;
-    --primary-foreground: #ffffff;
-    --secondary: #27272a;
-    --secondary-foreground: #ffffff;
-    --accent: #dc2626;
-    --accent-foreground: #ffffff;
-    --background: #fafafa;
-    --foreground: #171717;
-    --card: #ffffff;
-    --card-foreground: #171717;
-    --border: #e5e5e5;
-    --input: #e5e5e5;
-    --ring: #dc2626;
-    --radius: 0.5rem;
-    --font-family: 'Inter', sans-serif;
-}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+      :root {
+        --primary: #1a1a1a;
+        --primary-foreground: #ffffff;
+        --secondary: #27272a;
+        --secondary-foreground: #ffffff;
+        --accent: #dc2626;
+        --accent-foreground: #ffffff;
+        --background: #fafafa;
+        --foreground: #171717;
+        --card: #ffffff;
+        --card-foreground: #171717;
+        --border: #e5e5e5;
+        --input: #e5e5e5;
+        --ring: #dc2626;
+        --radius: 0.5rem;
+        --font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        --transition-base: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        --transition-transform: transform 0.3s
+          cubic-bezier(0.645, 0.045, 0.355, 1);
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
 
-body {
-    font-family: var(--font-family);
-    background-color: var(--background);
-    color: var(--foreground);
-}
+      @font-face {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2")
+          format("woff2");
+      }
 
-.navbar {
-    background-color: var(--primary) !important;
-    padding: 1rem 0;
-}
+      @font-face {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 600;
+        font-display: swap;
+        src: url("https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2")
+          format("woff2");
+      }
 
-.navbar-brand {
-    font-weight: 700;
-    color: var(--primary-foreground) !important;
-}
+      @font-face {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.woff2")
+          format("woff2");
+      }
 
-.nav-link {
-    color: var(--primary-foreground) !important;
-    transition: color 0.3s ease;
-}
+      body {
+        font-family: var(--font-family);
+        background-color: var(--background);
+        color: var(--foreground);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.5;
+      }
 
-.nav-link:hover {
-    color: var(--accent) !important;
-}
+      /* Improved focus styles for accessibility */
+      :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+      }
 
-.hero-section {
-    margin-top: 76px;
-}
+      /* Connection status indicator */
+      .connection-status {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        font-size: 0.875rem;
+        font-weight: 500;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: var(--transition-base);
+        transform: translateY(100px);
+        opacity: 0;
+      }
 
-.carousel-item img {
-    height: 80vh;
-    object-fit: cover;
-}
+      .connection-status.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
 
-.carousel-caption {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
-    border-radius: var(--radius);
-}
+      .connection-status.online {
+        background-color: #10b981;
+        color: white;
+      }
 
-.carousel-caption h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
+      .connection-status.offline {
+        background-color: #ef4444;
+        color: white;
+      }
 
-.btn-primary {
-    background-color: var(--accent);
-    border-color: var(--accent);
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    transition: all 0.3s ease;
-}
+      .connection-status.syncing {
+        background-color: #f59e0b;
+        color: white;
+      }
 
-.btn-primary:hover {
-    background-color: var(--accent-foreground);
-    border-color: var(--accent);
-    color: var(--accent);
-}
+      /* Sync status for components */
+      .sync-indicator {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        z-index: 1;
+      }
 
-.collection-section {
-    background-color: var(--background);
-    padding: 5rem 0;
-}
+      .sync-indicator.synced {
+        background-color: #10b981;
+        box-shadow: 0 0 0 2px var(--card);
+      }
 
-.car-card {
-    border-radius: var(--radius);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    border: 1px solid var(--border);
-}
+      .sync-indicator.syncing {
+        background-color: #f59e0b;
+        box-shadow: 0 0 0 2px var(--card);
+        animation: pulse 1.5s infinite;
+      }
 
-.car-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
+      .sync-indicator.offline {
+        background-color: #ef4444;
+        box-shadow: 0 0 0 2px var(--card);
+      }
 
-.car-card img {
-    height: 200px;
-    object-fit: cover;
-}
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-.card-body {
-    background-color: var(--card);
-    color: var(--card-foreground);
-}
+      /* Loading skeleton */
+      .skeleton {
+        background-color: #e5e7eb;
+        border-radius: var(--radius);
+        animation: shimmer 1.5s infinite linear;
+        background-image: linear-gradient(
+          to right,
+          #e5e7eb 0%,
+          #f3f4f6 20%,
+          #e5e7eb 40%,
+          #e5e7eb 100%
+        );
+        background-repeat: no-repeat;
+        background-size: 800px 100%;
+      }
 
-.modal-content {
-    background-color: var(--card);
-    color: var(--card-foreground);
-    border-radius: var(--radius);
-}
+      @keyframes shimmer {
+        0% {
+          background-position: -800px 0;
+        }
+        100% {
+          background-position: 800px 0;
+        }
+      }
 
-.specs-list {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-}
+      /* Enhanced navbar with sync status */
+      .navbar {
+        background-color: var(--primary) !important;
+        padding: 0.75rem 0;
+        transition: var(--transition-base);
+        box-shadow: var(--shadow-sm);
+      }
 
-.specs-list li {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-}
+      .navbar.scrolled {
+        padding: 0.5rem 0;
+        box-shadow: var(--shadow);
+      }
 
-.action-buttons .btn {
-    transition: transform 0.3s ease;
-}
+      .navbar-brand {
+        font-weight: 700;
+        color: var(--primary-foreground) !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-.action-buttons .btn:hover {
-    transform: translateY(-2px);
-}
+      .nav-link {
+        color: var(--primary-foreground) !important;
+        transition: var(--transition-base);
+        padding: 0.5rem 1rem !important;
+        border-radius: var(--radius);
+        font-weight: 500;
+      }
 
-.specs-highlight {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-    color: var(--accent);
-}
+      .nav-link:hover,
+      .nav-link:focus {
+        color: var(--accent) !important;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
 
-.price-tag {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-foreground);
-    margin-bottom: 1.5rem;
-}
+      .nav-link.active {
+        color: var(--accent) !important;
+        font-weight: 600;
+      }
 
-.specs-detailed {
-    padding: 2rem;
-    background-color: var(--card);
-    border-radius: var(--radius);
-}
+      /* Hero section with improved animations */
+      .hero-section {
+        margin-top: 76px;
+        overflow: hidden;
+      }
 
-.specs-detailed h4 {
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-}
+      .carousel-item {
+        transition: transform 0.6s ease-in-out;
+      }
 
-.search-section {
-    background-color: var(--background);
-}
+      .carousel-item img {
+        height: 80vh;
+        object-fit: cover;
+        width: 100%;
+      }
 
-.search-form {
-    border: 1px solid var(--border);
-}
+      .carousel-caption {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 2rem;
+        border-radius: var(--radius);
+        backdrop-filter: blur(8px);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.6s ease 0.3s;
+      }
 
-.car-card {
-    position: relative;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
+      .carousel-item.active .carousel-caption {
+        transform: translateY(0);
+        opacity: 1;
+      }
 
-.card-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--accent);
-    color: var(--accent-foreground);
-    padding: 0.5rem 1rem;
-    border-radius: var(--radius);
-    font-size: 0.875rem;
-    font-weight: 600;
-    z-index: 1;
-}
-
-.price {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--accent);
-}
-
-.review-card {
-    border: none;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.review-stars {
-    font-size: 1.25rem;
-}
-
-.reviewer-img {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin-right: 1rem;
-    object-fit: cover;
-}
-
-.review-author {
-    display: flex;
-    align-items: center;
-    margin-top: 1.5rem;
-}
-
-.review-text {
-    font-style: italic;
-    color: var(--card-foreground);
-    line-height: 1.6;
-}
-
-.modal-content {
-    border: none;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-@media (max-width: 768px) {
-    .carousel-caption h1 {
-        font-size: 2rem;
-    }
-    
-    .carousel-item img {
-        height: 50vh;
-    }
-    
-    .search-form {
-        padding: 1rem !important;
-    }
-    
-    .review-card {
+      .carousel-caption h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
         margin-bottom: 1rem;
-    }
-}
-</style>
-</head>
-<body>
+        line-height: 1.2;
+      }
+
+      /* Enhanced buttons */
+      .btn {
+        transition: var(--transition-base);
+        font-weight: 600;
+        letter-spacing: 0.025em;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        padding: 0.75rem 1.75rem;
+        border-radius: var(--radius);
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background-color: #b91c1c;
+        border-color: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-outline-primary {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .btn-outline-primary:hover,
+      .btn-outline-primary:focus {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-foreground);
+      }
+
+      /* Card styles with sync state */
+      .car-card {
+        border-radius: var(--radius);
+        overflow: hidden;
+        transition: var(--transition-base);
+        border: 1px solid var(--border);
+        position: relative;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .car-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--accent);
+      }
+
+      .car-card img {
+        height: 200px;
+        object-fit: cover;
+        transition: var(--transition-base);
+      }
+
+      .car-card:hover img {
+        transform: scale(1.03);
+      }
+
+      .card-body {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        padding: 1.5rem;
+      }
+
+      .card-title {
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+
+      .card-text {
+        color: #64748b;
+        margin-bottom: 1.25rem;
+      }
+
+      /* Badges */
+      .card-badge {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--radius);
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 1;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      /* Modal enhancements */
+      .modal-content {
+        background-color: var(--card);
+        color: var(--card-foreground);
+        border-radius: var(--radius);
+        border: none;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--border);
+        padding: 1.5rem;
+      }
+
+      .modal-title {
+        font-weight: 700;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      /* Search section */
+      .search-section {
+        background-color: var(--background);
+        padding: 3rem 0;
+      }
+
+      .search-form {
+        background-color: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+      }
+
+      .form-select,
+      .form-control {
+        border: 1px solid var(--border);
+        padding: 0.75rem 1rem;
+        border-radius: var(--radius);
+        transition: var(--transition-base);
+      }
+
+      .form-select:focus,
+      .form-control:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+      }
+
+      /* Reviews */
+      .review-card {
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition-base);
+        height: 100%;
+      }
+
+      .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .review-stars {
+        font-size: 1.25rem;
+        color: #f59e0b;
+        margin-bottom: 1rem;
+      }
+
+      .reviewer-img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .review-author {
+        display: flex;
+        align-items: center;
+        margin-top: 1.5rem;
+        gap: 1rem;
+      }
+
+      .review-text {
+        font-style: italic;
+        color: var(--card-foreground);
+        line-height: 1.6;
+      }
+
+      /* Responsive breakpoints */
+      @media (max-width: 992px) {
+        .carousel-item img {
+          height: 60vh;
+        }
+
+        .car-card img {
+          height: 180px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .carousel-item img {
+          height: 50vh;
+        }
+
+        .carousel-caption {
+          padding: 1.5rem;
+          bottom: 1rem;
+        }
+
+        .search-form {
+          padding: 1rem;
+        }
+
+        .review-card {
+          margin-bottom: 1.5rem;
+        }
+
+        .navbar-collapse {
+          padding: 1rem;
+          background-color: var(--primary);
+          margin-top: 0.5rem;
+          border-radius: var(--radius);
+        }
+      }
+
+      @media (max-width: 576px) {
+        .carousel-item img {
+          height: 40vh;
+        }
+
+        .carousel-caption {
+          padding: 1rem;
+        }
+
+        .carousel-caption h1 {
+          font-size: 1.75rem;
+        }
+
+        .btn {
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        .card-body {
+          padding: 1rem;
+        }
+
+        .price {
+          font-size: 1.1rem;
+        }
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .slide-up {
+        animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Debounced search loader */
+      .search-loader {
+        display: none;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.25rem;
+        height: 1.25rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: translateY(-50%) rotate(360deg);
+        }
+      }
+
+      /* Offline UI */
+      .offline-ui {
+        position: fixed;
+        bottom: -100px;
+        left: 0;
+        right: 0;
+        background-color: #ef4444;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        z-index: 1050;
+        transition: transform 0.4s ease;
+      }
+
+      .offline-ui.show {
+        transform: translateY(-100px);
+      }
+
+      /* Filter chips */
+      .filter-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.375rem 0.75rem;
+        background-color: var(--background);
+        border-radius: 1.5rem;
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        transition: var(--transition-base);
+        cursor: pointer;
+        border: 1px solid var(--border);
+      }
+
+      .filter-chip:hover {
+        background-color: #f1f5f9;
+      }
+
+      .filter-chip.active {
+        background-color: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      .filter-chip .badge {
+        margin-left: 0.25rem;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Toast notifications */
+      .toast-notification {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        background-color: var(--primary);
+        color: white;
+        padding: 1rem;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        z-index: 1050;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        max-width: 350px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .toast-notification.show {
+        transform: translateX(0);
+      }
+
+      .toast-notification.success {
+        background-color: #10b981;
+      }
+
+      .toast-notification.error {
+        background-color: #ef4444;
+      }
+
+      .toast-notification.warning {
+        background-color: #f59e0b;
+      }
+
+      .toast-icon {
+        font-size: 1.25rem;
+      }
+
+      .toast-close {
+        background: none;
+        border: none;
+        color: inherit;
+        margin-left: auto;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+      }
+
+      .toast-close:hover {
+        opacity: 1;
+      }
+
+      /* Loading overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .loading-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .loading-spinner {
+        width: 3rem;
+        height: 3rem;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Connection Status Indicator -->
+    <div class="connection-status">
+      <i class="bi bi-wifi"></i>
+      <span class="status-text">Connected</span>
+    </div>
+
+    <!-- Offline UI -->
+    <div class="offline-ui">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      You're currently offline. Some features may be limited.
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">SuperLuxe Motors</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#collection">Collection</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#compare">Compare</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="bi bi-lightning-charge-fill"></i>
+          SuperLuxe Motors
+          <span class="sync-indicator synced"></span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#collection">Collection</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#compare">Compare</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <section id="home" class="hero-section">
-        <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16" class="d-block w-100" alt="Ferrari SF90 Stradale">
-                    <div class="carousel-caption">
-                        <h1>Ferrari SF90 Stradale</h1>
-                        <p class="specs-highlight">986 HP | V8 Twin-Turbo | 0-60 mph: 2.5s</p>
-                        <p class="price-tag">Starting from $625,000</p>
-                        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#detailModal1">View Details</button>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1621247921829-15b4c2911f69" class="d-block w-100" alt="McLaren 720S">
-                    <div class="carousel-caption">
-                        <h1>McLaren 720S</h1>
-                        <p class="specs-highlight">710 HP | V8 Twin-Turbo | 0-60 mph: 2.8s</p>
-                        <p class="price-tag">Starting from $299,000</p>
-                        <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#detailModal2">View Details</button>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+      <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselHero"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"></button>
+          <button
+            type="button"
+            data-bs-target="#carouselHero"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"></button>
+          <button
+            type="button"
+            data-bs-target="#carouselHero"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"></button>
         </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img
+              src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16"
+              class="d-block w-100"
+              alt="Ferrari SF90 Stradale"
+              loading="lazy" />
+            <div class="carousel-caption">
+              <h1>Ferrari SF90 Stradale</h1>
+              <p class="specs-highlight">
+                986 HP | V8 Twin-Turbo | 0-60 mph: 2.5s
+              </p>
+              <p class="price-tag">Starting from $625,000</p>
+              <button
+                class="btn btn-primary btn-lg"
+                data-bs-toggle="modal"
+                data-bs-target="#detailModal1">
+                View Details
+              </button>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1621247921829-15b4c2911f69"
+              class="d-block w-100"
+              alt="McLaren 720S"
+              loading="lazy" />
+            <div class="carousel-caption">
+              <h1>McLaren 720S</h1>
+              <p class="specs-highlight">
+                710 HP | V8 Twin-Turbo | 0-60 mph: 2.8s
+              </p>
+              <p class="price-tag">Starting from $299,000</p>
+              <button
+                class="btn btn-primary btn-lg"
+                data-bs-toggle="modal"
+                data-bs-target="#detailModal2">
+                View Details
+              </button>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img
+              src="https://images.unsplash.com/photo-1494972308805-463bc619d34e"
+              class="d-block w-100"
+              alt="Lamborghini Aventador"
+              loading="lazy" />
+            <div class="carousel-caption">
+              <h1>Lamborghini Aventador SVJ</h1>
+              <p class="specs-highlight">759 HP | V12 | 0-60 mph: 2.8s</p>
+              <p class="price-tag">Starting from $517,000</p>
+              <button
+                class="btn btn-primary btn-lg"
+                data-bs-toggle="modal"
+                data-bs-target="#detailModal3">
+                View Details
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselHero"
+          data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselHero"
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </section>
 
-    <div class="modal fade" id="detailModal1" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Ferrari SF90 Stradale - Detailed Specifications</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div id="carDetailSlider" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae" class="d-block w-100" alt="SF90 Front">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16" class="d-block w-100" alt="SF90 Side">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="specs-detailed">
-                                <h4>Technical Specifications</h4>
-                                <ul class="specs-list">
-                                    <li><strong>Engine:</strong> 4.0L V8 Twin-Turbo + 3 Electric Motors</li>
-                                    <li><strong>Power:</strong> 986 hp (Combined)</li>
-                                    <li><strong>Torque:</strong> 590 lb-ft</li>
-                                    <li><strong>Transmission:</strong> 8-speed DCT</li>
-                                    <li><strong>Drive Type:</strong> All-Wheel Drive</li>
-                                    <li><strong>0-60 mph:</strong> 2.5 seconds</li>
-                                    <li><strong>Top Speed:</strong> 211 mph</li>
-                                    <li><strong>Electric Range:</strong> 15.5 miles</li>
-                                </ul>
-                                <div class="action-buttons mt-4">
-                                    <button class="btn btn-primary me-2" onclick="scheduleTestDrive()">Schedule Test Drive</button>
-                                    <button class="btn btn-outline-primary" onclick="downloadBrochure()">Download Brochure</button>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Detail Modals -->
+    <div class="modal fade" id="detailModal1" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Ferrari SF90 Stradale - Detailed Specifications
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div
+                  id="carDetailSlider1"
+                  class="carousel slide"
+                  data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img
+                        src="https://images.unsplash.com/photo-1592198084033-aade902d1aae"
+                        class="d-block w-100"
+                        alt="SF90 Front"
+                        loading="lazy" />
                     </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16"
+                        class="d-block w-100"
+                        alt="SF90 Side"
+                        loading="lazy" />
+                    </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1555215695-3004980ad54e"
+                        class="d-block w-100"
+                        alt="SF90 Interior"
+                        loading="lazy" />
+                    </div>
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carDetailSlider1"
+                    data-bs-slide="prev">
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carDetailSlider1"
+                    data-bs-slide="next">
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
                 </div>
+              </div>
+              <div class="col-md-6">
+                <div class="specs-detailed">
+                  <h4>Technical Specifications</h4>
+                  <ul class="specs-list">
+                    <li>
+                      <strong>Engine:</strong> 4.0L V8 Twin-Turbo + 3 Electric
+                      Motors
+                    </li>
+                    <li><strong>Power:</strong> 986 hp (Combined)</li>
+                    <li><strong>Torque:</strong> 590 lb-ft</li>
+                    <li><strong>Transmission:</strong> 8-speed DCT</li>
+                    <li><strong>Drive Type:</strong> All-Wheel Drive</li>
+                    <li><strong>0-60 mph:</strong> 2.5 seconds</li>
+                    <li><strong>Top Speed:</strong> 211 mph</li>
+                    <li><strong>Electric Range:</strong> 15.5 miles</li>
+                  </ul>
+                  <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="filter-chip active">Hybrid</span>
+                    <span class="filter-chip">Limited Edition</span>
+                    <span class="filter-chip">AWD</span>
+                  </div>
+                  <div class="action-buttons mt-4 d-flex flex-wrap gap-2">
+                    <button
+                      class="btn btn-primary"
+                      onclick="scheduleTestDrive('Ferrari SF90 Stradale')">
+                      Schedule Test Drive
+                    </button>
+                    <button
+                      class="btn btn-outline-primary"
+                      onclick="downloadBrochure('ferrari_sf90')">
+                      Download Brochure
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      onclick="addToCompare('Ferrari SF90 Stradale')">
+                      Add to Compare
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
-    <div class="modal fade" id="detailModal2" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">McLaren 720S - Detailed Specifications</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div id="carDetailSlider" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <img src="https://images.unsplash.com/photo-1617654112368-307921291f42" class="d-block w-100" alt="720S Front">
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img src="https://images.unsplash.com/photo-1621247921829-15b4c2911f69" class="d-block w-100" alt="720S Side">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="specs-detailed">
-                                <h4>Technical Specifications</h4>
-                                <ul class="specs-list">
-                                    <li><strong>Engine:</strong> 4.0L V8 Twin-Turbo + 3 Electric Motors</li>
-                                    <li><strong>Power:</strong> 710 hp (Combined)</li>
-                                    <li><strong>Torque:</strong> 590 lb-ft</li>
-                                    <li><strong>Transmission:</strong> 8-speed DCT</li>
-                                    <li><strong>Drive Type:</strong> All-Wheel Drive</li>
-                                    <li><strong>0-60 mph:</strong> 2.8 seconds</li>
-                                    <li><strong>Top Speed:</strong> 211 mph</li>
-                                    <li><strong>Electric Range:</strong> 15.5 miles</li>
-                                </ul>
-                                <div class="action-buttons mt-4">
-                                    <button class="btn btn-primary me-2" onclick="scheduleTestDrive()">Schedule Test Drive</button>
-                                    <button class="btn btn-outline-primary" onclick="downloadBrochure()">Download Brochure</button>
-                                </div>
-                            </div>
-                        </div>
+    <div class="modal fade" id="detailModal2" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">McLaren 720S - Detailed Specifications</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div
+                  id="carDetailSlider2"
+                  class="carousel slide"
+                  data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img
+                        src="https://images.unsplash.com/photo-1617654112368-307921291f42"
+                        class="d-block w-100"
+                        alt="720S Front"
+                        loading="lazy" />
                     </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1621247921829-15b4c2911f69"
+                        class="d-block w-100"
+                        alt="720S Side"
+                        loading="lazy" />
+                    </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1617654112293-9d1594b53f1c"
+                        class="d-block w-100"
+                        alt="720S Interior"
+                        loading="lazy" />
+                    </div>
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carDetailSlider2"
+                    data-bs-slide="prev">
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carDetailSlider2"
+                    data-bs-slide="next">
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
                 </div>
+              </div>
+              <div class="col-md-6">
+                <div class="specs-detailed">
+                  <h4>Technical Specifications</h4>
+                  <ul class="specs-list">
+                    <li><strong>Engine:</strong> 4.0L V8 Twin-Turbo</li>
+                    <li><strong>Power:</strong> 710 hp</li>
+                    <li><strong>Torque:</strong> 568 lb-ft</li>
+                    <li><strong>Transmission:</strong> 7-speed SSG</li>
+                    <li><strong>Drive Type:</strong> Rear-Wheel Drive</li>
+                    <li><strong>0-60 mph:</strong> 2.8 seconds</li>
+                    <li><strong>Top Speed:</strong> 212 mph</li>
+                    <li><strong>Curb Weight:</strong> 2,829 lbs</li>
+                  </ul>
+                  <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="filter-chip active">Super Series</span>
+                    <span class="filter-chip">RWD</span>
+                    <span class="filter-chip">Carbon Fiber</span>
+                  </div>
+                  <div class="action-buttons mt-4 d-flex flex-wrap gap-2">
+                    <button
+                      class="btn btn-primary"
+                      onclick="scheduleTestDrive('McLaren 720S')">
+                      Schedule Test Drive
+                    </button>
+                    <button
+                      class="btn btn-outline-primary"
+                      onclick="downloadBrochure('mclaren_720s')">
+                      Download Brochure
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      onclick="addToCompare('McLaren 720S')">
+                      Add to Compare
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="detailModal3" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Lamborghini Aventador SVJ - Detailed Specifications
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div
+                  id="carDetailSlider3"
+                  class="carousel slide"
+                  data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                    <div class="carousel-item active">
+                      <img
+                        src="https://images.unsplash.com/photo-1494972308805-463bc619d34e"
+                        class="d-block w-100"
+                        alt="Aventador Front"
+                        loading="lazy" />
+                    </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1493238792000-8113da705763"
+                        class="d-block w-100"
+                        alt="Aventador Side"
+                        loading="lazy" />
+                    </div>
+                    <div class="carousel-item">
+                      <img
+                        src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d"
+                        class="d-block w-100"
+                        alt="Aventador Interior"
+                        loading="lazy" />
+                    </div>
+                  </div>
+                  <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carDetailSlider3"
+                    data-bs-slide="prev">
+                    <span
+                      class="carousel-control-prev-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carDetailSlider3"
+                    data-bs-slide="next">
+                    <span
+                      class="carousel-control-next-icon"
+                      aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="specs-detailed">
+                  <h4>Technical Specifications</h4>
+                  <ul class="specs-list">
+                    <li><strong>Engine:</strong> 6.5L V12</li>
+                    <li><strong>Power:</strong> 759 hp</li>
+                    <li><strong>Torque:</strong> 531 lb-ft</li>
+                    <li><strong>Transmission:</strong> 7-speed ISR</li>
+                    <li><strong>Drive Type:</strong> All-Wheel Drive</li>
+                    <li><strong>0-60 mph:</strong> 2.8 seconds</li>
+                    <li><strong>Top Speed:</strong> 217 mph</li>
+                    <li><strong>Curb Weight:</strong> 3,362 lbs</li>
+                  </ul>
+                  <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="filter-chip active">V12</span>
+                    <span class="filter-chip">Aerodynamics</span>
+                    <span class="filter-chip">Limited Edition</span>
+                  </div>
+                  <div class="action-buttons mt-4 d-flex flex-wrap gap-2">
+                    <button
+                      class="btn btn-primary"
+                      onclick="scheduleTestDrive('Lamborghini Aventador SVJ')">
+                      Schedule Test Drive
+                    </button>
+                    <button
+                      class="btn btn-outline-primary"
+                      onclick="downloadBrochure('lamborghini_aventador_svj')">
+                      Download Brochure
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      onclick="addToCompare('Lamborghini Aventador SVJ')">
+                      Add to Compare
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <section class="search-section py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Find Your Dream Car</h2>
-            <div class="search-form bg-white p-4 rounded shadow-sm">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <select class="form-select">
-                            <option selected>Brand</option>
-                            <option>Ferrari</option>
-                            <option>Lamborghini</option>
-                            <option>McLaren</option>
-                            <option>Porsche</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select">
-                            <option selected>Price Range</option>
-                            <option>$200k - $300k</option>
-                            <option>$300k - $500k</option>
-                            <option>$500k+</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select class="form-select">
-                            <option selected>Year</option>
-                            <option>2023</option>
-                            <option>2022</option>
-                            <option>2021</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary w-100">Search</button>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 class="text-center mb-4">Find Your Dream Car</h2>
+        <div class="search-form">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="position-relative">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="searchInput"
+                  placeholder="Search by model or brand" />
+                <div class="search-loader" id="searchLoader"></div>
+              </div>
             </div>
+            <div class="col-md-3">
+              <select class="form-select" id="brandSelect">
+                <option value="" selected>All Brands</option>
+                <option value="Ferrari">Ferrari</option>
+                <option value="Lamborghini">Lamborghini</option>
+                <option value="McLaren">McLaren</option>
+                <option value="Porsche">Porsche</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select" id="priceSelect">
+                <option value="" selected>Any Price</option>
+                <option value="200-300">$200k - $300k</option>
+                <option value="300-500">$300k - $500k</option>
+                <option value="500+">$500k+</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary w-100" id="searchButton">
+                Search
+              </button>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <div class="d-flex flex-wrap gap-2" id="activeFilters"></div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <section id="collection" class="collection-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5">Our Exclusive Collection</h2>
-            <div class="filters mb-4">
-                <div class="btn-group">
-                    <button class="btn btn-outline-primary active">All</button>
-                    <button class="btn btn-outline-primary">Ferrari</button>
-                    <button class="btn btn-outline-primary">Lamborghini</button>
-                    <button class="btn btn-outline-primary">McLaren</button>
-                    <button class="btn btn-outline-primary">Porsche</button>
-                </div>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="car-card card h-100">
-                        <div class="card-badge">New Arrival</div>
-                        <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae" class="card-img-top" alt="Ferrari">
-                        <div class="card-body">
-                            <h5 class="card-title">Ferrari SF90 Stradale</h5>
-                            <p class="card-text">986 hp | 0-60 mph: 2.5s</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="price">$625,000</span>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#carModal">Quick View</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="car-card card h-100">
-                        <img src="https://images.unsplash.com/photo-1621247921829-15b4c2911f69" class="card-img-top" alt="Porsche">
-                        <div class="card-body">
-                            <h5 class="card-title">Porsche 911 GT3</h5>
-                            <p class="card-text">502 hp | 0-60 mph: 3.2s</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="price">$325,000</span>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#carModal">Quick View</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="car-card card h-100">
-                        <div class="card-badge">Limited Edition</div>
-                        <img src="https://images.unsplash.com/photo-1617654112368-307921291f42" class="card-img-top" alt="McLaren">
-                        <div class="card-body">
-                            <h5 class="card-title">McLaren P1</h5>
-                            <p class="card-text">903 hp | 0-60 mph: 2.8s</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="price">$1,150,000</span>
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#carModal">Quick View</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+          <h2 class="mb-0">Our Exclusive Collection</h2>
+          <div class="d-flex align-items-center">
+            <span class="me-2">Sort by:</span>
+            <select class="form-select form-select-sm w-auto" id="sortSelect">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+            </select>
+          </div>
         </div>
+        <div class="filters mb-4">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-primary filter-btn active"
+              data-filter="all">
+              All
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary filter-btn"
+              data-filter="ferrari">
+              Ferrari
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary filter-btn"
+              data-filter="lamborghini">
+              Lamborghini
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary filter-btn"
+              data-filter="mclaren">
+              McLaren
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary filter-btn"
+              data-filter="porsche">
+              Porsche
+            </button>
+          </div>
+        </div>
+        <div class="row g-4" id="carGrid">
+          <!-- Car cards will be dynamically loaded here -->
+          <div class="col-12 text-center py-5" id="loadingIndicator">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="reviews-section py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-5">Customer Reviews</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="review-card card h-100">
-                        <div class="card-body">
-                            <div class="review-stars mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="review-text">"Exceptional service and an amazing collection of supercars. The Ferrari F8 Tributo exceeded all my expectations!"</p>
-                            <div class="review-author">
-                                <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5" alt="Reviewer" class="reviewer-img">
-                                <div>
-                                    <h6 class="mb-0">John Smith</h6>
-                                    <small class="text-muted">Ferrari F8 Tributo Owner</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+      <div class="container">
+        <h2 class="text-center mb-5">Customer Reviews</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="review-card card h-100">
+              <div class="card-body">
+                <div class="review-stars mb-3">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
                 </div>
-                <div class="col-md-4">
-                    <div class="review-card card h-100">
-                        <div class="card-body">
-                            <div class="review-stars mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-half text-warning"></i>
-                            </div>
-                            <p class="review-text">"The McLaren 720S is a masterpiece of engineering. The team's knowledge and professionalism made the purchase process smooth."</p>
-                            <div class="review-author">
-                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2" alt="Reviewer" class="reviewer-img">
-                                <div>
-                                    <h6 class="mb-0">Sarah Johnson</h6>
-                                    <small class="text-muted">McLaren 720S Owner</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <p class="review-text">
+                  "Exceptional service and an amazing collection of supercars.
+                  The Ferrari F8 Tributo exceeded all my expectations!"
+                </p>
+                <div class="review-author">
+                  <img
+                    src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5"
+                    alt="Reviewer"
+                    class="reviewer-img"
+                    loading="lazy" />
+                  <div>
+                    <h6 class="mb-0">John Smith</h6>
+                    <small class="text-muted">Ferrari F8 Tributo Owner</small>
+                  </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="review-card card h-100">
-                        <div class="card-body">
-                            <div class="review-stars mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="review-text">"Incredible experience from start to finish. The Lamborghini Huracán is everything I dreamed of and more!"</p>
-                            <div class="review-author">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d" alt="Reviewer" class="reviewer-img">
-                                <div>
-                                    <h6 class="mb-0">Michael Brown</h6>
-                                    <small class="text-muted">Lamborghini Huracán Owner</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+          </div>
+          <div class="col-md-4">
+            <div class="review-card card h-100">
+              <div class="card-body">
+                <div class="review-stars mb-3">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                </div>
+                <p class="review-text">
+                  "The McLaren 720S is a masterpiece of engineering. The team's
+                  knowledge and professionalism made the purchase process
+                  smooth."
+                </p>
+                <div class="review-author">
+                  <img
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2"
+                    alt="Reviewer"
+                    class="reviewer-img"
+                    loading="lazy" />
+                  <div>
+                    <h6 class="mb-0">Sarah Johnson</h6>
+                    <small class="text-muted">McLaren 720S Owner</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="review-card card h-100">
+              <div class="card-body">
+                <div class="review-stars mb-3">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+                <p class="review-text">
+                  "Incredible experience from start to finish. The Lamborghini
+                  Huracán is everything I dreamed of and more!"
+                </p>
+                <div class="review-author">
+                  <img
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d"
+                    alt="Reviewer"
+                    class="reviewer-img"
+                    loading="lazy" />
+                  <div>
+                    <h6 class="mb-0">Michael Brown</h6>
+                    <small class="text-muted">Lamborghini Huracán Owner</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <div class="modal fade" id="carModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Car Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae" class="img-fluid" alt="Car Detail">
-                        </div>
-                        <div class="col-md-6">
-                            <h4>Ferrari SF90 Stradale</h4>
-                            <p>The Ferrari SF90 Stradale is Ferrari's first production plug-in hybrid electric vehicle (PHEV).</p>
-                            <ul class="specs-list">
-                                <li>Engine: V8 Twin-Turbo</li>
-                                <li>Power: 986 hp</li>
-                                <li>0-60 mph: 2.5s</li>
-                                <li>Top Speed: 211 mph</li>
-                            </ul>
-                            <button class="btn btn-primary">Book Test Drive</button>
-                        </div>
-                    </div>
-                </div>
+    <!-- Compare Modal -->
+    <div class="modal fade" id="compareModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Compare Vehicles</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th id="compareCar1">Car 1</th>
+                    <th id="compareCar2">Car 2</th>
+                    <th id="compareCar3">Car 3</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Brand</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Model</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Price</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Engine</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Power</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>0-60 mph</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Top Speed</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="clearComparison()">
+              Clear Comparison
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
-    <script>
-        function scheduleTestDrive() {
-            alert("Thank you for your interest! Our team will contact you shortly to schedule your test drive.");
-        }
-
-        function downloadBrochure() {
-            alert("Brochure download started. Please check your downloads folder.");
-        }
-
-        document.querySelectorAll('.btn-primary').forEach(button => {
-            button.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.05)';
-            });
-            button.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-            });
-        });
-    </script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script>
+      // Modern JavaScript with ES6+ features
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize app
+        initApp();
+
+        // Set up event listeners
+        setupEventListeners();
+
+        // Load car data
+        loadCarData();
+
+        // Check connection status
+        checkConnectionStatus();
+
+        // Set up scroll listener for navbar
+        setupScrollEffects();
+      });
+
+      // App state
+      const appState = {
+        cars: [],
+        filteredCars: [],
+        compareList: [],
+        connectionStatus: "online",
+        isLoading: false,
+        searchTimeout: null,
+      };
+
+      // Initialize the application
+      function initApp() {
+        // Set up service worker for offline capability
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("ServiceWorker registration successful");
+            })
+            .catch((err) => {
+              console.log("ServiceWorker registration failed: ", err);
+            });
+        }
+
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      // Set up event listeners
+      function setupEventListeners() {
+        // Search input with debounce
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", function (e) {
+            clearTimeout(appState.searchTimeout);
+            document.getElementById("searchLoader").style.display = "block";
+
+            appState.searchTimeout = setTimeout(() => {
+              filterCars();
+              document.getElementById("searchLoader").style.display = "none";
+            }, 500);
+          });
+
+        // Filter controls
+        document
+          .getElementById("brandSelect")
+          .addEventListener("change", filterCars);
+        document
+          .getElementById("priceSelect")
+          .addEventListener("change", filterCars);
+        document
+          .getElementById("sortSelect")
+          .addEventListener("change", filterCars);
+
+        // Filter buttons
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            filterCars();
+          });
+        });
+
+        // Search button
+        document
+          .getElementById("searchButton")
+          .addEventListener("click", filterCars);
+
+        // Online/offline detection
+        window.addEventListener("online", updateConnectionStatus);
+        window.addEventListener("offline", updateConnectionStatus);
+      }
+
+      // Load car data (simulated API call)
+      function loadCarData() {
+        appState.isLoading = true;
+        showLoading(true);
+
+        // Simulate API call with timeout
+        setTimeout(() => {
+          // This would normally be a fetch() call to your API
+          appState.cars = [
+            {
+              id: 1,
+              brand: "Ferrari",
+              model: "SF90 Stradale",
+              price: 625000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1592198084033-aade902d1aae",
+              specs: {
+                engine: "4.0L V8 Twin-Turbo + 3 Electric Motors",
+                power: "986 hp",
+                torque: "590 lb-ft",
+                transmission: "8-speed DCT",
+                drive: "AWD",
+                acceleration: "2.5s",
+                topSpeed: "211 mph",
+                range: "15.5 miles (electric)",
+              },
+              tags: ["hybrid", "limited", "awd"],
+              featured: true,
+            },
+            {
+              id: 2,
+              brand: "McLaren",
+              model: "720S",
+              price: 299000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1621247921829-15b4c2911f69",
+              specs: {
+                engine: "4.0L V8 Twin-Turbo",
+                power: "710 hp",
+                torque: "568 lb-ft",
+                transmission: "7-speed SSG",
+                drive: "RWD",
+                acceleration: "2.8s",
+                topSpeed: "212 mph",
+                range: "N/A",
+              },
+              tags: ["super series", "rwd", "carbon fiber"],
+              featured: true,
+            },
+            {
+              id: 3,
+              brand: "Lamborghini",
+              model: "Aventador SVJ",
+              price: 517000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1494972308805-463bc619d34e",
+              specs: {
+                engine: "6.5L V12",
+                power: "759 hp",
+                torque: "531 lb-ft",
+                transmission: "7-speed ISR",
+                drive: "AWD",
+                acceleration: "2.8s",
+                topSpeed: "217 mph",
+                range: "N/A",
+              },
+              tags: ["v12", "aerodynamics", "limited"],
+              featured: true,
+            },
+            {
+              id: 4,
+              brand: "Porsche",
+              model: "911 GT3",
+              price: 325000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1583121274602-3e2820c69888",
+              specs: {
+                engine: "4.0L Flat-6",
+                power: "502 hp",
+                torque: "346 lb-ft",
+                transmission: "7-speed PDK",
+                drive: "RWD",
+                acceleration: "3.2s",
+                topSpeed: "197 mph",
+                range: "N/A",
+              },
+              tags: ["gt", "rwd", "track"],
+              featured: false,
+            },
+            {
+              id: 5,
+              brand: "Ferrari",
+              model: "F8 Tributo",
+              price: 375000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1580273916550-e323be2ae537",
+              specs: {
+                engine: "3.9L V8 Twin-Turbo",
+                power: "710 hp",
+                torque: "568 lb-ft",
+                transmission: "7-speed DCT",
+                drive: "RWD",
+                acceleration: "2.9s",
+                topSpeed: "211 mph",
+                range: "N/A",
+              },
+              tags: ["tributo", "rwd", "special"],
+              featured: false,
+            },
+            {
+              id: 6,
+              brand: "Lamborghini",
+              model: "Huracán STO",
+              price: 350000,
+              year: 2023,
+              image:
+                "https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d",
+              specs: {
+                engine: "5.2L V10",
+                power: "630 hp",
+                torque: "417 lb-ft",
+                transmission: "7-speed DCT",
+                drive: "RWD",
+                acceleration: "3.0s",
+                topSpeed: "193 mph",
+                range: "N/A",
+              },
+              tags: ["sto", "rwd", "track"],
+              featured: true,
+            },
+          ];
+
+          appState.filteredCars = [...appState.cars];
+          renderCarGrid();
+          showLoading(false);
+          appState.isLoading = false;
+
+          // Update sync status
+          updateSyncStatus("synced");
+        }, 1500);
+      }
+
+      // Filter cars based on search and filters
+      function filterCars() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const brandFilter = document.getElementById("brandSelect").value;
+        const priceFilter = document.getElementById("priceSelect").value;
+        const sortValue = document.getElementById("sortSelect").value;
+        const activeFilter =
+          document.querySelector(".filter-btn.active").dataset.filter;
+
+        // Start with all cars
+        let filtered = [...appState.cars];
+
+        // Apply search term filter
+        if (searchTerm) {
+          filtered = filtered.filter(
+            (car) =>
+              car.brand.toLowerCase().includes(searchTerm) ||
+              car.model.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        // Apply brand filter
+        if (brandFilter) {
+          filtered = filtered.filter((car) => car.brand === brandFilter);
+        }
+
+        // Apply price filter
+        if (priceFilter) {
+          const [min, max] = priceFilter.split("-");
+          if (max) {
+            filtered = filtered.filter(
+              (car) =>
+                car.price >= parseInt(min) * 1000 &&
+                car.price <= parseInt(max) * 1000
+            );
+          } else {
+            filtered = filtered.filter((car) => car.price >= 500000);
+          }
+        }
+
+        // Apply button filter
+        if (activeFilter !== "all") {
+          filtered = filtered.filter(
+            (car) => car.brand.toLowerCase() === activeFilter
+          );
+        }
+
+        // Apply sorting
+        switch (sortValue) {
+          case "price-low":
+            filtered.sort((a, b) => a.price - b.price);
+            break;
+          case "price-high":
+            filtered.sort((a, b) => b.price - a.price);
+            break;
+          case "newest":
+            filtered.sort((a, b) => b.year - a.year);
+            break;
+          default: // featured
+            filtered.sort((a, b) => b.featured - a.featured);
+        }
+
+        appState.filteredCars = filtered;
+        renderCarGrid();
+        updateActiveFilters();
+      }
+
+      // Render the car grid
+      function renderCarGrid() {
+        const carGrid = document.getElementById("carGrid");
+        carGrid.innerHTML = "";
+
+        if (appState.filteredCars.length === 0) {
+          carGrid.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-exclamation-circle fs-1 text-muted"></i>
+                        <h4 class="mt-3">No cars match your search criteria</h4>
+                        <button class="btn btn-link" onclick="resetFilters()">Reset filters</button>
+                    </div>
+                `;
+          return;
+        }
+
+        appState.filteredCars.forEach((car) => {
+          const carCard = document.createElement("div");
+          carCard.className = "col-md-4";
+          carCard.innerHTML = `
+                    <div class="car-card card h-100 animate__animated animate__fadeIn">
+                        ${
+                          car.featured
+                            ? '<div class="card-badge">Featured</div>'
+                            : ""
+                        }
+                        <img src="${car.image}" class="card-img-top" alt="${
+            car.brand
+          } ${car.model}" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">${car.brand} ${
+            car.model
+          }</h5>
+                            <p class="card-text">${
+                              car.specs.power
+                            } | 0-60 mph: ${car.specs.acceleration}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">$${car.price.toLocaleString()}</span>
+                                <button class="btn btn-primary" onclick="showCarDetail(${
+                                  car.id
+                                })">Quick View</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+          carGrid.appendChild(carCard);
+        });
+      }
+
+      // Show car detail modal
+      function showCarDetail(carId) {
+        const car = appState.cars.find((c) => c.id === carId);
+        if (!car) return;
+
+        // In a real app, we would show a proper modal with all details
+        showToast(`Showing details for ${car.brand} ${car.model}`, "success");
+      }
+
+      // Update active filters display
+      function updateActiveFilters() {
+        const activeFiltersContainer = document.getElementById("activeFilters");
+        activeFiltersContainer.innerHTML = "";
+
+        const searchTerm = document.getElementById("searchInput").value;
+        const brandFilter = document.getElementById("brandSelect").value;
+        const priceFilter = document.getElementById("priceSelect").value;
+
+        if (searchTerm) {
+          addActiveFilter("Search", searchTerm, "searchInput");
+        }
+
+        if (brandFilter) {
+          addActiveFilter("Brand", brandFilter, "brandSelect");
+        }
+
+        if (priceFilter) {
+          let priceText = "";
+          if (priceFilter === "200-300") priceText = "$200k - $300k";
+          else if (priceFilter === "300-500") priceText = "$300k - $500k";
+          else if (priceFilter === "500+") priceText = "$500k+";
+
+          addActiveFilter("Price", priceText, "priceSelect");
+        }
+      }
+
+      // Add an active filter chip
+      function addActiveFilter(label, value, clearId) {
+        const chip = document.createElement("div");
+        chip.className = "filter-chip active";
+        chip.innerHTML = `
+                ${label}: ${value}
+                <button class="btn-close btn-close-white ms-2" onclick="clearFilter('${clearId}')"></button>
+            `;
+        document.getElementById("activeFilters").appendChild(chip);
+      }
+
+      // Clear a specific filter
+      function clearFilter(id) {
+        const element = document.getElementById(id);
+        if (element) {
+          if (element.tagName === "SELECT") {
+            element.selectedIndex = 0;
+          } else {
+            element.value = "";
+          }
+          filterCars();
+        }
+      }
+
+      // Reset all filters
+      function resetFilters() {
+        document.getElementById("searchInput").value = "";
+        document.getElementById("brandSelect").selectedIndex = 0;
+        document.getElementById("priceSelect").selectedIndex = 0;
+        document.getElementById("sortSelect").selectedIndex = 0;
+
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          if (btn.dataset.filter === "all") {
+            btn.classList.add("active");
+          }
+        });
+
+        filterCars();
+      }
+
+      // Schedule test drive
+      function scheduleTestDrive(carModel) {
+        if (appState.connectionStatus === "offline") {
+          showToast(
+            "Cannot schedule test drive while offline. Please reconnect.",
+            "error"
+          );
+          return;
+        }
+
+        showLoading(true);
+        updateSyncStatus("syncing");
+
+        // Simulate API call
+        setTimeout(() => {
+          showLoading(false);
+          updateSyncStatus("synced");
+          showToast(
+            `Test drive scheduled for ${carModel}! We'll contact you shortly.`,
+            "success"
+          );
+        }, 2000);
+      }
+
+      // Download brochure
+      function downloadBrochure(model) {
+        if (appState.connectionStatus === "offline") {
+          showToast(
+            "Cannot download brochure while offline. Please reconnect.",
+            "error"
+          );
+          return;
+        }
+
+        showLoading(true);
+        updateSyncStatus("syncing");
+
+        // Simulate download
+        setTimeout(() => {
+          showLoading(false);
+          updateSyncStatus("synced");
+          showToast(
+            `Brochure for ${model} downloaded successfully!`,
+            "success"
+          );
+        }, 1500);
+      }
+
+      // Add car to compare list
+      function addToCompare(carModel) {
+        if (appState.compareList.length >= 3) {
+          showToast("Maximum 3 cars can be compared at once", "warning");
+          return;
+        }
+
+        if (!appState.compareList.includes(carModel)) {
+          appState.compareList.push(carModel);
+          updateCompareModal();
+          showToast(`${carModel} added to comparison`, "success");
+
+          // Show compare modal if not already visible
+          if (appState.compareList.length === 1) {
+            const compareModal = new bootstrap.Modal(
+              document.getElementById("compareModal")
+            );
+            compareModal.show();
+          }
+        } else {
+          showToast(`${carModel} is already in comparison`, "warning");
+        }
+      }
+
+      // Update compare modal with current comparison
+      function updateCompareModal() {
+        const car1 = document.getElementById("compareCar1");
+        const car2 = document.getElementById("compareCar2");
+        const car3 = document.getElementById("compareCar3");
+
+        // Reset headers
+        car1.textContent = appState.compareList[0] || "Car 1";
+        car2.textContent = appState.compareList[1] || "Car 2";
+        car3.textContent = appState.compareList[2] || "Car 3";
+
+        // In a real app, we would populate the comparison table with actual data
+      }
+
+      // Clear comparison list
+      function clearComparison() {
+        appState.compareList = [];
+        updateCompareModal();
+        showToast("Comparison cleared", "success");
+      }
+
+      // Show loading overlay
+      function showLoading(show) {
+        const overlay = document.querySelector(".loading-overlay");
+        if (show) {
+          overlay.classList.add("active");
+        } else {
+          overlay.classList.remove("active");
+        }
+      }
+
+      // Show toast notification
+      function showToast(message, type = "info") {
+        const toast = document.createElement("div");
+        toast.className = `toast-notification ${type}`;
+        toast.innerHTML = `
+                <i class="bi ${getToastIcon(type)} toast-icon"></i>
+                <div class="toast-message">${message}</div>
+                <button class="toast-close">&times;</button>
+            `;
+
+        document.body.appendChild(toast);
+        toast.classList.add("show");
+
+        // Close button
+        toast.querySelector(".toast-close").addEventListener("click", () => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        });
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, 5000);
+      }
+
+      // Get appropriate icon for toast type
+      function getToastIcon(type) {
+        switch (type) {
+          case "success":
+            return "bi-check-circle-fill";
+          case "error":
+            return "bi-exclamation-circle-fill";
+          case "warning":
+            return "bi-exclamation-triangle-fill";
+          default:
+            return "bi-info-circle-fill";
+        }
+      }
+
+      // Check and update connection status
+      function checkConnectionStatus() {
+        updateConnectionStatus();
+
+        // Check periodically
+        setInterval(updateConnectionStatus, 30000);
+      }
+
+      // Update connection status UI
+      function updateConnectionStatus() {
+        const isOnline = navigator.onLine;
+        const statusElement = document.querySelector(".connection-status");
+        const offlineUI = document.querySelector(".offline-ui");
+
+        if (isOnline) {
+          appState.connectionStatus = "online";
+          statusElement.className = "connection-status online show";
+          statusElement.innerHTML =
+            '<i class="bi bi-wifi"></i> <span class="status-text">Connected</span>';
+          offlineUI.classList.remove("show");
+
+          // If we were offline, show reconnected message
+          if (statusElement.classList.contains("offline")) {
+            showToast("Connection restored. You are back online.", "success");
+          }
+        } else {
+          appState.connectionStatus = "offline";
+          statusElement.className = "connection-status offline show";
+          statusElement.innerHTML =
+            '<i class="bi bi-wifi-off"></i> <span class="status-text">Offline</span>';
+          offlineUI.classList.add("show");
+
+          showToast(
+            "You are currently offline. Some features may be limited.",
+            "warning"
+          );
+        }
+
+        // Update sync indicators
+        updateSyncStatus(isOnline ? "synced" : "offline");
+      }
+
+      // Update sync status indicators
+      function updateSyncStatus(status) {
+        const indicators = document.querySelectorAll(".sync-indicator");
+
+        indicators.forEach((indicator) => {
+          indicator.className = "sync-indicator";
+
+          switch (status) {
+            case "synced":
+              indicator.classList.add("synced");
+              break;
+            case "syncing":
+              indicator.classList.add("syncing");
+              break;
+            case "offline":
+              indicator.classList.add("offline");
+              break;
+          }
+        });
+      }
+
+      // Set up scroll effects
+      function setupScrollEffects() {
+        const navbar = document.querySelector(".navbar");
+
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        });
+
+        // Animate elements when they come into view
+        const animateOnScroll = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add(
+                  "animate__animated",
+                  "animate__fadeInUp"
+                );
+                animateOnScroll.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        document.querySelectorAll(".car-card, .review-card").forEach((card) => {
+          animateOnScroll.observe(card);
+        });
+      }
+    </script>
+  </body>
 </html>

@@ -1,253 +1,938 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Announcements & Schedules</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-  :root {
-    --primary: #0070f3;
-    --primary-foreground: #ffffff;
-    --secondary: #f5f5f5;
-    --secondary-foreground: #111111;
-    --accent: #00a8ff;
-    --accent-foreground: #ffffff;
-    --background: #ffffff;
-    --foreground: #111111;
-    --card: #ffffff;
-    --card-foreground: #111111;
-    --popover: #ffffff;
-    --popover-foreground: #111111;
-    --muted: #f5f5f5;
-    --muted-foreground: #666666;
-    --destructive: #ff0000;
-    --destructive-foreground: #ffffff;
-    --border: #e5e5e5;
-    --input: #e5e5e5;
-    --ring: #0070f3;
-    --radius: 0.5rem;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+      :root {
+        --primary: #0070f3;
+        --primary-foreground: #ffffff;
+        --secondary: #f5f5f5;
+        --secondary-foreground: #111111;
+        --accent: #00a8ff;
+        --accent-foreground: #ffffff;
+        --background: #ffffff;
+        --foreground: #111111;
+        --card: #ffffff;
+        --card-foreground: #111111;
+        --popover: #ffffff;
+        --popover-foreground: #111111;
+        --muted: #f5f5f5;
+        --muted-foreground: #666666;
+        --destructive: #ff0000;
+        --destructive-foreground: #ffffff;
+        --border: #e5e5e5;
+        --input: #e5e5e5;
+        --ring: #0070f3;
+        --radius: 0.5rem;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+        --info: #3b82f6;
+        --offline: #6b7280;
+      }
 
-body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    line-height: 1.6;
-}
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
 
-.card {
-    border-radius: var(--radius);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    border: 1px solid var(--border);
-    background: linear-gradient(145deg, #ffffff, #f9f9f9);
-}
-
-.announcement-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-    border-color: var(--primary);
-}
-
-.display-4 {
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 1.5rem;
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    border: none;
-    box-shadow: 0 4px 15px rgba(0,112,243,0.2);
-    transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,112,243,0.3);
-}
-
-.btn-outline-primary {
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    transition: all 0.3s ease;
-}
-
-.btn-outline-primary:hover {
-    background: linear-gradient(45deg, var(--primary), var(--accent));
-    border-color: transparent;
-    transform: translateY(-2px);
-}
-
-.badge {
-    border-radius: 20px;
-    padding: 8px 15px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-}
-
-.list-group-item {
-    border-left: 4px solid var(--primary);
-    margin-bottom: 8px;
-    border-radius: var(--radius);
-    transition: all 0.3s ease;
-}
-
-.list-group-item:hover {
-    background-color: var(--secondary);
-    transform: translateX(5px);
-}
-
-.alert {
-    border-radius: var(--radius);
-    border: none;
-    background: linear-gradient(145deg, #fff9e6, #fff5d6);
-    border-left: 5px solid #ffc107;
-    padding: 1.2rem;
-}
-
-.input-group .form-control {
-    border: 2px solid var(--input);
-    border-radius: var(--radius) 0 0 var(--radius);
-    padding: 12px 20px;
-    transition: all 0.3s ease;
-}
-
-.input-group .form-control:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0,112,243,0.1);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.card {
-    animation: fadeIn 0.6s ease-out;
-}
-
-@media (max-width: 768px) {
-    .btn-group {
-        flex-direction: column;
-        gap: 8px;
-    }
-    .btn-group .btn {
+      /* Sync status indicator */
+      .sync-status {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        padding: 0.5rem 1rem;
         border-radius: var(--radius);
-        margin: 0;
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      .sync-status.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .sync-status.online {
+        background-color: var(--success);
+        color: white;
+      }
+
+      .sync-status.offline {
+        background-color: var(--offline);
+        color: white;
+      }
+
+      .sync-status.syncing {
+        background-color: var(--warning);
+        color: white;
+      }
+
+      .sync-status.error {
+        background-color: var(--error);
+        color: white;
+      }
+
+      .card {
+        border-radius: var(--radius);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        background: linear-gradient(145deg, #ffffff, #f9f9f9);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-    }
-    .display-4 {
-        font-size: 2.5rem;
-    }
-}
-</style>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
+        height: 4px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .announcement-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        border-color: var(--primary);
+      }
+
+      .announcement-card:hover::after {
+        transform: scaleX(1);
+      }
+
+      .display-4 {
+        background: linear-gradient(45deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, var(--primary), var(--accent));
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 112, 243, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+
+      .btn-primary:focus:not(:active)::after {
+        animation: ripple 0.6s ease-out;
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(20, 20);
+          opacity: 0;
+        }
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 112, 243, 0.3);
+      }
+
+      .btn-outline-primary {
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-primary:hover {
+        background: linear-gradient(45deg, var(--primary), var(--accent));
+        border-color: transparent;
+        transform: translateY(-2px);
+      }
+
+      .badge {
+        border-radius: 20px;
+        padding: 8px 15px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+
+      .list-group-item {
+        border-left: 4px solid var(--primary);
+        margin-bottom: 8px;
+        border-radius: var(--radius);
+        transition: all 0.3s ease;
+      }
+
+      .list-group-item:hover {
+        background-color: var(--secondary);
+        transform: translateX(5px);
+      }
+
+      .alert {
+        border-radius: var(--radius);
+        border: none;
+        background: linear-gradient(145deg, #fff9e6, #fff5d6);
+        border-left: 5px solid #ffc107;
+        padding: 1.2rem;
+        transition: all 0.3s ease;
+      }
+
+      .alert:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .input-group .form-control {
+        border: 2px solid var(--input);
+        border-radius: var(--radius) 0 0 var(--radius);
+        padding: 12px 20px;
+        transition: all 0.3s ease;
+      }
+
+      .input-group .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card {
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      /* Connection status indicator */
+      .connection-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .connection-online {
+        background-color: var(--success);
+        box-shadow: 0 0 8px var(--success);
+      }
+
+      .connection-offline {
+        background-color: var(--offline);
+      }
+
+      .connection-syncing {
+        background-color: var(--warning);
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Responsive breakpoints */
+      @media (max-width: 768px) {
+        .btn-group {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .btn-group .btn {
+          border-radius: var(--radius);
+          margin: 0;
+          width: 100%;
+        }
+        .display-4 {
+          font-size: 2.5rem;
+        }
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .display-4 {
+          font-size: 2rem;
+        }
+        .card-body {
+          padding: 1rem;
+        }
+        .input-group .form-control,
+        .input-group .btn {
+          padding: 0.75rem;
+        }
+      }
+
+      /* Touch-friendly elements */
+      button,
+      .btn,
+      .list-group-item,
+      .card {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Loading skeleton */
+      .skeleton {
+        animation: skeleton-loading 1.5s ease-in-out infinite;
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e0e0e0 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        border-radius: var(--radius);
+      }
+
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* Debounced search indicator */
+      .search-loading {
+        position: absolute;
+        right: 60px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 0.8s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .search-loading.active {
+        opacity: 1;
+      }
+
+      @keyframes spin {
+        to {
+          transform: translateY(-50%) rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
     <div class="container py-5">
-        <header class="text-center mb-5">
-            <h1 class="display-4 fw-bold">📢 All Announcements</h1>
-            <div class="col-md-6 mx-auto mt-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search announcements...">
-                    <button class="btn btn-primary">Search</button>
-                </div>
-            </div>
-        </header>
+      <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold">📢 All Announcements</h1>
+        <div class="col-md-6 mx-auto mt-4 position-relative">
+          <div class="input-group">
+            <input
+              type="text"
+              id="searchInput"
+              class="form-control"
+              placeholder="Search announcements..." />
+            <div class="search-loading" id="searchLoading"></div>
+            <button class="btn btn-primary" id="searchButton">Search</button>
+          </div>
+          <div class="text-muted mt-2 small" id="searchStatus">
+            Ready to search
+          </div>
+        </div>
+      </header>
 
-        <div class="btn-group w-100 mb-5" role="group" aria-label="Filter buttons">
-            <button type="button" class="btn btn-outline-primary active">All</button>
-            <button type="button" class="btn btn-outline-primary">General</button>
-            <button type="button" class="btn btn-outline-primary">Course</button>
-            <button type="button" class="btn btn-outline-primary">Task</button>
+      <div
+        class="btn-group w-100 mb-5"
+        role="group"
+        aria-label="Filter buttons">
+        <button
+          type="button"
+          class="btn btn-outline-primary active"
+          data-filter="all">
+          All
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          data-filter="general">
+          General
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          data-filter="course">
+          Course
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          data-filter="task">
+          Task
+        </button>
+      </div>
+
+      <div class="row g-4 mb-5" id="announcementsContainer">
+        <!-- Announcements will be loaded here dynamically -->
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <h3 class="mb-4">Course Schedule</h3>
+          <div class="list-group" id="scheduleContainer">
+            <!-- Schedule items will be loaded here dynamically -->
+          </div>
         </div>
 
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="card h-100 announcement-card">
-                    <div class="card-body">
-                        <span class="badge bg-primary mb-2">General</span>
-                        <h5 class="card-title">Campus Event Update</h5>
-                        <p class="card-text">Annual campus festival scheduled for next month. Join us for exciting activities!</p>
-                        <p class="text-muted">Posted: Dec 15, 2023</p>
-                        <button class="btn btn-outline-primary">Read More</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 announcement-card">
-                    <div class="card-body">
-                        <span class="badge bg-success mb-2">Course</span>
-                        <h5 class="card-title">New Course Registration</h5>
-                        <p class="card-text">Spring semester course registration opens next week. Check eligibility criteria.</p>
-                        <p class="text-muted">Posted: Dec 14, 2023</p>
-                        <button class="btn btn-outline-primary">Read More</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 announcement-card">
-                    <div class="card-body">
-                        <span class="badge bg-warning mb-2">Task</span>
-                        <h5 class="card-title">Project Submission</h5>
-                        <p class="card-text">Final project submissions due by end of this week. Check guidelines.</p>
-                        <p class="text-muted">Posted: Dec 13, 2023</p>
-                        <button class="btn btn-outline-primary">Read More</button>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-6 mb-4">
+          <h3 class="mb-4">Upcoming Deadlines</h3>
+          <div id="deadlinesContainer">
+            <!-- Deadline alerts will be loaded here dynamically -->
+          </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <h3 class="mb-4">Course Schedule</h3>
-                <div class="list-group">
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Advanced Mathematics</h6>
-                            <small class="text-muted">Room 301</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">9:00 AM</span>
-                    </div>
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Web Development</h6>
-                            <small class="text-muted">Lab 204</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">11:00 AM</span>
-                    </div>
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Data Structures</h6>
-                            <small class="text-muted">Room 105</small>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">2:00 PM</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <h3 class="mb-4">Upcoming Deadlines</h3>
-                <div class="alert alert-warning" role="alert">
-                    <h6 class="alert-heading">Research Paper Submission</h6>
-                    <p class="mb-0">Due: December 20, 2023</p>
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    <h6 class="alert-heading">Group Project Presentation</h6>
-                    <p class="mb-0">Due: December 22, 2023</p>
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    <h6 class="alert-heading">Final Exam Preparation</h6>
-                    <p class="mb-0">Due: December 25, 2023</p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
+    <div class="sync-status" id="syncStatus">
+      <span
+        class="connection-indicator connection-online"
+        id="connectionIndicator"></span>
+      <span id="syncStatusText">Connected and synced</span>
+    </div>
+
+    <!-- Skeleton templates for loading states -->
+    <template id="announcementSkeleton">
+      <div class="col-md-4">
+        <div class="card h-100 announcement-card">
+          <div class="card-body">
+            <div class="skeleton mb-2" style="width: 80px; height: 28px"></div>
+            <div class="skeleton mb-2" style="width: 100%; height: 24px"></div>
+            <div class="skeleton mb-2" style="width: 100%; height: 60px"></div>
+            <div class="skeleton mb-3" style="width: 120px; height: 16px"></div>
+            <div class="skeleton" style="width: 100px; height: 38px"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="scheduleSkeleton">
+      <div
+        class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <div class="skeleton mb-1" style="width: 160px; height: 20px"></div>
+          <div class="skeleton" style="width: 80px; height: 14px"></div>
+        </div>
+        <div class="skeleton" style="width: 60px; height: 24px"></div>
+      </div>
+    </template>
+
+    <template id="deadlineSkeleton">
+      <div class="alert alert-warning" role="alert">
+        <div class="skeleton mb-1" style="width: 180px; height: 20px"></div>
+        <div class="skeleton" style="width: 120px; height: 16px"></div>
+      </div>
+    </template>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script>
+      // Connection and sync state management
+      class ConnectionManager {
+        constructor() {
+          this.statusElement = document.getElementById("syncStatus");
+          this.indicatorElement = document.getElementById(
+            "connectionIndicator"
+          );
+          this.statusTextElement = document.getElementById("syncStatusText");
+          this.isOnline = navigator.onLine;
+          this.isSyncing = false;
+          this.lastSyncTime = null;
+
+          this.init();
+        }
+
+        init() {
+          window.addEventListener("online", () =>
+            this.updateConnectionStatus(true)
+          );
+          window.addEventListener("offline", () =>
+            this.updateConnectionStatus(false)
+          );
+
+          // Initial status check
+          this.updateConnectionStatus(this.isOnline);
+
+          // Simulate periodic syncing (in a real app, this would be API calls)
+          setInterval(() => {
+            if (this.isOnline) {
+              this.startSync();
+              setTimeout(() => this.completeSync(), 2000);
+            }
+          }, 30000);
+        }
+
+        updateConnectionStatus(online) {
+          this.isOnline = online;
+
+          if (online) {
+            this.indicatorElement.className =
+              "connection-indicator connection-online";
+            this.statusTextElement.textContent = this.isSyncing
+              ? "Syncing data..."
+              : this.lastSyncTime
+              ? `Synced ${this.formatTimeSince(this.lastSyncTime)}`
+              : "Connected";
+            this.showStatus("online");
+
+            if (!this.isSyncing) {
+              this.startSync();
+              setTimeout(() => this.completeSync(), 2000);
+            }
+          } else {
+            this.indicatorElement.className =
+              "connection-indicator connection-offline";
+            this.statusTextElement.textContent =
+              "Offline - changes will sync when back online";
+            this.showStatus("offline");
+          }
+        }
+
+        startSync() {
+          this.isSyncing = true;
+          this.indicatorElement.className =
+            "connection-indicator connection-syncing";
+          this.statusTextElement.textContent = "Syncing data...";
+          this.showStatus("syncing");
+        }
+
+        completeSync(success = true) {
+          this.isSyncing = false;
+          this.lastSyncTime = new Date();
+
+          if (success) {
+            this.indicatorElement.className =
+              "connection-indicator connection-online";
+            this.statusTextElement.textContent = `Synced just now`;
+            this.showStatus("online");
+          } else {
+            this.indicatorElement.className =
+              "connection-indicator connection-offline";
+            this.statusTextElement.textContent = "Sync failed - will retry";
+            this.showStatus("error");
+          }
+
+          setTimeout(() => {
+            if (!this.isSyncing) {
+              this.statusTextElement.textContent = `Synced ${this.formatTimeSince(
+                this.lastSyncTime
+              )}`;
+            }
+          }, 3000);
+        }
+
+        showStatus(type) {
+          this.statusElement.className = `sync-status ${type} show`;
+
+          if (type !== "error") {
+            setTimeout(() => {
+              this.statusElement.classList.remove("show");
+            }, 3000);
+          }
+        }
+
+        formatTimeSince(date) {
+          const seconds = Math.floor((new Date() - date) / 1000);
+
+          if (seconds < 60) return "just now";
+          if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+          if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+          return `${Math.floor(seconds / 86400)} days ago`;
+        }
+      }
+
+      // Announcements manager with search and filtering
+      class AnnouncementsManager {
+        constructor() {
+          this.container = document.getElementById("announcementsContainer");
+          this.searchInput = document.getElementById("searchInput");
+          this.searchButton = document.getElementById("searchButton");
+          this.searchStatus = document.getElementById("searchStatus");
+          this.searchLoading = document.getElementById("searchLoading");
+          this.filterButtons = document.querySelectorAll("[data-filter]");
+          this.currentFilter = "all";
+          this.searchTerm = "";
+          this.debounceTimer = null;
+          this.announcements = [];
+
+          this.init();
+          this.loadAnnouncements();
+        }
+
+        init() {
+          // Debounced search
+          this.searchInput.addEventListener("input", () => {
+            this.searchTerm = this.searchInput.value.trim();
+            this.searchStatus.textContent = this.searchTerm
+              ? `Searching for "${this.searchTerm}"...`
+              : "Ready to search";
+
+            this.searchLoading.classList.add("active");
+
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+              this.filterAnnouncements();
+              this.searchLoading.classList.remove("active");
+              this.searchStatus.textContent = this.searchTerm
+                ? `Showing results for "${this.searchTerm}"`
+                : "Showing all announcements";
+            }, 500);
+          });
+
+          this.searchButton.addEventListener("click", () => {
+            this.searchTerm = this.searchInput.value.trim();
+            this.filterAnnouncements();
+          });
+
+          // Filter buttons
+          this.filterButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+              this.filterButtons.forEach((btn) =>
+                btn.classList.remove("active")
+              );
+              button.classList.add("active");
+              this.currentFilter = button.dataset.filter;
+              this.filterAnnouncements();
+            });
+          });
+        }
+
+        async loadAnnouncements() {
+          // Show skeleton loading states
+          this.showSkeletons();
+
+          // Simulate API fetch
+          try {
+            // In a real app, this would be a fetch() call
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+
+            // Sample data - in a real app this would come from an API
+            this.announcements = [
+              {
+                id: 1,
+                title: "Campus Event Update",
+                content:
+                  "Annual campus festival scheduled for next month. Join us for exciting activities!",
+                type: "general",
+                date: "2023-12-15",
+                badgeColor: "bg-primary",
+              },
+              {
+                id: 2,
+                title: "New Course Registration",
+                content:
+                  "Spring semester course registration opens next week. Check eligibility criteria.",
+                type: "course",
+                date: "2023-12-14",
+                badgeColor: "bg-success",
+              },
+              {
+                id: 3,
+                title: "Project Submission",
+                content:
+                  "Final project submissions due by end of this week. Check guidelines.",
+                type: "task",
+                date: "2023-12-13",
+                badgeColor: "bg-warning",
+              },
+              {
+                id: 4,
+                title: "Library Maintenance",
+                content:
+                  "The main library will be closed for maintenance this weekend.",
+                type: "general",
+                date: "2023-12-12",
+                badgeColor: "bg-primary",
+              },
+              {
+                id: 5,
+                title: "Exam Schedule Update",
+                content:
+                  "Updated exam schedule for Computer Science department is now available.",
+                type: "course",
+                date: "2023-12-11",
+                badgeColor: "bg-success",
+              },
+              {
+                id: 6,
+                title: "Thesis Defense",
+                content:
+                  "Reminder for all graduate students about upcoming thesis defense dates.",
+                type: "task",
+                date: "2023-12-10",
+                badgeColor: "bg-warning",
+              },
+            ];
+
+            this.filterAnnouncements();
+          } catch (error) {
+            console.error("Failed to load announcements:", error);
+            this.container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <div class="alert alert-danger">
+                                Failed to load announcements. Please check your connection and try again.
+                            </div>
+                            <button class="btn btn-primary mt-3" onclick="announcementsManager.loadAnnouncements()">
+                                Retry
+                            </button>
+                        </div>
+                    `;
+          }
+        }
+
+        showSkeletons() {
+          this.container.innerHTML = "";
+          for (let i = 0; i < 3; i++) {
+            const skeleton = document
+              .getElementById("announcementSkeleton")
+              .content.cloneNode(true);
+            this.container.appendChild(skeleton);
+          }
+        }
+
+        filterAnnouncements() {
+          let filtered = [...this.announcements];
+
+          // Apply type filter
+          if (this.currentFilter !== "all") {
+            filtered = filtered.filter(
+              (ann) => ann.type === this.currentFilter
+            );
+          }
+
+          // Apply search term
+          if (this.searchTerm) {
+            const term = this.searchTerm.toLowerCase();
+            filtered = filtered.filter(
+              (ann) =>
+                ann.title.toLowerCase().includes(term) ||
+                ann.content.toLowerCase().includes(term)
+            );
+          }
+
+          this.renderAnnouncements(filtered);
+        }
+
+        renderAnnouncements(announcements) {
+          this.container.innerHTML = "";
+
+          if (announcements.length === 0) {
+            this.container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <h5>No announcements found</h5>
+                            <p class="text-muted">Try adjusting your search or filter criteria</p>
+                        </div>
+                    `;
+            return;
+          }
+
+          announcements.forEach((announcement) => {
+            const col = document.createElement("div");
+            col.className = "col-md-4 mb-4";
+
+            const formattedDate = new Date(
+              announcement.date
+            ).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+
+            col.innerHTML = `
+                        <div class="card h-100 announcement-card">
+                            <div class="card-body">
+                                <span class="badge ${
+                                  announcement.badgeColor
+                                } mb-2">${
+              announcement.type.charAt(0).toUpperCase() +
+              announcement.type.slice(1)
+            }</span>
+                                <h5 class="card-title">${
+                                  announcement.title
+                                }</h5>
+                                <p class="card-text">${announcement.content}</p>
+                                <p class="text-muted">Posted: ${formattedDate}</p>
+                                <button class="btn btn-outline-primary">Read More</button>
+                            </div>
+                        </div>
+                    `;
+
+            this.container.appendChild(col);
+          });
+        }
+      }
+
+      // Schedule and deadlines manager
+      class ScheduleManager {
+        constructor() {
+          this.scheduleContainer = document.getElementById("scheduleContainer");
+          this.deadlinesContainer =
+            document.getElementById("deadlinesContainer");
+
+          this.loadData();
+        }
+
+        async loadData() {
+          // Show skeletons
+          this.showSkeletons();
+
+          try {
+            // Simulate API fetch
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            // Sample data
+            const scheduleData = [
+              {
+                course: "Advanced Mathematics",
+                room: "Room 301",
+                time: "9:00 AM",
+              },
+              { course: "Web Development", room: "Lab 204", time: "11:00 AM" },
+              { course: "Data Structures", room: "Room 105", time: "2:00 PM" },
+            ];
+
+            const deadlinesData = [
+              { title: "Research Paper Submission", date: "December 20, 2023" },
+              {
+                title: "Group Project Presentation",
+                date: "December 22, 2023",
+              },
+              { title: "Final Exam Preparation", date: "December 25, 2023" },
+            ];
+
+            this.renderSchedule(scheduleData);
+            this.renderDeadlines(deadlinesData);
+          } catch (error) {
+            console.error("Failed to load schedule data:", error);
+            this.scheduleContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load schedule data. Please try again later.
+                        </div>
+                    `;
+            this.deadlinesContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load deadlines. Please try again later.
+                        </div>
+                    `;
+          }
+        }
+
+        showSkeletons() {
+          this.scheduleContainer.innerHTML = "";
+          this.deadlinesContainer.innerHTML = "";
+
+          for (let i = 0; i < 3; i++) {
+            const scheduleSkeleton = document
+              .getElementById("scheduleSkeleton")
+              .content.cloneNode(true);
+            this.scheduleContainer.appendChild(scheduleSkeleton);
+
+            const deadlineSkeleton = document
+              .getElementById("deadlineSkeleton")
+              .content.cloneNode(true);
+            this.deadlinesContainer.appendChild(deadlineSkeleton);
+          }
+        }
+
+        renderSchedule(schedule) {
+          this.scheduleContainer.innerHTML = "";
+
+          schedule.forEach((item) => {
+            const li = document.createElement("div");
+            li.className =
+              "list-group-item d-flex justify-content-between align-items-center";
+            li.innerHTML = `
+                        <div>
+                            <h6 class="mb-0">${item.course}</h6>
+                            <small class="text-muted">${item.room}</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">${item.time}</span>
+                    `;
+            this.scheduleContainer.appendChild(li);
+          });
+        }
+
+        renderDeadlines(deadlines) {
+          this.deadlinesContainer.innerHTML = "";
+
+          deadlines.forEach((item) => {
+            const alert = document.createElement("div");
+            alert.className = "alert alert-warning mb-3";
+            alert.setAttribute("role", "alert");
+            alert.innerHTML = `
+                        <h6 class="alert-heading">${item.title}</h6>
+                        <p class="mb-0">Due: ${item.date}</p>
+                    `;
+            this.deadlinesContainer.appendChild(alert);
+          });
+        }
+      }
+
+      // Initialize all managers
+      const connectionManager = new ConnectionManager();
+      const announcementsManager = new AnnouncementsManager();
+      const scheduleManager = new ScheduleManager();
+
+      // Make managers available globally for debugging
+      window.connectionManager = connectionManager;
+      window.announcementsManager = announcementsManager;
+      window.scheduleManager = scheduleManager;
+    </script>
+  </body>
 </html>
