@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Request Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <style>
+      :root {
+        --primary: #0070f3;
+        --primary-hover: #005bb5;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --border-radius: 0.375rem;
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+      }
+
+      .status-badge {
+        padding: 0.35rem 0.65rem;
+        border-radius: 50rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+
+      .bg-pending {
+        background-color: var(--warning);
+        color: var(--dark);
+      }
+      .bg-approved {
+        background-color: var(--success);
+        color: white;
+      }
+      .bg-rejected {
+        background-color: var(--danger);
+        color: white;
+      }
+
+      .request-card {
+        transition: var(--transition);
+        cursor: pointer;
+      }
+
+      .request-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      }
+
+      .action-buttons .btn {
+        padding: 0.375rem 0.5rem;
+        min-width: 32px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+      }
+
+      .request-details {
+        background: #f8f9fa;
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1100;
+      }
+
+      .form-control,
+      .form-select {
+        transition: var(--transition);
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(0, 112, 243, 0.25);
+      }
+
+      @media (max-width: 768px) {
+        .action-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .table-responsive {
+          border: 0;
+        }
+
+        .table thead {
+          display: none;
+        }
+
+        .table tr {
+          display: block;
+          margin-bottom: 1rem;
+          border: 1px solid #dee2e6;
+          border-radius: var(--border-radius);
+        }
+
+        .table td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.75rem;
+          border-bottom: 1px solid #dee2e6;
+        }
+
+        .table td:before {
+          content: attr(data-label);
+          font-weight: bold;
+          margin-right: 1rem;
+        }
+
+        .action-buttons {
+          justify-content: flex-end;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid py-4">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4 mb-0">Employee Requests</h2>
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addRequestModal">
+                  <i class="bi bi-plus-lg me-1"></i> New Request
+                </button>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-3">
+                  <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Search..." />
+                </div>
+                <div class="col-md-2">
+                  <select id="filterType" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="leave">Leave</option>
+                    <option value="overtime">Overtime</option>
+                    <option value="equipment">Equipment</option>
+                    <option value="training">Training</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <select id="filterBranch" class="form-select">
+                    <option value="">All Branches</option>
+                    <option value="branch1">Main Branch</option>
+                    <option value="branch2">Downtown Branch</option>
+                    <option value="branch3">Airport Branch</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <select id="filterStatus" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <button
+                    id="refreshData"
+                    class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>ID</th>
+                      <th>Employee</th>
+                      <th>Type</th>
+                      <th>Branch</th>
+                      <th>Submitted</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="requestsTableBody">
+                    <!-- Requests will be loaded here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Request Modal -->
+    <div
+      class="modal fade"
+      id="addRequestModal"
+      tabindex="-1"
+      aria-labelledby="addRequestModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addRequestModalLabel">New Request</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <form id="requestForm" novalidate>
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="requestType" class="form-label"
+                    >Request Type</label
+                  >
+                  <select class="form-select" id="requestType" required>
+                    <option value="">Select Type</option>
+                    <option value="leave">Leave Request</option>
+                    <option value="overtime">Overtime</option>
+                    <option value="equipment">Equipment Request</option>
+                    <option value="training">Training</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a request type
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="hotelBranch" class="form-label"
+                    >Hotel Branch</label
+                  >
+                  <select class="form-select" id="hotelBranch" required>
+                    <option value="">Select Branch</option>
+                    <option value="branch1">Main Branch</option>
+                    <option value="branch2">Downtown Branch</option>
+                    <option value="branch3">Airport Branch</option>
+                  </select>
+                  <div class="invalid-feedback">Please select a branch</div>
+                </div>
+                <div class="col-12">
+                  <label for="requestDetails" class="form-label"
+                    >Request Details</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="requestDetails"
+                    rows="3"
+                    required></textarea>
+                  <div class="invalid-feedback">
+                    Please provide request details
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="startDate" class="form-label">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="startDate"
+                    required />
+                  <div class="invalid-feedback">Please select a start date</div>
+                </div>
+                <div class="col-md-6">
+                  <label for="endDate" class="form-label">End Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="endDate"
+                    required />
+                  <div class="invalid-feedback">Please select an end date</div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <span
+                  class="spinner-border spinner-border-sm d-none"
+                  id="submitSpinner"></span>
+                Submit Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- View/Edit Request Modal -->
+    <div
+      class="modal fade"
+      id="viewRequestModal"
+      tabindex="-1"
+      aria-labelledby="viewRequestModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewRequestModalLabel">
+              Request Details
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <form id="editRequestForm" novalidate>
+            <div class="modal-body">
+              <div class="request-details">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Request ID:</strong> <span id="viewId"></span>
+                    </p>
+                    <p>
+                      <strong>Employee:</strong> <span id="viewEmployee"></span>
+                    </p>
+                    <p>
+                      <strong>Branch:</strong> <span id="viewBranch"></span>
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <strong>Submitted:</strong>
+                      <span id="viewSubmitted"></span>
+                    </p>
+                    <p>
+                      <strong>Status:</strong> <span id="viewStatus"></span>
+                    </p>
+                    <p>
+                      <strong>Processed By:</strong>
+                      <span id="viewProcessedBy">-</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Request Type</label>
+                  <select class="form-select" id="editRequestType" required>
+                    <option value="leave">Leave Request</option>
+                    <option value="overtime">Overtime</option>
+                    <option value="equipment">Equipment Request</option>
+                    <option value="training">Training</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    Please select a request type
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Hotel Branch</label>
+                  <select class="form-select" id="editHotelBranch" required>
+                    <option value="branch1">Main Branch</option>
+                    <option value="branch2">Downtown Branch</option>
+                    <option value="branch3">Airport Branch</option>
+                  </select>
+                  <div class="invalid-feedback">Please select a branch</div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Request Details</label>
+                  <textarea
+                    class="form-control"
+                    id="editRequestDetails"
+                    rows="3"
+                    required></textarea>
+                  <div class="invalid-feedback">
+                    Please provide request details
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editStartDate"
+                    required />
+                  <div class="invalid-feedback">Please select a start date</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">End Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editEndDate"
+                    required />
+                  <div class="invalid-feedback">Please select an end date</div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                onclick="updateRequestStatus('rejected')">
+                Reject
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                onclick="updateRequestStatus('approved')">
+                Approve
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <span
+                  class="spinner-border spinner-border-sm d-none"
+                  id="saveSpinner"></span>
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Application state
+        const state = {
+          requests: JSON.parse(localStorage.getItem("requests")) || [],
+          currentRequestId: null,
+          currentUser: "John Doe", // In a real app, this would come from authentication
+          currentAdmin: "Admin User", // For processing requests
+          filters: {
+            search: "",
+            type: "",
+            branch: "",
+            status: "",
+          },
+        };
+
+        // Initialize the app
+        init();
+
+        function init() {
+          setupEventListeners();
+          renderRequests();
+
+          // Add some sample data if empty
+          if (state.requests.length === 0) {
+            seedSampleData();
+          }
+        }
+
+        function seedSampleData() {
+          const sampleRequests = [
+            {
+              id: "REQ" + Math.floor(1000 + Math.random() * 9000),
+              employee: "John Doe",
+              type: "leave",
+              hotelBranch: "branch1",
+              submitted: new Date(Date.now() - 86400000 * 2)
+                .toISOString()
+                .split("T")[0],
+              status: "approved",
+              details: "Annual leave for family vacation",
+              startDate: new Date(Date.now() + 86400000 * 5)
+                .toISOString()
+                .split("T")[0],
+              endDate: new Date(Date.now() + 86400000 * 12)
+                .toISOString()
+                .split("T")[0],
+              processedBy: state.currentAdmin,
+              processedAt: new Date(Date.now() - 86400000).toISOString(),
+            },
+            {
+              id: "REQ" + Math.floor(1000 + Math.random() * 9000),
+              employee: "Jane Smith",
+              type: "equipment",
+              hotelBranch: "branch2",
+              submitted: new Date(Date.now() - 86400000)
+                .toISOString()
+                .split("T")[0],
+              status: "pending",
+              details: "Need new laptop for front desk operations",
+              startDate: new Date().toISOString().split("T")[0],
+              endDate: new Date().toISOString().split("T")[0],
+              processedBy: "",
+              processedAt: "",
+            },
+            {
+              id: "REQ" + Math.floor(1000 + Math.random() * 9000),
+              employee: "Mike Johnson",
+              type: "overtime",
+              hotelBranch: "branch3",
+              submitted: new Date().toISOString().split("T")[0],
+              status: "pending",
+              details: "Overtime for weekend conference event",
+              startDate: new Date(Date.now() + 86400000 * 2)
+                .toISOString()
+                .split("T")[0],
+              endDate: new Date(Date.now() + 86400000 * 2)
+                .toISOString()
+                .split("T")[0],
+              processedBy: "",
+              processedAt: "",
+            },
+          ];
+
+          state.requests = sampleRequests;
+          saveRequests();
+        }
+
+        function setupEventListeners() {
+          // Form submissions
+          document
+            .getElementById("requestForm")
+            .addEventListener("submit", handleNewRequest);
+          document
+            .getElementById("editRequestForm")
+            .addEventListener("submit", handleEditRequest);
+
+          // Filter events
+          document
+            .getElementById("searchInput")
+            .addEventListener("input", debounce(handleFilter, 300));
+          document
+            .getElementById("filterType")
+            .addEventListener("change", handleFilter);
+          document
+            .getElementById("filterBranch")
+            .addEventListener("change", handleFilter);
+          document
+            .getElementById("filterStatus")
+            .addEventListener("change", handleFilter);
+
+          // Refresh button
+          document
+            .getElementById("refreshData")
+            .addEventListener("click", () => {
+              state.requests =
+                JSON.parse(localStorage.getItem("requests")) || [];
+              renderRequests();
+              showToast("Data refreshed successfully", "success");
+            });
+
+          // Initialize Bootstrap tooltips
+          const tooltipTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="tooltip"]')
+          );
+          tooltipTriggerList.map((tooltipTriggerEl) => {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+          });
+
+          // Form validation
+          const forms = document.querySelectorAll(".needs-validation");
+          Array.from(forms).forEach((form) => {
+            form.addEventListener(
+              "submit",
+              (event) => {
+                if (!form.checkValidity()) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+
+                form.classList.add("was-validated");
+              },
+              false
+            );
+          });
+        }
+
+        function handleNewRequest(e) {
+          e.preventDefault();
+          const form = e.target;
+
+          if (!form.checkValidity()) {
+            e.stopPropagation();
+            form.classList.add("was-validated");
+            return;
+          }
+
+          const submitBtn = form.querySelector('button[type="submit"]');
+          const spinner = document.getElementById("submitSpinner");
+
+          // Show loading state
+          submitBtn.disabled = true;
+          spinner.classList.remove("d-none");
+
+          // Simulate API call
+          setTimeout(() => {
+            const formData = new FormData(form);
+            const newRequest = {
+              id: `REQ${Date.now().toString().slice(-4)}`,
+              employee: state.currentUser,
+              ...Object.fromEntries(formData),
+              status: "pending",
+              submitted: new Date().toISOString().split("T")[0],
+              processedBy: "",
+              processedAt: "",
+            };
+
+            state.requests.unshift(newRequest);
+            saveRequests();
+
+            // Hide modal and reset form
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("addRequestModal")
+            );
+            modal.hide();
+            form.reset();
+            form.classList.remove("was-validated");
+
+            // Reset button state
+            submitBtn.disabled = false;
+            spinner.classList.add("d-none");
+
+            showToast("Request submitted successfully", "success");
+          }, 1000);
+        }
+
+        function handleEditRequest(e) {
+          e.preventDefault();
+          const form = e.target;
+
+          if (!form.checkValidity()) {
+            e.stopPropagation();
+            form.classList.add("was-validated");
+            return;
+          }
+
+          const saveBtn = form.querySelector('button[type="submit"]');
+          const spinner = document.getElementById("saveSpinner");
+
+          // Show loading state
+          saveBtn.disabled = true;
+          spinner.classList.remove("d-none");
+
+          // Simulate API call
+          setTimeout(() => {
+            const formData = new FormData(form);
+            const updatedRequest = {
+              ...state.requests.find((r) => r.id === state.currentRequestId),
+              ...Object.fromEntries(formData),
+            };
+
+            state.requests = state.requests.map((r) =>
+              r.id === state.currentRequestId ? updatedRequest : r
+            );
+
+            saveRequests();
+
+            // Hide modal
+            const modal = bootstrap.Modal.getInstance(
+              document.getElementById("viewRequestModal")
+            );
+            modal.hide();
+            form.classList.remove("was-validated");
+
+            // Reset button state
+            saveBtn.disabled = false;
+            spinner.classList.add("d-none");
+
+            showToast("Request updated successfully", "success");
+          }, 1000);
+        }
+
+        window.showRequestDetail = (id) => {
+          state.currentRequestId = id;
+          const request = state.requests.find((r) => r.id === id);
+
+          // Populate view modal
+          document.getElementById("viewId").textContent = request.id;
+          document.getElementById("viewEmployee").textContent =
+            request.employee;
+          document.getElementById("viewBranch").textContent = getBranchName(
+            request.hotelBranch
+          );
+          document.getElementById("viewSubmitted").textContent =
+            request.submitted;
+          document.getElementById(
+            "viewStatus"
+          ).innerHTML = `<span class="status-badge bg-${request.status}">${request.status}</span>`;
+          document.getElementById("viewProcessedBy").textContent =
+            request.processedBy || "-";
+
+          // Populate edit form
+          document.getElementById("editRequestType").value = request.type;
+          document.getElementById("editHotelBranch").value =
+            request.hotelBranch;
+          document.getElementById("editRequestDetails").value = request.details;
+          document.getElementById("editStartDate").value = request.startDate;
+          document.getElementById("editEndDate").value = request.endDate;
+
+          // Show modal
+          const modal = new bootstrap.Modal(
+            document.getElementById("viewRequestModal")
+          );
+          modal.show();
+        };
+
+        window.updateRequestStatus = (status) => {
+          const request = state.requests.find(
+            (r) => r.id === state.currentRequestId
+          );
+
+          if (request.status === status) {
+            showToast(`Request is already ${status}`, "info");
+            return;
+          }
+
+          state.requests = state.requests.map((r) => {
+            if (r.id === state.currentRequestId) {
+              return {
+                ...r,
+                status,
+                processedBy: state.currentAdmin,
+                processedAt: new Date().toISOString(),
+              };
+            }
+            return r;
+          });
+
+          saveRequests();
+
+          // Update the status display immediately
+          document.getElementById(
+            "viewStatus"
+          ).innerHTML = `<span class="status-badge bg-${status}">${status}</span>`;
+          document.getElementById("viewProcessedBy").textContent =
+            state.currentAdmin;
+
+          showToast(`Request ${status} successfully`, "success");
+        };
+
+        window.deleteRequest = (id) => {
+          if (
+            confirm(
+              "Are you sure you want to delete this request? This action cannot be undone."
+            )
+          ) {
+            state.requests = state.requests.filter((r) => r.id !== id);
+            saveRequests();
+            showToast("Request deleted successfully", "warning");
+          }
+        };
+
+        function handleFilter() {
+          state.filters = {
+            search: document.getElementById("searchInput").value.toLowerCase(),
+            type: document.getElementById("filterType").value,
+            branch: document.getElementById("filterBranch").value,
+            status: document.getElementById("filterStatus").value,
+          };
+          renderRequests();
+        }
+
+        function saveRequests() {
+          localStorage.setItem("requests", JSON.stringify(state.requests));
+          renderRequests();
+        }
+
+        function renderRequests() {
+          const filteredRequests = state.requests.filter((request) => {
+            const matchesSearch =
+              request.employee.toLowerCase().includes(state.filters.search) ||
+              request.id.toLowerCase().includes(state.filters.search) ||
+              request.details.toLowerCase().includes(state.filters.search);
+
+            const matchesType = state.filters.type
+              ? request.type === state.filters.type
+              : true;
+            const matchesBranch = state.filters.branch
+              ? request.hotelBranch === state.filters.branch
+              : true;
+            const matchesStatus = state.filters.status
+              ? request.status === state.filters.status
+              : true;
+
+            return (
+              matchesSearch && matchesType && matchesBranch && matchesStatus
+            );
+          });
+
+          const tbody = document.getElementById("requestsTableBody");
+
+          if (filteredRequests.length === 0) {
+            tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                <p class="mt-2">No requests found matching your criteria</p>
+                                <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#addRequestModal">
+                                    Create New Request
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+            return;
+          }
+
+          tbody.innerHTML = filteredRequests
+            .map(
+              (request) => `
+                    <tr class="request-card" onclick="showRequestDetail('${
+                      request.id
+                    }')">
+                        <td data-label="ID">${request.id}</td>
+                        <td data-label="Employee">${request.employee}</td>
+                        <td data-label="Type">${capitalizeFirstLetter(
+                          request.type
+                        )}</td>
+                        <td data-label="Branch">${getBranchName(
+                          request.hotelBranch
+                        )}</td>
+                        <td data-label="Submitted">${request.submitted}</td>
+                        <td data-label="Status">
+                            <span class="status-badge bg-${request.status}">${
+                request.status
+              }</span>
+                        </td>
+                        <td data-label="Actions">
+                            <div class="action-buttons d-flex gap-1">
+                                <button class="btn btn-sm btn-primary" 
+                                    onclick="event.stopPropagation(); showRequestDetail('${
+                                      request.id
+                                    }')"
+                                    data-bs-toggle="tooltip" data-bs-title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-warning" 
+                                    onclick="event.stopPropagation(); showRequestDetail('${
+                                      request.id
+                                    }')"
+                                    data-bs-toggle="tooltip" data-bs-title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" 
+                                    onclick="event.stopPropagation(); deleteRequest('${
+                                      request.id
+                                    }')"
+                                    data-bs-toggle="tooltip" data-bs-title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `
+            )
+            .join("");
+        }
+
+        // Utility functions
+        function debounce(func, timeout = 300) {
+          let timer;
+          return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), timeout);
+          };
+        }
+
+        function capitalizeFirstLetter(string) {
+          return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function getBranchName(branchCode) {
+          const branches = {
+            branch1: "Main Branch",
+            branch2: "Downtown Branch",
+            branch3: "Airport Branch",
+          };
+          return branches[branchCode] || branchCode;
+        }
+
+        function showToast(message, type = "success") {
+          const toast = document.createElement("div");
+          toast.className = `toast align-items-center text-white bg-${type} border-0`;
+          toast.setAttribute("role", "alert");
+          toast.setAttribute("aria-live", "assertive");
+          toast.setAttribute("aria-atomic", "true");
+
+          toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="bi ${
+                              type === "success"
+                                ? "bi-check-circle"
+                                : type === "danger"
+                                ? "bi-exclamation-triangle"
+                                : "bi-info-circle"
+                            } me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                `;
+
+          const toastContainer = document.querySelector(".toast-container");
+          toastContainer.appendChild(toast);
+
+          const bsToast = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 3000,
+          });
+
+          bsToast.show();
+
+          // Remove toast after it hides
+          toast.addEventListener("hidden.bs.toast", () => {
+            toast.remove();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

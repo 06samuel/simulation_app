@@ -9,10 +9,14 @@
       rel="stylesheet" />
     <style>
       :root {
-        --touch-target: 44px;
+        --primary-color: #0d6efd;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
         --grid-gap: 0.5rem;
-        --transition-speed: 0.3s;
         --border-radius: 8px;
+        --transition-speed: 0.3s;
       }
 
       .calendar-wrapper {
@@ -20,8 +24,6 @@
         border-radius: var(--border-radius);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
         padding: 1.5rem;
-        position: relative;
-        overflow: hidden;
       }
 
       .calendar-view {
@@ -37,7 +39,7 @@
 
       .time-slot {
         transition: all var(--transition-speed) ease;
-        touch-action: manipulation;
+        cursor: pointer;
       }
 
       .day-cell {
@@ -51,6 +53,21 @@
         cursor: pointer;
         transition: all var(--transition-speed) ease;
         position: relative;
+      }
+
+      .day-cell.has-event::after {
+        content: "";
+        position: absolute;
+        bottom: 0.25rem;
+        width: 6px;
+        height: 6px;
+        background: var(--primary-color);
+        border-radius: 50%;
+      }
+
+      .current-date {
+        font-weight: 600;
+        color: var(--primary-color);
       }
 
       .sync-status {
@@ -73,16 +90,6 @@
           gap: 1rem;
         }
 
-        .calendar-header .btn-group {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .current-date {
-          order: -1;
-          text-align: center;
-        }
-
         .day-cell {
           min-width: 2rem;
           font-size: 0.9rem;
@@ -92,11 +99,6 @@
       @media (max-width: 576px) {
         .calendar-wrapper {
           padding: 1rem;
-        }
-
-        .time-slot .btn {
-          padding: 0.25rem 0.5rem;
-          font-size: 0.8rem;
         }
 
         .day-cell {
@@ -110,22 +112,25 @@
     <div class="container py-4">
       <!-- Sync Status Indicator -->
       <div class="sync-status">
-        <div class="status-indicator"></div>
-        <span class="status-text">Connecting...</span>
+        <div
+          class="spinner-border spinner-border-sm text-primary"
+          role="status"
+          id="syncSpinner"></div>
+        <span id="syncStatusText">Synced</span>
       </div>
 
       <div class="calendar-wrapper">
         <header class="calendar-header mb-4">
           <div
             class="d-flex flex-wrap gap-3 justify-content-between align-items-center">
-            <h2 class="current-date mb-0">December 2023</h2>
+            <h2 class="current-date mb-0" id="currentDateDisplay"></h2>
             <div class="d-flex gap-2">
               <div class="btn-group">
                 <button class="btn btn-outline-primary" id="prevBtn">
-                  &lt;
+                  <i class="bi bi-chevron-left">&lt;</i>
                 </button>
                 <button class="btn btn-outline-primary" id="nextBtn">
-                  &gt;
+                  <i class="bi bi-chevron-right">&gt;</i>
                 </button>
               </div>
               <div class="btn-group">
@@ -158,29 +163,47 @@
                 class="btn-close"
                 data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-              <form id="eventForm">
+            <form id="eventForm">
+              <div class="modal-body">
                 <div class="mb-3">
                   <label class="form-label">Event Title</label>
-                  <input type="text" class="form-control" required />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="eventTitle"
+                    required />
                 </div>
-                <div class="mb-3">
-                  <label class="form-label">Time</label>
-                  <input type="time" class="form-control" required />
+                <div class="row mb-3">
+                  <div class="col-6">
+                    <label class="form-label">Date</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="eventDate"
+                      required />
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Time</label>
+                    <input
+                      type="time"
+                      class="form-control"
+                      id="eventTime"
+                      required />
+                  </div>
                 </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal">
-                Cancel
-              </button>
-              <button type="submit" form="eventForm" class="btn btn-primary">
-                Save
-              </button>
-            </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Save Event
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -205,6 +228,7 @@
 
         init() {
           this.renderViews();
+          this.updateDateDisplay();
           this.updateSyncStatus();
         }
 
@@ -212,10 +236,10 @@
           // Navigation
           document
             .getElementById("prevBtn")
-            .addEventListener("click", () => this.changeDate(-1));
+            .addEventListener("click", () => this.navigate(-1));
           document
             .getElementById("nextBtn")
-            .addEventListener("click", () => this.changeDate(1));
+            .addEventListener("click", () => this.navigate(1));
 
           // View switching
           document.querySelectorAll("[data-view]").forEach((btn) => {
@@ -243,7 +267,6 @@
           this.updateSyncStatus();
 
           try {
-            // Simulated API call
             await new Promise((resolve) => setTimeout(resolve, 1000));
             localStorage.setItem(
               "calendarEvents",
@@ -259,18 +282,18 @@
         }
 
         updateSyncStatus() {
-          const indicator = document.querySelector(".status-indicator");
-          const text = document.querySelector(".status-text");
+          const statusText = document.getElementById("syncStatusText");
+          const spinner = document.getElementById("syncSpinner");
 
           if (!this.state.isOnline) {
-            indicator.style.backgroundColor = "#dc3545";
-            text.textContent = "Offline - Changes saved locally";
+            statusText.textContent = "Offline - Changes saved locally";
+            spinner.style.display = "none";
           } else if (this.state.isSyncing) {
-            indicator.style.backgroundColor = "#ffc107";
-            text.textContent = "Syncing changes...";
+            statusText.textContent = "Syncing changes...";
+            spinner.style.display = "inline-block";
           } else {
-            indicator.style.backgroundColor = "#28a745";
-            text.textContent = "All changes synced";
+            statusText.textContent = "All changes synced";
+            spinner.style.display = "none";
           }
         }
 
@@ -282,46 +305,63 @@
 
         renderDailyView() {
           const container = document.getElementById("dailyView");
-          container.innerHTML = `
-                    <div class="time-slots">
-                        ${Array.from(
-                          { length: 24 },
-                          (_, i) => `
-                            <div class="time-slot card mb-2">
-                                <div class="card-body d-flex justify-content-between align-items-center">
-                                    <span class="time">${i}:00</span>
-                                    <button class="btn btn-sm btn-outline-success" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#eventModal">
-                                        + Add Event
-                                    </button>
-                                </div>
+          const hours = Array.from({ length: 24 }, (_, i) => {
+            const events = this.getEventsForHour(i);
+            return `
+                        <div class="time-slot card mb-2">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <span class="time">${i
+                                  .toString()
+                                  .padStart(2, "0")}:00</span>
+                                ${events
+                                  .map(
+                                    (event) => `
+                                    <div class="badge bg-primary">${event.title}</div>
+                                `
+                                  )
+                                  .join("")}
+                                <button class="btn btn-sm btn-outline-success" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#eventModal"
+                                        data-hour="${i}">
+                                    + Add
+                                </button>
                             </div>
-                        `
-                        ).join("")}
-                    </div>
-                `;
+                        </div>
+                    `;
+          }).join("");
+
+          container.innerHTML = `<div class="time-slots">${hours}</div>`;
         }
 
         renderWeeklyView() {
           const container = document.getElementById("weeklyView");
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
           container.innerHTML = `
                     <div class="row g-2">
-                        ${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                        ${days
                           .map(
                             (day) => `
                             <div class="col">
-                                <div class="card h-100 ${
-                                  day === "Tue" ? "current-day" : ""
-                                }">
+                                <div class="card h-100">
                                     <div class="card-header">${day}</div>
                                     <div class="card-body p-2">
                                         ${Array.from(
                                           { length: 5 },
                                           (_, i) => `
-                                            <div class="weekly-slot mb-1">${
-                                              9 + i
-                                            }:00</div>
+                                            <div class="weekly-slot mb-1">
+                                                ${9 + i}:00
+                                                ${this.getEventsForDay(
+                                                  day,
+                                                  9 + i
+                                                )
+                                                  .map(
+                                                    (event) =>
+                                                      `<div class="badge bg-success">${event.title}</div>`
+                                                  )
+                                                  .join("")}
+                                            </div>
                                         `
                                         ).join("")}
                                     </div>
@@ -336,29 +376,128 @@
 
         renderMonthlyView() {
           const container = document.getElementById("monthlyView");
+          const year = this.state.currentDate.getFullYear();
+          const month = this.state.currentDate.getMonth();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const firstDay = new Date(year, month, 1).getDay();
+
+          let days = [];
+          // Previous month days
+          for (let i = firstDay - 1; i >= 0; i--) {
+            days.push(
+              `<div class="day-cell text-muted">${new Date(
+                year,
+                month,
+                -i
+              ).getDate()}</div>`
+            );
+          }
+
+          // Current month days
+          for (let i = 1; i <= daysInMonth; i++) {
+            const hasEvent = this.state.events.some(
+              (event) =>
+                new Date(event.date).toDateString() ===
+                new Date(year, month, i).toDateString()
+            );
+            days.push(`
+                        <div class="day-cell ${hasEvent ? "has-event" : ""}" 
+                             data-date="${new Date(
+                               year,
+                               month,
+                               i
+                             ).toISOString()}">
+                            ${i}
+                        </div>
+                    `);
+          }
+
           container.innerHTML = `
                     <div class="row row-cols-7 g-1">
-                        ${Array.from(
-                          { length: 31 },
-                          (_, i) => `
-                            <div class="col">
-                                <div class="day-cell ${
-                                  i === 1 ? "current-day" : ""
-                                }">
-                                    ${i + 1}
-                                </div>
-                            </div>
-                        `
-                        ).join("")}
+                        ${days.join("")}
                     </div>
                 `;
         }
 
-        // Additional methods...
+        // Helper methods
+        getEventsForHour(hour) {
+          return this.state.events.filter(
+            (event) => new Date(event.date).getHours() === hour
+          );
+        }
+
+        getEventsForDay(dayName, hour) {
+          return this.state.events.filter((event) => {
+            const date = new Date(event.date);
+            return (
+              date.toLocaleString("en-US", { weekday: "short" }) === dayName &&
+              date.getHours() === hour
+            );
+          });
+        }
+
+        handleFormSubmit(e) {
+          e.preventDefault();
+          const newEvent = {
+            title: document.getElementById("eventTitle").value,
+            date:
+              document.getElementById("eventDate").value +
+              "T" +
+              document.getElementById("eventTime").value,
+          };
+
+          this.state.events.push(newEvent);
+          this.syncData();
+          this.renderViews();
+          bootstrap.Modal.getInstance("#eventModal").hide();
+          e.target.reset();
+        }
+
+        navigate(direction) {
+          const unit = this.state.view === "monthly" ? "month" : "week";
+          this.state.currentDate = new Date(
+            this.state.currentDate[`set${unit}`](
+              this.state.currentDate[`get${unit}`]() + direction
+            )
+          );
+          this.updateDateDisplay();
+          this.renderViews();
+        }
+
+        switchView(view) {
+          this.state.view = view;
+          document
+            .querySelectorAll("[data-view]")
+            .forEach((btn) =>
+              btn.classList.toggle("active", btn.dataset.view === view)
+            );
+          document
+            .querySelectorAll(".calendar-view")
+            .forEach((view) =>
+              view.classList.toggle("active", view.id === `${view}View`)
+            );
+          this.renderViews();
+        }
+
+        updateDateDisplay() {
+          const options = {
+            year: "numeric",
+            month: "long",
+            ...(this.state.view === "daily" && { day: "numeric" }),
+          };
+          document.getElementById("currentDateDisplay").textContent =
+            this.state.currentDate.toLocaleDateString("en-US", options);
+        }
+
+        handleConnectivityChange(online) {
+          this.state.isOnline = online;
+          this.updateSyncStatus();
+          if (online) this.syncData();
+        }
       }
 
       // Initialize calendar
-      const calendar = new SmartCalendar();
+      new SmartCalendar();
     </script>
   </body>
 </html>

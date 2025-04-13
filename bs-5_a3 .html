@@ -1,344 +1,442 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Employee Request Management</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-<link rel="stylesheet" href="index.css"><style>
-    :root {
---primary: #0070f3;
---primary-foreground: #ffffff;
---secondary: #f5f5f5;
---secondary-foreground: #111111;
---background: #ffffff;
---foreground: #111111;
---card: #ffffff;
---card-foreground: #111111;
---border: #e5e5e5;
---input: #ffffff;
---ring: #0070f3;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Request Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      :root {
+        --primary: #0070f3;
+        --primary-foreground: #ffffff;
+        --secondary: #f5f5f5;
+        --secondary-foreground: #111111;
+        --background: #ffffff;
+        --foreground: #111111;
+        --card: #ffffff;
+        --card-foreground: #111111;
+        --border: #e5e5e5;
+        --input: #ffffff;
+        --ring: #0070f3;
+      }
 
-body {
-background-color: var(--secondary);
-color: var(--foreground);
-}
+      body {
+        background-color: var(--secondary);
+        color: var(--foreground);
+      }
 
-.card {
-background-color: var(--card);
-border: 1px solid var(--border);
-border-radius: 8px;
-}
+      .card {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
 
-.form-control, .form-select {
-border-color: var(--border);
-}
+      .form-control,
+      .form-select {
+        border-color: var(--border);
+      }
 
-.form-control:focus, .form-select:focus {
-border-color: var(--ring);
-box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
-}
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.1);
+      }
 
-.btn-primary {
-background-color: var(--primary);
-border-color: var(--primary);
-color: var(--primary-foreground);
-}
+      .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+      }
 
-.table {
-background-color: var(--card);
-}
+      .table {
+        background-color: var(--card);
+      }
 
-.table thead th {
-border-bottom: 2px solid var(--border);
-}
+      .table thead th {
+        border-bottom: 2px solid var(--border);
+      }
 
-.modal-content {
-background-color: var(--card);
-border: 1px solid var(--border);
-}
+      .modal-content {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+      }
 
-.modal-header {
-border-bottom: 1px solid var(--border);
-}
+      .modal-header {
+        border-bottom: 1px solid var(--border);
+      }
 
-.modal-footer {
-border-top: 1px solid var(--border);
-}
+      .modal-footer {
+        border-top: 1px solid var(--border);
+      }
 
-.pagination .page-link {
-color: var(--primary);
-border-color: var(--border);
-}
+      .pagination .page-link {
+        color: var(--primary);
+        border-color: var(--border);
+      }
 
-.pagination .page-item.active .page-link {
-background-color: var(--primary);
-border-color: var(--primary);
-color: var(--primary-foreground);
-}
+      .pagination .page-item.active .page-link {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+      }
 
-.nav-tabs {
-border-bottom: 1px solid var(--border);
-}
+      .nav-tabs {
+        border-bottom: 1px solid var(--border);
+      }
 
-.nav-tabs .nav-link {
-color: var(--foreground);
-border: none;
-padding: 0.75rem 1.25rem;
-margin-bottom: -1px;
-}
+      .nav-tabs .nav-link {
+        color: var(--foreground);
+        border: none;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: -1px;
+      }
 
-.nav-tabs .nav-link:hover {
-border-color: transparent;
-}
+      .nav-tabs .nav-link:hover {
+        border-color: transparent;
+      }
 
-.nav-tabs .nav-link.active {
-color: var(--primary);
-border-bottom: 2px solid var(--primary);
-background-color: transparent;
-}
+      .nav-tabs .nav-link.active {
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
+        background-color: transparent;
+      }
 
-.badge {
-padding: 0.5em 0.75em;
-}
+      .badge {
+        padding: 0.5em 0.75em;
+      }
 
-.table-responsive {
-min-height: 400px;
-}
+      .table-responsive {
+        min-height: 400px;
+      }
 
-.tab-content {
-padding-top: 1.5rem;
-}
-</style>
-</head>
-<body>
-<div class="container-fluid p-4">
-<div class="row mb-4">
-<div class="col">
-<h2 class="text-primary mb-4">Employee Request Management</h2>
-<div class="card shadow-sm">
-<div class="card-body">
-<div class="row g-3">
-<div class="col-md-4">
-<select class="form-select" id="requestType">
-<option value="">Select Request Type</option>
-<option value="leave">Leave Request</option>
-<option value="overtime">Overtime</option>
-<option value="equipment">Equipment Request</option>
-<option value="training">Training</option>
-</select>
-</div>
-<div class="col-md-4">
-<select class="form-select" id="hotelBranch">
-<option value="">Select Hotel Branch</option>
-<option value="branch1">Main Branch</option>
-<option value="branch2">Downtown Branch</option>
-<option value="branch3">Airport Branch</option>
-</select>
-</div>
-<div class="col-md-4">
-<div class="input-group">
-<span class="input-group-text"><i class="bi bi-search"></i></span>
-<input type="text" class="form-control" placeholder="Search by Employee Name">
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+      .tab-content {
+        padding-top: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid p-4">
+      <div class="row mb-4">
+        <div class="col">
+          <h2 class="text-primary mb-4">Employee Request Management</h2>
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <select class="form-select" id="requestType">
+                    <option value="">Select Request Type</option>
+                    <option value="leave">Leave Request</option>
+                    <option value="overtime">Overtime</option>
+                    <option value="equipment">Equipment Request</option>
+                    <option value="training">Training</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-select" id="hotelBranch">
+                    <option value="">Select Hotel Branch</option>
+                    <option value="branch1">Main Branch</option>
+                    <option value="branch2">Downtown Branch</option>
+                    <option value="branch3">Airport Branch</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="bi bi-search"></i
+                    ></span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search by Employee Name" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="row">
-<div class="col">
-<div class="card shadow-sm">
-<div class="card-body">
-<ul class="nav nav-tabs mb-4" id="requestTabs" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button">All Requests</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button">Pending</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button">Approved</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button">Rejected</button>
-  </li>
-</ul>
+      <div class="row">
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <ul class="nav nav-tabs mb-4" id="requestTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="all-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#all"
+                    type="button">
+                    All Requests
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="pending-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#pending"
+                    type="button">
+                    Pending
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="approved-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#approved"
+                    type="button">
+                    Approved
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="rejected-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#rejected"
+                    type="button">
+                    Rejected
+                  </button>
+                </li>
+              </ul>
 
-<div class="tab-content" id="requestTabContent">
-  <div class="tab-pane fade show active" id="all" role="tabpanel">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Employee Name</th>
-            <th>Request Type</th>
-            <th>Date Submitted</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#REQ001</td>
-            <td>John Doe</td>
-            <td>Leave Request</td>
-            <td>2024-01-15</td>
-            <td><span class="badge bg-warning">Pending</span></td>
-            <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal"><i class="bi bi-eye"></i> View</button></td>
-          </tr>
-          <tr>
-            <td>#REQ002</td>
-            <td>Jane Smith</td>
-            <td>Equipment Request</td>
-            <td>2024-01-14</td>
-            <td><span class="badge bg-success">Approved</span></td>
-            <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal"><i class="bi bi-eye"></i> View</button></td>
-          </tr>
-        </tbody>
-      </table>
+              <div class="tab-content" id="requestTabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                      <thead>
+                        <tr>
+                          <th>Request ID</th>
+                          <th>Employee Name</th>
+                          <th>Request Type</th>
+                          <th>Date Submitted</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>#REQ001</td>
+                          <td>John Doe</td>
+                          <td>Leave Request</td>
+                          <td>2024-01-15</td>
+                          <td><span class="badge bg-warning">Pending</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#requestModal">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>#REQ002</td>
+                          <td>Jane Smith</td>
+                          <td>Equipment Request</td>
+                          <td>2024-01-14</td>
+                          <td>
+                            <span class="badge bg-success">Approved</span>
+                          </td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#requestModal">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="pending" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                      <thead>
+                        <tr>
+                          <th>Request ID</th>
+                          <th>Employee Name</th>
+                          <th>Request Type</th>
+                          <th>Date Submitted</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>#REQ001</td>
+                          <td>John Doe</td>
+                          <td>Leave Request</td>
+                          <td>2024-01-15</td>
+                          <td><span class="badge bg-warning">Pending</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#requestModal">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="approved" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                      <thead>
+                        <tr>
+                          <th>Request ID</th>
+                          <th>Employee Name</th>
+                          <th>Request Type</th>
+                          <th>Date Submitted</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>#REQ002</td>
+                          <td>Jane Smith</td>
+                          <td>Equipment Request</td>
+                          <td>2024-01-14</td>
+                          <td>
+                            <span class="badge bg-success">Approved</span>
+                          </td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#requestModal">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="rejected" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                      <thead>
+                        <tr>
+                          <th>Request ID</th>
+                          <th>Employee Name</th>
+                          <th>Request Type</th>
+                          <th>Date Submitted</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>#REQ003</td>
+                          <td>Mike Johnson</td>
+                          <td>Training Request</td>
+                          <td>2024-01-13</td>
+                          <td><span class="badge bg-danger">Rejected</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#requestModal">
+                              <i class="bi bi-eye"></i> View
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-end">
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                  </li>
+                  <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  
-  <div class="tab-pane fade" id="pending" role="tabpanel">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Employee Name</th>
-            <th>Request Type</th>
-            <th>Date Submitted</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#REQ001</td>
-            <td>John Doe</td>
-            <td>Leave Request</td>
-            <td>2024-01-15</td>
-            <td><span class="badge bg-warning">Pending</span></td>
-            <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal"><i class="bi bi-eye"></i> View</button></td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="modal fade" id="requestModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Request Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <p><strong>Employee ID:</strong> EMP001</p>
+                <p><strong>Full Name:</strong> John Doe</p>
+                <p><strong>Department:</strong> Operations</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Request Type:</strong> Leave Request</p>
+                <p><strong>Submission Date:</strong> 2024-01-15</p>
+                <p>
+                  <strong>Status:</strong>
+                  <span class="badge bg-warning">Pending</span>
+                </p>
+              </div>
+            </div>
+            <div class="mb-3">
+              <h6>Request Details</h6>
+              <p>
+                Annual leave request for 5 days starting from February 1st,
+                2024.
+              </p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Admin Feedback</label>
+              <textarea class="form-control" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success">
+              <i class="bi bi-check-lg"></i> Approve
+            </button>
+            <button type="button" class="btn btn-danger">
+              <i class="bi bi-x-lg"></i> Reject
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="tab-pane fade" id="approved" role="tabpanel">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Employee Name</th>
-            <th>Request Type</th>
-            <th>Date Submitted</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#REQ002</td>
-            <td>Jane Smith</td>
-            <td>Equipment Request</td>
-            <td>2024-01-14</td>
-            <td><span class="badge bg-success">Approved</span></td>
-            <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal"><i class="bi bi-eye"></i> View</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="tab-pane fade" id="rejected" role="tabpanel">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead>
-          <tr>
-            <th>Request ID</th>
-            <th>Employee Name</th>
-            <th>Request Type</th>
-            <th>Date Submitted</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#REQ003</td>
-            <td>Mike Johnson</td>
-            <td>Training Request</td>
-            <td>2024-01-13</td>
-            <td><span class="badge bg-danger">Rejected</span></td>
-            <td><button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal"><i class="bi bi-eye"></i> View</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<nav aria-label="Page navigation" class="mt-4">
-  <ul class="pagination justify-content-end">
-    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-  </ul>
-</nav>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="modal fade" id="requestModal" tabindex="-1">
-<div class="modal-dialog modal-lg">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Request Details</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-</div>
-<div class="modal-body">
-<div class="row mb-3">
-<div class="col-md-6">
-<p><strong>Employee ID:</strong> EMP001</p>
-<p><strong>Full Name:</strong> John Doe</p>
-<p><strong>Department:</strong> Operations</p>
-</div>
-<div class="col-md-6">
-<p><strong>Request Type:</strong> Leave Request</p>
-<p><strong>Submission Date:</strong> 2024-01-15</p>
-<p><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
-</div>
-</div>
-<div class="mb-3">
-<h6>Request Details</h6>
-<p>Annual leave request for 5 days starting from February 1st, 2024.</p>
-</div>
-<div class="mb-3">
-<label class="form-label">Admin Feedback</label>
-<textarea class="form-control" rows="3"></textarea>
-</div>
-</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-success"><i class="bi bi-check-lg"></i> Approve</button>
-<button type="button" class="btn btn-danger"><i class="bi bi-x-lg"></i> Reject</button>
-</div>
-</div>
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
