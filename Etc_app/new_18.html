@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Modern Interactive Dashboard - A responsive and dynamic web application" />
+    <title>Modern Interactive Dashboard</title>
+
+    <!-- Core dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+
+    <style>
+      /* Modern Design System */
+      :root {
+        /* Color System */
+        --primary: #2563eb;
+        --primary-light: #60a5fa;
+        --secondary: #6366f1;
+        --accent: #ec4899;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --neutral-50: #f8fafc;
+        --neutral-100: #f1f5f9;
+        --neutral-800: #1e293b;
+        --neutral-900: #0f172a;
+
+        /* Typography Scale */
+        --text-xs: clamp(0.75rem, calc(0.7rem + 0.25vw), 0.875rem);
+        --text-sm: clamp(0.875rem, calc(0.8rem + 0.375vw), 1rem);
+        --text-base: clamp(1rem, calc(0.95rem + 0.25vw), 1.125rem);
+        --text-lg: clamp(1.125rem, calc(1.1rem + 0.125vw), 1.25rem);
+        --text-xl: clamp(1.25rem, calc(1.2rem + 0.25vw), 1.5rem);
+        --text-2xl: clamp(1.5rem, calc(1.4rem + 0.5vw), 2rem);
+        --text-3xl: clamp(2rem, calc(1.8rem + 1vw), 3rem);
+
+        /* Spacing & Layout */
+        --space-1: 0.25rem;
+        --space-2: 0.5rem;
+        --space-3: 0.75rem;
+        --space-4: 1rem;
+        --space-6: 1.5rem;
+        --space-8: 2rem;
+        --space-12: 3rem;
+        --space-16: 4rem;
+
+        /* Animation & Transitions */
+        --duration-fast: 150ms;
+        --duration-normal: 300ms;
+        --duration-slow: 500ms;
+        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+        --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+        /* Elevation System */
+        --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.12),
+          0 1px 2px rgba(0, 0, 0, 0.24);
+        --elevation-2: 0 3px 6px rgba(0, 0, 0, 0.15),
+          0 2px 4px rgba(0, 0, 0, 0.12);
+        --elevation-3: 0 10px 20px rgba(0, 0, 0, 0.15),
+          0 3px 6px rgba(0, 0, 0, 0.1);
+        --elevation-4: 0 15px 25px rgba(0, 0, 0, 0.15),
+          0 5px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Dark Mode */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-primary: var(--neutral-900);
+          --bg-secondary: var(--neutral-800);
+          --text-primary: var(--neutral-50);
+          --text-secondary: var(--neutral-100);
+        }
+      }
+
+      /* Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: var(--space-8);
+      }
+
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(auto, 280px) 1fr;
+        transition: all var(--duration-normal) var(--ease-in-out);
+      }
+
+      /* Component Styles */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        gap: var(--space-6);
+        padding: var(--space-6);
+        width: 100%;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s var(--ease-in-out) forwards;
+      }
+
+      /* Loading Indicator Styles */
+      .loading-indicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-light), var(--accent));
+        z-index: 1000;
+        transform-origin: left;
+        animation: loadingProgress 2s var(--ease-in-out) infinite;
+      }
+
+      @keyframes loadingProgress {
+        0% {
+          transform: scaleX(0);
+          opacity: 1;
+        }
+        50% {
+          transform: scaleX(0.5);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scaleX(1);
+          opacity: 0;
+        }
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        background: var(--bg-secondary);
+        padding: var(--space-6);
+        height: 100vh;
+        overflow-y: auto;
+        transition: transform var(--duration-normal) var(--ease-in-out);
+        box-shadow: var(--elevation-2);
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(5px);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: var(--space-6);
+        padding-bottom: var(--space-4);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      body.sidebar-collapsed {
+        grid-template-columns: 0 1fr;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: var(--space-3) var(--space-4);
+        margin-bottom: var(--space-2);
+        border-radius: 8px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all var(--duration-fast) var(--ease-in-out);
+      }
+
+      .nav-link span:first-child {
+        margin-right: var(--space-3);
+        font-size: 1.2em;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        transform: translateX(4px);
+      }
+
+      .nav-link.active {
+        background: linear-gradient(
+          90deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      }
+
+      /* Content Header Styles */
+      .content-header {
+        padding: var(--space-6);
+        padding-bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .card {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: var(--space-6);
+        box-shadow: var(--elevation-2);
+        transition: all var(--duration-normal) var(--ease-bounce);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        transform-origin: center;
+      }
+
+      .card:hover {
+        transform: translateY(-4px) scale(1.01) rotate3d(1, 1, 0, 2deg);
+        box-shadow: var(--elevation-3);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        opacity: 0;
+        transition: opacity var(--duration-normal) var(--ease-in-out);
+      }
+
+      .card:hover::before {
+        opacity: 0.1;
+      }
+
+      /* Card Content Styles */
+      .card-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .card[data-status="success"] {
+        border-top: 3px solid var(--success);
+      }
+
+      .card[data-status="warning"] {
+        border-top: 3px solid var(--warning);
+      }
+
+      .card[data-status="info"] {
+        border-top: 3px solid var(--primary);
+      }
+
+      .card[data-status="danger"] {
+        border-top: 3px solid var(--danger);
+      }
+
+      /* Chart Container Styles */
+      .chart-container {
+        margin-top: var(--space-4);
+        position: relative;
+        transition: all var(--duration-normal) var(--ease-in-out);
+      }
+
+      .chart-container:hover {
+        transform: scale(1.02);
+      }
+
+      /* Activity Feed Styles */
+      .activity-feed {
+        margin-top: var(--space-4);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: var(--space-2);
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) transparent;
+      }
+
+      .activity-feed::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .activity-feed::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .activity-feed::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 20px;
+      }
+
+      .activity-item {
+        padding: var(--space-3);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 3px solid var(--primary);
+        transition: all var(--duration-fast) var(--ease-in-out);
+        opacity: 0;
+        transform: translateX(-10px);
+        animation: slideIn 0.3s var(--ease-in-out) forwards;
+        animation-delay: calc(var(--index) * 0.1s);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .activity-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(2px);
+        box-shadow: var(--elevation-2);
+      }
+
+      .activity-icon {
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+
+      .activity-content {
+        flex: 1;
+      }
+
+      .activity-message {
+        font-size: var(--text-sm);
+        margin-bottom: var(--space-1);
+      }
+
+      .activity-time {
+        font-size: var(--text-xs);
+        color: var(--text-secondary);
+        opacity: 0.8;
+      }
+
+      .activity-update {
+        border-left-color: var(--primary);
+      }
+      .activity-alert {
+        border-left-color: var(--warning);
+      }
+      .activity-success {
+        border-left-color: var(--success);
+      }
+      .activity-info {
+        border-left-color: var(--primary-light);
+      }
+      .activity-error {
+        border-left-color: var(--danger);
+      }
+
+      @keyframes slideIn {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          height: auto;
+          z-index: 100;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" aria-hidden="true"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" role="complementary">
+      <div class="sidebar-header">
+        <h1 class="text-2xl font-bold">ModernDash</h1>
+        <button
+          class="menu-toggle"
+          aria-label="Toggle Menu"
+          aria-expanded="false">
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <nav role="navigation">
+        <a href="#dashboard" class="nav-link active">
+          <span aria-hidden="true">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#analytics" class="nav-link">
+          <span aria-hidden="true">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="#settings" class="nav-link">
+          <span aria-hidden="true">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+      <header class="content-header">
+        <h1 class="text-3xl font-bold">Dashboard Overview</h1>
+      </header>
+
+      <div class="dashboard-grid">
+        <!-- Stats Card -->
+        <article class="card" data-status="success">
+          <div class="card-content">
+            <h2 class="text-xl font-semibold">Total Views</h2>
+            <p class="text-2xl font-bold">124,563</p>
+            <div class="chart-container" style="height: 120px">
+              <canvas id="miniChart1"></canvas>
+            </div>
+          </div>
+        </article>
+
+        <!-- Main Chart Card -->
+        <article class="card" data-status="warning">
+          <div class="chart-container" style="height: 300px">
+            <canvas id="mainChart"></canvas>
+          </div>
+        </article>
+
+        <!-- Activity Feed Card -->
+        <article class="card" data-status="info">
+          <h2 class="text-xl font-semibold">Recent Activity</h2>
+          <div class="activity-feed" role="log"></div>
+        </article>
+      </div>
+    </main>
+
+    <script type="module">
+      class DashboardApp {
+        constructor() {
+          this.initializeObservers();
+          this.setupEventListeners();
+          this.loadDashboard();
+          this.initializeAnimations();
+        }
+
+        initializeObservers() {
+          this.intersectionObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("visible");
+                  if (entry.target.classList.contains("blur-load")) {
+                    this.loadImage(entry.target);
+                  }
+                  this.intersectionObserver.unobserve(entry.target);
+                }
+              });
+            },
+            {
+              threshold: 0.1,
+              rootMargin: "50px",
+            }
+          );
+
+          document.querySelectorAll(".card").forEach((card) => {
+            this.intersectionObserver.observe(card);
+          });
+        }
+
+        initializeAnimations() {
+          gsap.from(".card", {
+            duration: 0.6,
+            y: 30,
+            opacity: 0,
+            stagger: 0.2,
+            ease: "power2.out",
+          });
+        }
+
+        setupEventListeners() {
+          window.addEventListener(
+            "resize",
+            this.debounce(this.handleResize.bind(this), 250)
+          );
+
+          const menuToggle = document.querySelector(".menu-toggle");
+          menuToggle?.addEventListener("click", this.toggleSidebar.bind(this));
+
+          document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener("click", (e) => {
+              e.preventDefault();
+              const target = document.querySelector(
+                anchor.getAttribute("href")
+              );
+              target?.scrollIntoView({ behavior: "smooth" });
+            });
+          });
+
+          window
+            .matchMedia("(prefers-reduced-motion: reduce)")
+            .addEventListener("change", (e) =>
+              this.handleReducedMotion(e.matches)
+            );
+        }
+
+        async loadDashboard() {
+          try {
+            await Promise.all([
+              this.initializeCharts(),
+              this.loadActivityFeed(),
+            ]);
+            document.querySelector(".loading-indicator").style.display = "none";
+          } catch (error) {
+            console.error("Failed to load dashboard:", error);
+          }
+        }
+
+        async initializeCharts() {
+          // Mini chart for stats card
+          const miniChartCtx = document
+            .getElementById("miniChart1")
+            ?.getContext("2d");
+          if (miniChartCtx) {
+            const gradientFill = miniChartCtx.createLinearGradient(
+              0,
+              0,
+              0,
+              100
+            );
+            gradientFill.addColorStop(0, "rgba(16, 185, 129, 0.3)");
+            gradientFill.addColorStop(1, "rgba(16, 185, 129, 0.0)");
+
+            new Chart(miniChartCtx, {
+              type: "line",
+              data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                  {
+                    label: "Views",
+                    data: [12500, 19200, 15700, 28900, 23100, 34500, 38900],
+                    borderColor: "rgba(16, 185, 129, 1)",
+                    borderWidth: 2,
+                    pointBackgroundColor: "rgba(16, 185, 129, 1)",
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradientFill,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    mode: "index",
+                    intersect: false,
+                    backgroundColor: "rgba(30, 41, 59, 0.9)",
+                    titleFont: { size: 12 },
+                    bodyFont: { size: 12 },
+                    padding: 10,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                      label: function (context) {
+                        return context.parsed.y.toLocaleString() + " views";
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: { display: false },
+                  y: { display: false },
+                },
+                interaction: {
+                  intersect: false,
+                  mode: "index",
+                },
+                animation: {
+                  duration: 1000,
+                  easing: "easeOutQuart",
+                },
+              },
+            });
+          }
+
+          // Main chart
+          const mainChartCtx = document
+            .getElementById("mainChart")
+            ?.getContext("2d");
+          if (mainChartCtx) {
+            const gradientFill = mainChartCtx.createLinearGradient(
+              0,
+              0,
+              0,
+              300
+            );
+            gradientFill.addColorStop(0, "rgba(99, 102, 241, 0.3)");
+            gradientFill.addColorStop(1, "rgba(99, 102, 241, 0.0)");
+
+            new Chart(mainChartCtx, {
+              type: "line",
+              data: {
+                labels: [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ],
+                datasets: [
+                  {
+                    label: "Current Year",
+                    data: [
+                      65, 78, 90, 105, 125, 138, 148, 160, 175, 190, 205, 220,
+                    ],
+                    borderColor: "rgba(99, 102, 241, 1)",
+                    borderWidth: 2,
+                    pointBackgroundColor: "rgba(99, 102, 241, 1)",
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: gradientFill,
+                  },
+                  {
+                    label: "Previous Year",
+                    data: [
+                      40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
+                    ],
+                    borderColor: "rgba(203, 213, 225, 0.8)",
+                    borderWidth: 2,
+                    pointBackgroundColor: "rgba(203, 213, 225, 0.8)",
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    tension: 0.4,
+                    borderDash: [5, 5],
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: "top",
+                    labels: {
+                      usePointStyle: true,
+                      padding: 20,
+                      font: {
+                        size: 12,
+                      },
+                    },
+                  },
+                  tooltip: {
+                    mode: "index",
+                    intersect: false,
+                    backgroundColor: "rgba(30, 41, 59, 0.9)",
+                    titleFont: { size: 12 },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                  },
+                },
+                scales: {
+                  x: {
+                    grid: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        size: 10,
+                      },
+                    },
+                  },
+                  y: {
+                    grid: {
+                      borderDash: [2, 4],
+                      color: "rgba(203, 213, 225, 0.2)",
+                    },
+                    ticks: {
+                      font: {
+                        size: 10,
+                      },
+                    },
+                  },
+                },
+                interaction: {
+                  intersect: false,
+                  mode: "index",
+                },
+                animation: {
+                  duration: 1000,
+                  easing: "easeOutQuart",
+                  delay: (context) => context.dataIndex * 100,
+                },
+              },
+            });
+          }
+        }
+
+        async loadActivityFeed() {
+          const activityFeed = document.querySelector(".activity-feed");
+          if (!activityFeed) return;
+
+          // Simulate loading data from an API
+          await new Promise((resolve) => setTimeout(resolve, 800));
+
+          const activities = [
+            {
+              type: "update",
+              message: "Dashboard updated with new analytics",
+              time: "2 minutes ago",
+              icon: "🔄",
+            },
+            {
+              type: "alert",
+              message: "Server load reached 85%",
+              time: "15 minutes ago",
+              icon: "⚠️",
+            },
+            {
+              type: "success",
+              message: "New user registration completed",
+              time: "1 hour ago",
+              icon: "✅",
+            },
+            {
+              type: "info",
+              message: "System maintenance scheduled",
+              time: "3 hours ago",
+              icon: "ℹ️",
+            },
+            {
+              type: "error",
+              message: "Payment gateway connection failed",
+              time: "5 hours ago",
+              icon: "❌",
+            },
+          ];
+
+          // Clear existing content
+          activityFeed.innerHTML = "";
+
+          // Add activity items with staggered animation
+          activities.forEach((activity, index) => {
+            const activityItem = document.createElement("div");
+            activityItem.className = `activity-item activity-${activity.type}`;
+            activityItem.style.setProperty("--index", index);
+
+            activityItem.innerHTML = `
+              <div class="activity-icon">${activity.icon}</div>
+              <div class="activity-content">
+                <p class="activity-message">${activity.message}</p>
+                <span class="activity-time">${activity.time}</span>
+              </div>
+            `;
+
+            activityFeed.appendChild(activityItem);
+          });
+        }
+
+        async loadImage(element) {
+          const img = element.querySelector("img");
+          if (img && img.dataset.src) {
+            img.src = img.dataset.src;
+            img.addEventListener("load", () => {
+              element.classList.add("loaded");
+            });
+          }
+        }
+
+        debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+            const later = () => {
+              clearTimeout(timeout);
+              func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+          };
+        }
+
+        handleResize() {
+          this.initializeCharts();
+          this.updateLayoutGrid();
+        }
+
+        updateLayoutGrid() {
+          const grid = document.querySelector(".dashboard-grid");
+          const width = window.innerWidth;
+          grid.style.gridTemplateColumns =
+            width < 768 ? "1fr" : "repeat(auto-fit, minmax(280px, 1fr))";
+        }
+
+        toggleSidebar() {
+          const sidebar = document.querySelector(".sidebar");
+          sidebar.classList.toggle("collapsed");
+          document.body.classList.toggle("sidebar-collapsed");
+        }
+
+        handleReducedMotion(shouldReduce) {
+          document.body.classList.toggle("reduce-motion", shouldReduce);
+        }
+      }
+
+      // Initialize dashboard when DOM is ready
+      document.addEventListener("DOMContentLoaded", () => {
+        new DashboardApp();
+      });
+
+      // Lazy load images when they enter viewport
+      document.addEventListener("DOMContentLoaded", () => {
+        const lazyImages = document.querySelectorAll("[data-src]");
+        const imageObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute("data-src");
+                img.classList.add("loaded");
+                observer.unobserve(img);
+              }
+            });
+          },
+          {
+            rootMargin: "50px",
+            threshold: 0.1,
+          }
+        );
+
+        lazyImages.forEach((img) => imageObserver.observe(img));
+      });
+
+      // Add scroll animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const scrollElements = document.querySelectorAll(".scroll-animate");
+        const scrollObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("scrolled");
+              } else {
+                entry.target.classList.remove("scrolled");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        scrollElements.forEach((el) => scrollObserver.observe(el));
+      });
+    </script>
+  </body>
+</html>

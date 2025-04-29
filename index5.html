@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photo Gallery Framework</title>
+    <style>
+      /* ===================
+   CORE DESIGN SYSTEM
+=================== */
+      :root {
+        /* Color System */
+        --color-primary: #3498db;
+        --color-primary-dark: #2980b9;
+        --color-secondary: #2ecc71;
+        --color-secondary-dark: #27ae60;
+        --color-accent: #e74c3c;
+        --color-accent-dark: #c0392b;
+        --color-light: #ecf0f1;
+        --color-dark: #dbe2e4;
+        --color-gray: #95a5a6;
+        --color-white: #ffffff;
+        --color-black: #1a1a1a;
+
+        /* State Colors */
+        --color-success: #2ecc71;
+        --color-info: #3498db;
+        --color-warning: #f39c12;
+        --color-danger: #e74c3c;
+
+        /* Spacing System */
+        --space-unit: 1rem;
+        --space-xxs: calc(var(--space-unit) * 0.25);
+        --space-xs: calc(var(--space-unit) * 0.5);
+        --space-sm: calc(var(--space-unit) * 0.75);
+        --space-md: var(--space-unit);
+        --space-lg: calc(var(--space-unit) * 1.5);
+        --space-xl: calc(var(--space-unit) * 2);
+        --space-xxl: calc(var(--space-unit) * 3);
+
+        /* Typography */
+        --font-base: "Segoe UI", system-ui, sans-serif;
+        --font-mono: "Courier New", monospace;
+        --text-base: 1rem;
+        --text-xs: calc(var(--text-base) * 0.75);
+        --text-sm: calc(var(--text-base) * 0.875);
+        --text-md: var(--text-base);
+        --text-lg: calc(var(--text-base) * 1.125);
+        --text-xl: calc(var(--text-base) * 1.25);
+        --text-xxl: calc(var(--text-base) * 1.5);
+        --text-xxxl: calc(var(--text-base) * 2);
+
+        /* Shadows */
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+        --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
+        --shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        /* Transitions */
+        --transition-base: all 0.3s ease;
+        --transition-fast: all 0.15s ease;
+        --transition-slow: all 0.6s ease;
+
+        /* Border Radius */
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 16px;
+        --radius-pill: 9999px;
+
+        /* Z-index */
+        --z-index-dropdown: 1000;
+        --z-index-sticky: 1020;
+        --z-index-fixed: 1030;
+        --z-index-modal: 1050;
+        --z-index-popover: 1070;
+        --z-index-tooltip: 1080;
+      }
+
+      /* ===================
+   DARK MODE THEME
+=================== */
+      [data-theme="dark"] {
+        --color-primary: #3498db;
+        --color-primary-dark: #2980b9;
+        --color-secondary: #2ecc71;
+        --color-secondary-dark: #27ae60;
+        --color-accent: #e74c3c;
+        --color-accent-dark: #c0392b;
+        --color-light: #2c3e50;
+        --color-dark: #ecf0f1;
+        --color-gray: #7f8c8d;
+        --color-white: #1a1a1a;
+        --color-black: #ffffff;
+
+        --color-success: #27ae60;
+        --color-info: #2980b9;
+        --color-warning: #d35400;
+        --color-danger: #c0392b;
+
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.35);
+      }
+
+      /* ===================
+   BASE STYLES
+=================== */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-base);
+        line-height: 1.6;
+        color: var(--color-black);
+        background-color: var(--color-white);
+        transition: var(--transition-base);
+      }
+
+      /* ===================
+   UTILITY CLASSES
+=================== */
+
+      /* Spacing Utilities */
+      .m-0 {
+        margin: 0 !important;
+      }
+      .m-1 {
+        margin: var(--space-xxs) !important;
+      }
+      .m-2 {
+        margin: var(--space-xs) !important;
+      }
+      .m-3 {
+        margin: var(--space-sm) !important;
+      }
+      .m-4 {
+        margin: var(--space-md) !important;
+      }
+      .m-5 {
+        margin: var(--space-lg) !important;
+      }
+      .m-6 {
+        margin: var(--space-xl) !important;
+      }
+
+      /* Padding Utilities */
+      .p-0 {
+        padding: 0 !important;
+      }
+      .p-1 {
+        padding: var(--space-xxs) !important;
+      }
+      .p-2 {
+        padding: var(--space-xs) !important;
+      }
+      .p-3 {
+        padding: var(--space-sm) !important;
+      }
+      .p-4 {
+        padding: var(--space-md) !important;
+      }
+      .p-5 {
+        padding: var(--space-lg) !important;
+      }
+      .p-6 {
+        padding: var(--space-xl) !important;
+      }
+
+      /* Text Utilities */
+      .text-left {
+        text-align: left !important;
+      }
+      .text-center {
+        text-align: center !important;
+      }
+      .text-right {
+        text-align: right !important;
+      }
+      .text-uppercase {
+        text-transform: uppercase !important;
+      }
+      .text-lowercase {
+        text-transform: lowercase !important;
+      }
+      .text-capitalize {
+        text-transform: capitalize !important;
+      }
+      .text-bold {
+        font-weight: bold !important;
+      }
+      .text-italic {
+        font-style: italic !important;
+      }
+      .text-underline {
+        text-decoration: underline !important;
+      }
+
+      /* Color Utilities */
+      .text-primary {
+        color: var(--color-primary) !important;
+      }
+      .text-secondary {
+        color: var(--color-secondary) !important;
+      }
+      .text-accent {
+        color: var(--color-accent) !important;
+      }
+      .text-success {
+        color: var(--color-success) !important;
+      }
+      .text-info {
+        color: var(--color-info) !important;
+      }
+      .text-warning {
+        color: var(--color-warning) !important;
+      }
+      .text-danger {
+        color: var(--color-danger) !important;
+      }
+      .text-light {
+        color: var(--color-light) !important;
+      }
+      .text-dark {
+        color: var(--color-dark) !important;
+      }
+      .text-white {
+        color: var(--color-white) !important;
+      }
+
+      .bg-primary {
+        background-color: var(--color-primary) !important;
+      }
+      .bg-secondary {
+        background-color: var(--color-secondary) !important;
+      }
+      .bg-accent {
+        background-color: var(--color-accent) !important;
+      }
+      .bg-success {
+        background-color: var(--color-success) !important;
+      }
+      .bg-info {
+        background-color: var(--color-info) !important;
+      }
+      .bg-warning {
+        background-color: var(--color-warning) !important;
+      }
+      .bg-danger {
+        background-color: var(--color-danger) !important;
+      }
+      .bg-light {
+        background-color: var(--color-light) !important;
+      }
+      .bg-dark {
+        background-color: var(--color-dark) !important;
+      }
+      .bg-white {
+        background-color: var(--color-white) !important;
+      }
+
+      /* Display Utilities */
+      .d-block {
+        display: block !important;
+      }
+      .d-inline {
+        display: inline !important;
+      }
+      .d-inline-block {
+        display: inline-block !important;
+      }
+      .d-flex {
+        display: flex !important;
+      }
+      .d-inline-flex {
+        display: inline-flex !important;
+      }
+      .d-none {
+        display: none !important;
+      }
+
+      /* Flex Utilities */
+      .flex-row {
+        flex-direction: row !important;
+      }
+      .flex-column {
+        flex-direction: column !important;
+      }
+      .flex-wrap {
+        flex-wrap: wrap !important;
+      }
+      .justify-start {
+        justify-content: flex-start !important;
+      }
+      .justify-end {
+        justify-content: flex-end !important;
+      }
+      .justify-center {
+        justify-content: center !important;
+      }
+      .justify-between {
+        justify-content: space-between !important;
+      }
+      .justify-around {
+        justify-content: space-around !important;
+      }
+      .align-start {
+        align-items: flex-start !important;
+      }
+      .align-end {
+        align-items: flex-end !important;
+      }
+      .align-center {
+        align-items: center !important;
+      }
+      .align-baseline {
+        align-items: baseline !important;
+      }
+      .align-stretch {
+        align-items: stretch !important;
+      }
+
+      /* Border Utilities */
+      .border {
+        border: 1px solid var(--color-gray) !important;
+      }
+      .border-top {
+        border-top: 1px solid var(--color-gray) !important;
+      }
+      .border-right {
+        border-right: 1px solid var(--color-gray) !important;
+      }
+      .border-bottom {
+        border-bottom: 1px solid var(--color-gray) !important;
+      }
+      .border-left {
+        border-left: 1px solid var(--color-gray) !important;
+      }
+      .border-0 {
+        border: 0 !important;
+      }
+      .border-primary {
+        border-color: var(--color-primary) !important;
+      }
+      .border-secondary {
+        border-color: var(--color-secondary) !important;
+      }
+      .border-accent {
+        border-color: var(--color-accent) !important;
+      }
+
+      /* Shadow Utilities */
+      .shadow-sm {
+        box-shadow: var(--shadow-sm) !important;
+      }
+      .shadow-md {
+        box-shadow: var(--shadow-md) !important;
+      }
+      .shadow-lg {
+        box-shadow: var(--shadow-lg) !important;
+      }
+      .shadow-none {
+        box-shadow: none !important;
+      }
+
+      /* Radius Utilities */
+      .rounded-sm {
+        border-radius: var(--radius-sm) !important;
+      }
+      .rounded-md {
+        border-radius: var(--radius-md) !important;
+      }
+      .rounded-lg {
+        border-radius: var(--radius-lg) !important;
+      }
+      .rounded-pill {
+        border-radius: var(--radius-pill) !important;
+      }
+      .rounded-circle {
+        border-radius: 50% !important;
+      }
+      .rounded-top {
+        border-top-left-radius: var(--radius-md) !important;
+        border-top-right-radius: var(--radius-md) !important;
+      }
+      .rounded-bottom {
+        border-bottom-left-radius: var(--radius-md) !important;
+        border-bottom-right-radius: var(--radius-md) !important;
+      }
+
+      /* ===================
+   GRID SYSTEM
+=================== */
+      .container {
+        width: 100%;
+        padding-right: var(--space-md);
+        padding-left: var(--space-md);
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: calc(var(--space-md) * -1);
+        margin-left: calc(var(--space-md) * -1);
+      }
+
+      .col {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+        padding-right: var(--space-md);
+        padding-left: var(--space-md);
+      }
+
+      /* Responsive Grid Columns */
+      .col-1 {
+        flex: 0 0 8.33333%;
+        max-width: 8.33333%;
+      }
+      .col-2 {
+        flex: 0 0 16.66667%;
+        max-width: 16.66667%;
+      }
+      .col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+      .col-4 {
+        flex: 0 0 33.33333%;
+        max-width: 33.33333%;
+      }
+      .col-5 {
+        flex: 0 0 41.66667%;
+        max-width: 41.66667%;
+      }
+      .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+      .col-7 {
+        flex: 0 0 58.33333%;
+        max-width: 58.33333%;
+      }
+      .col-8 {
+        flex: 0 0 66.66667%;
+        max-width: 66.66667%;
+      }
+      .col-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+      }
+      .col-10 {
+        flex: 0 0 83.33333%;
+        max-width: 83.33333%;
+      }
+      .col-11 {
+        flex: 0 0 91.66667%;
+        max-width: 91.66667%;
+      }
+      .col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      /* Responsive Breakpoints */
+      @media (min-width: 576px) {
+        .container {
+          max-width: 540px;
+        }
+        .col-sm-1 {
+          flex: 0 0 8.33333%;
+          max-width: 8.33333%;
+        }
+        /* Continue for other sizes... */
+      }
+
+      @media (min-width: 768px) {
+        .container {
+          max-width: 720px;
+        }
+        .col-md-1 {
+          flex: 0 0 8.33333%;
+          max-width: 8.33333%;
+        }
+        /* Continue for other sizes... */
+      }
+
+      @media (min-width: 992px) {
+        .container {
+          max-width: 960px;
+        }
+        .col-lg-1 {
+          flex: 0 0 8.33333%;
+          max-width: 8.33333%;
+        }
+        /* Continue for other sizes... */
+      }
+
+      @media (min-width: 1200px) {
+        .container {
+          max-width: 1140px;
+        }
+        .col-xl-1 {
+          flex: 0 0 8.33333%;
+          max-width: 8.33333%;
+        }
+        /* Continue for other sizes... */
+      }
+
+      /* ===================
+   COMPONENTS
+=================== */
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--text-md);
+        font-weight: 500;
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        transition: var(--transition-fast);
+      }
+
+      .btn-primary {
+        color: var(--color-white);
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+        border-color: var(--color-primary-dark);
+      }
+
+      .btn-outline-primary {
+        color: var(--color-primary);
+        background-color: transparent;
+        border-color: var(--color-primary);
+      }
+
+      .btn-outline-primary:hover {
+        color: var(--color-white);
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+      }
+
+      /* Cards */
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: var(--color-white);
+        background-clip: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: var(--radius-md);
+        transition: var(--transition-base);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .card-img-top {
+        width: 100%;
+        border-top-left-radius: var(--radius-md);
+        border-top-right-radius: var(--radius-md);
+      }
+
+      .card-body {
+        flex: 1 1 auto;
+        padding: var(--space-md);
+      }
+
+      .card-title {
+        margin-bottom: var(--space-sm);
+        font-size: var(--text-lg);
+        font-weight: 500;
+      }
+
+      .card-text {
+        margin-bottom: var(--space-sm);
+        color: var(--color-black);
+      }
+      .card-text-small {
+        margin-bottom: var(--space-sm);
+        color: var(--color-gray);
+      }
+
+      /* Navbar */
+      .navbar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-sm) var(--space-md);
+        background-color: var(--color-white);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .navbar-brand {
+        display: inline-block;
+        padding-top: var(--space-xs);
+        padding-bottom: var(--space-xs);
+        margin-right: var(--space-md);
+        font-size: var(--text-lg);
+        font-weight: 500;
+        line-height: inherit;
+        white-space: nowrap;
+        color: var(--color-black);
+        text-decoration: none;
+      }
+
+      .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+      }
+
+      .nav-link {
+        display: block;
+        padding: var(--space-xs) var(--space-sm);
+        color: var(--color-black);
+        text-decoration: none;
+        transition: var(--transition-fast);
+      }
+
+      .nav-link:hover {
+        color: var(--color-primary);
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: var(--z-index-modal);
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        outline: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: var(--space-xl) auto;
+        pointer-events: none;
+        max-width: 800px;
+      }
+
+      .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: var(--color-white);
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius-lg);
+        outline: 0;
+      }
+
+      .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: var(--space-md);
+      }
+
+      .modal-img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius-md);
+      }
+
+      /* Gallery */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-md);
+        padding: var(--space-md) 0;
+      }
+
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-md);
+        transition: var(--transition-base);
+      }
+
+      .gallery-item:hover {
+        transform: scale(1.02);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .gallery-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition-base);
+      }
+
+      .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: var(--space-md);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        color: var(--color-dark);
+        transform: translateY(100%);
+        transition: var(--transition-base);
+      }
+
+      .gallery-item:hover .gallery-caption {
+        transform: translateY(0);
+      }
+
+      /* ===================
+   LAYOUT
+=================== */
+      .section {
+        padding: var(--space-xl) 0;
+      }
+
+      .section-title {
+        margin-bottom: var(--space-lg);
+        font-size: var(--text-xxl);
+        font-weight: 600;
+        text-align: center;
+      }
+
+      /* ===================
+   UTILITIES DEMO
+=================== */
+      .utility-demo {
+        padding: var(--space-md);
+        margin-bottom: var(--space-md);
+        border-radius: var(--radius-md);
+        background-color: var(--color-light);
+      }
+
+      .color-swatch {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin-right: var(--space-sm);
+        margin-bottom: var(--space-sm);
+        border-radius: var(--radius-md);
+      }
+
+      /* ===================
+   RESPONSIVE HELPERS
+=================== */
+      @media (max-width: 768px) {
+        .mobile-hidden {
+          display: none !important;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .desktop-hidden {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="#" class="navbar-brand">Photo Gallery</a>
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+        <li class="nav-item">
+          <a href="index2.html" class="nav-link">Gallery</a>
+        </li>
+        <li class="nav-item">
+          <a href="index5.html" class="nav-link">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="index6.html" class="nav-link">Contact</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="section bg-primary text-white">
+      <div class="container">
+        <h1 class="section-title">Stunning Photo Gallery</h1>
+        <p class="text-center mb-5">
+          Discover beautiful images from around the world
+        </p>
+        <div class="text-center">
+          <a
+            href="#gallery"
+            class="btn btn-outline-primary btn-lg text-white border-white"
+            >View Gallery</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="section">
+      <div class="container">
+        <h2 class="section-title">Our Collection</h2>
+        <div class="gallery">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="Nature"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>Nature</h3>
+              <p>Beautiful landscapes from around the world</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>City</h3>
+              <p>Urban landscapes and architecture</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 3 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="People"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>People</h3>
+              <p>Portraits and candid moments</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 4 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="Animals"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>Animals</h3>
+              <p>Wildlife and pets</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 5 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="Food"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>Food</h3>
+              <p>Delicious dishes from around the world</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 6 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+              alt="Travel"
+              class="gallery-img" />
+            <div class="gallery-caption">
+              <h3>Travel</h3>
+              <p>Adventures and destinations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal -->
+    <div
+      class="modal"
+      id="imageModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <img src="" alt="" class="modal-img" id="modalImage" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilities Demo Section -->
+    <section class="section bg-light">
+      <div class="container">
+        <h2 class="section-title">Design System Utilities</h2>
+
+        <!-- Color System -->
+        <h3 class="mb-4">Color System</h3>
+        <div class="row mb-5">
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-primary"></div>
+            <p class="text-center">Primari</p>
+          </div>
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-secondary"></div>
+            <p class="text-center">Secondary</p>
+          </div>
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-accent"></div>
+            <p class="text-center">Accent</p>
+          </div>
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-success"></div>
+            <p class="text-center">Success</p>
+          </div>
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-warning"></div>
+            <p class="text-center">Warning</p>
+          </div>
+          <div class="col-3 col-md-2">
+            <div class="color-swatch bg-danger"></div>
+            <p class="text-center">Danger</p>
+          </div>
+        </div>
+
+        <!-- Spacing System -->
+        <h3 class="mb-4">Spacing System</h3>
+        <div class="utility-demo">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary p-1 mr-3"></div>
+            <span>--space-xxs (0.25rem)</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary p-2 mr-3"></div>
+            <span>--space-xs (0.5rem)</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary p-3 mr-3"></div>
+            <span>--space-sm (0.75rem)</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary p-4 mr-3"></div>
+            <span>--space-md (1rem)</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary p-5 mr-3"></div>
+            <span>--space-lg (1.5rem)</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="bg-primary p-6 mr-3"></div>
+            <span>--space-xl (2rem)</span>
+          </div>
+        </div>
+
+        <!-- Components -->
+        <h3 class="mb-4 mt-5">Components</h3>
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <h4>Buttons</h4>
+            <button class="btn btn-primary mr-2 mb-2">Primary</button>
+            <button class="btn btn-outline-primary mr-2 mb-2">Outline</button>
+            <button class="btn btn-success mr-2 mb-2">Success</button>
+            <button class="btn btn-danger mr-2 mb-2">Danger</button>
+          </div>
+          <div class="col-md-6 mb-4">
+            <h4>Cards</h4>
+            <div class="card" style="width: 100%; max-width: 300px">
+              <img
+                src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+                class="card-img-top"
+                alt="Sample" />
+              <div class="card-body">
+                <h5 class="card-title">Card Title</h5>
+                <p class="card-text">
+                  Some quick example text to build on the card title.
+                </p>
+                <small class="card-text-small"
+                  >Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Fuga illum blanditiis labore.</small
+                >
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid System -->
+        <h3 class="mb-4 mt-5">Grid System</h3>
+        <div class="row mb-3">
+          <div class="col-12 bg-primary p-3 text-white">.col-12</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-6 bg-primary p-3 text-white">.col-6</div>
+          <div class="col-6 bg-secondary p-3 text-white">.col-6</div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-4 bg-primary p-3 text-white">.col-4</div>
+          <div class="col-4 bg-secondary p-3 text-white">.col-4</div>
+          <div class="col-4 bg-accent p-3 text-white">.col-4</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white p-5 text-center">
+      <p>&copy; 2023 Photo Gallery Framework. All rights reserved.</p>
+      <button id="themeToggle" class="btn btn-outline-light mt-3">
+        Toggle Dark Mode
+      </button>
+    </footer>
+
+    <script>
+      // Theme Toggle
+      document
+        .getElementById("themeToggle")
+        .addEventListener("click", function () {
+          const html = document.documentElement;
+          const currentTheme = html.getAttribute("data-theme");
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          html.setAttribute("data-theme", newTheme);
+          localStorage.setItem("theme", newTheme);
+        });
+
+      // Check for saved theme preference
+      if (localStorage.getItem("theme")) {
+        document.documentElement.setAttribute(
+          "data-theme",
+          localStorage.getItem("theme")
+        );
+      }
+
+      // Gallery Modal
+      const galleryItems = document.querySelectorAll(".gallery-item");
+      const modal = document.getElementById("imageModal");
+      const modalImage = document.getElementById("modalImage");
+
+      galleryItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          const imgSrc = this.querySelector("img").src;
+          const imgAlt = this.querySelector("img").alt;
+
+          modalImage.src = imgSrc;
+          modalImage.alt = imgAlt;
+
+          modal.style.display = "block";
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      // Close modal when clicking outside
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.style.display === "block") {
+          modal.style.display = "none";
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Responsive Navbar Toggle (for mobile)
+      const navbarToggle = document.createElement("button");
+      navbarToggle.className = "navbar-toggler d-md-none";
+      navbarToggle.innerHTML = "<span></span><span></span><span></span>";
+      navbarToggle.addEventListener("click", function () {
+        const navbarNav = document.querySelector(".navbar-nav");
+        navbarNav.classList.toggle("show");
+      });
+
+      const navbar = document.querySelector(".navbar");
+      navbar.appendChild(navbarToggle);
+    </script>
+  </body>
+</html>

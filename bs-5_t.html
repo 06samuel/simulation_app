@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Calendar Component</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --disabled-color: #e9ecef;
+      }
+
+      body {
+        background-image: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        min-height: 100vh;
+      }
+
+      .calendar-container {
+        padding: 2rem;
+      }
+
+      .card {
+        border-radius: 1rem;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header {
+        background-color: var(--primary-color);
+        padding: 1.5rem;
+      }
+
+      .table {
+        margin-bottom: 0;
+        table-layout: fixed;
+      }
+
+      .table th,
+      .table td {
+        text-align: center;
+        vertical-align: middle;
+        height: 3.5rem;
+        border-radius: 0.5rem;
+        position: relative;
+      }
+
+      .enabled-date {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: white;
+      }
+
+      .enabled-date:hover {
+        background-color: var(--disabled-color);
+        transform: scale(1.05);
+      }
+
+      .disabled-date {
+        background-color: var(--disabled-color);
+        color: #adb5bd;
+        cursor: not-allowed;
+      }
+
+      .selected-date {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        font-weight: 600;
+      }
+
+      .availability-indicator {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: var(--success-color);
+      }
+
+      #bookSlot {
+        transition: all 0.3s ease;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      @media (max-width: 768px) {
+        .calendar-container {
+          padding: 1rem;
+        }
+
+        .card-header h2 {
+          font-size: 1.25rem;
+        }
+
+        .table th,
+        .table td {
+          height: 2.5rem;
+          font-size: 0.875rem;
+        }
+
+        #bookSlot {
+          font-size: 0.875rem;
+        }
+      }
+
+      .current-day {
+        position: relative;
+      }
+
+      .current-day::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 18px;
+        height: 2px;
+        background-color: var(--primary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calendar-container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card shadow-lg">
+            <div
+              class="card-header text-white d-flex justify-content-between align-items-center">
+              <button class="btn btn-outline-light" id="prevMonth">
+                <i class="fas fa-chevron-left"> &lt; </i>
+              </button>
+              <h2 class="mb-0" id="monthYear"></h2>
+              <button class="btn btn-outline-light" id="nextMonth">
+                <i class="fas fa-chevron-right"> &gt; </i>
+              </button>
+            </div>
+            <div class="card-body p-2">
+              <table class="table table-bordered m-0">
+                <thead>
+                  <tr class="small">
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                  </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+              </table>
+            </div>
+            <div class="card-footer text-center bg-white">
+              <button class="btn btn-success px-5 py-3" id="bookSlot" disabled>
+                <i class="fas fa-calendar-check me-2"></i>Confirm Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      class Calendar {
+        constructor() {
+          this.currentDate = new Date();
+          this.selectedDate = null;
+          this.initialize();
+        }
+
+        initialize() {
+          this.cacheElements();
+          this.setupEventListeners();
+          this.render();
+        }
+
+        cacheElements() {
+          this.elements = {
+            calendarBody: document.getElementById("calendarBody"),
+            monthYear: document.getElementById("monthYear"),
+            prevMonth: document.getElementById("prevMonth"),
+            nextMonth: document.getElementById("nextMonth"),
+            bookSlot: document.getElementById("bookSlot"),
+          };
+        }
+
+        setupEventListeners() {
+          this.elements.calendarBody.addEventListener("click", (e) =>
+            this.handleDateClick(e)
+          );
+          this.elements.prevMonth.addEventListener("click", () =>
+            this.changeMonth(-1)
+          );
+          this.elements.nextMonth.addEventListener("click", () =>
+            this.changeMonth(1)
+          );
+          this.elements.bookSlot.addEventListener("click", () =>
+            this.handleBooking()
+          );
+        }
+
+        render() {
+          const year = this.currentDate.getFullYear();
+          const month = this.currentDate.getMonth();
+          const today = new Date();
+
+          this.elements.monthYear.textContent = `${this.currentDate.toLocaleString(
+            "default",
+            { month: "long" }
+          )} ${year}`;
+
+          const firstDay = new Date(year, month, 1);
+          const lastDay = new Date(year, month + 1, 0);
+          const startDay = firstDay.getDay();
+          const endDate = lastDay.getDate();
+
+          let html = "";
+          let date = 1;
+
+          for (let i = 0; i < 6; i++) {
+            html += "<tr>";
+            for (let j = 0; j < 7; j++) {
+              if (i === 0 && j < startDay) {
+                html += "<td></td>";
+              } else if (date > endDate) {
+                html += "<td></td>";
+              } else {
+                const currentDate = new Date(year, month, date);
+                const isPast = currentDate < today;
+                const isAvailable = date % 2 === 0 && !isPast;
+                const isToday =
+                  currentDate.toDateString() === today.toDateString();
+
+                html += `
+                                <td class="${
+                                  isAvailable ? "enabled-date" : "disabled-date"
+                                } 
+                                    ${isToday ? "current-day" : ""}"
+                                    data-date="${currentDate.toISOString()}"
+                                    ${
+                                      isAvailable
+                                        ? 'tabindex="0" role="button"'
+                                        : 'aria-disabled="true"'
+                                    }>
+                                    ${date}
+                                    ${
+                                      isAvailable
+                                        ? '<div class="availability-indicator"></div>'
+                                        : ""
+                                    }
+                                </td>`;
+                date++;
+              }
+            }
+            html += "</tr>";
+            if (date > endDate) break;
+          }
+
+          this.elements.calendarBody.innerHTML = html;
+          this.updateSelection();
+        }
+
+        handleDateClick(e) {
+          const cell = e.target.closest(".enabled-date");
+          if (!cell) return;
+
+          this.selectedDate = cell.getAttribute("data-date");
+          this.updateSelection();
+        }
+
+        updateSelection() {
+          document.querySelectorAll(".enabled-date").forEach((cell) => {
+            cell.classList.toggle(
+              "selected-date",
+              cell.getAttribute("data-date") === this.selectedDate
+            );
+          });
+
+          this.elements.bookSlot.disabled = !this.selectedDate;
+        }
+
+        changeMonth(offset) {
+          this.currentDate.setMonth(this.currentDate.getMonth() + offset);
+          this.selectedDate = null;
+          this.render();
+        }
+
+        handleBooking() {
+          if (!this.selectedDate) return;
+
+          const formattedDate = new Date(this.selectedDate).toLocaleDateString(
+            "en-US",
+            {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }
+          );
+
+          alert(`Booking confirmed for:\n${formattedDate}`);
+          this.selectedDate = null;
+          this.updateSelection();
+        }
+      }
+
+      // Initialize calendar
+      new Calendar();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Category Carousel</title>
+    <!-- Removed duplicate CSS links -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet" />
+    <style>
+      :root {
+        --primary: #0066cc;
+        --primary-hover: #0052a3;
+        --primary-foreground: #ffffff;
+        --secondary: #4a5568;
+        --secondary-foreground: #111111;
+        --success: #38a169;
+        --danger: #e53e3e;
+        --online: #48bb78;
+        --offline: #f56565;
+        --background: #ffffff;
+        --foreground: #111111;
+        --card: #ffffff;
+        --card-foreground: #111111;
+        --border: #e5e5e5;
+        --input: #ffffff;
+        --ring: #0070f3;
+        --radius: 0.5rem;
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --space-xs: 0.5rem;
+        --space-sm: 1rem;
+        --space-md: 1.5rem;
+        --space-lg: 2rem;
+        --space-xl: 3rem;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+      }
+
+      .connection-status {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        padding: var(--space-xs) var(--space-sm);
+        border-radius: 2rem;
+        font-size: 0.875rem;
+        z-index: 1000;
+        transition: var(--transition);
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      .connection-status.online {
+        background: var(--online);
+        color: white;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .connection-status.offline {
+        background: var(--offline);
+        color: white;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .category-container {
+        padding: 1.5rem;
+      }
+
+      .category-grid {
+        display: grid;
+        gap: var(--space-sm);
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+
+      .category-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        transition: var(--transition);
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+
+      .category-card i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .category-card.active {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: scale(1.05);
+        border-color: var(--primary);
+      }
+
+      .category-card:hover:not(.active) {
+        background: var(--secondary);
+        transform: translateY(-5px);
+      }
+
+      .product-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .product-card img {
+        height: 50vh;
+        max-height: 400px;
+        min-height: 300px;
+        object-fit: cover;
+      }
+
+      .product-info {
+        background: var(--card);
+      }
+
+      .price {
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .carousel-item {
+        padding: 0 2%;
+        transition: transform 0.6s ease-in-out;
+      }
+
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.9;
+      }
+
+      .carousel-control-prev {
+        left: -25px;
+      }
+
+      .carousel-control-next {
+        right: -25px;
+      }
+
+      .btn-loading .spinner {
+        width: 1.2rem;
+        height: 1.2rem;
+        border-width: 2px;
+      }
+
+      @media (pointer: coarse) {
+        .carousel-control-prev,
+        .carousel-control-next {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .category-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+          display: none;
+        }
+
+        .product-card img {
+          height: 40vh;
+          min-height: 250px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .category-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (min-width: 1600px) {
+        .product-card img {
+          height: 60vh;
+          max-height: 500px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="connection-status">Online</div>
+    <div class="container-fluid py-5">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="category-container">
+            <h4 class="mb-4">Categories</h4>
+            <div class="category-grid" role="tablist">
+              <button
+                class="category-card active"
+                data-bs-toggle="pill"
+                data-bs-target="#electronics">
+                <i class="bi bi-laptop"></i>
+                <span>Electronics</span>
+              </button>
+              <button
+                class="category-card"
+                data-bs-toggle="pill"
+                data-bs-target="#clothing">
+                <i class="bi bi-scissors"></i>
+                <span>Clothing</span>
+              </button>
+              <button
+                class="category-card"
+                data-bs-toggle="pill"
+                data-bs-target="#home-decor">
+                <i class="bi bi-house-heart"></i>
+                <span>Home Decor</span>
+              </button>
+              <button
+                class="category-card"
+                data-bs-toggle="pill"
+                data-bs-target="#accessories">
+                <i class="bi bi-watch"></i>
+                <span>Accessories</span>
+              </button>
+              <button
+                class="category-card"
+                data-bs-toggle="pill"
+                data-bs-target="#furniture">
+                <i class="bi bi-lamp"></i>
+                <span>Furniture</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="electronics">
+              <div
+                id="electronicsCarousel"
+                class="carousel slide"
+                data-bs-ride="carousel">
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <div class="product-card">
+                      <img
+                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+                        class="d-block w-100"
+                        alt="Headphones" />
+                      <div class="product-info p-4">
+                        <h3>Premium Headphones</h3>
+                        <p>
+                          High-quality wireless headphones with noise
+                          cancellation
+                        </p>
+                        <div class="price mb-3">$299.99</div>
+                        <div class="d-flex gap-2">
+                          <button class="btn btn-primary">Add to Cart</button>
+                          <button
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#productModal">
+                            Quick View
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <div class="product-card">
+                      <img
+                        src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45"
+                        class="d-block w-100"
+                        alt="Laptop" />
+                      <div class="product-info p-4">
+                        <h3>Ultra Slim Laptop</h3>
+                        <p>Powerful performance in a sleek design</p>
+                        <div class="price mb-3">$1299.99</div>
+                        <div class="d-flex gap-2">
+                          <button class="btn btn-primary">Add to Cart</button>
+                          <button
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#productModal">
+                            Quick View
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#electronicsCarousel"
+                  data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button
+                  class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#electronicsCarousel"
+                  data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="productModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Product Details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <img
+                  src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e"
+                  class="img-fluid"
+                  alt="Product" />
+              </div>
+              <div class="col-md-6">
+                <h3>Premium Headphones</h3>
+                <p class="text-muted">
+                  High-quality wireless headphones with noise cancellation
+                </p>
+                <div class="price h4 mb-3">$299.99</div>
+                <p>
+                  Experience crystal-clear sound with our premium wireless
+                  headphones. Features include active noise cancellation,
+                  30-hour battery life, and premium comfort.
+                </p>
+                <button class="btn btn-primary">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Connection Monitoring
+      function updateConnectionStatus() {
+        const statusElement = document.querySelector(".connection-status");
+        if (navigator.onLine) {
+          statusElement.textContent = "Online";
+          statusElement.classList.add("online");
+          statusElement.classList.remove("offline");
+        } else {
+          statusElement.textContent = "Offline";
+          statusElement.classList.add("offline");
+          statusElement.classList.remove("online");
+        }
+      }
+
+      window.addEventListener("online", updateConnectionStatus);
+      window.addEventListener("offline", updateConnectionStatus);
+      updateConnectionStatus();
+
+      // Component Sync States
+      document.querySelectorAll(".btn-primary").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          const originalText = this.innerHTML;
+          this.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status"></span>
+            Adding...
+          `;
+          this.classList.add("btn-loading");
+          this.disabled = true;
+
+          setTimeout(() => {
+            this.innerHTML = originalText;
+            this.classList.remove("btn-loading");
+            this.disabled = false;
+          }, 2000);
+        });
+      });
+
+      // Responsive Layout Adjustments
+      function handleResponsiveLayout() {
+        const cards = document.querySelectorAll(".product-card");
+        const screenWidth = window.innerWidth;
+
+        cards.forEach((card) => {
+          const priceElement = card.querySelector(".price");
+          if (priceElement) {
+            priceElement.style.fontSize =
+              screenWidth < 768 ? "1.2rem" : "1.5rem";
+          }
+        });
+      }
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(handleResponsiveLayout, 250);
+      });
+
+      handleResponsiveLayout();
+
+      // Touch Gesture Handling
+      const carousel = document.querySelector("#electronicsCarousel");
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      carousel.addEventListener("touchstart", (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+
+      carousel.addEventListener("touchend", (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 50) {
+          bootstrap.Carousel.getInstance(carousel).next();
+        }
+        if (touchEndX - touchStartX > 50) {
+          bootstrap.Carousel.getInstance(carousel).prev();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merchant Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <style>
+      @media (max-width: 768px) {
+        .table-responsive {
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          overflow-x: auto;
+        }
+
+        .transaction-row td {
+          white-space: nowrap;
+        }
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .transaction-row {
+        animation: slideIn 0.3s ease-out;
+      }
+      .syncing-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius);
+      }
+
+      .syncing-spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 0.25em solid var(--border);
+        border-top-color: var(--primary-foreground);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      :root {
+        --primary: #fad4d4;
+        --primary-foreground: #e74c3c;
+        --secondary: #7f8c8d;
+        --secondary-foreground: #ffffff;
+        --accent: #e74c3c;
+        --accent-foreground: #ffffff;
+        --background: #ffffff;
+        --foreground: #333333;
+        --card: #ffffff;
+        --card-foreground: #333333;
+        --border: #e5e5e5;
+        --input: #f5f5f5;
+        --ring: #e74c3c;
+        --radius: 0.5rem;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --transition-base: all 0.2s ease-in-out;
+        --transition-fade: opacity 0.15s linear;
+        --transition-collapse: height 0.35s ease;
+        --connected: #2ecc71;
+        --disconnected: #e74c3c;
+        --connecting: #f39c12;
+        --syncing: #3498db;
+      }
+
+      [data-theme="dark"] {
+        --primary: #2c3e50;
+        --primary-foreground: #e74c3c;
+        --secondary: #95a5a6;
+        --secondary-foreground: #ffffff;
+        --accent: #e74c3c;
+        --accent-foreground: #ffffff;
+        --background: #191d28;
+        --foreground: #ffffff;
+        --card: #2c3e50;
+        --card-foreground: #ffffff;
+        --border: #3a3a3a;
+        --input: #2c3e50;
+        --ring: #e74c3c;
+        --connected: #27ae60;
+        --disconnected: #c0392b;
+        --connecting: #d35400;
+        --syncing: #2980b9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        min-height: 100vh;
+      }
+
+      /* Layout System */
+      .sidebar {
+        width: 280px;
+        height: 100vh;
+        position: fixed;
+        background-color: var(--card);
+        border-right: 1px solid var(--border);
+        transition: var(--transition-base);
+        z-index: 1000;
+        overflow-y: auto;
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 280px;
+        transition: var(--transition-base);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Navigation */
+      .nav-link {
+        color: var(--foreground);
+        border-radius: var(--radius);
+        margin-bottom: 0.5rem;
+        transition: var(--transition-base);
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        transform: translateX(4px);
+      }
+
+      .nav-link[data-bs-toggle="collapse"] {
+        position: relative;
+      }
+
+      .nav-link[data-bs-toggle="collapse"] .bi-chevron-down {
+        transition: transform 0.3s ease;
+        margin-left: auto;
+      }
+
+      .nav-link[data-bs-toggle="collapse"][aria-expanded="true"]
+        .bi-chevron-down {
+        transform: rotate(180deg);
+      }
+
+      /* Cards */
+      .card {
+        background-color: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        transition: var(--transition-base);
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      }
+
+      /* Progress */
+      .progress {
+        background-color: var(--input);
+        border-radius: var(--radius);
+      }
+
+      .progress-bar {
+        background-color: var(--primary-foreground);
+        transition: width 0.6s ease;
+      }
+
+      /* Tables */
+      .table {
+        color: var(--foreground);
+      }
+
+      .table-hover tbody tr {
+        transition: var(--transition-base);
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+      }
+
+      /* Dropdowns */
+      .dropdown-menu {
+        background-color: var(--card);
+        border-color: var(--border);
+        transition: var(--transition-base);
+      }
+
+      .dropdown-item {
+        color: var(--foreground);
+        transition: var(--transition-base);
+        padding: 0.5rem 1rem;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+      }
+
+      /* Buttons */
+      .btn {
+        transition: var(--transition-base);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-outline-primary {
+        border-color: var(--primary-foreground);
+        color: var(--primary-foreground);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--primary-foreground);
+        color: var(--secondary-foreground);
+      }
+
+      .btn-light {
+        background-color: var(--input);
+        border: 1px solid var(--border);
+        color: var(--foreground);
+      }
+
+      .btn-light:hover {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        transform: translateY(-2px);
+      }
+
+      /* Forms */
+      .form-control,
+      .form-select {
+        background-color: var(--input);
+        border-color: var(--border);
+        color: var(--foreground);
+        border-radius: var(--radius);
+        transition: var(--transition-base);
+        padding: 0.75rem 1rem;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--ring);
+        box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+      }
+
+      /* Footer */
+      .footer {
+        background-color: var(--card);
+        color: var(--foreground);
+        margin-top: auto;
+      }
+
+      .footer a {
+        color: var(--foreground);
+        opacity: 0.8;
+        transition: var(--transition-fade);
+      }
+
+      .footer a:hover {
+        opacity: 1;
+      }
+
+      /* Enhanced Synchronization and Connectivity Styles */
+      .sync-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--foreground);
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        background-color: var(--input);
+        transition: var(--transition-base);
+        white-space: nowrap;
+      }
+
+      .sync-status i {
+        font-size: 1rem;
+        transition: var(--transition-base);
+      }
+
+      .connected {
+        color: var(--connected);
+        background-color: rgba(46, 204, 113, 0.1);
+      }
+
+      .disconnected {
+        color: var(--disconnected);
+        background-color: rgba(231, 76, 60, 0.1);
+        animation: pulse 2s infinite;
+      }
+
+      .connecting {
+        color: var(--connecting);
+        background-color: rgba(243, 156, 18, 0.1);
+      }
+
+      .syncing {
+        color: var(--syncing);
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+
+      .loading {
+        color: var(--secondary);
+        animation: spin 1s linear infinite;
+      }
+
+      .component-sync {
+        position: relative;
+      }
+
+      .component-sync::after {
+        content: "";
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        border-top-color: var(--syncing);
+        transition: var(--transition-base);
+        opacity: 0;
+      }
+
+      .component-sync.syncing::after {
+        opacity: 1;
+        animation: spin 1s linear infinite;
+      }
+
+      .component-sync.connected::after {
+        opacity: 1;
+        background-color: var(--connected);
+        border-color: var(--connected);
+        animation: none;
+      }
+
+      .component-sync.disconnected::after {
+        opacity: 1;
+        background-color: var(--disconnected);
+        border-color: var(--disconnected);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      /* Connection indicator */
+      .connection-indicator {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        z-index: 1000;
+        transition: var(--transition-base);
+      }
+
+      .connection-indicator.connected {
+        background-color: var(--connected);
+        box-shadow: 0 0 10px var(--connected);
+      }
+
+      .connection-indicator.disconnected {
+        background-color: var(--disconnected);
+        box-shadow: 0 0 10px var(--disconnected);
+      }
+
+      .connection-indicator.connecting {
+        background-color: var(--connecting);
+        box-shadow: 0 0 10px var(--connecting);
+        animation: pulse 2s infinite;
+      }
+
+      .connection-indicator.syncing {
+        background-color: var(--syncing);
+        box-shadow: 0 0 10px var(--syncing);
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Responsive Design with Detailed Breakpoints */
+      /* Extra small devices (portrait phones, less than 400px) */
+      @media (max-width: 399.98px) {
+        .sidebar {
+          transform: translateX(-100%);
+          width: 90%;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .btn {
+          font-size: 0.8125rem;
+          padding: 0.5rem 0.75rem;
+        }
+
+        .card-title {
+          font-size: 1.125rem;
+        }
+
+        .card-subtitle {
+          font-size: 0.8125rem;
+        }
+
+        .sync-status {
+          font-size: 0.6875rem;
+          padding: 0.375rem 0.75rem;
+        }
+
+        .table-responsive {
+          font-size: 0.8125rem;
+        }
+
+        .connection-indicator {
+          width: 10px;
+          height: 10px;
+          bottom: 0.75rem;
+          right: 0.75rem;
+        }
+      }
+
+      /* Small devices (landscape phones, 400px and up) */
+      @media (min-width: 400px) and (max-width: 575.98px) {
+        .sidebar {
+          transform: translateX(-100%);
+          width: 85%;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .btn {
+          font-size: 0.875rem;
+          padding: 0.5rem 0.75rem;
+        }
+
+        .card-title {
+          font-size: 1.25rem;
+        }
+
+        .card-subtitle {
+          font-size: 0.875rem;
+        }
+
+        .sync-status {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.75rem;
+        }
+
+        .table-responsive {
+          font-size: 0.875rem;
+        }
+      }
+
+      /* Medium-small devices (576px to 767.98px) */
+      @media (min-width: 576px) and (max-width: 767.98px) {
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .btn {
+          font-size: 0.9rem;
+          padding: 0.6rem 0.9rem;
+        }
+
+        .card-title {
+          font-size: 1.5rem;
+        }
+
+        .card-subtitle {
+          font-size: 1rem;
+        }
+
+        .sync-status {
+          font-size: 0.8125rem;
+        }
+      }
+
+      /* Medium devices (tablets, 768px and up) */
+      @media (min-width: 768px) and (max-width: 991.98px) {
+        .sidebar {
+          width: 240px;
+        }
+
+        .main-content {
+          margin-left: 240px;
+        }
+
+        .btn {
+          font-size: 1rem;
+          padding: 0.75rem 1rem;
+        }
+
+        .card-title {
+          font-size: 1.75rem;
+        }
+
+        .card-subtitle {
+          font-size: 1.125rem;
+        }
+      }
+
+      /* Large devices (desktops, 992px and up) */
+      @media (min-width: 992px) and (max-width: 1199.98px) {
+        .sidebar {
+          width: 280px;
+        }
+
+        .main-content {
+          margin-left: 280px;
+        }
+
+        .btn {
+          font-size: 1.0625rem;
+          padding: 0.8125rem 1.125rem;
+        }
+
+        .card-title {
+          font-size: 1.875rem;
+        }
+
+        .card-subtitle {
+          font-size: 1.1875rem;
+        }
+      }
+
+      /* Extra large devices (large desktops, 1200px and up) */
+      @media (min-width: 1200px) {
+        .sidebar {
+          width: 300px;
+        }
+
+        .main-content {
+          margin-left: 300px;
+        }
+
+        .btn {
+          font-size: 1.125rem;
+          padding: 0.875rem 1.25rem;
+        }
+
+        .card-title {
+          font-size: 2rem;
+        }
+
+        .card-subtitle {
+          font-size: 1.25rem;
+        }
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      .slide-up {
+        animation: slideUp 0.3s ease-out;
+      }
+
+      .slide-down {
+        animation: slideDown 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Touch optimizations */
+      button,
+      a,
+      input[type="checkbox"],
+      input[type="radio"] {
+        touch-action: manipulation;
+      }
+
+      /* Focus styles for accessibility */
+      :focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+      }
+
+      /* Loading skeleton */
+      .skeleton {
+        background-color: var(--input);
+        border-radius: var(--radius);
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      /* Toast notifications */
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1100;
+      }
+
+      .toast {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        transition: var(--transition-base);
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--input);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary-foreground);
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+      }
+
+      /* Debounced search loader */
+      .search-loader {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary);
+        pointer-events: none;
+        opacity: 0;
+        transition: var(--transition-fade);
+      }
+
+      .search-loading .search-loader {
+        opacity: 1;
+        animation: spin 1s linear infinite;
+      }
+
+      /* Enhanced transaction table */
+      .transaction-row {
+        transition: var(--transition-base);
+      }
+
+      .transaction-row.syncing {
+        background-color: rgba(52, 152, 219, 0.05);
+      }
+
+      .transaction-row.syncing td {
+        position: relative;
+      }
+
+      .transaction-row.syncing td::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%);
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        border-top-color: var(--syncing);
+        animation: spin 1s linear infinite;
+      }
+
+      /* Offline warning banner */
+      .offline-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--disconnected);
+        color: white;
+        padding: 0.75rem 1rem;
+        text-align: center;
+        z-index: 1050;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .offline-banner.show {
+        transform: translateY(0);
+      }
+
+      /* Component sync indicators */
+      .component-sync-indicator {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        border: 2px solid transparent;
+      }
+
+      .component-sync-indicator.connected {
+        background-color: var(--connected);
+        border-color: var(--connected);
+      }
+
+      .component-sync-indicator.disconnected {
+        background-color: var(--disconnected);
+        border-color: var(--disconnected);
+        animation: pulse 2s infinite;
+      }
+
+      .component-sync-indicator.connecting {
+        background-color: var(--connecting);
+        border-color: var(--connecting);
+        animation: pulse 1.5s infinite;
+      }
+
+      .component-sync-indicator.syncing {
+        border-color: var(--border);
+        border-top-color: var(--syncing);
+        animation: spin 1s linear infinite;
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <!-- Offline Warning Banner -->
+    <div class="offline-banner" id="offlineBanner">
+      <i class="bi bi-wifi-off me-2"></i>
+      <span
+        >You are currently offline. Some features may not be available.</span
+      >
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row">
+      <div class="sidebar shadow-sm p-3" id="sidebar">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0">Merchant Portal</h5>
+          <button class="btn btn-sm" id="toggleTheme">
+            <i class="bi bi-moon"></i>
+          </button>
+        </div>
+        <div class="nav flex-column nav-pills">
+          <a
+            class="nav-link"
+            href="#files"
+            data-bs-toggle="collapse"
+            aria-expanded="false"
+            ><i class="bi bi-folder me-2"></i>Files<i
+              class="bi bi-chevron-down float-end"></i
+          ></a>
+          <div class="collapse" id="files">
+            <div class="nav flex-column nav-pills ps-3 mt-2">
+              <a class="nav-link" href="#uploaded"
+                ><i class="bi bi-file-earmark me-2"></i>Uploaded Files</a
+              >
+              <a class="nav-link" href="#shared"
+                ><i class="bi bi-share me-2"></i>Shared Files</a
+              >
+              <a class="nav-link" href="#recent"
+                ><i class="bi bi-clock-history me-2"></i>Recent Files</a
+              >
+            </div>
+          </div>
+          <a class="nav-link active" href="#onboarding"
+            ><i class="bi bi-person-plus me-2"></i>Onboarding</a
+          >
+          <a class="nav-link" href="#transactions"
+            ><i class="bi bi-currency-exchange me-2"></i>Transactions</a
+          >
+          <a class="nav-link" href="#profile"
+            ><i class="bi bi-person me-2"></i>Profile</a
+          >
+          <a class="nav-link" href="#analytics"
+            ><i class="bi bi-graph-up me-2"></i>Analytics</a
+          >
+          <a class="nav-link" href="#support"
+            ><i class="bi bi-headset me-2"></i>Support</a
+          >
+        </div>
+        <div class="mt-auto pt-3">
+          <div class="sync-status connecting" id="sidebarSyncStatus">
+            <i class="bi bi-arrow-repeat loading"></i>
+            <span>Connecting...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content p-3 p-md-4 w-100">
+        <header
+          class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+          <div class="d-flex align-items-center mb-3 mb-md-0">
+            <button class="btn btn-sm me-2 me-md-3" id="sidebarToggle">
+              <i class="bi bi-list"></i>
+            </button>
+            <h4 class="mb-0 text-success">Dashboard Overview</h4>
+          </div>
+          <div
+            class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2 gap-sm-3">
+            <div class="sync-status" id="syncStatus">
+              <i class="bi bi-arrow-repeat loading"></i>
+              <span>Synchronizing...</span>
+            </div>
+            <button class="btn btn-outline-primary w-100 w-sm-auto">
+              <i class="bi bi-plus-lg me-2"></i>New Transaction
+            </button>
+            <div class="dropdown">
+              <button
+                class="btn position-relative w-100 w-sm-auto"
+                data-bs-toggle="dropdown">
+                <i class="bi bi-bell"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  >3</span
+                >
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">New Transaction</a></li>
+                <li><a class="dropdown-item" href="#">System Update</a></li>
+                <li><a class="dropdown-item" href="#">Compliance Update</a></li>
+              </ul>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d"
+              alt="Profile"
+              class="rounded-circle"
+              width="40"
+              height="40" />
+          </div>
+        </header>
+
+        <div class="row g-3 g-md-4">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="card h-100 component-sync">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Total Balance</h6>
+                <h3 class="card-title">$45,289.00</h3>
+                <div class="progress mt-3" style="height: 5px">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="card h-100 component-sync">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">
+                  Pending Settlements
+                </h6>
+                <h3 class="card-title">$12,450.00</h3>
+                <div class="progress mt-3" style="height: 5px">
+                  <div
+                    class="progress-bar bg-warning"
+                    role="progressbar"
+                    style="width: 45%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="card h-100 component-sync">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Success Rate</h6>
+                <h3 class="card-title">98.5%</h3>
+                <div class="progress mt-3" style="height: 5px">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    style="width: 98%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="card h-100 component-sync">
+              <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Chargebacks</h6>
+                <h3 class="card-title">0.5%</h3>
+                <div class="progress mt-3" style="height: 5px">
+                  <div
+                    class="progress-bar bg-danger"
+                    role="progressbar"
+                    style="width: 15%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mt-3 mt-md-4 mb-3 mb-md-4 slide-up">
+          <div class="card-body">
+            <div class="row align-items-center g-2 g-md-3">
+              <div class="col-12 col-sm-6 col-md-3 position-relative">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search Transaction ID"
+                  id="searchInput" />
+                <i
+                  class="bi bi-arrow-repeat search-loader"
+                  id="searchLoader"></i>
+              </div>
+              <div class="col-12 col-sm-6 col-md-3">
+                <select class="form-select" id="statusFilter">
+                  <option value="">All Statuses</option>
+                  <option value="completed">Completed</option>
+                  <option value="pending">Pending</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-3">
+                <input type="date" class="form-control" id="dateFilter" />
+              </div>
+              <div class="col-12 col-sm-6 col-md-3">
+                <button class="btn btn-primary w-100" id="searchButton">
+                  <i class="bi bi-search me-2"></i>Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Add Transaction Modal -->
+        <div class="modal fade" id="transactionModal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">New Transaction</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"></button>
+              </div>
+              <form id="transactionForm">
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label">Amount</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="amount"
+                      required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Date</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="date"
+                      required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="status" required>
+                      <option value="completed">Completed</option>
+                      <option value="pending">Pending</option>
+                      <option value="failed">Failed</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3 mt-md-4 slide-up">
+          <div class="card-body">
+            <div
+              class="d-flex justify-content-between align-items-center mb-3 mb-md-4">
+              <h5 class="card-title mb-0">Recent Transactions</h5>
+              <div class="sync-status connected" id="tableSyncStatus">
+                <i class="bi bi-check-circle"></i>
+                <span>Synced</span>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover" id="transactionsTable">
+                <thead>
+                  <tr>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="fade-in transaction-row" data-id="1">
+                    <td>#TRX-789456</td>
+                    <td>2023-11-15</td>
+                    <td>$1,250.00</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary">
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="fade-in transaction-row" data-id="2">
+                    <td>#TRX-789457</td>
+                    <td>2023-11-15</td>
+                    <td>$850.00</td>
+                    <td><span class="badge bg-warning">Pending</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary">
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="fade-in transaction-row" data-id="3">
+                    <td>#TRX-789458</td>
+                    <td>2023-11-14</td>
+                    <td>$2,150.00</td>
+                    <td><span class="badge bg-success">Completed</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary">
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3 mt-md-4 mb-3 mb-md-4">
+          <div class="col-12">
+            <div class="card component-sync">
+              <div class="card-body">
+                <h5 class="card-title mb-3">Quick Actions</h5>
+                <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-3">
+                  <button class="btn btn-light flex-fill">
+                    <i class="bi bi-upload me-2"></i>Upload Files
+                  </button>
+                  <button class="btn btn-light flex-fill">
+                    <i class="bi bi-currency-dollar me-2"></i>New Payment
+                  </button>
+                  <button class="btn btn-light flex-fill">
+                    <i class="bi bi-file-text me-2"></i>Generate Report
+                  </button>
+                  <button class="btn btn-light flex-fill">
+                    <i class="bi bi-people me-2"></i>Team Access
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer mt-4 mt-md-5 py-3 border-top">
+          <div class="container">
+            <div class="row align-items-center text-center text-md-start">
+              <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <p class="mb-0">
+                  &copy; 2023 Merchant Portal. All rights reserved.
+                </p>
+              </div>
+              <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="d-flex gap-2 justify-content-center">
+                  <a href="#" class="text-decoration-none">Terms</a>
+                  <a href="#" class="text-decoration-none">Privacy</a>
+                  <a href="#" class="text-decoration-none">Security</a>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 text-md-end">
+                <p class="mb-0">Version 2.0.1</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <div class="modal fade" id="deleteModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p>Are you sure to delete this transaction?</p>
+            <div class="d-flex gap-2 justify-content-end">
+              <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">
+                Cancel
+              </button>
+              <button class="btn btn-sm btn-danger" id="confirmDelete">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection indicator -->
+    <div class="connection-indicator connecting" id="connectionIndicator"></div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Enhanced JavaScript with all requested features
+      document.addEventListener("DOMContentLoaded", function () {
+        // State management for the application
+        const appState = {
+          connectionStatus: "connecting",
+          syncStatus: "syncing",
+          theme: localStorage.getItem("theme") || "light",
+          offline: !navigator.onLine,
+          components: {
+            sidebar: { syncStatus: "connecting" },
+            dashboardCards: { syncStatus: "syncing" },
+            transactionsTable: { syncStatus: "connected" },
+            quickActions: { syncStatus: "syncing" },
+          },
+          debounceTimers: {},
+          searchQuery: "",
+          filters: {
+            status: "",
+            date: "",
+          },
+        };
+
+        // DOM Elements
+        const elements = {
+          sidebar: document.getElementById("sidebar"),
+          sidebarToggle: document.getElementById("sidebarToggle"),
+          mainContent: document.querySelector(".main-content"),
+          toggleTheme: document.getElementById("toggleTheme"),
+          themeIcon: document.querySelector("#toggleTheme i"),
+          connectionIndicator: document.getElementById("connectionIndicator"),
+          syncStatus: document.getElementById("syncStatus"),
+          sidebarSyncStatus: document.getElementById("sidebarSyncStatus"),
+          tableSyncStatus: document.getElementById("tableSyncStatus"),
+          searchInput: document.getElementById("searchInput"),
+          searchLoader: document.getElementById("searchLoader"),
+          statusFilter: document.getElementById("statusFilter"),
+          dateFilter: document.getElementById("dateFilter"),
+          searchButton: document.getElementById("searchButton"),
+          transactionsTable: document.getElementById("transactionsTable"),
+          toastContainer: document.getElementById("toastContainer"),
+          offlineBanner: document.getElementById("offlineBanner"),
+          componentSyncIndicators: document.querySelectorAll(".component-sync"),
+        };
+
+        // Initialize the application
+        function init() {
+          setupEventListeners();
+          setTheme(appState.theme);
+          checkConnection();
+          simulateComponentSync();
+          setupResponsiveChecks();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+          // Sidebar toggle functionality with animation
+          elements.sidebarToggle.addEventListener("click", toggleSidebar);
+
+          // Close sidebar when clicking outside on mobile
+          document.addEventListener("click", handleOutsideClick);
+
+          // Theme toggle
+          elements.toggleTheme.addEventListener("click", toggleTheme);
+
+          // Search and filter functionality
+          elements.searchInput.addEventListener("input", handleSearchInput);
+          elements.statusFilter.addEventListener("change", handleFilterChange);
+          elements.dateFilter.addEventListener("change", handleFilterChange);
+          elements.searchButton.addEventListener("click", performSearch);
+
+          // Online/offline detection
+          window.addEventListener("online", handleOnlineStatus);
+          window.addEventListener("offline", handleOfflineStatus);
+
+          // Simulate row-level sync on click
+          document.querySelectorAll(".transaction-row").forEach((row) => {
+            row.addEventListener("click", () => {
+              simulateRowSync(row);
+            });
+          });
+        }
+
+        // Sidebar functions
+        function toggleSidebar() {
+          elements.sidebar.classList.toggle("show");
+          if (elements.sidebar.classList.contains("show")) {
+            elements.sidebar.style.transform = "translateX(0)";
+          } else {
+            if (window.innerWidth < 768) {
+              elements.sidebar.style.transform = "translateX(-100%)";
+            }
+          }
+        }
+
+        function handleOutsideClick(event) {
+          if (
+            window.innerWidth < 768 &&
+            !elements.sidebar.contains(event.target) &&
+            !elements.sidebarToggle.contains(event.target) &&
+            elements.sidebar.classList.contains("show")
+          ) {
+            elements.sidebar.classList.remove("show");
+            elements.sidebar.style.transform = "translateX(-100%)";
+          }
+        }
+
+        // Theme functions
+        function toggleTheme() {
+          const newTheme = appState.theme === "light" ? "dark" : "light";
+          setTheme(newTheme);
+          showToast(
+            `Theme changed to ${newTheme} mode`,
+            newTheme === "dark" ? "bi-moon" : "bi-sun"
+          );
+        }
+
+        function setTheme(theme) {
+          document.body.setAttribute("data-theme", theme);
+          appState.theme = theme;
+          localStorage.setItem("theme", theme);
+
+          // Update icon
+          elements.themeIcon.classList.toggle("bi-moon", theme === "light");
+          elements.themeIcon.classList.toggle("bi-sun", theme === "dark");
+        }
+
+        // Connection monitoring system
+        function checkConnection() {
+          appState.connectionStatus = navigator.onLine
+            ? "connected"
+            : "disconnected";
+          updateConnectionStatus();
+
+          if (navigator.onLine) {
+            // Simulate initial connection
+            setTimeout(() => {
+              setConnectionState("connected");
+              showToast("Connection established", "bi-wifi");
+
+              // Simulate occasional disconnections
+              if (Math.random() > 0.7) {
+                setTimeout(() => {
+                  setConnectionState("disconnected");
+                  showToast("Connection lost", "bi-wifi-off", true);
+
+                  // Try to reconnect
+                  setTimeout(() => {
+                    setConnectionState("connecting");
+                    setTimeout(() => {
+                      setConnectionState("connected");
+                      showToast("Reconnected successfully", "bi-wifi");
+                    }, 2000);
+                  }, 3000);
+                }, 10000);
+              }
+            }, 2000);
+          }
+        }
+
+        function setConnectionState(state) {
+          appState.connectionStatus = state;
+          updateConnectionStatus();
+        }
+
+        function updateConnectionStatus() {
+          // Update all sync status indicators
+          const allStatusElements = [
+            elements.syncStatus,
+            elements.sidebarSyncStatus,
+            elements.tableSyncStatus,
+            elements.connectionIndicator,
+          ];
+
+          allStatusElements.forEach((element) => {
+            element.className = ""; // Clear all classes
+
+            if (element !== elements.connectionIndicator) {
+              element.classList.add("sync-status");
+            } else {
+              element.classList.add("connection-indicator");
+            }
+
+            // Add state class
+            element.classList.add(appState.connectionStatus);
+
+            // Update content for non-indicator elements
+            if (element !== elements.connectionIndicator) {
+              const icon =
+                element.querySelector("i") || document.createElement("i");
+              const text =
+                element.querySelector("span") || document.createElement("span");
+
+              icon.className = "bi";
+              if (appState.connectionStatus === "connected") {
+                icon.classList.add("bi-check-circle");
+                text.textContent = "Synced";
+              } else if (appState.connectionStatus === "disconnected") {
+                icon.classList.add("bi-exclamation-triangle");
+                text.textContent = "Disconnected";
+              } else {
+                icon.classList.add("bi-arrow-repeat", "loading");
+                text.textContent =
+                  appState.connectionStatus === "connecting"
+                    ? "Connecting..."
+                    : "Syncing...";
+              }
+
+              if (!element.querySelector("i")) {
+                element.prepend(icon);
+                element.appendChild(text);
+              }
+            }
+          });
+
+          // Update offline banner
+          if (appState.connectionStatus === "disconnected") {
+            elements.offlineBanner.classList.add("show");
+          } else {
+            elements.offlineBanner.classList.remove("show");
+          }
+        }
+
+        // Online/offline handlers
+        function handleOnlineStatus() {
+          setConnectionState("connected");
+          showToast("You're back online", "bi-wifi");
+          appState.offline = false;
+
+          // Trigger a sync of all components
+          simulateComponentSync();
+        }
+
+        function handleOfflineStatus() {
+          setConnectionState("disconnected");
+          showToast(
+            "You're offline. Some features may not work.",
+            "bi-wifi-off",
+            true
+          );
+          appState.offline = true;
+        }
+
+        // Search and filter functionality
+        function handleSearchInput() {
+          clearTimeout(appState.debounceTimers.search);
+          elements.searchInput.parentElement.classList.add("search-loading");
+
+          appState.debounceTimers.search = setTimeout(() => {
+            performSearch();
+            elements.searchInput.parentElement.classList.remove(
+              "search-loading"
+            );
+          }, 500);
+        }
+
+        function handleFilterChange(event) {
+          const { id, value } = event.target;
+          appState.filters[id.replace("Filter", "")] = value;
+          performSearch();
+        }
+
+        function performSearch() {
+          appState.searchQuery = elements.searchInput.value.toLowerCase();
+
+          // Show loading state
+          elements.tableSyncStatus.innerHTML =
+            '<i class="bi bi-arrow-repeat loading"></i><span>Syncing...</span>';
+          elements.tableSyncStatus.className = "sync-status syncing";
+
+          // Highlight the rows that match the search
+          const rows = elements.transactionsTable.querySelectorAll("tbody tr");
+          rows.forEach((row) => {
+            const rowText = row.textContent.toLowerCase();
+            const matchesSearch = rowText.includes(appState.searchQuery);
+            const matchesStatus =
+              !appState.filters.status ||
+              row.querySelector(".badge").textContent.toLowerCase() ===
+                appState.filters.status;
+            const matchesDate =
+              !appState.filters.date ||
+              row.cells[1].textContent === appState.filters.date;
+
+            row.style.display =
+              matchesSearch && matchesStatus && matchesDate ? "" : "none";
+          });
+
+          // Simulate API call delay
+          setTimeout(() => {
+            // Show sync complete
+            elements.tableSyncStatus.innerHTML =
+              '<i class="bi bi-check-circle"></i><span>Synced</span>';
+            elements.tableSyncStatus.className = "sync-status connected";
+          }, 800);
+        }
+
+        // Component synchronization simulation
+        function simulateComponentSync() {
+          if (appState.offline) return;
+
+          // Dashboard cards
+          elements.componentSyncIndicators.forEach((component) => {
+            component.classList.add("syncing");
+
+            setTimeout(() => {
+              const randomStatus =
+                Math.random() > 0.9 ? "disconnected" : "connected";
+              component.classList.remove("syncing");
+              component.classList.add(randomStatus);
+
+              if (randomStatus === "disconnected") {
+                showToast(
+                  "Component sync failed",
+                  "bi-exclamation-triangle",
+                  true
+                );
+              }
+            }, 1500 + Math.random() * 2000);
+          });
+        }
+
+        // Row-level synchronization
+        function simulateRowSync(row) {
+          if (appState.offline) {
+            showToast("Cannot sync while offline", "bi-wifi-off", true);
+            return;
+          }
+
+          row.classList.add("syncing");
+
+          setTimeout(() => {
+            row.classList.remove("syncing");
+
+            // Randomly simulate success or failure
+            if (Math.random() > 0.9) {
+              showToast(
+                `Failed to sync transaction ${row.dataset.id}`,
+                "bi-exclamation-triangle",
+                true
+              );
+            } else {
+              // Update the row with new data
+              const statusCell = row.cells[3];
+              const newStatus = Math.random() > 0.5 ? "Completed" : "Pending";
+              statusCell.innerHTML = `<span class="badge bg-${
+                newStatus === "Completed" ? "success" : "warning"
+              }">${newStatus}</span>`;
+
+              showToast(
+                `Transaction ${row.dataset.id} synced`,
+                "bi-check-circle"
+              );
+            }
+          }, 1000 + Math.random() * 1500);
+        }
+
+        // Toast notification system
+        function showToast(message, icon, isError = false) {
+          const toastId = "toast-" + Date.now();
+          const toast = document.createElement("div");
+          toast.className = `toast fade-in ${isError ? "error" : ""}`;
+          toast.id = toastId;
+          toast.setAttribute("role", "alert");
+          toast.setAttribute("aria-live", "assertive");
+          toast.setAttribute("aria-atomic", "true");
+          toast.innerHTML = `
+            <div class="toast-header">
+              <i class="bi ${icon} me-2"></i>
+              <strong class="me-auto">System Notification</strong>
+              <small>Just now</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              ${message}
+            </div>
+          `;
+          elements.toastContainer.appendChild(toast);
+
+          // Initialize Bootstrap toast
+          const bsToast = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 5000,
+          });
+          bsToast.show();
+
+          // Remove toast after it's hidden
+          toast.addEventListener("hidden.bs.toast", function () {
+            toast.remove();
+          });
+        }
+
+        // Responsive design checks
+        function setupResponsiveChecks() {
+          // Initial check
+          handleResponsiveChanges();
+
+          // Add resize listener with debounce
+          let resizeTimer;
+          window.addEventListener("resize", () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResponsiveChanges, 250);
+          });
+        }
+
+        function handleResponsiveChanges() {
+          const width = window.innerWidth;
+
+          // Adjust sidebar behavior based on screen size
+          if (width >= 768 && !elements.sidebar.classList.contains("show")) {
+            elements.sidebar.style.transform = "translateX(0)";
+          } else if (
+            width < 768 &&
+            !elements.sidebar.classList.contains("show")
+          ) {
+            elements.sidebar.style.transform = "translateX(-100%)";
+          }
+
+          // Adjust other elements as needed
+        }
+
+        // Initialize the application
+        init();
+      });
+      function showToast(message, icon, isError = false) {
+        const toastId = "toast-" + Date.now();
+        const toast = document.createElement("div");
+        toast.className = `toast fade-in ${isError ? "error" : ""}`;
+        toast.id = toastId;
+        toast.setAttribute("role", "alert");
+        toast.setAttribute("aria-live", "assertive");
+        toast.setAttribute("aria-atomic", "true");
+        toast.innerHTML = `
+    <div class="toast-header">
+      <i class="bi ${icon} me-2"></i>
+      <strong class="me-auto">Notification</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      ${message}
+    </div>
+  `;
+        elements.toastContainer.appendChild(toast);
+
+        const bsToast = new bootstrap.Toast(toast, {
+          autohide: true,
+          delay: 5000,
+        });
+        bsToast.show();
+
+        toast.addEventListener("hidden.bs.toast", function () {
+          toast.remove();
+        });
+      }
+      function handleResponsiveChanges() {
+        const width = window.innerWidth;
+        const sidebar = elements.sidebar;
+
+        if (width < 768) {
+          sidebar.style.transform = sidebar.classList.contains("show")
+            ? "translateX(0)"
+            : "translateX(-100%)";
+        } else {
+          sidebar.style.transform = "translateX(0)";
+        }
+      }
+      document
+        .getElementById("transactionForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          if (!e.target.checkValidity()) {
+            e.target.classList.add("was-validated");
+            return;
+          }
+
+          // Proses penyimpanan
+        });
+      function performSearch() {
+        const filtered = appState.transactions.filter((transaction) => {
+          const matchesSearch = transaction.transactionId
+            .toLowerCase()
+            .includes(appState.searchQuery.toLowerCase());
+          const matchesStatus =
+            !appState.filters.status ||
+            transaction.status === appState.filters.status;
+          const matchesDate =
+            !appState.filters.date ||
+            transaction.date === appState.filters.date;
+          return matchesSearch && matchesStatus && matchesDate;
+        });
+
+        renderTransactions(filtered);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Photo Gallery Framework</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      /* ===================
+           ROOT VARIABLES & THEMES
+        =================== */
+      :root {
+        /* Color System */
+        --color-primary-50: #f0f9ff;
+        --color-primary-100: #e0f2fe;
+        --color-primary-200: #bae6fd;
+        --color-primary-300: #7dd3fc;
+        --color-primary-400: #38bdf8;
+        --color-primary-500: #0ea5e9;
+        --color-primary-600: #0284c7;
+        --color-primary-700: #0369a1;
+        --color-primary-800: #075985;
+        --color-primary-900: #0c4a6e;
+
+        --color-gray-50: #f9fafb;
+        --color-gray-100: #f3f4f6;
+        --color-gray-200: #e5e7eb;
+        --color-gray-300: #d1d5db;
+        --color-gray-400: #9ca3af;
+        --color-gray-500: #6b7280;
+        --color-gray-600: #4b5563;
+        --color-gray-700: #374151;
+        --color-gray-800: #1f2937;
+        --color-gray-900: #111827;
+
+        --color-white: #ffffff;
+        --color-black: #000000;
+
+        /* Functional Colors */
+        --color-success: #10b981;
+        --color-warning: #f59e0b;
+        --color-danger: #ef4444;
+        --color-info: #3b82f6;
+
+        /* Spacing System */
+        --space-unit: 1rem;
+        --space-0: 0;
+        --space-1: calc(var(--space-unit) * 0.25);
+        --space-2: calc(var(--space-unit) * 0.5);
+        --space-3: calc(var(--space-unit) * 0.75);
+        --space-4: var(--space-unit);
+        --space-5: calc(var(--space-unit) * 1.25);
+        --space-6: calc(var(--space-unit) * 1.5);
+        --space-7: calc(var(--space-unit) * 1.75);
+        --space-8: calc(var(--space-unit) * 2);
+
+        /* Typography */
+        --text-base-size: 1rem;
+        --text-scale-ratio: 1.2;
+        --text-xs: calc(var(--text-base-size) / var(--text-scale-ratio));
+        --text-sm: calc(var(--text-xs) * var(--text-scale-ratio));
+        --text-md: calc(var(--text-sm) * var(--text-scale-ratio));
+        --text-lg: calc(var(--text-md) * var(--text-scale-ratio));
+        --text-xl: calc(var(--text-lg) * var(--text-scale-ratio));
+        --text-2xl: calc(var(--text-xl) * var(--text-scale-ratio));
+        --text-3xl: calc(var(--text-2xl) * var(--text-scale-ratio));
+
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+        /* Border Radius */
+        --radius-none: 0;
+        --radius-sm: 0.125rem;
+        --radius: 0.25rem;
+        --radius-md: 0.375rem;
+        --radius-lg: 0.5rem;
+        --radius-xl: 0.75rem;
+        --radius-full: 9999px;
+
+        /* Transitions */
+        --transition-duration-fast: 150ms;
+        --transition-duration: 300ms;
+        --transition-duration-slow: 500ms;
+        --transition-timing: ease;
+
+        /* Layout */
+        --max-width: 1200px;
+        --header-height: 4rem;
+
+        /* Light Theme Defaults */
+        --color-bg: var(--color-white);
+        --color-text: var(--color-gray-900);
+        --color-border: var(--color-gray-200);
+        --color-surface: var(--color-gray-50);
+      }
+
+      /* Dark Theme */
+      [data-theme="dark"] {
+        --color-bg: var(--color-gray-900);
+        --color-text: var(--color-gray-100);
+        --color-border: var(--color-gray-700);
+        --color-surface: var(--color-gray-800);
+      }
+
+      /* ===================
+           BASE STYLES
+        =================== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.5;
+        background-color: var(--color-bg);
+        color: var(--color-text);
+        transition: background-color var(--transition-duration)
+          var(--transition-timing);
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* ===================
+           UTILITY CLASSES
+        =================== */
+      /* Spacing Utilities */
+      .m-0 {
+        margin: var(--space-0);
+      }
+      .m-1 {
+        margin: var(--space-1);
+      }
+      .m-2 {
+        margin: var(--space-2);
+      }
+      .m-3 {
+        margin: var(--space-3);
+      }
+      .m-4 {
+        margin: var(--space-4);
+      }
+      .m-5 {
+        margin: var(--space-5);
+      }
+      .m-6 {
+        margin: var(--space-6);
+      }
+      .m-7 {
+        margin: var(--space-7);
+      }
+      .m-8 {
+        margin: var(--space-8);
+      }
+
+      .mt-0 {
+        margin-top: var(--space-0);
+      }
+      .mt-1 {
+        margin-top: var(--space-1);
+      }
+      /* Continue for all margin directions (mt, mr, mb, ml, mx, my) */
+
+      .p-0 {
+        padding: var(--space-0);
+      }
+      .p-1 {
+        padding: var(--space-1);
+      }
+      .p-2 {
+        padding: var(--space-2);
+      }
+      .p-3 {
+        padding: var(--space-3);
+      }
+      .p-4 {
+        padding: var(--space-4);
+      }
+      .p-5 {
+        padding: var(--space-5);
+      }
+      .p-6 {
+        padding: var(--space-6);
+      }
+      .p-7 {
+        padding: var(--space-7);
+      }
+      .p-8 {
+        padding: var(--space-8);
+      }
+
+      /* Continue for all padding directions (pt, pr, pb, pl, px, py) */
+      .py-1 {
+        padding: var(--space-1) 0;
+      }
+      .py-2 {
+        padding: var(--space-2) 0;
+      }
+      .py-3 {
+        padding: var(--space-3) 0;
+      }
+      .py-4 {
+        padding: var(--space-4) 0;
+      }
+      .py-5 {
+        padding: var(--space-5) 0;
+      }
+      .py-6 {
+        padding: var(--space-6) 0;
+      }
+      .py-7 {
+        padding: var(--space-7) 0;
+      }
+      .py-8 {
+        padding: var(--space-8) 0;
+      }
+      .px-1 {
+        padding: 0 var(--space-1);
+      }
+      .px-2 {
+        padding: 0 var(--space-2);
+      }
+      .px-3 {
+        padding: 0 var(--space-3);
+      }
+      .px-4 {
+        padding: 0 var(--space-4);
+      }
+      .px-5 {
+        padding: 0 var(--space-5);
+      }
+      .px-6 {
+        padding: 0 var(--space-6);
+      }
+      .px-7 {
+        padding: 0 var(--space-7);
+      }
+      .px-8 {
+        padding: 0 var(--space-8);
+      }
+      /* Color Utilities */
+      .text-primary {
+        color: var(--color-primary-600);
+      }
+      .text-success {
+        color: var(--color-success);
+      }
+      .text-warning {
+        color: var(--color-warning);
+      }
+      .text-danger {
+        color: var(--color-danger);
+      }
+      .text-info {
+        color: var(--color-info);
+      }
+
+      .bg-primary {
+        background-color: var(--color-primary-600);
+      }
+      .bg-success {
+        background-color: var(--color-success);
+      }
+      .bg-warning {
+        background-color: var(--color-warning);
+      }
+      .bg-danger {
+        background-color: var(--color-danger);
+      }
+      .bg-info {
+        background-color: var(--color-info);
+      }
+
+      /* Text Utilities */
+      .text-xs {
+        font-size: var(--text-xs);
+      }
+      .text-sm {
+        font-size: var(--text-sm);
+      }
+      .text-md {
+        font-size: var(--text-md);
+      }
+      .text-lg {
+        font-size: var(--text-lg);
+      }
+      .text-xl {
+        font-size: var(--text-xl);
+      }
+      .text-2xl {
+        font-size: var(--text-2xl);
+      }
+      .text-3xl {
+        font-size: var(--text-3xl);
+      }
+
+      .text-center {
+        text-align: center;
+      }
+      .text-left {
+        text-align: left;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-uppercase {
+        text-transform: uppercase;
+      }
+      .text-capitalize {
+        text-transform: capitalize;
+      }
+      .text-underline {
+        text-decoration: underline;
+      }
+
+      .font-light {
+        font-weight: 300;
+      }
+      .font-normal {
+        font-weight: 400;
+      }
+      .font-medium {
+        font-weight: 500;
+      }
+      .font-semibold {
+        font-weight: 600;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+
+      /* Flex Utilities */
+      .flex {
+        display: flex;
+      }
+      .inline-flex {
+        display: inline-flex;
+      }
+      .flex-col {
+        flex-direction: column;
+      }
+      .flex-row {
+        flex-direction: row;
+      }
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+      .flex-nowrap {
+        flex-wrap: nowrap;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .items-start {
+        align-items: flex-start;
+      }
+      .items-end {
+        align-items: flex-end;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .justify-start {
+        justify-content: flex-start;
+      }
+      .justify-end {
+        justify-content: flex-end;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .justify-around {
+        justify-content: space-around;
+      }
+      .gap-1 {
+        gap: var(--space-1);
+      }
+      .gap-2 {
+        gap: var(--space-2);
+      }
+      .gap-3 {
+        gap: var(--space-3);
+      }
+      .gap-4 {
+        gap: var(--space-4);
+      }
+      .gap-5 {
+        gap: var(--space-5);
+      }
+      .gap-6 {
+        gap: var(--space-6);
+      }
+      .gap-7 {
+        gap: var(--space-7);
+      }
+      .gap-8 {
+        gap: var(--space-8);
+      }
+
+      /* Grid Utilities */
+      .grid {
+        display: grid;
+      }
+      .grid-cols-1 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      .grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .grid-cols-5 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      .grid-cols-6 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+      .grid-cols-12 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+      }
+
+      .col-span-1 {
+        grid-column: span 1 / span 1;
+      }
+      .col-span-2 {
+        grid-column: span 2 / span 2;
+      }
+      .col-span-3 {
+        grid-column: span 3 / span 3;
+      }
+      .col-span-4 {
+        grid-column: span 4 / span 4;
+      }
+      .col-span-5 {
+        grid-column: span 5 / span 5;
+      }
+      .col-span-6 {
+        grid-column: span 6 / span 6;
+      }
+      .col-span-12 {
+        grid-column: span 12 / span 12;
+      }
+
+      /* Shadow Utilities */
+      .shadow-sm {
+        box-shadow: var(--shadow-sm);
+      }
+      .shadow {
+        box-shadow: var(--shadow);
+      }
+      .shadow-md {
+        box-shadow: var(--shadow-md);
+      }
+      .shadow-lg {
+        box-shadow: var(--shadow-lg);
+      }
+      .shadow-xl {
+        box-shadow: var(--shadow-xl);
+      }
+      .shadow-none {
+        box-shadow: none;
+      }
+
+      /* Border Radius Utilities */
+      .rounded-none {
+        border-radius: var(--radius-none);
+      }
+      .rounded-sm {
+        border-radius: var(--radius-sm);
+      }
+      .rounded {
+        border-radius: var(--radius);
+      }
+      .rounded-md {
+        border-radius: var(--radius-md);
+      }
+      .rounded-lg {
+        border-radius: var(--radius-lg);
+      }
+      .rounded-xl {
+        border-radius: var(--radius-xl);
+      }
+      .rounded-full {
+        border-radius: var(--radius-full);
+      }
+
+      /* Border Utilities */
+      .border {
+        border: 1px solid var(--color-border);
+      }
+      .border-t {
+        border-top: 1px solid var(--color-border);
+      }
+      .border-b {
+        border-bottom: 1px solid var(--color-border);
+      }
+      .border-l {
+        border-left: 1px solid var(--color-border);
+      }
+      .border-r {
+        border-right: 1px solid var(--color-border);
+      }
+
+      /* Display Utilities */
+      .block {
+        display: block;
+      }
+      .inline-block {
+        display: inline-block;
+      }
+      .inline {
+        display: inline;
+      }
+      .hidden {
+        display: none;
+      }
+
+      /* Position Utilities */
+      .relative {
+        position: relative;
+      }
+      .absolute {
+        position: absolute;
+      }
+      .fixed {
+        position: fixed;
+      }
+      .sticky {
+        position: sticky;
+      }
+
+      /* Width/Height Utilities */
+      .w-full {
+        width: 100%;
+      }
+      .h-full {
+        height: 100%;
+      }
+
+      /* ===================
+           COMPONENTS
+        =================== */
+      /* Container */
+      .container {
+        width: 100%;
+        max-width: var(--max-width);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: var(--space-4);
+        padding-right: var(--space-4);
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: var(--text-md);
+        line-height: 1.5;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all var(--transition-duration) var(--transition-timing);
+        border: 1px solid transparent;
+        user-select: none;
+      }
+
+      .btn-primary {
+        background-color: var(--color-primary-600);
+        color: var(--color-white);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-700);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border-color: var(--color-primary-600);
+        color: var(--color-primary-600);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--color-primary-50);
+      }
+
+      .btn-sm {
+        padding: var(--space-1) var(--space-3);
+        font-size: var(--text-sm);
+      }
+
+      .btn-lg {
+        padding: var(--space-3) var(--space-5);
+        font-size: var(--text-lg);
+      }
+
+      /* Cards */
+      .card {
+        background-color: var(--color-surface);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        transition: transform var(--transition-duration)
+            var(--transition-timing),
+          box-shadow var(--transition-duration) var(--transition-timing);
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .card-img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: var(--space-4);
+      }
+
+      .card-title {
+        font-size: var(--text-lg);
+        font-weight: 600;
+        margin-bottom: var(--space-2);
+      }
+
+      .card-text {
+        color: var(--color-gray-600);
+        margin-bottom: var(--space-3);
+      }
+
+      /* Navbar */
+      .navbar {
+        height: var(--header-height);
+        background-color: var(--color-surface);
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-brand {
+        font-size: var(--text-xl);
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--color-text);
+      }
+
+      .navbar-nav {
+        display: flex;
+        gap: var(--space-4);
+        list-style: none;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: var(--color-text);
+        font-weight: 500;
+        transition: color var(--transition-duration) var(--transition-timing);
+      }
+
+      .nav-link:hover {
+        color: var(--color-primary-600);
+      }
+
+      /* form */
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      label {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        margin-bottom: var(--space-1);
+      }
+      input {
+        border: 1px solid var(--color-border);
+        padding: var(--space-2) var(--space-2);
+        border-radius: var(--radius-md);
+        width: 100%;
+        margin-bottom: var(--space-4);
+      }
+      textarea {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        border: 1px solid var(--color-border);
+        padding: var(--space-1) var(--space-2);
+        border-radius: var(--radius-md);
+        width: 100%;
+        margin-bottom: var(--space-4);
+      }
+      /* Modal */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition-duration) var(--transition-timing);
+      }
+
+      .modal.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-content {
+        background-color: var(--color-surface);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-xl);
+        max-width: 90%;
+        max-height: 90%;
+        overflow: auto;
+        transform: translateY(20px);
+        transition: transform var(--transition-duration)
+          var(--transition-timing);
+      }
+
+      .modal.active .modal-content {
+        transform: translateY(0);
+      }
+
+      .modal-header {
+        padding: var(--space-4);
+        border-bottom: 1px solid var(--color-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-title {
+        font-size: var(--text-lg);
+        font-weight: 600;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        font-size: var(--text-2xl);
+        padding: var(--space-2);
+        cursor: pointer;
+        /* color: var(--color-gray-500); */
+        color: var(--color-danger);
+      }
+
+      .modal-body {
+        padding: var(--space-4);
+      }
+
+      /* Gallery Grid */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-4);
+      }
+
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-md);
+      }
+
+      .gallery-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--transition-duration-slow)
+          var(--transition-timing);
+      }
+
+      .gallery-item:hover .gallery-img {
+        transform: scale(1.05);
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: white;
+        padding: var(--space-4);
+        transform: translateY(100%);
+        transition: transform var(--transition-duration)
+          var(--transition-timing);
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+      }
+
+      /* ===================
+           LAYOUT
+        =================== */
+      .section {
+        padding: var(--space-8) 0;
+      }
+
+      .section-title {
+        font-size: var(--text-2xl);
+        font-weight: 700;
+        margin-bottom: var(--space-6);
+        text-align: center;
+      }
+
+      /* ===================
+           THEME TOGGLE
+        =================== */
+      .theme-toggle {
+        position: fixed;
+        bottom: var(--space-4);
+        right: var(--space-4);
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--radius-full);
+        background-color: var(--color-primary-600);
+        color: var(--color-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+        border: 2px solid var(--color-primary-600);
+        font-size: var(--text-lg);
+        z-index: 40;
+        transition: background-color var(--transition-duration)
+          var(--transition-timing);
+      }
+
+      .theme-toggle:hover {
+        color: var(--primary-600);
+        background-color: var(--color-gray-100-700);
+        border: 2px solid var(--color-text);
+      }
+
+      /* ===================
+           RESPONSIVE UTILITIES
+        =================== */
+      @media (min-width: 640px) {
+        .sm\:hidden {
+          display: none;
+        }
+        .sm\:block {
+          display: block;
+        }
+        /* Continue for other responsive utilities */
+      }
+
+      @media (min-width: 768px) {
+        .md\:hidden {
+          display: none;
+        }
+        .md\:block {
+          display: block;
+        }
+        /* Continue for other responsive utilities */
+      }
+
+      @media (min-width: 1024px) {
+        .lg\:hidden {
+          display: none;
+        }
+        .lg\:block {
+          display: block;
+        }
+        /* Continue for other responsive utilities */
+      }
+
+      @media (min-width: 1280px) {
+        .xl\:hidden {
+          display: none;
+        }
+        .xl\:block {
+          display: block;
+        }
+        /* Continue for other responsive utilities */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container flex justify-between items-center">
+        <a href="#" class="navbar-brand">Photo Gallery</a>
+        <ul class="navbar-nav">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index2.html" class="nav-link">Gallery</a></li>
+          <li><a href="index5.html" class="nav-link">user</a></li>
+          <li><a href="index6.html" class="nav-link">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="section">
+      <div class="container">
+        <div class="text-center">
+          <h1 class="text-3xl font-bold mb-4">Kumpulan Desain Website</h1>
+          <p class="text-lg text-gray-600 mb-8">
+            Temukan Desain Pilihan Anda di Sini
+          </p>
+          <a href="#gallery" class="btn btn-primary btn-lg m-3"
+            >Telusuri Galeri</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="section bg-gray-100">
+      <div class="container">
+        <h2 class="section-title">Rekomendasi</h2>
+        <div class="gallery">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2"
+              alt="Nature"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Nature Beauti</h3>
+              <p class="text-sm">Captured in the wild</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 3 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1515859005217-8a1f08870f59"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 4 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1469474968028-56623f02e42e"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+
+          <!-- Continue with more gallery items -->
+        </div>
+      </div>
+    </section>
+
+    <!-- user Section -->
+    <section id="user" class="section">
+      <div class="container">
+        <h2 class="section-title">Halaman Pengunjung</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Beranda</h3>
+            <p class="text-gray-600">Pilih Desain yang Anda Suka</p>
+            </p>
+            <section id="gallery" class="section bg-gray-100">
+              <div class="container">
+                <div class="gallery">
+                  <!-- Gallery Item 1 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2"
+                      alt="Nature"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Nature Beauti</h3>
+                      <p class="text-sm">Captured in the wild</p>
+                    </div>
+                  </div>
+
+                  <!-- Gallery Item 2 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1487958449943-2429e8be8625"
+                      alt="City"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Urban Life</h3>
+                      <p class="text-sm">City streets and architecture</p>
+                    </div>
+                  </div>
+                  <!-- Gallery Item 3 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1515859005217-8a1f08870f59"
+                      alt="City"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Urban Life</h3>
+                      <p class="text-sm">City streets and architecture</p>
+                    </div>
+                  </div>
+                  <!-- Gallery Item 4 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9"
+                      alt="City"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Urban Life</h3>
+                      <p class="text-sm">City streets and architecture</p>
+                    </div>
+                  </div>
+                  <!-- Gallery Item 2 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+                      alt="City"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Urban Life</h3>
+                      <p class="text-sm">City streets and architecture</p>
+                    </div>
+                  </div>
+                  <!-- Gallery Item 2 -->
+                  <div class="gallery-item">
+                    <img
+                      src="https://images.unsplash.com/photo-1469474968028-56623f02e42e"
+                      alt="City"
+                      class="gallery-img" />
+                    <div class="gallery-overlay">
+                      <h3 class="text-xl font-semibold">Urban Life</h3>
+                      <p class="text-sm">City streets and architecture</p>
+                    </div>
+                  </div>
+
+                  <!-- Continue with more gallery items -->
+                </div>
+              </div>
+            </section>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Dashboard</h3>
+            <p class="text-gray-600">
+       Pilihan Dashboard untuk Admin dan Pengunjung
+            </p>
+                <section id="gallery" class="section bg-gray-100">
+      <div class="container"> 
+        <div class="gallery">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2"
+              alt="Nature"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Nature Beauti</h3>
+              <p class="text-sm">Captured in the wild</p>
+            </div>
+          </div>
+
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1487958449943-2429e8be8625"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 3 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1515859005217-8a1f08870f59"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 4 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <img
+              src="https://images.unsplash.com/photo-1469474968028-56623f02e42e"
+              alt="City"
+              class="gallery-img" />
+            <div class="gallery-overlay">
+              <h3 class="text-xl font-semibold">Urban Life</h3>
+              <p class="text-sm">City streets and architecture</p>
+            </div>
+          </div>
+
+          <!-- Continue with more gallery items -->
+        </div>
+      </div>
+    </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-gray-100">
+      <div class="container">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="max-w-lg mx-auto">
+          <form class="space-y-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700"
+                >Name</label
+              >
+              <input type="text" id="name" class="w-full border rounded-md" />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <input type="email" id="email" class="w-full border rounded-md" />
+            </div>
+            <div>
+              <label
+                for="message"
+                class="block text-sm font-medium text-gray-700"
+                >Message</label
+              >
+              <textarea
+                id="message"
+                rows="4"
+                class="w-full border rounded-md"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal" id="imageModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Image Title</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <img src="" alt="" class="w-full" />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Theme Toggle
+      const themeToggle = document.getElementById("themeToggle");
+      const html = document.documentElement;
+
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem("theme") || "light";
+      html.setAttribute("data-theme", savedTheme);
+
+      // Update icon based on current theme
+      updateThemeIcon();
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "light" ? "dark" : "light";
+
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+
+        updateThemeIcon();
+      });
+
+      function updateThemeIcon() {
+        const currentTheme = html.getAttribute("data-theme");
+        const icon = themeToggle.querySelector("i");
+
+        if (currentTheme === "light") {
+          icon.classList.remove("fa-sun");
+          icon.classList.add("fa-moon");
+        } else {
+          icon.classList.remove("fa-moon");
+          icon.classList.add("fa-sun");
+        }
+      }
+
+      // Modal functionality
+      const modal = document.getElementById("imageModal");
+      const modalClose = modal.querySelector(".modal-close");
+
+      // Open modal when gallery item is clicked
+      document.querySelectorAll(".gallery-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const imgSrc = item.querySelector("img").src;
+          const imgAlt = item.querySelector("img").alt;
+          const title = item.querySelector("h3").textContent;
+
+          modal.querySelector("img").src = imgSrc;
+          modal.querySelector("img").alt = imgAlt;
+          modal.querySelector(".modal-title").textContent = title;
+
+          modal.classList.add("active");
+        });
+      });
+
+      // Close modal
+      modalClose.addEventListener("click", () => {
+        modal.classList.remove("active");
+      });
+
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("active")) {
+          modal.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

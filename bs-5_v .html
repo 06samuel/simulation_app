@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feature-rich Calendar Component</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --secondary-color: #f5f6fa;
+        --event-colors: #4a90e2, #50e3c2, #bd10e0, #f5a623, #7ed321;
+      }
+
+      .calendar-day {
+        height: 70vh;
+        min-height: 500px;
+        overflow-y: auto;
+        background: var(--secondary-color);
+      }
+
+      .hour-slot {
+        position: relative;
+        height: 60px;
+        border-bottom: 1px solid #e0e0e0;
+        transition: background 0.2s ease;
+      }
+
+      .hour-slot:hover {
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      .time {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        font-size: 0.8rem;
+        color: #888;
+        width: 50px;
+      }
+
+      .event {
+        position: absolute;
+        left: 70px;
+        right: 10px;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-left: 4px solid;
+        z-index: 1;
+      }
+
+      .event:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .event-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #fff;
+        margin-bottom: 2px;
+      }
+
+      .event-time {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      @media (max-width: 768px) {
+        .calendar-day {
+          height: 50vh;
+          min-height: 300px;
+        }
+
+        .event {
+          left: 50px;
+        }
+      }
+
+      .event-actions {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .event:hover .event-actions {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-primary" id="prevWeek">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="btn btn-primary" id="nextWeek">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+          <h3 class="mb-0" id="currentWeek"></h3>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center">
+            <div class="status-indicator"></div>
+            <small class="status-text"></small>
+          </div>
+          <button
+            class="btn btn-success"
+            data-bs-toggle="modal"
+            data-bs-target="#eventModal">
+            <i class="bi bi-plus-lg"></i> New Event
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3" id="calendarGrid"></div>
+    </div>
+
+    <!-- Event Modal -->
+    <div
+      class="modal fade"
+      id="eventModal"
+      tabindex="-1"
+      aria-labelledby="eventModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="eventModalLabel">Create New Event</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <form id="eventForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Event Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="eventTitle"
+                  required />
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="form-label">Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="eventDate"
+                    required />
+                </div>
+                <div class="col-6">
+                  <label class="form-label">Time</label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="eventTime"
+                    required />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Duration (minutes)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="eventDuration"
+                  value="60"
+                  min="15"
+                  step="15"
+                  required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Event Color</label>
+                <div class="d-flex gap-2">
+                  <template id="colorTemplate">
+                    <div
+                      class="color-option"
+                      style="
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                      "></div>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Save Event</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      class CalendarManager {
+        constructor() {
+          this.state = {
+            events: JSON.parse(localStorage.getItem("calendarEvents")) || [],
+            currentDate: new Date(),
+            isOnline: navigator.onLine,
+            isSyncing: false,
+          };
+
+          this.init();
+          this.setupEventListeners();
+          this.syncData();
+        }
+
+        init() {
+          this.renderCalendar();
+          this.updateSyncStatus();
+          this.generateColorOptions();
+        }
+
+        setupEventListeners() {
+          document
+            .getElementById("prevWeek")
+            .addEventListener("click", () => this.changeWeek(-1));
+          document
+            .getElementById("nextWeek")
+            .addEventListener("click", () => this.changeWeek(1));
+          document
+            .getElementById("eventForm")
+            .addEventListener("submit", (e) => this.handleFormSubmit(e));
+          window.addEventListener("online", () =>
+            this.handleConnectivityChange(true)
+          );
+          window.addEventListener("offline", () =>
+            this.handleConnectivityChange(false)
+          );
+          document
+            .getElementById("calendarGrid")
+            .addEventListener("click", (e) => this.handleEventClick(e));
+        }
+
+        generateColorOptions() {
+          const container = document.querySelector("#eventModal .d-flex.gap-2");
+          const colors = getComputedStyle(document.documentElement)
+            .getPropertyValue("--event-colors")
+            .split(", ")
+            .map((c) => c.trim());
+
+          colors.forEach((color) => {
+            const clone = document
+              .getElementById("colorTemplate")
+              .content.cloneNode(true);
+            const option = clone.querySelector(".color-option");
+            option.style.backgroundColor = color;
+            option.addEventListener("click", () =>
+              this.selectColor(color, option)
+            );
+            container.appendChild(clone);
+          });
+        }
+
+        selectColor(color, element) {
+          document
+            .querySelectorAll(".color-option")
+            .forEach((opt) => (opt.style.border = "none"));
+          element.style.border = "2px solid #000";
+          this.selectedColor = color;
+        }
+
+        handleFormSubmit(e) {
+          e.preventDefault();
+          const newEvent = {
+            id: Date.now(),
+            title: document.getElementById("eventTitle").value,
+            date: document.getElementById("eventDate").value,
+            time: document.getElementById("eventTime").value,
+            duration: document.getElementById("eventDuration").value,
+            color: this.selectedColor || "#4a90e2",
+          };
+
+          this.state.events.push(newEvent);
+          this.syncData();
+          this.renderCalendar();
+          bootstrap.Modal.getInstance(
+            document.getElementById("eventModal")
+          ).hide();
+          e.target.reset();
+        }
+
+        handleEventClick(e) {
+          const eventElement = e.target.closest(".event");
+          if (!eventElement) return;
+
+          const eventId = parseInt(eventElement.dataset.id);
+          const event = this.state.events.find((ev) => ev.id === eventId);
+
+          if (e.target.closest(".bi-trash")) {
+            this.state.events = this.state.events.filter(
+              (ev) => ev.id !== eventId
+            );
+            this.syncData();
+            this.renderCalendar();
+          }
+        }
+
+        changeWeek(weeks) {
+          this.state.currentDate.setDate(
+            this.state.currentDate.getDate() + weeks * 7
+          );
+          this.renderCalendar();
+        }
+
+        renderCalendar() {
+          const calendarGrid = document.getElementById("calendarGrid");
+          calendarGrid.innerHTML = "";
+
+          const days = this.getWeekDays();
+          days.forEach((day) => {
+            const dayElement = this.createDayElement(day);
+            calendarGrid.appendChild(dayElement);
+          });
+
+          document.getElementById("currentWeek").textContent =
+            this.getWeekRangeText(days[0], days[days.length - 1]);
+        }
+
+        createDayElement(date) {
+          const element = document.createElement("div");
+          element.className = "col-md-4 mb-3";
+          element.innerHTML = `
+            <div class="card h-100">
+              <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">${date.toLocaleDateString("en-US", {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                })}</h5>
+              </div>
+              <div class="card-body p-0">
+                <div class="calendar-day">
+                  ${Array.from({ length: 24 }, (_, hour) =>
+                    this.createHourSlot(date, hour)
+                  ).join("")}
+                </div>
+              </div>
+            </div>
+          `;
+          return element;
+        }
+
+        createHourSlot(date, hour) {
+          const events = this.getEventsForDate(date, hour);
+          return `
+            <div class="hour-slot" data-hour="${hour}">
+              <span class="time">${hour.toString().padStart(2, "0")}:00</span>
+              ${events.map((event) => this.createEventElement(event)).join("")}
+            </div>
+          `;
+        }
+
+        createEventElement(event) {
+          const start = new Date(event.date + "T" + event.time);
+          const end = new Date(start.getTime() + event.duration * 60000);
+          const top = (start.getMinutes() / 60) * 100;
+          const height = ((end - start) / 60000 / 60) * 100;
+
+          return `
+            <div class="event" 
+                 data-id="${event.id}"
+                 style="background-color: ${event.color};
+                        top: ${top}%;
+                        height: ${height}%">
+              <div class="event-actions">
+                <button class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-sm btn-light"><i class="bi bi-trash"></i></button>
+              </div>
+              <div class="event-title">${event.title}</div>
+              <div class="event-time">${start.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })} - ${end.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}</div>
+            </div>
+          `;
+        }
+
+        getEventsForDate(date, hour) {
+          const targetDate = date.toISOString().split("T")[0];
+          return this.state.events.filter((event) => {
+            const eventDate = new Date(event.date + "T" + event.time);
+            return (
+              eventDate.toISOString().split("T")[0] === targetDate &&
+              eventDate.getHours() === hour
+            );
+          });
+        }
+
+        getWeekDays() {
+          const start = new Date(this.state.currentDate);
+          start.setDate(
+            start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1)
+          );
+          return Array.from({ length: 3 }, (_, i) => {
+            const date = new Date(start);
+            date.setDate(date.getDate() + i);
+            return date;
+          });
+        }
+
+        getWeekRangeText(startDate, endDate) {
+          return `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+        }
+
+        async syncData() {
+          this.state.isSyncing = true;
+          this.updateSyncStatus();
+
+          try {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            localStorage.setItem(
+              "calendarEvents",
+              JSON.stringify(this.state.events)
+            );
+            this.state.isSyncing = false;
+            this.updateSyncStatus();
+          } catch (error) {
+            console.error("Sync failed:", error);
+            this.state.isSyncing = false;
+            this.updateSyncStatus();
+          }
+        }
+
+        handleConnectivityChange(online) {
+          this.state.isOnline = online;
+          this.updateSyncStatus();
+          if (online) this.syncData();
+        }
+
+        updateSyncStatus() {
+          const indicator = document.querySelector(".status-indicator");
+          const text = document.querySelector(".status-text");
+
+          if (!this.state.isOnline) {
+            indicator.style.backgroundColor = "#e74c3c";
+            text.textContent = "Offline - Changes saved locally";
+          } else if (this.state.isSyncing) {
+            indicator.style.backgroundColor = "#f1c40f";
+            text.textContent = "Syncing changes...";
+          } else {
+            indicator.style.backgroundColor = "#2ecc71";
+            text.textContent = "All changes synced";
+          }
+        }
+      }
+
+      // Initialize calendar
+      const calendar = new CalendarManager();
+    </script>
+  </body>
+</html>

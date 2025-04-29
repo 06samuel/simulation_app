@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Dynamic Web App with Responsive Design and Smooth Interactions" />
+    <title>Dynamic Web App</title>
+    <style>
+      /* CSS Variables - Theme Management */
+      :root {
+        --primary: #3a86ff;
+        --secondary: #ff006e;
+        --success: #4cc9f0;
+        --warning: #f72585;
+        --danger: #d90429;
+        --dark: #1d3557;
+        --light: #f8f9fa;
+        --text: #2b2d42;
+        --muted: #6c757d;
+        --card-bg: #ffffff;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --border-radius: 10px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --font-family: "Inter", system-ui, sans-serif;
+      }
+
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: var(--font-family);
+        background-color: var(--light);
+        color: var(--text);
+        line-height: 1.6;
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 260px;
+        background: linear-gradient(180deg, var(--dark), var(--secondary));
+        color: var(--light);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transition: transform var(--transition), width var(--transition);
+        z-index: 1000;
+        backdrop-filter: blur(15px);
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar.collapsed {
+        transform: translateX(-100%);
+      }
+
+      .sidebar-header {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        height: 70px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .toggle-btn {
+        background: none;
+        border: none;
+        color: var(--light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color var(--transition);
+      }
+
+      .toggle-btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-menu {
+        padding: 1rem 0;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0.875rem 1.5rem;
+        gap: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+        transition: var(--transition);
+        font-size: 0.95rem;
+        border-left: 3px solid transparent;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--light);
+        border-left: 3px solid var(--light);
+      }
+
+      /* Main Content Area */
+      .main-content {
+        margin-left: 260px;
+        padding: 2rem;
+        flex: 1;
+        transition: margin-left var(--transition);
+      }
+
+      .main-content.collapsed {
+        margin-left: 0;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      /* Grid System */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: transform var(--transition), box-shadow var(--transition);
+      }
+
+      .card:hover {
+        transform: translateY(-5px) scale(1.02) rotateX(5deg);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--border-radius);
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: var(--light);
+      }
+
+      .btn-primary:hover {
+        background: #2a75e6;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      /* UI Kit Components */
+      .button-group {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        display: none;
+      }
+
+      .modal.active {
+        display: block;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .modal-backdrop.active {
+        display: block;
+      }
+
+      /* Mobile Menu Toggle Button */
+      .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.5rem;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1010;
+        background-color: var(--card-bg);
+        box-shadow: var(--shadow);
+      }
+
+      /* Sidebar Overlay */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 990;
+        display: none;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .sidebar {
+          width: 240px;
+        }
+
+        .main-content {
+          margin-left: 240px;
+        }
+
+        .nav-item {
+          padding: 0.75rem 1.25rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.mobile-visible {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 1.5rem;
+        }
+
+        .user-profile {
+          margin-top: 1rem;
+        }
+
+        .mobile-menu-toggle {
+          display: flex;
+        }
+
+        .sidebar-overlay.active {
+          display: block;
+        }
+
+        /* Adjust card styles for mobile */
+        .card {
+          padding: 1.25rem;
+        }
+
+        .card:hover {
+          transform: none;
+          box-shadow: var(--shadow);
+        }
+
+        /* Adjust grid for mobile */
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .sidebar {
+          width: 85%;
+        }
+
+        .main-content {
+          padding: 1rem;
+        }
+
+        .nav-item {
+          padding: 0.75rem 1rem;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+
+        .card {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">🏢 DynamicApp</div>
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+      </div>
+      <nav class="nav-menu">
+        <div class="nav-item active" data-section="dashboard">📊 Dashboard</div>
+        <div class="nav-item" data-section="properties">🏠 Properties</div>
+        <div class="nav-item" data-section="tenants">👥 Tenants</div>
+        <div class="nav-item" data-section="financials">💰 Financials</div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <header class="header">
+        <h1 class="fade-in">Dynamic Web Application</h1>
+        <div class="user-profile">
+          <img
+            src="https://picsum.photos/40"
+            alt="User Avatar"
+            class="user-avatar" />
+          <div>
+            <h5>John Doe</h5>
+            <small>Admin</small>
+          </div>
+        </div>
+      </header>
+
+      <!-- Key Metrics Section -->
+      <section class="grid fade-in" id="keyMetrics">
+        <div class="card">
+          <h3>Total Properties</h3>
+          <p class="metric-value">48</p>
+        </div>
+        <div class="card">
+          <h3>Occupancy Rate</h3>
+          <p class="metric-value">92%</p>
+        </div>
+        <div class="card">
+          <h3>Monthly Revenue</h3>
+          <p class="metric-value">$86,400</p>
+        </div>
+      </section>
+
+      <!-- Data Visualization -->
+      <section class="card fade-in" id="revenueChart">
+        <h3>Revenue Overview</h3>
+        <canvas id="revenueChartCanvas"></canvas>
+      </section>
+
+      <!-- Modal -->
+      <div class="modal-backdrop" id="modalBackdrop"></div>
+      <div class="modal" id="propertyModal">
+        <h3>Add New Property</h3>
+        <form id="propertyForm">
+          <div class="form-group">
+            <label>Property Name</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" required />
+          </div>
+          <div class="form-group">
+            <label>Monthly Rent</label>
+            <input type="number" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Save Property</button>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      // Sidebar Toggle Functionality
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          sidebar.classList.toggle("mobile-visible");
+          sidebarOverlay.classList.toggle("active");
+        } else {
+          sidebar.classList.toggle("collapsed");
+          mainContent.classList.toggle("collapsed");
+        }
+      }
+
+      // Mobile Menu Toggle
+      document
+        .getElementById("mobileMenuToggle")
+        .addEventListener("click", function () {
+          const sidebar = document.getElementById("sidebar");
+          const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+          sidebar.classList.toggle("mobile-visible");
+          sidebarOverlay.classList.toggle("active");
+        });
+
+      // Close sidebar when clicking overlay
+      document
+        .getElementById("sidebarOverlay")
+        .addEventListener("click", function () {
+          const sidebar = document.getElementById("sidebar");
+          sidebar.classList.remove("mobile-visible");
+          this.classList.remove("active");
+        });
+
+      // Handle window resize
+      window.addEventListener("resize", function () {
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        if (window.innerWidth > 768) {
+          sidebar.classList.remove("mobile-visible");
+          sidebarOverlay.classList.remove("active");
+        }
+      });
+
+      // Initialize Chart.js
+      const ctx = document
+        .getElementById("revenueChartCanvas")
+        .getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          datasets: [
+            {
+              label: "Monthly Revenue",
+              data: [65000, 79000, 82000, 78000, 86000, 90000],
+              borderColor: getComputedStyle(document.documentElement)
+                .getPropertyValue("--primary")
+                .trim(),
+              backgroundColor: "rgba(58, 134, 255, 0.1)",
+              tension: 0.4,
+            },
+          ],
+        },
+      });
+
+      // Intersection Observer for Animations
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("fade-in");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".card").forEach((card) => {
+        observer.observe(card);
+      });
+
+      // Modal Handling
+      const modal = document.getElementById("propertyModal");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+
+      function showModal() {
+        modal.classList.add("active");
+        modalBackdrop.classList.add("active");
+      }
+
+      function hideModal() {
+        modal.classList.remove("active");
+        modalBackdrop.classList.remove("active");
+      }
+
+      document
+        .getElementById("propertyForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          alert("Property Saved!");
+          hideModal();
+        });
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          toggleSidebar();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuxeRent - Sewa Apartemen Modern</title>
+    <style>
+      /* Modern Design System Variables */
+      :root {
+        --primary: #2563eb;
+        --secondary: #10b981;
+        --accent: #f43f5e;
+        --text: #1f2937;
+        --bg: #f9fafb;
+        --radius-sm: 0.5rem;
+        --radius-md: 1rem;
+        --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        --blur-bg: saturate(180%) blur(20px);
+      }
+
+      /* Dark Mode Theme */
+      [data-theme="dark"] {
+        --bg: #111827;
+        --text: #f9fafb;
+        --shadow-sm: 0 4px 6px -1px rgba(255, 255, 255, 0.1);
+        --shadow-md: 0 10px 15px -3px rgba(255, 255, 255, 0.1);
+      }
+
+      /* Modern CSS Reset */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+
+      /* Base Styles with Mobile-First Approach */
+      body {
+        font-family: "Inter", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        line-height: 1.5;
+        transition: var(--transition-smooth);
+        overflow-x: hidden;
+      }
+
+      /* Enhanced Navbar */
+      header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: var(--blur-bg);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition-smooth);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .logo {
+        font-size: clamp(1.25rem, 4vw, 1.5rem);
+        color: var(--primary);
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .nav-links a {
+        color: var(--text);
+        text-decoration: none;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: var(--transition-fast);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* Enhanced Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+          url("https://picsum.photos/1200/800") center/cover;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 6vw, 4rem);
+        margin-bottom: 1rem;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .cta {
+        display: inline-block;
+        background: var(--primary);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        transition: var(--transition-fast);
+        box-shadow: var(--shadow-md);
+      }
+
+      .cta:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: var(--shadow-sm);
+      }
+
+      /* Dynamic Apartment Grid */
+      .apartment-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+        gap: 2rem;
+        padding: 4rem 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .apartment-card {
+        background: white;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        transition: var(--transition-smooth);
+        position: relative;
+      }
+
+      .apartment-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: var(--transition-smooth);
+      }
+
+      .card-content {
+        padding: 1.5rem;
+      }
+
+      .apartment-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .apartment-card:hover img {
+        transform: scale(1.05);
+      }
+
+      /* Enhanced Testimonials */
+      .testimonials {
+        background: var(--primary);
+        color: white;
+        padding: 4rem 1rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .testimonial-slider {
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .slide {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateX(100%);
+        transition: all 0.6s ease;
+      }
+
+      .slide.active {
+        opacity: 1;
+        position: relative;
+        transform: translateX(0);
+      }
+
+      /* Modern Contact Form */
+      .contact {
+        background: var(--secondary);
+        padding: 4rem 1rem;
+        color: white;
+      }
+
+      .contact form {
+        max-width: 600px;
+        margin: 2rem auto;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: var(--radius-sm);
+        border: 2px solid transparent;
+        background: rgba(255, 255, 255, 0.9);
+        transition: var(--transition-fast);
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .btn {
+        cursor: pointer;
+        border: none;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: -100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .btn:hover::after {
+        left: 100%;
+      }
+
+      /* Enhanced Dark Mode Toggle */
+      .dark-mode-toggle {
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        background: var(--text);
+        color: var(--bg);
+        transition: var(--transition-fast);
+      }
+
+      .dark-mode-toggle:hover {
+        transform: scale(1.1);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .hero {
+          padding: 1rem;
+        }
+
+        .apartment-grid {
+          padding: 2rem 1rem;
+        }
+      }
+
+      /* Loading Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">LuxeRent</div>
+      <nav class="nav-links">
+        <a href="#apartments">Apartemen</a>
+        <a href="#testimonials">Testimoni</a>
+        <a href="#contact">Hubungi</a>
+      </nav>
+      <button class="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
+    </header>
+
+    <main>
+      <section class="hero fade-in">
+        <div>
+          <h1>Temukan Apartemen Impian Anda</h1>
+          <p>Apartemen mewah dengan fasilitas terbaik</p>
+          <a href="#apartments" class="cta">Lihat Sekarang</a>
+        </div>
+      </section>
+
+      <section id="apartments" class="apartment-grid fade-in">
+        <div class="apartment-card">
+          <img
+            src="https://picsum.photos/300/200"
+            alt="Studio Deluxe"
+            loading="lazy" />
+          <div class="card-content">
+            <h3>Studio Deluxe</h3>
+            <p>$1,200/bulan</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonials" class="testimonials">
+        <div class="testimonial-slider">
+          <div class="slide active">"Lokasi strategis dan nyaman" - Rina</div>
+          <div class="slide">"Pelayanan terbaik!" - Budi</div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <h2>Kontak Kami</h2>
+        <form id="contact-form">
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Nama Lengkap"
+            required
+            aria-label="Full Name" />
+          <input
+            type="email"
+            class="form-input"
+            placeholder="Email"
+            required
+            aria-label="Email" />
+          <button type="submit" class="btn">Kirim</button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Smooth scroll implementation
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Enhanced dark mode toggle
+      const darkModeToggle = document.querySelector(".dark-mode-toggle");
+      darkModeToggle.addEventListener("click", () => {
+        document.body.dataset.theme =
+          document.body.dataset.theme === "dark" ? "" : "dark";
+        darkModeToggle.textContent =
+          document.body.dataset.theme === "dark" ? "☀️" : "🌙";
+      });
+
+      // Enhanced testimonial slider with debouncing
+      let slideInterval;
+      const startSlideshow = () => {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(() => {
+          const slides = document.querySelectorAll(".slide");
+          const currentSlide = document.querySelector(".slide.active");
+          const nextSlide = currentSlide.nextElementSibling || slides[0];
+
+          currentSlide.classList.remove("active");
+          nextSlide.classList.add("active");
+        }, 5000);
+      };
+
+      startSlideshow();
+
+      // Intersection Observer for fade-in animations
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("fade-in");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll("section").forEach((section) => {
+        observer.observe(section);
+      });
+
+      // Form submission handling
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          // Add your form submission logic here
+          alert("Terima kasih! Kami akan menghubungi Anda segera.");
+        });
+    </script>
+  </body>
+</html>

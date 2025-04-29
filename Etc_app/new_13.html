@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="LuxeRent - Smart Living Solutions" />
+    <title>LuxeRent SaaS</title>
+    <style>
+      /* Modern color palette and design variables */
+      :root {
+        --primary: #2d3436;
+        --secondary: #0984e3;
+        --accent: #00b894;
+        --surface: #f5f6fa;
+        --text: #2d3436;
+        --duration: 0.4s;
+        --easing: cubic-bezier(0.4, 0, 0.2, 1);
+        --blur: 10px;
+        --spacing-unit: 8px;
+      }
+
+      /* Modern CSS Reset */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Base styles with mobile-first approach */
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1.5;
+        background: var(--surface);
+        color: var(--text);
+        overflow-x: hidden;
+        font-size: calc(14px + 0.25vw);
+      }
+
+      /* Enhanced header with glassmorphism */
+      header {
+        position: fixed;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(var(--blur));
+        padding: calc(var(--spacing-unit) * 2);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        transition: all var(--duration) var(--easing);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Enhanced navigation */
+      .nav-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: var(--spacing-unit);
+        color: var(--primary);
+        transition: transform var(--duration);
+      }
+
+      nav {
+        display: flex;
+        gap: calc(var(--spacing-unit) * 3);
+      }
+
+      nav a {
+        color: var(--primary);
+        text-decoration: none;
+        position: relative;
+        padding: var(--spacing-unit);
+        transition: color var(--duration);
+      }
+
+      nav a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--secondary);
+        transform: scaleX(0);
+        transition: transform var(--duration) var(--easing);
+      }
+
+      nav a:hover::after {
+        transform: scaleX(1);
+      }
+
+      /* Enhanced hero section */
+      .hero {
+        min-height: 100vh;
+        background: linear-gradient(
+            45deg,
+            rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.4)
+          ),
+          url("https://source.unsplash.com/1600x900/?luxury-apartment")
+            center/cover;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: calc(var(--spacing-unit) * 2);
+      }
+
+      .hero-content {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1s var(--easing) forwards;
+      }
+
+      .hero-content h1 {
+        font-size: clamp(2rem, 5vw, 4rem);
+        margin-bottom: calc(var(--spacing-unit) * 2);
+      }
+
+      /* Enhanced buttons */
+      .btn {
+        background: var(--secondary);
+        color: white;
+        padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: transform var(--duration), box-shadow var(--duration);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(-100%);
+        transition: transform var(--duration);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:hover::after {
+        transform: translateX(100%);
+      }
+
+      /* Enhanced sections and cards */
+      .section {
+        min-height: 100vh;
+        padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 2);
+        display: grid;
+        place-items: center;
+      }
+
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: calc(var(--spacing-unit) * 3);
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: calc(var(--spacing-unit) * 3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all var(--duration) var(--easing);
+        transform-style: preserve-3d;
+        perspective: 1000px;
+      }
+
+      .card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: calc(var(--spacing-unit) * 2);
+      }
+
+      .card:hover {
+        transform: translateY(-10px) rotateX(5deg);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Enhanced footer */
+      .footer {
+        background: var(--primary);
+        color: white;
+        padding: calc(var(--spacing-unit) * 4);
+        text-align: center;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .nav-toggle {
+          display: block;
+        }
+
+        nav {
+          position: absolute;
+          top: 100%;
+          right: calc(var(--spacing-unit) * 2);
+          flex-direction: column;
+          background: white;
+          padding: calc(var(--spacing-unit) * 2);
+          border-radius: 10px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: all var(--duration) var(--easing);
+        }
+
+        nav.active {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+
+        .card-container {
+          padding: calc(var(--spacing-unit) * 2);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">LuxeRent</div>
+      <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <nav id="mainNav">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#apartments">Apartments</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-content">
+          <h1>Your Smart Living Solution</h1>
+          <p>Experience the future of modern living</p>
+          <button class="btn" onclick="scrollToSection('apartments')">
+            Explore Apartments
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="card-container">
+          <div class="card" data-aos="fade-up">
+            <h3>AI Climate Control</h3>
+            <p>Smart temperature management for optimal comfort</p>
+          </div>
+          <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Security System</h3>
+            <p>Advanced biometric access control</p>
+          </div>
+          <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Energy Efficient</h3>
+            <p>Sustainable living with smart power management</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="apartments">
+        <div class="card-container">
+          <div class="card" data-aos="fade-right">
+            <img
+              src="https://source.unsplash.com/300x200/?modern-apartment"
+              alt="Deluxe Studio Apartment"
+              loading="lazy" />
+            <h3>Deluxe Studio</h3>
+            <p>Starting from $1,200/month</p>
+            <button class="btn" onclick="showBooking('studio')">
+              Book Now
+            </button>
+          </div>
+          <div class="card" data-aos="fade-left">
+            <img
+              src="https://source.unsplash.com/300x200/?luxury-apartment"
+              alt="Executive Suite Apartment"
+              loading="lazy" />
+            <h3>Executive Suite</h3>
+            <p>Starting from $1,800/month</p>
+            <button class="btn" onclick="showBooking('suite')">Book Now</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2025 LuxeRent. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Debounced scroll handler
+      function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+
+      // Enhanced navigation toggle
+      const navToggle = document.querySelector(".nav-toggle");
+      const nav = document.getElementById("mainNav");
+
+      navToggle.addEventListener("click", () => {
+        nav.classList.toggle("active");
+        navToggle.setAttribute(
+          "aria-expanded",
+          nav.classList.contains("active")
+        );
+      });
+
+      // Smooth scroll implementation
+      function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      // Enhanced booking system
+      function showBooking(apartment) {
+        const bookingModal = document.createElement("div");
+        bookingModal.className = "booking-modal";
+        bookingModal.innerHTML = `
+          <div class="modal-content">
+            <h3>Booking Confirmation</h3>
+            <p>Your ${apartment} apartment booking is confirmed!</p>
+            <button onclick="this.parentElement.parentElement.remove()">Close</button>
+          </div>
+        `;
+        document.body.appendChild(bookingModal);
+      }
+
+      // Enhanced scroll effects
+      const handleScroll = debounce(() => {
+        const header = document.querySelector("header");
+        const scrolled = window.scrollY > 50;
+
+        header.style.background = `rgba(255, 255, 255, ${
+          scrolled ? "0.9" : "0.8"
+        })`;
+        header.style.backdropFilter = `blur(${scrolled ? "15px" : "10px"})`;
+        header.style.padding = `${scrolled ? "1rem" : "1.5rem"} 2rem`;
+      }, 16);
+
+      window.addEventListener("scroll", handleScroll);
+
+      // Enhanced card interactions
+      document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          card.style.transform = "translateY(-10px) rotateX(5deg)";
+          card.style.boxShadow = "0 20px 40px rgba(0,0,0,0.2)";
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "translateY(0) rotateX(0)";
+          card.style.boxShadow = "0 10px 30px rgba(0,0,0,0.1)";
+        });
+      });
+
+      // Intersection Observer for animations
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document.querySelectorAll(".card").forEach((card) => {
+        card.style.opacity = "0";
+        card.style.transform = "translateY(20px)";
+        observer.observe(card);
+      });
+    </script>
+  </body>
+</html>
