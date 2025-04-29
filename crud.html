@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rental Apartemen - Aplikasi Web</title>
+  <meta name="description"
+    content="Aplikasi modern untuk rental apartemen: kelola penyewa, apartemen, dan pesanan dengan mudah dan aman." />
+  <meta name="keywords" content="Rental Apartemen, Sewa Apartemen, Penyewa, Manajemen Properti, Booking" />
+  <meta name="author" content="Your Name" />
+  <!-- SEO basic tags -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* =========================
+       CSS Variables & Theming
+    ========================== */
+    :root {
+      --primary: #4f8cff;
+      --primary-dark: #2563eb;
+      --accent: #fbbf24;
+      --danger: #ef4444;
+      --success: #10b981;
+      --bg: #f9fafb;
+      --bg-alt: #fff;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 2px 8px 0 rgba(31, 41, 55, 0.08);
+      --radius: 0.75rem;
+      --transition: all 0.2s cubic-bezier(.4, 0, .2, 1);
+      --header-height: 64px;
+    }
+
+    [data-theme="dark"] {
+      --primary: #60a5fa;
+      --primary-dark: #2563eb;
+      --accent: #fbbf24;
+      --danger: #ef4444;
+      --success: #10b981;
+      --bg: #18181b;
+      --bg-alt: #23232a;
+      --text: #f3f4f6;
+      --text-light: #a1a1aa;
+      --border: #27272a;
+      --shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    a:hover,
+    a:focus {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    /* =========================
+       Header & Navigation
+    ========================== */
+    header {
+      height: var(--header-height);
+      background: var(--bg-alt);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.3s;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.02em;
+      color: var(--primary-dark);
+      gap: 0.5rem;
+    }
+
+    .logo svg {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+    }
+
+    nav[aria-label="Main Navigation"] {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      transition: background 0.2s, color 0.2s;
+      position: relative;
+    }
+
+    .nav-link:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      cursor: pointer;
+      margin-left: 1rem;
+      transition: color 0.2s;
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--primary);
+    }
+
+    /* Hamburger menu for mobile */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--primary-dark);
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+
+    /* Responsive Nav */
+    @media (max-width: 900px) {
+      nav[aria-label="Main Navigation"] {
+        position: fixed;
+        top: var(--header-height);
+        right: 0;
+        background: var(--bg-alt);
+        flex-direction: column;
+        align-items: flex-start;
+        width: 220px;
+        height: calc(100vh - var(--header-height));
+        box-shadow: var(--shadow);
+        padding: 2rem 1rem;
+        gap: 1rem;
+        transform: translateX(100%);
+        transition: transform 0.3s;
+        z-index: 99;
+      }
+
+      nav[aria-label="Main Navigation"].open {
+        transform: translateX(0);
+      }
+
+      .hamburger {
+        display: inline-block;
+      }
+    }
+
+    /* =========================
+       Layout Grid
+    ========================== */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      aside.sidebar {
+        order: 2;
+        margin-top: 2rem;
+      }
+    }
+
+    /* =========================
+       Hero Section
+    ========================== */
+    .hero {
+      position: relative;
+      min-height: 320px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 2.5rem 2rem;
+      color: #fff;
+      max-width: 600px;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-desc {
+      font-size: 1.15rem;
+      margin-bottom: 1.5rem;
+      color: #e0e7ef;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7em 1.5em;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      background: var(--accent);
+      color: #222;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: var(--primary-dark);
+      color: #fff;
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #fff;
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .btn-outline:hover,
+    .btn-outline:focus-visible {
+      background: #fff;
+      color: var(--primary-dark);
+    }
+
+    /* =========================
+       Main Content
+    ========================== */
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .content {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .content h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .content p {
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 1.2em;
+      font-size: 1.08rem;
+    }
+
+    /* =========================
+       Responsive Table
+    ========================== */
+    .table-responsive {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 500px;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    th,
+    td {
+      padding: 0.75em 1em;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem;
+    }
+
+    th {
+      background: var(--bg);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: var(--primary);
+      color: #fff;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* =========================
+       Contact Form
+    ========================== */
+    .contact-form {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .contact-form label {
+      font-weight: 600;
+      margin-bottom: 0.3em;
+      color: var(--primary-dark);
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.7em 1em;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg);
+      color: var(--text);
+      transition: border 0.2s;
+      resize: vertical;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .contact-form .error {
+      color: var(--danger);
+      font-size: 0.95em;
+      margin-top: -0.7em;
+      margin-bottom: 0.7em;
+    }
+
+    /* =========================
+       SVG Illustration
+    ========================== */
+    .svg-illustration {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem 0;
+    }
+
+    /* =========================
+       Sidebar
+    ========================== */
+    aside.sidebar {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      min-width: 0;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .sidebar-link {
+      color: var(--text-light);
+      font-weight: 500;
+      padding: 0.5em 1em;
+      border-radius: var(--radius);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar-link:hover,
+    .sidebar-link:focus-visible {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .sidebar-widget {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 1rem;
+      box-shadow: 0 1px 4px 0 rgba(31, 41, 55, 0.06);
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .newsletter-form input[type="email"] {
+      padding: 0.6em 1em;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      font-size: 1rem;
+      background: var(--bg-alt);
+      color: var(--text);
+    }
+
+    .newsletter-form button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.6em 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-form button:hover,
+    .newsletter-form button:focus-visible {
+      background: var(--primary-dark);
+    }
+
+    .ad-placeholder {
+      background: var(--accent);
+      color: #222;
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
+
+    /* =========================
+       Footer
+    ========================== */
+    footer {
+      background: var(--bg-alt);
+      color: var(--text-light);
+      padding: 2.5rem 1rem 1rem 1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    @media (max-width: 800px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    .footer-col h4 {
+      margin-top: 0;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      margin-bottom: 0.7em;
+    }
+
+    .footer-links,
+    .footer-social {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+    }
+
+    .footer-links a,
+    .footer-social a {
+      color: var(--text-light);
+      transition: color 0.2s;
+      font-size: 1rem;
+    }
+
+    .footer-links a:hover,
+    .footer-social a:hover {
+      color: var(--primary);
+    }
+
+    .footer-social {
+      flex-direction: row;
+      gap: 1em;
+      margin-top: 0.5em;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--text-light);
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    /* =========================
+       Utilities & Animations
+    ========================== */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.7s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      .hero-title {
+        font-size: 1.7rem;
+      }
+
+      .hero-content {
+        padding: 1.2rem 0.7rem;
+      }
+
+      .content,
+      .contact-form,
+      aside.sidebar {
+        padding: 1rem;
+      }
+
+      .layout {
+        padding: 1rem 0.3rem;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="light">
+  <!-- =========================
+       Header & Navigation
+  ========================== -->
+  <header>
+    <a href="#" class="logo" aria-label="Homepage">
+      <!-- SVG Logo Placeholder -->
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8" fill="var(--primary)" />
+        <text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff" font-family="Inter,Arial">APT</text>
+      </svg>
+      <span>Rental Apartemen</span>
+    </a>
+    <button class="hamburger" aria-label="Open navigation" aria-controls="main-nav" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav id="main-nav" aria-label="Main Navigation">
+      <a href="#" class="nav-link active">Beranda</a>
+      <a href="#tentang" class="nav-link">Tentang</a>
+      <a href="#kontak" class="nav-link">Kontak</a>
+      <button class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </nav>
+  </header>
+  <!-- =========================
+       Hero Section
+  ========================== -->
+  <section class="hero" aria-label="Hero Section">
+    <div class="hero-content fade-in">
+      <h1 class="hero-title">Aplikasi Web Rental Apartemen</h1>
+      <p class="hero-desc">
+        Platform modern untuk mencari, menyewa, dan mengelola apartemen dengan mudah. Temukan apartemen impian Anda,
+        kelola penyewaan, pembayaran, dan data penyewa secara efisien bersama kami.
+      </p>
+    </div>
+  </section>
+  <!-- =========================
+       Main Layout Grid
+  ========================== -->
+  <div class="layout">
+    <!-- Main Content -->
+    <main>
+      <!-- Introduction/Overview Section -->
+      <section class="content fade-in" id="tentang">
+        <h2>Tentang Aplikasi</h2>
+        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+          alt="Apartemen Modern" style="width:100%;border-radius:var(--radius);margin-bottom:1.5rem;">
+        <p>Aplikasi Rental Apartemen membantu Anda menemukan dan mengelola apartemen sewa dengan mudah. Fitur: pencarian
+          apartemen, manajemen penyewa, dan pemesanan online yang aman dan transparan.</p>
+      </section>
+      <!-- Core Features/Services -->
+      <section class="content fade-in">
+        <h2>Statistik Rental</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Kategori</th>
+                <th>Jumlah</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Penyewa</td>
+                <td>1,234</td>
+                <td>Aktif</td>
+              </tr>
+              <tr>
+                <td>Apartemen</td>
+                <td>567</td>
+                <td>Tersedia</td>
+              </tr>
+              <tr>
+                <td>Pesanan</td>
+                <td>890</td>
+                <td>Diproses</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--text-light);margin-top:1em;">
+          Data di atas menunjukkan jumlah penyewa, apartemen yang tersedia, dan pesanan yang sedang diproses di sistem
+          rental apartemen kami.
+        </p>
+      </section>
+      <!-- User Interaction/Contact -->
+      <section class="content fade-in" id="kontak">
+        <h2>Hubungi Admin Rental</h2>
+        <form class="contact-form" id="contactForm">
+          <div>
+            <label for="name">Nama Lengkap</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div>
+            <label for="message">Pesan / Pertanyaan</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="btn">Kirim Pesan</button>
+        </form>
+      </section>
+    </main>
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Sidebar">
+      <!-- Secondary Navigation -->
+      <nav class="sidebar-nav" aria-label="Secondary Navigation">
+        <a href="#apartemen" class="sidebar-link">Daftar Apartemen</a>
+        <a href="#penyewa" class="sidebar-link">Data Penyewa</a>
+        <a href="#pesanan" class="sidebar-link">Riwayat Pesanan</a>
+      </nav>
+      <!-- Related Links -->
+      <div class="sidebar-widget">
+        <h4>Informasi Penting</h4>
+        <ul class="footer-links">
+          <li><a href="#faq">FAQ Rental</a></li>
+          <li><a href="#panduan">Panduan Penyewa</a></li>
+          <li><a href="#kebijakan">Kebijakan Sewa</a></li>
+        </ul>
+      </div>
+      <!-- Ad Placeholder -->
+      <div class="ad-placeholder" aria-label="Advertisement">
+        <span>Promo Sewa Bulan Ini</span>
+      </div>
+      <!-- Weather Info -->
+      <div class="sidebar-widget">
+        <h4>Info Cuaca</h4>
+        <p>Jakarta: 30°C, Cerah</p>
+        <p>Tanggal: <span id="current-date"></span></p>
+      </div>
+    </aside>
+  </div>
+  <!-- =========================
+       Footer
+  ========================== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Menu</h4>
+        <ul class="footer-links">
+          <li><a href="#beranda">Beranda</a></li>
+          <li><a href="#faq">FAQ Rental</a></li>
+          <li><a href="#bantuan">Bantuan</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak</h4>
+        <ul class="footer-links">
+          <li><i class="fas fa-envelope"></i> admin@rentalapartemen.com</li>
+          <li><i class="fas fa-phone"></i> (021) 123-4567</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ikuti Kami</h4>
+        <ul class="footer-social">
+          <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a></li>
+          <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+          <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <a href="#privacy">Kebijakan Sewa</a> &middot; <a href="#terms">Syarat & Ketentuan</a>
+      <p>&copy; 2025 Rental Apartemen. Hak Cipta Dilindungi.</p>
+    </div>
+  </footer>
+  <!-- =========================
+       JavaScript (Minimal)
+  ========================== -->
+  <script>
+    // Theme toggle (light/dark mode)
+    const themeToggle = document.querySelector('.theme-toggle');
+    const body = document.body;
+    themeToggle.addEventListener('click', () => {
+      const isDark = body.getAttribute('data-theme') === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      themeToggle.innerHTML = isDark
+        ? '<i class="fas fa-moon"></i>'
+        : '<i class="fas fa-sun"></i>';
+      themeToggle.setAttribute('aria-label', isDark ? 'Toggle dark mode' : 'Toggle light mode');
+    });
+
+    // Hamburger menu for mobile nav
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.getElementById('main-nav');
+    hamburger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    // Close nav on link click (mobile)
+    nav.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 900) {
+          nav.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Contact form validation
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      let valid = true;
+      // Name
+      const name = this.name.value.trim();
+      const nameError = document.getElementById('nameError');
+      if (!name) {
+        nameError.textContent = 'Name is required.';
+        valid = false;
+      } else {
+        nameError.textContent = '';
+      }
+      // Email
+      const email = this.email.value.trim();
+      const emailError = document.getElementById('emailError');
+      if (!email) {
+        emailError.textContent = 'Email is required.';
+        valid = false;
+      } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(email)) {
+        emailError.textContent = 'Enter a valid email.';
+        valid = false;
+      } else {
+        emailError.textContent = '';
+      }
+      // Message
+      const message = this.message.value.trim();
+      const messageError = document.getElementById('messageError');
+      if (!message) {
+        messageError.textContent = 'Message is required.';
+        valid = false;
+      } else {
+        messageError.textContent = '';
+      }
+      if (valid) {
+        alert('Thank you for contacting us!');
+        this.reset();
+      }
+    });
+
+    // Newsletter form validation
+    document.getElementById('newsletterForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = this['newsletter-email'].value.trim();
+      if (!email || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/.test(email)) {
+        this['newsletter-email'].style.borderColor = 'var(--danger)';
+        this['newsletter-email'].setAttribute('aria-invalid', 'true');
+      } else {
+        this['newsletter-email'].style.borderColor = 'var(--success)';
+        this['newsletter-email'].setAttribute('aria-invalid', 'false');
+        alert('Subscribed!');
+        this.reset();
+      }
+    });
+
+    // Fade-in animation on scroll
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('animated');
+      });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    // Add current date to weather widget
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('id-ID', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  </script>
+</body>
+
+</html>

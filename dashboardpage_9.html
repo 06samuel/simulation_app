@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp SaaS Dashboard</title>
+  <meta name="description" content="Manage your WhatsApp instances with a modern SaaS dashboard." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-foreground: #fff;
+      --secondary: #f3f4f6;
+      --secondary-foreground: #1e293b;
+      --accent: #06b6d4;
+      --accent-foreground: #fff;
+      --background: #f8fafc;
+      --foreground: #22223b;
+      --card: #fff;
+      --card-foreground: #22223b;
+      --border: #e5e7eb;
+      --input: #e5e7eb;
+      --ring: #4f46e5;
+      --font-family: "Inter", "Roboto", "Poppins", system-ui, sans-serif;
+      --radius: 1.2rem;
+      --shadow: 0 4px 24px 0 rgb(79 70 229 / 0.08);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --muted: #64748b;
+      --cta: #06b6d4;
+      --cta-hover: #0891b2;
+      --gradient: linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%);
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    @media (max-width: 1200px) {
+      html {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      html {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      html {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      html {
+        font-size: 12px;
+      }
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--gradient);
+      color: var(--primary-foreground);
+      border-radius: var(--radius);
+      padding: 4rem 2rem 3rem 2rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -1.5px;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      color: #e0e7ef;
+      font-weight: 400;
+    }
+
+    .hero .btn-cta {
+      background: var(--cta);
+      color: var(--cta-foreground);
+      border: none;
+      padding: 0.85rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 2rem;
+      box-shadow: 0 2px 12px 0 rgb(6 182 212 / 0.15);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .hero .btn-cta:hover,
+    .hero .btn-cta:focus {
+      background: var(--cta-hover);
+      color: #fff;
+      box-shadow: 0 4px 18px 0 rgb(6 182 212 / 0.22);
+    }
+
+    /* Dashboard Cards */
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s;
+      min-height: 160px;
+    }
+
+    .card:hover,
+    .card:focus-within {
+      box-shadow: 0 6px 32px 0 rgb(79 70 229 / 0.13);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--card-foreground);
+    }
+
+    .icon-lg {
+      font-size: 2.3rem;
+      vertical-align: middle;
+    }
+
+    /* Table */
+    .table-responsive {
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .table {
+      margin-bottom: 0;
+      background: var(--card);
+    }
+
+    .table th {
+      border-top: none;
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.01em;
+    }
+
+    .table td {
+      vertical-align: middle;
+      font-size: 1rem;
+      color: var(--foreground);
+    }
+
+    .table-hover tbody tr:hover {
+      background: #e0e7ef;
+      transition: background 0.2s;
+    }
+
+    .badge.bg-success {
+      background: var(--success) !important;
+    }
+
+    .badge.bg-danger {
+      background: var(--danger) !important;
+    }
+
+    /* Features Section */
+    .features-section {
+      background: var(--secondary);
+      border-radius: var(--radius);
+      padding: 3rem 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 2px 12px 0 rgb(37 99 235 / 0.07);
+    }
+
+    .features-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px 0 rgb(37 99 235 / 0.08);
+      padding: 2rem 1.5rem;
+      min-width: 220px;
+      max-width: 320px;
+      flex: 1 1 220px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card i {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 0.7rem;
+    }
+
+    .feature-card h4 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--gradient);
+      color: var(--primary-foreground);
+      border-radius: var(--radius);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-section h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section .btn-cta {
+      background: var(--cta);
+      color: var(--cta-foreground);
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 2rem;
+      margin-top: 1rem;
+      box-shadow: 0 2px 12px 0 rgb(6 182 212 / 0.15);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-section .btn-cta:hover,
+    .cta-section .btn-cta:focus {
+      background: var(--cta-hover);
+      color: #fff;
+      box-shadow: 0 4px 18px 0 rgb(6 182 212 / 0.22);
+    }
+
+    /* Modal */
+    .modal-content {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid var(--border);
+      background: var(--secondary);
+      color: var(--secondary-foreground);
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+
+    .modal-title {
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 2rem 1.5rem;
+    }
+
+    .modal-body img {
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 8px 0 rgb(0 0 0 / 0.08);
+      max-width: 220px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .modal-body p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.98rem;
+      padding: 2rem 0 1rem 0;
+      margin-top: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .dashboard-cards {
+        gap: 1rem;
+      }
+
+      .features-list {
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2.5rem 1rem 2rem 1rem;
+      }
+
+      .dashboard-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .features-list {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .feature-card {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .hero {
+        padding: 1.5rem 0.5rem 1.2rem 0.5rem;
+      }
+
+      .features-section {
+        padding: 1.5rem 0.5rem;
+      }
+
+      .cta-section {
+        padding: 1.5rem 0.5rem;
+      }
+
+      .card-body {
+        padding: 1rem;
+      }
+
+      .modal-body {
+        padding: 1rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container py-4">
+    <!-- Hero Section -->
+    <section class="hero mb-5">
+      <h1>WhatsApp SaaS Dashboard</h1>
+      <p>Manage, monitor, and scale your WhatsApp instances with a modern, responsive SaaS dashboard. Boost productivity
+        and streamline your workflow.</p>
+      <a href="#get-started" class="btn btn-cta" aria-label="Get Started with WhatsApp SaaS">Get Started</a>
+    </section>
+    <!-- Dashboard Card Components -->
+    <section class="dashboard-cards">
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <div class="mb-2"><i class="bi bi-people icon-lg text-primary"></i></div>
+          <h5 class="card-title">Total Instances</h5>
+          <div class="card-text">24</div>
+        </div>
+      </div>
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <div class="mb-2"><i class="bi bi-link-45deg icon-lg text-success"></i></div>
+          <h5 class="card-title">Connected</h5>
+          <div class="card-text text-success">18</div>
+        </div>
+      </div>
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <div class="mb-2"><i class="bi bi-person-plus icon-lg text-info"></i></div>
+          <h5 class="card-title">Total Leads Today</h5>
+          <div class="card-text">156</div>
+        </div>
+      </div>
+      <div class="card h-100 text-center">
+        <div class="card-body">
+          <div class="mb-2"><i class="bi bi-activity icon-lg text-accent"></i></div>
+          <h5 class="card-title">Active Sessions</h5>
+          <div class="card-text">12</div>
+        </div>
+      </div>
+    </section>
+    <!-- Features Section -->
+    <section class="features-section">
+      <h2 class="text-center mb-4">Why Choose Our Platform?</h2>
+      <div class="features-list">
+        <div class="feature-card">
+          <i class="bi bi-shield-lock"></i>
+          <h4>Secure & Reliable</h4>
+          <p>Enterprise-grade security and 99.9% uptime for your peace of mind.</p>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-graph-up-arrow"></i>
+          <h4>Analytics & Insights</h4>
+          <p>Real-time analytics to help you make data-driven decisions.</p>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-phone"></i>
+          <h4>Mobile Friendly</h4>
+          <p>Access and manage your dashboard from any device, anywhere.</p>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-gear"></i>
+          <h4>Easy Integration</h4>
+          <p>Seamlessly connect with your existing tools and workflows.</p>
+        </div>
+      </div>
+    </section>
+    <!-- Table Component: Instances List -->
+    <section class="card mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="sticky-top bg-white">
+              <tr>
+                <th scope="col">Instance Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Last Active</th>
+                <th scope="col">Leads</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Instance-001</td>
+                <td><span class="badge bg-success">Connected</span></td>
+                <td>2024-01-20 10:30 AM</td>
+                <td>45</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#qrModal"
+                    aria-label="Show QR code for Instance-001">
+                    <i class="bi bi-qr-code me-1"></i>Connect QR
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Instance-002</td>
+                <td><span class="badge bg-danger">Disconnected</span></td>
+                <td>2024-01-20 09:15 AM</td>
+                <td>32</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#qrModal"
+                    aria-label="Show QR code for Instance-002">
+                    <i class="bi bi-qr-code me-1"></i>Connect QR
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Instance-003</td>
+                <td><span class="badge bg-success">Connected</span></td>
+                <td>2024-01-20 10:45 AM</td>
+                <td>28</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#qrModal"
+                    aria-label="Show QR code for Instance-003">
+                    <i class="bi bi-qr-code me-1"></i>Connect QR
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="cta-section" id="get-started">
+      <h2>Ready to Supercharge Your WhatsApp Workflow?</h2>
+      <p>Start your free trial today and experience the power of our SaaS dashboard.</p>
+      <a href="#" class="btn btn-cta" aria-label="Start Free Trial">Start Free Trial</a>
+    </section>
+  </main>
+  <!-- Modal Component: QR Code -->
+  <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="qrModalLabel">
+            Scan QR Code to Connect
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img src="https://images.unsplash.com/photo-1596526131083-e8c633c948d2" alt="QR Code for WhatsApp Instance"
+            class="img-fluid mb-3" />
+          <p>
+            Open WhatsApp on your phone and scan this QR code to connect.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2024 WhatsApp SaaS Dashboard. All rights reserved.
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

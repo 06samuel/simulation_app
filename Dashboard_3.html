@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentApart - Dashboard Rental Apartemen</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-500: #2c3e50;
+      /* Dark blue */
+      --primary-300: #34495e;
+      /* Light blue */
+      --accent-500: #3498db;
+      /* Bright blue */
+      --accent-300: #2980b9;
+      /* Darker blue */
+      --neutral-100: #ffffff;
+      /* White */
+      --neutral-200: #fafafa;
+      /* Light Grey */
+      --neutral-500: #bdc3c7;
+      /* Grey */
+      --neutral-900: #2c3e50;
+      /* Dark Grey */
+      --primary: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary: #3f37c9;
+      --accent: #f72585;
+      --dark: #1e1e24;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --success: #4cc9f0;
+      --warning: #f8961e;
+      --danger: #ef233c;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f5f7fb;
+      color: var(--dark);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    #sidebar {
+      width: 280px;
+      background: white;
+      height: 100vh;
+      position: fixed;
+      padding: 2rem 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      z-index: 1000;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    .sidebar-brand i {
+      margin-right: 0.75rem;
+      font-size: 1.8rem;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-item {
+      margin-bottom: 0.5rem;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .sidebar-item:hover {
+      background-color: var(--primary-light);
+    }
+
+    .sidebar-item.active {
+      background-color: var(--primary);
+    }
+
+    .sidebar-item.active a {
+      color: white;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+    }
+
+    .sidebar-link i {
+      margin-right: 0.75rem;
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    /* Main Content Styles */
+    #main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      transition: var(--transition);
+    }
+
+    /* Header Styles */
+    #main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .header-title h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .header-title p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Dashboard Summary Cards */
+    #dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+    }
+
+    .summary-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .summary-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .summary-card-title {
+      font-size: 0.9rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .summary-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .summary-card-value {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card-change {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .summary-card-change i {
+      margin-right: 0.25rem;
+    }
+
+    .positive-change {
+      color: var(--success);
+    }
+
+    .negative-change {
+      color: var(--danger);
+    }
+
+    /* Card Styles */
+    .card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title i {
+      margin-right: 0.75rem;
+      color: var(--primary);
+    }
+
+    /* Form Grid System */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+
+    .modern-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .modern-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    .modern-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-size: 0.95rem;
+      background-color: white;
+      transition: var(--transition);
+    }
+
+    .modern-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    textarea.modern-input {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      gap: 0.5rem;
+    }
+
+    .btn i {
+      font-size: 1rem;
+    }
+
+    .primary-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .primary-btn:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    .danger-btn {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .danger-btn:hover {
+      background-color: #d90429;
+      transform: translateY(-2px);
+    }
+
+    .outline-btn {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .outline-btn:hover {
+      background-color: var(--primary-light);
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: var(--transition);
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: var(--transition);
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--primary);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Payment Methods Grid */
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background-color: var(--primary-light);
+      border-radius: var(--border-radius);
+      gap: 1rem;
+    }
+
+    .method-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.25rem;
+    }
+
+    .payment-method h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .payment-method p {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    /* Checkbox Group */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    /* Range Input */
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e0e0e0;
+      border-radius: 5px;
+      outline: none;
+      margin: 1rem 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .range-value {
+      font-weight: 600;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    /* Help Text */
+    .help-text {
+      font-size: 0.8rem;
+      color: var(--gray);
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    /* Connected Apps */
+    .connected-apps {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .app-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background-color: var(--primary-light);
+      border-radius: var(--border-radius);
+    }
+
+    .app-info h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .app-info p {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    /* Form Actions */
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Notification Settings */
+    .notification-settings {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .notification-type {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .notification-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Refund Policy */
+    .refund-policy {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .policy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .policy-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      #sidebar {
+        width: 240px;
+        padding: 1.5rem 1rem;
+      }
+
+      #main-content {
+        margin-left: 240px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      #sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 1000;
+        height: 100vh;
+        background: white;
+      }
+
+      #sidebar.active {
+        transform: translateX(0);
+      }
+
+      #main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .sidebar-toggle {
+        display: block !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .payment-methods-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #dashboard-summary {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      #dashboard-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .header-actions {
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Mobile Toggle Button */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 999;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Overlay for mobile sidebar */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.2s;
+    }
+
+    .card:nth-child(4) {
+      animation-delay: 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Mobile Toggle Button -->
+  <button class="sidebar-toggle" id="sidebarToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-building"></i>
+      <span>RentApart</span>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-home"></i>
+          <span>Beranda</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-city"></i>
+          <span>Daftar Apartemen</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-users"></i>
+          <span>Penyewa Apartemen</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-calendar-check"></i>
+          <span>Transaksi Sewa</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-chart-bar"></i>
+          <span>Laporan</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a href="#" class="sidebar-link">
+          <i class="fas fa-cog"></i>
+          <span>Pengaturan</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <!-- Header -->
+    <header id="main-header">
+      <div class="header-title">
+        <h1>Dashboard Admin Rental Apartemen</h1>
+        <p>Selamat datang kembali, Admin! Kelola apartemen dan penyewa dengan mudah.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn outline-btn">
+          <i class="fas fa-bell"></i>
+          <span class="desktop-text">Notifikasi</span>
+        </button>
+        <button class="btn outline-btn">
+          <i class="fas fa-user-circle"></i>
+          <span class="desktop-text">Profil</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Summary -->
+    <section id="dashboard-summary">
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <span class="summary-card-title">Total Apartemen</span>
+          <div class="summary-card-icon">
+            <i class="fas fa-city"></i>
+          </div>
+        </div>
+        <div class="summary-card-value">42</div>
+        <div class="summary-card-change positive-change">
+          <i class="fas fa-arrow-up"></i> 8% dari bulan lalu
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <span class="summary-card-title">Apartemen Disewa</span>
+          <div class="summary-card-icon">
+            <i class="fas fa-key"></i>
+          </div>
+        </div>
+        <div class="summary-card-value">32</div>
+        <div class="summary-card-change positive-change">
+          <i class="fas fa-arrow-up"></i> 12% dari bulan lalu
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <span class="summary-card-title">Pendapatan Sewa Bulan Ini</span>
+          <div class="summary-card-icon">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+        </div>
+        <div class="summary-card-value">Rp 87.500.000</div>
+        <div class="summary-card-change positive-change">
+          <i class="fas fa-arrow-up"></i> 15% dari bulan lalu
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <span class="summary-card-title">Total Penyewa</span>
+          <div class="summary-card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+        </div>
+        <div class="summary-card-value">128</div>
+        <div class="summary-card-change positive-change">
+          <i class="fas fa-arrow-up"></i> 5% dari bulan lalu
+        </div>
+      </div>
+    </section>
+
+    <!-- Integration Container -->
+    <div class="integration-container">
+      <!-- Transaction Notifications -->
+      <div class="card" id="transaction-notifications">
+        <h2 class="section-title">
+          <i class="fas fa-bell"></i> Notifikasi Transaksi Sewa
+        </h2>
+
+        <div class="notification-settings">
+          <div class="notification-type">
+            <div class="notification-header">
+              <h3 class="notification-title">Email Notifikasi</h3>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="email-notification-toggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="notification-email">Alamat Email</label>
+              <input type="email" id="notification-email" class="modern-input" placeholder="admin@rentapart.id" />
+            </div>
+          </div>
+
+          <div class="notification-type">
+            <div class="notification-header">
+              <h3 class="notification-title">SMS Notifikasi</h3>
+              <label class="toggle-switch">
+                <input type="checkbox" id="sms-notification-toggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="notification-phone">Nomor Telepon</label>
+              <input type="tel" id="notification-phone" class="modern-input" placeholder="+628123456789" />
+            </div>
+          </div>
+
+          <div class="notification-type">
+            <div class="notification-header">
+              <h3 class="notification-title">Notifikasi Aplikasi</h3>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="app-notification-toggle" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin: 1.5rem 0 1rem">Jenis Notifikasi</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Status Transaksi Sewa</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" checked id="payment-success-notif" />
+                Pembayaran Sewa Berhasil
+              </label>
+              <label>
+                <input type="checkbox" checked id="payment-failed-notif" />
+                Pembayaran Sewa Gagal
+              </label>
+              <label>
+                <input type="checkbox" checked id="booking-confirmed-notif" />
+                Sewa Dikonfirmasi
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pengembalian Dana</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" checked id="refund-requested-notif" />
+                Permintaan Refund
+              </label>
+              <label>
+                <input type="checkbox" checked id="refund-processed-notif" />
+                Refund Diproses
+              </label>
+              <label>
+                <input type="checkbox" checked id="refund-completed-notif" />
+                Refund Selesai
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary-btn">
+            <i class="fas fa-save"></i> Simpan Pengaturan
+          </button>
+          <button class="btn outline-btn">
+            <i class="fas fa-bell-slash"></i> Nonaktifkan Semua
+          </button>
+        </div>
+      </div>
+
+      <!-- Refund Settings -->
+      <div class="card" id="refund-settings">
+        <h2 class="section-title">
+          <i class="fas fa-undo"></i> Pengaturan Refund Sewa
+        </h2>
+
+        <div class="refund-policy">
+          <div class="policy-header">
+            <h3 class="policy-title">Kebijakan Pengembalian Dana Sewa</h3>
+          </div>
+          <div class="form-group">
+            <textarea class="modern-input" id="refund-policy"
+              placeholder="Masukkan kebijakan pengembalian dana yang jelas dan transparan">
+Penyewa apartemen dapat meminta pengembalian dana (refund) jika pembatalan dilakukan minimal 7 hari sebelum tanggal mulai sewa. Refund akan diproses dalam waktu 5-7 hari kerja setelah permintaan disetujui. Biaya administrasi sebesar 10% akan dikenakan untuk setiap transaksi refund sewa apartemen.</textarea>
+            <small class="help-text">Kebijakan ini akan ditampilkan kepada penyewa apartemen sebelum melakukan
+              pemesanan.</small>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="refund-approval">Persetujuan Refund</label>
+            <select class="modern-select" id="refund-approval">
+              <option value="auto">
+                Otomatis (untuk pembatalan < 24 jam) </option>
+              <option value="manual" selected>
+                Manual (semua refund perlu disetujui)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund-period">Periode Maksimum Refund</label>
+            <select class="modern-select" id="refund-period">
+              <option value="7">7 hari sebelum mulai sewa</option>
+              <option value="14" selected>14 hari sebelum mulai sewa</option>
+              <option value="30">30 hari sebelum mulai sewa</option>
+              <option value="custom">Kustom</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="refund-percentage">Persentase Refund</label>
+            <input type="range" id="refund-percentage" min="0" max="100" value="90" />
+            <div class="range-value">90%</div>
+            <small class="help-text">Persentase dari total pembayaran yang akan dikembalikan</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-fee">Biaya Administrasi</label>
+            <input type="number" id="admin-fee" class="modern-input" value="10" min="0" max="100" />
+            <small class="help-text">Persentase biaya administrasi yang dikenakan</small>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary-btn">
+            <i class="fas fa-save"></i> Simpan Pengaturan
+          </button>
+          <button class="btn danger-btn">
+            <i class="fas fa-history"></i> Reset ke Default
+          </button>
+        </div>
+      </div>
+
+      <!-- API Configuration -->
+      <div class="card" id="api-configuration">
+        <h2 class="section-title">
+          <i class="fas fa-key"></i> Konfigurasi API Pembayaran & Integrasi
+        </h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="api-provider">Penyedia Layanan</label>
+            <select class="modern-select" id="api-provider">
+              <option>Google Maps</option>
+              <option>Midtrans</option>
+              <option>PayPal</option>
+              <option>Stripe</option>
+              <option>Xendit</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input type="text" id="api-key" class="modern-input" placeholder="Masukkan API Key" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="api-secret">Secret Key</label>
+            <input type="password" id="api-secret" class="modern-input" placeholder="Masukkan Secret Key" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="api-environment">Lingkungan</label>
+            <select class="modern-select" id="api-environment">
+              <option>Production</option>
+              <option>Sandbox</option>
+              <option>Development</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary-btn">
+            <i class="fas fa-save"></i> Simpan Konfigurasi
+          </button>
+          <button class="btn outline-btn">
+            <i class="fas fa-redo"></i> Reset
+          </button>
+          <button class="btn danger-btn">
+            <i class="fas fa-plug"></i> Test Koneksi
+          </button>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="card" id="payment-methods">
+        <h2 class="section-title">
+          <i class="fas fa-credit-card"></i> Metode Pembayaran Sewa
+        </h2>
+
+        <div class="payment-methods-grid">
+          <div class="payment-method">
+            <div class="method-icon">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <div>
+              <h4>Kartu Kredit</h4>
+              <p>Visa, Mastercard, JCB</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="credit-card-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="payment-method">
+            <div class="method-icon">
+              <i class="fas fa-university"></i>
+            </div>
+            <div>
+              <h4>Transfer Bank</h4>
+              <p>BCA, Mandiri, BRI, BNI</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" checked id="bank-transfer-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="payment-method">
+            <div class="method-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div>
+              <h4>E-Wallet</h4>
+              <p>OVO, GoPay, Dana, LinkAja</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ewallet-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="payment-method">
+            <div class="method-icon">
+              <i class="fas fa-store"></i>
+            </div>
+            <div>
+              <h4>Minimarket</h4>
+              <p>Alfamart, Indomaret</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="minimarket-toggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary-btn">
+            <i class="fas fa-save"></i> Simpan Perubahan
+          </button>
+        </div>
+      </div>
+
+      <!-- Connected Apps -->
+      <div class="card" id="connected-apps">
+        <h2 class="section-title">
+          <i class="fas fa-plug"></i> Aplikasi Terhubung
+        </h2>
+
+        <h3 style="margin-bottom: 1rem">Aktif</h3>
+        <div class="connected-apps">
+          <div class="app-item">
+            <div class="app-info">
+              <h4>Google Calendar</h4>
+              <p>Sinkronisasi jadwal penyewaan</p>
+            </div>
+            <button class="btn danger-btn">
+              <i class="fas fa-unlink"></i> Putuskan
+            </button>
+          </div>
+
+          <div class="app-item">
+            <div class="app-info">
+              <h4>Midtrans</h4>
+              <p>Gateway pembayaran aktif</p>
+            </div>
+            <button class="btn danger-btn">
+              <i class="fas fa-unlink"></i> Putuskan
+            </button>
+          </div>
+        </div>
+
+        <h3 style="margin: 1.5rem 0 1rem">Tersedia</h3>
+        <div class="connected-apps">
+          <div class="app-item">
+            <div class="app-info">
+              <h4>WhatsApp Business</h4>
+              <p>Notifikasi otomatis ke penyewa</p>
+            </div>
+            <button class="btn primary-btn">
+              <i class="fas fa-plug"></i> Hubungkan
+            </button>
+          </div>
+
+          <div class="app-item">
+            <div class="app-info">
+              <h4>Zoom Meeting</h4>
+              <p>Virtual tour apartemen</p>
+            </div>
+            <button class="btn primary-btn">
+              <i class="fas fa-plug"></i> Hubungkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Mobile sidebar toggle
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.add("active");
+      sidebarOverlay.classList.add("active");
+    });
+
+    sidebarOverlay.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+      sidebarOverlay.classList.remove("active");
+    });
+
+    // Range input value display
+    const rangeInput = document.getElementById("refund-percentage");
+    const rangeValue = document.querySelector(".range-value");
+
+    if (rangeInput && rangeValue) {
+      rangeInput.addEventListener("input", function () {
+        rangeValue.textContent = this.value + "%";
+      });
+    }
+
+    // Active sidebar item
+    const sidebarItems = document.querySelectorAll(".sidebar-item");
+
+    sidebarItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        sidebarItems.forEach((i) => i.classList.remove("active"));
+        this.classList.add("active");
+
+        // Close sidebar on mobile after selection
+        if (window.innerWidth < 992) {
+          sidebar.classList.remove("active");
+          sidebarOverlay.classList.remove("active");
+        }
+      });
+    });
+
+    // Responsive text for buttons
+    function checkScreenSize() {
+      const desktopTexts = document.querySelectorAll(".desktop-text");
+
+      if (window.innerWidth < 576) {
+        desktopTexts.forEach((text) => {
+          text.style.display = "none";
+        });
+      } else {
+        desktopTexts.forEach((text) => {
+          text.style.display = "inline";
+        });
+      }
+    }
+
+    // Run on load and resize
+    window.addEventListener("load", checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+  </script>
+</body>
+
+</html>
