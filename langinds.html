@@ -1136,21 +1136,21 @@
   </div>
 
   <!-- Header Navigation -->
-  <header class="header" id="header">
+  <header class="header" id="header" role="banner">
     <div class="container header-container">
-      <a href="#" class="logo">LuxeStay</a>
+      <a href="#" class="logo" aria-label="LuxeStay Home">LuxeStay</a>
 
-      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <span>☰</span>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu" aria-controls="navMenu" aria-expanded="false">
+        <span aria-hidden="true">☰</span>
       </button>
 
-      <nav class="nav-menu" id="navMenu">
+      <nav class="nav-menu" id="navMenu" role="navigation" aria-label="Main Navigation">
         <a href="#home" class="nav-link active">Home</a>
         <a href="#properties" class="nav-link">Properties</a>
         <a href="#services" class="nav-link">Services</a>
         <a href="#testimonials" class="nav-link">Testimonials</a>
         <a href="#contact" class="nav-link">Contact</a>
-        <button class="btn btn-outline" onclick="showToast('Login feature coming soon!', 'info')">Login</button>
+        <button class="btn btn-outline" type="button" onclick="showToast('Login feature coming soon!', 'info')">Login</button>
       </nav>
     </div>
   </header>
@@ -1366,25 +1366,25 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="section">
+    <section id="contact" class="section" aria-labelledby="contact-title">
       <div class="container">
-        <h2 class="section-title">Get In Touch</h2>
-        <form class="contact-form" id="contactForm">
+        <h2 class="section-title" id="contact-title">Get In Touch</h2>
+        <form class="contact-form" id="contactForm" autocomplete="on" novalidate>
           <div class="form-group">
-            <label for="name" class="form-label">Full Name</label>
-            <input type="text" id="name" class="form-control" required>
+            <label for="name" class="form-label">Full Name <span aria-hidden="true" style="color: var(--secondary);">*</span></label>
+            <input type="text" id="name" class="form-control" required aria-required="true" autocomplete="name">
           </div>
           <div class="form-group">
-            <label for="email" class="form-label">Email Address</label>
-            <input type="email" id="email" class="form-control" required>
+            <label for="email" class="form-label">Email Address <span aria-hidden="true" style="color: var(--secondary);">*</span></label>
+            <input type="email" id="email" class="form-control" required aria-required="true" autocomplete="email">
           </div>
           <div class="form-group">
             <label for="phone" class="form-label">Phone Number</label>
-            <input type="tel" id="phone" class="form-control">
+            <input type="tel" id="phone" class="form-control" autocomplete="tel">
           </div>
           <div class="form-group">
-            <label for="message" class="form-label">How Can We Help You?</label>
-            <textarea id="message" class="form-control" required></textarea>
+            <label for="message" class="form-label">How Can We Help You? <span aria-hidden="true" style="color: var(--secondary);">*</span></label>
+            <textarea id="message" class="form-control" required aria-required="true"></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Send Message</button>
         </form>
@@ -1444,17 +1444,17 @@
   </footer>
 
   <!-- Toast Notification -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <!-- Search Modal -->
-  <div class="modal-overlay" id="searchModal">
+  <div class="modal-overlay" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle" tabindex="-1">
     <div class="modal">
       <div class="modal-header">
-        <h3>Find Your Perfect Home</h3>
-        <button class="modal-close" onclick="hideModal('search')">&times;</button>
+        <h3 id="searchModalTitle">Find Your Perfect Home</h3>
+        <button class="modal-close" onclick="hideModal('search')" aria-label="Close search modal">&times;</button>
       </div>
       <div class="modal-body">
-        <form id="searchForm">
+        <form id="searchForm" autocomplete="on">
           <div class="form-group">
             <label for="searchLocation" class="form-label">Location</label>
             <input type="text" id="searchLocation" class="form-control" placeholder="City, State, or Neighborhood">
@@ -1509,11 +1509,11 @@
   </div>
 
   <!-- Property Detail Modal -->
-  <div class="modal-overlay" id="propertyModal">
+  <div class="modal-overlay" id="propertyModal" role="dialog" aria-modal="true" aria-labelledby="propertyModalTitle" tabindex="-1">
     <div class="modal">
       <div class="modal-header">
         <h3 id="propertyModalTitle">Property Details</h3>
-        <button class="modal-close" onclick="hideModal('property')">&times;</button>
+        <button class="modal-close" onclick="hideModal('property')" aria-label="Close property modal">&times;</button>
       </div>
       <div class="modal-body">
         <div id="propertyModalContent">
@@ -1617,7 +1617,9 @@
     // Mobile menu toggle
     mobileMenuToggle.addEventListener('click', () => {
       navMenu.classList.toggle('active');
-      mobileMenuToggle.innerHTML = navMenu.classList.contains('active') ? '✕' : '☰';
+      const expanded = navMenu.classList.contains('active');
+      mobileMenuToggle.setAttribute('aria-expanded', expanded);
+      mobileMenuToggle.innerHTML = expanded ? '✕' : '☰';
     });
 
     // Close mobile menu when clicking a nav link

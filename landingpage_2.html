@@ -4,344 +4,493 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modern Responsive UI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Modern responsive design system with enhanced user experience">
+  <title>Modern Design System</title>
+  
+  <!-- Optimized Font Loading -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" as="style" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" media="all" />
+
   <style>
+    /* =========================
+       DESIGN TOKENS
+    ========================= */
     :root {
-      --primary: #2563eb;
-      --primary-light: #93c5fd;
-      --accent: #ec4899;
-      --bg: #f8fafc;
-      --surface: #fff;
-      --text: #1e293b;
-      --text-light: #64748b;
-      --border: #e2e8f0;
-      --radius: 12px;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --section-spacing: 4rem;
+      /* Color Palette (HSL) */
+      --color-primary-h: 230;
+      --color-primary-s: 85%;
+      --color-primary-l: 55%;
+      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+      --color-primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 40%);
+      --color-primary-light: hsl(var(--color-primary-h), var(--color-primary-s), 95%);
+      --color-accent: hsl(200, 90%, 60%);
+      --color-success: hsl(150, 85%, 40%);
+      --color-warning: hsl(45, 95%, 50%);
+      --color-error: hsl(0, 85%, 60%);
+      --color-bg: hsl(220, 20%, 98%);
+      --color-surface: #fff;
+      --color-border: hsl(220, 15%, 91%);
+      --color-text: hsl(220, 10%, 15%);
+      --color-muted: hsl(220, 10%, 45%);
+      --color-link: var(--color-primary);
+
+      /* Typography */
+      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-size-xs: 0.875rem;
+      --font-size-sm: 1rem;
+      --font-size-md: 1.125rem;
+      --font-size-lg: 1.5rem;
+      --font-size-xl: 2.25rem;
+      --font-size-2xl: 3rem;
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.75;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 1rem;
+      --space-4: 1.5rem;
+      --space-5: 2rem;
+      --space-6: 3rem;
+      --space-7: 4rem;
+
+      /* Border Radius */
+      --radius-sm: 0.25rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 1rem;
+      --radius-full: 9999px;
+
+      /* Shadow */
+      --shadow-xs: 0 1px 2px hsl(220 3% 15% / 0.05);
+      --shadow-sm: 0 2px 8px hsl(220 3% 15% / 0.08);
+      --shadow-md: 0 4px 16px hsl(220 3% 15% / 0.12);
+
+      /* Transition */
+      --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    /* =========================
+       BASE & RESET
+    ========================= */
+    html { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: inherit; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      overflow-x: hidden;
+      font-family: var(--font-family);
+      font-size: var(--font-size-sm);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: var(--line-height-normal);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
+    a { color: var(--color-link); text-decoration: none; transition: color var(--transition);}
+    a:focus { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    img, svg { display: block; max-width: 100%; }
 
-    /* Enhanced Header & Navigation */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: var(--surface);
-      box-shadow: var(--shadow-sm);
-      border-bottom: 1px solid var(--border);
+    /* Utility Classes */
+    .u-flex { display: flex; }
+    .u-flex-center { justify-content: center; align-items: center; }
+    .u-grid { display: grid; }
+    .u-mb-4 { margin-bottom: var(--space-4); }
+    .u-mt-4 { margin-top: var(--space-4); }
+    .u-gap-3 { gap: var(--space-3); }
+    .u-gap-4 { gap: var(--space-4); }
+    .u-radius-md { border-radius: var(--radius-md); }
+    .u-shadow-md { box-shadow: var(--shadow-md); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+    /* =========================
+       HEADER & NAVIGATION
+    ========================= */
+    header {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-xs);
     }
-
-    .nav-container {
+    .nav {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: var(--space-2) var(--space-3);
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
     }
-
-    .nav-brand {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .nav__brand {
+      display: flex; align-items: center; gap: var(--space-2);
+      font-weight: 700; font-size: var(--font-size-md);
+      color: var(--color-primary-dark);
     }
-
-    .nav-menu {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      transition: var(--transition);
+    .nav__menu {
+      display: flex; gap: var(--space-3);
     }
-
-    .nav-link {
-      color: var(--text);
-      text-decoration: none;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius);
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .nav__link {
+      font-weight: 500;
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
     }
-
-    .nav-link:hover,
-    .nav-link:focus {
-      background: var(--primary-light);
-      color: var(--primary);
+    .nav__link:focus, .nav__link:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
     }
-
-    .nav-toggle {
+    .nav__toggle {
       display: none;
-      background: none;
-      border: none;
-      padding: 0.5rem;
-      cursor: pointer;
-      color: var(--primary);
+      background: none; border: none; cursor: pointer;
+      padding: var(--space-1);
+    }
+    @media (max-width: 768px) {
+      .nav__menu {
+        position: fixed; top: 0; right: 0; height: 100vh; width: 70vw;
+        background: var(--color-surface);
+        flex-direction: column; align-items: flex-start;
+        padding: var(--space-5) var(--space-4);
+        box-shadow: var(--shadow-md);
+        transform: translateX(100%);
+        transition: transform var(--transition);
+        z-index: 200;
+      }
+      .nav__menu.active { transform: translateX(0); }
+      .nav__toggle { display: block; }
     }
 
-    /* Hero Section Improvements */
+    /* =========================
+       HERO SECTION
+    ========================= */
     .hero {
-      padding: 6rem 1rem;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      color: #fff;
+      padding: var(--space-7) var(--space-3) var(--space-6);
       text-align: center;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: white;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 60vh;
     }
-
-    .hero-content {
-      max-width: 800px;
-      margin: 0 auto;
+    .hero__title {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--space-3);
     }
-
-    .hero-title {
-      font-size: clamp(2rem, 5vw, 3rem);
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
+    .hero__desc {
+      font-size: var(--font-size-md);
+      opacity: 0.95;
+      margin-bottom: var(--space-4);
     }
+    .hero__actions { display: flex; gap: var(--space-3); justify-content: center; }
 
-    .hero-text {
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      color: var(--primary-light);
-      margin-bottom: 2rem;
+    /* =========================
+       BUTTONS
+    ========================= */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: var(--font-size-sm);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-md);
+      border: none; cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-xs);
+      background: var(--color-primary);
+      color: #fff;
     }
+    .btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+    .btn:hover, .btn:active { background: var(--color-primary-dark); }
+    .btn--secondary {
+      background: var(--color-surface);
+      color: var(--color-primary-dark);
+      border: 1px solid var(--color-primary-light);
+    }
+    .btn--secondary:hover, .btn--secondary:active {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+    }
+    .btn[disabled] { opacity: 0.6; pointer-events: none; }
 
-    /* Responsive Card Grid */
+    /* =========================
+       CARD GRID
+    ========================= */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      padding: var(--section-spacing) 1rem;
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+      max-width: 1200px;
+      margin: var(--space-6) auto;
+      padding: 0 var(--space-3);
     }
-
+    @media (min-width: 600px) {
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 900px) {
+      .card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
     .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 2rem;
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
-      transition: var(--transition);
+      padding: var(--space-5);
+      display: flex; flex-direction: column; align-items: flex-start;
+      transition: box-shadow var(--transition), transform var(--transition);
+      border: 1px solid var(--color-border);
     }
-
-    .card:hover {
-      transform: translateY(-5px);
+    .card:hover, .card:focus-within {
       box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.01);
     }
-
-    /* Enhanced Form */
-    .contact-section {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: var(--section-spacing) 1rem;
+    .card__icon {
+      background: var(--color-primary-light);
+      color: var(--color-primary-dark);
+      border-radius: var(--radius-md);
+      padding: var(--space-2);
+      margin-bottom: var(--space-3);
+      display: flex; align-items: center; justify-content: center;
     }
+    .card__title { font-size: var(--font-size-md); font-weight: 700; margin-bottom: var(--space-2);}
+    .card__desc { color: var(--color-muted); font-size: var(--font-size-sm); }
 
-    .form {
-      display: grid;
-      gap: 1.5rem;
-      background: var(--surface);
-      padding: 2rem;
-      border-radius: var(--radius);
+    /* =========================
+       FORM SECTION
+    ========================= */
+    .form-section {
+      max-width: 480px;
+      margin: var(--space-6) auto;
+      padding: var(--space-5) var(--space-3);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
     }
-
-    .form-input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: var(--transition);
+    .form {
+      display: flex; flex-direction: column; gap: var(--space-3);
+    }
+    .form__group { display: flex; flex-direction: column; gap: var(--space-1);}
+    .form__label { font-weight: 500; color: var(--color-text);}
+    .form__input, .form__textarea {
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      background: var(--color-bg);
+      transition: border var(--transition), box-shadow var(--transition);
+    }
+    .form__input:focus, .form__textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+      outline: none;
+    }
+    .form__error {
+      color: var(--color-error);
+      font-size: var(--font-size-xs);
+      margin-top: var(--space-1);
     }
 
-    .form-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-light);
+    /* =========================
+       FOOTER
+    ========================= */
+    footer {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      margin-top: var(--space-6);
+      padding: var(--space-5) var(--space-3);
     }
-
-    /* Footer */
-    .footer {
-      background: var(--surface);
-      padding: 3rem 1rem;
-      margin-top: var(--section-spacing);
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-content {
+    .footer__content {
       max-width: 1200px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
+      display: flex; flex-wrap: wrap; gap: var(--space-4);
+      justify-content: space-between;
     }
+    .footer__section { min-width: 180px; }
+    .footer__title { font-weight: 700; margin-bottom: var(--space-2);}
+    .footer__links { display: flex; flex-direction: column; gap: var(--space-1);}
+    .footer__link { color: var(--color-muted); }
+    .footer__link:hover, .footer__link:focus { color: var(--color-primary-dark); }
 
-    /* Responsive Breakpoints */
-    @media (max-width: 768px) {
-      .nav-menu {
-        position: fixed;
-        top: 4.5rem;
-        right: -100%;
-        width: 80%;
-        max-width: 300px;
-        background: var(--surface);
-        flex-direction: column;
-        padding: 1rem;
-        box-shadow: var(--shadow-md);
-        border-radius: var(--radius);
-      }
-
-      .nav-menu.active {
-        right: 1rem;
-      }
-
-      .nav-link {
-        width: 100%;
-      }
-
-      .nav-toggle {
-        display: block;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero {
-        padding: 4rem 1rem;
-      }
-
-      .card-grid {
-        grid-template-columns: 1fr;
+    /* =========================
+       ACCESSIBILITY & REDUCED MOTION
+    ========================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <header class="header">
-    <nav class="nav-container">
-      <a href="#" class="nav-brand">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+  <header>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#" class="nav__brand" aria-label="Home">
+        <!-- SVG Logo with placeholder blur effect -->
+        <svg width="32" height="32" aria-hidden="true" focusable="false" viewBox="0 0 32 32">
+          <rect width="32" height="32" rx="8" fill="hsl(230,85%,55%)" opacity="0.2"/>
+          <path d="M16 4L4 10l12 6 12-6-12-6zM4 22l12 6 12-6M4 16l12 6 12-6" stroke="hsl(230,85%,55%)" stroke-width="2" fill="none"/>
         </svg>
-        Brand
+        <span>Design System</span>
       </a>
-
-      <button class="nav-toggle" aria-label="Toggle navigation">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 12h18M3 6h18M3 18h18" />
+      <button class="nav__toggle" aria-label="Open menu" aria-controls="nav-menu" aria-expanded="false">
+        <svg width="28" height="28" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" fill="none"/>
         </svg>
       </button>
-
-      <div class="nav-menu">
-        <a href="#" class="nav-link">Home</a>
-        <a href="#" class="nav-link">Features</a>
-        <a href="#" class="nav-link">About</a>
-        <a href="#" class="nav-link">Contact</a>
+      <div class="nav__menu" id="nav-menu" role="menu">
+        <a href="#features" class="nav__link" role="menuitem" tabindex="0">Features</a>
+        <a href="#about" class="nav__link" role="menuitem" tabindex="0">About</a>
+        <a href="#contact" class="nav__link" role="menuitem" tabindex="0">Contact</a>
+        <a href="#get-started" class="btn" role="menuitem" tabindex="0">Get Started</a>
       </div>
     </nav>
   </header>
-
   <main>
-    <section class="hero">
-      <div class="hero-content">
-        <h1 class="hero-title">Modern Responsive Design</h1>
-        <p class="hero-text">Create beautiful experiences that adapt to every screen</p>
-        <button class="cta-button">Get Started</button>
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="hero__title">Build Better Experiences</h1>
+      <p class="hero__desc">Create stunning, accessible, and responsive designs with our modern design system</p>
+      <div class="hero__actions">
+        <a href="#get-started" class="btn">Get Started</a>
+        <a href="#features" class="btn btn--secondary">Learn More</a>
       </div>
     </section>
-
-    <section class="card-grid">
-      <div class="card">
-        <h3>Responsive Design</h3>
-        <p>Perfectly adapts to any device size</p>
-      </div>
-      <div class="card">
-        <h3>Modern UI</h3>
-        <p>Clean and intuitive interface</p>
-      </div>
-      <div class="card">
-        <h3>Fast Performance</h3>
-        <p>Optimized for speed and efficiency</p>
-      </div>
+    <section class="card-grid" id="features" aria-labelledby="features-title">
+      <h2 id="features-title" class="visually-hidden">Features</h2>
+      <article class="card" tabindex="0" aria-labelledby="feature1-title">
+        <div class="card__icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <h3 id="feature1-title" class="card__title">Responsive Design</h3>
+        <p class="card__desc">Seamlessly adapts to any device or screen size with our flexible grid system.</p>
+      </article>
+      <!-- Tambahkan card lain dengan struktur serupa -->
     </section>
-
-    <section class="contact-section">
-      <form class="form">
-        <input type="text" class="form-input" placeholder="Name">
-        <input type="email" class="form-input" placeholder="Email">
-        <textarea class="form-input" rows="4" placeholder="Message"></textarea>
-        <button type="submit" class="cta-button">Send Message</button>
+    <section class="form-section" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="u-mb-4">Get in Touch</h2>
+      <form class="form" novalidate aria-describedby="form-desc">
+        <span id="form-desc" class="visually-hidden">All fields are required.</span>
+        <div class="form__group">
+          <label for="name" class="form__label">Name</label>
+          <input type="text" id="name" name="name" class="form__input" required aria-required="true" autocomplete="name" />
+          <span class="form__error" id="error-name" aria-live="polite"></span>
+        </div>
+        <div class="form__group">
+          <label for="email" class="form__label">Email</label>
+          <input type="email" id="email" name="email" class="form__input" required aria-required="true" autocomplete="email" />
+          <span class="form__error" id="error-email" aria-live="polite"></span>
+        </div>
+        <div class="form__group">
+          <label for="message" class="form__label">Message</label>
+          <textarea id="message" name="message" class="form__input form__textarea" rows="4" required aria-required="true"></textarea>
+          <span class="form__error" id="error-message" aria-live="polite"></span>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
       </form>
     </section>
   </main>
-
-  <footer class="footer">
-    <div class="footer-content">
-      <div>
-        <h4>Company</h4>
-        <nav>
-          <a href="#">About</a>
-          <a href="#">Careers</a>
-          <a href="#">Contact</a>
+  <footer>
+    <div class="footer__content">
+      <section class="footer__section">
+        <h4 class="footer__title">Company</h4>
+        <nav class="footer__links" aria-label="Footer company links">
+          <a href="#" class="footer__link">About</a>
+          <a href="#" class="footer__link">Careers</a>
+          <a href="#" class="footer__link">Contact</a>
         </nav>
-      </div>
-      <div>
-        <h4>Resources</h4>
-        <nav>
-          <a href="#">Documentation</a>
-          <a href="#">Blog</a>
-          <a href="#">Help Center</a>
-        </nav>
-      </div>
+      </section>
+      <!-- Tambahkan section footer lain jika perlu -->
     </div>
   </footer>
-
   <script>
-    // Enhanced Navigation
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
+    // ========== NAVIGATION MENU ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.querySelector('.nav__toggle');
+      const navMenu = document.querySelector('.nav__menu');
+      const focusableMenuItems = navMenu.querySelectorAll('a, .btn');
 
-    navToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-      document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
-    });
-
-    // Close menu on click outside
-    document.addEventListener('click', (e) => {
-      if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
-        navMenu.classList.remove('active');
-        document.body.style.overflow = '';
+      function openMenu() {
+        navMenu.classList.add('active');
+        navToggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        focusableMenuItems[0].focus();
       }
-    });
-
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
+      function closeMenu() {
+        navMenu.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        navToggle.focus();
+      }
+      navToggle.addEventListener('click', () => {
+        if (navMenu.classList.contains('active')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
       });
-    });
+      // Keyboard navigation (ESC to close, Tab trap)
+      navMenu.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+        if (e.key === 'Tab') {
+          const first = focusableMenuItems[0];
+          const last = focusableMenuItems[focusableMenuItems.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault(); last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus();
+          }
+        }
+      });
+      // Close menu on outside click
+      document.addEventListener('click', (e) => {
+        if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+          closeMenu();
+        }
+      });
 
-    // Form validation
-    const form = document.querySelector('.form');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Add validation logic here
+      // ========== FORM VALIDATION ==========
+      const form = document.querySelector('.form');
+      if (form) {
+        const fields = ['name', 'email', 'message'];
+        const errorEls = {
+          name: document.getElementById('error-name'),
+          email: document.getElementById('error-email'),
+          message: document.getElementById('error-message')
+        };
+        function validateField(name, value) {
+          if (!value.trim()) return 'This field is required';
+          if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email';
+          return '';
+        }
+        function showError(name, msg) {
+          errorEls[name].textContent = msg;
+        }
+        function clearError(name) {
+          errorEls[name].textContent = '';
+        }
+        fields.forEach(field => {
+          form[field].addEventListener('input', e => {
+            const msg = validateField(field, e.target.value);
+            if (msg) showError(field, msg); else clearError(field);
+          });
+        });
+        form.addEventListener('submit', e => {
+          e.preventDefault();
+          let hasError = false;
+          fields.forEach(field => {
+            const value = form[field].value;
+            const msg = validateField(field, value);
+            if (msg) {
+              showError(field, msg);
+              hasError = true;
+            } else {
+              clearError(field);
+            }
+          });
+          if (!hasError) {
+            // Simulasi submit sukses
+            form.reset();
+            fields.forEach(field => clearError(field));
+            alert('Thank you! Your message has been sent.');
+          }
+        });
+      }
     });
   </script>
 </body>

@@ -931,19 +931,19 @@
   <div class="toast" id="toast"></div>
 
   <!-- Navbar -->
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main Navigation">
     <div class="container flex justify-between align-center">
-      <a href="#" class="navbar__brand">SaaS UI Kit</a>
-      <button class="navbar__toggle" aria-expanded="false" aria-label="Toggle navigation">
-        <svg viewBox="0 0 24 24" width="24" height="24">
+      <a href="#" class="navbar__brand" aria-label="Homepage">SaaS UI Kit</a>
+      <button class="navbar__toggle" aria-expanded="false" aria-label="Toggle navigation" aria-controls="navbarMenu">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
           <path fill="none" stroke="currentColor" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
-      <div class="navbar__menu">
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#pricing" class="nav-link">Pricing</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#contact" class="nav-link">Contact</a>
+      <div class="navbar__menu" id="navbarMenu">
+        <a href="#features" class="nav-link" tabindex="0">Features</a>
+        <a href="#pricing" class="nav-link" tabindex="0">Pricing</a>
+        <a href="#about" class="nav-link" tabindex="0">About</a>
+        <a href="#contact" class="nav-link" tabindex="0">Contact</a>
         <button class="btn btn-accent" id="openSignUpModal">Get Started</button>
       </div>
     </div>
@@ -1066,22 +1066,25 @@
   </footer>
 
   <!-- Sign-Up Modal -->
-  <div class="modal" id="signUpModal">
+  <div class="modal" id="signUpModal" role="dialog" aria-modal="true" aria-labelledby="signUpTitle">
     <div class="modal__content">
-      <button class="modal__close" aria-label="Close modal">×</button>
-      <h2 class="txt-xl txt-bold txt-heading mb-lg">Start Your Free Trial</h2>
-      <form id="signUpForm" class="flex-col gap-md">
+      <button class="modal__close" aria-label="Close modal" tabindex="0">×</button>
+      <h2 class="txt-xl txt-bold txt-heading mb-lg" id="signUpTitle">Start Your Free Trial</h2>
+      <form id="signUpForm" class="flex-col gap-md" novalidate>
         <div class="form-group form-control--floating">
-          <input type="text" class="form-control" id="nameInput" placeholder=" " required>
+          <input type="text" class="form-control" id="nameInput" placeholder=" " required aria-required="true" aria-label="Full Name">
           <label for="nameInput">Full Name</label>
+          <span class="form-error" id="nameError" style="display:none;color:var(--clr-error);font-size:var(--txt-xs);"></span>
         </div>
         <div class="form-group form-control--floating">
-          <input type="email" class="form-control" id="emailInput" placeholder=" " required>
+          <input type="email" class="form-control" id="emailInput" placeholder=" " required aria-required="true" aria-label="Email Address" autocomplete="email">
           <label for="emailInput">Email Address</label>
+          <span class="form-error" id="emailError" style="display:none;color:var(--clr-error);font-size:var(--txt-xs);"></span>
         </div>
         <div class="form-group form-control--floating">
-          <input type="password" class="form-control" id="passwordInput" placeholder=" " required>
+          <input type="password" class="form-control" id="passwordInput" placeholder=" " required aria-required="true" aria-label="Password" autocomplete="new-password" minlength="6">
           <label for="passwordInput">Password</label>
+          <span class="form-error" id="passwordError" style="display:none;color:var(--clr-error);font-size:var(--txt-xs);"></span>
         </div>
         <button type="submit" class="btn btn-primary">Sign Up</button>
         <p class="txt-center mt-md">Already have an account? <a href="#" class="txt-primary">Sign in</a></p>
@@ -1165,6 +1168,13 @@
           if (e.key === "Escape") this.closeModal();
           if (e.key === "Tab") this.trapFocus(e);
         });
+
+        // Accessibility: Close modal with ESC from anywhere
+        document.addEventListener("keydown", e => {
+          if (e.key === "Escape" && this.elements.signUpModal.classList.contains("active")) {
+            this.closeModal();
+          }
+        });
       }
 
       openModal() {
@@ -1193,6 +1203,35 @@
 
       handleSignUp(e) {
         e.preventDefault();
+        // Clear previous errors
+        document.getElementById("nameError").style.display = "none";
+        document.getElementById("emailError").style.display = "none";
+        document.getElementById("passwordError").style.display = "none";
+
+        // Simple client-side validation
+        let valid = true;
+        const name = document.getElementById("nameInput").value.trim();
+        const email = document.getElementById("emailInput").value.trim();
+        const password = document.getElementById("passwordInput").value;
+
+        if (!name) {
+          document.getElementById("nameError").textContent = "Full name is required.";
+          document.getElementById("nameError").style.display = "block";
+          valid = false;
+        }
+        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+          document.getElementById("emailError").textContent = "Please enter a valid email address.";
+          document.getElementById("emailError").style.display = "block";
+          valid = false;
+        }
+        if (!password || password.length < 6) {
+          document.getElementById("passwordError").textContent = "Password must be at least 6 characters.";
+          document.getElementById("passwordError").style.display = "block";
+          valid = false;
+        }
+
+        if (!valid) return;
+
         this.closeModal();
         this.showToast("Sign-up Successful!", "success");
       }

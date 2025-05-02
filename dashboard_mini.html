@@ -5,264 +5,444 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Mini - Rental Apartemen</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font: Inter, fallback, font-display: swap -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="all" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
+    /* === Design Tokens === */
     :root {
-      --primary: #6c8eef;
-      --primary-foreground: #ffffff;
-      --secondary: #f8f9fa;
-      --secondary-foreground: #495057;
-      --background: #f9fafb;
-      --foreground: #495057;
-      --card: #ffffff;
-      --card-foreground: #495057;
-      --border: #e9ecef;
-      --input: #e9ecef;
-      --ring: #6c8eef;
-      --radius: 0.5rem;
-      --shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-      --success: #28a745;
-      --warning: #ffc107;
-      --danger: #dc3545;
-      --info: #17a2b8;
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      /* Color palette (HSL) */
+      --color-primary-h: 226;
+      --color-primary-s: 80%;
+      --color-primary-l: 62%;
+      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+      --color-primary-foreground: hsl(0, 0%, 100%);
+      --color-secondary: hsl(220, 16%, 96%);
+      --color-secondary-foreground: hsl(220, 13%, 18%);
+      --color-bg: hsl(220, 20%, 99%);
+      --color-fg: hsl(220, 13%, 18%);
+      --color-success: hsl(142, 71%, 45%);
+      --color-warning: hsl(45, 100%, 51%);
+      --color-danger: hsl(0, 84%, 60%);
+      --color-info: hsl(200, 98%, 39%);
+      --color-border: hsl(220, 14%, 92%);
+      --color-muted: hsl(220, 8%, 60%);
+      --color-card: hsl(0, 0%, 100%);
+      --color-card-shadow: 0 2px 8px 0 hsl(220, 13%, 18%, 0.06);
+
+      /* Typography */
+      --font-family: 'Inter', system-ui, sans-serif;
+      --font-size-xs: 0.875rem;
+      --font-size-sm: 1rem;
+      --font-size-md: 1.125rem;
+      --font-size-lg: 1.5rem;
+      --font-size-xl: 2.25rem;
+      --font-weight-normal: 400;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      --line-height: 1.5;
+
+      /* Spacing (modular scale) */
+      --space-1: 0.5rem;
+      --space-2: 1rem;
+      --space-3: 1.5rem;
+      --space-4: 2rem;
+      --space-5: 3rem;
+
+      /* Border radius & shadow */
+      --radius-sm: 0.5rem;
+      --radius-md: 1rem;
+      --shadow-sm: 0 1px 3px hsl(220, 13%, 18%, 0.06);
+      --shadow-md: 0 4px 16px hsl(220, 13%, 18%, 0.10);
+
+      /* Transition */
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Grid */
+      --container-max-width: 1200px;
     }
 
-    /* Layout Structure */
-    .layout-wrapper {
-      display: grid;
-      grid-template-areas:
-        "header"
-        "main";
-      grid-template-rows: 60px 1fr;
-      grid-template-columns: 1fr;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: hsl(220, 13%, 12%);
+        --color-card: hsl(220, 13%, 16%);
+        --color-fg: hsl(0, 0%, 100%);
+        --color-secondary: hsl(220, 13%, 18%);
+        --color-secondary-foreground: hsl(0, 0%, 100%);
+        --color-border: hsl(220, 13%, 24%);
+        --color-card-shadow: 0 2px 8px 0 hsl(220, 13%, 8%, 0.16);
+      }
+    }
+
+    html {
+      box-sizing: border-box;
+      font-size: 100%;
+      scroll-behavior: smooth;
+    }
+    *, *::before, *::after { box-sizing: inherit; }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-sm);
+      color: var(--color-fg);
+      background: var(--color-bg);
+      margin: 0;
       min-height: 100vh;
-      transition: var(--transition);
+      line-height: var(--line-height);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Header Styles */
-    .main-header {
-      grid-area: header;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      z-index: 1000;
+    /* === Layout === */
+    .container {
+      max-width: var(--container-max-width);
+      margin-inline: auto;
+      padding-inline: var(--space-2);
+    }
+    header[role="banner"] {
+      background: var(--color-card);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
       position: sticky;
       top: 0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    .main-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      padding-block: var(--space-1);
+    }
+    main {
+      padding-block: var(--space-3);
     }
 
-    /* Main Content Area */
-    .main-content {
-      grid-area: main;
-      padding: 1.5rem;
-      background: var(--background);
-      transition: var(--transition);
+    /* === Typography === */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: inherit;
+      font-weight: var(--font-weight-bold);
+      color: var(--color-fg);
+      margin: 0 0 var(--space-1) 0;
+      line-height: 1.2;
     }
+    h1 { font-size: var(--font-size-xl);}
+    h2 { font-size: var(--font-size-lg);}
+    h3 { font-size: var(--font-size-md);}
+    h4, h5, h6 { font-size: var(--font-size-sm);}
+    p, small { margin: 0; }
 
-    /* Card Styles */
+    /* === Card & Stat === */
+    .card {
+      background: var(--color-card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-border);
+      margin-bottom: var(--space-3);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .card:focus-within, .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .card-header {
+      padding: var(--space-2) var(--space-3) var(--space-1) var(--space-3);
+      border-bottom: 1px solid var(--color-border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-1);
+    }
+    .card-body {
+      padding: var(--space-2) var(--space-3);
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
     .stat-card {
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      transition: var(--transition);
-      height: 100%;
-      position: relative;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      border: none;
+      box-shadow: var(--shadow-sm);
+      background: var(--color-card);
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      min-height: 120px;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .stat-card:focus-within, .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .stat-title {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .stat-value {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-fg);
+    }
+    .stat-meta {
+      font-size: var(--font-size-xs);
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.25em;
     }
 
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-card .card-body {
-      position: relative;
-      z-index: 1;
-    }
-
-    .stat-card::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg,
-          rgba(108, 142, 239, 0.1) 0%,
-          rgba(108, 142, 239, 0) 100%);
-      opacity: 0;
-      transition: var(--transition);
-    }
-
-    .stat-card:hover::after {
-      opacity: 1;
-    }
-
-    /* Table Styles */
-    .table th {
-      font-weight: 600;
-      background: var(--secondary);
-      position: sticky;
-      top: 0;
-    }
-
+    /* === Table === */
     .table-responsive {
-      border-radius: var(--radius);
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border);
+      background: var(--color-card);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-size-xs);
+      background: transparent;
+    }
+    thead {
+      background: var(--color-secondary);
+    }
+    th, td {
+      padding: var(--space-1);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    th {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-fg);
+      background: var(--color-secondary);
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25em 0.75em;
+      border-radius: 999px;
+      font-size: 0.85em;
+      font-weight: var(--font-weight-semibold);
+      background: var(--color-secondary);
+      color: var(--color-fg);
+    }
+    .badge-success { background: var(--color-success); color: #fff; }
+    .badge-danger { background: var(--color-danger); color: #fff; }
+    .badge-warning { background: var(--color-warning); color: #222; }
+    .badge-info { background: var(--color-info); color: #fff; }
+
+    /* === Button & Icon === */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 0.5em 1em;
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition);
+      outline: none;
+      box-shadow: none;
+      min-width: 2.5em;
+      min-height: 2.5em;
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+    .btn:hover, .btn:active {
+      background: hsl(var(--color-primary-h), var(--color-primary-s), calc(var(--color-primary-l) - 8%));
+    }
+    .btn-danger {
+      background: var(--color-danger);
+      color: #fff;
+    }
+    .btn-danger:hover, .btn-danger:active {
+      background: hsl(0, 84%, 50%);
+    }
+    .btn[disabled], .btn:disabled {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .icon {
+      font-size: 1.1em;
+      vertical-align: middle;
+    }
+
+    /* === Utility Classes === */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
       overflow: hidden;
-      border: 1px solid var(--border);
+      clip: rect(0,0,0,0);
+      border: 0;
     }
+    .d-flex { display: flex; }
+    .gap-1 { gap: var(--space-1); }
+    .gap-2 { gap: var(--space-2); }
+    .align-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
 
-    /* Responsive Breakpoints */
-    @media (max-width: 992px) {
-      .layout-wrapper {
-        grid-template-columns: 1fr;
-      }
+    /* === Responsive === */
+    @media (max-width: 900px) {
+      .container { padding-inline: var(--space-1);}
+      .stat-grid { grid-template-columns: 1fr; }
+      .main-header-content { flex-direction: column; align-items: flex-start; gap: var(--space-1);}
     }
-
-    @media (max-width: 768px) {
-      .main-content {
-        padding: 1rem;
-      }
-
-      .stat-card {
-        margin-bottom: 1rem;
-      }
+    @media (max-width: 600px) {
+      .card-header, .card-body { padding: var(--space-1);}
+      .stat-card { padding: var(--space-1);}
+      h1 { font-size: var(--font-size-lg);}
+      h2 { font-size: var(--font-size-md);}
     }
-
-    @media (max-width: 576px) {
-      .main-header h5 {
-        font-size: 1.1rem;
-      }
-
-      .card-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-
-      .card-header .d-flex {
-        width: 100%;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="layout-wrapper">
-    <header class="main-header">
-      <div class="d-flex justify-content-between align-items-center px-3 py-2">
-        <h5 class="mb-0">Dashboard Mini Rental Apartemen</h5>
-      </div>
-    </header>
-    <main class="main-content">
-      <div class="container-fluid p-4">
-        <div class="row g-4 mb-4">
-          <div class="col-12 col-md-4">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h5 class="card-title">Total Penyewa</h5>
-                <h2 class="mb-0">1,234</h2>
-                <small class="text-success"><i class="bi bi-arrow-up"></i> 12% naik</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h5 class="card-title">Total Apartemen</h5>
-                <h2 class="mb-0">120</h2>
-                <small class="text-primary"><i class="bi bi-graph-up"></i> Aktif</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="card stat-card">
-              <div class="card-body">
-                <h5 class="card-title">Sewa Menunggu Persetujuan</h5>
-                <h2 class="mb-0">8</h2>
-                <small class="text-warning"><i class="bi bi-clock"></i> Menunggu</small>
-              </div>
-            </div>
+  <header role="banner" aria-label="Header utama">
+    <nav class="container main-header-content" aria-label="Navigasi utama">
+      <h1>Dashboard Mini Rental Apartemen</h1>
+      <!-- Navigasi tambahan bisa ditambahkan di sini -->
+    </nav>
+  </header>
+  <main id="main-content" tabindex="-1" class="container" aria-label="Konten utama">
+    <section aria-labelledby="statistik-heading" class="stat-grid" style="margin-top: var(--space-3);">
+      <article class="stat-card" tabindex="0" aria-labelledby="stat-penyewa">
+        <span class="stat-title" id="stat-penyewa">Total Penyewa</span>
+        <span class="stat-value" aria-live="polite">1,234</span>
+        <span class="stat-meta" aria-label="Perubahan 12 persen naik">
+          <i class="bi bi-arrow-up icon" aria-hidden="true"></i>
+          <span class="sr-only">Naik</span>
+          12% naik
+        </span>
+      </article>
+      <article class="stat-card" tabindex="0" aria-labelledby="stat-apartemen">
+        <span class="stat-title" id="stat-apartemen">Total Apartemen</span>
+        <span class="stat-value" aria-live="polite">120</span>
+        <span class="stat-meta" aria-label="Status aktif">
+          <i class="bi bi-graph-up icon" aria-hidden="true"></i>
+          <span class="sr-only">Aktif</span>
+          Aktif
+        </span>
+      </article>
+      <article class="stat-card" tabindex="0" aria-labelledby="stat-menunggu">
+        <span class="stat-title" id="stat-menunggu">Sewa Menunggu Persetujuan</span>
+        <span class="stat-value" aria-live="polite">8</span>
+        <span class="stat-meta" aria-label="Status menunggu">
+          <i class="bi bi-clock icon" aria-hidden="true"></i>
+          <span class="sr-only">Menunggu</span>
+          Menunggu
+        </span>
+      </article>
+    </section>
+    <section aria-labelledby="daftar-penyewa-heading">
+      <div class="card" tabindex="0">
+        <div class="card-header">
+          <h2 id="daftar-penyewa-heading">Daftar Penyewa</h2>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive" tabindex="0">
+            <table aria-describedby="daftar-penyewa-heading">
+              <thead>
+                <tr>
+                  <th scope="col">ID Penyewa</th>
+                  <th scope="col">Nama</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Apartemen</th>
+                  <th scope="col">Terakhir Aktif</th>
+                  <th scope="col">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#12345</td>
+                  <td>John Doe</td>
+                  <td><span class="badge badge-success" aria-label="Aktif">Aktif</span></td>
+                  <td>Unit A-12</td>
+                  <td><small class="text-muted">2 menit lalu</small></td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <button class="btn" aria-label="Edit John Doe" tabindex="0">
+                        <i class="bi bi-pencil icon" aria-hidden="true"></i>
+                        <span class="sr-only">Edit</span>
+                      </button>
+                      <button class="btn btn-danger" aria-label="Hapus John Doe" tabindex="0">
+                        <i class="bi bi-trash icon" aria-hidden="true"></i>
+                        <span class="sr-only">Hapus</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#12346</td>
+                  <td>Jane Smith</td>
+                  <td><span class="badge badge-danger" aria-label="Nonaktif">Nonaktif</span></td>
+                  <td>Unit B-05</td>
+                  <td><small class="text-muted">5 hari lalu</small></td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <button class="btn" aria-label="Edit Jane Smith" tabindex="0">
+                        <i class="bi bi-pencil icon" aria-hidden="true"></i>
+                        <span class="sr-only">Edit</span>
+                      </button>
+                      <button class="btn btn-danger" aria-label="Hapus Jane Smith" tabindex="0">
+                        <i class="bi bi-trash icon" aria-hidden="true"></i>
+                        <span class="sr-only">Hapus</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>#12347</td>
+                  <td>Robert Johnson</td>
+                  <td><span class="badge badge-success" aria-label="Aktif">Aktif</span></td>
+                  <td>Unit C-21</td>
+                  <td><small class="text-muted">1 jam lalu</small></td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <button class="btn" aria-label="Edit Robert Johnson" tabindex="0">
+                        <i class="bi bi-pencil icon" aria-hidden="true"></i>
+                        <span class="sr-only">Edit</span>
+                      </button>
+                      <button class="btn btn-danger" aria-label="Hapus Robert Johnson" tabindex="0">
+                        <i class="bi bi-trash icon" aria-hidden="true"></i>
+                        <span class="sr-only">Hapus</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="card mb-4">
-          <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <h5 class="mb-0">Daftar Penyewa</h5>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-hover" id="customersTable">
-                <thead>
-                  <tr>
-                    <th>ID Penyewa</th>
-                    <th>Nama</th>
-                    <th>Status</th>
-                    <th>Apartemen</th>
-                    <th>Terakhir Aktif</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>#12345</td>
-                    <td>John Doe</td>
-                    <td><span class="badge bg-success">Aktif</span></td>
-                    <td>Unit A-12</td>
-                    <td><small class="text-muted">2 menit lalu</small></td>
-                    <td>
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-primary">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#12346</td>
-                    <td>Jane Smith</td>
-                    <td><span class="badge bg-danger">Nonaktif</span></td>
-                    <td>Unit B-05</td>
-                    <td><small class="text-muted">5 hari lalu</small></td>
-                    <td>
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-primary">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#12347</td>
-                    <td>Robert Johnson</td>
-                    <td><span class="badge bg-success">Aktif</span></td>
-                    <td>Unit C-21</td>
-                    <td><small class="text-muted">1 jam lalu</small></td>
-                    <td>
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-primary">
-                          <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger">
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
       </div>
-    </main>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </section>
+  </main>
+  <!-- Bootstrap Icons only, no Bootstrap JS needed -->
 </body>
 
 </html>

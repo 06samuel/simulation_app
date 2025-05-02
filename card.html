@@ -474,11 +474,12 @@
       </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-modal="true" role="dialog" aria-labelledby="modalImageLabel">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-body p-0">
-            <img src="" class="img-fluid" id="modalImage" alt="Modal Image" />
+            <img src="" class="img-fluid" id="modalImage" alt="" aria-labelledby="modalImageLabel" />
+            <div id="modalImageLabel" class="visually-hidden"></div>
           </div>
         </div>
       </div>
@@ -656,13 +657,17 @@
         card.addEventListener('click', () => {
           modalImage.src = item.url;
           modalImage.alt = item.title;
+          document.getElementById('modalImageLabel').textContent = item.title + ' - ' + item.description;
           modal.show();
+          setTimeout(() => modalImage.focus(), 300); // focus image for accessibility
         });
         card.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             modalImage.src = item.url;
             modalImage.alt = item.title;
+            document.getElementById('modalImageLabel').textContent = item.title + ' - ' + item.description;
             modal.show();
+            setTimeout(() => modalImage.focus(), 300);
           }
         });
         gallery.appendChild(col);
@@ -679,16 +684,28 @@
         : galleryData.filter(item => item.category === category);
       renderGallery(filtered);
     }
-    // --- Sidebar toggle for mobile ---
+    // --- Modal accessibility: close on ESC, return focus ---
+    let lastFocusedCard = null;
+    document.getElementById('imageModal').addEventListener('show.bs.modal', (e) => {
+      lastFocusedCard = document.activeElement;
+    });
+    document.getElementById('imageModal').addEventListener('hidden.bs.modal', (e) => {
+      if (lastFocusedCard) lastFocusedCard.focus();
+      modalImage.src = '';
+      modalImage.alt = '';
+      document.getElementById('modalImageLabel').textContent = '';
+    });
+    // --- Sidebar toggle for mobile (improved a11y) ---
     function toggleSidebar() {
-      if (sidebar.style.display === 'block') {
-        sidebar.style.display = 'none';
-      } else {
-        sidebar.style.display = 'block';
-      }
+      const isOpen = sidebar.style.display === 'block';
+      sidebar.style.display = isOpen ? 'none' : 'block';
+      sidebar.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+      if (!isOpen) sidebar.querySelector('a,button,input,select,textarea')?.focus();
     }
     if (sidebarToggle) {
       sidebarToggle.addEventListener('click', toggleSidebar);
+      sidebarToggle.setAttribute('aria-controls', 'sidebar');
+      sidebarToggle.setAttribute('aria-expanded', 'false');
     }
     // Show sidebar by default on desktop
     function handleSidebarDisplay() {
@@ -704,10 +721,33 @@
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => filterGallery(btn.dataset.filter));
     });
+    // --- Form validation (example for completeness) ---
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const nama = document.getElementById('nama');
+      const email = document.getElementById('email');
+      let valid = true;
+      if (!nama.value.trim()) {
+        nama.classList.add('is-invalid');
+        valid = false;
+      } else {
+        nama.classList.remove('is-invalid');
+      }
+      if (!email.value.trim() || !/^[^@]+@[^@]+\.[^@]+$/.test(email.value)) {
+        email.classList.add('is-invalid');
+        valid = false;
+      } else {
+        email.classList.remove('is-invalid');
+      }
+      if (!valid) {
+        e.preventDefault();
+      }
+    });
     // --- Init ---
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
       renderGallery(galleryData);
+      // Add aria-hidden to sidebar for a11y
+      sidebar.setAttribute('aria-hidden', window.innerWidth < 992 ? 'true' : 'false');
     });
   </script>
 </body>

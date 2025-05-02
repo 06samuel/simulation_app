@@ -9,946 +9,727 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+  </noscript>
   <style>
+    /* ---------------------------- */
+    /* DESIGN TOKENS (HSL & SYSTEM) */
+    /* ---------------------------- */
     :root {
-      /* SaaS-inspired Color System */
-      --color-primary: #2563eb;
-      --color-secondary: #6366f1;
-      --color-accent: #06b6d4;
-      --color-success: #22c55e;
-      --color-danger: #ef4444;
-      --color-warning: #fbbf24;
-      --color-info: #0ea5e9;
-      --color-light: #f8fafc;
-      --color-dark: #0f172a;
-      --color-gray: #64748b;
-      --color-neutral: #f1f5f9;
-      --color-bg: #f8fafc;
-      --color-surface: #fff;
-      --color-border: #e5e7eb;
-      --color-cta: #f472b6;
+      /* Color Palette (HSL) */
+      --color-primary-h: 220;
+      --color-primary-s: 90%;
+      --color-primary-l: 56%;
+      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+      --color-primary-light: hsl(var(--color-primary-h), var(--color-primary-s), 70%);
+      --color-primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 36%);
+      --color-secondary: hsl(260, 8%, 40%);
+      --color-accent: hsl(12, 90%, 60%);
+      --color-success: hsl(142, 71%, 45%);
+      --color-warning: hsl(38, 92%, 60%);
+      --color-danger: hsl(0, 80%, 60%);
+      --color-info: hsl(200, 90%, 60%);
+      --color-bg: hsl(0, 0%, 99%);
+      --color-bg-alt: hsl(0, 0%, 96%);
+      --color-surface: hsl(0, 0%, 100%);
+      --color-border: hsl(220, 13%, 91%);
+      --color-text: hsl(220, 15%, 18%);
+      --color-text-muted: hsl(220, 10%, 45%);
+      --color-text-inverse: hsl(0, 0%, 100%);
+      --color-shadow: 220 15% 18%;
+
+      /* Dark mode tokens */
+      --color-bg-dark: hsl(220, 15%, 10%);
+      --color-surface-dark: hsl(220, 15%, 16%);
+      --color-text-dark: hsl(0, 0%, 100%);
+      --color-border-dark: hsl(220, 13%, 25%);
 
       /* Typography */
-      --font-primary: 'Inter', 'Segoe UI', Arial, sans-serif;
-      --font-heading: 'Poppins', 'Inter', sans-serif;
-      --text-base: clamp(1rem, 1.2vw, 1.2rem);
-      --text-lg: clamp(1.25rem, 2vw, 2rem);
-      --text-xl: clamp(2rem, 4vw, 3.5rem);
+      --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+      --font-heading: 'Poppins', 'Inter', Arial, sans-serif;
+      --font-mono: 'Fira Mono', 'Menlo', monospace;
+      --font-size-xs: 0.875rem;
+      --font-size-sm: 1rem;
+      --font-size-md: 1.125rem;
+      --font-size-lg: 1.375rem;
+      --font-size-xl: 1.75rem;
+      --font-size-2xl: 2.25rem;
+      --font-size-3xl: 3rem;
+      --font-weight-normal: 400;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      --line-height-base: 1.6;
+      --line-height-heading: 1.2;
 
-      /* Spacing */
-      --space-xs: 0.5rem;
-      --space-sm: 1rem;
-      --space-md: 2rem;
-      --space-lg: 3rem;
-      --space-xl: 5vw;
+      /* Spacing (4px scale) */
+      --space-0: 0;
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.5rem;
+      --space-6: 2rem;
+      --space-7: 3rem;
+      --space-8: 4rem;
 
-      /* Border Radius */
+      /* Border radius */
+      --radius-xs: 0.25rem;
       --radius-sm: 0.5rem;
-      --radius-md: 1.25rem;
-      --radius-lg: 2rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1.25rem;
       --radius-full: 9999px;
 
       /* Shadows */
-      --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
-      --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.06);
-      --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.10);
-      --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.12);
+      --shadow-xs: 0 1px 2px 0 hsl(var(--color-shadow) / 0.04);
+      --shadow-sm: 0 2px 8px 0 hsl(var(--color-shadow) / 0.08);
+      --shadow-md: 0 4px 16px 0 hsl(var(--color-shadow) / 0.10);
+      --shadow-lg: 0 8px 32px 0 hsl(var(--color-shadow) / 0.12);
 
       /* Transitions */
-      --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      --transition-fast: 0.15s cubic-bezier(.4,0,.2,1);
+      --transition-base: 0.25s cubic-bezier(.4,0,.2,1);
+      --transition-slow: 0.4s cubic-bezier(.4,0,.2,1);
+
+      /* Breakpoints */
+      --breakpoint-sm: 480px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 1024px;
+      --breakpoint-xl: 1280px;
     }
 
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: var(--color-bg-dark);
+        --color-surface: var(--color-surface-dark);
+        --color-text: var(--color-text-dark);
+        --color-border: var(--color-border-dark);
+      }
+    }
+
+    [data-theme="dark"] {
+      --color-bg: var(--color-bg-dark);
+      --color-surface: var(--color-surface-dark);
+      --color-text: var(--color-text-dark);
+      --color-border: var(--color-border-dark);
+    }
+
+    /* Font loading optimization */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTcviYw.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600 800;
+      font-display: swap;
+      src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfedw.ttf') format('truetype');
+    }
+
+    /* ---------------------------- */
+    /* BASE & RESET                 */
+    /* ---------------------------- */
     html {
+      font-size: 100%;
       box-sizing: border-box;
-      font-size: 16px;
-    }
-
-    *,
-    *:before,
-    *:after {
-      box-sizing: inherit;
-    }
-
-    body {
-      font-family: var(--font-primary);
+      font-family: var(--font-sans);
       background: var(--color-bg);
-      color: var(--color-dark);
-      font-size: var(--text-base);
-      line-height: 1.7;
+      color: var(--color-text);
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    *, *::before, *::after { box-sizing: inherit; }
+    body {
+      min-height: 100vh;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-base);
+      font-family: var(--font-sans);
       margin: 0;
       padding: 0;
-      min-height: 100vh;
-      scroll-behavior: smooth;
     }
-
-    /* Layout Utilities */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding-left: var(--space-sm);
-      padding-right: var(--space-sm);
-    }
-
-    .d-flex {
-      display: flex;
-    }
-
-    .flex-wrap {
-      flex-wrap: wrap;
-    }
-
-    .align-items-center {
-      align-items: center;
-    }
-
-    .justify-content-center {
-      justify-content: center;
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .mb-4 {
-      margin-bottom: var(--space-md);
-    }
-
-    .mb-5 {
-      margin-bottom: var(--space-lg);
-    }
-
-    .mt-5 {
-      margin-top: var(--space-lg);
-    }
-
-    .py-5 {
-      padding-top: var(--space-lg);
-      padding-bottom: var(--space-lg);
-    }
-
-    /* Navigation */
-    .nav-modern {
-      backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.92);
-      border-bottom: 1.5px solid var(--color-border);
-      box-shadow: var(--shadow-xs);
-      z-index: 1030;
-      transition: var(--transition-base);
-    }
-
-    .navbar-brand {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      letter-spacing: 0.03em;
-      color: var(--color-primary) !important;
-      font-weight: 700;
-      padding: var(--space-xs) 0;
-    }
-
-    .nav-link {
-      font-weight: 500;
-      font-size: 1.08rem;
-      padding: 0.7rem 1.2rem;
+    img, picture, video, canvas, svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
       border-radius: var(--radius-sm);
-      transition: var(--transition-base);
-      color: var(--color-dark) !important;
-      margin: 0 var(--space-xs);
-      position: relative;
+      background: var(--color-border);
+      transition: filter var(--transition-base);
     }
-
-    .nav-link.active,
-    .nav-link:focus {
-      color: var(--color-primary) !important;
-      font-weight: bold;
-      background: rgba(37, 99, 235, 0.08);
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      box-shadow: 0 2px 8px 0 rgb(37 99 235 / 0.07);
-      border-bottom: 2.5px solid var(--color-primary);
-    }
-
-    .nav-link:hover:not(.active) {
-      background: rgba(37, 99, 235, 0.06);
-      color: var(--color-secondary) !important;
-      text-decoration: none;
-    }
-
-    /* SaaS Hero Section */
-    .hero {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(120deg, var(--color-bg) 60%, #e0e7ef 100%);
-      padding: var(--space-xl) 0 var(--space-lg) 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-content {
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-      z-index: 2;
-    }
-
-    .hero-title {
-      font-family: var(--font-heading);
-      font-size: var(--text-xl);
-      font-weight: 800;
+    a {
       color: var(--color-primary);
-      margin-bottom: var(--space-sm);
-      letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: color var(--transition-fast);
     }
-
-    .hero-desc {
-      font-size: var(--text-lg);
-      color: var(--color-gray);
-      margin-bottom: var(--space-md);
-    }
-
-    .hero-cta {
-      padding: 1rem 2.5rem;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-      font-size: 1.25rem;
-      background: var(--color-cta);
-      color: #fff;
-      border: none;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition-bounce);
-      margin-right: 1rem;
-    }
-
-    .hero-cta:hover,
-    .hero-cta:focus {
-      background: var(--color-primary);
-      color: #fff;
+    a:hover, a:focus {
+      color: var(--color-primary-dark);
       outline: none;
     }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      background: none;
+      border: none;
+      outline: none;
+    }
+    button:focus, input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    /* ... (lanjutkan ke komponen dan utilitas di tahap berikutnya) ... */
 
-    /* Decorative SaaS Hero BG */
-    .hero-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* ---------------------------- */
+    /* UTILITY CLASSES              */
+    /* ---------------------------- */
+    .container {
       width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 80% 20%, #6366f1 0%, transparent 70%), radial-gradient(circle at 20% 80%, #06b6d4 0%, transparent 70%);
-      opacity: 0.12;
-      z-index: 1;
+      max-width: 1200px;
+      margin-inline: auto;
+      padding-inline: var(--space-4);
+    }
+    .d-flex { display: flex; }
+    .d-grid { display: grid; }
+    .gap-2 { gap: var(--space-2); }
+    .gap-4 { gap: var(--space-4); }
+    .justify-center { justify-content: center; }
+    .align-center { align-items: center; }
+    .text-center { text-align: center; }
+    .mb-4 { margin-bottom: var(--space-4); }
+    .mb-6 { margin-bottom: var(--space-6); }
+    .mt-4 { margin-top: var(--space-4); }
+    .mt-6 { margin-top: var(--space-6); }
+    .w-100 { width: 100%; }
+    .shadow-md { box-shadow: var(--shadow-md); }
+    .rounded-md { border-radius: var(--radius-md); }
+    .bg-surface { background: var(--color-surface); }
+    .border { border: 1px solid var(--color-border); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* ---------------------------- */
+    /* BUTTONS                      */
+    /* ---------------------------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      border-radius: var(--radius-sm);
+      background: var(--color-primary);
+      color: var(--color-text-inverse);
+      border: none;
+      box-shadow: var(--shadow-xs);
+      cursor: pointer;
+      transition: background var(--transition-base), box-shadow var(--transition-base), transform var(--transition-fast);
+    }
+    .btn:hover, .btn:focus {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--color-primary);
+      border: 1.5px solid var(--color-primary);
+      box-shadow: none;
+    }
+    .btn-outline:hover, .btn-outline:focus {
+      background: var(--color-primary-light);
+      color: var(--color-text-inverse);
+      border-color: var(--color-primary-dark);
+    }
+    .btn[disabled], .btn:disabled {
+      opacity: 0.6;
       pointer-events: none;
     }
 
-    /* SaaS Features Section */
-    .features-section {
-      background: var(--color-surface);
-      padding: var(--space-xl) 0;
-    }
-
-    .features-title {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--color-primary);
-      margin-bottom: var(--space-md);
-      text-align: center;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: var(--space-lg);
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .feature-card {
-      background: var(--color-neutral);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-md);
-      text-align: center;
-      transition: var(--transition-base);
-      border: 1px solid var(--color-border);
-    }
-
-    .feature-card:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-4px) scale(1.03);
-    }
-
-    .feature-icon {
-      font-size: 2.5rem;
-      color: var(--color-accent);
-      margin-bottom: var(--space-sm);
-    }
-
-    .feature-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--color-dark);
-    }
-
-    .feature-desc {
-      color: var(--color-gray);
-      font-size: 1rem;
-    }
-
-    /* SaaS Testimonials Section */
-    .testimonials-section {
-      background: var(--color-bg);
-      padding: var(--space-xl) 0;
-    }
-
-    .testimonials-title {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--color-secondary);
-      margin-bottom: var(--space-md);
-      text-align: center;
-    }
-
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-lg);
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .testimonial-card {
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-md);
-      border: 1px solid var(--color-border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .testimonial-avatar {
-      width: 64px;
-      height: 64px;
-      border-radius: var(--radius-full);
-      object-fit: cover;
-      margin-bottom: var(--space-sm);
-      border: 2px solid var(--color-accent);
-    }
-
-    .testimonial-name {
-      font-weight: 600;
-      color: var(--color-primary);
-      margin-bottom: 0.2rem;
-    }
-
-    .testimonial-role {
-      color: var(--color-gray);
-      font-size: 0.95rem;
-      margin-bottom: var(--space-sm);
-    }
-
-    .testimonial-text {
-      color: var(--color-dark);
-      font-size: 1.05rem;
-      font-style: italic;
-    }
-
-    /* SaaS Pricing Section */
-    .pricing-section {
-      background: var(--color-surface);
-      padding: var(--space-xl) 0;
-    }
-
-    .pricing-title {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--color-primary);
-      margin-bottom: var(--space-md);
-      text-align: center;
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: var(--space-lg);
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .pricing-card {
-      background: var(--color-neutral);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-md);
+    /* ---------------------------- */
+    /* INPUTS & FORMS               */
+    /* ---------------------------- */
+    .form-control {
+      width: 100%;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-xs);
       border: 1.5px solid var(--color-border);
-      text-align: center;
-      transition: var(--transition-base);
+      background: var(--color-surface);
+      color: var(--color-text);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .form-control:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px hsl(var(--color-primary-h), var(--color-primary-s), 80%, 0.2);
+    }
+    .form-control.is-invalid {
+      border-color: var(--color-danger);
+      background: hsl(0, 80%, 98%);
+    }
+    .invalid-feedback {
+      color: var(--color-danger);
+      font-size: var(--font-size-xs);
+      margin-top: var(--space-1);
+      display: none;
+    }
+    .form-control.is-invalid + .invalid-feedback {
+      display: block;
+    }
+
+    /* ---------------------------- */
+    /* CARD COMPONENT               */
+    /* ---------------------------- */
+    .card {
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+      border: 1px solid var(--color-border);
+      transition: box-shadow var(--transition-base), transform var(--transition-fast);
+    }
+    .card:hover, .card:focus-within {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px) scale(1.01);
+    }
+    .card-img-wrapper {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: var(--space-3);
+      background: var(--color-border);
+      aspect-ratio: 4/3;
       position: relative;
     }
-
-    .pricing-card.featured {
-      border: 2.5px solid var(--color-primary);
-      box-shadow: var(--shadow-lg);
-      z-index: 2;
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter var(--transition-base);
+      filter: blur(8px);
     }
-
-    .pricing-plan {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--color-secondary);
-      margin-bottom: 0.5rem;
+    .card-img[data-loaded="true"] {
+      filter: blur(0);
     }
-
-    .pricing-price {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--color-primary);
-      margin-bottom: var(--space-sm);
+    .card-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-2);
+      color: var(--color-text);
     }
+    .card-desc {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+      margin-bottom: var(--space-3);
+    }
+    /* ... (lanjutkan untuk komponen lain: modal, nav, grid, dsb) ... */
 
-    .pricing-features {
+    /* ---------------------------- */
+    /* GRID SYSTEM & RESPONSIVE     */
+    /* ---------------------------- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+    @media (min-width: 600px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .main-nav {
+      display: flex;
+      gap: var(--space-4);
       list-style: none;
       padding: 0;
-      margin-bottom: var(--space-md);
-      color: var(--color-gray);
-      font-size: 1rem;
+      margin: 0;
     }
-
-    .pricing-cta {
-      padding: 0.8rem 2rem;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-      background: var(--color-primary);
-      color: #fff;
+    .nav-toggle {
+      display: none;
+      background: none;
       border: none;
-      transition: var(--transition-bounce);
-    }
-
-    .pricing-cta:hover,
-    .pricing-cta:focus {
-      background: var(--color-secondary);
-      color: #fff;
-      outline: none;
-    }
-
-    /* SaaS Footer */
-    .footer {
-      background: var(--color-dark);
-      color: var(--color-light);
-      padding: var(--space-lg) 0 var(--space-md) 0;
-      text-align: center;
-    }
-
-    .footer-links {
-      margin-bottom: var(--space-sm);
-    }
-
-    .footer-links a {
-      color: var(--color-accent);
-      margin: 0 0.7rem;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--color-warning);
-    }
-
-    .footer-newsletter {
-      margin: var(--space-md) auto;
-      max-width: 400px;
-      display: flex;
-      gap: var(--space-xs);
-      justify-content: center;
-    }
-
-    .footer-newsletter input[type="email"] {
-      flex: 1;
-      border-radius: var(--radius-full);
-      border: none;
-      padding: 0.7rem 1rem;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .footer-newsletter button {
-      border-radius: var(--radius-full);
-      background: var(--color-accent);
-      color: #fff;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-
-    .footer-newsletter button:hover {
-      background: var(--color-primary);
-    }
-
-    .footer-copyright {
-      color: var(--color-gray);
-      font-size: 0.95rem;
-      margin-top: var(--space-sm);
-    }
-
-    /* Responsive Utilities */
-    @media (max-width: 1200px) {
-      .container {
-        max-width: 1000px;
-      }
-
-      .features-grid,
-      .testimonials-grid,
-      .pricing-grid {
-        max-width: 900px;
-      }
-    }
-
-    @media (max-width: 992px) {
-      .container {
-        max-width: 760px;
-      }
-
-      .features-grid,
-      .testimonials-grid,
-      .pricing-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .hero-title {
-        font-size: 2.2rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        max-width: 98vw;
-      }
-
-      .features-grid,
-      .testimonials-grid,
-      .pricing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-title {
-        font-size: 1.6rem;
-      }
-
-      .hero-desc {
-        font-size: 1.1rem;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .container {
-        padding-left: var(--space-xs);
-        padding-right: var(--space-xs);
-      }
-
-      .hero-content {
-        padding: 0 var(--space-xs);
-      }
-
-      .footer-newsletter {
-        flex-direction: column;
-        gap: var(--space-xs);
-      }
-    }
-
-    /* Add missing .btn-modern styles for consistent button appearance */
-    .btn-modern {
-      display: inline-block;
-      font-family: var(--font-primary);
-      font-weight: 600;
-      border-radius: var(--radius-full);
-      padding: 0.6rem 1.5rem;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      transition: var(--transition-base);
-      box-shadow: var(--shadow-xs);
-      background: var(--color-primary);
-      color: #fff;
-      text-decoration: none;
-    }
-
-    .btn-modern.btn-outline-primary {
-      background: transparent;
+      font-size: 2rem;
       color: var(--color-primary);
-      border: 2px solid var(--color-primary);
+      cursor: pointer;
     }
+    @media (max-width: 768px) {
+      .main-nav {
+        display: none;
+        flex-direction: column;
+        background: var(--color-surface);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        box-shadow: var(--shadow-md);
+        z-index: 100;
+      }
+      .main-nav.open {
+        display: flex;
+      }
+      .nav-toggle {
+        display: block;
+      }
+    }
+    /* ... (lanjutkan untuk section, heading, dsb) ... */
 
-    .btn-modern.btn-outline-primary:hover,
-    .btn-modern.btn-outline-primary:focus {
-      background: var(--color-primary);
-      color: #fff;
+    .btn, .form-control, .card, .main-nav a {
+      transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), transform var(--transition-fast);
     }
-
-    .btn-modern.btn-primary {
-      background: var(--color-primary);
-      color: #fff;
+    .btn:active {
+      transform: scale(0.98);
+      box-shadow: var(--shadow-xs);
     }
-
-    .btn-modern.btn-primary:hover,
-    .btn-modern.btn-primary:focus {
-      background: var(--color-secondary);
-      color: #fff;
+    .main-nav a:focus, .main-nav a.active {
+      color: var(--color-primary-dark);
+      background: var(--color-primary-light);
+      border-radius: var(--radius-xs);
+      outline: 2px solid var(--color-primary);
     }
-
-    /* Highlight for search results */
-    .search-highlight {
-      background: var(--color-warning);
-      color: var(--color-dark);
-      padding: 0 2px;
-      border-radius: 3px;
-    }
+    /* ... (lanjutkan untuk modal, toast, dsb) ... */
   </style>
 </head>
 
 <body>
-  <!-- Enhanced Navigation -->
-  <nav class="navbar navbar-expand-lg nav-modern fixed-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">Photo Gallery</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+  <header class="site-header" role="banner" aria-label="Main site header">
+    <nav class="container nav-main" aria-label="Main navigation">
+      <a class="site-logo" href="#" aria-label="Photo Gallery Home">PhotoGallery</a>
+      <button class="nav-toggle" id="navToggle" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span aria-hidden="true">&#9776;</span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index2.html">Gallery</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index5.html">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index6.html">Contact</a>
-          </li>
-        </ul>
+      <ul class="main-nav" id="mainNav" role="menubar">
+        <li role="none"><a class="nav-link" href="index.html" role="menuitem" tabindex="0">Home</a></li>
+        <li role="none"><a class="nav-link" href="index2.html" role="menuitem" tabindex="0">Gallery</a></li>
+        <li role="none"><a class="nav-link" href="index5.html" role="menuitem" tabindex="0">About</a></li>
+        <li role="none"><a class="nav-link" href="index6.html" role="menuitem" tabindex="0">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main-content" tabindex="-1" aria-label="Main content">
+    <section class="hero" aria-labelledby="heroTitle">
+      <h1 id="heroTitle" class="hero-title">Empower Your Visual Storytelling</h1>
+      <p class="hero-desc">A modern SaaS photo gallery platform for everyone.</p>
+      <div class="u-flex u-flex-center u-mb-lg">
+        <a href="#pricing" class="btn" role="button" aria-label="See Pricing">Get Started</a>
+        <a href="#features" class="btn btn-outline" role="button" aria-label="See Features">Learn More</a>
       </div>
-    </div>
-  </nav>
+    </section>
 
-  <!-- SaaS Hero Section -->
-  <section class="hero" id="hero">
-    <div class="hero-bg"></div>
-    <div class="container hero-content" data-aos="fade-up">
-      <h1 class="hero-title">Empower Your Visual Storytelling</h1>
-      <p class="hero-desc">A modern SaaS photo gallery platform for creators, teams, and businesses. Organize, share,
-        and showcase your best moments with ease and style.</p>
-      <a href="#pricing" class="hero-cta" aria-label="See Pricing">Get Started</a>
-      <a href="#features" class="btn-modern btn-outline-primary" aria-label="See Features">Learn More</a>
-    </div>
-  </section>
-
-  <!-- SaaS Features Section -->
-  <section class="features-section" id="features">
-    <div class="container">
-      <h2 class="features-title">Why Choose Our Gallery SaaS?</h2>
-      <div class="features-grid">
-        <div class="feature-card" data-aos="fade-up">
-          <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-          <div class="feature-title">Cloud Storage</div>
-          <div class="feature-desc">Secure, scalable cloud storage for all your photos and assets.</div>
-        </div>
-        <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-          <div class="feature-icon"><i class="fas fa-users"></i></div>
-          <div class="feature-title">Team Collaboration</div>
-          <div class="feature-desc">Invite team members, assign roles, and manage access easily.</div>
-        </div>
-        <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-          <div class="feature-title">Lightning Fast</div>
-          <div class="feature-desc">Optimized for speed and performance on any device.</div>
-        </div>
-        <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-          <div class="feature-icon"><i class="fas fa-lock"></i></div>
-          <div class="feature-title">Privacy & Security</div>
-          <div class="feature-desc">Your data is encrypted and protected with industry standards.</div>
+    <!-- SaaS Features Section -->
+    <section class="features-section" id="features">
+      <div class="container">
+        <h2 class="features-title">Why Choose Our Gallery SaaS?</h2>
+        <div class="features-grid">
+          <div class="feature-card" data-aos="fade-up">
+            <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+            <div class="feature-title">Cloud Storage</div>
+            <div class="feature-desc">Secure, scalable cloud storage for all your photos and assets.</div>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="feature-icon"><i class="fas fa-users"></i></div>
+            <div class="feature-title">Team Collaboration</div>
+            <div class="feature-desc">Invite team members, assign roles, and manage access easily.</div>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+            <div class="feature-title">Lightning Fast</div>
+            <div class="feature-desc">Optimized for speed and performance on any device.</div>
+          </div>
+          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="feature-icon"><i class="fas fa-lock"></i></div>
+            <div class="feature-title">Privacy & Security</div>
+            <div class="feature-desc">Your data is encrypted and protected with industry standards.</div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="gallery" class="py-5">
-    <div class="container">
-      <h2 class="text-center mb-5 fw-bold" style="font-family: var(--font-heading); font-size: 2.1rem;">Our Photo
-        Collection</h2>
-      <div class="row g-4 gallery-grid" data-masonry='{"percentPosition": true }'>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892" class="card-img-top"
-              alt="Scenic landscape" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Scenic Landscape</h5>
-              <p class="card-text">
-                A breathtaking view of mountains and lakes.
-              </p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal1">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
+    <section id="gallery" class="py-5">
+      <div class="container">
+        <h2 class="text-center mb-5 fw-bold" style="font-family: var(--font-heading); font-size: 2.1rem;">Our Photo
+          Collection</h2>
+        <div class="row g-4 gallery-grid" data-masonry='{"percentPosition": true }'>
+          <div class="col col-4 gallery-item">
+            <article class="card" tabindex="0" aria-labelledby="gallery-title-1">
+              <div class="card-img-wrapper" style="aspect-ratio: 4/3; background: #e5e7eb;">
+                <img
+                  src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23e5e7eb'/%3E%3C/svg%3E"
+                  data-src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
+                  class="card-img"
+                  alt="Scenic landscape"
+                  loading="lazy"
+                  width="400"
+                  height="300"
+                  style="object-fit:cover; width:100%; height:100%; border-radius:var(--radius-md);"
+                />
+              </div>
+              <div class="card-body">
+                <h3 class="card-title" id="gallery-title-1">Scenic Landscape</h3>
+                <p class="card-desc">A breathtaking view of mountains and lakes.</p>
+                <div class="d-flex gap-sm mt-2">
+                  <button class="btn" data-modal="imageModal1" aria-label="View large image">View Large</button>
+                  <button class="btn btn-outline share-btn" aria-label="Share this photo"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-4 col-sm-6 gallery-item">
+            <div class="card-modern">
+              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca" class="card-img-top" alt="Urban architecture" style="width:100%;" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title">Urban Architecture</h5>
+              <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca" class="card-img-top"
+                alt="Urban architecture" style="width:100%;" />
+                  Modern city skyline with impressive buildings.
+                </p>
+                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal2">
+                  View Large
+                </button>
+                <button class="btn-modern btn-outline-primary share-btn">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca" class="card-img-top"
-              alt="Urban architecture" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Urban Architecture</h5>
-              <p class="card-text">
-                Modern city skyline with impressive buildings.
-              </p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal2">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
+          <div class="col-md-4 col-sm-6 gallery-item">
+            <div class="card-modern">
+              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top" alt="Wildlife photography" style="width:100%;" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title">Wildlife Photography</h5>
+              <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top"
+                alt="Wildlife photography" style="width:100%;" />
+                  Majestic lion captured in its natural habitat.
+                </p>
+                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal3">
+                  View Large
+                </button>
+                <button class="btn-modern btn-outline-primary share-btn">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top"
-              alt="Wildlife photography" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Wildlife Photography</h5>
-              <p class="card-text">
-                Majestic lion captured in its natural habitat.
-              </p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal3">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
+          <div class="col-md-4 col-sm-6 gallery-item">
+            <div class="card-modern">
+              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="card-img-top" alt="Aerial beach view" style="width:100%;" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title">Aerial Beach View</h5>
+              <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="card-img-top"
+                alt="Aerial beach view" style="width:100%;" />
+                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal4">
+                  View Large
+                </button>
+                <button class="btn-modern btn-outline-primary share-btn">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="card-img-top"
-              alt="Aerial beach view" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Aerial Beach View</h5>
-              <p class="card-text">Stunning coastline captured from above.</p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal4">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
+          <div class="col-md-4 col-sm-6 gallery-item">
+            <div class="card-modern">
+              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" class="card-img-top" alt="Cultural festival" style="width:100%;" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title">Cultural Festival</h5>
+              <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" class="card-img-top"
+                alt="Cultural festival" style="width:100%;" />
+                  Vibrant colors of a traditional celebration.
+                </p>
+                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal5">
+                  View Large
+                </button>
+                <button class="btn-modern btn-outline-primary share-btn">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" class="card-img-top"
-              alt="Cultural festival" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Cultural Festival</h5>
-              <p class="card-text">
-                Vibrant colors of a traditional celebration.
-              </p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal5">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 gallery-item">
-          <div class="card-modern">
-            <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99" class="card-img-top"
-              alt="Abstract art" style="width:100%;" />
-            <div class="card-body">
-              <h5 class="card-title">Abstract Art</h5>
-              <p class="card-text">
-                Colorful and thought-provoking modern artwork.
-              </p>
-              <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal6">
-                View Large
-              </button>
-              <button class="btn-modern btn-outline-primary share-btn">
-                <i class="fas fa-share-alt"></i> Share
-              </button>
+          <div class="col-md-4 col-sm-6 gallery-item">
+            <div class="card-modern">
+              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99" class="card-img-top" alt="Abstract art" style="width:100%;" loading="lazy" />
+              <div class="card-body">
+                <h5 class="card-title">Abstract Art</h5>
+              <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99" class="card-img-top"
+                alt="Abstract art" style="width:100%;" />
+                  Colorful and thought-provoking modern artwork.
+                </p>
+                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal6">
+                  View Large
+                </button>
+                <button class="btn-modern btn-outline-primary share-btn">
+                  <i class="fas fa-share-alt"></i> Share
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SaaS Testimonials Section -->
-  <section class="testimonials-section" id="testimonials">
-    <div class="container">
-      <h2 class="testimonials-title">What Our Users Say</h2>
-      <div class="testimonials-grid">
-        <div class="testimonial-card" data-aos="fade-up">
-          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User testimonial" class="testimonial-avatar" />
-          <div class="testimonial-name">Alex Johnson</div>
-          <div class="testimonial-role">Photographer</div>
-          <div class="testimonial-text">"The gallery SaaS is a game changer for my workflow. Uploading and sharing is
-            seamless!"</div>
-        </div>
-        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User testimonial"
-            class="testimonial-avatar" />
-          <div class="testimonial-name">Maria Lee</div>
-          <div class="testimonial-role">Marketing Lead</div>
-          <div class="testimonial-text">"Our team collaboration improved drastically. The interface is beautiful and
-            intuitive."</div>
-        </div>
-        <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-          <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="User testimonial" class="testimonial-avatar" />
-          <div class="testimonial-name">Chris Evans</div>
-          <div class="testimonial-role">Startup Founder</div>
-          <div class="testimonial-text">"Highly recommend for any business that values visual content and security."
+    <!-- SaaS Testimonials Section -->
+    <section class="testimonials-section" id="testimonials">
+      <div class="container">
+        <h2 class="testimonials-title">What Our Users Say</h2>
+        <div class="testimonials-grid">
+          <div class="testimonial-card" data-aos="fade-up">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User testimonial" class="testimonial-avatar" />
+            <div class="testimonial-name">Alex Johnson</div>
+            <div class="testimonial-role">Photographer</div>
+            <div class="testimonial-text">"The gallery SaaS is a game changer for my workflow. Uploading and sharing is
+              seamless!"</div>
+          </div>
+          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User testimonial"
+              class="testimonial-avatar" />
+            <div class="testimonial-name">Maria Lee</div>
+            <div class="testimonial-role">Marketing Lead</div>
+            <div class="testimonial-text">"Our team collaboration improved drastically. The interface is beautiful and
+              intuitive."</div>
+          </div>
+          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+            <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="User testimonial" class="testimonial-avatar" />
+            <div class="testimonial-name">Chris Evans</div>
+            <div class="testimonial-role">Startup Founder</div>
+            <div class="testimonial-text">"Highly recommend for any business that values visual content and security."
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SaaS Pricing Section -->
-  <section class="pricing-section" id="pricing">
-    <div class="container">
-      <h2 class="pricing-title">Simple, Transparent Pricing</h2>
-      <div class="pricing-grid">
-        <div class="pricing-card" data-aos="fade-up">
-          <div class="pricing-plan">Starter</div>
-          <div class="pricing-price">$0<span style="font-size:1rem;">/mo</span></div>
-          <ul class="pricing-features">
-            <li>Up to 100 photos</li>
-            <li>Basic sharing</li>
-            <li>Email support</li>
+    <!-- SaaS Pricing Section -->
+    <section class="pricing-section" id="pricing">
+      <div class="container">
+        <h2 class="pricing-title">Simple, Transparent Pricing</h2>
+        <div class="pricing-grid">
+          <div class="pricing-card" data-aos="fade-up">
+            <div class="pricing-plan">Starter</div>
+            <div class="pricing-price">$0<span style="font-size:1rem;">/mo</span></div>
+            <ul class="pricing-features">
+              <li>Up to 100 photos</li>
+              <li>Basic sharing</li>
+              <li>Email support</li>
+            </ul>
+            <button class="pricing-cta">Sign Up Free</button>
+          </div>
+          <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="100">
+            <div class="pricing-plan">Pro</div>
+            <div class="pricing-price">$12<span style="font-size:1rem;">/mo</span></div>
+            <ul class="pricing-features">
+              <li>Unlimited photos</li>
+              <li>Team collaboration</li>
+              <li>Priority support</li>
+              <li>Advanced analytics</li>
+            </ul>
+            <button class="pricing-cta">Start Pro</button>
+          </div>
+          <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="pricing-plan">Enterprise</div>
+            <div class="pricing-price">Custom</div>
+            <ul class="pricing-features">
+              <li>Custom integrations</li>
+              <li>Dedicated manager</li>
+              <li>SLAs & compliance</li>
+            </ul>
+            <button class="pricing-cta">Contact Sales</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-5" id="login-section">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <ul class="nav nav-tabs mb-3" id="authTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
+                role="tab">Login</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button"
+                role="tab">Register</button>
+            </li>
           </ul>
-          <button class="pricing-cta">Sign Up Free</button>
-        </div>
-        <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="100">
-          <div class="pricing-plan">Pro</div>
-          <div class="pricing-price">$12<span style="font-size:1rem;">/mo</span></div>
-          <ul class="pricing-features">
-            <li>Unlimited photos</li>
-            <li>Team collaboration</li>
-            <li>Priority support</li>
-            <li>Advanced analytics</li>
-          </ul>
-          <button class="pricing-cta">Start Pro</button>
-        </div>
-        <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
-          <div class="pricing-plan">Enterprise</div>
-          <div class="pricing-price">Custom</div>
-          <ul class="pricing-features">
-            <li>Custom integrations</li>
-            <li>Dedicated manager</li>
-            <li>SLAs & compliance</li>
-          </ul>
-          <button class="pricing-cta">Contact Sales</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="container py-5" id="login-section">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <ul class="nav nav-tabs mb-3" id="authTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
-              role="tab">Login</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button"
-              role="tab">Register</button>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="login" role="tabpanel">
-            <form id="loginForm" novalidate autocomplete="off">
-              <div class="mb-3">
-                <label for="loginEmail" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="loginEmail" required autocomplete="off">
-                <div class="invalid-feedback">Please enter a valid email.</div>
-              </div>
-              <div class="mb-3">
-                <label for="loginPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="loginPassword" required minlength="6"
-                  autocomplete="off">
-                <div class="invalid-feedback">Password must be at least 6 characters.</div>
-              </div>
-              <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-          </div>
-          <div class="tab-pane fade" id="register" role="tabpanel">
-            <form id="registerForm" novalidate autocomplete="off">
-              <div class="mb-3">
-                <label for="registerEmail" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="registerEmail" required autocomplete="off">
-                <div class="invalid-feedback">Please enter a valid email.</div>
-              </div>
-              <div class="mb-3">
-                <label for="registerPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="registerPassword" required minlength="6"
-                  autocomplete="off">
-                <div class="invalid-feedback">Password must be at least 6 characters.</div>
-              </div>
-              <div class="mb-3">
-                <label for="registerConfirm" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="registerConfirm" required autocomplete="off">
-                <div class="invalid-feedback">Passwords do not match.</div>
-              </div>
-              <button type="submit" class="btn btn-success w-100">Register</button>
-            </form>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <form id="loginForm" novalidate autocomplete="off">
+                <div class="mb-3">
+                  <label for="loginEmail" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="loginEmail" required autocomplete="off">
+                  <div class="invalid-feedback">Please enter a valid email.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="loginPassword" required minlength="6"
+                    autocomplete="off">
+                  <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="register" role="tabpanel">
+              <form id="registerForm" novalidate autocomplete="off">
+                <div class="mb-3">
+                  <label for="registerEmail" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="registerEmail" required autocomplete="off">
+                  <div class="invalid-feedback">Please enter a valid email.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="registerPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="registerPassword" required minlength="6"
+                    autocomplete="off">
+                  <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="registerConfirm" class="form-label">Confirm Password</label>
+                  <input type="password" class="form-control" id="registerConfirm" required autocomplete="off">
+                  <div class="invalid-feedback">Passwords do not match.</div>
+                </div>
+                <button type="submit" class="btn btn-success w-100">Register</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="container py-5" id="search-section">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <form id="searchForm" class="d-flex mb-3" role="search">
-          <input class="form-control me-2" type="search" id="searchInput" placeholder="Search gallery..."
-            aria-label="Search">
-          <button class="btn btn-outline-primary" type="submit">Search</button>
-        </form>
-        <div id="searchResults" class="list-group" aria-live="polite"></div>
+    <section class="container py-5" id="search-section">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <form id="searchForm" class="d-flex mb-3" role="search">
+            <input class="form-control me-2" type="search" id="searchInput" placeholder="Search gallery..."
+              aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+          </form>
+          <div id="searchResults" class="list-group" aria-live="polite"></div>
+        </div>
       </div>
+    </section>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode">
+      <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Image Modals -->
+    <div id="galleryModals">
+      <!-- Modals will be injected here by JS -->
     </div>
-  </section>
-
-  <!-- Theme Toggle Button -->
-  <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode">
-    <i class="fas fa-moon"></i>
-  </button>
-
-  <!-- Image Modals -->
-  <div id="galleryModals">
-    <!-- Modals will be injected here by JS -->
-  </div>
-
-  <!-- SaaS Footer -->
-  <footer class="footer">
+  </main>
+  <footer role="contentinfo" aria-label="Site footer">
     <div class="footer-links">
       <a href="#features">Features</a>
       <a href="#gallery">Gallery</a>
@@ -1123,17 +904,7 @@
             pass.classList.remove('is-invalid');
           }
           if (valid) {
-            if (!document.getElementById('loginToast')) {
-              const toast = document.createElement('div');
-              toast.id = 'loginToast';
-              toast.className = 'toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3';
-              toast.role = 'alert';
-              toast.ariaLive = 'assertive';
-              toast.ariaAtomic = 'true';
-              toast.innerHTML = '<div class="d-flex"><div class="toast-body">Login successful (dummy)</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
-              document.body.appendChild(toast);
-              new bootstrap.Toast(toast).show();
-            }
+            showToast('loginToast', 'Login successful (dummy)');
           }
         });
       }
@@ -1165,17 +936,7 @@
             conf.classList.remove('is-invalid');
           }
           if (valid) {
-            if (!document.getElementById('registerToast')) {
-              const toast = document.createElement('div');
-              toast.id = 'registerToast';
-              toast.className = 'toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3';
-              toast.role = 'alert';
-              toast.ariaLive = 'assertive';
-              toast.ariaAtomic = 'true';
-              toast.innerHTML = '<div class="d-flex"><div class="toast-body">Registration successful (dummy)</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
-              document.body.appendChild(toast);
-              new bootstrap.Toast(toast).show();
-            }
+            showToast('registerToast', 'Registration successful (dummy)');
           }
         });
       }
@@ -1263,18 +1024,83 @@
 
       // Footer year
       document.getElementById('footerYear').textContent = new Date().getFullYear();
-    });
 
-    function toggleTheme() {
-      const html = document.documentElement;
-      const theme =
-        html.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      html.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
-    }
+      function toggleTheme() {
+        const html = document.documentElement;
+        const theme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+      }
+
+      // Add this for accessibility for toasts
+      function showToast(id, message, type = "success") {
+        // Remove existing toast with same id if present
+        const existing = document.getElementById(id);
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.id = id;
+        toast.className = `toast align-items-center text-bg-${type} border-0 position-fixed bottom-0 end-0 m-3`;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+        document.body.appendChild(toast);
+        new bootstrap.Toast(toast).show();
+      }
+
+      // Blur-up image loading
+      document.querySelectorAll('.card-img[data-src]').forEach(img => {
+        const realSrc = img.getAttribute('data-src');
+        img.onload = () => img.setAttribute('data-loaded', 'true');
+        img.src = realSrc;
+      });
+
+      // Real-time form validation
+      function validateInput(input, type = "text") {
+        if (type === "email") {
+          return /\S+@\S+\.\S+/.test(input.value);
+        }
+        if (type === "password") {
+          return input.value.length >= 6;
+        }
+        if (type === "confirm") {
+          const pass = document.getElementById('registerPassword');
+          return input.value === pass.value && input.value.length >= 6;
+        }
+        return !!input.value.trim();
+      }
+      document.querySelectorAll('input[required]').forEach(input => {
+        input.addEventListener('input', function () {
+          let valid = true;
+          if (input.type === "email") valid = validateInput(input, "email");
+          else if (input.id === "registerPassword" || input.id === "loginPassword") valid = validateInput(input, "password");
+          else if (input.id === "registerConfirm") valid = validateInput(input, "confirm");
+          else valid = validateInput(input);
+          input.classList.toggle('is-invalid', !valid);
+        });
+      });
+
+      // Keyboard navigation for nav
+      const navToggle = document.getElementById('navToggle');
+      const mainNav = document.getElementById('mainNav');
+      navToggle.addEventListener('click', function () {
+        const expanded = mainNav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', expanded);
+        if (expanded) mainNav.querySelector('a').focus();
+      });
+      navToggle.addEventListener('keydown', function (e) {
+        if (e.key === "Enter" || e.key === " ") navToggle.click();
+      });
+
+      // prefers-reduced-motion
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('*').forEach(el => {
+          el.style.transition = 'none !important';
+          el.style.animation = 'none !important';
+        });
+      }
+    });
   </script>
-  <!-- Required Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Masonry JS -->
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <!-- AOS Animation JS -->
@@ -1282,6 +1108,13 @@
   <script>
     AOS.init({ once: true, duration: 700 });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.querySelector('.navbar-toggler');
+      navToggle.addEventListener('click', () => {
+        document.querySelector('.navbar-collapse').classList.toggle('show');
+      });
+    });
+  </script>
 </body>
-
 </html>

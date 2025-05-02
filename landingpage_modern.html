@@ -72,13 +72,33 @@
         font-size: 1rem !important;
       }
     }
+
+    /* Improved: Add focus styles for accessibility */
+    a:focus, button:focus, input:focus {
+      outline: 2px solid #198754;
+      outline-offset: 2px;
+    }
+
+    /* Improved: Sidebar responsive collapse */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        margin-top: 2rem;
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    /* Improved: Table responsiveness */
+    .table-responsive {
+      overflow-x: auto;
+    }
   </style>
 </head>
 
 <body>
   <!-- Header -->
-  <header class="sticky-top bg-light border-bottom mb-4">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <header class="sticky-top bg-light border-bottom mb-4" aria-label="Header">
+    <nav class="navbar navbar-expand-md navbar-light bg-light" aria-label="Main navigation">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
           <img src="https://via.placeholder.com/48x48?text=Logo" alt="Logo" class="me-2 rounded brand-logo">
@@ -103,11 +123,11 @@
   <div class="container">
     <div class="row">
       <!-- Main Content -->
-      <main class="col-lg-8 mb-4">
-        <section class="text-center my-5">
-          <h1 class="display-5 fw-bold">Solusi Sewa Apartemen Modern</h1>
+      <main class="col-lg-8 mb-4" id="main-content" tabindex="-1">
+        <section class="text-center my-5" aria-labelledby="hero-title">
+          <h1 class="display-5 fw-bold" id="hero-title">Solusi Sewa Apartemen Modern</h1>
           <p class="lead mb-4">Kelola apartemen, penyewa, dan pembayaran dalam satu aplikasi.</p>
-          <a href="#" class="btn btn-success btn-lg">Mulai Sekarang</a>
+          <a href="#" class="btn btn-success btn-lg" role="button" aria-label="Mulai Sekarang">Mulai Sekarang</a>
         </section>
         <section class="my-5">
           <div class="row text-center">
@@ -142,47 +162,49 @@
         </div>
         <div class="mb-4">
           <h4>Data Penyewa</h4>
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Andi</td>
-                <td>Aktif</td>
-              </tr>
-              <tr>
-                <td>Budi</td>
-                <td>Menunggu Pembayaran</td>
-              </tr>
-              <tr>
-                <td>Citra</td>
-                <td>Aktif</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered" aria-label="Data Penyewa">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Andi</td>
+                  <td>Aktif</td>
+                </tr>
+                <tr>
+                  <td>Budi</td>
+                  <td>Menunggu Pembayaran</td>
+                </tr>
+                <tr>
+                  <td>Citra</td>
+                  <td>Aktif</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div>
           <h4>Formulir Kontak</h4>
-          <form id="contactForm">
+          <form id="contactForm" novalidate>
             <div class="mb-3">
               <label for="nama" class="form-label">Nama</label>
-              <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required>
+              <input type="text" class="form-control" id="nama" placeholder="Masukkan nama Anda" required aria-required="true">
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda" required>
+              <input type="email" class="form-control" id="email" placeholder="Masukkan email Anda" required aria-required="true">
             </div>
             <button type="submit" class="btn btn-primary">Kirim</button>
           </form>
-          <div id="formMessage" class="mt-2"></div>
+          <div id="formMessage" class="mt-2" aria-live="polite"></div>
         </div>
       </main>
       <!-- Sidebar -->
-      <aside class="col-lg-4">
+      <aside class="col-lg-4" aria-label="Sidebar">
         <div class="sidebar">
           <h5 class="fw-bold mb-3">Menu Navigasi</h5>
           <ul class="nav flex-column mb-4">
@@ -205,7 +227,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="mt-auto">
+  <footer class="mt-auto" aria-label="Footer">
     <div class="container">
       <div class="row mb-3">
         <div class="col-md-4 mb-2">
@@ -260,10 +282,12 @@
     // Contoh: Mengubah judul halaman secara dinamis
     document.getElementById('pageTitle').textContent = "Solusi Sewa Apartemen Modern";
 
-    // Formulir kontak sederhana
+    // Improved: Use ARIA live for form feedback
     document.getElementById('contactForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      document.getElementById('formMessage').textContent = "Terima kasih, pesan Anda telah dikirim!";
+      const msg = document.getElementById('formMessage');
+      msg.textContent = "Terima kasih, pesan Anda telah dikirim!";
+      msg.setAttribute('role', 'status');
       this.reset();
     });
   </script>
