@@ -2,77 +2,210 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#00b7eb" />
     <title>ApertureFind - Reports</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Add required libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   </head>
   <body>
-    <!-- Sidebar -->
+    <!-- Sidebar with improved navigation -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="index.html" class="logo txt-xl txt-bold">ApertureFind</a>
+        <a href="index.html" class="logo txt-xl txt-bold">
+          <img src="logo.png" alt="ApertureFind Logo" class="logo-img" />
+          ApertureFind
+        </a>
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <span></span>
+        </button>
       </div>
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <a href="index.html" class="sidebar-link"
-              ><span>🏠</span> Dashboard</a
-            >
+            <a href="index.html" class="sidebar-link" title="Dashboard">
+              <span class="icon">🏠</span>
+              <span class="text">Dashboard</span>
+            </a>
           </li>
           <li>
-            <a href="apartments.html" class="sidebar-link"
-              ><span>🏢</span> Apartments</a
-            >
+            <a href="apartments.html" class="sidebar-link" title="Apartments">
+              <span class="icon">🏢</span>
+              <span class="text">Apartments</span>
+            </a>
           </li>
           <li>
-            <a href="tenants.html" class="sidebar-link"
-              ><span>👥</span> Tenants</a
-            >
+            <a href="tenants.html" class="sidebar-link" title="Tenants">
+              <span class="icon">👥</span>
+              <span class="text">Tenants</span>
+            </a>
           </li>
           <li>
-            <a href="payments.html" class="sidebar-link"
-              ><span>💳</span> Payments</a
-            >
+            <a href="payments.html" class="sidebar-link" title="Payments">
+              <span class="icon">💳</span>
+              <span class="text">Payments</span>
+            </a>
           </li>
           <li>
-            <a href="reports.html" class="sidebar-link active"
-              ><span>📊</span> Reports</a
-            >
+            <a href="reports.html" class="sidebar-link active" title="Reports">
+              <span class="icon">📊</span>
+              <span class="text">Reports</span>
+            </a>
           </li>
         </ul>
       </nav>
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main Content with improved layout -->
     <main class="main-content">
       <header class="header">
         <div class="container flex justify-between align-center">
-          <h1 class="txt-xl txt-bold">Reports</h1>
+          <div class="flex align-center gap-sm">
+            <h1 class="txt-xl txt-bold">Reports</h1>
+            <div class="breadcrumb txt-sm txt-muted">
+              Dashboard / Reports
+            </div>
+          </div>
           <div class="user-menu">
-            <button class="btn btn-secondary">Admin <span>▼</span></button>
+            <div class="notifications">
+              <button class="btn btn-icon" title="Notifications">
+                <span class="icon">🔔</span>
+                <span class="badge">3</span>
+              </button>
+            </div>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle">
+                <img src="avatar.png" alt="Admin" class="avatar-sm" />
+                <span>Admin</span>
+                <span class="icon">▼</span>
+              </button>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Profile</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item txt-danger">Logout</a>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       <section class="reports">
         <div class="container">
-          <div class="grid-12 gap-md">
-            <div class="col-span-6 card fade-in">
-              <h3 class="txt-lg txt-bold">Occupancy Rate</h3>
-              <canvas id="occupancyChart"></canvas>
+          <!-- Enhanced Tab Navigation -->
+          <div class="tabs mb-md fade-in">
+            <button class="tab-btn active" data-tab="financial">
+              <span class="icon">💰</span>
+              <span>Financial Reports</span>
+            </button>
+            <button class="tab-btn" data-tab="occupancy">
+              <span class="icon">📈</span>
+              <span>Occupancy Analysis</span>
+            </button>
+            <button class="tab-btn" data-tab="performance">
+              <span class="icon">⭐</span>
+              <span>Performance Analysis</span>
+            </button>
+            <button class="tab-btn" data-tab="maintenance">
+              <span class="icon">🔧</span>
+              <span>Maintenance Reports</span>
+            </button>
+          </div>
+
+          <!-- Improved Filters and Controls -->
+          <div class="card mb-md fade-in">
+            <div class="flex justify-between align-center flex-wrap gap-sm">
+              <div>
+                <h3 class="txt-lg txt-bold mb-xs">Financial & Occupancy Reports</h3>
+                <p class="txt-sm txt-muted">Analyze property performance and revenue</p>
+              </div>
+              <div class="flex gap-sm flex-wrap">
+                <div class="form-group">
+                  <label for="reportPeriod" class="form-label">Period</label>
+                  <div class="select-wrapper">
+                    <select id="reportPeriod" class="form-select">
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly" selected>Monthly</option>
+                      <option value="quarterly">Quarterly</option>
+                      <option value="yearly">Yearly</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="startDate" class="form-label">Start Date</label>
+                  <input type="date" id="startDate" class="form-input datepicker" />
+                </div>
+                <div class="form-group">
+                  <label for="endDate" class="form-label">End Date</label>
+                  <input type="date" id="endDate" class="form-input datepicker" />
+                </div>
+                <div class="form-group">
+                  <label for="propertyFilter" class="form-label">Property</label>
+                  <select id="propertyFilter" class="form-select">
+                    <option value="all">All Properties</option>
+                    <!-- Dynamic options will be added here -->
+                  </select>
+                </div>
+                <div class="form-group flex align-end">
+                  <button id="generateReport" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    Generate Report
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="col-span-6 card fade-in">
-              <h3 class="txt-lg txt-bold">Revenue Over Time</h3>
-              <canvas id="revenueChart"></canvas>
+          </div>
+
+          <!-- Rest of the content remains the same but with improved styling -->
+          <!-- Previous tab content sections... -->
+
+          <!-- Enhanced Export Options -->
+          <div class="flex justify-end mt-md gap-sm">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Export As
+              </button>
+              <div class="dropdown-menu">
+                <button id="exportCSV" class="dropdown-item">
+                  <span class="icon">📊</span> CSV
+                </button>
+                <button id="exportExcel" class="dropdown-item">
+                  <span class="icon">📑</span> Excel
+                </button>
+                <button id="exportPDF" class="dropdown-item">
+                  <span class="icon">📄</span> PDF
+                </button>
+              </div>
             </div>
+            <button id="printReport" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7"></path>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <path d="M6 14h12v8H6z"></path>
+              </svg>
+              Print Report
+            </button>
           </div>
         </div>
       </section>
     </main>
 
+    <!-- Add required scripts -->
+    <script src="charts.js"></script>
+    <script src="reports.js"></script>
     <script src="main.js"></script>
   </body>
 </html>

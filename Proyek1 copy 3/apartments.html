@@ -2,45 +2,49 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#00b7eb" />
+    <meta name="description" content="Manage your apartment listings with ApertureFind" />
     <title>ApertureFind - Manage Apartments</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Add Font Awesome for better icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   </head>
   <body>
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar__header">
-        <a href="index.html" class="sidebar__logo txt-xl txt-bold">ApertureFind</a>
+      <div class="sidebar-header">
+        <a href="index.html" class="logo txt-xl txt-bold">
+          <img src="logo.png" alt="ApertureFind Logo" class="logo-img" />
+          ApertureFind
+        </a>
       </div>
-      <nav class="sidebar__nav">
-        <ul class="sidebar__menu">
-          <li class="sidebar__item">
-            <a href="index.html" class="sidebar__link"
-              ><span class="sidebar__icon">🏠</span> Dashboard</a
-            >
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html" class="sidebar-link">
+              <i class="fas fa-home"></i> Dashboard
+            </a>
           </li>
-          <li class="sidebar__item">
-            <a href="apartments.html" class="sidebar__link sidebar__link--active"
-              ><span class="sidebar__icon">🏢</span> Apartments</a
-            >
+          <li>
+            <a href="apartments.html" class="sidebar-link active">
+              <i class="fas fa-building"></i> Apartments
+            </a>
           </li>
-          <li class="sidebar__item">
-            <a href="tenants.html" class="sidebar__link"
-              ><span class="sidebar__icon">👥</span> Tenants</a
-            >
+          <li>
+            <a href="tenants.html" class="sidebar-link">
+              <i class="fas fa-users"></i> Tenants
+            </a>
           </li>
-          <li class="sidebar__item">
-            <a href="payments.html" class="sidebar__link"
-              ><span class="sidebar__icon">💳</span> Payments</a
-            >
+          <li>
+            <a href="payments.html" class="sidebar-link">
+              <i class="fas fa-credit-card"></i> Payments
+            </a>
           </li>
-          <li class="sidebar__item">
-            <a href="reports.html" class="sidebar__link"
-              ><span class="sidebar__icon">📊</span> Reports</a
-            >
+          <li>
+            <a href="reports.html" class="sidebar-link">
+              <i class="fas fa-chart-bar"></i> Reports
+            </a>
           </li>
         </ul>
       </nav>
@@ -50,42 +54,101 @@
     <main class="main-content">
       <header class="header">
         <div class="container flex justify-between align-center">
-          <button class="mobile-menu-toggle" data-mobile-toggle>
-            ☰
+          <button class="mobile-menu-toggle" aria-label="Toggle Menu" data-mobile-toggle>
+            <i class="fas fa-bars"></i>
           </button>
           <h1 class="txt-xl txt-bold">Manage Apartments</h1>
           <div class="user-menu">
-            <button class="btn btn-secondary">Admin <span>▼</span></button>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle">
+                <i class="fas fa-user-circle"></i>
+                Admin
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="logout.html" class="text-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       <section class="apartments">
         <div class="container">
+          <div class="dashboard-stats grid-4">
+            <div class="stat-card">
+              <i class="fas fa-building"></i>
+              <h3>Total Units</h3>
+              <p id="totalUnits">0</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-check-circle"></i>
+              <h3>Available</h3>
+              <p id="availableUnits">0</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <h3>Occupied</h3>
+              <p id="occupiedUnits">0</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-dollar-sign"></i>
+              <h3>Total Revenue</h3>
+              <p id="totalRevenue">$0</p>
+            </div>
+          </div>
+
           <div class="flex justify-between align-center mb-md">
-            <input
-              type="text"
-              id="searchApartments"
-              class="form-control"
-              placeholder="Search apartments..."
-              aria-label="Search apartments" />
+            <div class="search-filter-group">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input
+                  type="text"
+                  id="searchApartments"
+                  class="form-control"
+                  placeholder="Search apartments..."
+                  aria-label="Search apartments" />
+              </div>
+              <select id="filterStatus" class="form-control">
+                <option value="all">All Status</option>
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+              <select id="sortBy" class="form-control">
+                <option value="name">Sort by Name</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
             <button class="btn btn-primary" id="addApartmentBtn">
-              Add Apartment
+              <i class="fas fa-plus"></i> Add Apartment
             </button>
           </div>
+
           <div class="table-container">
             <table class="table">
               <thead>
                 <tr>
+                  <th>Image</th>
                   <th>Name</th>
                   <th>Location</th>
                   <th>Price</th>
                   <th>Status</th>
+                  <th>Features</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="apartmentsTable"></tbody>
             </table>
+            <div class="pagination">
+              <button class="btn btn-secondary" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+              <span id="currentPage">Page 1 of 1</span>
+              <button class="btn btn-secondary" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+            </div>
           </div>
         </div>
       </section>
@@ -93,42 +156,66 @@
       <!-- Modal -->
       <div class="modal" id="apartmentModal">
         <div class="modal-content">
-          <h2 class="txt-lg txt-bold">Add/Edit Apartment</h2>
+          <div class="modal-header">
+            <h2 class="txt-lg txt-bold">Add/Edit Apartment</h2>
+            <button class="close-modal" aria-label="Close modal">×</button>
+          </div>
           <form id="apartmentForm" class="modal-form" data-form="apartment">
-            <div class="form-group">
-              <label for="aptName">Name</label>
-              <input type="text" id="aptName" class="form-control" required />
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="aptImage">Apartment Image</label>
+                <input type="file" id="aptImage" class="form-control" accept="image/*" />
+                <div id="imagePreview" class="image-preview"></div>
+              </div>
+              <div class="form-group">
+                <label for="aptName">Name</label>
+                <input type="text" id="aptName" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="aptLocation">Location</label>
+                <input type="text" id="aptLocation" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="aptPrice">Price ($/month)</label>
+                <input type="number" id="aptPrice" class="form-control" required min="0" />
+              </div>
+              <div class="form-group">
+                <label for="aptStatus">Status</label>
+                <select id="aptStatus" class="form-control">
+                  <option value="available">Available</option>
+                  <option value="occupied">Occupied</option>
+                  <option value="maintenance">Under Maintenance</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="aptType">Apartment Type</label>
+                <select id="aptType" class="form-control">
+                  <option value="studio">Studio</option>
+                  <option value="1br">1 Bedroom</option>
+                  <option value="2br">2 Bedrooms</option>
+                  <option value="3br">3 Bedrooms</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Features</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" name="features" value="parking"> Parking</label>
+                  <label><input type="checkbox" name="features" value="gym"> Gym</label>
+                  <label><input type="checkbox" name="features" value="pool"> Pool</label>
+                  <label><input type="checkbox" name="features" value="security"> 24/7 Security</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="aptDescription">Description</label>
+                <textarea id="aptDescription" class="form-control" rows="3"></textarea>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="aptLocation">Location</label>
-              <input
-                type="text"
-                id="aptLocation"
-                class="form-control"
-                required />
-            </div>
-            <div class="form-group">
-              <label for="aptPrice">Price ($/month)</label>
-              <input
-                type="number"
-                id="aptPrice"
-                class="form-control"
-                required />
-            </div>
-            <div class="form-group">
-              <label for="aptStatus">Status</label>
-              <select id="aptStatus" class="form-control">
-                <option value="available">Available</option>
-                <option value="occupied">Occupied</option>
-              </select>
-            </div>
-            <div class="flex gap-sm">
-              <button type="submit" class="btn btn-primary">Save</button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                id="cancelApartment">
-                Cancel
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="cancelApartment">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save
               </button>
             </div>
           </form>
@@ -136,6 +223,9 @@
       </div>
     </main>
 
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <script src="main.js"></script>
+    <script src="apartments.js"></script>
   </body>
 </html>

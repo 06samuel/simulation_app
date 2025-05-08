@@ -2,65 +2,80 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <meta name="theme-color" content="#4C67EA" />
-    <meta
-      name="description"
-      content="ApertureFind - Modern Property Management Dashboard" />
+    <meta name="description" content="ApertureFind - Modern Property Management Dashboard" />
     <title>ApertureFind - Admin Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Add modern UI libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar__header">
         <a href="index.html" class="sidebar__logo" aria-label="Go to dashboard">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          ApertureFind
+          <span class="logo-text">ApertureFind</span>
         </a>
+        <button class="sidebar__collapse-btn" aria-label="Collapse sidebar">
+          <i class="mdi mdi-menu-fold"></i>
+        </button>
       </div>
+
       <nav class="sidebar__nav" aria-label="Main navigation">
         <ul class="sidebar__menu" role="list">
           <li class="sidebar__item">
-            <a
-              href="index.html"
-              class="sidebar__link sidebar__link--active"
-              aria-current="page">
-              <span class="sidebar__icon" role="img" aria-label="Dashboard">🏠</span> Dashboard
+            <a href="index.html" class="sidebar__link sidebar__link--active" aria-current="page">
+              <i class="mdi mdi-view-dashboard"></i>
+              <span>Dashboard</span>
             </a>
           </li>
           <li class="sidebar__item">
             <a href="apartments.html" class="sidebar__link">
-              <span class="sidebar__icon" role="img" aria-label="Apartments">🏢</span> Apartments
+              <i class="mdi mdi-apartment"></i>
+              <span>Apartments</span>
             </a>
           </li>
           <li class="sidebar__item">
             <a href="tenants.html" class="sidebar__link">
-              <span class="sidebar__icon" role="img" aria-label="Tenants">👥</span> Tenants
+              <i class="mdi mdi-account-group"></i>
+              <span>Tenants</span>
             </a>
           </li>
           <li class="sidebar__item">
             <a href="payments.html" class="sidebar__link">
-              <span class="sidebar__icon" role="img" aria-label="Payments">💳</span> Payments
+              <i class="mdi mdi-credit-card"></i>
+              <span>Payments</span>
+            </a>
+          </li>
+          <li class="sidebar__item">
+            <a href="maintenance.html" class="sidebar__link">
+              <i class="mdi mdi-tools"></i>
+              <span>Maintenance</span>
             </a>
           </li>
           <li class="sidebar__item">
             <a href="reports.html" class="sidebar__link">
-              <span class="sidebar__icon" role="img" aria-label="Reports">📊</span> Reports
+              <i class="mdi mdi-chart-bar"></i>
+              <span>Reports</span>
             </a>
           </li>
         </ul>
+
+        <div class="sidebar__footer">
+          <div class="theme-switch">
+            <label class="switch">
+              <input type="checkbox" id="themeToggle">
+              <span class="slider round"></span>
+            </label>
+            <span>Dark Mode</span>
+          </div>
+        </div>
       </nav>
     </aside>
 
@@ -68,38 +83,102 @@
     <main class="main-content">
       <header class="header">
         <div class="container">
-          <div class="flex justify-between align-center">
-            <button
-              class="btn btn-icon mobile-menu-toggle"
-              aria-label="Toggle menu"
-              data-mobile-toggle>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </button>
-            <h1 class="txt-xl txt-bold">Dashboard Overview</h1>
-            <div class="user-menu">
-              <button class="btn btn-secondary" aria-haspopup="true">
-                <span class="avatar">A</span>
-                Admin
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
+          <div class="header__wrapper">
+            <div class="header__left">
+              <button class="btn btn-icon mobile-menu-toggle" aria-label="Toggle menu" data-mobile-toggle>
+                <i class="mdi mdi-menu"></i>
               </button>
+              
+              <div class="search-container">
+                <form id="globalSearch" class="search-form">
+                  <i class="mdi mdi-magnify search-icon"></i>
+                  <input 
+                    type="search" 
+                    id="searchInput" 
+                    placeholder="Search apartments, tenants or payments..."
+                    class="search-input"
+                    autocomplete="off"
+                  >
+                  <div class="search-suggestions" id="searchSuggestions"></div>
+                </form>
+              </div>
+            </div>
+
+            <div class="header__right">
+              <div class="quick-actions">
+                <button class="btn btn-primary btn-sm">
+                  <i class="mdi mdi-plus"></i>
+                  <span>New Tenant</span>
+                </button>
+              </div>
+
+              <div class="notification-center">
+                <button id="notificationToggle" class="notification-toggle" aria-label="Notifications">
+                  <i class="mdi mdi-bell"></i>
+                  <span class="notification-badge pulse" id="notificationCount">3</span>
+                </button>
+                
+                <div class="notification-dropdown" id="notificationDropdown">
+                  <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <button id="markAllRead" class="btn btn-text">Mark all as read</button>
+                  </div>
+                  
+                  <div class="notification-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="payments">Payments</button>
+                    <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+                  </div>
+
+                  <ul class="notification-list custom-scrollbar" id="notificationList">
+                    <!-- Notification items will be dynamically populated -->
+                  </ul>
+                  
+                  <div class="notification-footer">
+                    <a href="notifications.html" class="btn btn-link">View All Notifications</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="user-menu">
+                <button id="userMenuToggle" class="user-menu-toggle">
+                  <img src="images/avatar.jpg" alt="Admin" class="user-avatar">
+                  <span class="user-name">Admin</span>
+                  <i class="mdi mdi-chevron-down"></i>
+                </button>
+                
+                <div class="user-dropdown" id="userDropdown">
+                  <div class="user-dropdown-header">
+                    <img src="images/avatar.jpg" alt="Admin" class="user-avatar-lg">
+                    <div class="user-info">
+                      <h4>Admin User</h4>
+                      <p>admin@aperturefind.com</p>
+                    </div>
+                  </div>
+                  
+                  <ul class="user-dropdown-menu">
+                    <li>
+                      <a href="profile.html">
+                        <i class="mdi mdi-account"></i>
+                        <span>My Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="settings.html">
+                        <i class="mdi mdi-cog"></i>
+                        <span>Settings</span>
+                      </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                      <a href="#" id="logoutLink" class="text-danger">
+                        <i class="mdi mdi-logout"></i>
+                        <span>Logout</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -108,103 +187,84 @@
       <section class="overview-section" aria-label="Dashboard overview">
         <div class="container">
           <!-- Stats Grid -->
-          <div class="grid-12 gap-md slide-in">
-            <div class="col-span-4 card">
-              <div class="flex align-center gap-md">
-                <div class="icon-circle bg-primary-light">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2">
-                    <path
-                      d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="txt-lg txt-bold">Total Apartments</h3>
-                  <p class="txt-2xl txt-bold txt-primary" id="total-apartments">
-                    0
-                  </p>
-                </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__icon bg-primary-light">
+                <i class="mdi mdi-home-city"></i>
+              </div>
+              <div class="stat-card__content">
+                <h3>Total Units</h3>
+                <p class="stat-value" id="total-apartments">120</p>
+                <p class="stat-change positive">+2.5% from last month</p>
               </div>
             </div>
-            <div class="col-span-4 card">
-              <div class="flex align-center gap-md">
-                <div class="icon-circle bg-success-light">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
+
+            <div class="stat-card">
+              <div class="stat-card__icon bg-success-light">
+                <i class="mdi mdi-account-check"></i>
+              </div>
+              <div class="stat-card__content">
+                <h3>Occupied Units</h3>
+                <p class="stat-value" id="occupiedUnits">98</p>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 82%"></div>
                 </div>
-                <div>
-                  <h3 class="txt-lg txt-bold">Occupied Units</h3>
-                  <p class="txt-2xl txt-bold txt-success" id="occupiedUnits">
-                    0
-                  </p>
-                </div>
+                <p class="stat-subtitle">82% Occupancy Rate</p>
               </div>
             </div>
-            <div class="col-span-4 card">
-              <div class="flex align-center gap-md">
-                <div class="icon-circle bg-warning-light">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2">
-                    <rect
-                      x="1"
-                      y="4"
-                      width="22"
-                      height="16"
-                      rx="2"
-                      ry="2"></rect>
-                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                  </svg>
-                </div>
-                <div>
-                  <h3 class="txt-lg txt-bold">Pending Payments</h3>
-                  <p class="txt-2xl txt-bold txt-warning" id="pendingPayments">
-                    $0
-                  </p>
-                </div>
+
+            <div class="stat-card">
+              <div class="stat-card__icon bg-warning-light">
+                <i class="mdi mdi-cash-multiple"></i>
+              </div>
+              <div class="stat-card__content">
+                <h3>Pending Payments</h3>
+                <p class="stat-value" id="pendingPayments">$12,450</p>
+                <p class="stat-change negative">5 payments overdue</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card__icon bg-info-light">
+                <i class="mdi mdi-chart-line"></i>
+              </div>
+              <div class="stat-card__content">
+                <h3>Monthly Revenue</h3>
+                <p class="stat-value">$45,250</p>
+                <p class="stat-change positive">+12% from last month</p>
               </div>
             </div>
           </div>
 
           <!-- Activity Sections -->
-          <div class="grid-12 gap-md mt-md">
-            <div class="col-span-6">
-              <div class="card fade-in">
-                <div class="flex justify-between align-center mb-md">
-                  <h3 class="txt-lg txt-bold">Recent Tenants</h3>
-                  <a href="tenants.html" class="btn btn-secondary btn-sm"
-                    >View All</a
-                  >
+          <div class="activity-grid">
+            <div class="activity-card">
+              <div class="card-header">
+                <h3>Recent Tenants</h3>
+                <div class="card-actions">
+                  <button class="btn btn-icon" aria-label="Filter">
+                    <i class="mdi mdi-filter"></i>
+                  </button>
+                  <a href="tenants.html" class="btn btn-outline">View All</a>
                 </div>
-                <ul id="recent-tenants" class="list" role="list"></ul>
+              </div>
+              <div class="tenant-list custom-scrollbar" id="recent-tenants">
+                <!-- Tenant items will be dynamically populated -->
               </div>
             </div>
-            <div class="col-span-6">
-              <div class="card fade-in">
-                <div class="flex justify-between align-center mb-md">
-                  <h3 class="txt-lg txt-bold">Recent Payments</h3>
-                  <a href="payments.html" class="btn btn-secondary btn-sm"
-                    >View All</a
-                  >
+
+            <div class="activity-card">
+              <div class="card-header">
+                <h3>Recent Payments</h3>
+                <div class="card-actions">
+                  <button class="btn btn-icon" aria-label="Filter">
+                    <i class="mdi mdi-filter"></i>
+                  </button>
+                  <a href="payments.html" class="btn btn-outline">View All</a>
                 </div>
-                <ul id="recentPayments" class="list" role="list"></ul>
+              </div>
+              <div class="payment-list custom-scrollbar" id="recentPayments">
+                <!-- Payment items will be dynamically populated -->
               </div>
             </div>
           </div>
@@ -212,6 +272,12 @@
       </section>
     </main>
 
-    <script src="main.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/dashboard.js"></script>
   </body>
 </html>

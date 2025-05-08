@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#00b7eb" />
+    <title>ApertureFind - Manajemen Pemeliharaan</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Add Material Icons for better UI -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Add Toast notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  </head>
+  <body>
+    <!-- Sidebar with improved navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo txt-xl txt-bold">
+          <img src="assets/logo.png" alt="ApertureFind Logo" class="logo-img">
+          ApertureFind
+        </a>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="index.html" class="sidebar-link">
+              <i class="material-icons">dashboard</i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="apartments.html" class="sidebar-link">
+              <i class="material-icons">apartment</i>
+              <span>Apartments</span>
+            </a>
+          </li>
+          <li>
+            <a href="tenants.html" class="sidebar-link">
+              <i class="material-icons">people</i>
+              <span>Tenants</span>
+            </a>
+          </li>
+          <li>
+            <a href="payments.html" class="sidebar-link">
+              <i class="material-icons">payment</i>
+              <span>Payments</span>
+            </a>
+          </li>
+          <li>
+            <a href="maintenance.html" class="sidebar-link active">
+              <i class="material-icons">build</i>
+              <span>Maintenance</span>
+            </a>
+          </li>
+          <li>
+            <a href="reports.html" class="sidebar-link">
+              <i class="material-icons">assessment</i>
+              <span>Reports</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content with improved layout -->
+    <main class="main-content">
+      <div class="main-header">
+        <h1 class="page-title">
+          <i class="material-icons">build</i>
+          Manajemen Pemeliharaan
+        </h1>
+        <div class="header-actions">
+          <button id="exportBtn" class="btn btn-secondary">
+            <i class="material-icons">file_download</i>
+            Export
+          </button>
+          <button id="addMaintenanceBtn" class="btn btn-primary">
+            <i class="material-icons">add</i>
+            Tambah Permintaan
+          </button>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <!-- Enhanced Filter dan Pencarian -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <i class="material-icons">search</i>
+            <input type="text" id="searchMaintenance" placeholder="Cari permintaan..." />
+            <button type="button" class="clear-search" id="clearSearch">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+          <div class="filter-group">
+            <div class="date-range">
+              <input type="date" id="startDate" class="form-control" placeholder="Dari Tanggal">
+              <input type="date" id="endDate" class="form-control" placeholder="Sampai Tanggal">
+            </div>
+            <select id="statusFilter" class="form-control">
+              <option value="">Semua Status</option>
+              <option value="pending">Menunggu</option>
+              <option value="in-progress">Dalam Proses</option>
+              <option value="completed">Selesai</option>
+              <option value="cancelled">Dibatalkan</option>
+            </select>
+            <select id="priorityFilter" class="form-control">
+              <option value="">Semua Prioritas</option>
+              <option value="low">Rendah</option>
+              <option value="medium">Sedang</option>
+              <option value="high">Tinggi</option>
+              <option value="urgent">Darurat</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+          <div class="stat-card pending">
+            <i class="material-icons">hourglass_empty</i>
+            <div class="stat-info">
+              <span class="stat-value" id="pendingCount">0</span>
+              <span class="stat-label">Menunggu</span>
+            </div>
+          </div>
+          <div class="stat-card in-progress">
+            <i class="material-icons">engineering</i>
+            <div class="stat-info">
+              <span class="stat-value" id="inProgressCount">0</span>
+              <span class="stat-label">Dalam Proses</span>
+            </div>
+          </div>
+          <div class="stat-card completed">
+            <i class="material-icons">check_circle</i>
+            <div class="stat-info">
+              <span class="stat-value" id="completedCount">0</span>
+              <span class="stat-label">Selesai</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Table -->
+        <div class="table-responsive">
+          <table class="data-table" id="maintenanceTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Apartemen</th>
+                <th>Penyewa</th>
+                <th>Masalah</th>
+                <th>Tanggal Laporan</th>
+                <th>Jadwal</th>
+                <th>Prioritas</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data akan diisi melalui JavaScript -->
+            </tbody>
+          </table>
+          <!-- Pagination -->
+          <div class="pagination-container">
+            <button id="prevPage" class="btn btn-secondary">
+              <i class="material-icons">chevron_left</i>
+            </button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button id="nextPage" class="btn btn-secondary">
+              <i class="material-icons">chevron_right</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Enhanced Modal -->
+    <div class="modal" id="maintenanceModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">
+            <i class="material-icons">build</i>
+            Tambah Permintaan Pemeliharaan
+          </h2>
+          <button class="close-btn" id="closeModal">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="maintenanceForm">
+            <input type="hidden" id="maintenance-id">
+            
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="apartment-id">Apartemen</label>
+                <select id="apartment-id" class="form-control" required>
+                  <option value="">Pilih Apartemen</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="tenant-id">Penyewa</label>
+                <select id="tenant-id" class="form-control" required>
+                  <option value="">Pilih Penyewa</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="issue-type">Jenis Masalah</label>
+                <select id="issue-type" class="form-control" required>
+                  <option value="">Pilih Jenis Masalah</option>
+                  <option value="plumbing">Pipa/Saluran Air</option>
+                  <option value="electrical">Listrik</option>
+                  <option value="appliance">Peralatan</option>
+                  <option value="structural">Struktural</option>
+                  <option value="hvac">AC/Pemanas</option>
+                  <option value="other">Lainnya</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="priority">Prioritas</label>
+                <select id="priority" class="form-control" required>
+                  <option value="low">Rendah</option>
+                  <option value="medium">Sedang</option>
+                  <option value="high">Tinggi</option>
+                  <option value="urgent">Darurat</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Deskripsi Masalah</label>
+              <textarea id="description" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="status">Status</label>
+                <select id="status" class="form-control" required>
+                  <option value="pending">Menunggu</option>
+                  <option value="in-progress">Dalam Proses</option>
+                  <option value="completed">Selesai</option>
+                  <option value="cancelled">Dibatalkan</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="scheduled-date">Jadwal Perbaikan</label>
+                <input type="datetime-local" id="scheduled-date" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="technician">Teknisi yang Ditugaskan</label>
+              <select id="technician" class="form-control">
+                <option value="">Pilih Teknisi</option>
+                <!-- Will be populated via JavaScript -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="maintenance-notes">Catatan</label>
+              <textarea id="maintenance-notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="maintenance-images">Foto (opsional)</label>
+              <div class="file-upload-container">
+                <input type="file" id="maintenance-images" class="form-control" multiple accept="image/*">
+                <div class="upload-label">
+                  <i class="material-icons">cloud_upload</i>
+                  <span>Drag & drop atau klik untuk memilih file</span>
+                </div>
+              </div>
+              <div id="image-preview" class="image-preview-container"></div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="form-group" id="progressTracking">
+              <label>Progress Pekerjaan</label>
+              <div class="progress-bar-container">
+                <input type="range" id="workProgress" min="0" max="100" step="10" value="0">
+                <span id="progressValue">0%</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="cancelBtn">
+                <i class="material-icons">close</i>
+                Batal
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="material-icons">save</i>
+                Simpan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add required scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/maintenance.js"></script>
+  </body>
+</html>
