@@ -15,9 +15,6 @@ class ApertureFindAdmin {
         this.renderContent();
         this.setupEventListeners();
         this.setupIntersectionObserver();
-        this.handlePromoCode();
-        this.handleFinancialReports();
-        this.handleReportTabs();
     }
 
     async loadData() {
@@ -43,10 +40,34 @@ class ApertureFindAdmin {
         }
     }
 
-    // Existing methods for theme, rendering, etc.
-    // ...
+    setupEventListeners() {
+        // Toggle sidebar
+        const mobileToggle = document.querySelector('[data-mobile-toggle]');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                document.querySelector('.sidebar').classList.toggle('sidebar--collapsed');
+            });
+        }
 
-    // Modified methods for CRUD operations
+        // User dropdown
+        const userMenuToggle = document.getElementById('userMenuToggle');
+        if (userMenuToggle) {
+            userMenuToggle.addEventListener('click', () => {
+                document.getElementById('userDropdown').classList.toggle('show');
+            });
+        }
+
+        // Add apartment button
+        const addApartmentBtn = document.getElementById('addApartmentBtn');
+        if (addApartmentBtn) {
+            addApartmentBtn.addEventListener('click', () => {
+                this.showApartmentModal();
+            });
+        }
+
+        // More event listeners...
+    }
+
     async addApartment(apartmentData) {
         try {
             const result = await this.api.createApartment(apartmentData);

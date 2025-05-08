@@ -1,181 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
+    <style>
+    .sidebar {
+        transition: all 0.3s ease;
+        width: 250px;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+    }
+
+    .sidebar.collapsed .sidebar__logo-text,
+    .sidebar.collapsed .sidebar__link-text {
+        display: none;
+    }
+
+    .sidebar__collapse-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.collapsed .sidebar__collapse-btn {
+        transform: rotate(180deg);
+    }
+    </style>
+
+    <script>
+    document.getElementById('sidebarCollapseBtn').addEventListener('click', function() {
+        const sidebar = document.querySelector('.sidebar');
+        sidebar.classList.toggle('collapsed');
+    });
+    </script>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#00b7eb" />
-    <title>ApertureFind - Manage Tenants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApertureFind Admin Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="dashboard.html" class="logo txt-xl txt-bold">ApertureFind</a>
-      </div>
-      <nav class="sidebar-nav">
-        <ul>
-          <li>
-            <a href="dashboard.html" class="sidebar-link"
-              ><span>🏠</span> Dashboard</a
-            >
-          </li>
-          <li>
-            <a href="apartments.html" class="sidebar-link"
-              ><span>🏢</span> Apartments</a
-            >
-          </li>
-          <li>
-            <a href="tenants.html" class="sidebar-link active"
-              ><span>👥</span> Tenants</a
-            >
-          </li>
-          <li>
-            <a href="payments.html" class="sidebar-link"
-              ><span>💳</span> Payments</a
-            >
-          </li>
-          <li>
-            <a href="reports.html" class="sidebar-link"
-              ><span>📊</span> Reports</a
-            >
-          </li>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ @mdi/font@latest/css/materialdesignicons.min.css">
+</head>
+<body class="body">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  
+    <div class="sidebar__header">
+        <a href="#" class="sidebar__logo">
+            <img src="logo.png" alt="Logo" class="sidebar__logo-img">
+            <span class="sidebar__logo-text">ApertureFind</span>
+        </a>
+        <button id="sidebarCollapseBtn" class="sidebar__collapse-btn" aria-label="Toggle sidebar">
+            <i class="mdi mdi-menu"></i>
+        </button>
+    </div>
+
+
+    <nav class="sidebar__nav">
+        <ul class="sidebar__menu">
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link" title="Dashboard">
+                    <i class="mdi mdi-view-dashboard sidebar__icon"></i>
+                    <span class="sidebar__link-text">Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link" title="Apartments">
+                    <i class="mdi mdi-apartment sidebar__icon"></i>
+                    <span class="sidebar__link-text">Apartments</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link sidebar__link--active" title="Tenants">
+                    <i class="mdi mdi-account-group sidebar__icon"></i>
+                    <span class="sidebar__link-text">Tenants</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link" title="Payments">
+                    <i class="mdi mdi-credit-card sidebar__icon"></i>
+                    <span class="sidebar__link-text">Payments</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link" title="Reports">
+                    <i class="mdi mdi-chart-bar sidebar__icon"></i>
+                    <span class="sidebar__link-text">Reports</span>
+                </a>
+            </li>
+            <li class="sidebar__item">
+                <a href="#" class="sidebar__link" title="Maintenance">
+                    <i class="mdi mdi-tools sidebar__icon"></i>
+                    <span class="sidebar__link-text">Maintenance</span>
+                </a>
+            </li>
         </ul>
-      </nav>
-    </aside>
+    </nav>
+</aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="header">
-        <div class="container flex justify-between align-center">
-          <h1 class="txt-xl txt-bold">Manage Tenants</h1>
-          <div class="user-menu">
-            <button class="btn btn-secondary">Admin <span>▼</span></button>
-          </div>
-        </div>
-      </header>
-
-      <section class="tenants-section">
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Header -->
+    <header class="header">
         <div class="container">
-          <div class="flex justify-between align-center mb-md">
-            <input
-              type="text"
-              id="search-tenants"
-              class="form-control with-icon"
-              placeholder="Search tenants..."
-              aria-label="Search tenants" />
-            <button class="btn btn-primary" id="add-tenant-btn">
-              + Add Tenant
-            </button>
-          </div>
-          <div class="table-container">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Apartment</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="tenants-table"></tbody>
-            </table>
-          </div>
+            <div class="header__wrapper">
+                <div class="header__left">
+                    <button class="btn btn--icon header__mobile-toggle" aria-label="Toggle menu">
+                        <i class="mdi mdi-menu"></i>
+                    </button>
+                    <h1 class="header__title">Dashboard Overview</h1>
+                </div>
+                <div class="header__right">
+                    <div class="notification-center">
+                        <button id="notificationToggle" class="notification-center__toggle" aria-label="Notifications">
+                            <i class="mdi mdi-bell"></i>
+                            <span class="notification-center__badge">5</span>
+                        </button>
+                    </div>
+                    <div class="user-menu">
+                        <button id="userMenuToggle" class="user-menu__toggle">
+                            <img src="avatar.png" alt="Admin" class="user-menu__avatar">
+                            <span>Admin</span>
+                            <i class="mdi mdi-chevron-down"></i>
+                        </button>
+                        <div id="userDropdown" class="user-menu__dropdown">
+                            <a href="#">Profile</a>
+                            <a href="#">Settings</a>
+                            <a href="#">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </section>
+    </header>
 
-      <!-- Modal -->
-      <div class="modal" id="tenant-modal">
-        <div class="modal-content">
-          <h2 class="txt-lg txt-bold">Add/Edit Tenant</h2>
-          <form id="tenant-form" class="flex-column gap-md">
-            <div class="form-group">
-              <label for="tenant-name">Name</label>
-              <input
-                type="text"
-                id="tenant-name"
-                class="form-control"
-                required />
+    <!-- Dashboard Stats -->
+    <section class="dashboard-stats">
+        <div class="container">
+            <div class="stats">
+                <div class="stats__card stats__card--pending">
+                    <i class="mdi mdi-alert-circle stats__icon"></i>
+                    <div class="stats__info">
+                        <span class="stats__value">24</span>
+                        <span class="stats__label">Pending Requests</span>
+                    </div>
+                </div>
+                <div class="stats__card stats__card--in-progress">
+                    <i class="mdi mdi-clock-outline stats__icon"></i>
+                    <div class="stats__info">
+                        <span class="stats__value">68</span>
+                        <span class="stats__label">In Progress</span>
+                    </div>
+                </div>
+                <div class="stats__card stats__card--completed">
+                    <i class="mdi mdi-check-circle stats__icon"></i>
+                    <div class="stats__info">
+                        <span class="stats__value">320</span>
+                        <span class="stats__label">Completed Tasks</span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-              <label for="tenant-email">Email</label>
-              <input
-                type="email"
-                id="tenant-email"
-                class="form-control"
-                required />
-            </div>
-            <div class="form-group">
-              <label for="tenant-apartment">Apartment</label>
-              <select id="tenant-apartment" class="form-control">
-                <option value="">Select Apartment</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="tenant-phone">Phone Number</label>
-              <input
-                type="tel"
-                id="tenant-phone"
-                class="form-control"
-                required />
-            </div>
-            <div class="form-group">
-              <label>Identity Documents</label>
-              <div class="document-upload">
-                <input type="file" id="identity-document" class="form-control" />
-                <small class="txt-muted">Upload ID card, passport, or driver's license</small>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="tenant-notes">Notes</label>
-              <textarea
-                id="tenant-notes"
-                class="form-control"
-                rows="3"></textarea>
-            </div>
-            <div class="flex gap-sm">
-              <button type="submit" class="btn btn-primary">Save</button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                id="cancel-tenant">
-                Cancel
-              </button>
-            </div>
-          </form>
         </div>
-        <!-- Tambahkan di dalam modal tenant -->
-        <div class="tabs">
-          <button class="tab-btn active" data-tab="profile">Profile</button>
-          <button class="tab-btn" data-tab="transactions">Transactions</button>
-          <button class="tab-btn" data-tab="documents">Documents</button>
-          <button class="tab-btn" data-tab="messages">Messages</button>
-        </div>
+    </section>
 
-        <div class="tab-content" id="profile-tab">
-          <!-- Konten profil yang sudah ada -->
+    <!-- Reports Filter Section -->
+    <section class="reports-section">
+        <div class="container">
+            <div class="filter">
+                <div class="filter__search">
+                    <i class="mdi mdi-magnify filter__search-icon"></i>
+                    <input type="text" id="searchInput" class="filter__search-input" placeholder="Search reports...">
+                    <button class="filter__search-clear">×</button>
+                </div>
+                <div class="filter__group">
+                    <select class="form-control">
+                        <option>Date Range</option>
+                        <option>Last Week</option>
+                        <option>Last Month</option>
+                    </select>
+                    <select class="form-control">
+                        <option>Status</option>
+                        <option>Pending</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                <button class="btn btn--primary" id="generateReport">Generate Report</button>
+            </div>
         </div>
+    </section>
 
-        <div class="tab-content hidden" id="transactions-tab">
-          <h3 class="txt-md txt-bold">Payment History</h3>
-          <div class="table-container">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="tenant-payments"></tbody>
-            </table>
-          </div>
+    <!-- Report Tabs -->
+    <section class="report-tabs">
+        <div class="container">
+            <div class="tabs">
+                <button class="tabs__btn tabs__btn--active" data-tab="summary">Summary</button>
+                <button class="tabs__btn" data-tab="details">Details</button>
+                <button class="tabs__btn" data-tab="analytics">Analytics</button>
+            </div>
         </div>
-      </div>
-    </main>
+    </section>
 
-    <script src="main.js"></script>
-  </body>
+    <!-- Reports Table -->
+    <section class="report-table">
+        <div class="container">
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__title">Recent Reports</h2>
+                    <div class="card__actions">
+                        <button class="btn btn--outline" id="exportCSV">Export CSV</button>
+                        <button class="btn btn--outline" id="exportExcel">Export Excel</button>
+                        <button class="btn btn--outline" id="exportPDF">Export PDF</button>
+                        <button class="btn btn--primary" id="printReport">Print</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Maintenance Request #123</td>
+                            <td>Maintenance</td>
+                            <td><span class="badge badge--warning">Pending</span></td>
+                            <td>2025-04-05</td>
+                            <td>
+                                <button class="btn btn--icon"><i class="mdi mdi-eye"></i></button>
+                                <button class="btn btn--icon"><i class="mdi mdi-pencil"></i></button>
+                                <button class="btn btn--icon"><i class="mdi mdi-delete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Form -->
+    <section class="upload-section">
+        <div class="container">
+            <div class="card">
+                <div class="card__header">
+                    <h2 class="card__title">Upload New Document</h2>
+                </div>
+                <div class="form__upload">
+                    <input type="file" id="documentUpload">
+                    <div class="form__upload-label">
+                        <i class="mdi mdi-cloud-upload" style="font-size: 2rem;"></i>
+                        <span>Click to upload or drag and drop</span>
+                        <small>PDF, DOCX up to 10MB</small>
+                    </div>
+                </div>
+                <div class="form__image-preview"></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="js/admin.js"></script>
+<script src="js/api.js"></script>
+<script src="main.js"></script>
+</body>
 </html>

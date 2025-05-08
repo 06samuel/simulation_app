@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#00b7eb" />
+    <meta name="theme-color" content="#4C67EA" />
     <title>ApertureFind - Reports</title>
     <link rel="stylesheet" href="styles.css" />
     <!-- Add required libraries -->
@@ -13,80 +13,178 @@
   </head>
   <body>
     <!-- Sidebar with improved navigation -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="index.html" class="logo txt-xl txt-bold">
-          <img src="logo.png" alt="ApertureFind Logo" class="logo-img" />
-          ApertureFind
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__header">
+        <a href="index.html" class="sidebar__logo">
+          <img src="logo.png" alt="ApertureFind Logo" class="sidebar__logo-img" />
+          <span class="sidebar__logo-text">ApertureFind</span>
         </a>
-        <button class="sidebar-toggle" id="sidebarToggle">
-          <span></span>
+        <button class="sidebar__collapse-btn" id="sidebarToggle" aria-label="Toggle Sidebar">
+          <i class="mdi mdi-menu"></i>
         </button>
       </div>
-      <nav class="sidebar-nav">
-        <ul>
-          <li>
-            <a href="index.html" class="sidebar-link" title="Dashboard">
-              <span class="icon">🏠</span>
-              <span class="text">Dashboard</span>
+      <nav class="sidebar__nav">
+        <!-- Mobile Toggle Button -->
+        <button class="sidebar__mobile-toggle" id="mobileSidebarToggle" aria-label="Toggle Mobile Menu">
+          <i class="mdi mdi-menu"></i>
+        </button>
+        
+        <ul class="sidebar__menu">
+          <li class="sidebar__item">
+            <a href="index.html" class="sidebar__link" title="Dashboard">
+              <i class="mdi mdi-view-dashboard"></i>
+              <span class="sidebar__link-text">Dashboard</span>
             </a>
           </li>
-          <li>
-            <a href="apartments.html" class="sidebar-link" title="Apartments">
-              <span class="icon">🏢</span>
-              <span class="text">Apartments</span>
+          <li class="sidebar__item">
+            <a href="apartments.html" class="sidebar__link" title="Apartments">
+              <i class="mdi mdi-apartment"></i>
+              <span class="sidebar__link-text">Apartments</span>
             </a>
           </li>
-          <li>
-            <a href="tenants.html" class="sidebar-link" title="Tenants">
-              <span class="icon">👥</span>
-              <span class="text">Tenants</span>
+          <li class="sidebar__item">
+            <a href="tenants.html" class="sidebar__link" title="Tenants">
+              <i class="mdi mdi-account-group"></i>
+              <span class="sidebar__link-text">Tenants</span>
             </a>
           </li>
-          <li>
-            <a href="payments.html" class="sidebar-link" title="Payments">
-              <span class="icon">💳</span>
-              <span class="text">Payments</span>
+          <li class="sidebar__item">
+            <a href="payments.html" class="sidebar__link" title="Payments">
+              <i class="mdi mdi-credit-card"></i>
+              <span class="sidebar__link-text">Payments</span>
             </a>
           </li>
-          <li>
-            <a href="reports.html" class="sidebar-link active" title="Reports">
-              <span class="icon">📊</span>
-              <span class="text">Reports</span>
+          <li class="sidebar__item">
+            <a href="reports.html" class="sidebar__link sidebar__link--active" title="Reports">
+              <i class="mdi mdi-chart-bar"></i>
+              <span class="sidebar__link-text">Reports</span>
             </a>
           </li>
         </ul>
       </nav>
     </aside>
 
+    <!-- Add this CSS to your styles.css file -->
+    <style>
+      .sidebar {
+        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+        transform: translateX(0);
+      }
+
+      .sidebar--collapsed {
+        transform: translateX(-100%);
+      }
+
+      .sidebar__mobile-toggle {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        position: fixed;
+        top: 1rem;
+        right: -40px;
+        z-index: 1000;
+        border-radius: 0 4px 4px 0;
+        background-color: #4C67EA;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      }
+
+      .sidebar__collapse-btn i {
+        font-size: 24px;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar--collapsed .sidebar__collapse-btn i {
+        transform: rotate(180deg);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          height: 100%;
+          z-index: 1000;
+        }
+
+        .sidebar__mobile-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sidebar__link-text {
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .sidebar--collapsed .sidebar__link-text {
+          opacity: 0;
+        }
+      }
+    </style>
+
+    <!-- Add this JavaScript to your main.js file -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+
+        function toggleSidebar() {
+          sidebar.classList.toggle('sidebar--collapsed');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        mobileSidebarToggle.addEventListener('click', toggleSidebar);
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+          const isMobile = window.innerWidth <= 768;
+          const isClickInside = sidebar.contains(event.target) || 
+                              mobileSidebarToggle.contains(event.target) ||
+                              sidebarToggle.contains(event.target);
+
+          if (isMobile && !isClickInside && !sidebar.classList.contains('sidebar--collapsed')) {
+            sidebar.classList.add('sidebar--collapsed');
+          }
+        });
+      });
+    </script>
+
     <!-- Main Content with improved layout -->
     <main class="main-content">
       <header class="header">
-        <div class="container flex justify-between align-center">
-          <div class="flex align-center gap-sm">
-            <h1 class="txt-xl txt-bold">Reports</h1>
-            <div class="breadcrumb txt-sm txt-muted">
-              Dashboard / Reports
+        <div class="container">
+          <div class="header__wrapper">
+            <div class="header__left">
+              <h1 class="header__title">Reports</h1>
+              <div class="header__breadcrumb">
+                Dashboard / Reports
+              </div>
             </div>
-          </div>
-          <div class="user-menu">
-            <div class="notifications">
-              <button class="btn btn-icon" title="Notifications">
-                <span class="icon">🔔</span>
-                <span class="badge">3</span>
-              </button>
-            </div>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle">
-                <img src="avatar.png" alt="Admin" class="avatar-sm" />
-                <span>Admin</span>
-                <span class="icon">▼</span>
-              </button>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Profile</a>
-                <a href="#" class="dropdown-item">Settings</a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item txt-danger">Logout</a>
+            <div class="header__right">
+              <div class="notification-center">
+                <button class="notification-toggle" title="Notifications">
+                  <i class="mdi mdi-bell"></i>
+                  <span class="notification-badge">3</span>
+                </button>
+              </div>
+              <div class="user-menu">
+                <button class="user-menu__toggle" id="userMenuToggle">
+                  <img src="avatar.png" alt="Admin" class="user-menu__avatar" />
+                  <span>Admin</span>
+                  <i class="mdi mdi-chevron-down"></i>
+                </button>
+                <div class="user-menu__dropdown" id="userDropdown">
+                  <a href="#" class="user-menu__item">Profile</a>
+                  <a href="#" class="user-menu__item">Settings</a>
+                  <div class="user-menu__divider"></div>
+                  <a href="#" class="user-menu__item user-menu__item--danger">Logout</a>
+                </div>
               </div>
             </div>
           </div>
@@ -96,33 +194,33 @@
       <section class="reports">
         <div class="container">
           <!-- Enhanced Tab Navigation -->
-          <div class="tabs mb-md fade-in">
-            <button class="tab-btn active" data-tab="financial">
-              <span class="icon">💰</span>
+          <div class="tabs">
+            <button class="tabs__btn tabs__btn--active" data-tab="financial">
+              <i class="mdi mdi-cash-multiple"></i>
               <span>Financial Reports</span>
             </button>
-            <button class="tab-btn" data-tab="occupancy">
-              <span class="icon">📈</span>
+            <button class="tabs__btn" data-tab="occupancy">
+              <i class="mdi mdi-chart-line"></i>
               <span>Occupancy Analysis</span>
             </button>
-            <button class="tab-btn" data-tab="performance">
-              <span class="icon">⭐</span>
+            <button class="tabs__btn" data-tab="performance">
+              <i class="mdi mdi-star"></i>
               <span>Performance Analysis</span>
             </button>
-            <button class="tab-btn" data-tab="maintenance">
-              <span class="icon">🔧</span>
+            <button class="tabs__btn" data-tab="maintenance">
+              <i class="mdi mdi-tools"></i>
               <span>Maintenance Reports</span>
             </button>
           </div>
 
           <!-- Improved Filters and Controls -->
-          <div class="card mb-md fade-in">
-            <div class="flex justify-between align-center flex-wrap gap-sm">
-              <div>
-                <h3 class="txt-lg txt-bold mb-xs">Financial & Occupancy Reports</h3>
-                <p class="txt-sm txt-muted">Analyze property performance and revenue</p>
+          <div class="card">
+            <div class="card__header">
+              <div class="card__title">
+                <h3>Financial & Occupancy Reports</h3>
+                <p class="card__subtitle">Analyze property performance and revenue</p>
               </div>
-              <div class="flex gap-sm flex-wrap">
+              <div class="filter-controls">
                 <div class="form-group">
                   <label for="reportPeriod" class="form-label">Period</label>
                   <div class="select-wrapper">
@@ -137,11 +235,11 @@
                 </div>
                 <div class="form-group">
                   <label for="startDate" class="form-label">Start Date</label>
-                  <input type="date" id="startDate" class="form-input datepicker" />
+                  <input type="date" id="startDate" class="form-input" />
                 </div>
                 <div class="form-group">
                   <label for="endDate" class="form-label">End Date</label>
-                  <input type="date" id="endDate" class="form-input datepicker" />
+                  <input type="date" id="endDate" class="form-input" />
                 </div>
                 <div class="form-group">
                   <label for="propertyFilter" class="form-label">Property</label>
@@ -150,13 +248,9 @@
                     <!-- Dynamic options will be added here -->
                   </select>
                 </div>
-                <div class="form-group flex align-end">
+                <div class="form-group">
                   <button id="generateReport" class="btn btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                      <line x1="8" y1="21" x2="16" y2="21"></line>
-                      <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
+                    <i class="mdi mdi-file-chart"></i>
                     Generate Report
                   </button>
                 </div>
@@ -164,38 +258,27 @@
             </div>
           </div>
 
-          <!-- Rest of the content remains the same but with improved styling -->
-          <!-- Previous tab content sections... -->
-
           <!-- Enhanced Export Options -->
-          <div class="flex justify-end mt-md gap-sm">
+          <div class="export-actions">
             <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
+              <button class="btn btn-secondary dropdown__toggle" id="exportDropdown">
+                <i class="mdi mdi-download"></i>
                 Export As
               </button>
-              <div class="dropdown-menu">
-                <button id="exportCSV" class="dropdown-item">
-                  <span class="icon">📊</span> CSV
+              <div class="dropdown__menu">
+                <button id="exportCSV" class="dropdown__item">
+                  <i class="mdi mdi-file-delimited"></i> CSV
                 </button>
-                <button id="exportExcel" class="dropdown-item">
-                  <span class="icon">📑</span> Excel
+                <button id="exportExcel" class="dropdown__item">
+                  <i class="mdi mdi-microsoft-excel"></i> Excel
                 </button>
-                <button id="exportPDF" class="dropdown-item">
-                  <span class="icon">📄</span> PDF
+                <button id="exportPDF" class="dropdown__item">
+                  <i class="mdi mdi-file-pdf"></i> PDF
                 </button>
               </div>
             </div>
             <button id="printReport" class="btn btn-primary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M6 9V2h12v7"></path>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                <path d="M6 14h12v8H6z"></path>
-              </svg>
+              <i class="mdi mdi-printer"></i>
               Print Report
             </button>
           </div>
@@ -204,8 +287,9 @@
     </main>
 
     <!-- Add required scripts -->
-    <script src="charts.js"></script>
-    <script src="reports.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
