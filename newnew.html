@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RentApart Dashboard</title>
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3B82F6;
+      --secondary: #10B981;
+      --accent: #F59E0B;
+      --neutral-dark: #1F2937;
+      --neutral-light: #F9FAFB;
+      --card-radius: 0.375rem;
+      --padding: 1.5rem;
+      --font-main: 'Inter', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+      --text-body: 1rem;
+      --text-subheading: 1.25rem;
+      --text-heading: 1.5rem;
+      --sidebar-width: 250px;
+      --transition: 0.3s;
+      --bg: var(--neutral-light);
+      --text: var(--neutral-dark);
+      --card-bg: #fff;
+      --card-shadow: 0 2px 8px rgba(31,41,55,0.06);
+    }
+    [data-theme="dark"] {
+      --bg: #181e29;
+      --text: #F9FAFB;
+      --card-bg: #232b3b;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      font-size: var(--text-body);
+      min-height: 100vh;
+      transition: background var(--transition), color var(--transition);
+    }
+    h1, h2, h3, h4, h5 {
+      font-family: var(--font-heading);
+      font-weight: 600;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+      min-height: 100vh;
+      position: fixed;
+      left: 0; top: 0;
+      z-index: 1030;
+      transition: left var(--transition);
+    }
+    .sidebar .nav-link {
+      color: var(--text);
+      font-weight: 500;
+      border-radius: var(--card-radius);
+      margin-bottom: 0.5rem;
+      transition: background var(--transition), color var(--transition);
+    }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .sidebar .sidebar-header {
+      padding: var(--padding) 1rem 1rem 1rem;
+      font-size: var(--text-heading);
+      color: var(--primary);
+      letter-spacing: 1px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding: var(--padding);
+      transition: margin-left var(--transition);
+    }
+    .navbar {
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+      border-radius: var(--card-radius);
+      margin-bottom: var(--padding);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar .breadcrumb {
+      margin-bottom: 0;
+      background: none;
+      font-size: 0.95rem;
+    }
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 1.25rem;
+      color: var(--primary);
+      background: none;
+      border: none;
+      outline: none;
+      margin-left: 1rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1.25rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      transition: background var(--transition), color var(--transition);
+    }
+    .stat-card .icon {
+      font-size: 2rem;
+      padding: 0.75rem;
+      border-radius: 50%;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stat-card .stat-title {
+      font-size: 1rem;
+      color: var(--text);
+      opacity: 0.7;
+    }
+    .stat-card .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .stat-card.blue .icon { background: var(--primary);}
+    .stat-card.green .icon { background: var(--secondary);}
+    .stat-card.orange .icon { background: var(--accent);}
+    .stat-card.gray .icon { background: #6b7280;}
+    .stat-card.purple .icon { background: #8b5cf6;}
+    .chart-placeholder {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 1.1rem;
+      margin-bottom: var(--padding);
+    }
+    .table-responsive {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1rem;
+      margin-bottom: var(--padding);
+    }
+    .table thead th {
+      background: var(--bg);
+      color: var(--primary);
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    .table tbody tr {
+      vertical-align: middle;
+    }
+    .top-tenants {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1rem;
+      margin-bottom: var(--padding);
+    }
+    .top-tenants .tenant {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .top-tenants .tenant:last-child { margin-bottom: 0; }
+    .top-tenants .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    .top-tenants .name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .top-tenants .amount {
+      margin-left: auto;
+      color: var(--secondary);
+      font-weight: 500;
+    }
+    /* Sidebar toggle for mobile */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        left: -260px;
+      }
+      .sidebar.active {
+        left: 0;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+    /* Responsive grid for stat cards */
+    @media (max-width: 767.98px) {
+      .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+    /* Notification popup */
+    .notif-popup {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 2000;
+      background: var(--card-bg);
+      color: var(--text);
+      border-left: 5px solid var(--primary);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 1rem 1.5rem 1rem 1.25rem;
+      min-width: 220px;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1rem;
+      animation: fadeIn 0.4s;
+    }
+    .notif-popup.show { display: flex; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <!-- Sidebar -->
+  <nav class="sidebar d-flex flex-column p-3" aria-label="Sidebar Navigation">
+    <div class="sidebar-header mb-4">
+      <i class="fa-solid fa-building"></i> RentApart
+    </div>
+    <ul class="nav flex-column mb-auto">
+      <li><a href="dashboard.html" class="nav-link active" aria-current="page"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a></li>
+      <li><a href="card.html" class="nav-link"><i class="fa-solid fa-image me-2"></i> Galeri</a></li>
+      <li><a href="crud.html" class="nav-link"><i class="fa-solid fa-database me-2"></i> Manajemen Data</a></li>
+      <li><a href="dashboard_2.html" class="nav-link"><i class="fa-solid fa-wallet me-2"></i> Keuangan</a></li>
+      <li><a href="dashboard_3.html" class="nav-link"><i class="fa-solid fa-tools me-2"></i> Pemeliharaan</a></li>
+      <li><a href="dashboard_4.html" class="nav-link"><i class="fa-solid fa-users me-2"></i> Penyewa</a></li>
+      <li><a href="dashboard_7.html" class="nav-link"><i class="fa-solid fa-file-alt me-2"></i> Laporan</a></li>
+      <li><a href="docs.html" class="nav-link"><i class="fa-solid fa-book me-2"></i> Dokumentasi</a></li>
+    </ul>
+    <hr>
+    <div class="d-flex align-items-center">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin" class="rounded-circle me-2" width="36" height="36">
+      <span>Admin</span>
+    </div>
+  </nav>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar d-flex align-items-center justify-content-between">
+      <div>
+        <button class="btn btn-link d-lg-none p-0 me-3" id="sidebarToggle" aria-label="Toggle Sidebar">
+          <i class="fa-solid fa-bars fa-lg"></i>
+        </button>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+      <div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme" title="Ganti Tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Stat Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card blue" aria-label="Total Apartemen">
+          <div class="icon"><i class="fa-solid fa-building"></i></div>
+          <div>
+            <div class="stat-title">Total Apartemen</div>
+            <div class="stat-value" id="statTotalApt">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card green" aria-label="Disewakan">
+          <div class="icon"><i class="fa-solid fa-key"></i></div>
+          <div>
+            <div class="stat-title">Disewakan</div>
+            <div class="stat-value" id="statRented">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card orange" aria-label="Pendapatan Bulanan">
+          <div class="icon"><i class="fa-solid fa-coins"></i></div>
+          <div>
+            <div class="stat-title">Pendapatan Bulanan</div>
+            <div class="stat-value" id="statIncome">Rp0</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card gray" aria-label="Total Penyewa">
+          <div class="icon"><i class="fa-solid fa-users"></i></div>
+          <div>
+            <div class="stat-title">Total Penyewa</div>
+            <div class="stat-value" id="statTenants">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Chart & Top Tenants -->
+    <div class="row g-3 mb-4">
+      <div class="col-lg-8">
+        <div class="chart-placeholder" id="chartArea" aria-label="Grafik Tren">
+          <span><i class="fa-solid fa-chart-area me-2"></i> Grafik tren okupansi & pendapatan (placeholder)</span>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="top-tenants" aria-label="Penyewa Teratas">
+          <h5 class="mb-3" style="font-size:1.15rem;">Penyewa Teratas</h5>
+          <div id="topTenantsList"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Recent Activity Table -->
+    <div class="table-responsive" aria-label="Aktivitas Terbaru">
+      <h5 class="mb-3" style="font-size:1.15rem;">Aktivitas Terbaru</h5>
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th scope="col">Tanggal</th>
+            <th scope="col">Penyewa</th>
+            <th scope="col">Aksi</th>
+            <th scope="col">Apartemen</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody id="activityTable">
+          <!-- Data diisi via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Notifikasi Popup -->
+  <div class="notif-popup" id="notifPopup" role="alert" aria-live="assertive">
+    <i class="fa-solid fa-circle-check text-success"></i>
+    <span id="notifMsg">Aksi berhasil!</span>
+  </div>
+  <!-- Bootstrap JS & Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Variabel data dummy (bisa diganti dengan localStorage)
+    const dashboardData = {
+      totalApt: 24,
+      rented: 18,
+      income: 42000000,
+      tenants: 21,
+      topTenants: [
+        {name: "Rizky Maulana", img: "https://randomuser.me/api/portraits/men/11.jpg", amount: 8500000},
+        {name: "Dewi Lestari", img: "https://randomuser.me/api/portraits/women/12.jpg", amount: 8000000},
+        {name: "Budi Santoso", img: "https://randomuser.me/api/portraits/men/13.jpg", amount: 7800000},
+        {name: "Siti Aminah", img: "https://randomuser.me/api/portraits/women/14.jpg", amount: 7500000},
+      ],
+      activity: [
+        {date: "2024-06-01", tenant: "Rizky Maulana", action: "Menyewa", apt: "Apt. 12A", status: "Berhasil"},
+        {date: "2024-05-30", tenant: "Dewi Lestari", action: "Perpanjang", apt: "Apt. 7B", status: "Berhasil"},
+        {date: "2024-05-29", tenant: "Budi Santoso", action: "Pembayaran", apt: "Apt. 3C", status: "Tertunda"},
+        {date: "2024-05-28", tenant: "Siti Aminah", action: "Keluar", apt: "Apt. 5D", status: "Selesai"},
+      ]
+    };
+
+    // Format angka ke Rupiah
+    function formatRupiah(angka) {
+      return 'Rp' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Render statistik
+    function renderStats() {
+      document.getElementById('statTotalApt').textContent = dashboardData.totalApt;
+      document.getElementById('statRented').textContent = dashboardData.rented;
+      document.getElementById('statIncome').textContent = formatRupiah(dashboardData.income);
+      document.getElementById('statTenants').textContent = dashboardData.tenants;
+    }
+
+    // Render penyewa teratas
+    function renderTopTenants() {
+      const list = document.getElementById('topTenantsList');
+      list.innerHTML = '';
+      dashboardData.topTenants.forEach(t => {
+        list.innerHTML += `
+          <div class="tenant">
+            <img src="${t.img}" alt="${t.name}" class="avatar" />
+            <span class="name">${t.name}</span>
+            <span class="amount">${formatRupiah(t.amount)}</span>
+          </div>
+        `;
+      });
+    }
+
+    // Render aktivitas terbaru
+    function renderActivity() {
+      const table = document.getElementById('activityTable');
+      table.innerHTML = '';
+      dashboardData.activity.forEach(a => {
+        let badgeClass = a.status === "Berhasil" ? "success" : (a.status === "Tertunda" ? "warning" : "secondary");
+        table.innerHTML += `
+          <tr>
+            <td>${a.date}</td>
+            <td>${a.tenant}</td>
+            <td>${a.action}</td>
+            <td>${a.apt}</td>
+            <td><span class="badge bg-${badgeClass}">${a.status}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    // Notifikasi popup
+    function showNotif(msg) {
+      const notif = document.getElementById('notifPopup');
+      document.getElementById('notifMsg').textContent = msg;
+      notif.classList.add('show');
+      setTimeout(() => notif.classList.remove('show'), 2500);
+    }
+
+    // Theme toggle
+    function setTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      document.getElementById('themeToggle').innerHTML =
+        theme === 'dark'
+          ? '<i class="fa-solid fa-sun"></i>'
+          : '<i class="fa-solid fa-moon"></i>';
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const current = document.body.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+      showNotif('Tema berhasil diubah!');
+    });
+    // Load theme from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setTheme(savedTheme);
+      renderStats();
+      renderTopTenants();
+      renderActivity();
+    });
+
+    // Sidebar toggle (mobile)
+    document.getElementById('sidebarToggle').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+
+    // Accessibility: close sidebar on outside click (mobile)
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth < 992) {
+        const sidebar = document.querySelector('.sidebar');
+        if (!sidebar.contains(e.target) && !document.getElementById('sidebarToggle').contains(e.target)) {
+          sidebar.classList.remove('active');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RentApart | Dashboard</title>
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter, Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;700&display=swap"
+    rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --clr-primary: #0d6efd;
+      --clr-secondary: #6c757d;
+      --clr-bg: #f8f9fa;
+      --clr-text: #212529;
+      --clr-card: #fff;
+      --transition: 0.3s ease-in-out;
+    }
+
+    [data-theme="dark"] {
+      --clr-bg: #181a1b;
+      --clr-text: #f8f9fa;
+      --clr-card: #23272b;
+    }
+
+    body {
+      background-color: var(--clr-bg);
+      transition: var(--transition);
+    }
+
+    .sidebar {
+      background-color: var(--clr-card);
+      border-right: 1px solid var(--clr-secondary);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      width: 250px;
+      z-index: 1;
+    }
+
+    .sidebar-toggle {
+      background-color: var(--clr-primary);
+      border: none;
+      color: var(--clr-text);
+      font-size: 1.5rem;
+      outline: none;
+      padding: 0.5rem 1rem;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .sidebar-toggle:hover {
+      background-color: var(--clr-primary);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 1rem 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-menu a {
+      color: var(--clr-text);
+      display: block;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+    }
+
+    .sidebar-menu a:hover {
+      background-color: var(--clr-secondary);
+    }
+
+    .sidebar-menu a.active {
+      background-color: var(--clr-primary);
+      color: var(--clr-text);
+    }
+
+    main {
+      margin-left: 250px;
+      padding: 1rem;
+    }
+
+    .theme-toggle {
+      background-color: var(--clr-primary);
+      border: none;
+      color: var(--clr-text);
+      font-size: 1.5rem;
+      outline: none;
+      padding: 0.5rem 1rem;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--clr-primary);
+    }
+  </style>
+</head>
+
+  <body data-theme="light">
+  <!-- Notification Toast -->
+  <div class="notification alert alert-info shadow" id="notification" role="alert" aria-live="polite"></div>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar d-flex flex-column p-3" aria-label="Sidebar Navigation">
+    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+      <span class="fs-4 fw-bold"><i class="fa-solid fa-building"></i> RentApart</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item"><a href="#" class="nav-link active" aria-current="page"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a></li>
+      <li><a href="card.html" class="nav-link"><i class="fa-solid fa-image me-2"></i> Gallery</a></li>
+      <li><a href="crud.html" class="nav-link"><i class="fa-solid fa-table me-2"></i> Management</a></li>
+      <li><a href="index.html" class="nav-link"><i class="fa-solid fa-book me-2"></i> Documentation</a></li>
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" width="32" height="32" class="rounded-circle me-2">
+        <strong>Admin</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Sign out</a></li>
+      </ul>
+    </div>
+  </nav>
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light px-4 py-2 d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-outline-secondary d-lg-none" id="sidebarToggle" aria-label="Toggle Sidebar"><i class="fa fa-bars"></i></button>
+        <span class="fs-5 fw-semibold">Dashboard</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-outline-primary position-relative" id="notifBtn" aria-label="Show Notifications">
+          <i class="fa-solid fa-bell"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
+        </button>
+        <button class="btn btn-outline-secondary theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </nav>
+    <div class="container-fluid mt-4">
+      <!-- Statistic Cards -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <div class="me-3"><i class="fa-solid fa-building fa-2x text-primary"></i></div>
+              <div>
+                <div class="fw-bold fs-4" id="stat-apartments">42</div>
+                <div class="text-muted">Total Apartments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <div class="me-3"><i class="fa-solid fa-door-open fa-2x text-success"></i></div>
+              <div>
+                <div class="fw-bold fs-4" id="stat-rented">28</div>
+                <div class="text-muted">Rented Apartments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <div class="me-3"><i class="fa-solid fa-users fa-2x text-warning"></i></div>
+              <div>
+                <div class="fw-bold fs-4" id="stat-tenants">65</div>
+                <div class="text-muted">Total Tenants</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <div class="me-3"><i class="fa-solid fa-money-bill-wave fa-2x text-info"></i></div>
+              <div>
+                <div class="fw-bold fs-4" id="stat-income">Rp 120jt</div>
+                <div class="text-muted">Monthly Income</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Charts Row -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-8">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Occupancy Rate (This Year)</span>
+              <button class="btn btn-sm btn-outline-primary" disabled><i class="fa fa-chart-bar"></i> Chart</button>
+            </div>
+            <div class="chart-placeholder" id="occupancyChart">[Chart Placeholder]</div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Maintenance Alerts</span>
+              <button class="btn btn-sm btn-outline-danger" onclick="showNotification('3 urgent maintenance tasks!')"><i class="fa fa-exclamation-triangle"></i></button>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item bg-transparent"><i class="fa fa-wrench text-danger me-2"></i> AC Repair - Apt 12A</li>
+              <li class="list-group-item bg-transparent"><i class="fa fa-bolt text-warning me-2"></i> Power Issue - Apt 7C</li>
+              <li class="list-group-item bg-transparent"><i class="fa fa-tint text-info me-2"></i> Water Leak - Apt 21B</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Data Table Row -->
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Recent Bookings</span>
+              <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#addBookingModal"><i class="fa fa-plus"></i> Add Booking</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">Tenant</th>
+                    <th scope="col">Apartment</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingTableBody">
+                  <!-- Sample row -->
+                  <tr>
+                    <td><i class="fa fa-user-circle me-2"></i> Sarah Wijaya</td>
+                    <td>12A</td>
+                    <td>2025-05-07</td>
+                    <td><span class="badge bg-success">Confirmed</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" aria-label="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa fa-user-circle me-2"></i> Budi Santoso</td>
+                    <td>7C</td>
+                    <td>2025-05-05</td>
+                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" aria-label="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><i class="fa fa-user-circle me-2"></i> Lina Sari</td>
+                    <td>21B</td>
+                    <td>2025-05-03</td>
+                    <td><span class="badge bg-danger">Cancelled</span></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary" aria-label="Edit"><i class="fa fa-edit"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" aria-label="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal: Add Booking -->
+  <div class="modal fade" id="addBookingModal" tabindex="-1" aria-labelledby="addBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="addBookingForm" autocomplete="off" novalidate>
+          <div class="modal-header">
+            <h5 class="modal-title" id="addBookingModalLabel">Add New Booking</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="tenantName" class="form-label">Tenant Name</label>
+              <input type="text" class="form-control" id="tenantName" required aria-required="true">
+              <div class="invalid-feedback">Please enter tenant name.</div>
+            </div>
+            <div class="mb-3">
+              <label for="apartmentNumber" class="form-label">Apartment Number</label>
+              <input type="text" class="form-control" id="apartmentNumber" required aria-required="true">
+              <div class="invalid-feedback">Please enter apartment number.</div>
+            </div>
+            <div class="mb-3">
+              <label for="bookingDate" class="form-label">Date</label>
+              <input type="date" class="form-control" id="bookingDate" required aria-required="true">
+              <div class="invalid-feedback">Please select a date.</div>
+            </div>
+            <div class="mb-3">
+              <label for="bookingStatus" class="form-label">Status</label>
+              <select class="form-select" id="bookingStatus" required aria-required="true">
+                <option value="">Choose...</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <div class="invalid-feedback">Please select a status.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  // Theme toggle logic
+  const themeToggle = document.getElementById('themeToggle');
+  const htmlEl = document.documentElement;
+  let darkMode = localStorage.getItem('theme') === 'dark';
+  function setTheme(dark) {
+    htmlEl.setAttribute('data-theme', dark ? 'dark' : 'light');
+    themeToggle.innerHTML = `<i class="fa-solid fa-${dark ? 'sun' : 'moon'}"></i>`;
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }
+  themeToggle.addEventListener('click', () => {
+    darkMode = !darkMode;
+    setTheme(darkMode);
+  });
+  setTheme(darkMode);
+
+  // Sidebar toggle for mobile
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  sidebarToggle && sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+
+  // Notification system
+  function showNotification(message) {
+    const notif = document.getElementById('notification');
+    notif.textContent = message;
+    notif.style.display = 'block';
+    notif.classList.add('show');
+    setTimeout(() => {
+      notif.classList.remove('show');
+      notif.style.display = 'none';
+    }, 2800);
+  }
+  document.getElementById('notifBtn').addEventListener('click', () => {
+    showNotification('2 new bookings and 1 maintenance alert!');
+  });
+
+  // Add Booking Modal - Form Validation and Table Update
+  const addBookingForm = document.getElementById('addBookingForm');
+  addBookingForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!addBookingForm.checkValidity()) {
+      addBookingForm.classList.add('was-validated');
+      return;
+    }
+    // Simulate adding booking to table
+    const tenant = document.getElementById('tenantName').value;
+    const apt = document.getElementById('apartmentNumber').value;
+    const date = document.getElementById('bookingDate').value;
+    const status = document.getElementById('bookingStatus').value;
+    const statusBadge = status === 'Confirmed' ? 'success' : status === 'Pending' ? 'warning text-dark' : 'danger';
+    const tableBody = document.getElementById('bookingTableBody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td><i class='fa fa-user-circle me-2'></i> ${tenant}</td>
+      <td>${apt}</td>
+      <td>${date}</td>
+      <td><span class='badge bg-${statusBadge}'>${status}</span></td>
+      <td>
+        <button class='btn btn-sm btn-outline-primary' aria-label='Edit'><i class='fa fa-edit'></i></button>
+        <button class='btn btn-sm btn-outline-danger' aria-label='Delete'><i class='fa fa-trash'></i></button>
+      </td>
+    `;
+    tableBody.prepend(newRow);
+    // Reset form
+    addBookingForm.reset();
+    addBookingForm.classList.remove('was-validated');
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addBookingModal'));
+    modal.hide();
+    showNotification('Booking added successfully!');
+  });
+  // Accessibility: Close sidebar on nav link click (mobile)
+  document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth < 992) sidebar.classList.remove('open');
+    });
+  });
+  // Placeholder: Chart rendering (future integration)
+  // You can integrate Chart.js or similar here for real charts
+  </script>
+</body>
+
+</html>
