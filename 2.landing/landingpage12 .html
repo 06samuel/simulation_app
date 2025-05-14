@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <meta name="description" content="Rentelindo - Platform manajemen properti sewa dengan fitur lengkap untuk pemilik dan pengelola properti di Indonesia. Kelola unit, lacak penyewa, dan optimalkan keuangan dalam satu dashboard intuitif." />
+  <meta name="keywords" content="Rental Apartemen, Manajemen Properti, Penyewa, Dashboard Admin, Booking Digital, Tur Virtual, Sistem Pembayaran" />
+  <meta name="author" content="Tim Rentelindo" />
+  <title>Rentelindo - Manajemen Properti Sewa</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com " crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter :wght@400;500;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter :wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </noscript>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css " />
+
+  <style>
+    /* =========================
+       1. DESIGN TOKENS MODERN
+    ========================== */
+    :root {
+      --color-primary-h: 214;
+      --color-primary-s: 100%;
+      --color-primary-l: 54%;
+      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+      --color-primary-dark: hsl(var(--color-primary-h), 100%, 42%);
+      --color-primary-light: hsl(var(--color-primary-h), 100%, 92%);
+      --color-accent: hsl(40, 90%, 60%);
+      --color-success: hsl(140, 60%, 45%);
+      --color-danger: hsl(0, 80%, 56%);
+      --color-warning: hsl(40, 90%, 60%);
+      --color-bg: hsl(220, 16%, 98%);
+      --color-bg-alt: hsl(0, 0%, 100%);
+      --color-text: hsl(220, 24%, 16%);
+      --color-muted: hsl(220, 10%, 50%);
+      --color-border: hsl(220, 20%, 90%);
+      --color-focus: hsl(var(--color-primary-h), 100%, 85%);
+      --color-shadow: hsla(var(--color-primary-h), var(--color-primary-s), 20%, 0.1);
+
+      /* Typography Scale */
+      --font-main: 'Inter', system-ui, sans-serif;
+      --font-xs: 0.875rem;
+      --font-sm: 1rem;
+      --font-md: 1.125rem;
+      --font-lg: 1.375rem;
+      --font-xl: 1.75rem;
+      --font-display: 2.25rem;
+
+      /* Spacing Scale */
+      --space-xxs: 0.25rem;
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+
+      /* Radius & Shadow */
+      --radius-xs: 0.375rem;
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+      --transition-fast: all 0.2s ease-in-out;
+      --transition-normal: all 0.3s ease-in-out;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: hsl(220, 24%, 16%);
+      --color-bg-alt: hsl(224, 29%, 14%);
+      --color-text: hsl(210, 40%, 98%);
+      --color-muted: hsl(215, 20%, 65%);
+      --color-border: hsl(217, 33%, 20%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body[data-theme="dark"] {
+      background: var(--color-bg);
+      color: #f8fafc;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--color-primary-dark);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    .section {
+      padding: var(--space-xl) 0;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+
+    .card {
+      background: #fff;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-lg);
+    }
+
+    .card-header {
+      font-size: var(--font-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: var(--space-sm);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-xl);
+      font-weight: 500;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--color-primary-light);
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--space-xs);
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-sm);
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: var(--color-bg);
+      box-shadow: 0 0 0 2px var(--color-focus);
+    }
+
+    .form-error {
+      color: var(--color-danger);
+      font-size: var(--font-xs);
+      display: none;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: var(--color-primary-dark);
+      color: #fff;
+      min-width: 240px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      left: 0;
+      padding: var(--space-xl);
+      overflow-y: auto;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: block;
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav li {
+      margin: var(--space-sm) 0;
+    }
+
+    .sidebar nav a {
+      color: #fff;
+      display: block;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: var(--color-primary);
+      transform: translateX(4px);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: var(--space-xl);
+      background: var(--color-bg-alt);
+    }
+
+    .main-content h2 {
+      font-size: var(--font-xl);
+      margin-bottom: var(--space-md);
+    }
+
+    .main-content p {
+      color: var(--color-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
+      color: #fff;
+      padding: var(--space-md) 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    nav[aria-label="Navigasi utama"] {
+      display: flex;
+      gap: var(--space-xl);
+    }
+
+    .nav-link {
+      color: #fff;
+      font-weight: 500;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .nav-link::after,
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      height: 2px;
+      width: 100%;
+      background: #fff;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-fast);
+    }
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 320px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--space-5);
+      background: linear-gradient(120deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-content {
+      z-index: 1;
+      padding: var(--space-6) var(--space-4);
+      color: #fff;
+      max-width: 600px;
+    }
+
+    .hero-title {
+      font-size: var(--font-display);
+      font-weight: 800;
+      margin-bottom: var(--space-2);
+      letter-spacing: -0.01em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-desc {
+      font-size: var(--font-lg);
+      margin-bottom: var(--space-3);
+      color: #e0e7ef;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .hero-buttons button {
+      background: #fff;
+      color: var(--color-primary);
+      border: 2px solid #fff;
+    }
+
+    .hero-buttons button:hover {
+      background: var(--color-primary-dark);
+      color: #fff;
+    }
+
+    /* FEATURE TABS */
+    .feature-tabs {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+
+    .feature-tab {
+      padding: var(--space-sm) var(--space-xl);
+      background: var(--color-bg);
+      border-radius: var(--radius-lg);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .feature-tab.active,
+    .feature-tab:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    /* PAYMENT FORM */
+    .payment-form {
+      background: #fff;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-xl);
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .payment-method {
+      border: 2px solid var(--color-border);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .payment-method.active {
+      border-color: var(--color-primary);
+      transform: scale(1.03);
+    }
+
+    /* CHAT BOX */
+    .chat-box {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-md);
+      height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .chat-message {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    .chat-user {
+      background: var(--color-primary-light);
+      align-self: flex-end;
+    }
+
+    .chat-owner {
+      background: var(--color-bg-alt);
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: var(--space-sm);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+    }
+
+    .chat-input button {
+      background: var(--color-primary);
+      color: #fff;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+    }
+
+    /* VERIFIED REVIEWS */
+    .review-card {
+      background: #fff;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .verified-badge {
+      background: var(--color-success);
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-xs);
+      font-size: 0.8rem;
+      margin-left: var(--space-xs);
+    }
+
+    .stars {
+      display: flex;
+      gap: var(--space-xs);
+      margin: var(--space-xs) 0;
+    }
+
+    .stars i {
+      color: var(--color-warning);
+      cursor: pointer;
+    }
+
+    /* VIRTUAL TOUR */
+    .virtual-tour {
+      background: #000;
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      aspect-ratio: 16/9;
+      position: relative;
+    }
+
+    .virtual-tour img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      transition: transform 0.5s;
+    }
+
+    .tour-controls {
+      position: absolute;
+      bottom: var(--space-md);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .tour-controls button {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      border: none;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer.c-footer {
+      background: var(--color-primary-dark);
+      color: #fff;
+      text-align: center;
+      padding: var(--space-md) 0;
+      margin-top: var(--space-xl);
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+      }
+    }
+
+    /* LAZY LOAD GAMBAR */
+    img.lazy {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    img.lazy.loaded {
+      opacity: 1;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        height: auto;
+        min-width: 100%;
+        position: relative;
+      }
+
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-input input {
+        font-size: var(--font-sm);
+      }
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<!-- STATUS BAR -->
+<div class="c-status-bar" id="connectionBar" role="status" aria-live="polite"></div>
+
+<!-- HEADER -->
+<header class="c-header" role="banner">
+  <div class="l-container d-flex justify-between align-center">
+    <a href="#" class="c-header__logo">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E"
+           alt="Logo Rentelindo" width="24" height="24" loading="lazy" style="margin-right: 0.5rem;" />
+      Rentelindo
+    </a>
+    <button class="theme-toggle btn btn-outline" aria-label="Toggle dark mode">
+      <i class="fas fa-moon"></i> Mode Gelap
+    </button>
+  </div>
+</header>
+
+<!-- SIDEBAR DAN MAIN CONTENT -->
+<div class="dashboard">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Menu Admin">
+    <a href="#beranda" class="logo d-block text-center mb-3">Rentelindo</a>
+    <nav class="d-flex flex-column gap-2">
+      <a href="#beranda" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-home"></i> Beranda</a>
+      <a href="#penyewa" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-users"></i> Penyewa</a>
+      <a href="#unit" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-building"></i> Unit</a>
+      <a href="#laporan" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-chart-line"></i> Laporan</a>
+      <a href="#" class="btn btn-sm btn-outline-danger w-100 text-start" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="main-content" tabindex="-1">
+    <!-- HERO SECTION -->
+    <section class="hero fade-in">
+      <div class="container hero-content">
+        <h1 class="hero-title">Kelola Apartemen Anda Secara Digital</h1>
+        <p class="hero-desc">
+          Platform intuitif untuk pemilik dan manajer properti. Monitor penyewa, lacak kontrak, dan optimalkan keuangan dalam satu dashboard.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="openModal('add-tenant')"><i class="fas fa-user-plus"></i> Tambah Penyewa</button>
+          <button class="btn btn-outline" onclick="openModal('add-unit')"><i class="fas fa-building"></i> Tambah Unit</button>
+          <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Ekspor Data</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FITUR TABS -->
+    <div class="container mt-5">
+      <div class="feature-tabs">
+        <button class="feature-tab active" data-tab="pembayaran">Pembayaran Online</button>
+        <button class="feature-tab" data-tab="chat">Chat Langsung</button>
+        <button class="feature-tab" data-tab="ulasan">Ulasan Terpercaya</button>
+        <button class="feature-tab" data-tab="tur">Tur Virtual 360°</button>
+      </div>
+
+      <!-- PEMBAYARAN -->
+      <section id="pembayaran" class="fade-in">
+        <div class="payment-form">
+          <h2 class="fs-xl fw-bold mb-3">Sistem Pembayaran Digital</h2>
+          <p class="text-muted mb-4">Lakukan pembayaran secara aman dan cepat melalui platform kami. Semua transaksi dilindungi dengan enkripsi SSL.</p>
+          <div class="payment-methods mb-4">
+            <div class="payment-method active" data-method="bank">
+              <i class="fas fa-university fs-xl"></i>
+              <p class="mt-2">Transfer Bank</p>
+            </div>
+            <div class="payment-method" data-method="qris">
+              <i class="fas fa-qrcode fs-xl"></i>
+              <p class="mt-2">QRIS</p>
+            </div>
+            <div class="payment-method" data-method="ewallet">
+              <i class="fas fa-wallet fs-xl"></i>
+              <p class="mt-2">E-Wallet</p>
+            </div>
+          </div>
+          <form id="paymentForm" class="d-flex flex-column gap-3" novalidate>
+            <div class="form-group">
+              <label for="tenantId">ID Penyewa</label>
+              <input type="text" id="tenantId" name="tenantId" required pattern="[A-Za-z0-9]+" aria-describedby="tenantError">
+              <small id="tenantError" class="form-error" role="alert"></small>
+            </div>
+            <div class="form-group">
+              <label for="amount">Jumlah Pembayaran</label>
+              <input type="text" id="amount" name="amount" required pattern="[0-9]+" aria-describedby="amountError">
+              <small id="amountError" class="form-error" role="alert"></small>
+            </div>
+            <div class="form-group">
+              <label for="date">Tanggal</label>
+              <input type="date" id="date" name="date" required aria-describedby="dateError">
+              <small id="dateError" class="form-error" role="alert"></small>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Kirim Pembayaran</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section id="chat" class="fade-in" hidden>
+        <h2 class="fs-xl fw-bold mb-3">Chat Langsung</h2>
+        <p class="text-muted mb-4">Komunikasi langsung dengan penyewa atau pemilik properti secara real-time</p>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input mt-3">
+          <form id="chatForm" novalidate>
+            <input type="text" id="chatMessage" placeholder="Tulis pesan..." required aria-describedby="chatError">
+            <button type="submit" class="btn btn-primary">Kirim</button>
+            <small id="chatError" class="form-error" role="alert"></small>
+          </form>
+        </div>
+      </section>
+
+      <!-- UASAN -->
+      <section id="ulasan" class="fade-in" hidden>
+        <h2 class="fs-xl fw-bold mb-3">Ulasan Properti</h2>
+        <p class="text-muted mb-4">Lihat ulasan dari penyewa yang telah tinggal di unit ini</p>
+        <div class="grid" id="reviewList">
+          <div class="review-card">
+            <div class="d-flex align-center gap-sm">
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+              <i class="fas fa-star text-warning"></i>
+            </div>
+            <p class="mt-2">"Unit ini sangat nyaman. Pemandangan kota yang luar biasa dan fasilitas lengkap."</p>
+            <small class="text-muted">Adi Gunawan • <span class="verified-badge">Terverifikasi</span></small>
+          </div>
+        </div>
+      </section>
+
+      <!-- TUR -->
+      <section id="tur" class="fade-in" hidden>
+        <h2 class="fs-xl fw-bold mb-3">Tur Virtual 360°</h2>
+        <p class="text-muted mb-4">Jelajahi unit apartemen secara detail sebelum memesan</p>
+        <div class="virtual-tour" id="virtualTour">
+          <img src="https://via.placeholder.com/800x400?text=Tur+Virtual+360 °" alt="Tur Virtual" id="tourImage">
+          <div class="tour-controls">
+            <button onclick="prevTour()">‹</button>
+            <button onclick="nextTour()">›</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="container">
+      <p>&copy; 2025 Rentelindo. Hak Cipta Dilindungi.</p>
+      <p>Dibuat dengan ❤️ oleh tim Rentelindo untuk ekosistem sewa properti digital di Indonesia.</p>
+    </div>
+  </footer>
+</main>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast" id="toast" style="position:fixed;bottom:1rem;right:1rem;background:#333;color:#fff;padding:0.75rem 1.5rem;border-radius:var(--radius-sm);opacity:0;visibility:hidden;z-index:1050;"></div>
+
+<script>
+  // DATA PENYEWA
+  let tenants = [
+    { id: 'T001', name: 'Budi Santoso', email: 'budi@example.com', phone: '+6281234567890', status: 'Aktif', rent: 5000000 },
+    { id: 'T002', name: 'Siti Aminah', email: 'siti@example.com', phone: '+6289876543210', status: 'Aktif', rent: 7500000 }
+  ];
+
+  // DATA UNIT APARTEMEN
+  let units = [
+    { name: 'Sky Residence', status: 'Ditempati', tenant: 'Budi Santoso' },
+    { name: 'Green Park', status: 'Ditempati', tenant: 'Siti Aminah' },
+    { name: 'Urban Loft', status: 'Tersedia', tenant: '' }
+  ];
+
+  // TOGGLE MODE GELAP
+  const themeToggle = document.querySelector('.theme-toggle');
+  const body = document.body;
+  themeToggle.addEventListener('click', () => {
+    const isDark = body.getAttribute('data-theme') === 'dark';
+    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i> Mode Gelap' : '<i class="fas fa-sun"></i> Mode Terang';
+  });
+// FORM VALIDATION
+const contactFields = [
+  { id: 'name', emptyMessage: 'Name is required.', pattern: /^[A-Za-z ]+$/, invalidMessage: 'Only letters and spaces allowed.' },
+  { id: 'email', emptyMessage: 'Email is required.', pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/, invalidMessage: 'Invalid email format.' },
+  { id: 'message', emptyMessage: 'Message is required.' }
+];
+
+// Validate individual form field
+function validateField(field) {
+  const input = document.getElementById(field.id);
+  const errorEl = document.getElementById(`${field.id}Error`);
+  const value = input.value.trim();
+
+  if (!value) {
+    errorEl.textContent = field.emptyMessage;
+    input.setAttribute('aria-invalid', 'true');
+    input.focus();
+    return false;
+  } else if (field.pattern && !field.pattern.test(value)) {
+    errorEl.textContent = field.invalidMessage;
+    input.setAttribute('aria-invalid', 'true'); 
+    input.focus();
+    return false;
+  }
+
+  errorEl.textContent = '';
+  input.setAttribute('aria-invalid', 'false');
+  return true;
+}
+
+// Handle contact form submission
+document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+  contactFields.forEach(f => {
+    if (!validateField(f)) valid = false;
+  });
+  if (valid) {
+    showToast('Message sent successfully!');
+    document.getElementById('contactForm').reset();
+    contactFields.forEach(f => document.getElementById(`${f.id}Error`).textContent = '');
+  }
+});
+
+// Show toast notification
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.opacity = 1;
+  toast.style.visibility = 'visible';
+  setTimeout(() => {
+    toast.style.opacity = 0;
+    toast.style.visibility = 'hidden';
+  }, duration);
+}
+
+// Export data to CSV
+function exportData() {
+  const csv = [
+    ['Tenant ID', 'Name', 'Email', 'Phone', 'Status', 'Rent'],
+    ...tenants.map(t => [t.id, t.name, t.email, t.phone, t.status, t.rent])
+  ].map(row => row.join(',')).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'tenants.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Handle logout
+function logout() {
+  if (confirm("Are you sure you want to logout?")) {
+    showToast("Logged out successfully.");
+    setTimeout(() => window.location.href = "login.html", 1000);
+  }
+}
+
+// Open modal dialog
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'block';
+  }
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  renderUnits();
+  updateStats();
+  document.getElementById('payments').removeAttribute('hidden');
+});
+
+// Handle form validation
+const paymentFields = [
+  { id: 'tenantId', emptyMessage: 'Tenant ID is required', pattern: /^[A-Za-z0-9]+$/, invalidMessage: 'Only letters and numbers' },
+  { id: 'amount', emptyMessage: 'Amount is required', pattern: /^[0-9]+$/, invalidMessage: 'Numbers only' },
+  { id: 'date', emptyMessage: 'Date is required' }
+];
+
+// Handle payment form submission
+document.getElementById('paymentForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+  paymentFields.forEach(f => {
+    if (!validateField(f)) valid = false;
+  });
+  if (valid) {
+    showToast('Payment sent successfully!');
+    document.getElementById('paymentForm').reset();
+    paymentFields.forEach(f => document.getElementById(`${f.id}Error`).textContent = '');
+  }
+});
+
+// Handle tooltips
+document.querySelectorAll('.tooltip').forEach(el => {
+  el.addEventListener('mouseover', () => {
+    el.querySelector('.tooltip-text').style.display = 'block';
+  });
+  el.addEventListener('mouseout', () => {
+    el.querySelector('.tooltip-text').style.display = 'none';
+  });
+});
+
+// Lazy load images
+document.querySelectorAll('img[data-src]').forEach(img => {
+  img.src = img.dataset.src;
+  img.onload = () => img.style.opacity = 1;
+});
+
+// Update dashboard statistics
+function updateStats() {
+  document.getElementById('total-units').textContent = units.length;
+  document.getElementById('rented-units').textContent = units.filter(u => u.status === 'Occupied').length;
+  document.getElementById('vacant-units').textContent = units.filter(u => u.status === 'Available').length;
+  document.getElementById('new-tenants').textContent = tenants.filter(t => t.status === 'Pending' || t.status === 'Booking').length;
+}
+
+// Render unit table
+function renderUnits() {
+  const tbody = document.getElementById('unit-table');
+  if (!tbody) return;
+  tbody.innerHTML = units.map(unit => `
+    <tr>
+      <td>${unit.name}</td>
+      <td><span class="badge badge-${unit.status === 'Occupied' ? 'success' : 'secondary'}">${unit.status}</span></td>
+      <td>${unit.tenant || '-'}</td>
+      <td>
+        <button class="btn btn-outline" onclick="editUnit('${unit.name}')"><i class="fas fa-pencil"></i> Edit</button>
+        <button class="btn btn-danger" onclick="deleteUnit('${unit.name}')"><i class="fas fa-trash"></i> Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+</script>
+</body>
+</html>

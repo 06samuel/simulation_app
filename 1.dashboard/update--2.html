@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentalApartemen | Manajemen Penyewaan Apartemen</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* CSS Variables */
+    :root {
+      --color-primary: #3a86ff;
+      --color-secondary: #ffbe0b;
+      --color-accent: #ff006e;
+      --color-bg: #f8f9fa;
+      --color-text: #212529;
+      --radius: 1rem;
+      --transition: 0.3s;
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #181a1b;
+      --color-text: #f8f9fa;
+      --color-primary: #1e3c72;
+      --color-secondary: #2a5298;
+    }
+
+    /* Basic Styles */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--color-bg);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link.active,
+    .nav-link:hover {
+      color: var(--color-primary) !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(90deg, var(--color-primary) 60%, var(--color-secondary) 100%);
+      color: #fff;
+      padding: 4rem 1rem;
+      border-radius: var(--radius);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .footer__nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .footer__nav a:hover {
+      color: var(--color-secondary);
+    }
+
+    /* Form Styles */
+    .form-control {
+      border-radius: var(--radius);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header & Navbar -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
+      <div class="container-xl">
+        <a class="navbar-brand fw-bold" href="#">
+          <i class="fa-solid fa-building me-2"></i>RentalApart
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#">Dasbor</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Apartemen</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Penyewa</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Keuangan</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Pengaturan</a></li>
+          </ul>
+          <button id="theme-toggle" class="btn btn-link ms-3" aria-label="Ganti tema terang/gelap">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container-xl py-5">
+    <!-- Hero Section -->
+    <section class="hero text-center mb-5">
+      <h1 class="hero__title">RentalApartemen</h1>
+      <p class="hero__subtitle">Platform komprehensif untuk manajemen penyewaan apartemen.</p>
+      <a href="#" class="btn btn-warning btn-lg hero__cta">Mulai Sekarang</a>
+    </section>
+
+    <!-- Dashboard Widgets -->
+    <section class="row g-4 mb-5">
+      <div class="col-sm-6 col-md-3">
+        <div class="card widget text-center">
+          <div class="card-body">
+            <h5 class="widget__title">Total Apartemen</h5>
+            <p class="widget__value" id="total-apartments">—</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="card widget text-center">
+          <div class="card-body">
+            <h5 class="widget__title">Unit Terisi</h5>
+            <p class="widget__value" id="occupied-units">—</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="card widget text-center">
+          <div class="card-body">
+            <h5 class="widget__title">Unit Kosong</h5>
+            <p class="widget__value" id="vacant-units">—</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3">
+        <div class="card widget text-center">
+          <div class="card-body">
+            <h5 class="widget__title">Pendapatan Bulanan</h5>
+            <p class="widget__value" id="monthly-revenue">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Add New Apartment Form -->
+    <section class="py-5">
+      <h2 class="text-center">Tambah Apartemen Baru</h2>
+      <form id="add-apartment-form" class="text-center">
+        <div class="mb-3">
+          <label for="apartment-name" class="form-label">Nama Apartemen</label>
+          <input type="text" class="form-control" id="apartment-name" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Tambah Apartemen</button>
+      </form>
+    </section>
+
+    <!-- Manage Tenants -->
+    <section class="py-5">
+      <h2 class="text-center">Kelola Penyewa</h2>
+      <div class="mb-3">
+        <button class="btn btn-success" id="add-tenant">Tambah Penyewa</button>
+      </div>
+      <div id="tenant-list"></div>
+    </section>
+
+    <!-- Add Rental Payment -->
+    <section class="py-5">
+      <h2 class="text-center">Tambah Pembayaran Sewa</h2>
+      <form id="add-rental-payment" class="text-center">
+        <div class="mb-3">
+          <label for="tenant-name" class="form-label">Nama Penyewa</label>
+          <input type="text" class="form-control" id="tenant-name" required>
+        </div>
+        <div class="mb-3">
+          <label for="payment-amount" class="form-label">Jumlah Pembayaran</label>
+          <input type="number" class="form-control" id="payment-amount" required>
+        </div>
+        <button type="submit" class="btn btn-info">Tambah Pembayaran</button>
+      </form>
+    </section>
+
+    <!-- Search Apartments -->
+    <section class="py-5">
+      <h2 class="text-center">Cari Apartemen</h2>
+      <div class="mb-3">
+        <input type="text" id="search-apartments" class="form-control" placeholder="Cari Apartemen...">
+      </div>
+      <div id="search-results" class="text-center"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer text-center py-4">
+    <div class="container">
+      <small>&copy; 2025 RentalApartemen. Semua hak dilindungi.</small>
+      <nav class="footer__nav mt-2">
+        <a href="#" class="me-3">Dokumentasi</a>
+        <a href="mailto:support@rentalapartemen.com" class="me-3">Dukungan</a>
+        <a href="#">Kebijakan Privasi</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- JS Script -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle Theme
+      const toggle = document.getElementById('theme-toggle');
+      toggle?.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        toggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+      });
+
+      // Fetch Dashboard Data
+      fetch('/api/statistics')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('total-apartments').textContent = data.totalApartments;
+          document.getElementById('occupied-units').textContent = data.occupiedUnits;
+          document.getElementById('vacant-units').textContent = data.vacantUnits;
+          document.getElementById('monthly-revenue').textContent = data.monthlyRevenue;
+        });
+
+      // Handle Add Apartment Form
+      document.getElementById('add-apartment-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const apartmentName = document.getElementById('apartment-name').value;
+        fetch('/api/add-apartment', {
+          method: 'POST',
+          body: JSON.stringify({ name: apartmentName }),
+          headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+          .then(data => alert('Apartemen berhasil ditambahkan!'));
+      });
+
+      // Handle Add Rental Payment
+      document.getElementById('add-rental-payment').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const tenantName = document.getElementById('tenant-name').value;
+        const paymentAmount = document.getElementById('payment-amount').value;
+        fetch('/api/add-payment', {
+          method: 'POST',
+          body: JSON.stringify({ tenant: tenantName, amount: paymentAmount }),
+          headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+          .then(data => alert('Pembayaran berhasil ditambahkan!'));
+      });
+
+      // Manage Tenants (Example)
+      document.getElementById('add-tenant').addEventListener('click', () => {
+        const tenantName = prompt("Masukkan nama penyewa");
+        if (tenantName) {
+          // Simulate adding a tenant to the list
+          const tenantList = document.getElementById('tenant-list');
+          const tenantDiv = document.createElement('div');
+          tenantDiv.textContent = tenantName;
+          tenantList.appendChild(tenantDiv);
+        }
+      });
+
+      // Search Apartments
+      document.getElementById('search-apartments').addEventListener('input', (e) => {
+        const query = e.target.value;
+        fetch(`/api/search-apartments?q=${query}`)
+          .then(response => response.json())
+          .then(results => {
+            const resultsDiv = document.getElementById('search-results');
+            resultsDiv.innerHTML = '';
+            results.forEach(result => {
+              const div = document.createElement('div');
+              div.textContent = result.name;
+              resultsDiv.appendChild(div);
+            });
+          });
+      });
+    });
+  </script>
+</body>
+
+</html>

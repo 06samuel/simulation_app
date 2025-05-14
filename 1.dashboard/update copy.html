@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RentApart | Dashboard</title>
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,700|Poppins:400,700&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --primary: #0d6efd;
+      --secondary: #6c757d;
+      --bg: #f8f9fa;
+      --bg-dark: #212529;
+      --text: #212529;
+      --text-light: #fff;
+      --card-bg: #fff;
+      --card-bg-dark: #343a40;
+    }
+
+    [data-theme="dark"] {
+      --bg: #181a1b;
+      --text: #f8f9fa;
+      --card-bg: #23272b;
+    }
+
+    body {
+      font-family: 'Inter', 'Poppins', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      min-width: 220px;
+      max-width: 220px;
+      background: var(--card-bg);
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-right: 1px solid #dee2e6;
+      z-index: 1000;
+      transition: left 0.3s;
+    }
+
+    .sidebar .nav-link {
+      color: var(--text);
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover {
+      background: var(--primary);
+      color: var(--text-light);
+    }
+
+    .sidebar-collapsed {
+      left: -220px;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      transition: margin-left 0.3s;
+    }
+
+    .main-content-collapsed {
+      margin-left: 0;
+    }
+
+    .navbar {
+      background: var(--card-bg);
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-card .icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .chart-placeholder {
+      height: 260px;
+      background: repeating-linear-gradient(135deg, #e9ecef, #e9ecef 10px, #f8f9fa 10px, #f8f9fa 20px);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #adb5bd;
+      font-size: 1.3rem;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    .notification {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 2000;
+      min-width: 260px;
+    }
+
+    @media (max-width: 991px) {
+      .sidebar {
+        left: -220px;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    .table-responsive {
+      background: var(--card-bg);
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar" aria-label="Navigasi Sidebar">
+    <nav class="nav flex-column pt-4">
+      <a class="nav-link active" href="#"><i class="fa-solid fa-home me-2"></i> Dashboard</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-image me-2"></i> Galeri</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-users me-2"></i> Penyewa</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-building me-2"></i> Apartemen</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-calendar-check me-2"></i> Pemesanan</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-file-lines me-2"></i> Dokumentasi</a>
+      <a class="nav-link" href="#"><i class="fa-solid fa-gear me-2"></i> Pengaturan</a>
+    </nav>
+  </aside>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar">
+      <a class="navbar-brand" href="#">RentApart</a>
+    </nav>
+  </header>
+
+  <!-- Konten Utama -->
+  <main>
+    <section class="hero mt-4">
+      <h1>Selamat datang di RentApart</h1>
+      <p>Manajemen penyewaan apartemen Anda menjadi lebih mudah dengan platform SaaS kami yang serba lengkap.</p>
+      <a href="#" class="btn btn-primary btn-lg">Mulai Sekarang</a>
+    </section>
+
+    <!-- Statistik Dashboard -->
+    <div class="container-fluid py-2">
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="stat-card" tabindex="0" aria-label="Total Apartemen">
+            <span class="icon"><i class="fa-solid fa-building"></i></span>
+            <div>
+              <div class="fs-4 fw-bold" id="statApartments">24</div>
+              <div class="text-muted">Total Apartemen</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="stat-card" tabindex="0" aria-label="Apartemen Tersewa">
+            <span class="icon"><i class="fa-solid fa-key"></i></span>
+            <div>
+              <div class="fs-4 fw-bold" id="statRented">18</div>
+              <div class="text-muted">Apartemen Tersewa</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="stat-card" tabindex="0" aria-label="Pendapatan Bulanan">
+            <span class="icon"><i class="fa-solid fa-dollar-sign"></i></span>
+            <div>
+              <div class="fs-4 fw-bold" id="statIncome">Rp 7.200.000</div>
+              <div class="text-muted">Pendapatan Bulanan</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <div class="stat-card" tabindex="0" aria-label="Total Penyewa">
+            <span class="icon"><i class="fa-solid fa-users"></i></span>
+            <div>
+              <div class="fs-4 fw-bold" id="statTenants">34</div>
+              <div class="text-muted">Total Penyewa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder Grafik -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-7">
+          <div class="chart-placeholder d-flex align-items-center justify-content-center" aria-label="Grafik Hunian">
+            <i class="fa-solid fa-chart-pie fa-2x me-2"></i> Grafik Hunian (Demo)
+          </div>
+        </div>
+        <div class="col-12 col-lg-5">
+          <div class="chart-placeholder d-flex align-items-center justify-content-center"
+            aria-label="Grafik Pendapatan">
+            <i class="fa-solid fa-chart-line fa-2x me-2"></i> Grafik Pendapatan (Demo)
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Penyewa -->
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="table-responsive p-3">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Penyewa</th>
+                  <th scope="col">Apartemen</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Sewa</th>
+                  <th scope="col">Akhir Sewa</th>
+                  <th scope="col">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="tenantTableBody">
+                <!-- Data Penyewa akan ditampilkan di sini -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 RentApart. Semua hak dilindungi.</p>
+  </footer>
+
+  <!-- Skrip JavaScript -->
+  <script>
+    // Data Penyewa untuk Demo
+    const tenants = [
+      { name: 'John Doe', apartment: 'A-101', status: 'Aktif', rent: 'Rp 1.200.000', leaseEnd: '2025-12-31' },
+      { name: 'Jane Smith', apartment: 'B-202', status: 'Tertunda', rent: 'Rp 950.000', leaseEnd: '2025-08-15' },
+      { name: 'Alex Tan', apartment: 'C-303', status: 'Aktif', rent: 'Rp 1.400.000', leaseEnd: '2026-01-10' },
+      { name: 'Maria Garcia', apartment: 'A-103', status: 'Tidak Aktif', rent: 'Rp 1.100.000', leaseEnd: '2024-11-30' },
+    ];
+
+    // Fungsi untuk mengisi tabel penyewa
+    function populateTenantTable() {
+      const tbody = document.getElementById('tenantTableBody');
+      tbody.innerHTML = tenants.map(t => `
+        <tr>
+          <td>${t.name}</td>
+          <td>${t.apartment}</td>
+          <td><span class="badge bg-${t.status === 'Aktif' ? 'success' : t.status === 'Tertunda' ? 'warning' : 'secondary'}">${t.status}</span></td>
+          <td>${t.rent}</td>
+          <td>${t.leaseEnd}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fa fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Menampilkan notifikasi selamat datang
+    document.addEventListener('DOMContentLoaded', function () {
+      alert('Selamat datang di Dashboard RentApart!');
+      populateTenantTable();
+    });
+  </script>
+</body>
+
+</html>

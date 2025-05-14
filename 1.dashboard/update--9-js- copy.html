@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Management Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0070f3;
+            --primary-foreground: #ffffff;
+            --secondary: #6c757d;
+            --secondary-foreground: #ffffff;
+            --accent: #17a2b8;
+            --accent-foreground: #ffffff;
+            --background: #f8f9fa;
+            --foreground: #212529;
+            --card: #ffffff;
+            --card-foreground: #212529;
+            --border: #dee2e6;
+            --input: #ced4da;
+            --ring: #0070f3;
+            --radius: 0.5rem;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: var(--primary) !important;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-card {
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .counter {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            color: var(--primary);
+        }
+
+        .trend {
+            color: #28a745;
+            margin: 0;
+        }
+
+        .trend-warning {
+            color: #ffc107;
+            margin: 0;
+        }
+
+        .trend-danger {
+            color: #dc3545;
+            margin: 0;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-radius: var(--radius);
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+
+        .activity-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+
+        .activity-content h6 {
+            margin: 0;
+            color: var(--foreground);
+        }
+
+        .activity-content p {
+            margin: 0.25rem 0;
+            color: var(--secondary);
+        }
+
+        .activity-content small {
+            color: var(--muted-foreground);
+        }
+
+        .due-dates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .due-date-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+
+        .date-badge {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .due-content h6 {
+            margin: 0;
+            color: var(--foreground);
+        }
+
+        .due-content p {
+            margin: 0;
+            color: var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .counter {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="wrapper">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">PropManager</a>
+                <div class="d-flex align-items-center">
+                    <div class="theme-switch me-3">
+                        <i class="bi bi-moon-stars text-white"></i>
+                    </div>
+                    <div class="dropdown">
+                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d" alt="profile"
+                            class="rounded-circle" width="40" height="40">
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row mt-4">
+                <div class="col-md-3 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Tenants</h5>
+                            <h2 class="counter">156</h2>
+                            <p class="trend"><i class="bi bi-arrow-up-right"></i> +12% this month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Requests</h5>
+                            <h2 class="counter">23</h2>
+                            <p class="trend-warning"><i class="bi bi-exclamation-triangle"></i> 5 urgent</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Due Payments</h5>
+                            <h2 class="counter">$45,250</h2>
+                            <p class="trend-danger"><i class="bi bi-clock"></i> Next 7 days</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card dashboard-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Revenue</h5>
+                            <h2 class="counter">$128,350</h2>
+                            <p class="trend"><i class="bi bi-graph-up"></i> +8.5% vs last month</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="quick-actions">
+                        <button class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Tenant</button>
+                        <button class="btn btn-secondary"><i class="bi bi-tools"></i> Create Maintenance
+                            Request</button>
+                        <button class="btn btn-info"><i class="bi bi-file-earmark-text"></i> Generate Reports</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-8 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Recent Activities</h5>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <i class="bi bi-person-plus activity-icon"></i>
+                                    <div class="activity-content">
+                                        <h6>New Tenant Added</h6>
+                                        <p>John Doe signed lease for Apt 304</p>
+                                        <small>2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <i class="bi bi-cash activity-icon"></i>
+                                    <div class="activity-content">
+                                        <h6>Payment Received</h6>
+                                        <p>$2,500 received from Sarah Wilson</p>
+                                        <small>5 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <i class="bi bi-wrench activity-icon"></i>
+                                    <div class="activity-content">
+                                        <h6>Maintenance Request</h6>
+                                        <p>Plumbing issue reported in Unit 205</p>
+                                        <small>1 day ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Upcoming Due Dates</h5>
+                            <div class="due-dates-list">
+                                <div class="due-date-item">
+                                    <div class="date-badge">15</div>
+                                    <div class="due-content">
+                                        <h6>Rent Collection</h6>
+                                        <p>12 payments due</p>
+                                    </div>
+                                </div>
+                                <div class="due-date-item">
+                                    <div class="date-badge">18</div>
+                                    <div class="due-content">
+                                        <h6>Lease Renewal</h6>
+                                        <p>3 contracts expiring</p>
+                                    </div>
+                                </div>
+                                <div class="due-date-item">
+                                    <div class="date-badge">22</div>
+                                    <div class="due-content">
+                                        <h6>Maintenance Schedule</h6>
+                                        <p>Building inspection</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

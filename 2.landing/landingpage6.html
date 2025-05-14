@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Rentelindo - Platform Sewa Apartemen Premium</title>
+<style>
+
+body {
+ font-family: Arial, sans-serif;
+ margin: 0;
+ padding: 0;
+}
+header {
+ background-color: #333;
+ color: #fff;
+ padding: 1em;
+ text-align: center;
+}
+nav ul {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ display: flex;
+ justify-content: space-between;
+}
+nav li {
+ margin-right: 20px;
+}
+nav a {
+ color: #fff;
+ text-decoration: none;
+}
+main {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 2em;
+}
+section {
+ background-color: #f7f7f7;
+ padding: 2em;
+ margin-bottom: 20px;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+ font-size: 24px;
+ margin-bottom: 10px;
+}
+ul {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+}
+li {
+ margin-bottom: 10px;
+}
+#reviewsList {
+ padding: 0;
+ margin: 0;
+}
+.review-card {
+ background-color: #fff;
+ padding: 10px;
+ border: 1px solid #ddd;
+ margin-bottom: 10px;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+</style></head>
+<body>
+ <header>
+ <nav>
+ <ul>
+ <li><a href="#home">Beranda</a></li>
+ <li><a href="#properti">Properti</a></li>
+ <li><a href="#ulasan">Ulasan</a></li>
+ <li><a href="#kontak">Kontak</a></li>
+ </ul>
+ </nav>
+ </header>
+ <main>
+ <section id="home">
+ <h1>Selamat Datang di Rentelindo!</h1>
+ <p>Temukan hunian impianmu dengan pengalaman digital.</p>
+ </section>
+ <section id="properti">
+ <h1>Properti Eksklusif</h1>
+ <ul>
+ <li>
+ <h2>Apartemen Mewah</h2>
+ <p>Fasilitas lengkap dan lokasi strategis.</p>
+ </li>
+ <li>
+ <h2>Rumah Minimalis</h2>
+ <p>Desain modern dan harga terjangkau.</p>
+ </li>
+ </ul>
+ </section>
+ <section id="ulasan">
+ <h1>Ulasan Terpercaya</h1>
+ <ul id="reviewsList"></ul>
+ </section>
+ <section id="kontak">
+ <h1>Kontak Kami</h1>
+ <form id="contactForm">
+ <label for="name">Nama:</label>
+ <input type="text" id="name" name="name"><br><br>
+ <label for="email">Email:</label>
+ <input type="email" id="email" name="email"><br><br>
+ <label for="message">Pesan:</label>
+ <textarea id="message" name="message"></textarea><br><br>
+ <button type="submit">Kirim</button>
+ </form>
+ </section>
+ </main>
+<script>
+
+// Sistem Ulasan
+let currentRating = 0;
+function setRating(rating) {
+ currentRating = rating;
+ document.querySelectorAll('#ratingStars span').forEach((star, index) => {
+
+star.style.color = index < rating ? '#ffd700' : '#ccc';
+ });
+}
+function submitReview() {
+ const reviewText = document.getElementById('reviewInput').value;
+ if (reviewText && currentRating > 0) {
+ const review = { text: reviewText, rating: currentRating, date: new Date().toLocaleDateString() };
+ // Simpan ke localStorage
+ const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+ reviews.push(review);
+ localStorage.setItem('reviews', JSON.stringify(reviews));
+ renderReviews();
+ }
+}
+function renderReviews() {
+ const reviews = JSON.parse(localStorage.getItem('reviews') || []);
+ document.getElementById('reviewsList').innerHTML = reviews.map(review => `
+ <div class="review-card">
+ <div class="rating">${'★'.repeat(review.rating)}</div>
+ <p>${review.text}</p>
+ <time>${review.date}</time>
+ </div>
+ `).join('');
+}
+// Sistem Kontak
+document.getElementById('contactForm').addEventListener('submit', (e) => {
+ e.preventDefault();
+ const name = document.getElementById('name').value;
+ const email = document.getElementById('email').value;
+ const message = document.getElementById('message').value;
+ // Kirim email atau simpan ke database
+ alert('Pesan Anda telah terkirim!');
+});
+// Inisialisasi
+document.addEventListener('DOMContentLoaded', () => {
+ // Render ulasan
+ renderReviews();
+});
+</script></body>
+</html>
