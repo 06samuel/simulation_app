@@ -1,167 +1,228 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RentalPro - Solusi Manajemen Rental Terintegrasi</title>
+    <title>RentalPro - Solusi Manajemen Apartemen Terintegrasi</title>
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jQuery and jQuery UI for Datepicker -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- Leaflet for Interactive Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- Stripe for Payment (Placeholder) -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #3B82F6;
-            --primary-dark: #2563EB;
-            --secondary: #10B981;
-            --dark: #1F2937;
-            --darker: #111827;
-            --light: #F3F4F6;
-            --gray: #6B7280;
-            --danger: #EF4444;
-            --warning: #F59E0B;
-            
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            
-            --rounded-sm: 0.125rem;
-            --rounded: 0.25rem;
-            --rounded-md: 0.375rem;
-            --rounded-lg: 0.5rem;
-            --rounded-xl: 0.75rem;
+            --primary: #4361ee;
+            --primary-light: #3f37c9;
+            --primary-dark: #3a0ca3;
+            --secondary: #f72585;
+            --accent: #4cc9f0;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #ff4444;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --rounded-sm: 4px;
+            --rounded: 8px;
+            --rounded-md: 12px;
+            --rounded-lg: 16px;
+            --rounded-xl: 24px;
             --rounded-full: 9999px;
-            
-            --transition: all 0.2s ease-in-out;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --transition-fast: all 0.15s ease-in-out;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #F9FAFB;
-            color: var(--darker);
-            line-height: 1.6;
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
         }
-        
+
+        body {
+            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont,
+                'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
         /* Typography */
-        h1, h2, h3, h4, h5, h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 1rem;
+            color: var(--darker);
         }
-        
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.25rem; }
-        h6 { font-size: 1rem; }
-        
+
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+
+        h3 {
+            font-size: 1.75rem;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+        }
+
+        h5 {
+            font-size: 1.25rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+        }
+
         @media (min-width: 768px) {
-            h1 { font-size: 3rem; }
-            h2 { font-size: 2.5rem; }
-            h3 { font-size: 2rem; }
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            h2 {
+                font-size: 2.5rem;
+            }
+
+            h3 {
+                font-size: 2rem;
+            }
         }
-        
+
         p {
             margin-bottom: 1rem;
+            color: var(--dark);
+            font-size: 1rem;
         }
-        
+
         a {
             color: var(--primary);
             text-decoration: none;
-            transition: var(--transition);
+            transition: var(--transition-fast);
         }
-        
+
         a:hover {
             color: var(--primary-dark);
         }
-        
+
         /* Layout */
         .container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 1.5rem;
         }
-        
+
         .section {
-            padding: 5rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
+            padding: 6rem 0;
             position: relative;
         }
-        
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
         .section-title::after {
             content: '';
             display: block;
             width: 80px;
             height: 4px;
-            background: var(--primary);
-            margin: 1rem auto 0;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 1.25rem auto 0;
             border-radius: var(--rounded-full);
         }
-        
+
         /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.75rem;
             border-radius: var(--rounded-lg);
             font-weight: 600;
+            font-size: 1rem;
             text-align: center;
             white-space: nowrap;
             transition: var(--transition);
             cursor: pointer;
             border: none;
             outline: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
-        
+
         .btn-primary {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
+            box-shadow: 0 4px 14px rgba(67, 97, 238, 0.3);
         }
-        
+
         .btn-primary:hover {
-            background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
         }
-        
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
-        
-        .btn-secondary:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
+
         .btn-outline {
             background-color: transparent;
             border: 2px solid var(--primary);
             color: var(--primary);
         }
-        
+
         .btn-outline:hover {
             background-color: var(--primary);
             color: white;
+            border-color: var(--primary);
         }
-        
+
         .btn-lg {
-            padding: 1rem 2rem;
+            padding: 1rem 2.25rem;
             font-size: 1.1rem;
         }
-        
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
         /* Cards */
         .card {
             background: white;
@@ -169,53 +230,66 @@
             box-shadow: var(--shadow);
             overflow: hidden;
             transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
         }
-        
+
         .card-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--light-gray);
         }
-        
+
         .card-body {
             padding: 1.5rem;
         }
-        
+
         .card-footer {
-            padding: 1.5rem;
-            border-top: 1px solid #E5E7EB;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            background-color: rgba(248, 249, 250, 0.5);
         }
-        
+
         /* Forms */
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
+            color: var(--darker);
         }
-        
+
         .form-control {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #D1D5DB;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--light-gray);
             border-radius: var(--rounded-md);
             font-size: 1rem;
-            transition: var(--transition);
+            transition: var(--transition-fast);
+            background-color: white;
+            color: var(--dark);
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
         }
-        
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+        }
+
         /* Navigation */
         .navbar {
             position: fixed;
@@ -223,57 +297,62 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(8px);
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
         }
-        
+
         .navbar.scrolled {
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow);
         }
-        
+
         .navbar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem 0;
         }
-        
+
         .navbar-brand {
             display: flex;
             align-items: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--darker);
         }
-        
+
         .navbar-logo {
             height: 40px;
-            margin-right: 0.5rem;
+            margin-right: 0.75rem;
         }
-        
+
         .navbar-menu {
             display: flex;
             align-items: center;
         }
-        
+
         .navbar-nav {
             display: flex;
             list-style: none;
         }
-        
+
         .nav-item {
-            margin-left: 1.5rem;
+            margin-left: 1.75rem;
+            position: relative;
         }
-        
+
         .nav-link {
-            color: var(--dark);
-            font-weight: 500;
+            color: var(--darker);
+            font-weight: 600;
             padding: 0.5rem 0;
             position: relative;
         }
-        
+
         .nav-link:hover {
             color: var(--primary);
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -281,250 +360,166 @@
             left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             transition: width 0.3s ease;
         }
-        
+
         .nav-link:hover::after {
             width: 100%;
         }
-        
+
         .navbar-toggler {
             display: none;
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--dark);
+            color: var(--darker);
             cursor: pointer;
+            transition: var(--transition-fast);
         }
-        
+
+        .navbar-toggler:hover {
+            color: var(--primary);
+        }
+
         /* Hero Section */
         .hero {
-            padding: 8rem 0 5rem;
-            background: linear-gradient(135deg, #F9FAFB 0%, #E5E7EB 100%);
+            padding: 9rem 0 6rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
         .hero-content {
             display: flex;
             align-items: center;
             gap: 3rem;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .hero-text {
             flex: 1;
         }
-        
+
         .hero-image {
             flex: 1;
             position: relative;
         }
-        
+
         .hero-image img {
             width: 100%;
             border-radius: var(--rounded-xl);
             box-shadow: var(--shadow-xl);
-        }
-        
-        .hero-badge {
-            position: absolute;
-            top: -1rem;
-            right: -1rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: var(--rounded-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Features Section */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-        
-        /* Pricing Section */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .pricing-card {
-            text-align: center;
-        }
-        
-        .pricing-card.popular {
-            border: 2px solid var(--primary);
-            position: relative;
-        }
-        
-        .popular-badge {
-            position: absolute;
-            top: -1rem;
-            right: 1rem;
-            background: var(--primary);
-            color: white;
-            padding: 0.25rem 1rem;
-            border-radius: var(--rounded-full);
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        
-        .price {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 1rem 0;
-        }
-        
-        .price-period {
-            font-size: 1rem;
-            color: var(--gray);
-        }
-        
-        /* Rental Management Dashboard */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: 100vh;
-        }
-        
-        .sidebar {
-            background: var(--darker);
-            color: white;
-            padding: 2rem 0;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-        }
-        
-        .sidebar-item {
-            margin-bottom: 0.5rem;
-        }
-        
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            color: #D1D5DB;
+            transform: perspective(1000px) rotateY(-10deg);
             transition: var(--transition);
         }
-        
-        .sidebar-link:hover, .sidebar-link.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+
+        .hero-image:hover img {
+            transform: perspective(1000px) rotateY(0);
         }
-        
-        .sidebar-icon {
-            margin-right: 0.75rem;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .main-content {
+
+        /* Search Form */
+        .search-form {
+            background-color: white;
+            border-radius: var(--rounded-xl);
             padding: 2rem;
-            background: #F3F4F6;
+            box-shadow: var(--shadow-xl);
+            margin-top: -4rem;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
-        .stats-grid {
+
+        .search-form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--rounded-lg);
-            box-shadow: var(--shadow);
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
-        
-        .stat-value {
-            font-size: 2rem;
+
+        .feature-card {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Property Cards */
+        .property-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .property-img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .property-card:hover .property-img {
+            opacity: 0.9;
+        }
+
+        .property-price {
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
+            margin: 0.75rem 0;
         }
-        
-        .stat-label {
+
+        .property-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--gray);
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
-        
-        .table-responsive {
-            overflow-x: auto;
+
+        .property-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
         }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: var(--shadow);
-            border-radius: var(--rounded-lg);
-            overflow: hidden;
-        }
-        
-        .table th, .table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #E5E7EB;
-        }
-        
-        .table th {
-            background: #F9FAFB;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--rounded-full);
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background: #ECFDF5;
-            color: #065F46;
-        }
-        
-        .badge-warning {
-            background: #FFFBEB;
-            color: #92400E;
-        }
-        
-        .badge-danger {
-            background: #FEF2F2;
-            color: #991B1B;
-        }
-        
+
         /* Modal */
         .modal {
             position: fixed;
@@ -533,6 +528,7 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -540,220 +536,674 @@
             opacity: 0;
             visibility: hidden;
             transition: var(--transition);
+            padding: 1rem;
         }
-        
+
         .modal.active {
             opacity: 1;
             visibility: visible;
         }
-        
+
         .modal-content {
             background: white;
-            border-radius: var(--rounded-lg);
-            width: 90%;
-            max-width: 500px;
+            border-radius: var(--rounded-xl);
+            width: 100%;
+            max-width: 800px;
             max-height: 90vh;
             overflow-y: auto;
             transform: translateY(20px);
             transition: var(--transition);
+            box-shadow: var(--shadow-xl);
         }
-        
+
         .modal.active .modal-content {
             transform: translateY(0);
         }
-        
+
         .modal-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid var(--light-gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
         }
-        
-        .modal-title {
-            margin: 0;
-        }
-        
+
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             cursor: pointer;
             color: var(--gray);
+            transition: var(--transition-fast);
+            line-height: 1;
         }
-        
+
+        .modal-close:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+
         .modal-body {
             padding: 1.5rem;
         }
-        
+
         .modal-footer {
             padding: 1.5rem;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid var(--light-gray);
             display: flex;
             justify-content: flex-end;
+            gap: 1rem;
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            border-radius: var(--rounded-lg);
+            overflow: hidden;
+        }
+
+        .table th,
+        .table td {
+            padding: 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .table th {
+            background: var(--light);
+            font-weight: 600;
+            color: var(--darker);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover td {
+            background-color: rgba(248, 249, 250, 0.5);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--rounded-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(255, 204, 0, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background-color: rgba(255, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Map */
+        .map-container {
+            height: 350px;
+            border-radius: var(--rounded-lg);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-gray);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        /* Utility Classes */
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-secondary {
+            color: var(--secondary);
+        }
+
+        .text-accent {
+            color: var(--accent);
+        }
+
+        .text-dark {
+            color: var(--dark);
+        }
+
+        .text-light {
+            color: var(--light);
+        }
+
+        .text-gray {
+            color: var(--gray);
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .bg-primary {
+            background-color: var(--primary);
+        }
+
+        .bg-secondary {
+            background-color: var(--secondary);
+        }
+
+        .bg-accent {
+            background-color: var(--accent);
+        }
+
+        .bg-dark {
+            background-color: var(--dark);
+        }
+
+        .bg-light {
+            background-color: var(--light);
+        }
+
+        .bg-gray {
+            background-color: var(--gray);
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-5 {
+            margin-top: 2rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-5 {
+            margin-bottom: 2rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .gap-2 {
             gap: 0.5rem;
         }
-        
-        /* Responsive */
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .gap-6 {
+            gap: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .h-full {
+            height: 100%;
+        }
+
+        /* Flexbox Utilities */
+        .self-end {
+            align-self: flex-end;
+        }
+
+        .flex-1 {
+            flex: 1 1 0%;
+        }
+
+        /* Width Utilities for Medium Screens */
+        @media (min-width: 768px) {
+            .md\:w-1\/3 {
+                width: 33.333333%;
+            }
+
+            .md\:w-2\/3 {
+                width: 66.666667%;
+            }
+        }
+
+        /* Grid Utilities */
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        /* Table Responsive Utility */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Typography Utilities */
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        /* Spacing Utilities */
+        .p-4 {
+            padding: 1rem;
+        }
+
+        .p-6 {
+            padding: 1.5rem;
+        }
+
+        .ml-8 {
+            margin-left: 2rem;
+        }
+
+        .space-y-4> :not([hidden])~ :not([hidden]) {
+            margin-top: 1rem;
+        }
+
+        .mr-4 {
+            margin-right: 1rem;
+        }
+
+        .pt-6 {
+            padding-top: 1.5rem;
+        }
+
+        /* Border Utilities */
+        .border-t {
+            border-top: 1px solid;
+        }
+
+        .border-gray-700 {
+            border-color: #4b5563;
+        }
+
+        /* Border Radius Utility */
+        .rounded-lg {
+            border-radius: var(--rounded-lg);
+        }
+
+        /* List Utilities */
+        .list-disc {
+            list-style-type: disc;
+        }
+
+        .pl-5 {
+            padding-left: 1.25rem;
+        }
+
+        /* Background Color Utility */
+        .bg-green-500 {
+            background-color: #22c55e;
+        }
+
+        /* Padding Utilities */
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        /* Text Color Utility */
+        .text-gray-300 {
+            color: #d1d5db;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .hero-content {
+                gap: 2rem;
+            }
+        }
+
         @media (max-width: 992px) {
             .hero-content {
                 flex-direction: column;
             }
-            
+
             .hero-text {
                 order: 2;
                 text-align: center;
             }
-            
+
             .hero-image {
                 order: 1;
+                max-width: 600px;
+                margin: 0 auto;
             }
-            
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                display: none;
+
+            .search-form {
+                margin-top: -2rem;
             }
         }
-        
+
         @media (max-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
             .navbar-menu {
                 position: fixed;
-                top: 70px;
+                top: 76px;
                 left: 0;
                 right: 0;
                 background: white;
                 flex-direction: column;
-                padding: 1rem;
+                padding: 1.5rem;
                 box-shadow: var(--shadow-md);
                 transform: translateY(-100%);
                 opacity: 0;
                 visibility: hidden;
                 transition: var(--transition);
             }
-            
+
             .navbar-menu.active {
                 transform: translateY(0);
                 opacity: 1;
                 visibility: visible;
             }
-            
+
             .navbar-nav {
                 flex-direction: column;
                 width: 100%;
             }
-            
+
             .nav-item {
                 margin: 0;
             }
-            
+
             .nav-link {
                 display: block;
                 padding: 0.75rem 0;
             }
-            
+
             .navbar-toggler {
                 display: block;
             }
-            
-            .section {
-                padding: 3rem 0;
+
+            .modal-content {
+                max-height: 95vh;
             }
         }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        @media (max-width: 576px) {
+            .search-form {
+                padding: 1.5rem;
+            }
+
+            .modal-body,
+            .modal-header,
+            .modal-footer {
+                padding: 1.25rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn-group .btn {
+                width: 100%;
+            }
         }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
         }
-        
-        /* Utility Classes */
-        .text-primary { color: var(--primary); }
-        .text-secondary { color: var(--secondary); }
-        .text-dark { color: var(--dark); }
-        .text-gray { color: var(--gray); }
-        .text-white { color: white; }
-        
-        .bg-primary { background-color: var(--primary); }
-        .bg-secondary { background-color: var(--secondary); }
-        .bg-dark { background-color: var(--dark); }
-        .bg-light { background-color: var(--light); }
-        
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-3 { margin-top: 1rem; }
-        .mt-4 { margin-top: 1.5rem; }
-        .mt-5 { margin-top: 2rem; }
-        
-        .mb-1 { margin-bottom: 0.25rem; }
-        .mb-2 { margin-bottom: 0.5rem; }
-        .mb-3 { margin-bottom: 1rem; }
-        .mb-4 { margin-bottom: 1.5rem; }
-        .mb-5 { margin-bottom: 2rem; }
-        
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-center { justify-content: center; }
-        .justify-between { justify-content: space-between; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-4 { gap: 1rem; }
-        .gap-6 { gap: 1.5rem; }
-        
-        .text-center { text-align: center; }
-        
-        .hidden { display: none; }
-        
-        @media (min-width: 768px) {
-            .md\:flex { display: flex; }
-            .md\:hidden { display: none; }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .fab:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+            background: var(--primary-light);
+        }
+
+        /* Tooltip */
+        [data-tooltip] {
+            position: relative;
+        }
+
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--rounded-sm);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-fast);
+            pointer-events: none;
+        }
+
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--rounded-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
         <div class="container navbar-container">
-            <a href="#" class="navbar-brand">
+            <a href="#home" class="navbar-brand">
                 <img src="https://via.placeholder.com/40x40" alt="RentalPro Logo" class="navbar-logo">
-                <span class="font-bold text-xl">RentalPro</span>
+                <span class="font-bold text-xl">Rental_Pro</span>
             </a>
-            
             <div class="navbar-menu" id="navbarMenu">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a href="#home" class="nav-link">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#features" class="nav-link">Fitur</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#pricing" class="nav-link">Harga</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#dashboard" class="nav-link">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#testimonials" class="nav-link">Testimoni</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#contact" class="nav-link">Kontak</a>
-                    </li>
+                    <li class="nav-item"><a href="#home" class="nav-link">Beranda</a></li>
+                    <li class="nav-item"><a href="#search" class="nav-link">Cari Apartemen</a></li>
+                    <li class="nav-item"><a href="#features" class="nav-link">Fitur</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
+                    <li class="nav-item"><a href="#profile" class="nav-link">Profil</a></li>
                 </ul>
-                
                 <div class="ml-8 flex items-center gap-4">
                     <a href="#login" class="btn btn-outline">Masuk</a>
                     <a href="#register" class="btn btn-primary">Daftar Gratis</a>
                 </div>
             </div>
-            
-            <button class="navbar-toggler" id="navbarToggler">
+            <button class="navbar-toggler mr-4" id="navbarToggler" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -764,40 +1214,212 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Kelola Bisnis Rental Anda dengan Mudah</h1>
+                    <h1>Temukan Apartemen Impian Anda</h1>
                     <p class="text-gray mb-5">
-                        Solusi terintegrasi untuk mengelola inventaris, pemesanan, pembayaran, dan laporan bisnis rental Anda. Tingkatkan efisiensi dan pendapatan dengan sistem yang dirancang khusus untuk kebutuhan rental di Indonesia.
+                        Cari dan pesan apartemen dengan mudah melalui platform kami. Nikmati pengalaman sewa yang aman,
+                        cepat, dan terpercaya.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <a href="#register" class="btn btn-primary btn-lg">
-                            <i class="fas fa-play-circle mr-2"></i> Mulai Sekarang
-                        </a>
-                        <a href="#demo" class="btn btn-outline btn-lg">
-                            <i class="fas fa-video mr-2"></i> Lihat Demo
-                        </a>
-                    </div>
-                    <div class="mt-8 flex items-center gap-4 justify-center md:justify-start">
-                        <div class="flex -space-x-2">
-                            <img src="https://via.placeholder.com/40x40" class="w-10 h-10 rounded-full border-2 border-white" alt="Customer 1">
-                            <img src="https://via.placeholder.com/40x40" class="w-10 h-10 rounded-full border-2 border-white" alt="Customer 2">
-                            <img src="https://via.placeholder.com/40x40" class="w-10 h-10 rounded-full border-2 border-white" alt="Customer 3">
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray"><span class="font-bold text-dark">500+</span> pelanggan percaya pada kami</p>
-                            <div class="flex items-center">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="ml-2 text-sm font-bold">4.9/5</span>
+                    <form id="heroSearchForm" class="card p-4">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="form-group flex-1">
+                                <label for="location" class="form-label">Lokasi</label>
+                                <input type="text" id="location" class="form-control" placeholder="Jakarta"
+                                    aria-label="Lokasi apartemen" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkIn" class="form-label">Check-In</label>
+                                <input type="text" id="checkIn" class="form-control datepicker"
+                                    aria-label="Tanggal check-in" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="checkOut" class="form-label">Check-Out</label>
+                                <input type="text" id="checkOut" class="form-control datepicker"
+                                    aria-label="Tanggal check-out" required>
+                            </div>
+                            <div class="form-group self-end">
+                                <button type="submit" class="btn btn-primary btn-lg">Cari</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="hero-image">
-                    <img src="https://via.placeholder.com/600x400" alt="Dashboard RentalPro" loading="lazy">
-                    <span class="hero-badge">#1 Software Rental di Indonesia</span>
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f7c4c60d"
+                        alt="Interior apartemen modern" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results Section -->
+    <section class="section" id="search">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cari Apartemen</h2>
+                <p class="text-gray">Temukan apartemen yang sesuai dengan kebutuhan Anda</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-6">
+                <aside class="md:w-1/3">
+                    <div class="card p-4">
+                        <h4 class="mb-4">Filter Pencarian</h4>
+                        <form id="searchForm">
+                            <div class="form-group">
+                                <label for="searchLocation" class="form-label">Lokasi</label>
+                                <input type="text" id="searchLocation" class="form-control"
+                                    placeholder="Masukkan kota atau daerah" aria-label="Lokasi apartemen">
+                            </div>
+                            <div class="form-group">
+                                <label for="priceRange" class="form-label">Rentang Harga</label>
+                                <select id="priceRange" class="form-control" aria-label="Rentang harga">
+                                    <option value="">Semua Harga</option>
+                                    <option value="0-5000000">Rp0 - Rp5.000.000</option>
+                                    <option value="5000000-10000000">Rp5.000.000 - Rp10.000.000</option>
+                                    <option value="10000000+">Rp10.000.000+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="amenities" class="form-label">Fasilitas</label>
+                                <select id="amenities" class="form-control" multiple aria-label="Fasilitas apartemen">
+                                    <option value="wifi">Wi-Fi</option>
+                                    <option value="ac">AC</option>
+                                    <option value="pool">Kolam Renang</option>
+                                    <option value="gym">Gym</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="apartmentType" class="form-label">Tipe Apartemen</label>
+                                <select id="apartmentType" class="form-control" aria-label="Tipe apartemen">
+                                    <option value="">Semua Tipe</option>
+                                    <option value="studio">Studio</option>
+                                    <option value="1-bedroom">1 Kamar</option>
+                                    <option value="2-bedroom">2 Kamar</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">Terapkan Filter</button>
+                        </form>
+                    </div>
+                </aside>
+                <div class="md:w-2/3">
+                    <div id="map" class="map-container"></div>
+                    <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apartment Detail Modal -->
+    <div class="modal" id="apartmentDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="apartmentTitle"></h4>
+                <button class="modal-close" id="closeDetailModalBtn" aria-label="Tutup modal">×</button>
+            </div>
+            <div class="modal-body">
+                <figure>
+                    <img id="apartmentImage" src="" alt="Foto apartemen" class="w-full rounded-lg mb-4">
+                    <figcaption id="apartmentCaption"></figcaption>
+                </figure>
+                <div id="apartmentMap" class="map-container"></div>
+                <details class="mb-4">
+                    <summary>Deskripsi</summary>
+                    <p id="apartmentDescription" class="text-gray"></p>
+                </details>
+                <details class="mb-4">
+                    <summary>Fasilitas</summary>
+                    <ul id="apartmentAmenities" class="list-disc pl-5"></ul>
+                </details>
+                <details class="mb-4">
+                    <summary>Kebijakan</summary>
+                    <p id="apartmentPolicies" class="text-gray"></p>
+                </details>
+                <h5>Ulasan</h5>
+                <div id="apartmentReviews" class="mb-4"></div>
+                <button class="btn btn-outline mb-4" id="virtualTourBtn">Tur Virtual</button>
+                <button class="btn btn-outline mb-4" id="reportBtn">Laporkan</button>
+            </div>
+            <div class="modal-footer">
+                <span id="apartmentPrice" class="font-bold text-lg"></span>
+                <button class="btn btn-primary" id="bookNowBtn">Pesan Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pesan Apartemen</h4>
+                <button class="modal-close" id="closeBookingModalBtn" aria-label="Tutup modal">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="bookingName" class="form-label">Nama Lengkap</label>
+                        <input type="text" id="bookingName" class="form-control" required aria-label="Nama lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingEmail" class="form-label">Email</label>
+                        <input type="email" id="bookingEmail" class="form-control" required aria-label="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingCheckIn" class="form-label">Check-In</label>
+                        <input type="text" id="bookingCheckIn" class="form-control datepicker" required
+                            aria-label="Tanggal check-in">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookingCheckOut" class="form-label">Check-Out</label>
+                        <input type="text" id="bookingCheckOut" class="form-control datepicker" required
+                            aria-label="Tanggal check-out">
+                    </div>
+                </form>
+                <div id="card-element" class="form-control mb-4"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelBookingBtn">Batal</button>
+                <button class="btn btn-primary" id="confirmBookingBtn">Konfirmasi Pemesanan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Section -->
+    <section class="section" id="profile">
+        <div class="container">
+            <div class="section-title">
+                <h2>Profil Pengguna</h2>
+                <p class="text-gray">Kelola informasi akun dan riwayat pemesanan Anda</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h4 class="mb-4">Informasi Akun</h4>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileName" class="form-label">Nama</label>
+                            <input type="text" id="profileName" class="form-control" value="John Doe"
+                                aria-label="Nama pengguna">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail" class="form-label">Email</label>
+                            <input type="email" id="profileEmail" class="form-control" value="john@example.com"
+                                aria-label="Email pengguna">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </form>
+                </div>
+                <div class="card p-6">
+                    <h4 class="mb-4">Riwayat Pemesanan</h4>
+                    <div id="bookingHistory" class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Apartemen</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingHistoryTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -807,405 +1429,31 @@
     <section class="section bg-light" id="features">
         <div class="container">
             <div class="section-title">
-                <h2>Fitur Unggulan Kami</h2>
-                <p class="text-gray">Solusi lengkap untuk semua kebutuhan manajemen rental Anda</p>
+                <h2>Fitur Unggulan</h2>
+                <p class="text-gray">Nikmati pengalaman sewa apartemen yang mudah dan terpercaya</p>
             </div>
-            
             <div class="features-grid">
                 <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <h3>Manajemen Pemesanan</h3>
-                    <p class="text-gray">
-                        Kelola semua pemesanan dari berbagai channel dalam satu dashboard. Sistem notifikasi otomatis untuk mengingatkan jadwal pengembalian.
+                    <div class="feature-icon"><i class="fas fa-search"></i></div>
+                    <h3>Pencarian Mudah</h3>
+                    <p class="text-gray">Cari apartemen berdasarkan lokasi, harga, dan fasilitas dengan filter canggih.
                     </p>
                 </div>
-                
                 <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-car"></i>
-                    </div>
-                    <h3>Manajemen Inventaris</h3>
-                    <p class="text-gray">
-                        Pantau ketersediaan unit rental, kondisi, dan perawatan. Sistem pelacakan GPS terintegrasi untuk memonitor lokasi kendaraan.
-                    </p>
+                    <div class="feature-icon"><i class="fas fa-camera"></i></div>
+                    <h3>Tur Virtual</h3>
+                    <p class="text-gray">Jelajahi apartemen dengan tur virtual 360° untuk pengalaman imersif.</p>
                 </div>
-                
                 <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <h3>Pembayaran & Invoice</h3>
-                    <p class="text-gray">
-                        Sistem pembayaran terintegrasi dengan berbagai metode pembayaran lokal. Generate invoice profesional secara otomatis.
-                    </p>
+                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Pembayaran Aman</h3>
+                    <p class="text-gray">Bayar dengan aman melalui sistem escrow dan berbagai metode pembayaran.</p>
                 </div>
-                
                 <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Analisis & Laporan</h3>
-                    <p class="text-gray">
-                        Laporan keuangan dan kinerja bisnis secara real-time. Identifikasi tren dan peluang bisnis dengan analisis mendalam.
-                    </p>
+                    <div class="feature-icon"><i class="fas fa-star"></i></div>
+                    <h3>Ulasan Terpercaya</h3>
+                    <p class="text-gray">Baca ulasan dari penyewa lain untuk membuat keputusan yang tepat.</p>
                 </div>
-                
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Manajemen Pelanggan</h3>
-                    <p class="text-gray">
-                        Database pelanggan dengan riwayat transaksi. Sistem loyalitas dan promo untuk meningkatkan retensi pelanggan.
-                    </p>
-                </div>
-                
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Aplikasi Mobile</h3>
-                    <p class="text-gray">
-                        Kelola bisnis dari mana saja dengan aplikasi mobile kami. Tersedia untuk iOS dan Android dengan fitur lengkap.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Rental Dashboard Preview -->
-    <section class="section" id="dashboard">
-        <div class="container">
-            <div class="section-title">
-                <h2>Dashboard Manajemen Rental</h2>
-                <p class="text-gray">Lihat bagaimana kami menyederhanakan operasional bisnis rental Anda</p>
-            </div>
-            
-            <div class="dashboard">
-                <div class="sidebar">
-                    <ul class="sidebar-menu">
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link active">
-                                <span class="sidebar-icon"><i class="fas fa-tachometer-alt"></i></span>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-calendar-alt"></i></span>
-                                Pemesanan
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-car"></i></span>
-                                Inventaris
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-users"></i></span>
-                                Pelanggan
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-file-invoice"></i></span>
-                                Pembayaran
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-chart-pie"></i></span>
-                                Laporan
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">
-                                <span class="sidebar-icon"><i class="fas fa-cog"></i></span>
-                                Pengaturan
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="main-content">
-                    <h3 class="mb-5">Ringkasan Bisnis</h3>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">24</div>
-                            <div class="stat-label">Pemesanan Hari Ini</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">Rp12.450.000</div>
-                            <div class="stat-label">Pendapatan Hari Ini</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">18</div>
-                            <div class="stat-label">Kendaraan Tersedia</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">92%</div>
-                            <div class="stat-label">Tingkat Kepuasan</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card mb-5">
-                        <div class="card-header">
-                            <h4>Pemesanan Terkini</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Pelanggan</th>
-                                            <th>Kendaraan</th>
-                                            <th>Tanggal</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>#RENT001</td>
-                                            <td>Budi Santoso</td>
-                                            <td>Toyota Avanza</td>
-                                            <td>12 Mei 2023</td>
-                                            <td><span class="badge badge-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-outline btn-sm">Detail</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#RENT002</td>
-                                            <td>Siti Rahayu</td>
-                                            <td>Honda Brio</td>
-                                            <td>11 Mei 2023</td>
-                                            <td><span class="badge badge-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-outline btn-sm">Detail</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#RENT003</td>
-                                            <td>Andi Wijaya</td>
-                                            <td>Daihatsu Xenia</td>
-                                            <td>10 Mei 2023</td>
-                                            <td><span class="badge badge-warning">Pending</span></td>
-                                            <td>
-                                                <button class="btn btn-outline btn-sm">Detail</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#RENT004</td>
-                                            <td>Dewi Lestari</td>
-                                            <td>Suzuki Ertiga</td>
-                                            <td>9 Mei 2023</td>
-                                            <td><span class="badge badge-danger">Batal</span></td>
-                                            <td>
-                                                <button class="btn btn-outline btn-sm">Detail</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="card-footer text-right">
-                            <button class="btn btn-primary" id="addBookingBtn">
-                                <i class="fas fa-plus mr-2"></i>Tambah Pemesanan
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Ketersediaan Kendaraan</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="h-64 flex items-center justify-center">
-                                    <p class="text-gray">Grafik ketersediaan akan ditampilkan di sini</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Pendapatan Bulan Ini</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="h-64 flex items-center justify-center">
-                                    <p class="text-gray">Grafik pendapatan akan ditampilkan di sini</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section class="section bg-light" id="pricing">
-        <div class="container">
-            <div class="section-title">
-                <h2>Paket Harga</h2>
-                <p class="text-gray">Pilih paket yang sesuai dengan kebutuhan bisnis rental Anda</p>
-            </div>
-            
-            <div class="pricing-grid">
-                <div class="card pricing-card">
-                    <div class="card-header">
-                        <h4>Starter</h4>
-                        <p class="text-gray">Cocok untuk rental kecil</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="price">Rp299.000<span class="price-period">/bulan</span></div>
-                        <ul class="mb-5">
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> 10 kendaraan</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Manajemen pemesanan</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Laporan dasar</li>
-                            <li class="mb-2"><i class="fas fa-times text-gray mr-2"></i> <span class="text-gray">Integrasi pembayaran</span></li>
-                            <li class="mb-2"><i class="fas fa-times text-gray mr-2"></i> <span class="text-gray">Aplikasi mobile</span></li>
-                        </ul>
-                        <button class="btn btn-outline w-full">Pilih Paket</button>
-                    </div>
-                </div>
-                
-                <div class="card pricing-card popular">
-                    <div class="popular-badge">Paling Populer</div>
-                    <div class="card-header">
-                        <h4>Professional</h4>
-                        <p class="text-gray">Solusi lengkap untuk rental menengah</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="price">Rp799.000<span class="price-period">/bulan</span></div>
-                        <ul class="mb-5">
-                                                       <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> 50 kendaraan</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Manajemen pemesanan lengkap</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Laporan lanjutan</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Integrasi pembayaran</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Aplikasi mobile</li>
-                        </ul>
-                        <button class="btn btn-primary w-full">Pilih Paket</button>
-                    </div>
-                </div>
-                
-                <div class="card pricing-card">
-                    <div class="card-header">
-                        <h4>Enterprise</h4>
-                        <p class="text-gray">Untuk bisnis rental besar</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="price">Rp1.999.000<span class="price-period">/bulan</span></div>
-                        <ul class="mb-5">
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Kendaraan unlimited</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Semua fitur Professional</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Prioritas support</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Pelatihan tim</li>
-                            <li class="mb-2"><i class="fas fa-check text-secondary mr-2"></i> Integrasi custom</li>
-                        </ul>
-                        <button class="btn btn-outline w-full">Hubungi Kami</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-10 text-center">
-                <p class="text-gray">Butuh solusi khusus untuk bisnis Anda? <a href="#contact" class="text-primary font-medium">Konsultasi gratis</a> dengan tim kami.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="section" id="testimonials">
-        <div class="container">
-            <div class="section-title">
-                <h2>Apa Kata Pelanggan Kami</h2>
-                <p class="text-gray">Bisnis rental yang telah mempercayai solusi kami</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="card p-6">
-                    <div class="flex items-center mb-4">
-                        <img src="https://via.placeholder.com/60x60" alt="Testimoni 1" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <h5>Budi Santoso</h5>
-                            <p class="text-sm text-gray">Pemilik Rental Mobil Jaya</p>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray">
-                        "Sejak menggunakan RentalPro, bisnis rental saya jadi lebih teratur. Fitur notifikasi pengembalian sangat membantu mengurangi keterlambatan."
-                    </p>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-center mb-4">
-                        <img src="https://via.placeholder.com/60x60" alt="Testimoni 2" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <h5>Siti Rahmawati</h5>
-                            <p class="text-sm text-gray">Manajer Rental Sejahtera</p>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray">
-                        "Laporan keuangan yang detail membantu saya memantau cash flow dengan lebih baik. Sistem ini benar-benar menghemat waktu saya."
-                    </p>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-center mb-4">
-                        <img src="https://via.placeholder.com/60x60" alt="Testimoni 3" class="w-12 h-12 rounded-full mr-4">
-                        <div>
-                            <h5>Andi Wijaya</h5>
-                            <p class="text-sm text-gray">Pemilik Andi Rent Car</p>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <div class="flex text-yellow-400">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                    </div>
-                    <p class="text-gray">
-                        "Aplikasi mobile-nya sangat membantu saya mengelola bisnis saat sedang bepergian. Tim support juga responsif ketika ada kendala."
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="section bg-primary text-white">
-        <div class="container text-center">
-            <h2 class="text-white">Siap Mengubah Bisnis Rental Anda?</h2>
-            <p class="mb-8 max-w-2xl mx-auto">Mulai gratis selama 14 hari. Tidak perlu kartu kredit.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#register" class="btn btn-secondary btn-lg">Coba Gratis Sekarang</a>
-                <a href="#demo" class="btn btn-outline btn-lg bg-white text-primary hover:text-white">Lihat Demo</a>
             </div>
         </div>
     </section>
@@ -1215,77 +1463,52 @@
         <div class="container">
             <div class="section-title">
                 <h2>Hubungi Kami</h2>
-                <p class="text-gray">Punya pertanyaan? Tim kami siap membantu Anda</p>
+                <p class="text-gray">Kami siap membantu Anda 24/7</p>
             </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <div class="card p-6 mb-6">
-                        <h4 class="mb-4">Informasi Kontak</h4>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <i class="fas fa-map-marker-alt text-primary mt-1 mr-4"></i>
-                                <div>
-                                    <h5>Kantor Pusat</h5>
-                                    <p class="text-gray">Jl. Sudirman No. 123, Jakarta Selatan, Indonesia</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-phone-alt text-primary mt-1 mr-4"></i>
-                                <div>
-                                    <h5>Telepon</h5>
-                                    <p class="text-gray">+62 21 1234 5678</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-envelope text-primary mt-1 mr-4"></i>
-                                <div>
-                                    <h5>Email</h5>
-                                    <p class="text-gray">info@rentalpro.id</p>
-                                </div>
+                <div class="card p-6">
+                    <h4 class="mb-4">Informasi Kontak</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-4"></i>
+                            <div>
+                                <h5>Kantor</h5>
+                                <p class="text-gray">Jl. Sudirman No. 123, Jakarta</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="card p-6">
-                        <h4 class="mb-4">Jam Operasional</h4>
-                        <div class="space-y-2">
-                            <div class="flex justify-between">
-                                <span class="text-gray">Senin - Jumat</span>
-                                <span class="font-medium">08:00 - 17:00</span>
+                        <div class="flex items-start">
+                            <i class="fas fa-phone-alt text-primary mt-1 mr-4"></i>
+                            <div>
+                                <h5>Telepon</h5>
+                                <p class="text-gray">+62 21 1234 5678</p>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray">Sabtu</span>
-                                <span class="font-medium">09:00 - 15:00</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray">Minggu</span>
-                                <span class="font-medium">Tutup</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-primary mt-1 mr-4"></i>
+                            <div>
+                                <h5>Email</h5>
+                                <p class="text-gray">support@rentalpro.id</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="card p-6">
                     <h4 class="mb-4">Kirim Pesan</h4>
                     <form id="contactForm">
                         <div class="form-group">
-                            <label for="name" class="form-label">Nama Lengkap</label>
-                            <input type="text" id="name" class="form-control" required>
+                            <label for="contactName" class="form-label">Nama</label>
+                            <input type="text" id="contactName" class="form-control" required aria-label="Nama lengkap">
                         </div>
                         <div class="form-group">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" class="form-control" required>
+                            <label for="contactEmail" class="form-label">Email</label>
+                            <input type="email" id="contactEmail" class="form-control" required aria-label="Email">
                         </div>
                         <div class="form-group">
-                            <label for="phone" class="form-label">Nomor Telepon</label>
-                            <input type="tel" id="phone" class="form-control">
+                            <label for="contactMessage" class="form-label">Pesan</label>
+                            <textarea id="contactMessage" rows="4" class="form-control" required
+                                aria-label="Pesan"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="message" class="form-label">Pesan</label>
-                            <textarea id="message" rows="4" class="form-control" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                        <button type="submit" class="btn btn-primary">Kirim</button>
                     </form>
                 </div>
             </div>
@@ -1295,122 +1518,99 @@
     <!-- Footer -->
     <footer class="bg-dark text-white py-10">
         <div class="container">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h4 class="text-white mb-4">RentalPro</h4>
-                    <p class="text-gray-300 mb-4">
-                        Solusi manajemen rental terintegrasi untuk bisnis Anda. Lebih efisien, lebih produktif.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <p class="text-gray-300">Sewa apartemen dengan mudah dan aman.</p>
                 </div>
-                
                 <div>
-                    <h5 class="text-white mb-4">Produk</h5>
+                    <h5 class="text-white mb-4">Link Cepat</h5>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Fitur</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Harga</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Demo</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Panduan</a></li>
+                        <li><a href="#search" class="text-gray-300 hover:text-white">Cari Apartemen</a></li>
+                        <li><a href="#features" class="text-gray-300 hover:text-white">Fitur</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white">Kontak</a></li>
                     </ul>
                 </div>
-                
-                <div>
-                    <h5 class="text-white mb-4">Perusahaan</h5>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Tentang Kami</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Karir</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Blog</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Partner</a></li>
-                    </ul>
-                </div>
-                
                 <div>
                     <h5 class="text-white mb-4">Dukungan</h5>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-white">Bantuan</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Kontak</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white">Bantuan</a></li>
                         <li><a href="#" class="text-gray-300 hover:text-white">FAQ</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">Kebijakan Privasi</a></li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-700 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-300 mb-4 md:mb-0">© 2023 RentalPro. All rights reserved.</p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-300 hover:text-white">Syarat & Ketentuan</a>
-                    <a href="#" class="text-gray-300 hover:text-white">Kebijakan Privasi</a>
-                </div>
+            <div class="border-t border-gray-700 mt-10 pt-6 text-center">
+                <p class="text-gray-300">© 2025 RentalPro. Hak cipta dilindungi.</p>
             </div>
         </div>
     </footer>
-
-    <!-- Add Booking Modal -->
-    <div class="modal" id="addBookingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tambah Pemesanan Baru</h4>
-                <button class="modal-close" id="closeModalBtn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="bookingForm">
-                    <div class="form-group">
-                        <label for="customerName" class="form-label">Nama Pelanggan</label>
-                        <input type="text" id="customerName" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerPhone" class="form-label">Nomor Telepon</label>
-                        <input type="tel" id="customerPhone" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="vehicleType" class="form-label">Jenis Kendaraan</label>
-                        <select id="vehicleType" class="form-control" required>
-                            <option value="">Pilih Kendaraan</option>
-                            <option value="Toyota Avanza">Toyota Avanza</option>
-                            <option value="Honda Brio">Honda Brio</option>
-                            <option value="Daihatsu Xenia">Daihatsu Xenia</option>
-                            <option value="Suzuki Ertiga">Suzuki Ertiga</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="form-group">
-                            <label for="startDate" class="form-label">Tanggal Mulai</label>
-                            <input type="date" id="startDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="endDate" class="form-label">Tanggal Selesai</label>
-                            <input type="date" id="endDate" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="bookingNotes" class="form-label">Catatan</label>
-                        <textarea id="bookingNotes" rows="3" class="form-control"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelBookingBtn">Batal</button>
-                <button class="btn btn-primary" id="saveBookingBtn">Simpan Pemesanan</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Success Notification -->
     <div class="fixed bottom-4 right-4 hidden" id="successNotification">
         <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
             <i class="fas fa-check-circle mr-2"></i>
-            <span id="notificationMessage">Pemesanan berhasil ditambahkan!</span>
+            <span id="notificationMessage"></span>
         </div>
     </div>
 
     <script>
+        // Error Handling
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            console.error('Error:', msg, 'di baris', lineNo, 'kolom', columnNo, error);
+            showNotification('Terjadi kesalahan. Silakan coba lagi.');
+            return false;
+        };
+
+        // Dummy Data
+        const apartments = [
+            {
+                id: 1,
+                title: 'Apartemen Mewah Jakarta',
+                image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267',
+                location: 'Jakarta Selatan',
+                price: 8000000,
+                description: 'Apartemen modern dengan pemandangan kota.',
+                amenities: ['Wi-Fi', 'AC', 'Kolam Renang'],
+                policies: 'Check-in: 14:00, Check-out: 12:00, Tidak boleh merokok.',
+                lat: -6.21462,
+                lng: 106.84513,
+                reviews: [
+                    { user: 'Budi', rating: 5, comment: 'Sangat nyaman!' },
+                    { user: 'Siti', rating: 4, comment: 'Lokasi strategis.' }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Studio Cozy Bandung',
+                image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb',
+                location: 'Bandung',
+                price: 5000000,
+                description: 'Studio nyaman untuk pasangan muda.',
+                amenities: ['Wi-Fi', 'AC'],
+                policies: 'Check-in: 15:00, Check-out: 11:00.',
+                lat: -6.91474,
+                lng: 107.60981,
+                reviews: [
+                    { user: 'Andi', rating: 4, comment: 'Bersih dan terjangkau.' }
+                ]
+            }
+        ];
+
+        let bookings = [
+            { id: 'BOOK001', apartment: 'Apartemen Mewah Jakarta', date: '2025-05-20', status: 'Confirmed' }
+        ];
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.getElementById('successNotification');
+            const notificationMessage = document.getElementById('notificationMessage');
+            notificationMessage.textContent = message;
+            notification.classList.remove('hidden');
+            setTimeout(() => notification.classList.add('hidden'), 3000);
+        }
+
         // Navbar Scroll Effect
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
@@ -1422,80 +1622,21 @@
         // Mobile Menu Toggle
         const navbarToggler = document.getElementById('navbarToggler');
         const navbarMenu = document.getElementById('navbarMenu');
-        
-        navbarToggler.addEventListener('click', function() {
+        navbarToggler.addEventListener('click', function () {
             navbarMenu.classList.toggle('active');
         });
 
-        // Close mobile menu when clicking on a link
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navbarMenu.classList.remove('active');
-            });
+        // Close Mobile Menu on Link Click
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => navbarMenu.classList.remove('active'));
         });
 
-        // Modal Handling
-        const addBookingBtn = document.getElementById('addBookingBtn');
-        const addBookingModal = document.getElementById('addBookingModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
-        const saveBookingBtn = document.getElementById('saveBookingBtn');
-        const bookingForm = document.getElementById('bookingForm');
-        
-        addBookingBtn.addEventListener('click', function() {
-            addBookingModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        
-        function closeModal() {
-            addBookingModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelBookingBtn.addEventListener('click', closeModal);
-        
-        // Close modal when clicking outside
-        addBookingModal.addEventListener('click', function(e) {
-            if (e.target === addBookingModal) {
-                closeModal();
-            }
-        });
-        
-        // Save booking
-        saveBookingBtn.addEventListener('click', function() {
-            if (bookingForm.checkValidity()) {
-                // In a real app, you would send data to server here
-                showNotification('Pemesanan berhasil ditambahkan!');
-                bookingForm.reset();
-                closeModal();
-            } else {
-                bookingForm.reportValidity();
-            }
-        });
-        
-        // Notification
-        function showNotification(message) {
-            const notification = document.getElementById('successNotification');
-            const notificationMessage = document.getElementById('notificationMessage');
-            
-            notificationMessage.textContent = message;
-            notification.classList.remove('hidden');
-            
-            setTimeout(() => {
-                notification.classList.add('hidden');
-            }, 3000);
-        }
-        
-        // Smooth scrolling for anchor links
+        // Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
-                
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
                     window.scrollTo({
@@ -1505,42 +1646,258 @@
                 }
             });
         });
-        
-        // Form submission
-        const contactForm = document.getElementById('contactForm');
-        if (contactForm) {
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                // In a real app, you would send the form data to a server
-                showNotification('Pesan Anda telah terkirim! Kami akan segera menghubungi Anda.');
-                this.reset();
+
+        // Datepicker Initialization
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0
+            });
+        });
+
+        // Search Form Handling
+        document.getElementById('heroSearchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            renderSearchResults();
+            window.scrollTo({
+                top: document.getElementById('search').offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            renderSearchResults();
+        });
+
+        // Render Search Results
+        function renderSearchResults() {
+            const resultsContainer = document.getElementById('searchResults');
+            const location = document.getElementById('searchLocation').value.toLowerCase();
+            const priceRange = document.getElementById('priceRange').value;
+            const amenities = Array.from(document.getElementById('amenities').selectedOptions).map(opt => opt.value);
+            const apartmentType = document.getElementById('apartmentType').value;
+
+            const filteredApartments = apartments.filter(apartment => {
+                const matchesLocation = !location || apartment.location.toLowerCase().includes(location);
+                let matchesPrice = true;
+                if (priceRange) {
+                    const [min, max] = priceRange.split('-').map(Number);
+                    matchesPrice = max ? apartment.price >= min && apartment.price <= max : apartment.price >= min;
+                }
+                const matchesAmenities = !amenities.length || amenities.every(amenity => apartment.amenities.includes(amenity));
+                const matchesType = !apartmentType || apartment.title.toLowerCase().includes(apartmentType);
+                return matchesLocation && matchesPrice && matchesAmenities && matchesType;
+            });
+
+            resultsContainer.innerHTML = '';
+            filteredApartments.forEach(apartment => {
+                const card = document.createElement('div');
+                card.className = 'card p-4 fade-in';
+                card.innerHTML = `
+                    <figure>
+                        <img src="${apartment.image}" alt="${apartment.title}" class="w-full rounded-lg mb-4" loading="lazy">
+                        <figcaption>${apartment.title}</figcaption>
+                    </figure>
+                    <p class="text-gray">${apartment.location}</p>
+                    <p class="font-bold">Rp ${apartment.price.toLocaleString()}/bulan</p>
+                    <button class="btn btn-primary w-full mt-3 view-details" data-id="${apartment.id}">Lihat Detail</button>
+                `;
+                resultsContainer.appendChild(card);
+            });
+
+            // Initialize Map
+            const map = L.map('map').setView([-6.21462, 106.84513], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            filteredApartments.forEach(apartment => {
+                L.marker([apartment.lat, apartment.lng]).addTo(map)
+                    .bindPopup(apartment.title);
             });
         }
-        
-        // Animate elements when scrolling
+
+        // Apartment Detail Modal
+        const detailModal = document.getElementById('apartmentDetailModal');
+        const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
+        const virtualTourBtn = document.getElementById('virtualTourBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        const bookNowBtn = document.getElementById('bookNowBtn');
+
+        function openDetailModal(apartment) {
+            document.getElementById('apartmentTitle').textContent = apartment.title;
+            document.getElementById('apartmentImage').src = apartment.image;
+            document.getElementById('apartmentImage').alt = apartment.title;
+            document.getElementById('apartmentCaption').textContent = apartment.title;
+            document.getElementById('apartmentDescription').textContent = apartment.description;
+            document.getElementById('apartmentPolicies').textContent = apartment.policies;
+            document.getElementById('apartmentPrice').textContent = `Rp ${apartment.price.toLocaleString()}/bulan`;
+
+            const amenitiesList = document.getElementById('apartmentAmenities');
+            amenitiesList.innerHTML = '';
+            apartment.amenities.forEach(amenity => {
+                const li = document.createElement('li');
+                li.textContent = amenity;
+                amenitiesList.appendChild(li);
+            });
+
+            const reviewsContainer = document.getElementById('apartmentReviews');
+            reviewsContainer.innerHTML = '';
+            apartment.reviews.forEach(review => {
+                const div = document.createElement('div');
+                div.className = 'mb-2';
+                div.innerHTML = `
+                    <p><strong>${review.user}</strong> (${review.rating}/5)</p>
+                    <p class="text-gray">${review.comment}</p>
+                `;
+                reviewsContainer.appendChild(div);
+            });
+
+            detailModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Initialize Apartment Map
+            const apartmentMap = L.map('apartmentMap').setView([apartment.lat, apartment.lng], 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(apartmentMap);
+            L.marker([apartment.lat, apartment.lng]).addTo(apartmentMap)
+                .bindPopup(apartment.title).openPopup();
+        }
+
+        function closeDetailModal() {
+            detailModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeDetailModalBtn.addEventListener('click', closeDetailModal);
+        detailModal.addEventListener('click', function (e) {
+            if (e.target === detailModal) closeDetailModal();
+        });
+
+        virtualTourBtn.addEventListener('click', function () {
+            alert('Tur virtual akan segera tersedia!');
+        });
+
+        reportBtn.addEventListener('click', function () {
+            alert('Laporan telah dikirim ke tim kami.');
+        });
+
+        // Booking Modal
+        const bookingModal = document.getElementById('bookingModal');
+        const closeBookingModalBtn = document.getElementById('closeBookingModalBtn');
+        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+        const bookingForm = document.getElementById('bookingForm');
+
+        let selectedApartment = null;
+
+        bookNowBtn.addEventListener('click', function () {
+            const apartmentId = parseInt(this.closest('.modal-content').querySelector('.view-details')?.dataset.id || apartments[0].id);
+            selectedApartment = apartments.find(a => a.id === apartmentId);
+            bookingModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeBookingModal() {
+            bookingModal.classList.remove('active');
+            document.body.style.overflow = '';
+            bookingForm.reset();
+        }
+
+        closeBookingModalBtn.addEventListener('click', closeBookingModal);
+        cancelBookingBtn.addEventListener('click', closeBookingModal);
+        bookingModal.addEventListener('click', function (e) {
+            if (e.target === bookingModal) closeBookingModal();
+        });
+
+        // Stripe Integration (Simulated)
+        const stripe = Stripe('pk_test_51YOUR_STRIPE_PUBLISHABLE_KEY');
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        card.mount('#card-element');
+
+        confirmBookingBtn.addEventListener('click', function () {
+            if (bookingForm.checkValidity()) {
+                const newBooking = {
+                    id: `BOOK${String(bookings.length + 1).padStart(3, '0')}`,
+                    apartment: selectedApartment.title,
+                    date: document.getElementById('bookingCheckIn').value,
+                    status: 'Confirmed'
+                };
+                bookings.push(newBooking);
+                showNotification('Pemesanan berhasil!');
+                closeBookingModal();
+                renderBookingHistory();
+            } else {
+                bookingForm.reportValidity();
+            }
+        });
+
+        // Booking History
+        function renderBookingHistory() {
+            const tableBody = document.getElementById('bookingHistoryTable');
+            tableBody.innerHTML = '';
+            bookings.forEach(booking => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${booking.id}</td>
+                    <td>${booking.apartment}</td>
+                    <td>${booking.date}</td>
+                    <td><span class="badge badge-success">${booking.status}</span></td>
+                    <td><button class="btn btn-outline btn-sm">Detail</button></td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Profile Form
+        document.getElementById('profileForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            showNotification('Informasi akun diperbarui!');
+        });
+
+        // Contact Form
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            showNotification('Pesan terkirim! Kami akan segera menghubungi Anda.');
+            this.reset();
+        });
+
+        // Handle View Details
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('view-details')) {
+                const apartmentId = parseInt(e.target.dataset.id);
+                const apartment = apartments.find(a => a.id === apartmentId);
+                if (apartment) openDetailModal(apartment);
+            }
+        });
+
+        // Animation on Scroll
         function animateOnScroll() {
-            const elements = document.querySelectorAll('.fade-in');
-            
-            elements.forEach(element => {
-                const elementPosition = element.getBoundingClientRect().top;
+            document.querySelectorAll('.fade-in').forEach(element => {
+                const position = element.getBoundingClientRect().top;
                 const screenPosition = window.innerHeight / 1.2;
-                
-                if (elementPosition < screenPosition) {
+                if (position < screenPosition) {
                     element.style.opacity = '1';
                     element.style.transform = 'translateY(0)';
                 }
             });
         }
-        
-        // Set initial state for animated elements
+
         document.querySelectorAll('.fade-in').forEach(element => {
             element.style.opacity = '0';
             element.style.transform = 'translateY(20px)';
             element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         });
-        
+
         window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('load', function () {
+            animateOnScroll();
+            renderSearchResults();
+            renderBookingHistory();
+        });
     </script>
 </body>
+
 </html>

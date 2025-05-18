@@ -1,801 +1,985 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dashboard pengelolaan apartemen untuk memantau unit, penyewa, dan pembayaran" />
-  <title>Dashboard Pengguna - Rental Apartemen</title>
-  
-  <!-- Preload critical fonts -->
-  <link 
-      rel="preload" 
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
-  />
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  
-<style>
-  /* Design Tokens */
-  :root {
-    /* Enhanced Harmonious Color System */
-    --color-primary-h: 222;
-    --color-primary-s: 89%;
-    --color-primary-l: 45%;
-    --color-primary: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l));
-    --color-primary-50: hsl(var(--color-primary-h) calc(var(--color-primary-s) - 10%) 95%);
-    --color-primary-100: hsl(var(--color-primary-h) calc(var(--color-primary-s) - 5%) 90%);
-    --color-primary-200: hsl(var(--color-primary-h) var(--color-primary-s) 80%);
-    --color-primary-300: hsl(var(--color-primary-h) var(--color-primary-s) 70%);
-    --color-primary-400: hsl(var(--color-primary-h) var(--color-primary-s) 60%);
-    --color-primary-500: var(--color-primary);
-    --color-primary-600: hsl(var(--color-primary-h) var(--color-primary-s) 35%);
-    --color-primary-700: hsl(var(--color-primary-h) calc(var(--color-primary-s) + 5%) 25%);
-    --color-primary-800: hsl(var(--color-primary-h) calc(var(--color-primary-s) + 10%) 15%);
-    --color-primary-900: hsl(var(--color-primary-h) calc(var(--color-primary-s) + 15%) 5%);
-
-    /* Enhanced Surface Colors with Better Contrast */
-    --color-surface-50: hsl(220 25% 99%);
-    --color-surface-100: hsl(220 25% 97%);
-    --color-surface-200: hsl(220 25% 95%);
-    --color-surface-300: hsl(220 25% 90%);
-    --color-surface-400: hsl(220 25% 85%);
-    --color-surface-500: hsl(220 25% 75%);
-    --color-surface-600: hsl(220 25% 65%);
-    --color-surface-700: hsl(220 25% 55%);
-    --color-surface-800: hsl(220 25% 45%);
-    --color-surface-900: hsl(220 25% 20%);
-    
-    /* Refined Semantic Colors */
-    --color-success-50: hsl(142 85% 97%);
-    --color-success-100: hsl(142 85% 92%);
-    --color-success-500: hsl(142 85% 36%);
-    --color-success-600: hsl(142 85% 29%);
-    
-    --color-warning-50: hsl(45 100% 97%); 
-    --color-warning-100: hsl(45 100% 92%);
-    --color-warning-500: hsl(45 100% 47%);
-    --color-warning-600: hsl(45 100% 38%);
-    
-    --color-danger-50: hsl(0 100% 97%);
-    --color-danger-100: hsl(0 100% 92%);
-    --color-danger-500: hsl(0 100% 63%);
-    --color-danger-600: hsl(0 100% 51%);
-
-    /* Optimized Typography Scale */
-    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-size-2xs: clamp(0.625rem, 0.5vw + 0.5rem, 0.75rem);
-    --font-size-xs: clamp(0.75rem, 0.75vw + 0.5rem, 0.875rem);
-    --font-size-sm: clamp(0.875rem, 1vw + 0.5rem, 1rem);
-    --font-size-base: clamp(1rem, 1.25vw + 0.5rem, 1.125rem);
-    --font-size-lg: clamp(1.125rem, 1.5vw + 0.5rem, 1.25rem);
-    --font-size-xl: clamp(1.25rem, 2vw + 0.5rem, 1.5rem);
-    --font-size-2xl: clamp(1.5rem, 2.5vw + 0.5rem, 1.875rem);
-    --font-size-3xl: clamp(1.875rem, 3vw + 0.5rem, 2.25rem);
-    --font-size-4xl: clamp(2.25rem, 4vw + 0.5rem, 3rem);
-
-    /* Enhanced Line Heights */
-    --line-height-tight: clamp(1.2, 1.2 + 0.2vw, 1.25);
-    --line-height-snug: clamp(1.35, 1.35 + 0.2vw, 1.375); 
-    --line-height-normal: clamp(1.45, 1.45 + 0.2vw, 1.5);
-    --line-height-relaxed: clamp(1.6, 1.6 + 0.2vw, 1.625);
-
-    /* Fluid Spacing Scale */
-    --spacing-px: 1px;
-    --spacing-0: 0;
-    --spacing-0-5: clamp(0.125rem, 0.1vw + 0.1rem, 0.25rem);
-    --spacing-1: clamp(0.25rem, 0.25vw + 0.15rem, 0.375rem);
-    --spacing-1-5: clamp(0.375rem, 0.375vw + 0.2rem, 0.5rem);
-    --spacing-2: clamp(0.5rem, 0.5vw + 0.25rem, 0.75rem);
-    --spacing-2-5: clamp(0.625rem, 0.625vw + 0.3rem, 0.875rem);
-    --spacing-3: clamp(0.75rem, 0.75vw + 0.35rem, 1rem);
-    --spacing-3-5: clamp(0.875rem, 0.875vw + 0.4rem, 1.125rem);
-    --spacing-4: clamp(1rem, 1vw + 0.45rem, 1.25rem);
-    --spacing-5: clamp(1.25rem, 1.25vw + 0.5rem, 1.5rem);
-    --spacing-6: clamp(1.5rem, 1.5vw + 0.75rem, 2rem);
-    --spacing-8: clamp(2rem, 2vw + 1rem, 2.5rem);
-    --spacing-10: clamp(2.5rem, 2.5vw + 1.25rem, 3rem);
-    --spacing-12: clamp(3rem, 3vw + 1.5rem, 4rem);
-
-    /* Refined Shadows with Better Depth */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.03);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.16), 0 4px 8px rgba(0, 0, 0, 0.08);
-    --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.24), 0 8px 16px rgba(0, 0, 0, 0.12);
-    --shadow-focus: 0 0 0 3px hsla(var(--color-primary-h), var(--color-primary-s), 50%, 0.35);
-    
-    /* Enhanced Border Radius */
-    --radius-xs: max(0.125rem, 0.2vw);
-    --radius-sm: max(0.25rem, 0.3vw);
-    --radius-md: max(0.375rem, 0.4vw);
-    --radius-lg: max(0.5rem, 0.5vw);
-    --radius-xl: max(0.75rem, 0.75vw);
-    --radius-2xl: max(1rem, 1vw);
-    --radius-full: 9999px;
-
-    /* Smooth Transitions */
-    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  /* Enhanced Base Styles */
-  body {
-    font-family: var(--font-family);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-normal);
-    color: var(--color-surface-900);
-    background: var(--color-surface-100);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-  }
-
-  /* Improved Motion Reduction */
-  @media (prefers-reduced-motion: reduce) {
-    *, ::before, ::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  /* Enhanced Layout Components */
-  .dashboard-wrapper {
-    max-width: min(1280px, 95%);
-    margin: 0 auto;
-    padding: var(--spacing-6);
-    display: grid;
-    gap: var(--spacing-8);
-    transition: padding var(--transition-normal);
-  }
-
-  .dashboard-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-6);
-    padding: var(--spacing-6);
-    background: var(--color-surface-50);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-surface-200);
-    transition: all var(--transition-normal);
-  }
-
-  .dashboard-header:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-primary-200);
-    transform: translateY(-1px);
-  }
-
-  .dashboard-title {
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    color: var(--color-surface-900);
-    margin: 0;
-    transition: color var(--transition-normal);
-  }
-
-  /* Enhanced Card Components */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: var(--spacing-6);
-  }
-
-  .stats-card {
-    background: var(--color-surface-50);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-6);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--color-surface-200);
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    transition: all var(--transition-bounce);
-  }
-
-  .stats-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      var(--color-primary-100) 0%,
-      transparent 100%
-    );
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-    z-index: -1;
-  }
-
-  .stats-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--color-primary-300);
-  }
-
-  .stats-card:hover::before {
-    opacity: 0.7;
-  }
-
-  .stats-card:focus-within {
-    box-shadow: var(--shadow-focus);
-    outline: 2px solid var(--color-primary-300);
-    outline-offset: 2px;
-  }
-
-  .stats-label {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-surface-700);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--spacing-2);
-    transition: color var(--transition-normal);
-  }
-
-  .stats-value {
-    font-size: var(--font-size-3xl);
-    font-weight: 700;
-    color: var(--color-primary-600);
-    line-height: var(--line-height-tight);
-    margin: 0;
-    transition: color var(--transition-normal);
-  }
-
-  /* Enhanced Table Styles */
-  .table-container {
-    background: var(--color-surface-50);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-6);
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--color-surface-200);
-    overflow: auto;
-    transition: all var(--transition-normal);
-  }
-
-  .table-container:hover {
-    box-shadow: var(--shadow-lg);
-    border-color: var(--color-primary-200);
-  }
-
-  .custom-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-
-  .custom-table th {
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--color-surface-800);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: var(--spacing-4);
-    background: var(--color-surface-100);
-    border-bottom: 2px solid var(--color-surface-300);
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    transition: all var(--transition-normal);
-  }
-
-  .custom-table td {
-    padding: var(--spacing-4);
-    border-bottom: 1px solid var(--color-surface-200);
-    font-size: var(--font-size-sm);
-    transition: all var(--transition-normal);
-  }
-
-  .custom-table tr {
-    transition: all var(--transition-normal);
-  }
-
-  .custom-table tr:hover td {
-    background: var(--color-surface-100);
-    color: var(--color-primary-700);
-  }
-
-  /* Enhanced Status Badges */
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--spacing-1-5) var(--spacing-3);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    letter-spacing: 0.025em;
-    transition: all var(--transition-bounce);
-  }
-
-  .status-active {
-    background: var(--color-success-50);
-    color: var(--color-success-600);
-    border: 1px solid var(--color-success-100);
-  }
-
-  .status-active:hover {
-    background: var(--color-success-100);
-    transform: translateY(-1px);
-  }
-
-  .status-overdue {
-    background: var(--color-warning-50);
-    color: var(--color-warning-600);
-    border: 1px solid var(--color-warning-100);
-  }
-
-  .status-overdue:hover {
-    background: var(--color-warning-100);
-    transform: translateY(-1px);
-  }
-
-  /* Enhanced Focus States */
-  :focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-  }
-
-  /* Enhanced Responsive Design */
-  @media (max-width: 1024px) {
-    .dashboard-wrapper {
-      padding: var(--spacing-4);
-      gap: var(--spacing-6);
-    }
-    
-    .stats-grid {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-    }
-  }
-
-  @media (max-width: 768px) {
-    .dashboard-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--spacing-4);
-    }
-
-    .table-container {
-      margin: 0 calc(var(--spacing-4) * -1);
-      border-radius: var(--radius-lg);
-      border-left: 0;
-      border-right: 0;
-    }
-
-    .stats-card {
-      padding: var(--spacing-4);
-    }
-  }
-
-  /* Enhanced Dark Mode */
-  @media (prefers-color-scheme: dark) {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Platform penyewaan apartemen dengan pencarian canggih, pembayaran aman, dan manajemen booking efisien">
+  <title>Rental Apartemen Elite</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <style>
+    /* Design Tokens */
     :root {
-      --color-surface-50: hsl(222 47% 11%);
-      --color-surface-100: hsl(222 47% 13%);
-      --color-surface-200: hsl(222 47% 15%);
-      --color-surface-300: hsl(222 47% 18%);
-      --color-surface-400: hsl(222 47% 22%);
-      --color-surface-500: hsl(222 47% 27%);
-      --color-surface-600: hsl(222 47% 35%);
-      --color-surface-700: hsl(222 47% 45%);
-      --color-surface-800: hsl(222 47% 60%);
-      --color-surface-900: hsl(222 47% 90%);
+      --primary: #0070f3;
+      --primary-foreground: #ffffff;
+      --secondary: #f5f5f5;
+      --secondary-foreground: #1f2937;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --background: #ffffff;
+      --foreground: #1f2937;
+      --card: #ffffff;
+      --card-foreground: #1f2937;
+      --border: #e5e7eb;
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --radius-sm: 0.25rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --transition-fast: all 0.2s ease-in-out;
+      --font-family: 'Inter', sans-serif;
     }
 
-    .stats-card::before {
-      background: linear-gradient(
-        135deg,
-        hsla(var(--color-primary-h), var(--color-primary-s), 30%, 0.2) 0%,
-        transparent 100%
-      );
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-family); background: var(--secondary); color: var(--foreground); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font-family: inherit; }
+
+    /* Utilities */
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .flex-center { justify-content: center; align-items: center; }
+    .gap-xs { gap: var(--spacing-xs); }
+    .gap-sm { gap: var(--spacing-sm); }
+    .gap-md { gap: var(--spacing-md); }
+    .gap-lg { gap: var(--spacing-lg); }
+    .mt-xs { margin-top: var(--spacing-xs); }
+    .mt-sm { margin-top: var(--spacing-sm); }
+    .mt-md { margin-top: var(--spacing-md); }
+    .mt-lg { margin-top: var(--spacing-lg); }
+    .mb-sm { margin-bottom: var(--spacing-sm); }
+    .mb-md { margin-bottom: var(--spacing-md); }
+    .mb-lg { margin-bottom: var(--spacing-lg); }
+    .p-sm { padding: var(--spacing-sm); }
+    .p-md { padding: var(--spacing-md); }
+    .p-lg { padding: var(--spacing-lg); }
+    .text-center { text-align: center; }
+    .w-full { width: 100%; }
+    .rounded { border-radius: var(--radius-md); }
+    .shadow { box-shadow: var(--shadow-md); }
+    .hidden { display: none; }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: var(--spacing-md); }
+    .section { padding: var(--spacing-xl) 0; }
+    .grid { display: grid; gap: var(--spacing-lg); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-auto { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+
+    /* Navigation */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--background);
+      padding: var(--spacing-md) 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-brand { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .nav-links { display: flex; gap: var(--spacing-lg); list-style: none; }
+    .nav-link { font-weight: 500; padding: var(--spacing-sm) 0; cursor: pointer; position: relative; }
+    .nav-link:hover::after, .nav-link.is-active::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--primary);
     }
 
-    .dashboard-header,
-    .stats-card,
-    .table-container {
-      background: var(--color-surface-100);
-      border-color: var(--color-surface-300);
+    /* Buttons */
+    .btn {
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-foreground); }
+    .btn-primary:hover { background: #005bb5; transform: translateY(-2px); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-success { background: var(--success); color: var(--primary-foreground); }
+    .btn-danger { background: var(--danger); color: var(--primary-foreground); }
+
+    /* Card Styles */
+    .property-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-fast);
+    }
+    .property-card:hover { transform: translateY(-5px); }
+    .property-card img { width: 100%; height: 200px; object-fit: cover; }
+    .property-card figcaption { padding: var(--spacing-md); }
+    .property-card h3 { font-size: 1.2rem; margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-sm); }
+    .property-details { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+    .price { color: var(--primary); font-weight: 600; }
+    .location { display: flex; align-items: center; gap: var(--spacing-xs); color: var(--secondary-foreground); }
+    .property-features { display: flex; flex-wrap: wrap; gap: var(--spacing-md); color: var(--secondary-foreground); }
+    details { padding: var(--spacing-md); border-top: 1px solid var(--border); }
+    summary { cursor: pointer; color: var(--primary); font-weight: 500; }
+    blockquote { border-left: 3px solid var(--primary); padding-left: var(--spacing-md); margin: var(--spacing-md) 0; font-style: italic; }
+
+    /* Search and Filter */
+    .search-form { background: var(--card); padding: var(--spacing-lg); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
+    .filter-group { margin-bottom: var(--spacing-md); }
+    .filter-group label { display: block; font-weight: 500; margin-bottom: var(--spacing-sm); }
+    .filter-group input, .filter-group select { padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 100%; }
+    .map-canvas { width: 100%; height: 300px; background: var(--secondary); border-radius: var(--radius-md); }
+
+    /* Calendar */
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--spacing-xs); }
+    .calendar-day { padding: var(--spacing-sm); text-align: center; border-radius: var(--radius-sm); cursor: pointer; }
+    .calendar-day.available { background: var(--success); color: var(--primary-foreground); }
+    .calendar-day.booked { background: var(--warning); color: var(--primary-foreground); cursor: not-allowed; }
+
+    /* Gallery and Virtual Tour */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); }
+    .gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius-md); transition: transform 0.3s; }
+    .gallery img:hover { transform: scale(1.1); }
+    .virtual-tour { position: relative; overflow: hidden; }
+    .virtual-tour img { transition: transform 0.5s ease; }
+    .virtual-tour:hover img { transform: rotate(5deg) scale(1.1); }
+    .virtual-tour-btn { position: absolute; bottom: var(--spacing-md); right: var(--spacing-md); background: var(--primary); color: var(--primary-foreground); padding: var(--spacing-sm); border-radius: var(--radius-sm); }
+
+    /* Chat System */
+    .chat-window { height: 300px; overflow-y: auto; border: 1px solid var(--border); padding: var(--spacing-md); border-radius: var(--radius-md); }
+    .chat-message { margin-bottom: var(--spacing-sm); padding: var(--spacing-sm); border-radius: var(--radius-md); }
+    .chat-message.sent { background: var(--primary); color: var(--primary-foreground); margin-left: 20%; }
+    .chat-message.received { background: var(--secondary); margin-right: 20%; }
+
+    /* Payment Methods */
+    .payment-methods { display: flex; gap: var(--spacing-md); }
+    .payment-method { padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition-fast); }
+    .payment-method.selected { border-color: var(--primary); background: #bfdbfe; }
+
+    /* Cost Breakdown */
+    .cost-breakdown { background: var(--card); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md); }
+    .cost-breakdown h3 { margin-bottom: var(--spacing-sm); }
+    .cost-line { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+    .total { font-weight: bold; font-size: 1.2rem; }
+
+    /* Escrow Info */
+    .escrow-info { background: #fef9c3; padding: var(--spacing-sm); border-left: 4px solid gold; margin: var(--spacing-md) 0; }
+
+    /* Chatbox */
+    .chatbox {
+      position: fixed;
+      bottom: 80px;
+      right: var(--spacing-lg);
+      background: var(--card);
+      width: 300px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      display: none;
+      flex-direction: column;
+      height: 400px;
+    }
+    .chat-header {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      padding: var(--spacing-sm);
+      border-top-left-radius: var(--radius-md);
+      border-top-right-radius: var(--radius-md);
+    }
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-sm);
+    }
+    .chat-input {
+      display: flex;
+      padding: var(--spacing-sm);
+      border-top: 1px solid var(--border);
+    }
+    .chat-input input {
+      flex: 1;
+      padding: var(--spacing-sm);
+      border: 1px solid var(--border);
+      border-right: none;
+      border-top-left-radius: var(--radius-sm);
+      border-bottom-left-radius: var(--radius-sm);
+    }
+    .chat-input button {
+      padding: var(--spacing-sm);
+      border: 1px solid var(--border);
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
     }
 
-    .custom-table th {
-      background: var(--color-surface-200);
+    /* Loyalty Badge */
+    .loyalty-badge {
+      background: var(--warning);
+      color: var(--primary-foreground);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
     }
 
-    .custom-table tr:hover td {
-      background: var(--color-surface-200);
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .grid-3 { grid-template-columns: repeat(2, 1fr); }
     }
-  }
-</style>
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; gap: var(--spacing-md); }
+      .nav-links { flex-direction: column; align-items: center; }
+      .grid-3, .grid-2 { grid-template-columns: 1fr; }
+      .search-form { grid-template-columns: 1fr; }
+      .chatbox { width: 90%; }
+    }
+
+    /* Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
+    [tabindex="0"]:focus, button:focus, input:focus, select:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
-
 <body>
-<main class="dashboard-wrapper">
-  <header class="dashboard-header">
-    <div class="header-content">
-      <h1 class="dashboard-title">Rental Apartemen</h1>
-      <p class="dashboard-subtitle">Temukan hunian nyaman untuk Anda</p>
-    </div>
-    
-    <nav class="main-nav" aria-label="Navigasi utama">
-      <div class="search-filters">
-        <div class="search-location">
-          <label class="input-label" for="location-search">Lokasi</label>
-          <div class="input-group">
-            <i class="icon icon-location"></i>
-            <input 
-              type="text" 
-              id="location-search"
-              class="input-control"
-              placeholder="Cari lokasi atau landmark..."
-              aria-label="Cari lokasi"
-            >
-          </div>
-          <div id="map" class="interactive-map"></div>
-        </div>
-        
-        <div class="date-picker">
-          <label class="input-label">Tanggal</label>
-          <div class="date-inputs">
-            <div class="input-group">
-              <i class="icon icon-calendar"></i>
-              <input 
-                type="date" 
-                class="input-control"
-                aria-label="Check-in date"
-              >
-            </div>
-            <div class="input-group">
-              <i class="icon icon-calendar"></i>
-              <input 
-                type="date"
-                class="input-control" 
-                aria-label="Check-out date"
-              >
-            </div>
-          </div>
-        </div>
-
-        <div class="price-range">
-          <label class="input-label">Rentang Harga</label>
-          <div class="range-control">
-            <input 
-              type="range"
-              class="range-slider" 
-              min="0"
-              max="10000000"
-              step="500000"
-              aria-label="Rentang harga"
-            >
-            <div class="price-display">
-              <span class="min-price">Rp 0</span>
-              <span class="max-price">Rp 10.000.000</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="filters">
-          <details class="filter-group">
-            <summary class="filter-summary">
-              <i class="icon icon-amenities"></i>
-              <span>Fasilitas</span>
-            </summary>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="pool">
-                <span class="checkbox-text">Kolam Renang</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="gym">
-                <span class="checkbox-text">Gym</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="parking">
-                <span class="checkbox-text">Parkir</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="wifi">
-                <span class="checkbox-text">WiFi</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="ac">
-                <span class="checkbox-text">AC</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="laundry">
-                <span class="checkbox-text">Laundry</span>
-              </label>
-            </div>
-          </details>
-
-          <details class="filter-group">
-            <summary class="filter-summary">
-              <i class="icon icon-apartment"></i>
-              <span>Tipe Apartemen</span>
-            </summary>
-            <div class="checkbox-group">
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="studio">
-                <span class="checkbox-text">Studio</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="1br">
-                <span class="checkbox-text">1 Kamar Tidur</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="2br">
-                <span class="checkbox-text">2 Kamar Tidur</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="3br">
-                <span class="checkbox-text">3 Kamar Tidur</span>
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" class="checkbox-input" value="penthouse">
-                <span class="checkbox-text">Penthouse</span>
-              </label>
-            </div>
-          </details>
-        </div>
-      </div>
+  <!-- Navigation -->
+  <header class="container">
+    <nav class="navbar">
+      <div class="nav-brand">EliteRent</div>
+      <ul class="nav-links">
+        <li><span class="nav-link is-active" data-page="home">Beranda</span></li>
+        <li><span class="nav-link" data-page="search">Pencarian</span></li>
+        <li><span class="nav-link" data-page="profile">Profil</span></li>
+        <li><span class="nav-link" data-page="support">Dukungan</span></li>
+      </ul>
     </nav>
   </header>
 
-  <section class="featured-listings" aria-label="Apartemen Unggulan">
-    <div class="section-header">
-      <h2 class="section-title">Apartemen Unggulan</h2>
-      <p class="section-subtitle">Pilihan terbaik untuk hunian Anda</p>
-    </div>
-    
-    <div class="listings-grid">
-      <article class="listing-card">
-        <div class="listing-gallery">
-          <img 
-            src="apartment1.jpg"
-            alt="Interior apartemen Green Park B-12"
-            class="listing-image"
-            loading="lazy"
-          >
-          <button class="virtual-tour-btn" aria-label="Lihat virtual tour">
-            <i class="icon icon-360"></i>
-            <span>Virtual Tour 360°</span>
-          </button>
+  <!-- Main Content -->
+  <main class="container">
+    <!-- Home Page -->
+    <section id="home" class="section page fade-in active">
+      <h1 class="text-center">Temukan Apartemen Impian Anda</h1>
+      <p class="text-center mb-lg">Jelajahi apartemen modern dengan fasilitas premium</p>
+
+      <!-- Quick Search -->
+      <form class="search-form mb-lg">
+        <div class="grid-3">
+          <div class="filter-group">
+            <label for="quick-location">Lokasi</label>
+            <input type="text" id="quick-location" placeholder="Masukkan kota atau area" aria-label="Cari lokasi">
+          </div>
+          <div class="filter-group">
+            <label for="quick-checkin">Check-in</label>
+            <input type="date" id="quick-checkin" aria-label="Tanggal check-in">
+          </div>
+          <div class="filter-group">
+            <label for="quick-checkout">Check-out</label>
+            <input type="date" id="quick-checkout" aria-label="Tanggal check-out">
+          </div>
         </div>
-        
-        <div class="listing-details">
-          <div class="listing-header">
-            <h3 class="listing-title">Green Park B-12</h3>
-            <div class="listing-meta">
-              <span class="price">Rp 5.000.000/bulan</span>
-              <div class="rating">
-                <div class="stars" aria-label="Rating 4.5 dari 5">
-                  <i class="icon icon-star-filled"></i>
-                  <i class="icon icon-star-filled"></i>
-                  <i class="icon icon-star-filled"></i>
-                  <i class="icon icon-star-filled"></i>
-                  <i class="icon icon-star-half"></i>
-                </div>
-                <span class="rating-text">(4.5/5)</span>
+        <button type="submit" class="btn btn-primary mt-md"><span class="material-icons">search</span>Cari Sekarang</button>
+      </form>
+
+      <!-- Featured Properties -->
+      <h2>Properti Unggulan</h2>
+      <div class="grid grid-auto">
+        <figure class="property-card">
+          <img src="https://source.unsplash.com/random/800x600/?apartment" alt="Luxury Penthouse" loading="lazy">
+          <figcaption>
+            <h3>Luxury Penthouse <span class="material-icons verified-icon" title="Pemilik Terverifikasi">verified</span></h3>
+            <div class="property-details">
+              <span class="price">Rp 25.000.000/bln</span>
+              <span class="location"><i class="material-icons">location_on</i> Jakarta Pusat</span>
+            </div>
+            <div class="property-features">
+              <span><i class="material-icons">hotel</i> 3 BR</span>
+              <span><i class="material-icons">square_foot</i> 2000 sqft</span>
+              <span><i class="material-icons">pool</i> Kolam</span>
+            </div>
+            <blockquote>
+              <p>"Pemandangan kota yang luar biasa dan fasilitas terbaik!"</p>
+              <footer>- John Doe <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
+            </blockquote>
+          </figcaption>
+          <details>
+            <summary>Detail Lebih Lanjut</summary>
+            <p>Apartemen modern dengan pemandangan kota, gym, dan keamanan 24/7.</p>
+            <button class="btn btn-primary" onclick="navigateToDetail(1)">Lihat Detail</button>
+          </details>
+        </figure>
+        <figure class="property-card">
+          <img src="https://source.unsplash.com/random/800x600/?modern-apartment" alt="Modern Studio" loading="lazy">
+          <figcaption>
+            <h3>Modern Studio <span class="material-icons verified-icon" title="Pemilik Terverifikasi">verified</span></h3>
+            <div class="property-details">
+              <span class="price">Rp 12.000.000/bln</span>
+              <span class="location"><i class="material-icons">location_on</i> Jakarta Selatan</span>
+            </div>
+            <div class="property-features">
+              <span><i class="material-icons">hotel</i> Studio</span>
+              <span><i class="material-icons">square_foot</i> 500 sqft</span>
+              <span><i class="material-icons">wifi</i> WiFi</span>
+            </div>
+            <blockquote>
+              <p>"Cocok untuk profesional muda!"</p>
+              <footer>- Jane Smith <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
+            </blockquote>
+          </figcaption>
+          <details>
+            <summary>Detail Lebih Lanjut</summary>
+            <p>Studio kompak dengan fasilitas modern di lingkungan yang dinamis.</p>
+            <button class="btn btn-primary" onclick="navigateToDetail(2)">Lihat Detail</button>
+          </details>
+        </figure>
+        <figure class="property-card">
+          <img src="https://source.unsplash.com/random/800x600/?luxury-condo" alt="Family Apartment" loading="lazy">
+          <figcaption>
+            <h3>Family Apartment <span class="material-icons verified-icon" title="Pemilik Terverifikasi">verified</span></h3>
+            <div class="property-details">
+              <span class="price">Rp 18.000.000/bln</span>
+              <span class="location"><i class="material-icons">location_on</i> Jakarta Barat</span>
+            </div>
+            <div class="property-features">
+              <span><i class="material-icons">hotel</i> 2 BR</span>
+              <span><i class="material-icons">square_foot</i> 1200 sqft</span>
+              <span><i class="material-icons">local_parking</i> Parkir</span>
+            </div>
+            <blockquote>
+              <p>"Luas dan nyaman untuk keluarga!"</p>
+              <footer>- Sarah Johnson <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
+            </blockquote>
+          </figcaption>
+          <details>
+            <summary>Detail Lebih Lanjut</summary>
+            <p>Apartemen luas cocok untuk keluarga dengan fasilitas lengkap.</p>
+            <button class="btn btn-primary" onclick="navigateToDetail(3)">Lihat Detail</button>
+          </details>
+        </figure>
+      </div>
+
+      <!-- Why Choose Us -->
+      <h2 class="mt-lg">Mengapa Memilih Kami</h2>
+      <div class="grid grid-3">
+        <div class="card p-md">
+          <h3>Pembayaran Aman</h3>
+          <p>Transaksi dilindungi escrow dengan berbagai opsi pembayaran.</p>
+        </div>
+        <div class="card p-md">
+          <h3>Dukungan 24/7</h3>
+          <p>Hubungi tim kami kapan saja melalui chat, email, atau telepon.</p>
+        </div>
+        <div class="card p-md">
+          <h3>Pemilik Terverifikasi</h3>
+          <p>Semua pemilik diverifikasi identitas untuk keamanan Anda.</p>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <h2 class="mt-lg">Testimoni</h2>
+      <div class="grid grid-auto">
+        <div class="card p-md">
+          <blockquote>
+            <p>"Menemukan apartemen impian saya hanya dalam beberapa klik!"</p>
+            <footer>- Sarah Johnson</footer>
+          </blockquote>
+        </div>
+        <div class="card p-md">
+          <blockquote>
+            <p>"Proses pemesanan yang mulus dan aman."</p>
+            <footer>- Michael Lee</footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search Page -->
+    <section id="search" class="section page fade-in hidden">
+      <h1>Cari Apartemen</h1>
+      <div class="grid-2">
+        <div>
+          <form class="search-form">
+            <div class="filter-group">
+              <label>Lokasi</label>
+              <input type="text" id="search-location" placeholder="Masukkan kota atau landmark" aria-label="Cari lokasi">
+              <canvas class="map-canvas" id="searchMap" aria-label="Peta interaktif"></canvas>
+              <input type="range" min="1" max="10" value="5" id="radiusSlider" aria-label="Filter radius">
+              <p>Radius: <span id="radiusValue">5</span> km</p>
+            </div>
+            <div class="filter-group">
+              <label>Tanggal</label>
+              <div class="calendar" id="searchCalendar" role="grid" aria-label="Kalender ketersediaan"></div>
+            </div>
+            <div class="filter-group">
+              <label>Rentang Harga</label>
+              <input type="range" min="5000000" max="50000000" value="25000000" id="priceSlider" aria-label="Filter harga">
+              <p>Maks: Rp <span id="priceValue">25.000.000</span></p>
+            </div>
+            <div class="filter-group">
+              <label>Fasilitas</label>
+              <div class="flex-col gap-sm">
+                <label><input type="checkbox" value="pool" aria-label="Kolam Renang"> Kolam Renang</label>
+                <label><input type="checkbox" value="gym" aria-label="Gym"> Gym</label>
+                <label><input type="checkbox" value="wifi" aria-label="WiFi"> WiFi</label>
+                <label><input type="checkbox" value="parking" aria-label="Parkir"> Parkir</label>
+                <label><input type="checkbox" value="ac" aria-label="AC"> AC</label>
+                <label><input type="checkbox" value="laundry" aria-label="Laundry"> Laundry</label>
               </div>
             </div>
-          </div>
-          
-          <div class="listing-features">
-            <span class="feature">
-              <i class="icon icon-bedroom"></i>
-              2 Kamar
-            </span>
-            <span class="feature">
-              <i class="icon icon-bathroom"></i>
-              1 Kamar Mandi
-            </span>
-            <span class="feature">
-              <i class="icon icon-wifi"></i>
-              WiFi
-            </span>
-            <span class="feature">
-              <i class="icon icon-ac"></i>
-              AC
-            </span>
-          </div>
-          
-          <div class="listing-actions">
-            <button class="btn btn-primary btn-book">
-              <span>Pesan Sekarang</span>
-              <i class="icon icon-arrow-right"></i>
-            </button>
-            <button class="btn btn-secondary btn-contact" aria-label="Hubungi pemilik">
-              <i class="icon icon-chat"></i>
-            </button>
-          </div>
+            <div class="filter-group">
+              <label for="apartment-type">Tipe Apartemen</label>
+              <select id="apartment-type" aria-label="Filter tipe apartemen">
+                <option value="">Semua Tipe</option>
+                <option value="studio">Studio</option>
+                <option value="1br">1 Kamar</option>
+                <option value="2br">2 Kamar</option>
+                <option value="3br">3 Kamar+</option>
+                <option value="penthouse">Penthouse</option>
+                <option value="family">Keluarga</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary mt-md"><span class="material-icons">filter_alt</span>Terapkan Filter</button>
+          </form>
         </div>
-      </article>
+        <div>
+          <h2>Hasil Pencarian</h2>
+          <div class="flex gap-md mb-md">
+            <select id="sort-results" aria-label="Urutkan hasil">
+              <option value="price-asc">Harga: Rendah ke Tinggi</option>
+              <option value="price-desc">Harga: Tinggi ke Rendah</option>
+              <option value="rating-desc">Rating: Tinggi ke Rendah</option>
+            </select>
+          </div>
+          <div class="grid grid-auto" id="searchResults"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Apartment Detail Page -->
+    <section id="apartment" class="section page fade-in hidden">
+      <h1 id="apartment-title"></h1>
+      <div class="gallery mb-lg">
+        <div class="virtual-tour">
+          <img src="https://source.unsplash.com/random/800x600/?apartment,interior" alt="Tur Virtual Interior Apartemen" loading="lazy">
+          <button class="virtual-tour-btn" aria-label="Lihat virtual tour 360°"><span class="material-icons">360</span> Virtual Tour</button>
+        </div>
+        <img src="https://source.unsplash.com/random/400x300/?bedroom" alt="Kamar Tidur" loading="lazy">
+        <img src="https://source.unsplash.com/random/400x300/?kitchen" alt="Dapur" loading="lazy">
+        <img src="https://source.unsplash.com/random/400x300/?living-room" alt="Ruang Tamu" loading="lazy">
+      </div>
+      <div class="grid-2">
+        <div>
+          <h2>Detail</h2>
+          <p>Harga: <span id="apartment-price"></span></p>
+          <p>Lokasi: <span id="apartment-location"></span></p>
+          <p>Fasilitas: <span id="apartment-amenities"></span></p>
+          <canvas class="map-canvas" id="apartmentMap" aria-label="Peta lokasi apartemen"></canvas>
+          <p><a href="https://maps.google.com" target="_blank" aria-label="Lihat di Google Maps">Lihat di Google Maps</a></p>
+          <h3>Ulasan</h3>
+          <div id="apartment-reviews"></div>
+        </div>
+        <div>
+          <h2>Pesan Sekarang</h2>
+          <form class="booking-form">
+            <div class="filter-group">
+              <label for="book-checkin">Check-in</label>
+              <input type="date" id="book-checkin" required aria-label="Tanggal check-in pemesanan">
+            </div>
+            <div class="filter-group">
+              <label for="book-checkout">Check-out</label>
+              <input type="date" id="book-checkout" required aria-label="Tanggal check-out pemesanan">
+            </div>
+            <div class="filter-group">
+              <label for="guests">Tamu</label>
+              <input type="number" id="guests" min="1" value="1" required aria-label="Jumlah tamu">
+            </div>
+            <div class="filter-group">
+              <label>Metode Pembayaran</label>
+              <div class="payment-methods" role="radiogroup" aria-label="Pilih metode pembayaran">
+                <div class="payment-method" data-method="credit" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">credit_card</i> Kartu Kredit</div>
+                <div class="payment-method" data-method="bank" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">account_balance</i> Transfer Bank</div>
+                <div class="payment-method" data-method="ewallet" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">phone_iphone</i> E-Wallet</div>
+              </div>
+            </div>
+            <div class="filter-group">
+              <label><input type="checkbox" id="insurance" aria-label="Tambah asuransi"> Tambah Asuransi (+10%)</label>
+            </div>
+            <div class="cost-breakdown hidden" id="cost-breakdown">
+              <h3>Rincian Biaya</h3>
+              <div class="cost-line"><span>Sewa</span><span id="base-cost"></span></div>
+              <div class="cost-line"><span>Biaya Layanan</span><span id="service-cost"></span></div>
+              <div class="cost-line"><span>Asuransi</span><span id="insurance-cost"></span></div>
+              <div class="cost-line total"><span>Total</span><span id="total-cost"></span></div>
+            </div>
+            <p class="escrow-info">Pembayaran dijamin aman melalui sistem escrow hingga check-in.</p>
+            <button type="submit" class="btn btn-primary"><span class="material-icons">book</span>Konfirmasi Pemesanan</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile Page -->
+    <section id="profile" class="section page fade-in hidden">
+      <h1>Profil Pengguna</h1>
+      <div class="grid-2">
+        <div class="card p-lg">
+          <h2>Informasi Akun</h2>
+          <p>Nama: Jane Doe</p>
+          <p>Email: jane@example.com</p>
+          <p>Poin Loyalitas: <span class="loyalty-badge">150</span></p>
+          <button class="btn btn-outline mt-sm">Edit Profil</button>
+        </div>
+        <div class="card p-lg">
+          <h2>Pesan</h2>
+          <div class="chat-window" id="chatWindow" aria-live="polite">
+            <div class="chat-message sent">Apakah apartemen tersedia?</div>
+            <div class="chat-message received">Ya, tersedia!</div>
+          </div>
+          <input type="text" id="chatInput" placeholder="Ketik pesan..." aria-label="Input chat">
+          <button class="btn btn-primary mt-sm" onclick="sendMessage()">Kirim</button>
+        </div>
+      </div>
+      <h2 class="mt-lg">Riwayat Pemesanan</h2>
+      <div class="grid grid-auto" id="booking-history">
+        <div class="card p-md">
+          <h3>Luxury Penthouse</h3>
+          <p>Check-in: 2025-06-01</p>
+          <p>Check-out: 2025-06-07</p>
+          <p>Total: Rp 175.000.000</p>
+          <p>Status: <span class="status-badge status-active">Terkonfirmasi</span></p>
+        </div>
+        <div class="card p-md">
+          <h3>Modern Studio</h3>
+          <p>Check-in: 2025-07-01</p>
+          <p>Check-out: 2025-07-15</p>
+          <p>Total: Rp 168.000.000</p>
+          <p>Status: <span class="status-badge status-active">Terkonfirmasi</span></p>
+        </div>
+      </div>
+      <h2 class="mt-lg">Notifikasi</h2>
+      <div class="card p-md">
+        <p>Pengingat: Check-in untuk Luxury Penthouse dalam 2 hari.</p>
+      </div>
+    </section>
+
+    <!-- Support Page -->
+    <section id="support" class="section page fade-in hidden">
+      <h1>Dukungan Pelanggan</h1>
+      <div class="grid-3">
+        <div class="card p-md">
+          <h2>Live Chat</h2>
+          <button class="btn btn-primary" onclick="openChat()">Mulai Chat</button>
+        </div>
+        <div class="card p-md">
+          <h2>Email</h2>
+          <p><a href="mailto:support@eliterent.com">support@eliterent.com</a></p>
+        </div>
+        <div class="card p-md">
+          <h2>Telepon</h2>
+          <p><a href="tel:+628001234567">+62-800-123-4567</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Chatbox -->
+  <button class="message-btn" id="messageBtn" aria-label="Buka chat"><span class="material-icons">chat</span></button>
+  <div class="chatbox" id="chatbox">
+    <div class="chat-header">Dukungan Pelanggan</div>
+    <div class="chat-body" id="chatBody" aria-live="polite">
+      <div class="chat-message system">Selamat datang! Bagaimana kami dapat membantu Anda?</div>
     </div>
-  </section>
-
-  <section class="booking-management" aria-labelledby="booking-title">
-    <div class="section-header">
-      <h2 id="booking-title" class="section-title">Pemesanan Saya</h2>
-      <p class="section-subtitle">Kelola semua pemesanan Anda</p>
+    <div class="chat-input">
+      <input type="text" id="supportChatInput" placeholder="Ketik pesan..." aria-label="Input chat dukungan">
+      <button onclick="sendSupportMessage()" aria-label="Kirim pesan">Kirim</button>
     </div>
-    
-    <div class="table-container">
-      <table class="custom-table" role="table">
-        <thead>
-          <tr>
-            <th scope="col">Unit</th>
-            <th scope="col">Check-in</th>
-            <th scope="col">Check-out</th>
-            <th scope="col">Total Bayar</th>
-            <th scope="col">Status</th>
-            <th scope="col">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="unit-cell">Green Park B-12</td>
-            <td class="date-cell">10 Mei 2024</td>
-            <td class="date-cell">10 Juni 2024</td>
-            <td class="price-cell">Rp 5.000.000</td>
-            <td class="status-cell">
-              <span class="status-badge status-active">
-                <i class="icon icon-check"></i>
-                Terkonfirmasi
-              </span>
-            </td>
-            <td class="action-cell">
-              <button class="btn btn-text btn-details">
-                <i class="icon icon-info"></i>
-                <span>Detail</span>
-              </button>
-              <button class="btn btn-text btn-chat">
-                <i class="icon icon-chat"></i>
-                <span>Chat</span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  </div>
 
-  <aside class="support-widget" aria-label="Dukungan pelanggan">
-    <button class="support-toggle" aria-expanded="false">
-      <i class="icon icon-help"></i>
-      <span>Butuh bantuan?</span>
-    </button>
-    
-    <div class="support-options" hidden>
-      <a href="#" class="support-option">
-        <i class="icon icon-phone"></i>
-        <span>Telepon</span>
-      </a>
-      <a href="#" class="support-option">
-        <i class="icon icon-chat"></i>
-        <span>Live Chat</span>
-      </a>
-      <a href="#" class="support-option">
-        <i class="icon icon-email"></i>
-        <span>Email</span>
-      </a>
-    </div>
-  </aside>
-</main>
+  <!-- Footer -->
+  <footer class="text-center p-lg" style="background: var(--foreground); color: var(--primary-foreground);">
+    <p>© 2025 EliteRent. Hak cipta dilindungi.</p>
+  </footer>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Enhanced keyboard navigation and focus management
-    const focusableElements = document.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+  <script>
+    // Mock Data
+    const apartments = [
+      {
+        id: 1,
+        title: 'Luxury Penthouse',
+        price: 25000000,
+        location: 'Jakarta Pusat',
+        bedrooms: 3,
+        sqft: 2000,
+        type: 'penthouse',
+        amenities: ['pool', 'gym', 'wifi', 'parking', 'ac'],
+        rating: 4.5,
+        images: [
+          'https://source.unsplash.com/random/800x600/?apartment',
+          'https://source.unsplash.com/random/400x300/?bedroom',
+          'https://source.unsplash.com/random/400x300/?kitchen',
+          'https://source.unsplash.com/random/400x300/?living-room'
+        ],
+        description: 'Apartemen modern dengan pemandangan kota, gym, dan keamanan 24/7.',
+        reviews: [
+          { user: 'John Doe', comment: 'Pemandangan kota yang luar biasa dan fasilitas terbaik!', rating: 5 },
+          { user: 'Michael Lee', comment: 'Layanan dan pemandangan luar biasa!', rating: 4 }
+        ],
+        status: 'available'
+      },
+      {
+        id: 2,
+        title: 'Modern Studio',
+        price: 12000000,
+        location: 'Jakarta Selatan',
+        bedrooms: 0,
+        sqft: 500,
+        type: 'studio',
+        amenities: ['wifi', 'ac', 'laundry'],
+        rating: 4.2,
+        images: [
+          'https://source.unsplash.com/random/800x600/?modern-apartment',
+          'https://source.unsplash.com/random/400x300/?living-room',
+          'https://source.unsplash.com/random/400x300/?bathroom'
+        ],
+        description: 'Studio kompak cocok untuk profesional muda.',
+        reviews: [
+          { user: 'Jane Smith', comment: 'Lokasi strategis, sangat bersih!', rating: 4 },
+          { user: 'Sarah Johnson', comment: 'Cocok untuk pelancong solo.', rating: 5 }
+        ],
+        status: 'booked'
+      },
+      {
+        id: 3,
+        title: 'Family Apartment',
+        price: 18000000,
+        location: 'Jakarta Barat',
+        bedrooms: 2,
+        sqft: 1200,
+        type: 'family',
+        amenities: ['parking', 'ac', 'laundry'],
+        rating: 4.8,
+        images: [
+          'https://source.unsplash.com/random/800x600/?luxury-condo',
+          'https://source.unsplash.com/random/400x300/?bedroom',
+          'https://source.unsplash.com/random/400x300/?kitchen'
+        ],
+        description: 'Apartemen luas cocok untuk keluarga dengan fasilitas lengkap.',
+        reviews: [
+          { user: 'Sarah Johnson', comment: 'Luas dan nyaman untuk keluarga!', rating: 5 }
+        ],
+        status: 'available'
+      }
+    ];
 
-    // Add focus and interactive states
-    focusableElements.forEach(element => {
-      // Focus state
-      element.addEventListener('focus', () => {
-        element.style.outline = '3px solid var(--color-primary-400)';
-        element.style.outlineOffset = '2px';
-        element.style.transition = 'all var(--transition-fast)';
-        element.style.transform = 'scale(1.02)';
-      });
+    // SPA Routing
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('.nav-link');
 
-      // Blur state
-      element.addEventListener('blur', () => {
-        element.style.outline = '';
-        element.style.outlineOffset = '';
-        element.style.transform = '';
-      });
+    function showPage(pageId) {
+      pages.forEach(page => page.classList.toggle('hidden', page.id !== pageId));
+      navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.page === pageId));
+      loadDynamicContent(pageId);
+      window.scrollTo(0, 0);
+    }
 
-      // Hover state
-      element.addEventListener('mouseenter', () => {
-        element.style.transform = 'translateY(-1px)';
-        element.style.boxShadow = 'var(--shadow-md)';
-      });
-
-      element.addEventListener('mouseleave', () => {
-        element.style.transform = '';
-        element.style.boxShadow = '';
-      });
-
-      // Active state
-      element.addEventListener('mousedown', () => {
-        element.style.transform = 'scale(0.98)';
-      });
-
-      element.addEventListener('mouseup', () => {
-        element.style.transform = '';
-      });
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => showPage(link.dataset.page));
     });
 
-    // Enhanced color contrast for interactive elements
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-      button.style.position = 'relative';
-      button.style.overflow = 'hidden';
-      
-      // Add hover effect
-      button.addEventListener('mouseover', () => {
-        button.style.backgroundColor = 'var(--color-primary-600)';
-        button.style.color = 'var(--color-surface-50)';
-      });
+    window.addEventListener('load', () => showPage('home'));
 
-      // Add ripple effect
-      button.addEventListener('click', (e) => {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        
-        ripple.style.position = 'absolute';
-        ripple.style.borderRadius = '50%';
-        ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-        ripple.style.width = ripple.style.height = '100px';
-        ripple.style.left = `${e.clientX - rect.left - 50}px`;
-        ripple.style.top = `${e.clientY - rect.top - 50}px`;
-        ripple.style.transform = 'scale(0)';
-        ripple.style.animation = 'ripple 0.6s linear';
-        
-        button.appendChild(ripple);
-        setTimeout(() => ripple.remove(), 600);
+    function navigateToDetail(id) {
+      localStorage.setItem('selectedApartmentId', id);
+      showPage('apartment');
+    }
+
+    // Dynamic Content Loading
+    function loadDynamicContent(pageId) {
+      switch (pageId) {
+        case 'search':
+          renderSearchResults();
+          break;
+        case 'apartment':
+          renderApartmentDetails();
+          break;
+        default:
+          break;
+      }
+    }
+
+    // Fade-in Animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
       });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Search and Filter
+    const searchForm = document.querySelector('.search-form');
+    const searchResults = document.getElementById('searchResults');
+    const radiusSlider = document.getElementById('radiusSlider');
+    const radiusValue = document.getElementById('radiusValue');
+    const priceSlider = document.getElementById('priceSlider');
+    const priceValue = document.getElementById('priceValue');
+    const sortSelect = document.getElementById('sort-results');
+
+    radiusSlider.addEventListener('input', () => {
+      radiusValue.textContent = radiusSlider.value;
     });
 
-    // Add keydown navigation for custom components
-    const customComponents = document.querySelectorAll('.listing-card, .filter-group');
-    customComponents.forEach(component => {
-      component.addEventListener('keydown', (e) => {
+    priceSlider.addEventListener('input', () => {
+      priceValue.textContent = priceSlider.value.toLocaleString('id-ID');
+    });
+
+    function renderSearchResults() {
+      const location = document.getElementById('search-location')?.value.toLowerCase() || '';
+      const price = parseInt(priceSlider.value);
+      const amenities = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const type = document.querySelector('#apartment-type').value;
+      const sort = sortSelect.value;
+
+      let results = apartments.filter(apartment => {
+        return (
+          (!location || apartment.location.toLowerCase().includes(location)) &&
+          apartment.price <= price &&
+          (!amenities.length || amenities.every(amenity => apartment.amenities.includes(amenity))) &&
+          (!type || apartment.type === type)
+        );
+      });
+
+      if (sort === 'price-asc') {
+        results.sort((a, b) => a.price - b.price);
+      } else if (sort === 'price-desc') {
+        results.sort((a, b) => b.price - a.price);
+      } else if (sort === 'rating-desc') {
+        results.sort((a, b) => b.rating - a.rating);
+      }
+
+      searchResults.innerHTML = results.length ? results.map(apartment => `
+        <figure class="property-card">
+          <img src="${apartment.images[0]}" alt="${apartment.title}" loading="lazy">
+          <figcaption>
+            <h3>${apartment.title} <span class="material-icons verified-icon" title="Pemilik Terverifikasi">verified</span></h3>
+            <div class="property-details">
+              <span class="price">Rp ${apartment.price.toLocaleString('id-ID')}/bln</span>
+              <span class="location"><i class="material-icons">location_on</i> ${apartment.location}</span>
+            </div>
+            <div class="property-features">
+              <span><i class="material-icons">hotel</i> ${apartment.bedrooms || 'Studio'} BR</span>
+              <span><i class="material-icons">square_foot</i> ${apartment.sqft} sqft</span>
+              <span><i class="material-icons">star</i> ${apartment.rating}</span>
+            </div>
+            <blockquote>
+              <p>"${apartment.reviews[0]?.comment || 'Tempat yang luar biasa!'}"</p>
+              <footer>- ${apartment.reviews[0]?.user || 'Tamu'} <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
+            </blockquote>
+          </figcaption>
+          <details>
+            <summary>Detail Lebih Lanjut</summary>
+            <p>${apartment.description}</p>
+            <button class="btn btn-primary" onclick="navigateToDetail(${apartment.id})">Lihat Detail</button>
+          </details>
+        </figure>
+      `).join('') : '<p class="text-center">Tidak ada hasil ditemukan.</p>';
+    }
+
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      renderSearchResults();
+    });
+
+    sortSelect.addEventListener('change', renderSearchResults);
+
+    // Calendar
+    function renderCalendar(containerId) {
+      const calendar = document.getElementById(containerId);
+      const days = Array(35).fill().map((_, i) => ({
+        day: i + 1,
+        status: Math.random() > 0.3 ? 'available' : 'booked'
+      }));
+
+      calendar.innerHTML = days.map(day => `
+        <div class="calendar-day ${day.status}" role="gridcell" aria-label="${day.status} pada hari ${day.day}">${day.day}</div>
+      `).join('');
+    }
+    renderCalendar('searchCalendar');
+
+    // Map Simulation
+    function drawMap(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, canvas.height / 2, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3b82f6';
+      ctx.fillRect(canvas.width / 2 - 10, canvas.height / 2 - 40, 20, 20);
+    }
+    drawMap('searchMap');
+    drawMap('apartmentMap');
+
+    // Apartment Details
+    function renderApartmentDetails() {
+      const id = parseInt(localStorage.getItem('selectedApartmentId'));
+      const apartment = apartments.find(a => a.id === id);
+      if (!apartment) {
+        document.getElementById('apartment').innerHTML = '<p class="text-center">Apartemen tidak ditemukan.</p>';
+        return;
+      }
+
+      document.getElementById('apartment-title').textContent = apartment.title;
+      document.getElementById('apartment-price').textContent = `Rp ${apartment.price.toLocaleString('id-ID')}/bln`;
+      document.getElementById('apartment-location').textContent = apartment.location;
+      document.getElementById('apartment-amenities').textContent = apartment.amenities.join(', ');
+
+      const reviewsContainer = document.getElementById('apartment-reviews');
+      reviewsContainer.innerHTML = apartment.reviews.map(review => `
+        <blockquote>
+          <p>"${review.comment}"</p>
+          <footer>- ${review.user} (${review.rating}/5) <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
+        </blockquote>
+      `).join('');
+    }
+
+    // Booking Form
+    const bookingForm = document.querySelector('.booking-form');
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const checkin = document.getElementById('book-checkin').value;
+      const checkout = document.getElementById('book-checkout').value;
+      const guests = document.getElementById('guests').value;
+      const insurance = document.getElementById('insurance').checked;
+      const id = parseInt(localStorage.getItem('selectedApartmentId'));
+      const apartment = apartments.find(a => a.id === id);
+
+      if (!checkin || !checkout) {
+        alert('Silakan pilih tanggal check-in dan check-out.');
+        return;
+      }
+
+      const days = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+      if (days <= 0) {
+        alert('Tanggal check-out harus setelah tanggal check-in.');
+        return;
+      }
+
+      const baseCost = apartment.price * days;
+      const serviceFee = baseCost * 0.05;
+      const insuranceFee = insurance ? baseCost * 0.1 : 0;
+      const total = baseCost + serviceFee + insuranceFee;
+
+      document.getElementById('base-cost').textContent = `Rp ${baseCost.toLocaleString('id-ID')}`;
+      document.getElementById('service-cost').textContent = `Rp ${serviceFee.toLocaleString('id-ID')}`;
+      document.getElementById('insurance-cost').textContent = `Rp ${insuranceFee.toLocaleString('id-ID')}`;
+      document.getElementById('total-cost').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+      document.getElementById('cost-breakdown').classList.remove('hidden');
+
+      alert(`Pemesanan dikonfirmasi untuk ${guests} tamu! Periksa email Anda untuk detailnya.`);
+    });
+
+    // Payment Method Selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.addEventListener('click', () => {
+        document.querySelectorAll('.payment-method').forEach(m => {
+          m.classList.remove('selected');
+          m.setAttribute('aria-checked', 'false');
+        });
+        method.classList.add('selected');
+        method.setAttribute('aria-checked', 'true');
+      });
+      method.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          component.click();
+          method.click();
         }
       });
     });
-  });
 
-  // Add ripple animation
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes ripple {
-      to {
-        transform: scale(4);
-        opacity: 0;
+    // Chat System
+    function sendMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const chatWindow = document.getElementById('chatWindow');
+      if (chatInput.value.trim()) {
+        chatWindow.innerHTML += `
+          <div class="chat-message sent">${chatInput.value}</div>
+        `;
+        chatInput.value = '';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        setTimeout(() => {
+          chatWindow.innerHTML += `
+            <div class="chat-message received">Terima kasih atas pesan Anda! Kami akan segera merespons.</div>
+          `;
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }, 1000);
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation: none !important;
-        transition: none !important;
+    // Support Chat
+    function sendSupportMessage() {
+      const chatInput = document.getElementById('supportChatInput');
+      const chatBody = document.getElementById('chatBody');
+      if (chatInput.value.trim()) {
+        chatBody.innerHTML += `
+          <div class="chat-message user"><span>${chatInput.value}</span></div>
+        `;
+        chatInput.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+        setTimeout(() => {
+          chatBody.innerHTML += `
+            <div class="chat-message system"><span>Tim kami akan segera membantu Anda.</span></div>
+          `;
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }, 1000);
       }
     }
-  `;
-  document.head.appendChild(style);
-</script>
+
+    document.getElementById('supportChatInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendSupportMessage();
+      }
+    });
+
+    // Report Review
+    function reportReview() {
+      alert('Ulasan dilaporkan. Tim kami akan segera meninjau.');
+    }
+
+    // Open Chat
+    function openChat() {
+      const chatbox = document.getElementById('chatbox');
+      chatbox.style.display = 'flex';
+      document.getElementById('supportChatInput').focus();
+    }
+
+    document.getElementById('messageBtn').addEventListener('click', () => {
+      const chatbox = document.getElementById('chatbox');
+      chatbox.style.display = chatbox.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Virtual Tour Button
+    document.querySelectorAll('.virtual-tour-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Memulai virtual tour 360°...');
+      });
+    });
+  </script>
 </body>
-
 </html>
