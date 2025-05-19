@@ -1,1062 +1,1602 @@
-<!DOCTYPE html>
-<html lang="id" data-theme="light">
-
+    <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Rentelindo - Modern property management platform for rental properties in Indonesia">
-    <meta name="keywords"
-        content="property management, apartment rental, rental system, financial reports, virtual tours, online payments">
-    <meta name="author" content="Rentelindo Team">
-    <title>Rentelindo | Modern Property Management System</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="preload"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
-        as="style" onload="this.rel='stylesheet'">
-    <noscript>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
-            rel="stylesheet">
-    </noscript>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <meta name="description" content="RentEase - Premium Apartment Rentals with Modern Amenities">
+    <title>RentEase - Find Your Perfect Stay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tX/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
+
+        /* Reset and Base Styles */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --color-primary: hsl(214, 100%, 54%);
-            --color-primary-dark: hsl(214, 100%, 42%);
-            --color-primary-light: hsl(214, 100%, 92%);
-            --color-primary-50: hsl(214, 100%, 97%);
-            --color-accent: hsl(40, 90%, 60%);
-            --color-accent-dark: hsl(40, 90%, 50%);
-            --color-success: hsl(140, 60%, 45%);
-            --color-success-dark: hsl(140, 60%, 35%);
-            --color-danger: hsl(0, 80%, 56%);
-            --color-danger-dark: hsl(0, 80%, 46%);
-            --color-warning: hsl(40, 90%, 60%);
-            --color-info: hsl(200, 90%, 60%);
-            --color-bg: hsl(0, 0%, 98%);
-            --color-bg-alt: hsl(0, 0%, 100%);
-            --color-text: hsl(220, 24%, 16%);
-            --color-text-light: hsl(220, 10%, 50%);
-            --color-text-lighter: hsl(220, 10%, 70%);
-            --color-border: hsl(220, 20%, 90%);
-            --color-border-dark: hsl(220, 20%, 80%);
-            --color-active: var(--color-success);
-            --color-pending: var(--color-warning);
-            --color-inactive: var(--color-danger);
-            --space-xxs: 0.25rem;
-            --space-xs: 0.5rem;
-            --space-sm: 0.75rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2rem;
-            --space-2xl: 3rem;
-            --space-3xl: 4rem;
-            --font-main: 'Inter', system-ui, sans-serif;
-            --font-heading: 'Poppins', system-ui, sans-serif;
-            --font-xs: 0.75rem;
-            --font-sm: 0.875rem;
-            --font-md: 1rem;
-            --font-lg: 1.125rem;
-            --font-xl: 1.25rem;
-            --font-2xl: 1.5rem;
-            --font-3xl: 1.875rem;
-            --font-4xl: 2.25rem;
-            --font-5xl: 3rem;
-            --radius-xs: 0.25rem;
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --radius-full: 9999px;
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
-            --transition-fast: all 0.15s ease-in-out;
-            --transition-normal: all 0.3s ease-in-out;
-            --transition-slow: all 0.5s ease-in-out;
-        }
-
-        [data-theme="dark"] {
-            --color-bg: hsl(220, 15%, 16%);
-            --color-bg-alt: hsl(220, 15%, 20%);
-            --color-text: hsl(210, 40%, 98%);
-            --color-text-light: hsl(215, 20%, 65%);
-            --color-text-lighter: hsl(215, 20%, 45%);
-            --color-border: hsl(217, 33%, 20%);
-            --color-border-dark: hsl(217, 33%, 30%);
-        }
-
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            border-color: var(--color-border);
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            --primary-color: #4a6bff;
+            --secondary-color: #ff6b6b;
+            --accent-color: #20c997;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         body {
-            font-family: var(--font-main);
-            background: var(--color-bg);
-            color: var(--color-text);
-            line-height: 1.5;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        button, input, select, textarea { font-family: inherit; font-size: inherit; }
+        img { max-width: 100%; height: auto; }
+
+        /* Utility Classes */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .gap-1 { gap: 0.25rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 1rem; }
+        .gap-4 { gap: 1.5rem; }
+        .gap-6 { gap: 2rem; }
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .bg-primary { background-color: var(--primary-color); }
+        .bg-secondary { background-color: var(--secondary-color); }
+        .bg-accent { background-color: var(--accent-color); }
+        .bg-dark { background-color: var(--dark-color); }
+        .bg-light { background-color: var(--light-color); }
+        .bg-light-gray { background-color: var(--light-gray); }
+        .text-primary { color: var(--primary-color); }
+        .text-secondary { color: var(--secondary-color); }
+        .text-accent { color: var(--accent-color); }
+        .text-dark { color: var(--dark-color); }
+        .text-light { color: var(--light-color); }
+        .text-gray { color: var(--gray-color); }
+        .text-warning { color: var(--warning-color); }
+        .rounded { border-radius: var(--border-radius); }
+        .shadow { box-shadow: var(--box-shadow); }
+        .transition { transition: var(--transition); }
+        .w-full { width: 100%; }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5ae8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge-accent {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        .nav-links {
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: var(--dark-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/random/1600x900/?apartment') no-repeat center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            margin-top: 70px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        /* Search Form */
+        .search-form {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+        }
+
+        /* Properties */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            position: relative;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1;
+        }
+
+        .property-favorite {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .property-favorite:hover {
+            transform: scale(1.1);
+        }
+
+        .property-favorite.active {
+            color: var(--secondary-color);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .property-details {
+            padding: 1. ESR5rem;
+        }
+
+        .property-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .property-features {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-main {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 1/1;
+        }
+
+        .gallery-main .gallery-image {
+            aspect-ratio: 16/9;
+        }
+
+        /* Virtual Tour */
+        .virtual-tour {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            background: url('https://source.unsplash.com/random/800x600/?apartment,interior') center/cover;
+        }
+
+        .virtual-tour-nav {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .virtual-tour-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .virtual-tour-btn:hover {
+            background-color: white;
+            transform: scale(1.1);
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Calendar */
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar th,
+        .calendar td {
+            padding: 0.75rem;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+        }
+
+        .calendar th {
+            font-weight: 500;
+            color: var(--gray-color);
+        }
+
+        .calendar td {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .calendar td:hover:not(.disabled) {
+            background-color: var(--light-gray);
+        }
+
+        .calendar td.disabled {
+            color: var(--light-gray);
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+        }
+
+        .calendar td.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Reviews */
+        .review-card {
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .review-name {
+            font-weight: 500;
+        }
+
+        .review-date {
+            font-size: 0.875rem;
+            color: var(--gray-color);
+        }
+
+        .review-rating {
+            color: var(--warning-color);
+        }
+
+        .review-content {
+            margin-bottom: 1rem;
+        }
+
+        /* Chat */
+        .chat-container {
+            display: flex;
+            height: 500px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .chat-sidebar {
+            width: 300px;
+            border-right: 1px solid var(--light-gray);
+            background-color: white;
+        }
+
+        .chat-main {
+            flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: var(--font-heading);
-            font-weight: 600;
-            line-height: 1.2;
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-            transition: var(--transition-fast);
+        .chat-body {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
         }
 
-        button {
+        .chat-message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+        }
+
+        .chat-message.sent {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+        }
+
+        .chat-bubble.sent {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-bubble.received {
+            background-color: var(--light-gray);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-time {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+        }
+
+        .chat-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            resize: none;
+        }
+
+        .chat-conversation {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
             cursor: pointer;
-            font-family: inherit;
+            transition: var(--transition);
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
+        .chat-conversation:hover {
+            background-color: var(--light-gray);
+        }
+
+        .chat-conversation.active {
+            background-color: rgba(74, 107, 255, 0.1);
+        }
+
+        /* Profile */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 4px solid white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-email {
+            color: var(--gray-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Booking */
+        .booking-card {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .booking-imageDER {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+
+        .booking-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .gallery-main {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 1rem;
+                transform: translateY(-100%);
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .chat-sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--light-gray);
+                max-height: 300px;
+                overflow-y: auto;
+            }
+
+            .chat-main {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                height: 60vh;
+            }
+
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 2rem 0;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .booking-card {
+                flex-direction: column;
+            }
+
+            .booking-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+    
+/* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
         }
 
         .container {
-            width: 100%;
-            max-width: 1280px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 var(--space-md);
+            padding: 0 1.5rem;
         }
 
-        .flex {
-            display: flex;
-        }
-
-        .items-center {
-            align-items: center;
-        }
-
-        .justify-between {
-            justify-content: space-between;
-        }
-
-        .gap-xs {
-            gap: var(--space-xs);
-        }
-
-        .gap-sm {
-            gap: var(--space-sm);
-        }
-
-        .gap-md {
-            gap: var(--space-md);
-        }
-
-        .gap-lg {
-            gap: var(--space-lg);
-        }
-
-        .gap-xl {
-            gap: var(--space-xl);
-        }
-
-        .w-full {
-            width: 100%;
-        }
-
-        .p-xs {
-            padding: var(--space-xs);
-        }
-
-        .p-sm {
-            padding: var(--space-sm);
-        }
-
-        .p-md {
-            padding: var(--space-md);
-        }
-
-        .p-lg {
-            padding: var(--space-lg);
-        }
-
-        .p-xl {
-            padding: var(--space-xl);
-        }
-
-        .py-xs {
-            padding-top: var(--space-xs);
-            padding-bottom: var(--space-xs);
-        }
-
-        .py-sm {
-            padding-top: var(--space-sm);
-            padding-bottom: var(--space-sm);
-        }
-
-        .py-md {
-            padding-top: var(--space-md);
-            padding-bottom: var(--space-md);
-        }
-
-        .py-lg {
-            padding-top: var(--space-lg);
-            padding-bottom: var(--space-lg);
-        }
-
-        .py-xl {
-            padding-top: var(--space-xl);
-            padding-bottom: var(--space-xl);
-        }
-
-        .px-xs {
-            padding-left: var(--space-xs);
-            padding-right: var(--space-xs);
-        }
-
-        .px-sm {
-            padding-left: var(--space-sm);
-            padding-right: var(--space-sm);
-        }
-
-        .px-md {
-            padding-left: var(--space-md);
-            padding-right: var(--space-md);
-        }
-
-        .px-lg {
-            padding-left: var(--space-lg);
-            padding-right: var(--space-lg);
-        }
-
-        .px-xl {
-            padding-left: var(--space-xl);
-            padding-right: var(--space-xl);
-        }
-
-        .mx-auto {
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .text-xs {
-            font-size: var(--font-xs);
-        }
-
-        .text-sm {
-            font-size: var(--font-sm);
-        }
-
-        .text-md {
-            font-size: var(--font-md);
-        }
-
-        .text-lg {
-            font-size: var(--font-lg);
-        }
-
-        .text-xl {
-            font-size: var(--font-xl);
-        }
-
-        .text-2xl {
-            font-size: var(--font-2xl);
-        }
-
-        .text-3xl {
-            font-size: var(--font-3xl);
-        }
-
-        .text-4xl {
-            font-size: var(--font-4xl);
-        }
-
-        .text-5xl {
-            font-size: var(--font-5xl);
-        }
-
-        .font-light {
-            font-weight: 300;
-        }
-
-        .font-normal {
-            font-weight: 400;
-        }
-
-        .font-medium {
+        /* Utility Classes */
+        .btn {
+            display: inline-flex;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
             font-weight: 500;
-        }
-
-        .font-semibold {
-            font-weight: 600;
-        }
-
-        .font-bold {
-            font-weight: 700;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .text-primary {
-            color: var(--color-primary);
-        }
-
-        .text-success {
-            color: var(--color-success);
-        }
-
-        .text-danger {
-            color: var(--color-danger);
-        }
-
-        .text-warning {
-            color: var(--color-warning);
-        }
-
-        .text-info {
-            color: var(--color-info);
-        }
-
-        .text-muted {
-            color: var(--color-text-light);
-        }
-
-        .bg-primary {
-            background-color: var(--color-primary);
-        }
-
-        .bg-success {
-            background-color: var(--color-success);
-        }
-
-        .bg-danger {
-            background-color: var(--color-danger);
-        }
-
-        .bg-warning {
-            background-color: var(--color-warning);
-        }
-
-        .bg-info {
-            background-color: var(--color-info);
-        }
-
-        .bg-light {
-            background-color: var(--color-bg-alt);
-        }
-
-        .rounded-xs {
-            border-radius: var(--radius-xs);
-        }
-
-        .rounded-sm {
-            border-radius: var(--radius-sm);
-        }
-
-        .rounded-md {
-            border-radius: var(--radius-md);
-        }
-
-        .rounded-lg {
-            border-radius: var(--radius-lg);
-        }
-
-        .rounded-xl {
-            border-radius: var(--radius-xl);
-        }
-
-        .rounded-full {
-            border-radius: var(--radius-full);
-        }
-
-        .shadow-xs {
-            box-shadow: var(--shadow-xs);
-        }
-
-        .shadow-sm {
-            box-shadow: var(--shadow-sm);
-        }
-
-        .shadow-md {
-            box-shadow: var(--shadow-md);
-        }
-
-        .shadow-lg {
-            box-shadow: var(--shadow-lg);
-        }
-
-        .shadow-xl {
-            box-shadow: var(--shadow-xl);
-        }
-
-        .transition {
-            transition: var(--transition-normal);
-        }
-
-        .transition-fast {
-            transition: var(--transition-fast);
-        }
-
-        .transition-slow {
-            transition: var(--transition-slow);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .block {
-            display: block;
-        }
-
-        .inline-block {
-            display: inline-block;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-md);
-            padding: var(--space-md) 0;
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--space-lg);
-            flex-wrap: wrap;
-        }
-
-        .logo-img {
-            height: 2rem;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
-
-        .main-nav {
-            flex: 1;
-            margin: 0 var(--space-xl);
-        }
-
-        .nav-list {
-            display: flex;
-            list-style: none;
-            gap: var(--space-lg);
-        }
-
-        .nav-link {
-            color: var(--color-text-lighter);
-            font-weight: 500;
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-md);
-            transition: var(--transition-fast);
-        }
-
-        .nav-link:hover {
-            color: white;
-            background: var(--color-primary-50);
-        }
-
-        .nav-link.active {
-            color: white;
-            background: var(--color-primary-dark);
-            font-weight: 600;
-        }
-
-        .btn-outline-primary {
-            background: transparent;
-            border: 1px solid var(--color-primary-light);
-            color: var(--color-primary-light);
-            padding: var(--space-sm) var(--space-lg);
-            font-weight: 500;
-        }
-
-        .btn-outline-primary:hover {
-            background: var(--color-primary-50);
-            color: white;
-            border-color: white;
-            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
         }
 
         .btn-primary {
-            background: var(--color-primary);
+            background: #2563eb;
             color: white;
-            padding: var(--space-sm) var(--space-lg);
-            font-weight: 500;
         }
 
         .btn-primary:hover {
-            background: var(--color-primary-dark);
-            box-shadow: var(--shadow-md);
+            background: #1d4ed8;
         }
 
-        .btn-lg {
-            padding: var(--space-md) var(--space-xl);
-            font-size: var(--font-md);
+        .btn-outline {
+            border: 1px solid #2563eb;
+            color: #2563eb;
         }
 
-        .btn-sm {
-            padding: var(--space-xs) var(--space-md);
-            font-size: var(--font-xs);
+        .btn-outline:hover {
+            background: #eff6ff;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #1d4ed8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .nav-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            min-height: calc(100vh - 200px);
         }
 
         .hero {
-            background: var(--color-bg-alt);
-            padding: var(--space-3xl) 0;
+            background: linear-gradient(to right, #eff6ff, #dbeafe);
+            padding: 4rem 0;
             text-align: center;
         }
 
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: var(--space-xl);
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
         }
 
-        .hero-title {
-            font-size: var(--font-5xl);
-            margin-bottom: var(--space-lg);
-            color: var(--color-text);
-        }
-
-        .hero-subtitle {
-            font-size: var(--font-xl);
-            color: var(--color-text-light);
-            margin-bottom: var(--space-2xl);
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: var(--space-md);
+        .search-form {
             background: white;
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-sm);
-            box-shadow: var(--shadow-sm);
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: grid;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
         }
 
-        .search-input {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
+        .search-form input,
+        .search-form select {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
         }
 
-        .search-input i {
-            position: absolute;
-            left: var(--space-md);
-            color: var(--color-text-light);
-            font-size: var(--font-md);
-        }
-
-        .search-input input {
-            width: 100%;
-            padding: var(--space-md) var(--space-md) var(--space-md) calc(var(--space-md) + 1.5rem);
-            border: none;
-            font-size: var(--font-md);
-            background: transparent;
-        }
-
-        .search-input input:focus {
-            outline: none;
-        }
-
-        .featured {
-            padding: var(--space-2xl) 0;
-            background: var(--color-bg);
-        }
-
-        .section-title {
-            font-size: var(--font-3xl);
-            text-align: center;
-            margin-bottom: var(--space-2xl);
-            color: var(--color-text);
-        }
-
+        /* Property Listing */
         .property-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-lg);
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 0;
         }
 
         .property-card {
-            background: var(--color-bg-alt);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            transition: var(--transition-normal);
-        }
-
-        .property-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .property-image {
             position: relative;
-            overflow: hidden;
         }
 
-        .property-image img {
+        .property-card img {
             width: 100%;
             height: 200px;
             object-fit: cover;
         }
 
-        .badge-featured {
-            position: absolute;
-            top: var(--space-md);
-            left: var(--space-md);
-            background: var(--color-success);
+        .property-card .content {
+            padding: 1.5rem;
+        }
+
+        .property-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-card .price {
+            color: #2563eb;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-card .amenities {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        /* Property Detail */
+        .property-detail {
+            padding: 2rem 0;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .booking-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Profile Page */
+        .profile-page {
+            padding: 2rem 0;
+        }
+
+        .profile-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-card .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+        }
+
+        /* Messages Page */
+        .messages-page {
+            padding: 2rem 0;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .chat-list {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .chat-window {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #1f2937;
             color: white;
-            padding: var(--space-xs) var(--space-sm);
-            font-size: var(--font-xs);
-            font-weight: 600;
-            border-radius: var(--radius-sm);
+            padding: 4rem 0;
         }
 
-        .property-content {
-            padding: var(--space-md);
-        }
-
-        .property-content h3 {
-            font-size: var(--font-xl);
-            margin-bottom: var(--space-sm);
-        }
-
-        .location {
-            color: var(--color-text-light);
-            margin-bottom: var(--space-md);
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-        }
-
-        .property-features {
-            display: flex;
-            gap: var(--space-md);
-            margin-bottom: var(--space-md);
-            color: var(--color-text-light);
-        }
-
-        .property-features span {
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-        }
-
-        .property-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--space-md);
-            border-top: 1px solid var(--color-border);
-        }
-
-        .price {
-            font-size: var(--font-lg);
-            font-weight: 600;
-            color: var(--color-primary);
-        }
-
-        .footer {
-            background: var(--color-bg-alt);
-            padding: var(--space-2xl) 0;
-            border-top: 1px solid var(--color-border);
-        }
-
-        .footer-content {
+        .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-xl);
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .footer-brand {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
+        .footer-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
         }
 
-        .footer-logo {
-            height: 2rem;
-            width: auto;
+        .footer-links li {
+            margin-bottom: 0.5rem;
         }
 
-        .link-group {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-sm);
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
         }
 
-        .link-group h4 {
-            font-size: var(--font-lg);
-            margin-bottom: var(--space-sm);
+        .footer-links a:hover {
+            color: white;
         }
 
-        .link-group ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-xs);
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
         }
 
-        .link-group a {
-            color: var(--color-text-light);
-            transition: var(--transition-fast);
-        }
-
-        .link-group a:hover {
-            color: var(--color-primary);
-        }
-
-        .c-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-xs);
-            padding: var(--space-sm) var(--space-lg);
-            font-size: var(--font-sm);
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            border: none;
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-
-        .c-card {
-            background: var(--color-bg-alt);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--color-border);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition-fast);
-        }
-
-        .c-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 1024px) {
-            .main-nav {
-                margin: 0 var(--space-md);
-            }
-
-            .nav-list {
-                flex-wrap: wrap;
-                gap: var(--space-md);
-            }
-
-            .hero-title {
-                font-size: var(--font-4xl);
-            }
-
-            .hero-subtitle {
-                font-size: var(--font-lg);
-            }
-
-            .search-box {
-                flex-direction: column;
-                padding: var(--space-md);
-            }
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .header-content {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
                 flex-direction: column;
-                gap: var(--space-md);
-                text-align: center;
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             }
 
-            .main-nav {
-                margin: var(--space-md) 0;
+            .nav-links.active {
+                display: flex;
             }
 
-            .nav-list {
-                flex-direction: column;
-                align-items: center;
+            .nav-actions {
+                display: none;
             }
 
-            .hero {
-                padding: var(--space-xl) 0;
-            }
-
-            .property-grid {
+            .search-form {
                 grid-template-columns: 1fr;
             }
 
-            .footer-content {
+            .gallery {
                 grid-template-columns: 1fr;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .header-actions {
-                flex-direction: column;
-                gap: var(--space-sm);
-                width: 100%;
             }
 
-            .btn-outline-primary,
-            .btn-primary {
-                width: 100%;
-                text-align: center;
+            .messages-page {
+                grid-template-columns: 1fr;
             }
-
-            .search-box {
-                max-width: 100%;
-            }
-
-            .hero-title {
-                font-size: var(--font-3xl);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .animate-fade {
-            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
-
 <body>
-    <header class="header">
-        <div class="container header-content">
-            <div class="logo">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏠%3C/text%3E%3C/svg%3E"
-                    alt="Rentelindo Logo" class="logo-img">
-                <span class="logo-text font-bold text-xl">Rentelindo</span>
+    <!-- Header -->
+    <header>
+        <nav class="navbar container">
+            <a href="#home" class="logo">RentEase <span>Stay</span></a>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="nav-links">
+                <a href="#home" data-route="home">Home</a>
+                <a href="#search" data-route="search">Search</a>
+                <a href="#profile" data-route="profile">Profile</a>
+                <a href="#messages" data-route="messages">Messages</a>
             </div>
-            <nav class="main-nav">
-                <ul class="nav-list">
-                    <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
-                    <li><a href="#properties" class="nav-link" data-section="properties">Properties</a></li>
-                    <li><a href="#search" class="nav-link" data-section="search">Search</a></li>
-                    <li><a href="#about" class="nav-link" data-section="about">About</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions flex gap-sm">
-                <button class="c-button btn-outline btn-sm theme-toggle" aria-label="Toggle theme">
-                    <i class="fas fa-moon"></i>
-                    <span class="theme-text">Mode Gelap</span>
-                </button>
-                <button class="c-button btn-outline-primary">List Property</button>
-                <button class="c-button btn-primary">Sign In</button>
+            <div class="nav-actions">
+                <a href="#login" class="btn btn-outline">Log In</a>
+                <a href="#signup" class="btn btn-primary">Sign Up</a>
             </div>
-        </div>
+        </nav>
     </header>
 
+    <!-- Main Content -->
     <main id="main-content">
-        <section id="home" class="hero" data-section="home">
-            <div class="container hero-content animate-fade">
-                <h1 class="hero-title">Find Your Perfect Rental Property</h1>
-                <p class="hero-subtitle">Browse through thousands of curated properties across Indonesia</p>
-                <div class="search-box">
-                    <div class="search-input">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search by location, property type..."
-                            aria-label="Search properties">
-                    </div>
-                    <button class="c-button btn-primary btn-lg">Search</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="properties" class="featured hidden" data-section="properties">
-            <div class="container">
-                <h2 class="section-title">Featured Properties</h2>
-                <div class="property-grid">
-                    <div class="property-card animate-fade">
-                        <div class="property-image">
-                            <img src="https://images.unsplash.com/photo-1512917774080-9991f7c4c60d"
-                                alt="Luxury Apartment">
-                            <span class="badge badge-featured">Featured</span>
-                        </div>
-                        <div class="property-content">
-                            <h3>Modern Luxury Apartment</h3>
-                            <p class="location"><i class="fas fa-map-marker-alt"></i> Central Jakarta</p>
-                            <div class="property-features">
-                                <span><i class="fas fa-bed"></i> 2 Beds</span>
-                                <span><i class="fas fa-bath"></i> 2 Baths</span>
-                                <span><i class="fas fa-ruler-combined"></i> 80m²</span>
-                            </div>
-                            <div class="property-footer">
-                                <div class="price">Rp 5.5M/year</div>
-                                <button class="c-button btn-outline-primary">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="property-card animate-fade">
-                        <div class="property-image">
-                            <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb" alt="Cozy Studio">
-                            <span class="badge badge-featured">Featured</span>
-                        </div>
-                        <div class="property-content">
-                            <h3>Cozy Studio</h3>
-                            <p class="location"><i class="fas fa-map-marker-alt"></i> Bandung</p>
-                            <div class="property-features">
-                                <span><i class="fas fa-bed"></i> 1 Bed</span>
-                                <span><i class="fas fa-bath"></i> 1 Bath</span>
-                                <span><i class="fas fa-ruler-combined"></i> 40m²</span>
-                            </div>
-                            <div class="property-footer">
-                                <div class="price">Rp 3M/year</div>
-                                <button class="c-button btn-outline-primary">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="search" class="featured hidden" data-section="search">
-            <div class="container">
-                <h2 class="section-title">Search Properties</h2>
-                <div class="search-box w-full mx-auto">
-                    <div class="search-input">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search by location, property type..."
-                            aria-label="Search properties">
-                    </div>
-                    <button class="c-button btn-primary btn-lg">Search</button>
-                </div>
-                <div class="property-grid">
-                    <!-- Dynamic search results would go here -->
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="featured hidden" data-section="about">
-            <div class="container">
-                <h2 class="section-title">About Rentelindo</h2>
-                <p class="text-lg text-center text-muted">Rentelindo is your trusted platform for finding and managing
-                    rental properties across Indonesia. Our mission is to make property rental simple, efficient, and
-                    accessible for everyone.</p>
-            </div>
-        </section>
+        <!-- Content will be dynamically loaded here -->
     </main>
 
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏠%3C/text%3E%3C/svg%3E"
-                    alt="Rentelindo Logo" class="footer-logo">
-                <p class="text-muted">Making property rental simple and efficient</p>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3 class="footer-title">RentEase</h3>
+                    <p>Your trusted platform for apartment rentals worldwide.</p>
+                </div>
+                <div>
+                    <h3 class="footer-title">Explore</h3>
+                    <ul class="footer-links">
+                        <li><a href="#search">Search Properties</a></li>
+                        <li><a href="#">Popular Destinations</a></li>
+                        <li><a href="#">Luxury Rentals</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#support">Help Center</a></li>
+                        <li><a href="#">Safety Information</a></li>
+                        <li><a href="#">Insurance Options</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="link-group">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <div class="link-group">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Support</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>© 2025 RentEase. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // Theme Toggle
-        const themeToggle = document.querySelector('.theme-toggle');
-        const themeText = document.querySelector('.theme-text');
+        // Mock Data
+        const properties = [
+            {
+                id: 1,
+                title: "Modern Downtown Loft",
+                price: 150,
+                location: { lat: 40.7128, lng: -74.0060 },
+                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267'],
+                amenities: ['WiFi', 'AC', 'Kitchen'],
+                reviews: [
+                    { user: 'John D.', rating: 4.5, comment: 'Great stay!' }
+                ],
+                availability: ['2025-06-01', '2025-06-02']
+            },
+            // Add more properties as needed
+        ];
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            if (themeText) {
-                themeText.textContent = savedTheme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
+        const user = {
+            id: 1,
+            name: 'Jane Doe',
+            email: 'jane@example.com',
+            verified: true,
+            bookings: [
+                { propertyId: 1, dates: ['2025-06-01', '2025-06-02'], status: 'confirmed' }
+            ]
+        };
+
+        // Router
+        class Router {
+            constructor() {
+                this.routes = {
+                    'home': this.renderHome,
+                    'search': this.renderSearch,
+                    'property': this.renderPropertyDetail,
+                    'profile': this.renderProfile,
+                    'messages': this.renderMessages
+                };
+                this.mainContent = document.getElementById('main-content');
+                this.init();
+            }
+
+            init() {
+                window.addEventListener('hashchange', () => this.handleRoute());
+                document.querySelectorAll('[data-route]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.hash = link.getAttribute('data-route');
+                    });
+                });
+                this.handleRoute();
+            }
+
+            handleRoute() {
+                const hash = window.location.hash.slice(1) || 'home';
+                const route = hash.split('/')[0];
+                const param = hash.split('/')[1];
+                const handler = this.routes[route] || this.renderHome;
+                this.mainContent.innerHTML = handler.call(this, param);
+                this.initPage();
+            }
+
+            renderHome() {
+                return `
+                    <section class="hero">
+                        <div class="container">
+                            <h1>Find Your Perfect Apartment</h1>
+                            <p>Discover premium rentals with modern amenities worldwide</p>
+                        </div>
+                    </section>
+                    <section class="search-form-section">
+                        <form class="search-form container">
+                            <input type="text" placeholder="Location" aria-label="Location">
+                            <input type="date" placeholder="Check-in" aria-label="Check-in date">
+                            <input type="date" placeholder="Check-out" aria-label="Check-out date">
+                            <select aria-label="Price range">
+                                <option>Price Range</option>
+                                <option>$50-$100</option>
+                                <option>$100-$200</option>
+                            </select>
+                            <select aria-label="Amenities">
+                                <option>Amenities</option>
+                                <option>WiFi</option>
+                                <option>Pool</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                    </section>
+                    <section class="property-grid container">
+                        ${properties.map(prop => `
+                            <article class="property-card card">
+                                <figure>
+                                    <img src="${prop.images[0]}" alt="${prop.title}" loading="lazy">
+                                    <figcaption>
+                                        <div class="content">
+                                            <h3>${prop.title}</h3>
+                                            <p class="price">$${prop.price}/night</p>
+                                            <p>${prop.amenities.join(', ')}</p>
+                                            <a href="#property/${prop.id}" class="btn btn-primary">View Details</a>
+                                        </div>
+                                    </figcaption>
+                                </figure>
+                            </article>
+                        `).join('')}
+                    </section>
+                `;
+            }
+
+            renderSearch() {
+                return `
+                    <section class="search-page container">
+                        <h2>Search Properties</h2>
+                        <form class="search-form">
+                            <input type="text" placeholder="Location" aria-label="Location">
+                            <input type="date" placeholder="Check-in" aria-label="Check-in date">
+                            <input type="date" placeholder="Check-out" aria-label="Check-out date">
+                            <select aria-label="Price range">
+                                <option>Price Range</option>
+                                <option>$50-$100</option>
+                                <option>$100-$200</option>
+                            </select>
+                            <select aria-label="Amenities">
+                                <option>Amenities</option>
+                                <option>WiFi</option>
+                                <option>Pool</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                        <div id="map"></div>
+                        <div class="property-grid">
+                            ${properties.map(prop => `
+                                <article class="property-card card">
+                                    <figure>
+                                        <img src="${prop.images[0]}" alt="${prop.title}" loading="lazy">
+                                        <figcaption>
+                                            <div class="content">
+                                                <h3>${prop.title}</h3>
+                                                <p class="price">$${prop.price}/night</p>
+                                                <p>${prop.amenities.join(', ')}</p>
+                                                <a href="#property/${prop.id}" class="btn btn-primary">View Details</a>
+                                            </div>
+                                        </figcaption>
+                                    </figure>
+                                </article>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+
+            renderPropertyDetail(id) {
+                const property = properties.find(p => p.id === parseInt(id));
+                if (!property) return '<h2>Property not found</h2>';
+
+                return `
+                    <section class="property-detail container">
+                        <h2>${property.title}</h2>
+                        <div class="gallery">
+                            ${property.images.map(img => `
+                                <img src="${img}" alt="${property.title}" loading="lazy">
+                            `).join('')}
+                        </div>
+                        <div id="map"></div>
+                        <article class="booking-form card">
+                            <h3>Book Now</h3>
+                            <form>
+                                <input type="date" placeholder="Check-in" aria-label="Check-in date">
+                                <input type="date" placeholder="Check-out" aria-label="Check-out date">
+                                <select aria-label="Payment method">
+                                    <option>Payment Method</option>
+                                    <option>Credit Card</option>
+                                    <option>PayPal</option>
+                                </select>
+                                <p>Total: $${property.price}/night</p>
+                                <button type="submit" class="btn btn-primary">Book Now</button>
+                            </form>
+                        </article>
+                        <section class="reviews">
+                            <h3>Reviews</h3>
+                            ${property.reviews.map(review => `
+                                <article class="review card">
+                                    <p><strong>${review.user}</strong> - ${review.rating}/5</p>
+                                    <blockquote>${review.comment}</blockquote>
+                                </article>
+                            `).join('')}
+                        </section>
+                        <details>
+                            <summary>Report an issue</summary>
+                            <form class="report-form">
+                                <textarea placeholder="Describe the issue" aria-label="Issue description"></textarea>
+                                <button type="submit" class="btn btn-primary">Submit Report</button>
+                            </form>
+                        </details>
+                    </section>
+                `;
+            }
+
+            renderProfile() {
+                return `
+                    <section class="profile-page container">
+                        <article class="profile-card card">
+                            <img src="https://via.placeholder.com/100" alt="User avatar" class="avatar">
+                            <h2>${user.name} ${user.verified ? '<i class="fas fa-check-circle"></i>' : ''}</h2>
+                            <p>${user.email}</p>
+                            <h3>Your Bookings</h3>
+                            ${user.bookings.map(booking => {
+                                const prop = properties.find(p => p.id === booking.propertyId);
+                                return `
+                                    <article class="booking card">
+                                        <h4>${prop.title}</h4>
+                                        <p>Dates: ${booking.dates.join(' to ')}</p>
+                                        <p>Status: ${booking.status}</p>
+                                    </article>
+                                `;
+                            }).join('')}
+                        </article>
+                    </section>
+                `;
+            }
+
+            renderMessages() {
+                return `
+                    <section class="messages-page container">
+                        <aside class="chat-list card">
+                            <h3>Conversations</h3>
+                            <ul>
+                                <li><a href="#">Owner 1</a></li>
+                                <li><a href="#">Owner 2</a></li>
+                            </ul>
+                        </aside>
+                        <article class="chat-window card">
+                            <h3>Chat with Owner</h3>
+                            <div class="chat-messages">
+                                <p><strong>Owner:</strong> Hello! How can I help you?</p>
+                            </div>
+                            <form class="chat-form">
+                                <textarea placeholder="Type a message" aria-label="Message"></textarea>
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </form>
+                        </article>
+                    </section>
+                `;
+            }
+
+            initPage() {
+                // Initialize mobile menu
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                const navLinks = document.querySelector('.nav-links');
+                menuBtn?.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+
+                // Initialize map
+                const mapElement = document.getElementById('map');
+                if (mapElement) {
+                    const map = L.map(mapElement).setView([40.7128, -74.0060], 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+                    properties.forEach(prop => {
+                        L.marker([prop.location.lat, prop.location.lng])
+                            .addTo(map)
+                            .bindPopup(prop.title);
+                    });
+                }
+
+                // Initialize gallery zoom
+                document.querySelectorAll('.gallery img').forEach(img => {
+                    img.addEventListener('click', () => {
+                        const modal = document.createElement('div');
+                        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
+                        modal.innerHTML = `<img src="${img.src}" style="max-width: 90%; max-height: 90%;">`;
+                        modal.addEventListener('click', () => modal.remove());
+                        document.body.appendChild(modal);
+                    });
+                });
+
+                // Initialize forms
+                document.querySelectorAll('form').forEach(form => {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        alert('Form submitted! (Mock action)');
+                    });
+                });
             }
         }
 
-        if (themeToggle && themeText) {
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                themeText.textContent = newTheme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
-                themeToggle.querySelector('i').className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            });
-        }
-
-        // Section Navigation
-        const navLinks = document.querySelectorAll('.nav-link');
-        const sections = document.querySelectorAll('[data-section]');
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                sections.forEach(section => section.classList.add('hidden'));
-                const sectionId = link.getAttribute('data-section');
-                document.getElementById(sectionId).classList.remove('hidden');
-                navLinks.forEach(navLink => navLink.classList.remove('active'));
-                link.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-
-        // Search Functionality
-        const searchInputs = document.querySelectorAll('.search-input input');
-        searchInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                console.log('Searching for:', input.value);
-            });
-        });
-
-        // Initialize
+        // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            document.getElementById('home').classList.remove('hidden');
+            new Router();
         });
     </script>
 </body>
-
 </html>

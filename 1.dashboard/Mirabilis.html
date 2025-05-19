@@ -1,382 +1,345 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RentApart | Dashboard</title>
-  <!-- Bootstrap 5.3 CSS -->
+  <title>RentApart | Modern Living</title>
+  
+  <!-- Core CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Inter:400,700|Poppins:400,700&display=swap" rel="stylesheet">
-  <!-- Custom CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom Styles -->
   <style>
     :root {
-      --primary: #0d6efd;
-      --secondary: #6c757d;
-      --bg: #f8f9fa;
-      --bg-dark: #212529;
-      --text: #212529;
-      --text-light: #fff;
-      --card-bg: #fff;
-      --card-bg-dark: #343a40;
+      --primary-color: #2563eb;
+      --secondary-color: #475569;
+      --success-color: #16a34a;
+      --warning-color: #ca8a04;
+      --danger-color: #dc2626;
+      --background-light: #f8fafc;
+      --background-dark: #0f172a;
+      --text-light: #f8fafc;
+      --text-dark: #1e293b;
+      --border-color: #e2e8f0;
+      --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
     }
 
     [data-theme="dark"] {
-      --bg: #181a1b;
-      --text: #f8f9fa;
-      --card-bg: #23272b;
+      --background-color: var(--background-dark);
+      --text-color: var(--text-light);
+      --card-bg: #1e293b;
+      --border-color: #334155;
     }
 
     body {
-      font-family: 'Inter', 'Poppins', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--background-light);
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    .app-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
       min-height: 100vh;
     }
 
     .sidebar {
-      min-width: 220px;
-      max-width: 220px;
-      background: var(--card-bg);
-      min-height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      border-right: 1px solid #dee2e6;
-      z-index: 1000;
-      transition: left 0.3s;
+      background: white;
+      border-right: 1px solid var(--border-color);
+      padding: 1.5rem;
     }
 
-    .sidebar .nav-link {
-      color: var(--text);
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: var(--text-dark);
+      border-radius: 0.5rem;
+      transition: all 0.2s;
     }
 
-    .sidebar .nav-link.active,
-    .sidebar .nav-link:hover {
-      background: var(--primary);
-      color: var(--text-light);
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--primary-color);
+      color: white;
     }
 
-    .sidebar-collapsed {
-      left: -220px;
+    .nav-link i {
+      width: 1.5rem;
+      margin-right: 0.75rem;
     }
 
     .main-content {
-      margin-left: 220px;
-      transition: margin-left 0.3s;
+      padding: 2rem;
     }
 
-    .main-content-collapsed {
-      margin-left: 0;
-    }
-
-    .navbar {
-      background: var(--card-bg);
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .stat-card {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: white;
       padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
     }
 
     .stat-card .icon {
-      font-size: 2.5rem;
-      color: var(--primary);
-      flex-shrink: 0;
-    }
-
-    .chart-placeholder {
-      height: 260px;
-      background: repeating-linear-gradient(135deg, #e9ecef, #e9ecef 10px, #f8f9fa 10px, #f8f9fa 20px);
-      border-radius: 1rem;
+      width: 3rem;
+      height: 3rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #adb5bd;
-      font-size: 1.3rem;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
     }
 
-    .theme-toggle {
-      cursor: pointer;
-      font-size: 1.4rem;
-      color: var(--primary);
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
     }
 
-    .notification {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      z-index: 2000;
-      min-width: 260px;
-    }
-
-    @media (max-width: 991px) {
-      .sidebar {
-        left: -220px;
-      }
-
-      .sidebar.show {
-        left: 0;
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-    }
-
-    .table-responsive {
-      background: var(--card-bg);
+    .property-card {
+      background: white;
       border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+
+    .property-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .property-card .content {
+      padding: 1.5rem;
+    }
+
+    .search-form {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 2rem;
+    }
+
+    .tenant-table {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        display: none;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar" id="sidebar" aria-label="Navigasi Sidebar">
-    <nav class="nav flex-column pt-4">
-      <a class="nav-link active" href="#"><i class="fa-solid fa-home me-2"></i> Dashboard</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-image me-2"></i> Galeri</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-users me-2"></i> Penyewa</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-building me-2"></i> Apartemen</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-calendar-check me-2"></i> Pemesanan</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-file-lines me-2"></i> Dokumentasi</a>
-      <a class="nav-link" href="#"><i class="fa-solid fa-gear me-2"></i> Pengaturan</a>
-    </nav>
-  </aside>
-
-  <!-- Header -->
-  <header>
-    <nav class="navbar">
-      <a class="navbar-brand" href="#">RentApart</a>
-    </nav>
-  </header>
-
-  <!-- Konten Utama -->
-  <main>
-    <section class="hero mt-4">
-      <h1>Selamat datang di RentApart</h1>
-      <p>Manajemen penyewaan apartemen Anda menjadi lebih mudah dengan platform SaaS kami yang serba lengkap.</p>
-      <a href="#" class="btn btn-primary btn-lg">Mulai Sekarang</a>
-<div class="container-fluid mt-5">
-  <!-- Featured Properties Section -->
-  <div class="row mb-5">
-    <div class="col-12">
-      <h2 class="mb-4">Featured Properties</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <img src="https://placehold.co/600x400" class="card-img-top" alt="Luxury Apartment">
-            <div class="card-body">
-              <h5 class="card-title">Luxury Suite</h5>
-              <p class="card-text">Premium 2BR apartment with city view</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="h5 text-primary mb-0">$1,200/month</span>
-                <a href="#" class="btn btn-outline-primary">View Details</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <img src="https://placehold.co/600x400" class="card-img-top" alt="Modern Studio">
-            <div class="card-body">
-              <h5 class="card-title">Modern Studio</h5>
-              <p class="card-text">Cozy studio in downtown area</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="h5 text-primary mb-0">$800/month</span>
-                <a href="#" class="btn btn-outline-primary">View Details</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <img src="https://placehold.co/600x400" class="card-img-top" alt="Family Apartment">
-            <div class="card-body">
-              <h5 class="card-title">Family Home</h5>
-              <p class="card-text">Spacious 3BR with garden access</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="h5 text-primary mb-0">$1,500/month</span>
-                <a href="#" class="btn btn-outline-primary">View Details</a>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand mb-4">
+        <h4>RentApart</h4>
       </div>
-    </div>
+      <nav>
+        <a href="#" class="nav-link active">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fas fa-building"></i>
+          <span>Properties</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fas fa-users"></i>
+          <span>Tenants</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fas fa-calendar"></i>
+          <span>Bookings</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fas fa-chart-bar"></i>
+          <span>Analytics</span>
+        </a>
+        <a href="#" class="nav-link">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="mb-4">
+        <h1>Dashboard Overview</h1>
+        <p class="text-muted">Welcome back! Here's what's happening with your properties.</p>
+      </header>
+
+      <!-- Stats Grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <h3 class="h2 mb-1">24</h3>
+          <p class="text-muted mb-0">Total Properties</p>
+        </div>
+        <div class="stat-card">
+          <div class="icon">
+            <i class="fas fa-key"></i>
+          </div>
+          <h3 class="h2 mb-1">18</h3>
+          <p class="text-muted mb-0">Occupied Units</p>
+        </div>
+        <div class="stat-card">
+          <div class="icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <h3 class="h2 mb-1">$45,200</h3>
+          <p class="text-muted mb-0">Monthly Revenue</p>
+        </div>
+        <div class="stat-card">
+          <div class="icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="h2 mb-1">34</h3>
+          <p class="text-muted mb-0">Active Tenants</p>
+        </div>
+      </section>
+
+      <!-- Property Search -->
+      <section class="search-form mb-4">
+        <h2 class="h4 mb-3">Find Properties</h2>
+        <form class="row g-3">
+          <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Location">
+          </div>
+          <div class="col-md-3">
+            <select class="form-select">
+              <option>Price Range</option>
+              <option>$500 - $1000</option>
+              <option>$1000 - $2000</option>
+              <option>$2000+</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select">
+              <option>Property Type</option>
+              <option>Studio</option>
+              <option>1 Bedroom</option>
+              <option>2 Bedrooms</option>
+              <option>3+ Bedrooms</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Charts -->
+      <section class="row mb-4">
+        <div class="col-md-8">
+          <div class="chart-container">
+            <h3 class="h5 mb-3">Occupancy Trends</h3>
+            <div class="chart-placeholder" style="height: 300px;">
+              <!-- Chart will be rendered here -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="chart-container">
+            <h3 class="h5 mb-3">Revenue</h3>
+            <div class="chart-placeholder" style="height: 300px;">
+              <!-- Chart will be rendered here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Tenants -->
+      <section class="tenant-table">
+        <h2 class="h4 mb-3">Recent Tenants</h2>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tenant</th>
+                <th>Unit</th>
+                <th>Status</th>
+                <th>Rent</th>
+                <th>Move-in Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tenantTableBody">
+              <!-- Tenant data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <!-- Search Section -->
-  <div class="row mb-5">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h3 class="card-title mb-4">Find Your Perfect Home</h3>
-          <form class="row g-3">
-            <div class="col-md-3">
-              <label for="location" class="form-label">Location</label>
-              <input type="text" class="form-control" id="location" placeholder="Enter location">
-            </div>
-            <div class="col-md-3">
-              <label for="price" class="form-label">Price Range</label>
-              <select class="form-select" id="price">
-                <option selected>Choose...</option>
-                <option>$500 - $800</option>
-                <option>$800 - $1200</option>
-                <option>$1200+</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label for="type" class="form-label">Property Type</label>
-              <select class="form-select" id="type">
-                <option selected>Choose...</option>
-                <option>Studio</option>
-                <option>1 Bedroom</option>
-                <option>2 Bedrooms</option>
-                <option>3+ Bedrooms</option>
-              </select>
-            </div>
-            <div class="col-md-3 d-flex align-items-end">
-              <button type="submit" class="btn btn-primary w-100">Search</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-    </section>
-
-    <!-- Statistik Dashboard -->
-    <div class="container-fluid py-2">
-      <div class="row g-4 mb-4">
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="stat-card" tabindex="0" aria-label="Total Apartemen">
-            <span class="icon"><i class="fa-solid fa-building"></i></span>
-            <div>
-              <div class="fs-4 fw-bold" id="statApartments">24</div>
-              <div class="text-muted">Total Apartemen</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="stat-card" tabindex="0" aria-label="Apartemen Tersewa">
-            <span class="icon"><i class="fa-solid fa-key"></i></span>
-            <div>
-              <div class="fs-4 fw-bold" id="statRented">18</div>
-              <div class="text-muted">Apartemen Tersewa</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="stat-card" tabindex="0" aria-label="Pendapatan Bulanan">
-            <span class="icon"><i class="fa-solid fa-dollar-sign"></i></span>
-            <div>
-              <div class="fs-4 fw-bold" id="statIncome">Rp 7.200.000</div>
-              <div class="text-muted">Pendapatan Bulanan</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="stat-card" tabindex="0" aria-label="Total Penyewa">
-            <span class="icon"><i class="fa-solid fa-users"></i></span>
-            <div>
-              <div class="fs-4 fw-bold" id="statTenants">34</div>
-              <div class="text-muted">Total Penyewa</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Placeholder Grafik -->
-      <div class="row g-4 mb-4">
-        <div class="col-12 col-lg-7">
-          <div class="chart-placeholder d-flex align-items-center justify-content-center" aria-label="Grafik Hunian">
-            <i class="fa-solid fa-chart-pie fa-2x me-2"></i> Grafik Hunian (Demo)
-          </div>
-        </div>
-        <div class="col-12 col-lg-5">
-          <div class="chart-placeholder d-flex align-items-center justify-content-center"
-            aria-label="Grafik Pendapatan">
-            <i class="fa-solid fa-chart-line fa-2x me-2"></i> Grafik Pendapatan (Demo)
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabel Penyewa -->
-      <div class="row g-4">
-        <div class="col-12">
-          <div class="table-responsive p-3">
-            <table class="table align-middle mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Penyewa</th>
-                  <th scope="col">Apartemen</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Sewa</th>
-                  <th scope="col">Akhir Sewa</th>
-                  <th scope="col">Tindakan</th>
-                </tr>
-              </thead>
-              <tbody id="tenantTableBody">
-                <!-- Data Penyewa akan ditampilkan di sini -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 RentApart. Semua hak dilindungi.</p>
-  </footer>
-
-  <!-- Skrip JavaScript -->
+  <!-- Core Scripts -->
   <script>
-    // Data Penyewa untuk Demo
+    // Sample tenant data
     const tenants = [
-      { name: 'John Doe', apartment: 'A-101', status: 'Aktif', rent: 'Rp 1.200.000', leaseEnd: '2025-12-31' },
-      { name: 'Jane Smith', apartment: 'B-202', status: 'Tertunda', rent: 'Rp 950.000', leaseEnd: '2025-08-15' },
-      { name: 'Alex Tan', apartment: 'C-303', status: 'Aktif', rent: 'Rp 1.400.000', leaseEnd: '2026-01-10' },
-      { name: 'Maria Garcia', apartment: 'A-103', status: 'Tidak Aktif', rent: 'Rp 1.100.000', leaseEnd: '2024-11-30' },
+      { name: 'John Smith', unit: 'A-101', status: 'Active', rent: '$1,200', moveIn: '2023-01-15' },
+      { name: 'Sarah Johnson', unit: 'B-205', status: 'Pending', rent: '$950', moveIn: '2023-02-01' },
+      { name: 'Michael Brown', unit: 'C-304', status: 'Active', rent: '$1,400', moveIn: '2023-03-10' }
     ];
 
-    // Fungsi untuk mengisi tabel penyewa
+    // Populate tenant table
     function populateTenantTable() {
       const tbody = document.getElementById('tenantTableBody');
-      tbody.innerHTML = tenants.map(t => `
+      tbody.innerHTML = tenants.map(tenant => `
         <tr>
-          <td>${t.name}</td>
-          <td>${t.apartment}</td>
-          <td><span class="badge bg-${t.status === 'Aktif' ? 'success' : t.status === 'Tertunda' ? 'warning' : 'secondary'}">${t.status}</span></td>
-          <td>${t.rent}</td>
-          <td>${t.leaseEnd}</td>
+          <td>${tenant.name}</td>
+          <td>${tenant.unit}</td>
+          <td><span class="badge bg-${tenant.status === 'Active' ? 'success' : 'warning'}">${tenant.status}</span></td>
+          <td>${tenant.rent}</td>
+          <td>${tenant.moveIn}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fa fa-trash"></i></button>
+            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
           </td>
         </tr>
       `).join('');
     }
 
-    // Menampilkan notifikasi selamat datang
-    document.addEventListener('DOMContentLoaded', function () {
-      alert('Selamat datang di Dashboard RentApart!');
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
       populateTenantTable();
     });
   </script>
 </body>
-
 </html>

@@ -1,387 +1,456 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatsApp SaaS Dashboard</title>
-  <meta name="description" content="Manage your WhatsApp instances with a modern SaaS dashboard." />
-  <!-- Preload font for performance -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" media="all" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
-  <style>
-    /* ======= DESIGN TOKENS ======= */
-    :root {
-      /* Enhanced color system with better contrast ratios */
-      --color-primary-h: 220;
-      --color-primary-s: 95%;
-      --color-primary-l: 50%;
-      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
-      --color-primary-light: hsl(var(--color-primary-h), 90%, 65%);
-      --color-primary-dark: hsl(var(--color-primary-h), 95%, 35%);
-      --color-primary-contrast: hsl(0, 0%, 100%);
-      --color-accent: hsl(186, 100%, 37%);
-      --color-accent-light: hsl(186, 95%, 45%);
-      --color-success: hsl(142, 76%, 42%);
-      --color-danger: hsl(0, 84%, 55%);
-      --color-warning: hsl(36, 100%, 45%);
-      --color-info: hsl(200, 100%, 40%);
-      --color-bg: hsl(220, 30%, 98%);
-      --color-surface: hsl(0, 0%, 100%);
-      --color-surface-hover: hsl(220, 20%, 97%);
-      --color-border: hsl(220, 16%, 88%);
-      --color-muted: hsl(220, 12%, 55%);
-      --color-foreground: hsl(230, 20%, 15%);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Platform penyewaan apartemen dengan pencarian canggih, pembayaran aman, dan manajemen booking efisien">
+    <meta name="keywords" content="penyewaan apartemen, manajemen properti, sistem sewa">
+    <meta name="author" content="xAI">
+    <title>Rentelindo - Penyewaan Apartemen</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ======= DESIGN TOKENS ======= */
+        :root {
+            --color-primary: hsl(200, 85%, 45%);
+            --color-primary-light: hsl(200, 80%, 60%);
+            --color-primary-dark: hsl(200, 85%, 35%);
+            --color-accent: hsl(25, 95%, 55%);
+            --color-success: hsl(142, 76%, 42%);
+            --color-danger: hsl(0, 84%, 55%);
+            --color-warning: hsl(36, 100%, 45%);
+            --color-bg: hsl(210, 20%, 98%);
+            --color-surface: hsl(0, 0%, 100%);
+            --color-surface-hover: hsl(210, 15%, 97%);
+            --color-border: hsl(210, 16%, 88%);
+            --color-muted: hsl(210, 12%, 55%);
+            --color-foreground: hsl(210, 25%, 15%);
 
-      /* Enhanced shadow system */
-      --shadow-xs: 0 2px 4px -2px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.08);
-      --shadow-sm: 0 4px 6px -2px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.1);
-      --shadow-md: 0 10px 20px -5px rgba(0,0,0,0.08), 0 20px 30px -10px rgba(0,0,0,0.12);
-      --shadow-lg: 0 20px 30px -10px rgba(0,0,0,0.1), 0 30px 50px -15px rgba(0,0,0,0.15);
-      
-      /* Refined typography scale */
-      --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-      --font-size-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
-      --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-      --font-size-md: clamp(1.125rem, 1.1rem + 0.25vw, 1.25rem);
-      --font-size-lg: clamp(1.25rem, 1.2rem + 0.25vw, 1.5rem);
-      --font-size-xl: clamp(1.5rem, 1.4rem + 0.5vw, 2rem);
-      --font-size-2xl: clamp(2rem, 1.8rem + 1vw, 2.5rem);
-      --font-size-3xl: clamp(2.5rem, 2.2rem + 1.5vw, 3.5rem);
-      --line-height-tight: 1.2;
-      --line-height-normal: 1.6;
-      --line-height-relaxed: 1.8;
-      
-      /* Fluid spacing scale */
-      --space-1: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
-      --space-2: clamp(0.5rem, 0.4rem + 0.25vw, 0.75rem);
-      --space-3: clamp(1rem, 0.8rem + 0.5vw, 1.5rem);
-      --space-4: clamp(1.5rem, 1.2rem + 0.75vw, 2rem);
-      --space-5: clamp(2rem, 1.6rem + 1vw, 3rem);
-      --space-6: clamp(3rem, 2.4rem + 1.5vw, 4rem);
+            --shadow-sm: 0 4px 6px -2px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-md: 0 10px 20px -5px rgba(0,0,0,0.08), 0 20px 30px -10px rgba(0,0,0,0.12);
 
-      /* Enhanced border radius */
-      --radius-xs: 0.375rem;
-      --radius-sm: 0.5rem;
-      --radius-md: 0.75rem;
-      --radius-lg: 1rem;
-      --radius-xl: 1.5rem;
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);
+            --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+            --font-size-md: clamp(1.125rem, 1.1rem + 0.25vw, 1.25rem);
+            --font-size-lg: clamp(1.25rem, 1.2rem + 0.25vw, 1.5rem);
+            --font-size-xl: clamp(1.5rem, 1.4rem + 0.5vw, 2rem);
+            --line-height-normal: 1.6;
 
-      /* Smooth transitions */
-      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-    }
+            --space-1: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+            --space-2: clamp(0.5rem, 0.4rem + 0.25vw, 0.75rem);
+            --space-3: clamp(1rem, 0.8rem + 0.5vw, 1.5rem);
+            --space-4: clamp(1.5rem, 1.2rem + 0.75vw, 2rem);
 
-    /* Enhanced base styles */
-    html {
-      font-size: 16px;
-      font-family: var(--font-family);
-      background: var(--color-bg);
-      color: var(--color-foreground);
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      line-height: var(--line-height-normal);
-      background: var(--color-bg);
-      color: var(--color-foreground);
-    }
-
-    /* Enhanced component styles */
-    .btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5em;
-      padding: 0.75em 1.75em;
-      font-weight: 600;
-      font-size: var(--font-size-base);
-      line-height: 1;
-      color: var(--color-primary-contrast);
-      background: var(--color-primary);
-      border: none;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      text-decoration: none;
-      transition: all var(--transition-normal);
-      transform-origin: center;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn:hover {
-      background: var(--color-primary-light);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .btn:active {
-      background: var(--color-primary-dark);
-      transform: translateY(1px);
-    }
-
-    .btn:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-
-    /* Enhanced modal styles */
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: grid;
-      place-items: center;
-      padding: var(--space-4);
-      background: hsla(220, 30%, 10%, 0.4);
-      backdrop-filter: blur(4px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition-normal);
-    }
-
-    .modal[aria-hidden="false"] {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      position: relative;
-      width: 100%;
-      max-width: min(90vw, 500px);
-      background: var(--color-surface);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      transform: scale(0.95);
-      transition: transform var(--transition-normal);
-    }
-
-    .modal[aria-hidden="false"] .modal-content {
-      transform: scale(1);
-    }
-
-    /* Enhanced responsive styles */
-    @media (max-width: 768px) {
-      .container {
-        padding: 0 var(--space-3);
-      }
-      
-      .nav-menu {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        background: var(--color-surface);
-        padding: var(--space-4);
-        transform: translateX(-100%);
-        transition: transform var(--transition-normal);
-      }
-
-      .nav-menu.active {
-        transform: translateX(0);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <a href="#main-content" class="visually-hidden" tabindex="0">Skip to main content</a>
-  <header class="container d-flex align-center justify-between py-4" role="banner" aria-label="Main header">
-    <a href="#" class="logo fw-bold" aria-label="WhatsApp SaaS Dashboard Home">WA SaaS</a>
-    <nav role="navigation" aria-label="Main navigation">
-      <ul class="d-flex gap-3" style="list-style:none; margin:0; padding:0;">
-        <li><a href="#dashboard" tabindex="0" aria-current="page">Dashboard</a></li>
-        <li><a href="#features" tabindex="0">Features</a></li>
-        <li><a href="#instances" tabindex="0">Instances</a></li>
-        <li><a href="#get-started" tabindex="0">Get Started</a></li>
-      </ul>
-    </nav>
-    <button id="menu-toggle" class="btn d-md-none" aria-label="Open navigation menu" aria-expanded="false" aria-controls="main-nav">
-      <i class="bi bi-list"></i>
-    </button>
-  </header>
-  <main id="main-content" class="container py-4" tabindex="-1">
-    <!-- Hero Section -->
-    <section class="hero mb-5" aria-labelledby="hero-title">
-      <h1 id="hero-title">WhatsApp SaaS Dashboard</h1>
-      <p>Manage, monitor, and scale your WhatsApp instances with a modern, responsive SaaS dashboard. Boost productivity and streamline your workflow.</p>
-      <a href="#get-started" class="btn" aria-label="Get Started with WhatsApp SaaS">Get Started</a>
-    </section>
-    <!-- Dashboard Card Components -->
-    <section class="dashboard-cards d-grid gap-3 mb-4" aria-label="Dashboard summary cards" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-      <article class="card text-center shadow rounded" tabindex="0" aria-label="Total Instances">
-        <div class="card-title text-muted mb-1">Total Instances</div>
-        <div class="card-text fw-bold fs-2xl">24</div>
-      </article>
-      <article class="card text-center shadow rounded" tabindex="0" aria-label="Connected Instances">
-        <div class="card-title text-muted mb-1">Connected</div>
-        <div class="card-text fw-bold fs-2xl" style="color: var(--color-success)">18</div>
-      </article>
-      <article class="card text-center shadow rounded" tabindex="0" aria-label="Total Leads Today">
-        <div class="card-title text-muted mb-1">Total Leads Today</div>
-        <div class="card-text fw-bold fs-2xl">156</div>
-      </article>
-      <article class="card text-center shadow rounded" tabindex="0" aria-label="Active Sessions">
-        <div class="card-title text-muted mb-1">Active Sessions</div>
-        <div class="card-text fw-bold fs-2xl">12</div>
-      </article>
-    </section>
-    <!-- Table Component: Instances List -->
-    <section class="card mb-4" id="instances" aria-labelledby="instances-title">
-      <h2 id="instances-title" class="mb-2">Instances List</h2>
-      <div class="table-responsive" tabindex="0">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Instance Name</th>
-              <th scope="col">Status</th>
-              <th scope="col">Last Active</th>
-              <th scope="col">Leads</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Instance-001</td>
-              <td><span class="badge badge-success" aria-label="Connected">Connected</span></td>
-              <td>2024-01-20 10:30 AM</td>
-              <td>45</td>
-              <td>
-                <button class="btn btn-sm" data-modal="qrModal" aria-label="Show QR code for Instance-001">
-                  <i class="bi bi-qr-code me-1" aria-hidden="true"></i>Connect QR
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Instance-002</td>
-              <td><span class="badge badge-danger" aria-label="Disconnected">Disconnected</span></td>
-              <td>2024-01-20 09:15 AM</td>
-              <td>32</td>
-              <td>
-                <button class="btn btn-sm" data-modal="qrModal" aria-label="Show QR code for Instance-002">
-                  <i class="bi bi-qr-code me-1" aria-hidden="true"></i>Connect QR
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>Instance-003</td>
-              <td><span class="badge badge-success" aria-label="Connected">Connected</span></td>
-              <td>2024-01-20 10:45 AM</td>
-              <td>28</td>
-              <td>
-                <button class="btn btn-sm" data-modal="qrModal" aria-label="Show QR code for Instance-003">
-                  <i class="bi bi-qr-code me-1" aria-hidden="true"></i>Connect QR
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-    <!-- CTA Section -->
-    <section class="hero" id="get-started" aria-labelledby="cta-title">
-      <h2 id="cta-title">Ready to Supercharge Your WhatsApp Workflow?</h2>
-      <p>Start your free trial today and experience the power of our SaaS dashboard.</p>
-      <a href="#" class="btn" aria-label="Start Free Trial">Start Free Trial</a>
-    </section>
-  </main>
-  <!-- Modal Component: QR Code -->
-  <div class="modal" id="qrModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="qrModalLabel" tabindex="-1">
-    <div class="modal-content rounded shadow-lg" tabindex="0">
-      <div class="modal-header d-flex align-center justify-between">
-        <span class="modal-title fw-bold" id="qrModalLabel">Scan QR Code to Connect</span>
-        <button class="modal-close" aria-label="Close modal" data-modal-close="qrModal">&times;</button>
-      </div>
-      <div class="modal-body text-center">
-        <img src="https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=300&q=20&blur=20"
-             alt="QR Code for WhatsApp Instance"
-             class="img-fluid mb-3 rounded"
-             width="220" height="220"
-             loading="lazy"
-             style="border: 1px solid var(--color-border);" />
-        <p>Open WhatsApp on your phone and scan this QR code to connect.</p>
-      </div>
-    </div>
-  </div>
-  <footer class="footer text-center" role="contentinfo">
-    &copy; 2024 WhatsApp SaaS Dashboard. All rights reserved.
-  </footer>
-  <script>
-    // ======= MODERN JS: MODAL, NAV, VALIDATION =======
-    // Modal accessibility & keyboard navigation
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.setAttribute('aria-hidden', 'false');
-        setTimeout(() => modal.querySelector('.modal-content').focus(), 10);
-      }
-    }
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.setAttribute('aria-hidden', 'true');
-      }
-    }
-    document.querySelectorAll('[data-modal]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        openModal(this.getAttribute('data-modal'));
-      });
-    });
-    document.querySelectorAll('[data-modal-close]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        closeModal(this.getAttribute('data-modal-close'));
-      });
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal[aria-hidden="false"]').forEach(modal => {
-          modal.setAttribute('aria-hidden', 'true');
-        });
-      }
-    });
-    // Trap focus in modal
-    document.querySelectorAll('.modal').forEach(modal => {
-      modal.addEventListener('keydown', function(e) {
-        if (modal.getAttribute('aria-hidden') === 'false' && e.key === 'Tab') {
-          const focusable = modal.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-          if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
-            e.preventDefault();
-            (e.shiftKey ? last : first).focus();
-          }
+            --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
         }
-      });
-    });
-    // ======= MOBILE NAVIGATION =======
-    const menuToggle = document.getElementById('menu-toggle');
-    const nav = document.querySelector('nav[role="navigation"] ul');
-    menuToggle?.addEventListener('click', function() {
-      const expanded = this.getAttribute('aria-expanded') === 'true';
-      this.setAttribute('aria-expanded', !expanded);
-      nav.classList.toggle('open');
-    });
-    // ======= FORM VALIDATION (EXAMPLE) =======
-    // Add your form validation logic here if you have forms
-  </script>
-</body>
 
+        /* ======= UTILITY CLASSES ======= */
+        .container { max-width: 1280px; margin: 0 auto; padding: var(--space-3); }
+        .d-flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-1 { gap: var(--space-1); }
+        .gap-2 { gap: var(--space-2); }
+        .gap-3 { gap: var(--space-3); }
+        .py-2 { padding-top: var(--space-2); padding-bottom: var(--space-2); }
+        .py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+        .px-3 { padding-left: var(--space-3); padding-right: var(--space-3); }
+        .mb-2 { margin-bottom: var(--space-2); }
+        .mb-3 { margin-bottom: var(--space-3); }
+        .mt-2 { margin-top: var(--space-2); }
+        .text-center { text-align: center; }
+        .fw-bold { font-weight: 700; }
+        .shadow { box-shadow: var(--shadow-sm); }
+        .rounded { border-radius: var(--radius-md); }
+        .hidden { display: none; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* ======= BASE STYLES ======= */
+        html {
+            font-size: 16px;
+            font-family: var(--font-family);
+            background: var(--color-bg);
+            color: var(--color-foreground);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            line-height: var(--line-height-normal);
+        }
+
+        a { color: var(--color-primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        button, input, select { font-family: inherit; }
+
+        /* ======= NAVIGATION ======= */
+        .navbar {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-links { list-style: none; margin: 0; padding: 0; }
+        .nav-link { padding: var(--space-2); font-weight: 500; }
+        .nav-link:hover, .nav-link.active { color: var(--color-primary); border-bottom: 2px solid var(--color-primary); }
+        .logo { font-size: var(--font-size-xl); font-weight: 700; }
+
+        /* ======= BUTTONS ======= */
+        .btn {
+            padding: var(--space-2) var(--space-3);
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--color-primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+        .btn:hover { background: var(--color-primary-light); transform: translateY(-2px); }
+        .btn:active { background: var(--color-primary-dark); }
+        .btn-outline { background: transparent; border: 1px solid var(--color-border); color: var(--color-foreground); }
+        .btn-outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+        /* ======= CARDS ======= */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--space-3);
+        }
+        .property-card { transition: transform var(--transition-normal); cursor: pointer; }
+        .property-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .property-image { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+        .property-details { padding: var(--space-2); }
+        .property-price { font-size: var(--font-size-lg); font-weight: 700; color: var(--color-primary); }
+        .property-location { display: flex; align-items: center; gap: 0.5em; color: var(--color-muted); }
+
+        /* ======= FORM ELEMENTS ======= */
+        .form-control {
+            padding: var(--space-2);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            width: 100%;
+            font-size: var(--font-size-base);
+        }
+        .form-control:focus { border-color: var(--color-primary); outline: none; }
+        .filter-group { margin-bottom: var(--space-2); }
+        .filter-group label { display: block; font-weight: 500; margin-bottom: var(--space-1); }
+
+        /* ======= MODAL ======= */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: all var(--transition-normal);
+        }
+        .modal[aria-hidden="false"] { visibility: visible; opacity: 1; }
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            max-width: 600px;
+            width: 90%;
+            padding: var(--space-3);
+        }
+        .modal-close { background: none; border: none; font-size: var(--font-size-lg); cursor: pointer; }
+
+        /* ======= RESPONSIVE ======= */
+        @media (max-width: 768px) {
+            .nav-links { flex-direction: column; }
+            .search-form { grid-template-columns: 1fr; }
+            .property-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="sr-only">Lewati ke konten utama</a>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="container d-flex align-center justify-between">
+            <a href="#home" class="logo">Rentelindo</a>
+            <nav>
+                <ul class="nav-links d-flex gap-2">
+                    <li><a href="#home" class="nav-link active" data-route="home">Beranda</a></li>
+                    <li><a href="#search" class="nav-link" data-route="search">Cari</a></li>
+                    <li><a href="#profile" class="nav-link" data-route="profile">Profil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container">
+        <!-- Home -->
+        <section id="home" class="fade-in">
+            <div class="hero text-center mb-3">
+                <h1>Temukan Apartemen Impian Anda</h1>
+                <p>Cari dan sewa apartemen dengan mudah dan aman</p>
+                <form class="search-form d-grid gap-2" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="filter-group">
+                        <label for="quick-location">Lokasi</label>
+                        <input type="text" id="quick-location" class="form-control" placeholder="Masukkan kota">
+                    </div>
+                    <div class="filter-group">
+                        <label for="quick-checkin">Check-in</label>
+                        <input type="date" id="quick-checkin" class="form-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="quick-type">Tipe</label>
+                        <select id="quick-type" class="form-control">
+                            <option value="">Semua Tipe</option>
+                            <option value="studio">Studio</option>
+                            <option value="1br">1 Kamar</option>
+                            <option value="2br">2 Kamar</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn mt-2">Cari</button>
+                </form>
+            </div>
+            <section class="property-grid d-grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                <!-- Properties will be rendered here -->
+            </section>
+        </section>
+
+        <!-- Search -->
+        <section id="search" class="fade-in hidden">
+            <h1>Pencarian Apartemen</h1>
+            <div class="d-flex gap-3">
+                <aside style="flex: 1;">
+                    <form class="search-form card">
+                        <div class="filter-group">
+                            <label for="search-location">Lokasi</label>
+                            <input type="text" id="search-location" class="form-control" placeholder="Kota atau landmark">
+                        </div>
+                        <div class="filter-group">
+                            <label for="price-range">Harga</label>
+                            <input type="range" id="price-range" min="1000000" max="50000000" value="25000000" class="form-control">
+                            <p>Rp <span id="price-value">25.000.000</span></p>
+                        </div>
+                        <div class="filter-group">
+                            <label>Fasilitas</label>
+                            <label><input type="checkbox" value="pool"> Kolam Renang</label>
+                            <label><input type="checkbox" value="gym"> Gym</label>
+                            <label><input type="checkbox" value="wifi"> WiFi</label>
+                        </div>
+                        <button type="submit" class="btn">Filter</button>
+                    </form>
+                </aside>
+                <div style="flex: 3;">
+                    <div class="property-grid d-grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <!-- Search results here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Property Detail -->
+        <section id="property" class="fade-in hidden">
+            <h1 id="property-title"></h1>
+            <div class="gallery d-grid gap-2" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <img src="https://source.unsplash.com/random/800x600/?apartment" alt="Apartemen">
+            </div>
+            <div class="d-flex gap-3">
+                <div style="flex: 2;">
+                    <p>Harga: <span id="property-price"></span></p>
+                    <p>Lokasi: <span id="property-location"></span></p>
+                    <form class="booking-form card">
+                        <div class="filter-group">
+                            <label for="book-checkin">Check-in</label>
+                            <input type="date" id="book-checkin" class="form-control" required>
+                        </div>
+                        <div class="filter-group">
+                            <label for="book-checkout">Check-out</label>
+                            <input type="date" id="book-checkout" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn">Pesan</button>
+                    </form>
+                </div>
+                <aside style="flex: 1;">
+                    <div class="card">
+                        <h2>Pembayaran</h2>
+                        <div class="d-flex gap-2">
+                            <button class="btn-outline" data-method="credit">Kartu Kredit</button>
+                            <button class="btn-outline" data-method="bank">Transfer Bank</button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- Profile -->
+        <section id="profile" class="fade-in hidden">
+            <h1>Profil</h1>
+            <div class="card">
+                <h2>Informasi Akun</h2>
+                <p>Nama: John Doe</p>
+                <p>Email: john@example.com</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="property-modal" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close">×</button>
+            <h2>Detail Properti</h2>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4">
+        <p>© 2025 Rentelindo. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const properties = [
+            {
+                id: 'prop-1',
+                title: 'Luxury Penthouse',
+                location: 'Jakarta Pusat',
+                price: 25000000,
+                image: 'https://source.unsplash.com/random/600x400/?apartment,1',
+                type: 'penthouse'
+            },
+            {
+                id: 'prop-2',
+                title: 'Modern Studio',
+                location: 'Jakarta Selatan',
+                price: 12000000,
+                image: 'https://source.unsplash.com/random/600x400/?apartment,2',
+                type: 'studio'
+            }
+        ];
+
+        const router = {
+            init() {
+                // Initialize routing with hash change and DOM content loaded events
+                window.addEventListener('hashchange', () => this.handleRoute());
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Ensure initial route is set
+                    if (!window.location.hash) {
+                        window.location.hash = 'home';
+                    }
+                    this.handleRoute();
+                });
+                document.addEventListener('click', (e) => {
+                    const link = e.target.closest('[data-route]');
+                    if (link) {
+                        e.preventDefault();
+                        this.navigateTo(link.getAttribute('data-route'));
+                    }
+                });
+            },
+            navigateTo(route) {
+                // Update the hash without using pushState or replaceState
+                window.location.hash = route;
+                // handleRoute will be triggered by hashchange event
+            },
+            handleRoute() {
+                // Get the current hash or default to 'home'
+                const hash = window.location.hash || '#home';
+                const view = hash.slice(1).split('?')[0];
+                
+                // Toggle visibility of sections
+                document.querySelectorAll('section').forEach(sec => {
+                    sec.classList.toggle('hidden', sec.id !== view);
+                });
+                
+                // Update active navigation link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('data-route') === view);
+                });
+                
+                // Load the view content
+                this.loadView(view);
+            },
+            loadView(view) {
+                switch (view) {
+                    case 'home':
+                        document.querySelector('.property-grid').innerHTML = properties.map(prop => `
+                            <figure class="property-card card">
+                                <img src="${prop.image}" alt="${prop.title}" class="property-image">
+                                <figcaption class="property-details">
+                                    <h3>${prop.title}</h3>
+                                    <p class="property-price">Rp ${prop.price.toLocaleString('id-ID')}</p>
+                                    <p class="property-location"><i class="fa fa-map-marker"></i> ${prop.location}</p>
+                                </figcaption>
+                            </figure>
+                        `).join('');
+                        break;
+                    case 'search':
+                        // Render search results (simplified for demo)
+                        document.querySelector('.property-grid').innerHTML = properties.map(prop => `
+                            <figure class="property-card card">
+                                <img src="${prop.image}" alt="${prop.title}" class="property-image">
+                                <figcaption class="property-details">
+                                    <h3>${prop.title}</h3>
+                                    <p class="property-price">Rp ${prop.price.toLocaleString('id-ID')}</p>
+                                    <p class="property-location"><i class="fa fa-map-marker"></i> ${prop.location}</p>
+                                </figcaption>
+                            </figure>
+                        `).join('');
+                        break;
+                    case 'property':
+                        // Placeholder for property details
+                        document.getElementById('property-title').textContent = 'Detail Properti';
+                        document.getElementById('property-price').textContent = 'Rp 25.000.000';
+                        document.getElementById('property-location').textContent = 'Jakarta Pusat';
+                        break;
+                    case 'profile':
+                        // Profile content is static in HTML
+                        break;
+                }
+                
+                // Trigger fade-in animations
+                document.querySelectorAll('.fade-in').forEach(el => {
+                    if (!el.classList.contains('hidden')) {
+                        el.classList.add('visible');
+                    }
+                });
+            }
+        };
+
+        // Initialize router
+        router.init();
+
+        // Handle search form submissions
+        document.querySelectorAll('.search-form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                router.navigateTo('search');
+            });
+        });
+
+        // Handle price range slider
+        const priceRange = document.getElementById('price-range');
+        const priceValue = document.getElementById('price-value');
+        if (priceRange && priceValue) {
+            priceRange.addEventListener('input', () => {
+                priceValue.textContent = priceRange.value.toLocaleString('id-ID');
+            });
+        }
+    </script>
+</body>
 </html>
