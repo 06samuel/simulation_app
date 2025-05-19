@@ -1,1902 +1,2061 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Apartemen Terintegrasi</title>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- jQuery and jQuery UI for Datepicker -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <!-- Leaflet for Interactive Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    <!-- Stripe for Payment (Placeholder) -->
-    <script src="https://js.stripe.com/v3/"></script>
-    <!-- Open Sans Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApartRent - Find Your Perfect Apartment</title>
+    <meta name="description"
+        content="Browse thousands of verified rental listings with detailed amenities, virtual tours, and trusted reviews." />
+    <meta name="author" content="ApartRent" />
     <style>
+        /* Base Styles & Variables */
         :root {
-            --primary: #4361ee;
-            --primary-light: #3f37c9;
-            --primary-dark: #3a0ca3;
-            --secondary: #f72585;
-            --accent: #4cc9f0;
-            --dark: #1a1a2e;
-            --darker: #16213e;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --success: #4bb543;
-            --warning: #ffcc00;
-            --danger: #ff4444;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
-            --rounded-sm: 4px;
-            --rounded: 8px;
-            --rounded-md: 12px;
-            --rounded-lg: 16px;
-            --rounded-xl: 24px;
-            --rounded-full: 9999px;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-fast: all 0.15s ease-in-out;
+            --primary: #4361EE;
+            --primary-dark: #3A56D4;
+            --primary-light: #829DF5;
+            --secondary: #F0F4FE;
+            --foreground: #333333;
+            --background: #FFFFFF;
+            --muted: #F1F5F9;
+            --muted-foreground: #64748B;
+            --border: #E2E8F0;
+            --input: #E2E8F0;
+            --radius: 0.5rem;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
+        /* Reset & Base Styles */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
         }
 
         body {
-            font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont,
-                'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-
-        /* Typography */
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            color: var(--darker);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            line-height: 1.1;
-        }
-
-        h2 {
-            font-size: 2rem;
-        }
-
-        h3 {
-            font-size: 1.75rem;
-        }
-
-        h4 {
-            font-size: 1.5rem;
-        }
-
-        h5 {
-            font-size: 1.25rem;
-        }
-
-        h6 {
-            font-size: 1rem;
-        }
-
-        @media (min-width: 768px) {
-            h1 {
-                font-size: 3.5rem;
-            }
-
-            h2 {
-                font-size: 2.5rem;
-            }
-
-            h3 {
-                font-size: 2rem;
-            }
-        }
-
-        p {
-            margin-bottom: 1rem;
-            color: var(--dark);
-            font-size: 1rem;
+            font-family: var(--font-sans);
+            color: var(--foreground);
+            background-color: var(--background);
+            line-height: 1.5;
+            font-size: 16px;
         }
 
         a {
-            color: var(--primary);
+            color: inherit;
             text-decoration: none;
-            transition: var(--transition-fast);
         }
 
-        a:hover {
-            color: var(--primary-dark);
-        }
-
-        /* Layout */
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .section {
-            padding: 6rem 0;
-            position: relative;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            margin: 1.25rem auto 0;
-            border-radius: var(--rounded-full);
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.75rem;
-            border-radius: var(--rounded-lg);
-            font-weight: 600;
-            font-size: 1rem;
-            text-align: center;
-            white-space: nowrap;
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-            outline: none;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: 0 4px 14px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
-            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .btn-lg {
-            padding: 1rem 2.25rem;
-            font-size: 1.1rem;
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-
-        /* Cards */
-        .card {
-            background: white;
-            border-radius: var(--rounded-lg);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--light-gray);
-            background-color: rgba(248, 249, 250, 0.5);
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--darker);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--rounded-md);
-            font-size: 1rem;
-            transition: var(--transition-fast);
-            background-color: white;
-            color: var(--dark);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 16px 12px;
-        }
-
-        /* Navigation */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background-color: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(8px);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            box-shadow: var(--shadow);
-        }
-
-        .navbar-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--darker);
-        }
-
-        .navbar-logo {
-            height: 40px;
-            margin-right: 0.75rem;
-        }
-
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-nav {
-            display: flex;
+        ul {
             list-style: none;
         }
 
-        .nav-item {
-            margin-left: 1.75rem;
-            position: relative;
+        button,
+        input,
+        select {
+            font: inherit;
         }
 
-        .nav-link {
-            color: var(--darker);
-            font-weight: 600;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .navbar-toggler {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--darker);
+        button {
             cursor: pointer;
-            transition: var(--transition-fast);
         }
 
-        .navbar-toggler:hover {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 9rem 0 6rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
+        .container {
             width: 100%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(67, 97, 238, 0.1) 0%, transparent 70%);
-            z-index: 0;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
-        .hero-content {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-image {
-            flex: 1;
-            position: relative;
-        }
-
-        .hero-image img {
-            width: 100%;
-            border-radius: var(--rounded-xl);
-            box-shadow: var(--shadow-xl);
-            transform: perspective(1000px) rotateY(-10deg);
-            transition: var(--transition);
-        }
-
-        .hero-image:hover img {
-            transform: perspective(1000px) rotateY(0);
-        }
-
-        /* Search Form */
-        .search-form {
-            background-color: white;
-            border-radius: var(--rounded-xl);
-            padding: 2rem;
-            box-shadow: var(--shadow-xl);
-            margin-top: -4rem;
-            position: relative;
-            z-index: 10;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .search-form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* Features */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 2.5rem 2rem;
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* Property Cards */
-        .property-card {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            transition: var(--transition);
-        }
-
-        .property-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .property-img {
-            height: 220px;
-            width: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .property-card:hover .property-img {
-            opacity: 0.9;
-        }
-
-        .property-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 0.75rem 0;
-        }
-
-        .property-meta {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .property-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            padding: 1rem;
-        }
-
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: var(--rounded-xl);
-            width: 100%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: translateY(20px);
-            transition: var(--transition);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .modal.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 10;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.75rem;
-            cursor: pointer;
-            color: var(--gray);
-            transition: var(--transition-fast);
-            line-height: 1;
-        }
-
-        .modal-close:hover {
-            color: var(--danger);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            position: sticky;
-            bottom: 0;
-            background: white;
-        }
-
-        /* Tables */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: var(--shadow-sm);
-            border-radius: var(--rounded-lg);
-            overflow: hidden;
-        }
-
-        .table th,
-        .table td {
-            padding: 1.25rem;
-            text-align: left;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .table th {
-            background: var(--light);
-            font-weight: 600;
-            color: var(--darker);
-        }
-
-        .table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table tr:hover td {
-            background-color: rgba(248, 249, 250, 0.5);
-        }
-
-        /* Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.375rem 0.75rem;
-            border-radius: var(--rounded-full);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-success {
-            background-color: rgba(75, 181, 67, 0.1);
-            color: var(--success);
-        }
-
-        .badge-warning {
-            background-color: rgba(255, 204, 0, 0.1);
-            color: var(--warning);
-        }
-
-        .badge-danger {
-            background-color: rgba(255, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        /* Map */
-        .map-container {
-            height: 350px;
-            border-radius: var(--rounded-lg);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--light-gray);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(-20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        .slide-in {
-            animation: slideIn 0.6s ease-out forwards;
-        }
-
-        /* Utility Classes */
+        /* Utilities */
         .text-primary {
             color: var(--primary);
         }
 
-        .text-secondary {
-            color: var(--secondary);
+        .font-semibold {
+            font-weight: 600;
         }
 
-        .text-accent {
-            color: var(--accent);
-        }
-
-        .text-dark {
-            color: var(--dark);
-        }
-
-        .text-light {
-            color: var(--light);
-        }
-
-        .text-gray {
-            color: var(--gray);
-        }
-
-        .text-success {
-            color: var(--success);
-        }
-
-        .text-warning {
-            color: var(--warning);
-        }
-
-        .text-danger {
-            color: var(--danger);
-        }
-
-        .bg-primary {
-            background-color: var(--primary);
-        }
-
-        .bg-secondary {
-            background-color: var(--secondary);
-        }
-
-        .bg-accent {
-            background-color: var(--accent);
-        }
-
-        .bg-dark {
-            background-color: var(--dark);
-        }
-
-        .bg-light {
-            background-color: var(--light);
-        }
-
-        .bg-gray {
-            background-color: var(--gray);
-        }
-
-        .mt-1 {
-            margin-top: 0.25rem;
-        }
-
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-
-        .mt-3 {
-            margin-top: 1rem;
-        }
-
-        .mt-4 {
-            margin-top: 1.5rem;
-        }
-
-        .mt-5 {
-            margin-top: 2rem;
-        }
-
-        .mb-1 {
-            margin-bottom: 0.25rem;
-        }
-
-        .mb-2 {
-            margin-bottom: 0.5rem;
-        }
-
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
-
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-
-        .mb-5 {
-            margin-bottom: 2rem;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .items-center {
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
             align-items: center;
-        }
-
-        .justify-center {
             justify-content: center;
-        }
-
-        .justify-between {
-            justify-content: space-between;
-        }
-
-        .gap-2 {
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            padding: 0.5rem 1rem;
+            border: none;
             gap: 0.5rem;
         }
 
-        .gap-4 {
-            gap: 1rem;
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
         }
 
-        .gap-6 {
-            gap: 1.5rem;
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
         }
 
-        .text-center {
-            text-align: center;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--foreground);
         }
 
-        .text-left {
-            text-align: left;
+        .btn-outline:hover {
+            background-color: var(--muted);
         }
 
-        .text-right {
-            text-align: right;
+        .btn-ghost {
+            background-color: transparent;
         }
 
-        .hidden {
-            display: none;
+        .btn-ghost:hover {
+            background-color: var(--muted);
         }
 
-        .w-full {
+        .btn-lg {
+            padding: 0.75rem 2rem;
+            font-size: 1.05rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-block {
+            display: flex;
             width: 100%;
         }
 
-        .h-full {
-            height: 100%;
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
         }
 
-        /* Flexbox Utilities */
-        .self-end {
-            align-self: flex-end;
-        }
-
-        .flex-1 {
-            flex: 1 1 0%;
-        }
-
-        /* Width Utilities for Medium Screens */
-        @media (min-width: 768px) {
-            .md\:w-1\/3 {
-                width: 33.333333%;
-            }
-
-            .md\:w-2\/3 {
-                width: 66.666667%;
-            }
-        }
-
-        /* Grid Utilities */
-        .grid {
-            display: grid;
-        }
-
-        .grid-cols-1 {
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-
-        @media (min-width: 768px) {
-            .md\:grid-cols-2 {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        .justify-center {
-            justify-content: center;
-        }
-
-        .align-items-center {
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        /* Table Responsive Utility */
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        .navbar-logo {
+            display: flex;
+            align-items: center;
         }
 
-        /* Typography Utilities */
-        .font-bold {
-            font-weight: 700;
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--primary);
         }
 
-        .text-lg {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 0.25rem;
         }
 
-        /* Spacing Utilities */
-        .p-4 {
-            padding: 1rem;
+        .navbar-search {
+            display: flex;
+            flex: 1;
+            max-width: 36rem;
+            margin: 0 2.5rem;
+            border-radius: 9999px;
+            background-color: var(--secondary);
+            padding: 0.5rem 1rem;
+            align-items: center;
         }
 
-        .p-6 {
-            padding: 1.5rem;
+        .search-input {
+            flex: 1;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.875rem;
         }
 
-        .ml-8 {
-            margin-left: 2rem;
-        }
-
-        .space-y-4> :not([hidden])~ :not([hidden]) {
-            margin-top: 1rem;
-        }
-
-        .mr-4 {
-            margin-right: 1rem;
-        }
-
-        .pt-6 {
-            padding-top: 1.5rem;
-        }
-
-        /* Border Utilities */
-        .border-t {
-            border-top: 1px solid;
-        }
-
-        .border-gray-700 {
-            border-color: #4b5563;
-        }
-
-        /* Border Radius Utility */
-        .rounded-lg {
-            border-radius: var(--rounded-lg);
-        }
-
-        /* List Utilities */
-        .list-disc {
-            list-style-type: disc;
-        }
-
-        .pl-5 {
-            padding-left: 1.25rem;
-        }
-
-        /* Background Color Utility */
-        .bg-green-500 {
-            background-color: #22c55e;
-        }
-
-        /* Padding Utilities */
-        .px-6 {
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .py-3 {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
-        }
-
-        /* Text Color Utility */
-        .text-gray-300 {
-            color: #d1d5db;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 1200px) {
-            .hero-content {
-                gap: 2rem;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .hero-content {
-                flex-direction: column;
-            }
-
-            .hero-text {
-                order: 2;
-                text-align: center;
-            }
-
-            .hero-image {
-                order: 1;
-                max-width: 600px;
-                margin: 0 auto;
-            }
-
-            .search-form {
-                margin-top: -2rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            html {
-                font-size: 15px;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .navbar-menu {
-                position: fixed;
-                top: 76px;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1.5rem;
-                box-shadow: var(--shadow-md);
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition);
-            }
-
-            .navbar-menu.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .navbar-nav {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .nav-item {
-                margin: 0;
-            }
-
-            .nav-link {
-                display: block;
-                padding: 0.75rem 0;
-            }
-
-            .navbar-toggler {
-                display: block;
-            }
-
-            .modal-content {
-                max-height: 95vh;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .search-form {
-                padding: 1.5rem;
-            }
-
-            .modal-body,
-            .modal-header,
-            .modal-footer {
-                padding: 1.25rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .btn-group .btn {
-                width: 100%;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(67, 97, 238, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--primary);
+        .search-button {
+            background-color: var(--primary);
             color: white;
+            border: none;
+            border-radius: 9999px;
+            height: 2.25rem;
+            width: 2.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-left: 0.5rem;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .map-view-btn {
+            display: none;
+        }
+
+        .user-btn {
+            height: 2.5rem;
+            width: 2.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #f0f4fe, white);
+            padding: 4rem 1rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 48rem;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--muted-foreground);
+            margin-bottom: 2rem;
+        }
+
+        .search-card {
+            background-color: white;
+            border-radius: var(--radius);
             box-shadow: var(--shadow-lg);
-            z-index: 100;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
+            padding: 1.5rem;
+            max-width: 64rem;
+            margin: 0 auto;
         }
 
-        .fab:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: var(--shadow-xl);
-            background: var(--primary-light);
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
 
-        /* Tooltip */
-        [data-tooltip] {
-            position: relative;
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
         }
 
-        [data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark);
-            color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--rounded-sm);
+        .search-label {
             font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        .search-value {
+            font-weight: 500;
             white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition-fast);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        /* Tabs Section */
+        .tabs-section {
+            padding: 2rem 1rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: inline-flex;
+            height: 2.5rem;
+            background-color: var(--muted);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.75rem;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+            border-radius: calc(var(--radius) - 0.25rem);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            transition: all 0.2s;
+            gap: 0.5rem;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: var(--foreground);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-count {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Listings Grid */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            display: none;
+            /* Hidden on mobile by default */
+        }
+
+        .filter-container {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            position: sticky;
+            top: 5rem;
+            max-height: calc(100vh - 6rem);
+            overflow-y: auto;
+        }
+
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group-title {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .range-slider {
+            position: relative;
+            height: 2rem;
+            margin: 0.5rem 0;
+        }
+
+        .slider {
+            position: absolute;
+            width: 100%;
+            height: 0.25rem;
+            background-color: var(--muted);
+            outline: none;
+            -webkit-appearance: none;
             pointer-events: none;
         }
 
-        [data-tooltip]:hover::after {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(-5px);
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: var(--primary);
+            cursor: pointer;
+            pointer-events: auto;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        #min-price {
+            z-index: 1;
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--light-gray);
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: var(--rounded-full);
+        .range-inputs {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-light);
+        .input-group {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .range-input {
+            width: 100%;
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .checkbox-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-text {
+            font-size: 0.875rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Property List */
+        .property-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: white;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .property-image-container {
+            position: relative;
+            height: 13rem;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-tags {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .property-tag {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .property-content {
+            padding: 1rem;
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+        }
+
+        .property-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-right: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .property-rating .fa-star {
+            color: #FFCA28;
+            margin-right: 0.25rem;
+        }
+
+        .rating-count {
+            color: var(--muted-foreground);
+            margin-left: 0.25rem;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .property-amenities {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .price-period {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--muted-foreground);
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        /* Map View */
+        .map-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .map-view {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .map-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .map-title {
+            font-weight: 600;
+        }
+
+        .map-area {
+            height: 450px;
+            background-color: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .map-area::before {
+            content: "📍";
+            font-size: 3rem;
+        }
+
+        .map-area::after {
+            content: "Interactive Map";
+            position: absolute;
+            top: 60%;
+            font-weight: 500;
+        }
+
+        .map-footer {
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--muted);
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--muted-foreground);
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 0.75rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+
+        .newsletter-form .btn {
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-legal a {
+            color: var(--muted-foreground);
+            transition: color 0.2s;
+        }
+
+        .footer-legal a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive Styles */
+        @media (min-width: 640px) {
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .search-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .map-view-btn {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .listings-grid {
+                grid-template-columns: 280px 1fr;
+            }
+
+            .map-container {
+                grid-template-columns: 2fr 1fr;
+            }
+
+            .filter-sidebar {
+                display: block;
+            }
+
+            .property-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .property-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
     </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
-        <div class="container navbar-container">
-            <a href="#home" class="navbar-brand">
-                <img src="https://via.placeholder.com/40x40" alt="imgs" class="navbar-logo">
-                <span class="font-bold text-xl">Rental_Pro</span>
-            </a>
-            <div class="navbar-menu" id="navbarMenu">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a href="#home" class="nav-link">Beranda</a></li>
-                    <li class="nav-item"><a href="#search" class="nav-link">Cari Apartemen</a></li>
-                    <li class="nav-item"><a href="#features" class="nav-link">Fitur</a></li>
-                    <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
-                    <li class="nav-item"><a href="#profile" class="nav-link">Profil</a></li>
-                </ul>
-                <div class="ml-8 flex items-center gap-4">
-                    <a href="#login" class="btn btn-outline">Masuk</a>
-                    <a href="#register" class="btn btn-primary">Daftar Gratis</a>
+    <div id="app">
+        <!-- Navbar -->
+        <header class="navbar">
+            <div class="container">
+                <div class="navbar-logo">
+                    <a href="#/" class="logo">
+                        <span class="logo-icon">⌂</span>
+                        ApartRent
+                    </a>
+                </div>
+
+                <div class="navbar-search">
+                    <input type="text" placeholder="Search for apartments, locations..." class="search-input" />
+                    <button class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <div class="navbar-actions">
+                    <button class="btn btn-outline map-view-btn">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Map View</span>
+                    </button>
+
+                    <button class="btn btn-ghost user-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
                 </div>
             </div>
-            <button class="navbar-toggler mr-4" id="navbarToggler" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </nav>
+        </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Temukan Apartemen Impian Anda</h1>
-                    <p class="text-gray mb-5">
-                        Cari dan pesan apartemen dengan mudah melalui platform kami. Nikmati pengalaman sewa yang aman,
-                        cepat, dan terpercaya.
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Hero Section -->
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            Find Your Perfect <span class="text-primary">Apartment</span>
+                        </h1>
+                        <p class="hero-description">
+                            Browse thousands of verified rental listings with detailed amenities, virtual tours, and
+                            trusted reviews.
+                        </p>
+
+                        <div class="search-card">
+                            <div class="search-grid">
+                                <div class="search-item">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                    <div>
+                                        <p class="search-label">Location</p>
+                                        <p class="search-value">New York, USA</p>
+                                    </div>
+                                </div>
+
+                                <div class="search-item">
+                                    <i class="fas fa-calendar text-primary"></i>
+                                    <div>
+                                        <p class="search-label">Date</p>
+                                        <p class="search-value">Jun 15 - Jun 30</p>
+                                    </div>
+                                </div>
+
+                                <div class="search-item">
+                                    <i class="fas fa-filter text-primary"></i>
+                                    <div>
+                                        <p class="search-label">Price Range</p>
+                                        <p class="search-value">$1,000 - $3,000</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="search-actions">
+                                <button class="btn btn-primary btn-lg">
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs Section -->
+            <section class="container tabs-section">
+                <div class="tabs-header">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="listings">
+                            <i class="fas fa-search"></i>
+                            Listings
+                        </button>
+                        <button class="tab-btn" data-tab="map">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Map
+                        </button>
+                    </div>
+
+                    <div class="results-count">
+                        Showing <span class="font-semibold">8</span> results
+                    </div>
+                </div>
+
+                <div class="tabs-content">
+                    <!-- Listings Tab Content -->
+                    <div class="tab-panel active" id="listings-panel">
+                        <div class="listings-grid">
+                            <aside class="filter-sidebar">
+                                <div class="filter-container">
+                                    <h3 class="filter-title">Filters</h3>
+
+                                    <!-- Price Range Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Price Range</h4>
+                                        <div class="range-slider">
+                                            <input type="range" min="500" max="5000" value="1000" class="slider"
+                                                id="min-price">
+                                            <input type="range" min="500" max="5000" value="3000" class="slider"
+                                                id="max-price">
+                                        </div>
+                                        <div class="range-labels">
+                                            <span>$500</span>
+                                            <span>$5,000+</span>
+                                        </div>
+                                        <div class="range-inputs">
+                                            <div class="input-group">
+                                                <span class="input-prefix">$</span>
+                                                <input type="text" value="1000" placeholder="Min" class="range-input">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-prefix">$</span>
+                                                <input type="text" value="3000" placeholder="Max" class="range-input">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Property Type Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Property Type</h4>
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="property-type" value="apartment">
+                                                <span class="checkbox-text">Apartment</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="property-type" value="studio">
+                                                <span class="checkbox-text">Studio</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="property-type" value="condo">
+                                                <span class="checkbox-text">Condo</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="property-type" value="house">
+                                                <span class="checkbox-text">House</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bedrooms Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Bedrooms</h4>
+                                        <div class="button-group">
+                                            <button class="btn btn-small btn-outline" data-value="any">Any</button>
+                                            <button class="btn btn-small btn-outline"
+                                                data-value="studio">Studio</button>
+                                            <button class="btn btn-small btn-outline" data-value="1">1</button>
+                                            <button class="btn btn-small btn-outline" data-value="2">2</button>
+                                            <button class="btn btn-small btn-outline" data-value="3">3</button>
+                                            <button class="btn btn-small btn-outline" data-value="4+">4+</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bathrooms Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Bathrooms</h4>
+                                        <div class="button-group">
+                                            <button class="btn btn-small btn-outline" data-value="any">Any</button>
+                                            <button class="btn btn-small btn-outline" data-value="1">1</button>
+                                            <button class="btn btn-small btn-outline" data-value="1.5">1.5</button>
+                                            <button class="btn btn-small btn-outline" data-value="2">2</button>
+                                            <button class="btn btn-small btn-outline" data-value="2.5+">2.5+</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Amenities Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Amenities</h4>
+                                        <div class="checkbox-group">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="air-conditioning">
+                                                <span class="checkbox-text">Air Conditioning</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="washer-dryer">
+                                                <span class="checkbox-text">Washer/Dryer</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="parking">
+                                                <span class="checkbox-text">Parking</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="gym">
+                                                <span class="checkbox-text">Gym</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="pool">
+                                                <span class="checkbox-text">Pool</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="doorman">
+                                                <span class="checkbox-text">Doorman</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="elevator">
+                                                <span class="checkbox-text">Elevator</span>
+                                            </label>
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="amenity" value="pets-allowed">
+                                                <span class="checkbox-text">Pets Allowed</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Availability Date Filter -->
+                                    <div class="filter-group">
+                                        <h4 class="filter-group-title">Availability Date</h4>
+                                        <button class="btn btn-outline btn-block date-picker-btn">
+                                            <span>Select dates</span>
+                                            <i class="fas fa-calendar"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="filter-actions">
+                                        <button class="btn btn-outline">Reset</button>
+                                        <button class="btn btn-primary">Apply Filters</button>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <!-- Property List -->
+                            <div class="property-list-container">
+                                <div class="property-list-header">
+                                    <h2 class="section-title">Featured Properties</h2>
+                                    <div class="sort-dropdown">
+                                        <select class="sort-select">
+                                            <option>Sort: Recommended</option>
+                                            <option>Price: Low to High</option>
+                                            <option>Price: High to Low</option>
+                                            <option>Highest Rated</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="property-grid" id="properties-container">
+                                    <!-- Property cards will be dynamically inserted here -->
+                                </div>
+
+                                <div class="load-more">
+                                    <button class="btn btn-outline load-more-btn">
+                                        Load More Properties
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Tab Content -->
+                    <div class="tab-panel" id="map-panel">
+                        <div class="map-container">
+                            <div class="map-view">
+                                <div class="map-header">
+                                    <h3 class="map-title">Property Locations</h3>
+                                </div>
+                                <div id="map" class="map-area"></div>
+                                <div class="map-footer">
+                                    <p>Zoom in/out and click on pins to see property details</p>
+                                </div>
+                            </div>
+                            <aside class="filter-sidebar">
+                                <!-- Filter sidebar content (same as listings tab) -->
+                                <div class="filter-container">
+                                    <!-- Filter content will be duplicated via JavaScript -->
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h3 class="footer-title">
+                            <span class="logo-icon">⌂</span>
+                            ApartRent
+                        </h3>
+                        <p class="footer-text">
+                            Finding your perfect apartment rental has never been easier.
+                        </p>
+                        <div class="social-icons">
+                            <button class="social-btn"><i class="fab fa-twitter"></i></button>
+                            <button class="social-btn"><i class="fab fa-facebook-f"></i></button>
+                            <button class="social-btn"><i class="fab fa-instagram"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="#/">Home</a></li>
+                            <li><a href="#/search">Search</a></li>
+                            <li><a href="#/map">Map View</a></li>
+                            <li><a href="#/featured">Featured Listings</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Support</h4>
+                        <ul class="footer-links">
+                            <li><a href="#/help">Help Center</a></li>
+                            <li><a href="#/safety">Safety Center</a></li>
+                            <li><a href="#/cancellation">Cancellation Options</a></li>
+                            <li><a href="#/contact">Contact Us</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4 class="footer-subtitle">Newsletter</h4>
+                        <p class="footer-text">
+                            Subscribe to get updates on new listings and features.
+                        </p>
+                        <div class="newsletter-form">
+                            <input type="email" placeholder="Your email" class="newsletter-input">
+                            <button class="btn btn-primary">Subscribe</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p class="copyright">
+                        © 2025 ApartRent. All rights reserved.
                     </p>
-                    <form id="heroSearchForm" class="card p-4">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="form-group flex-1">
-                                <label for="location" class="form-label">Lokasi</label>
-                                <input type="text" id="location" class="form-control" placeholder="Jakarta"
-                                    aria-label="Lokasi apartemen" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkIn" class="form-label">Check-In</label>
-                                <input type="text" id="checkIn" class="form-control datepicker"
-                                    aria-label="Tanggal check-in" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkOut" class="form-label">Check-Out</label>
-                                <input type="text" id="checkOut" class="form-control datepicker"
-                                    aria-label="Tanggal check-out" required>
-                            </div>
-                            <div class="form-group self-end">
-                                <button type="submit" class="btn btn-primary btn-lg">Cari</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="hero-image">
-                    <img src="https://images.unsplash.com/photo-1512917774080-9991f7c4c60d"
-                        alt="Interior apartemen modern" loading="lazy">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Search Results Section -->
-    <section class="section" id="search">
-        <div class="container">
-            <div class="section-title">
-                <h2>Cari Apartemen</h2>
-                <p class="text-gray">Temukan apartemen yang sesuai dengan kebutuhan Anda</p>
-            </div>
-            <div class="flex flex-col md:flex-row gap-6">
-                <aside class="md:w-1/3">
-                    <div class="card p-4">
-                        <h4 class="mb-4">Filter Pencarian</h4>
-                        <form id="searchForm">
-                            <div class="form-group">
-                                <label for="searchLocation" class="form-label">Lokasi</label>
-                                <input type="text" id="searchLocation" class="form-control"
-                                    placeholder="Masukkan kota atau daerah" aria-label="Lokasi apartemen">
-                            </div>
-                            <div class="form-group">
-                                <label for="priceRange" class="form-label">Rentang Harga</label>
-                                <select id="priceRange" class="form-control" aria-label="Rentang harga">
-                                    <option value="">Semua Harga</option>
-                                    <option value="0-5000000">Rp0 - Rp5.000.000</option>
-                                    <option value="5000000-10000000">Rp5.000.000 - Rp10.000.000</option>
-                                    <option value="10000000+">Rp10.000.000+</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="amenities" class="form-label">Fasilitas</label>
-                                <select id="amenities" class="form-control" multiple aria-label="Fasilitas apartemen">
-                                    <option value="wifi">Wi-Fi</option>
-                                    <option value="ac">AC</option>
-                                    <option value="pool">Kolam Renang</option>
-                                    <option value="gym">Gym</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="apartmentType" class="form-label">Tipe Apartemen</label>
-                                <select id="apartmentType" class="form-control" aria-label="Tipe apartemen">
-                                    <option value="">Semua Tipe</option>
-                                    <option value="studio">Studio</option>
-                                    <option value="1-bedroom">1 Kamar</option>
-                                    <option value="2-bedroom">2 Kamar</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-full">Terapkan Filter</button>
-                        </form>
+                    <div class="footer-legal">
+                        <a href="#/privacy">Privacy Policy</a>
+                        <a href="#/terms">Terms of Service</a>
+                        <a href="#/cookies">Cookies</a>
                     </div>
-                </aside>
-                <div class="md:w-2/3">
-                    <div id="map" class="map-container"></div>
-                    <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Apartment Detail Modal -->
-    <div class="modal" id="apartmentDetailModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="apartmentTitle"></h4>
-                <button class="modal-close" id="closeDetailModalBtn" aria-label="Tutup modal">×</button>
-            </div>
-            <div class="modal-body">
-                <figure>
-                    <img id="apartmentImage" src="" alt="Foto apartemen" class="w-full rounded-lg mb-4">
-                    <figcaption id="apartmentCaption"></figcaption>
-                </figure>
-                <div id="apartmentMap" class="map-container"></div>
-                <details class="mb-4">
-                    <summary>Deskripsi</summary>
-                    <p id="apartmentDescription" class="text-gray"></p>
-                </details>
-                <details class="mb-4">
-                    <summary>Fasilitas</summary>
-                    <ul id="apartmentAmenities" class="list-disc pl-5"></ul>
-                </details>
-                <details class="mb-4">
-                    <summary>Kebijakan</summary>
-                    <p id="apartmentPolicies" class="text-gray"></p>
-                </details>
-                <h5>Ulasan</h5>
-                <div id="apartmentReviews" class="mb-4"></div>
-                <button class="btn btn-outline mb-4" id="virtualTourBtn">Tur Virtual</button>
-                <button class="btn btn-outline mb-4" id="reportBtn">Laporkan</button>
-            </div>
-            <div class="modal-footer">
-                <span id="apartmentPrice" class="font-bold text-lg"></span>
-                <button class="btn btn-primary" id="bookNowBtn">Pesan Sekarang</button>
-            </div>
-        </div>
+        </footer>
     </div>
 
-    <!-- Booking Modal -->
-    <div class="modal" id="bookingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Pesan Apartemen</h4>
-                <button class="modal-close" id="closeBookingModalBtn" aria-label="Tutup modal">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="bookingForm">
-                    <div class="form-group">
-                        <label for="bookingName" class="form-label">Nama Lengkap</label>
-                        <input type="text" id="bookingName" class="form-control" required aria-label="Nama lengkap">
-                    </div>
-                    <div class="form-group">
-                        <label for="bookingEmail" class="form-label">Email</label>
-                        <input type="email" id="bookingEmail" class="form-control" required aria-label="Email">
-                    </div>
-                    <div class="form-group">
-                        <label for="bookingCheckIn" class="form-label">Check-In</label>
-                        <input type="text" id="bookingCheckIn" class="form-control datepicker" required
-                            aria-label="Tanggal check-in">
-                    </div>
-                    <div class="form-group">
-                        <label for="bookingCheckOut" class="form-label">Check-Out</label>
-                        <input type="text" id="bookingCheckOut" class="form-control datepicker" required
-                            aria-label="Tanggal check-out">
-                    </div>
-                </form>
-                <div id="card-element" class="form-control mb-4"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelBookingBtn">Batal</button>
-                <button class="btn btn-primary" id="confirmBookingBtn">Konfirmasi Pemesanan</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Profile Section -->
-    <section class="section" id="profile">
-        <div class="container">
-            <div class="section-title">
-                <h2>Profil Pengguna</h2>
-                <p class="text-gray">Kelola informasi akun dan riwayat pemesanan Anda</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="card p-6">
-                    <h4 class="mb-4">Informasi Akun</h4>
-                    <form id="profileForm">
-                        <div class="form-group">
-                            <label for="profileName" class="form-label">Nama</label>
-                            <input type="text" id="profileName" class="form-control" value="John Doe"
-                                aria-label="Nama pengguna">
-                        </div>
-                        <div class="form-group">
-                            <label for="profileEmail" class="form-label">Email</label>
-                            <input type="email" id="profileEmail" class="form-control" value="john@example.com"
-                                aria-label="Email pengguna">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    </form>
+    <!-- Template for property card -->
+    <template id="property-card-template">
+        <div class="property-card">
+            <div class="property-image-container">
+                <img class="property-image" src="" alt="">
+                <div class="property-tags">
+                    <!-- Tags will be added dynamically -->
                 </div>
-                <div class="card p-6">
-                    <h4 class="mb-4">Riwayat Pemesanan</h4>
-                    <div id="bookingHistory" class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Apartemen</th>
-                                    <th>Tanggal</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bookingHistoryTable"></tbody>
-                        </table>
+            </div>
+
+            <div class="property-content">
+                <div class="property-header">
+                    <h3 class="property-title"></h3>
+                    <div class="property-rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value"></span>
+                        <span class="rating-count"></span>
+                    </div>
+                </div>
+
+                <div class="property-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="location-text"></span>
+                </div>
+
+                <div class="property-details">
+                    <div class="property-amenities">
+                        <span class="beds"></span>
+                        <span class="baths"></span>
+                        <span class="area"></span>
+                    </div>
+                    <div class="property-price">
+                        <span class="price-value"></span>
+                        <span class="price-period">/mo</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </template>
 
-    <!-- Features Section -->
-    <section class="section bg-light" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Fitur Unggulan</h2>
-                <p class="text-gray">Nikmati pengalaman sewa apartemen yang mudah dan terpercaya</p>
-            </div>
-            <div class="features-grid">
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon"><i class="fas fa-search"></i></div>
-                    <h3>Pencarian Mudah</h3>
-                    <p class="text-gray">Cari apartemen berdasarkan lokasi, harga, dan fasilitas dengan filter canggih.
-                    </p>
-                </div>
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon"><i class="fas fa-camera"></i></div>
-                    <h3>Tur Virtual</h3>
-                    <p class="text-gray">Jelajahi apartemen dengan tur virtual 360° untuk pengalaman imersif.</p>
-                </div>
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon"><i class="fas fa-lock"></i></div>
-                    <h3>Pembayaran Aman</h3>
-                    <p class="text-gray">Bayar dengan aman melalui sistem escrow dan berbagai metode pembayaran.</p>
-                </div>
-                <div class="card feature-card fade-in">
-                    <div class="feature-icon"><i class="fas fa-star"></i></div>
-                    <h3>Ulasan Terpercaya</h3>
-                    <p class="text-gray">Baca ulasan dari penyewa lain untuk membuat keputusan yang tepat.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="section" id="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2>Hubungi Kami</h2>
-                <p class="text-gray">Kami siap membantu Anda 24/7</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="card p-6">
-                    <h4 class="mb-4">Informasi Kontak</h4>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-4"></i>
-                            <div>
-                                <h5>Kantor</h5>
-                                <p class="text-gray">Jl. Sudirman No. 123, Jakarta</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-phone-alt text-primary mt-1 mr-4"></i>
-                            <div>
-                                <h5>Telepon</h5>
-                                <p class="text-gray">+62 21 1234 5678</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-envelope text-primary mt-1 mr-4"></i>
-                            <div>
-                                <h5>Email</h5>
-                                <p class="text-gray">support@rentalpro.id</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card p-6">
-                    <h4 class="mb-4">Kirim Pesan</h4>
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="contactName" class="form-label">Nama</label>
-                            <input type="text" id="contactName" class="form-control" required aria-label="Nama lengkap">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactEmail" class="form-label">Email</label>
-                            <input type="email" id="contactEmail" class="form-control" required aria-label="Email">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactMessage" class="form-label">Pesan</label>
-                            <textarea id="contactMessage" rows="4" class="form-control" required
-                                aria-label="Pesan"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Kirim</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-10">
-        <div class="container">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h4 class="text-white mb-4">RentalPro</h4>
-                    <p class="text-gray-300">Sewa apartemen dengan mudah dan aman.</p>
-                </div>
-                <div>
-                    <h5 class="text-white mb-4">Link Cepat</h5>
-                    <ul class="space-y-2">
-                        <li><a href="#search" class="text-gray-300 hover:text-white">Cari Apartemen</a></li>
-                        <li><a href="#features" class="text-gray-300 hover:text-white">Fitur</a></li>
-                        <li><a href="#contact" class="text-gray-300 hover:text-white">Kontak</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-white mb-4">Dukungan</h5>
-                    <ul class="space-y-2">
-                        <li><a href="#contact" class="text-gray-300 hover:text-white">Bantuan</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-white">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-10 pt-6 text-center">
-                <p class="text-gray-300">© 2025 RentalPro. Hak cipta dilindungi.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Success Notification -->
-    <div class="fixed bottom-4 right-4 hidden" id="successNotification">
-        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span id="notificationMessage"></span>
-        </div>
-    </div>
-
+    <!-- Scripts -->
     <script>
-        // Error Handling
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            console.error('Error:', msg, 'di baris', lineNo, 'kolom', columnNo, error);
-            showNotification('Terjadi kesalahan. Silakan coba lagi.');
-            return false;
-        };
 
-        // Dummy Data
-        const apartments = [
-            {
-                id: 1,
-                title: 'Apartemen Mewah Jakarta',
-                image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267',
-                location: 'Jakarta Selatan',
-                price: 8000000,
-                description: 'Apartemen modern dengan pemandangan kota.',
-                amenities: ['Wi-Fi', 'AC', 'Kolam Renang'],
-                policies: 'Check-in: 14:00, Check-out: 12:00, Tidak boleh merokok.',
-                lat: -6.21462,
-                lng: 106.84513,
-                reviews: [
-                    { user: 'Budi', rating: 5, comment: 'Sangat nyaman!' },
-                    { user: 'Siti', rating: 4, comment: 'Lokasi strategis.' }
-                ]
-            },
-            {
-                id: 2,
-                title: 'Studio Cozy Bandung',
-                image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb',
-                location: 'Bandung',
-                price: 5000000,
-                description: 'Studio nyaman untuk pasangan muda.',
-                amenities: ['Wi-Fi', 'AC'],
-                policies: 'Check-in: 15:00, Check-out: 11:00.',
-                lat: -6.91474,
-                lng: 107.60981,
-                reviews: [
-                    { user: 'Andi', rating: 4, comment: 'Bersih dan terjangkau.' }
-                ]
+    // Property data (replacing the React propertyData)
+    const propertyData = [
+        {
+            id: "prop1",
+            title: "Modern Downtown Apartment",
+            location: "Manhattan, New York",
+            price: 2800,
+            rating: 4.8,
+            reviewCount: 128,
+            imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 2,
+            baths: 2,
+            sqft: 950,
+            tags: ["Luxury", "New"]
+        },
+        {
+            id: "prop2",
+            title: "Cozy Studio in Brooklyn",
+            location: "Brooklyn, New York",
+            price: 1600,
+            rating: 4.5,
+            reviewCount: 96,
+            imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 0,
+            baths: 1,
+            sqft: 450,
+            tags: ["Studio", "Cozy"]
+        },
+        {
+            id: "prop3",
+            title: "Luxury Condo with City Views",
+            location: "Midtown, New York",
+            price: 3500,
+            rating: 4.9,
+            reviewCount: 215,
+            imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1980&q=80",
+            beds: 3,
+            baths: 2,
+            sqft: 1200,
+            tags: ["Luxury", "Views"]
+        },
+        {
+            id: "prop4",
+            title: "Charming Brownstone Apartment",
+            location: "Upper West Side, New York",
+            price: 2200,
+            rating: 4.7,
+            reviewCount: 153,
+            imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 1,
+            baths: 1,
+            sqft: 700,
+            tags: ["Historic", "Furnished"]
+        },
+        {
+            id: "prop5",
+            title: "Modern Loft in Tribeca",
+            location: "Tribeca, New York",
+            price: 4200,
+            rating: 4.9,
+            reviewCount: 87,
+            imageUrl: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 2,
+            baths: 2,
+            sqft: 1500,
+            tags: ["Loft", "Luxury"]
+        },
+        {
+            id: "prop6",
+            title: "Renovated Pre-War Apartment",
+            location: "Upper East Side, New York",
+            price: 2600,
+            rating: 4.6,
+            reviewCount: 112,
+            imageUrl: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2284&q=80",
+            beds: 1,
+            baths: 1,
+            sqft: 850,
+            tags: ["Renovated", "Doorman"]
+        },
+        {
+            id: "prop7",
+            title: "Contemporary High-Rise Studio",
+            location: "Financial District, New York",
+            price: 3000,
+            rating: 4.8,
+            reviewCount: 65,
+            imageUrl: "https://images.unsplash.com/photo-1626178793926-22b28830aa30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 0,
+            baths: 1,
+            sqft: 550,
+            tags: ["Studio", "High-Rise"]
+        },
+        {
+            id: "prop8",
+            title: "Spacious Family Apartment",
+            location: "Chelsea, New York",
+            price: 4500,
+            rating: 4.7,
+            reviewCount: 178,
+            imageUrl: "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+            beds: 3,
+            baths: 2,
+            sqft: 1400,
+            tags: ["Family", "Spacious"]
+        }
+    ];
+
+    // Wait for DOM to be fully loaded before running scripts
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the application
+        initApp();
+    });
+
+    function initApp() {
+        // Render property cards
+        renderPropertyCards();
+
+        // Set up tab switching
+        setupTabs();
+
+        // Set up filter sidebar in map view (clone from listings view)
+        setupFilterSidebar();
+
+        // Set up range slider behavior
+        setupRangeSliders();
+
+        // Set up event listeners
+        setupEventListeners();
+    }
+
+    /**
+     * Render property cards in the grid
+     */
+    function renderPropertyCards() {
+        const propertyContainer = document.getElementById('properties-container');
+        const template = document.getElementById('property-card-template');
+
+        if (!propertyContainer || !template) return;
+
+        // Clear existing content
+        propertyContainer.innerHTML = '';
+
+        // Loop through property data and create cards
+        propertyData.forEach(property => {
+            // Clone the template
+            const propertyCard = document.importNode(template.content, true);
+
+            // Set property data
+            const image = propertyCard.querySelector('.property-image');
+            image.src = property.imageUrl;
+            image.alt = property.title;
+
+            // Set property tags
+            const tagsContainer = propertyCard.querySelector('.property-tags');
+            property.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'property-tag';
+                tagElement.textContent = tag;
+                tagsContainer.appendChild(tagElement);
+            });
+
+            // Set property title
+            propertyCard.querySelector('.property-title').textContent = property.title;
+
+            // Set rating
+            propertyCard.querySelector('.rating-value').textContent = property.rating;
+            propertyCard.querySelector('.rating-count').textContent = `(${property.reviewCount})`;
+
+            // Set location
+            propertyCard.querySelector('.location-text').textContent = property.location;
+
+            // Set property details
+            propertyCard.querySelector('.beds').textContent = `${property.beds} ${property.beds === 1 ? 'bed' : property.beds === 0 ? 'studio' : 'beds'}`;
+            propertyCard.querySelector('.baths').textContent = `${property.baths} ${property.baths === 1 ? 'bath' : 'baths'}`;
+            propertyCard.querySelector('.area').textContent = `${property.sqft} sqft`;
+
+            // Set price
+            propertyCard.querySelector('.price-value').textContent = `$${property.price}`;
+
+            // Add click event
+            const card = propertyCard.querySelector('.property-card');
+            card.setAttribute('data-id', property.id);
+            card.addEventListener('click', () => {
+                window.location.hash = `/property/${property.id}`;
+            });
+
+            // Add to container
+            propertyContainer.appendChild(propertyCard);
+        });
+    }
+
+    /**
+     * Set up tab switching functionality
+     */
+    function setupTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabValue = button.getAttribute('data-tab');
+
+                // Update active tab button
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+
+                // Show the selected tab panel
+                document.querySelectorAll('.tab-panel').forEach(panel => {
+                    panel.classList.remove('active');
+                });
+                document.getElementById(`${tabValue}-panel`).classList.add('active');
+            });
+        });
+    }
+
+    /**
+     * Set up filter sidebar in map view
+     */
+    function setupFilterSidebar() {
+        // Clone the filter sidebar from listings view to map view
+        const originalSidebar = document.querySelector('#listings-panel .filter-container');
+        const mapSidebar = document.querySelector('#map-panel .filter-container');
+
+        if (originalSidebar && mapSidebar) {
+            mapSidebar.innerHTML = originalSidebar.innerHTML;
+
+            // Re-initialize any interactive elements in the cloned sidebar
+            setupRangeSliders('#map-panel');
+        }
+    }
+
+    /**
+     * Set up range slider behavior
+     */
+    function setupRangeSliders(parentSelector = '') {
+        const minSlider = document.querySelector(`${parentSelector} #min-price`);
+        const maxSlider = document.querySelector(`${parentSelector} #max-price`);
+        const minInput = document.querySelector(`${parentSelector} .range-inputs input:first-child`);
+        const maxInput = document.querySelector(`${parentSelector} .range-inputs input:last-child`);
+
+        if (!minSlider || !maxSlider || !minInput || !maxInput) return;
+
+        // Update input values when sliders change
+        minSlider.addEventListener('input', () => {
+            const value = parseInt(minSlider.value);
+            if (value >= parseInt(maxSlider.value)) {
+                minSlider.value = parseInt(maxSlider.value) - 100;
             }
-        ];
+            minInput.value = minSlider.value;
+        });
 
-        let bookings = [
-            { id: 'BOOK001', apartment: 'Apartemen Mewah Jakarta', date: '2025-05-20', status: 'Confirmed' }
-        ];
+        maxSlider.addEventListener('input', () => {
+            const value = parseInt(maxSlider.value);
+            if (value <= parseInt(minSlider.value)) {
+                maxSlider.value = parseInt(minSlider.value) + 100;
+            }
+            maxInput.value = maxSlider.value;
+        });
 
-        // Notification
-        function showNotification(message) {
-            const notification = document.getElementById('successNotification');
-            const notificationMessage = document.getElementById('notificationMessage');
-            notificationMessage.textContent = message;
-            notification.classList.remove('hidden');
-            setTimeout(() => notification.classList.add('hidden'), 3000);
+        // Update slider values when inputs change
+        minInput.addEventListener('change', () => {
+            const value = parseInt(minInput.value);
+            if (isNaN(value)) return;
+
+            if (value < 500) minInput.value = 500;
+            if (value >= parseInt(maxInput.value)) {
+                minInput.value = parseInt(maxInput.value) - 100;
+            }
+
+            minSlider.value = minInput.value;
+        });
+
+        maxInput.addEventListener('change', () => {
+            const value = parseInt(maxInput.value);
+            if (isNaN(value)) return;
+
+            if (value > 5000) maxInput.value = 5000;
+            if (value <= parseInt(minInput.value)) {
+                maxInput.value = parseInt(minInput.value) + 100;
+            }
+
+            maxSlider.value = maxInput.value;
+        });
+    }
+
+    /**
+     * Set up general event listeners
+     */
+    function setupEventListeners() {
+        // Load more properties button
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                // In a real app, this would load more properties from an API
+                alert('In a real application, this would load more properties from the server.');
+            });
         }
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+        // Apply filters button
+        const applyFilterBtns = document.querySelectorAll('.filter-actions .btn-primary');
+        applyFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Filters applied! In a real application, this would filter properties based on your selections.');
+            });
         });
 
-        // Mobile Menu Toggle
-        const navbarToggler = document.getElementById('navbarToggler');
-        const navbarMenu = document.getElementById('navbarMenu');
-        navbarToggler.addEventListener('click', function () {
-            navbarMenu.classList.toggle('active');
+        // Reset filters button
+        const resetFilterBtns = document.querySelectorAll('.filter-actions .btn-outline');
+        resetFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // In a real app, this would reset all filters
+                alert('Filters reset! In a real application, this would clear all filter selections.');
+            });
         });
 
-        // Close Mobile Menu on Link Click
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => navbarMenu.classList.remove('active'));
+        // Date picker button
+        const datePickerBtns = document.querySelectorAll('.date-picker-btn');
+        datePickerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('In a real application, this would open a date picker calendar.');
+            });
         });
 
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Search button in hero section
+        const heroSearchBtn = document.querySelector('.search-actions .btn-primary');
+        if (heroSearchBtn) {
+            heroSearchBtn.addEventListener('click', () => {
+                alert('Search initiated! In a real application, this would perform a search based on your criteria.');
+            });
+        }
+
+        // Newsletter subscription
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+                const emailInput = newsletterForm.querySelector('input[type="email"]');
+                if (emailInput && emailInput.value) {
+                    alert(`Thanks for subscribing with email: ${emailInput.value}`);
+                    emailInput.value = '';
+                } else {
+                    alert('Please enter a valid email address.');
                 }
             });
-        });
-
-        // Datepicker Initialization
-        $(document).ready(function () {
-            $('.datepicker').datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: 0
-            });
-        });
-
-        // Search Form Handling
-        document.getElementById('heroSearchForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            renderSearchResults();
-            window.scrollTo({
-                top: document.getElementById('search').offsetTop - 80,
-                behavior: 'smooth'
-            });
-        });
-
-        document.getElementById('searchForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            renderSearchResults();
-        });
-
-        // Render Search Results
-        function renderSearchResults() {
-            const resultsContainer = document.getElementById('searchResults');
-            const location = document.getElementById('searchLocation').value.toLowerCase();
-            const priceRange = document.getElementById('priceRange').value;
-            const amenities = Array.from(document.getElementById('amenities').selectedOptions).map(opt => opt.value);
-            const apartmentType = document.getElementById('apartmentType').value;
-
-            const filteredApartments = apartments.filter(apartment => {
-                const matchesLocation = !location || apartment.location.toLowerCase().includes(location);
-                let matchesPrice = true;
-                if (priceRange) {
-                    const [min, max] = priceRange.split('-').map(Number);
-                    matchesPrice = max ? apartment.price >= min && apartment.price <= max : apartment.price >= min;
-                }
-                const matchesAmenities = !amenities.length || amenities.every(amenity => apartment.amenities.includes(amenity));
-                const matchesType = !apartmentType || apartment.title.toLowerCase().includes(apartmentType);
-                return matchesLocation && matchesPrice && matchesAmenities && matchesType;
-            });
-
-            resultsContainer.innerHTML = '';
-            filteredApartments.forEach(apartment => {
-                const card = document.createElement('div');
-                card.className = 'card p-4 fade-in';
-                card.innerHTML = `
-                    <figure>
-                        <img src="${apartment.image}" alt="${apartment.title}" class="w-full rounded-lg mb-4" loading="lazy">
-                        <figcaption>${apartment.title}</figcaption>
-                    </figure>
-                    <p class="text-gray">${apartment.location}</p>
-                    <p class="font-bold">Rp ${apartment.price.toLocaleString()}/bulan</p>
-                    <button class="btn btn-primary w-full mt-3 view-details" data-id="${apartment.id}">Lihat Detail</button>
-                `;
-                resultsContainer.appendChild(card);
-            });
-
-            // Initialize Map
-            const map = L.map('map').setView([-6.21462, 106.84513], 10);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-            filteredApartments.forEach(apartment => {
-                L.marker([apartment.lat, apartment.lng]).addTo(map)
-                    .bindPopup(apartment.title);
-            });
         }
 
-        // Apartment Detail Modal
-        const detailModal = document.getElementById('apartmentDetailModal');
-        const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
-        const virtualTourBtn = document.getElementById('virtualTourBtn');
-        const reportBtn = document.getElementById('reportBtn');
-        const bookNowBtn = document.getElementById('bookNowBtn');
+        // Simple routing based on hash changes
+        window.addEventListener('hashchange', handleRouteChange);
 
-        function openDetailModal(apartment) {
-            document.getElementById('apartmentTitle').textContent = apartment.title;
-            document.getElementById('apartmentImage').src = apartment.image;
-            document.getElementById('apartmentImage').alt = apartment.title;
-            document.getElementById('apartmentCaption').textContent = apartment.title;
-            document.getElementById('apartmentDescription').textContent = apartment.description;
-            document.getElementById('apartmentPolicies').textContent = apartment.policies;
-            document.getElementById('apartmentPrice').textContent = `Rp ${apartment.price.toLocaleString()}/bulan`;
+        // Initial route check
+        handleRouteChange();
+    }
 
-            const amenitiesList = document.getElementById('apartmentAmenities');
-            amenitiesList.innerHTML = '';
-            apartment.amenities.forEach(amenity => {
-                const li = document.createElement('li');
-                li.textContent = amenity;
-                amenitiesList.appendChild(li);
-            });
+    /**
+     * Handle route changes (simple hash-based routing)
+     */
+    function handleRouteChange() {
+        const hash = window.location.hash || '#/';
 
-            const reviewsContainer = document.getElementById('apartmentReviews');
-            reviewsContainer.innerHTML = '';
-            apartment.reviews.forEach(review => {
-                const div = document.createElement('div');
-                div.className = 'mb-2';
-                div.innerHTML = `
-                    <p><strong>${review.user}</strong> (${review.rating}/5)</p>
-                    <p class="text-gray">${review.comment}</p>
-                `;
-                reviewsContainer.appendChild(div);
-            });
+        // Property detail page
+        if (hash.startsWith('#/property/')) {
+            const propertyId = hash.replace('#/property/', '');
+            const property = propertyData.find(p => p.id === propertyId);
 
-            detailModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            // Initialize Apartment Map
-            const apartmentMap = L.map('apartmentMap').setView([apartment.lat, apartment.lng], 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(apartmentMap);
-            L.marker([apartment.lat, apartment.lng]).addTo(apartmentMap)
-                .bindPopup(apartment.title).openPopup();
-        }
-
-        function closeDetailModal() {
-            detailModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        closeDetailModalBtn.addEventListener('click', closeDetailModal);
-        detailModal.addEventListener('click', function (e) {
-            if (e.target === detailModal) closeDetailModal();
-        });
-
-        virtualTourBtn.addEventListener('click', function () {
-            alert('Tur virtual akan segera tersedia!');
-        });
-
-        reportBtn.addEventListener('click', function () {
-            alert('Laporan telah dikirim ke tim kami.');
-        });
-
-        // Booking Modal
-        const bookingModal = document.getElementById('bookingModal');
-        const closeBookingModalBtn = document.getElementById('closeBookingModalBtn');
-        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
-        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
-        const bookingForm = document.getElementById('bookingForm');
-
-        let selectedApartment = null;
-
-        bookNowBtn.addEventListener('click', function () {
-            const apartmentId = parseInt(this.closest('.modal-content').querySelector('.view-details')?.dataset.id || apartments[0].id);
-            selectedApartment = apartments.find(a => a.id === apartmentId);
-            bookingModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        function closeBookingModal() {
-            bookingModal.classList.remove('active');
-            document.body.style.overflow = '';
-            bookingForm.reset();
-        }
-
-        closeBookingModalBtn.addEventListener('click', closeBookingModal);
-        cancelBookingBtn.addEventListener('click', closeBookingModal);
-        bookingModal.addEventListener('click', function (e) {
-            if (e.target === bookingModal) closeBookingModal();
-        });
-
-        // Stripe Integration (Simulated)
-        const stripe = Stripe('pk_test_51YOUR_STRIPE_PUBLISHABLE_KEY');
-        const elements = stripe.elements();
-        const card = elements.create('card');
-        card.mount('#card-element');
-
-        confirmBookingBtn.addEventListener('click', function () {
-            if (bookingForm.checkValidity()) {
-                const newBooking = {
-                    id: `BOOK${String(bookings.length + 1).padStart(3, '0')}`,
-                    apartment: selectedApartment.title,
-                    date: document.getElementById('bookingCheckIn').value,
-                    status: 'Confirmed'
-                };
-                bookings.push(newBooking);
-                showNotification('Pemesanan berhasil!');
-                closeBookingModal();
-                renderBookingHistory();
+            if (property) {
+                showPropertyDetail(property);
             } else {
-                bookingForm.reportValidity();
+                // Property not found, go to home
+                window.location.hash = '#/';
             }
-        });
+        } else {
+            // Default home page
+            showMainContent();
+        }
+    }
 
-        // Booking History
-        function renderBookingHistory() {
-            const tableBody = document.getElementById('bookingHistoryTable');
-            tableBody.innerHTML = '';
-            bookings.forEach(booking => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${booking.id}</td>
-                    <td>${booking.apartment}</td>
-                    <td>${booking.date}</td>
-                    <td><span class="badge badge-success">${booking.status}</span></td>
-                    <td><button class="btn btn-outline btn-sm">Detail</button></td>
-                `;
-                tableBody.appendChild(tr);
+    /**
+     * Show property detail page
+     */
+    function showPropertyDetail(property) {
+        const mainContent = document.getElementById('main-content');
+
+        // Save current scroll position
+        const scrollPos = window.scrollY;
+
+        // Create property detail HTML
+        mainContent.innerHTML = `
+    <div class="container py-8">
+      <div class="mb-4">
+        <button class="btn btn-outline back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Listings
+        </button>
+      </div>
+      
+      <div class="property-detail">
+        <div class="property-detail-header">
+          <div>
+            <h1 class="property-detail-title">${property.title}</h1>
+            <p class="property-detail-location">
+              <i class="fas fa-map-marker-alt"></i>
+              ${property.location}
+            </p>
+          </div>
+          <div class="property-detail-price">
+            <span>$${property.price}</span><span class="price-period">/mo</span>
+          </div>
+        </div>
+        
+        <div class="property-detail-gallery">
+          <img src="${property.imageUrl}" alt="${property.title}" class="property-detail-image">
+          <div class="property-detail-thumbnails">
+            <div class="thumbnail active">
+              <img src="${property.imageUrl}" alt="${property.title}">
+            </div>
+            <div class="thumbnail placeholder">
+              <div class="placeholder-content">+</div>
+            </div>
+            <div class="thumbnail placeholder">
+              <div class="placeholder-content">+</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-detail-content">
+          <div class="property-detail-info">
+            <div class="property-detail-features">
+              <div class="feature">
+                <i class="fas fa-bed"></i>
+                <div>
+                  <span class="feature-value">${property.beds}</span>
+                  <span class="feature-label">${property.beds === 1 ? 'Bedroom' : property.beds === 0 ? 'Studio' : 'Bedrooms'}</span>
+                </div>
+              </div>
+              <div class="feature">
+                <i class="fas fa-bath"></i>
+                <div>
+                  <span class="feature-value">${property.baths}</span>
+                  <span class="feature-label">${property.baths === 1 ? 'Bathroom' : 'Bathrooms'}</span>
+                </div>
+              </div>
+              <div class="feature">
+                <i class="fas fa-vector-square"></i>
+                <div>
+                  <span class="feature-value">${property.sqft}</span>
+                  <span class="feature-label">Sq Ft</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="property-detail-description">
+              <h2 class="section-title">Description</h2>
+              <p>This beautiful ${property.beds === 0 ? 'studio' : `${property.beds}-bedroom`} apartment in ${property.location} offers modern amenities and a great location. With ${property.sqft} square feet of living space, this apartment features high ceilings, hardwood floors, and plenty of natural light.</p>
+              <p>The property includes ${property.baths} ${property.baths === 1 ? 'bathroom' : 'bathrooms'}, a fully equipped kitchen with stainless steel appliances, and an in-unit washer and dryer. Building amenities include 24/7 doorman, gym, and rooftop terrace.</p>
+            </div>
+            
+            <div class="property-detail-amenities">
+              <h2 class="section-title">Amenities</h2>
+              <div class="amenities-grid">
+                <div class="amenity-item">
+                  <i class="fas fa-snowflake"></i>
+                  <span>Air Conditioning</span>
+                </div>
+                <div class="amenity-item">
+                  <i class="fas fa-dumbbell"></i>
+                  <span>Fitness Center</span>
+                </div>
+                <div class="amenity-item">
+                  <i class="fas fa-wifi"></i>
+                  <span>High-Speed Internet</span>
+                </div>
+                <div class="amenity-item">
+                  <i class="fas fa-utensils"></i>
+                  <span>Dishwasher</span>
+                </div>
+                <div class="amenity-item">
+                  <i class="fas fa-tshirt"></i>
+                  <span>In-Unit Laundry</span>
+                </div>
+                <div class="amenity-item">
+                  <i class="fas fa-parking"></i>
+                  <span>Parking Available</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="property-detail-map">
+              <h2 class="section-title">Location</h2>
+              <div class="detail-map-container">
+                <div class="detail-map-placeholder">
+                  <i class="fas fa-map-marker-alt map-pin"></i>
+                  <div class="map-label">${property.location}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="property-detail-reviews">
+              <div class="reviews-header">
+                <h2 class="section-title">Reviews</h2>
+                <div class="reviews-rating">
+                  <span class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <span>${property.rating}</span>
+                  </span>
+                  <span class="reviews-count">${property.reviewCount} reviews</span>
+                </div>
+              </div>
+              
+              <div class="review-list">
+                <div class="review-item">
+                  <div class="review-header">
+                    <div class="reviewer">
+                      <div class="reviewer-avatar">JD</div>
+                      <div class="reviewer-info">
+                        <div class="reviewer-name">John Doe</div>
+                        <div class="review-date">April 2025</div>
+                      </div>
+                    </div>
+                    <div class="review-rating">
+                      <i class="fas fa-star"></i>
+                      <span>4.9</span>
+                    </div>
+                  </div>
+                  <div class="review-content">
+                    Amazing apartment with great views and amenities. The location is perfect for exploring the city, and the building staff is very helpful. Highly recommended!
+                  </div>
+                </div>
+                
+                <div class="review-item">
+                  <div class="review-header">
+                    <div class="reviewer">
+                      <div class="reviewer-avatar">JS</div>
+                      <div class="reviewer-info">
+                        <div class="reviewer-name">Jane Smith</div>
+                        <div class="review-date">March 2025</div>
+                      </div>
+                    </div>
+                    <div class="review-rating">
+                      <i class="fas fa-star"></i>
+                      <span>4.7</span>
+                    </div>
+                  </div>
+                  <div class="review-content">
+                    The apartment was clean, modern, and exactly as pictured. Great location with plenty of restaurants and shops nearby. I would definitely stay here again!
+                  </div>
+                </div>
+              </div>
+              
+              <button class="btn btn-outline view-all-reviews-btn">
+                View All ${property.reviewCount} Reviews
+              </button>
+            </div>
+          </div>
+          
+          <div class="property-detail-sidebar">
+            <div class="booking-card">
+              <div class="booking-card-header">
+                <h3>Schedule a Tour</h3>
+              </div>
+              <div class="booking-card-body">
+                <div class="booking-options">
+                  <button class="booking-option active">
+                    <i class="fas fa-home"></i>
+                    <span>In-Person</span>
+                  </button>
+                  <button class="booking-option">
+                    <i class="fas fa-video"></i>
+                    <span>Video Chat</span>
+                  </button>
+                </div>
+                
+                <div class="date-selector">
+                  <label>Select Date</label>
+                  <div class="date-picker-field">
+                    <i class="fas fa-calendar"></i>
+                    <input type="text" placeholder="MM/DD/YYYY" readonly>
+                  </div>
+                </div>
+                
+                <div class="time-selector">
+                  <label>Select Time</label>
+                  <div class="time-slots">
+                    <button class="time-slot">10:00 AM</button>
+                    <button class="time-slot">12:30 PM</button>
+                    <button class="time-slot">3:00 PM</button>
+                    <button class="time-slot">5:30 PM</button>
+                  </div>
+                </div>
+                
+                <div class="contact-form">
+                  <label>Your Information</label>
+                  <input type="text" placeholder="Full Name" class="form-input">
+                  <input type="email" placeholder="Email Address" class="form-input">
+                  <input type="tel" placeholder="Phone Number" class="form-input">
+                </div>
+                
+                <button class="btn btn-primary btn-block schedule-btn">
+                  Schedule Tour
+                </button>
+                
+                <div class="booking-footer">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Your information is secure and will not be shared.</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="agent-card">
+              <div class="agent-info">
+                <div class="agent-avatar">
+                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Agent">
+                </div>
+                <div class="agent-details">
+                  <div class="agent-name">Sarah Johnson</div>
+                  <div class="agent-title">Leasing Agent</div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-block contact-btn">
+                <i class="fas fa-comment-alt"></i>
+                Contact Agent
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+        // Add CSS for property detail page
+        const style = document.createElement('style');
+        style.textContent = `
+    .property-detail { margin-top: 2rem; }
+    .property-detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+    .property-detail-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .property-detail-location { display: flex; align-items: center; gap: 0.5rem; color: var(--muted-foreground); }
+    .property-detail-price { font-size: 1.75rem; font-weight: 700; }
+    
+    .property-detail-gallery { margin-bottom: 2rem; }
+    .property-detail-image { width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius); }
+    .property-detail-thumbnails { display: flex; gap: 0.75rem; margin-top: 0.75rem; }
+    .thumbnail { width: 100px; height: 75px; border-radius: var(--radius); overflow: hidden; cursor: pointer; }
+    .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .thumbnail.active { border: 2px solid var(--primary); }
+    .thumbnail.placeholder { background-color: var(--muted); display: flex; align-items: center; justify-content: center; }
+    .placeholder-content { font-size: 2rem; color: var(--muted-foreground); }
+    
+    .property-detail-content { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+    .property-detail-features { display: flex; flex-wrap: wrap; gap: 2rem; background-color: var(--secondary); padding: 1.5rem; border-radius: var(--radius); margin-bottom: 2rem; }
+    
+    .feature { display: flex; align-items: center; gap: 1rem; }
+    .feature i { font-size: 1.5rem; color: var(--primary); }
+    .feature-value { display: block; font-size: 1.25rem; font-weight: 600; }
+    .feature-label { color: var(--muted-foreground); font-size: 0.875rem; }
+    
+    .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+    .property-detail-description p { margin-bottom: 1rem; line-height: 1.6; }
+    
+    .property-detail-amenities { margin: 2rem 0; }
+    .amenities-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .amenity-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background-color: var(--secondary); border-radius: var(--radius); }
+    .amenity-item i { color: var(--primary); }
+    
+    .detail-map-container { height: 300px; border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem; }
+    .detail-map-placeholder { height: 100%; background-color: #e9f5fe; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .map-pin { font-size: 3rem; color: var(--primary); margin-bottom: 0.5rem; }
+    
+    .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .rating-stars { display: flex; align-items: center; gap: 0.25rem; }
+    .rating-stars i { color: #FFCA28; }
+    .reviews-count { margin-left: 0.5rem; color: var(--muted-foreground); }
+    
+    .review-list { margin-bottom: 1.5rem; }
+    .review-item { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .reviewer { display: flex; align-items: center; gap: 0.75rem; }
+    .reviewer-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .reviewer-name { font-weight: 500; }
+    .review-date { font-size: 0.875rem; color: var(--muted-foreground); }
+    .review-rating { display: flex; align-items: center; gap: 0.25rem; }
+    .review-rating i { color: #FFCA28; }
+    .review-content { line-height: 1.6; }
+    
+    .booking-card { background-color: white; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-md); margin-bottom: 1.5rem; }
+    .booking-card-header { padding: 1.25rem; border-bottom: 1px solid var(--border); }
+    .booking-card-header h3 { font-size: 1.25rem; font-weight: 600; }
+    .booking-card-body { padding: 1.25rem; }
+    
+    .booking-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .booking-option { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background-color: white; }
+    .booking-option.active { border-color: var(--primary); background-color: var(--secondary); color: var(--primary); }
+    
+    .date-selector, .time-selector, .contact-form { margin-bottom: 1.25rem; }
+    label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
+    
+    .date-picker-field { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem; }
+    .date-picker-field i { margin-right: 0.5rem; color: var(--muted-foreground); }
+    .date-picker-field input { border: none; background: transparent; width: 100%; }
+    
+    .time-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .time-slot { padding: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius); background-color: white; text-align: center; }
+    .time-slot:hover { background-color: var(--secondary); }
+    
+    .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.75rem; }
+    
+    .booking-footer { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; font-size: 0.875rem; color: var(--muted-foreground); }
+    
+    .agent-card { background-color: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .agent-info { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .agent-avatar { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; }
+    .agent-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .agent-name { font-weight: 600; }
+    .agent-title { font-size: 0.875rem; color: var(--muted-foreground); }
+    
+    @media (min-width: 768px) {
+      .property-detail-title { font-size: 2.25rem; }
+      .property-detail-image { height: 500px; }
+      .amenities-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    
+    @media (min-width: 1024px) {
+      .property-detail-content { grid-template-columns: 2fr 1fr; }
+      .property-detail-image { height: 600px; }
+    }
+  `;
+        document.head.appendChild(style);
+
+        // Add event listeners for the property detail page
+        const backBtn = document.querySelector('.back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                window.history.back();
             });
         }
 
-        // Profile Form
-        document.getElementById('profileForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            showNotification('Informasi akun diperbarui!');
-        });
-
-        // Contact Form
-        document.getElementById('contactForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            showNotification('Pesan terkirim! Kami akan segera menghubungi Anda.');
-            this.reset();
-        });
-
-        // Handle View Details
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('view-details')) {
-                const apartmentId = parseInt(e.target.dataset.id);
-                const apartment = apartments.find(a => a.id === apartmentId);
-                if (apartment) openDetailModal(apartment);
-            }
-        });
-
-        // Animation on Scroll
-        function animateOnScroll() {
-            document.querySelectorAll('.fade-in').forEach(element => {
-                const position = element.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.2;
-                if (position < screenPosition) {
-                    element.style.opacity = '1';
-                    element.style.transform = 'translateY(0)';
-                }
+        const scheduleTourBtn = document.querySelector('.schedule-btn');
+        if (scheduleTourBtn) {
+            scheduleTourBtn.addEventListener('click', () => {
+                alert('Tour scheduled! In a real application, this would book your tour and send confirmation details.');
             });
         }
 
-        document.querySelectorAll('.fade-in').forEach(element => {
-            element.style.opacity = '0';
-            element.style.transform = 'translateY(20px)';
-            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        const contactAgentBtn = document.querySelector('.contact-btn');
+        if (contactAgentBtn) {
+            contactAgentBtn.addEventListener('click', () => {
+                alert('In a real application, this would open a chat window with the agent.');
+            });
+        }
+
+        const bookingOptions = document.querySelectorAll('.booking-option');
+        bookingOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                bookingOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+            });
         });
 
-        window.addEventListener('scroll', animateOnScroll);
-        window.addEventListener('load', function () {
-            animateOnScroll();
-            renderSearchResults();
-            renderBookingHistory();
+        const dateField = document.querySelector('.date-picker-field');
+        if (dateField) {
+            dateField.addEventListener('click', () => {
+                alert('In a real application, this would open a calendar date picker.');
+            });
+        }
+
+        const timeSlots = document.querySelectorAll('.time-slot');
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                timeSlots.forEach(s => s.classList.remove('active'));
+                slot.classList.add('active');
+            });
         });
+
+        const viewAllReviewsBtn = document.querySelector('.view-all-reviews-btn');
+        if (viewAllReviewsBtn) {
+            viewAllReviewsBtn.addEventListener('click', () => {
+                alert(`In a real application, this would show all ${property.reviewCount} reviews.`);
+            });
+        }
+
+        // Restore scroll position
+        window.scrollTo(0, 0);
+    }
+
+    /**
+     * Show the main content (home page)
+     */
+    function showMainContent() {
+        // Nothing to do here since the main content is already in the HTML
+    }
+
     </script>
 </body>
 

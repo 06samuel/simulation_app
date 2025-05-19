@@ -1,1081 +1,1486 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Platform penyewaan apartemen dengan pencarian canggih, pembayaran aman, dan manajemen booking efisien">
-  <title>Rental Apartemen Elite</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <title>SewaApt - Platform Sewa Apartemen</title>
   <style>
-    /* Design Tokens */
+    /* Reset and Base Styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
-      --primary: #0070f3;
-      --primary-foreground: #ffffff;
-      --secondary: #f5f5f5;
-      --secondary-foreground: #1f2937;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --background: #ffffff;
-      --foreground: #1f2937;
-      --card: #ffffff;
-      --card-foreground: #1f2937;
-      --border: #e5e7eb;
-      --spacing-xs: 0.25rem;
-      --spacing-sm: 0.5rem;
-      --spacing-md: 1rem;
-      --spacing-lg: 1.5rem;
-      --spacing-xl: 2rem;
-      --radius-sm: 0.25rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 0.75rem;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --transition-fast: all 0.2s ease-in-out;
-      --font-family: 'Inter', sans-serif;
+      --primary: #3366FF;
+      --primary-hover: #2952cc;
+      --primary-light: #e6edff;
+      --secondary: #FF6633;
+      --text: #333333;
+      --text-light: #666666;
+      --bg-light: #F5F7FA;
+      --border: #E1E5EB;
+      --white: #FFFFFF;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --sidebar-width: 270px;
+      --header-height: 60px;
+      --transition: all 0.3s ease;
     }
 
-    /* Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: var(--font-family); background: var(--secondary); color: var(--foreground); line-height: 1.6; }
-    a { text-decoration: none; color: inherit; }
-    button, input, select, textarea { font-family: inherit; }
-
-    /* Utilities */
-    .flex { display: flex; }
-    .flex-col { flex-direction: column; }
-    .flex-center { justify-content: center; align-items: center; }
-    .gap-xs { gap: var(--spacing-xs); }
-    .gap-sm { gap: var(--spacing-sm); }
-    .gap-md { gap: var(--spacing-md); }
-    .gap-lg { gap: var(--spacing-lg); }
-    .mt-xs { margin-top: var(--spacing-xs); }
-    .mt-sm { margin-top: var(--spacing-sm); }
-    .mt-md { margin-top: var(--spacing-md); }
-    .mt-lg { margin-top: var(--spacing-lg); }
-    .mb-sm { margin-bottom: var(--spacing-sm); }
-    .mb-md { margin-bottom: var(--spacing-md); }
-    .mb-lg { margin-bottom: var(--spacing-lg); }
-    .p-sm { padding: var(--spacing-sm); }
-    .p-md { padding: var(--spacing-md); }
-    .p-lg { padding: var(--spacing-lg); }
-    .text-center { text-align: center; }
-    .w-full { width: 100%; }
-    .rounded { border-radius: var(--radius-md); }
-    .shadow { box-shadow: var(--shadow-md); }
-    .hidden { display: none; }
-    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* Layout */
-    .container { max-width: 1200px; margin: 0 auto; padding: var(--spacing-md); }
-    .section { padding: var(--spacing-xl) 0; }
-    .grid { display: grid; gap: var(--spacing-lg); }
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-auto { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-
-    /* Navigation */
-    .navbar {
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: var(--text);
+      background-color: var(--bg-light);
+      line-height: 1.5;
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--background);
-      padding: var(--spacing-md) 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: var(--shadow-sm);
-    }
-    .nav-brand { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-    .nav-links { display: flex; gap: var(--spacing-lg); list-style: none; }
-    .nav-link { font-weight: 500; padding: var(--spacing-sm) 0; cursor: pointer; position: relative; }
-    .nav-link:hover::after, .nav-link.is-active::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--primary);
+      overflow-x: hidden;
     }
 
-    /* Buttons */
-    .btn {
-      padding: var(--spacing-sm) var(--spacing-lg);
-      border-radius: var(--radius-md);
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition-fast);
-      border: none;
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-    .btn-primary { background: var(--primary); color: var(--primary-foreground); }
-    .btn-primary:hover { background: #005bb5; transform: translateY(-2px); }
-    .btn-outline { background: transparent; border: 1px solid var(--border); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-    .btn-success { background: var(--success); color: var(--primary-foreground); }
-    .btn-danger { background: var(--danger); color: var(--primary-foreground); }
-
-    /* Card Styles */
-    .property-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition-fast);
-    }
-    .property-card:hover { transform: translateY(-5px); }
-    .property-card img { width: 100%; height: 200px; object-fit: cover; }
-    .property-card figcaption { padding: var(--spacing-md); }
-    .property-card h3 { font-size: 1.2rem; margin-bottom: var(--spacing-sm); display: flex; align-items: center; gap: var(--spacing-sm); }
-    .property-details { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); }
-    .price { color: var(--primary); font-weight: 600; }
-    .location { display: flex; align-items: center; gap: var(--spacing-xs); color: var(--secondary-foreground); }
-    .property-features { display: flex; flex-wrap: wrap; gap: var(--spacing-md); color: var(--secondary-foreground); }
-    details { padding: var(--spacing-md); border-top: 1px solid var(--border); }
-    summary { cursor: pointer; color: var(--primary); font-weight: 500; }
-    blockquote { border-left: 3px solid var(--primary); padding-left: var(--spacing-md); margin: var(--spacing-md) 0; font-style: italic; }
-
-    /* Search and Filter */
-    .search-form { background: var(--card); padding: var(--spacing-lg); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
-    .filter-group { margin-bottom: var(--spacing-md); }
-    .filter-group label { display: block; font-weight: 500; margin-bottom: var(--spacing-sm); }
-    .filter-group input, .filter-group select { padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 100%; }
-    .map-canvas { width: 100%; height: 300px; background: var(--secondary); border-radius: var(--radius-md); }
-
-    /* Calendar */
-    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--spacing-xs); }
-    .calendar-day { padding: var(--spacing-sm); text-align: center; border-radius: var(--radius-sm); cursor: pointer; }
-    .calendar-day.available { background: var(--success); color: var(--primary-foreground); }
-    .calendar-day.booked { background: var(--warning); color: var(--primary-foreground); cursor: not-allowed; }
-
-    /* Gallery and Virtual Tour */
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); }
-    .gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius-md); transition: transform 0.3s; }
-    .gallery img:hover { transform: scale(1.1); }
-    .virtual-tour { position: relative; overflow: hidden; }
-    .virtual-tour img { transition: transform 0.5s ease; }
-    .virtual-tour:hover img { transform: rotate(5deg) scale(1.1); }
-    .virtual-tour-btn { position: absolute; bottom: var(--spacing-md); right: var(--spacing-md); background: var(--primary); color: var(--primary-foreground); padding: var(--spacing-sm); border-radius: var(--radius-sm); }
-
-    /* Chat System */
-    .chat-window { height: 300px; overflow-y: auto; border: 1px solid var(--border); padding: var(--spacing-md); border-radius: var(--radius-md); }
-    .chat-message { margin-bottom: var(--spacing-sm); padding: var(--spacing-sm); border-radius: var(--radius-md); }
-    .chat-message.sent { background: var(--primary); color: var(--primary-foreground); margin-left: 20%; }
-    .chat-message.received { background: var(--secondary); margin-right: 20%; }
-
-    /* Payment Methods */
-    .payment-methods { display: flex; gap: var(--spacing-md); flex-wrap: wrap; }
-    .payment-method { padding: var(--spacing-sm); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition-fast); flex: 1; min-width: 100px; text-align: center; }
-    .payment-method.selected { border-color: var(--primary); background: #bfdbfe; }
-
-    /* Cost Breakdown */
-    .cost-breakdown { background: var(--card); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: var(--spacing-md); }
-    .cost-breakdown h3 { margin-bottom: var(--spacing-sm); }
-    .cost-line { display: flex; justify-content: space-between; margin-bottom: var(--spacing-sm); }
-    .total { font-weight: bold; font-size: 1.2rem; }
-
-    /* Escrow Info */
-    .escrow-info { background: #fef9c3; padding: var(--spacing-sm); border-left: 4px solid gold; margin: var(--spacing-md) 0; }
-
-    /* Chatbox */
-    .chatbox {
-      position: fixed;
-      bottom: 80px;
-      right: var(--spacing-lg);
-      background: var(--card);
-      width: 300px;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      display: none;
-      flex-direction: column;
-      height: 400px;
-      z-index: 1000;
-    }
-    .chat-header {
-      background: var(--primary);
-      color: var(--primary-foreground);
-      padding: var(--spacing-sm);
-      border-top-left-radius: var(--radius-md);
-      border-top-right-radius: var(--radius-md);
-    }
-    .chat-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--spacing-sm);
-    }
-    .chat-input {
-      display: flex;
-      padding: var(--spacing-sm);
-      border-top: 1px solid var(--border);
-    }
-    .chat-input input {
-      flex: 1;
-      padding: var(--spacing-sm);
-      border: 1px solid var(--border);
-      border-right: none;
-      border-top-left-radius: var(--radius-sm);
-      border-bottom-left-radius: var(--radius-sm);
-    }
-    .chat-input button {
-      padding: var(--spacing-sm);
-      border: 1px solid var(--border);
-      background: var(--primary);
-      color: var(--primary-foreground);
-      border-top-right-radius: var(--radius-sm);
-      border-bottom-right-radius: var(--radius-sm);
-    }
-
-    /* Message Button */
-    .message-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: var(--shadow-md);
-      border: none;
-      z-index: 999;
-    }
-
-    /* Verification Badge */
-    .verified-badge {
-      display: inline-flex;
-      align-items: center;
-      background: #e6f7ff;
-      color: #0070f3;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      margin-left: 8px;
-    }
-    .verified-badge .material-icons {
-      font-size: 14px;
-      margin-right: 4px;
-    }
-
-    /* Rating Stars */
-    .rating {
-      display: flex;
-      align-items: center;
-    }
-    .rating .material-icons {
-      color: gold;
-      font-size: 18px;
-    }
-
-    /* Loyalty Badge */
-    .loyalty-badge {
-      background: var(--warning);
-      color: var(--primary-foreground);
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border-radius: var(--radius-sm);
-      font-size: 0.8rem;
-    }
-
-    /* Status Badge */
-    .status-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-    }
-    .status-active {
-      background: var(--success);
-      color: white;
-    }
-    .status-pending {
-      background: var(--warning);
-      color: white;
-    }
-
-    /* Insurance Option */
-    .insurance-option {
-      background: #f0f9ff;
-      border: 1px solid #bfdbfe;
-      border-radius: var(--radius-md);
-      padding: var(--spacing-sm);
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 600;
+      line-height: 1.25;
       margin-bottom: var(--spacing-md);
     }
 
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .grid-3 { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 768px) {
-      .navbar { flex-direction: column; gap: var(--spacing-md); }
-      .nav-links { flex-direction: column; align-items: center; }
-      .grid-3, .grid-2 { grid-template-columns: 1fr; }
-      .search-form { grid-template-columns: 1fr; }
-      .chatbox { width: 90%; }
-      .payment-methods { flex-direction: column; }
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      * { transition-duration: 0.01ms !important; }
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
     }
-    [tabindex="0"]:focus, button:focus, input:focus, select:focus {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
+
+    input,
+    select,
+    textarea,
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    /* Layout */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--white);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: var(--shadow-sm);
+      padding: var(--spacing-lg) var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: var(--spacing-lg);
+      max-width: calc(100vw - var(--sidebar-width));
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Typography */
+    .app-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .card-title {
+      font-size: 18px;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .text-sm {
+      font-size: 14px;
+    }
+
+    .text-light {
+      color: var(--text-light);
+    }
+
+    .text-bold {
+      font-weight: 600;
+    }
+
+    /* Navigation */
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .nav-item i {
+      margin-right: var(--spacing-md);
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .search-input {
+      width: 100%;
+      padding-left: 40px;
+      background-color: var(--bg-light);
+      border: 1px solid var(--border);
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: var(--spacing-md);
+      transform: translateY(-50%);
+      color: var(--text-light);
+    }
+
+    .user-profile {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-light);
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 600;
+      margin-right: var(--spacing-md);
+    }
+
+    /* Components */
+    .tabs {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab {
+      padding: var(--spacing-md) 0;
+      cursor: pointer;
+      position: relative;
+      font-weight: 500;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary);
+    }
+
+    .search-box {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .search-field {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-field label {
+      font-weight: 500;
+      margin-bottom: var(--spacing-xs);
+      display: block;
+    }
+
+    .search-field input,
+    .search-field select {
+      border: none;
+      padding: var(--spacing-sm);
+      width: 100%;
+      background: transparent;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm) var(--spacing-lg);
+      font-weight: 500;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background-color: transparent;
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-light);
+    }
+
+    .btn-icon {
+      margin-right: var(--spacing-sm);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .card {
+      background-color: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .card-img {
+      height: 180px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: var(--spacing-md);
+    }
+
+    .card-info {
+      display: flex;
+      margin-bottom: var(--spacing-sm);
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .card-info-item {
+      margin-right: var(--spacing-md);
+      display: flex;
+      align-items: center;
+    }
+
+    .card-info-item i {
+      margin-right: var(--spacing-xs);
+    }
+
+    .card-price {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .testimonial-card {
+      background-color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .testimonial-icon {
+      color: var(--primary);
+      font-size: 24px;
+      margin-right: var(--spacing-md);
+    }
+
+    .testimonial-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .testimonial-text {
+      color: var(--text-light);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--white);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--spacing-lg);
+      position: relative;
+      transform: translateY(-20px);
+      transition: var(--transition);
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: var(--spacing-lg);
+      right: var(--spacing-lg);
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    .modal-header {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .modal-body {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-md);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .property-details {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .property-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .property-info-item {
+      background-color: var(--bg-light);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    .property-info-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .property-info-label {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--bg-light);
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      top: var(--spacing-lg);
+      right: var(--spacing-lg);
+      z-index: 1000;
+    }
+
+    .toast {
+      background-color: var(--white);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      min-width: 300px;
+      transform: translateX(120%);
+      transition: var(--transition);
+    }
+
+    .toast.active {
+      transform: translateX(0);
+    }
+
+    .toast-icon {
+      margin-right: var(--spacing-md);
+      font-size: 20px;
+    }
+
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+
+    .toast-warning .toast-icon {
+      color: var(--warning);
+    }
+
+    .toast-error .toast-icon {
+      color: var(--danger);
+    }
+
+    .toast-message {
+      flex: 1;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
+    }
+
+    .page-item {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .page-item:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .page-item.active {
+      background-color: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      .hamburger-menu {
+        display: block;
+        position: fixed;
+        top: var(--spacing-md);
+        left: var(--spacing-md);
+        z-index: 200;
+        background-color: var(--white);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .property-info {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .card-actions {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .property-info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Icons */
+    .icon {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      stroke-width: 0;
+      stroke: currentColor;
+      fill: currentColor;
+      vertical-align: middle;
+    }
+
+    .icon-sm {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon-lg {
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Utils */
+    .d-flex {
+      display: flex;
+    }
+
+    .align-center {
+      align-items: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .gap-sm {
+      gap: var(--spacing-sm);
+    }
+
+    .gap-md {
+      gap: var(--spacing-md);
+    }
+
+    .mt-sm {
+      margin-top: var(--spacing-sm);
+    }
+
+    .mt-md {
+      margin-top: var(--spacing-md);
+    }
+
+    .mt-lg {
+      margin-top: var(--spacing-lg);
+    }
+
+    .mb-sm {
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .mb-md {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .mb-lg {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .text-primary {
+      color: var(--primary);
+    }
+
+    /* SVG Icons */
+    .feather {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
     }
   </style>
 </head>
+
 <body>
-  <!-- Navigation -->
-  <header class="container">
-    <nav class="navbar">
-      <div class="nav-brand">EliteRent</div>
-      <ul class="nav-links">
-        <li><span class="nav-link is-active" data-page="home">Beranda</span></li>
-        <li><span class="nav-link" data-page="search">Pencarian</span></li>
-        <li><span class="nav-link" data-page="profile">Profil</span></li>
-        <li><span class="nav-link" data-page="support">Dukungan</span></li>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <h1 class="app-title">SewaApt</h1>
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Cari">
+      <svg class="feather search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+    <nav>
+      <ul class="nav-menu">
+        <li class="nav-item active">
+          <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Beranda</span>
+        </li>
+        <li class="nav-item">
+          <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          <span>Favorit</span>
+        </li>
+        <li class="nav-item">
+          <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>Pesanan</span>
+        </li>
+        <li class="nav-item">
+          <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Akun</span>
+        </li>
       </ul>
     </nav>
-  </header>
+    <div class="user-profile">
+      <div class="avatar">D</div>
+      <div>
+        <div>Halo, Dinda</div>
+        <div class="text-sm text-light">Penyewa</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile menu toggle -->
+  <button class="hamburger-menu hidden" id="menuToggle">
+    <svg class="feather" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
 
   <!-- Main Content -->
-  <main class="container">
-    <!-- Home Page -->
-    <section id="home" class="section page fade-in active">
-      <h1 class="text-center">Temukan Apartemen Impian Anda</h1>
-      <p class="text-center mb-lg">Jelajahi apartemen modern dengan fasilitas premium</p>
+  <main class="main-content">
+    <div class="container">
+      <h2 class="section-title">Cari Apartemen</h2>
 
-      <!-- Quick Search -->
-      <form class="search-form mb-lg">
-        <div class="grid-3">
-          <div class="filter-group">
-            <label for="quick-location">Lokasi</label>
-            <input type="text" id="quick-location" placeholder="Masukkan kota atau area" aria-label="Cari lokasi">
-          </div>
-          <div class="filter-group">
-            <label for="quick-checkin">Check-in</label>
-            <input type="date" id="quick-checkin" aria-label="Tanggal check-in">
-          </div>
-          <div class="filter-group">
-            <label for="quick-checkout">Check-out</label>
-            <input type="date" id="quick-checkout" aria-label="Tanggal check-out">
+      <!-- Search Section -->
+      <div class="search-box">
+        <div class="search-field">
+          <label>Lokasi</label>
+          <div class="d-flex align-center">
+            <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input type="text" placeholder="Masukkan kota atau area" id="locationInput">
           </div>
         </div>
-        <button type="submit" class="btn btn-primary mt-md"><span class="material-icons">search</span>Cari Sekarang</button>
-      </form>
-
-      <!-- Featured Properties -->
-      <h2>Properti Unggulan</h2>
-      <div class="grid grid-auto">
-        <figure class="property-card">
-          <img src="https://source.unsplash.com/random/800x600/?apartment" alt="Luxury Penthouse" loading="lazy" onclick="openImageModal(this.src)">
-          <figcaption>
-            <h3>Luxury Penthouse <span class="verified-badge"><i class="material-icons">verified</i>Terverifikasi</span></h3>
-            <div class="property-details">
-              <span class="price">Rp 25.000.000/bln</span>
-              <span class="location"><i class="material-icons">location_on</i> Jakarta Pusat</span>
-            </div>
-            <div class="property-features">
-              <span><i class="material-icons">hotel</i> 3 BR</span>
-              <span><i class="material-icons">square_foot</i> 2000 sqft</span>
-              <span><i class="material-icons">pool</i> Kolam</span>
-            </div>
-            <div class="rating">
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star_half</i>
-              <span>4.5/5</span>
-            </div>
-            <blockquote>
-              <p>"Pemandangan kota yang luar biasa dan fasilitas terbaik!"</p>
-              <footer>- John Doe <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
-            </blockquote>
-          </figcaption>
-          <details>
-            <summary>Detail Lebih Lanjut</summary>
-            <p>Apartemen modern dengan pemandangan kota, gym, dan keamanan 24/7.</p>
-            <button class="btn btn-primary" onclick="navigateToDetail(1)">Lihat Detail</button>
-          </details>
-        </figure>
-        <figure class="property-card">
-          <img src="https://source.unsplash.com/random/800x600/?modern-apartment" alt="Modern Studio" loading="lazy" onclick="openImageModal(this.src)">
-          <figcaption>
-            <h3>Modern Studio <span class="verified-badge"><i class="material-icons">verified</i>Terverifikasi</span></h3>
-            <div class="property-details">
-              <span class="price">Rp 12.000.000/bln</span>
-              <span class="location"><i class="material-icons">location_on</i> Jakarta Selatan</span>
-            </div>
-            <div class="property-features">
-              <span><i class="material-icons">hotel</i> Studio</span>
-              <span><i class="material-icons">square_foot</i> 500 sqft</span>
-              <span><i class="material-icons">wifi</i> WiFi</span>
-            </div>
-            <div class="rating">
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star_outline</i>
-              <span>4.2/5</span>
-            </div>
-            <blockquote>
-              <p>"Cocok untuk profesional muda!"</p>
-              <footer>- Jane Smith <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
-            </blockquote>
-          </figcaption>
-          <details>
-            <summary>Detail Lebih Lanjut</summary>
-            <p>Studio kompak dengan fasilitas modern di lingkungan yang dinamis.</p>
-            <button class="btn btn-primary" onclick="navigateToDetail(2)">Lihat Detail</button>
-          </details>
-        </figure>
-        <figure class="property-card">
-          <img src="https://source.unsplash.com/random/800x600/?luxury-condo" alt="Family Apartment" loading="lazy" onclick="openImageModal(this.src)">
-          <figcaption>
-            <h3>Family Apartment <span class="verified-badge"><i class="material-icons">verified</i>Terverifikasi</span></h3>
-            <div class="property-details">
-              <span class="price">Rp 18.000.000/bln</span>
-              <span class="location"><i class="material-icons">location_on</i> Jakarta Barat</span>
-            </div>
-            <div class="property-features">
-              <span><i class="material-icons">hotel</i> 2 BR</span>
-              <span><i class="material-icons">square_foot</i> 1200 sqft</span>
-              <span><i class="material-icons">local_parking</i> Parkir</span>
-            </div>
-            <div class="rating">
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <i class="material-icons">star</i>
-              <span>4.8/5</span>
-            </div>
-            <blockquote>
-              <p>"Luas dan nyaman untuk keluarga!"</p>
-              <footer>- Sarah Johnson <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
-            </blockquote>
-          </figcaption>
-          <details>
-            <summary>Detail Lebih Lanjut</summary>
-            <p>Apartemen luas cocok untuk keluarga dengan fasilitas lengkap.</p>
-            <button class="btn btn-primary" onclick="navigateToDetail(3)">Lihat Detail</button>
-          </details>
-        </figure>
+        <div class="search-field">
+          <label>Harga Maks</label>
+          <div class="d-flex align-center">
+            <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <input type="text" placeholder="cth: 5.000.000" id="priceInput">
+          </div>
+        </div>
+        <div class="search-field">
+          <label>Tipe</label>
+          <div class="d-flex align-center">
+            <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <input type="text" placeholder="Studio, 2BR, dll" id="typeInput">
+          </div>
+        </div>
+        <button class="btn btn-primary" id="searchBtn">
+          Cari
+        </button>
       </div>
 
-      <!-- Why Choose Us -->
-      <h2 class="mt-lg">Mengapa Memilih Kami</h2>
-      <div class="grid grid-3">
-        <div class="card p-md">
-          <h3><i class="material-icons">security</i> Pembayaran Aman</h3>
-          <p>Transaksi dilindungi escrow dengan berbagai opsi pembayaran.</p>
-        </div>
-        <div class="card p-md">
-          <h3><i class="material-icons">support_agent</i> Dukungan 24/7</h3>
-          <p>Hubungi tim kami kapan saja melalui chat, email, atau telepon.</p>
-        </div>
-        <div class="card p-md">
-          <h3>Pemilik Terverifikasi</h3>
-          <p>Semua pemilik diverifikasi identitas untuk keamanan Anda.</p>
+      <!-- Filter Tabs -->
+      <div class="tabs">
+        <div class="tab active" data-filter="all">Semua</div>
+        <div class="tab" data-filter="studio">Studio</div>
+        <div class="tab" data-filter="1br">1BR</div>
+        <div class="tab" data-filter="2br">2BR+</div>
+      </div>
+
+      <!-- Apartment Listings -->
+      <h3 class="section-title">Daftar Apartemen</h3>
+      <div class="cards-grid" id="apartmentListings">
+        <!-- Apartment cards will be dynamically generated here -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination">
+        <div class="page-item active">1</div>
+        <div class="page-item">2</div>
+        <div class="page-item">3</div>
+        <div class="page-item">
+          <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </div>
       </div>
 
       <!-- Testimonials -->
-      <h2 class="mt-lg">Testimoni</h2>
-      <div class="grid grid-auto">
-        <div class="card p-md">
-          <blockquote>
-            <p>"Menemukan apartemen impian saya hanya dalam beberapa klik!"</p>
-            <footer>- Sarah Johnson</footer>
-          </blockquote>
-        </div>
-        <div class="card p-md">
-          <blockquote>
-            <p>"Proses pemesanan yang mulus dan aman."</p>
-            <footer>- Michael Lee</footer>
-          </blockquote>
-        </div>
-      </div>
-    </section>
-
-    <!-- Search Page -->
-    <section id="search" class="section page fade-in hidden">
-      <h1>Cari Apartemen</h1>
-      <div class="grid-2">
-        <div>
-          <form class="search-form">
-            <div class="filter-group">
-              <label>Lokasi</label>
-              <input type="text" id="search-location" placeholder="Masukkan kota atau landmark" aria-label="Cari lokasi">
-              <canvas class="map-canvas" id="searchMap" aria-label="Peta interaktif"></canvas>
-              <input type="range" min="1" max="10" value="5" id="radiusSlider" aria-label="Filter radius">
-              <p>Radius: <span id="radiusValue">5</span> km</p>
-            </div>
-            <div class="filter-group">
-              <label>Tanggal</label>
-              <div class="calendar" id="searchCalendar" role="grid" aria-label="Kalender ketersediaan"></div>
-            </div>
-            <div class="filter-group">
-              <label>Rentang Harga</label>
-              <input type="range" min="5000000" max="50000000" value="25000000" id="priceSlider" aria-label="Filter harga">
-              <p>Maks: Rp <span id="priceValue">25.000.000</span></p>
-            </div>
-            <div class="filter-group">
-              <label>Fasilitas</label>
-              <div class="flex-col gap-sm">
-                <label><input type="checkbox" value="pool" aria-label="Kolam Renang"> Kolam Renang</label>
-                <label><input type="checkbox" value="gym" aria-label="Gym"> Gym</label>
-                <label><input type="checkbox" value="wifi" aria-label="WiFi"> WiFi</label>
-                <label><input type="checkbox" value="parking" aria-label="Parkir"> Parkir</label>
-                <label><input type="checkbox" value="ac" aria-label="AC"> AC</label>
-                <label><input type="checkbox" value="laundry" aria-label="Laundry"> Laundry</label>
-              </div>
-            </div>
-            <div class="filter-group">
-              <label for="apartment-type">Tipe Apartemen</label>
-              <select id="apartment-type" aria-label="Filter tipe apartemen">
-                <option value="">Semua Tipe</option>
-                <option value="studio">Studio</option>
-                <option value="1br">1 Kamar</option>
-                <option value="2br">2 Kamar</option>
-                <option value="3br">3 Kamar+</option>
-                <option value="penthouse">Penthouse</option>
-                <option value="family">Keluarga</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary mt-md"><span class="material-icons">filter_alt</span>Terapkan Filter</button>
-          </form>
-        </div>
-        <div>
-          <h2>Hasil Pencarian</h2>
-          <div class="flex gap-md mb-md">
-            <select id="sort-results" aria-label="Urutkan hasil">
-              <option value="price-asc">Harga: Rendah ke Tinggi</option>
-              <option value="price-desc">Harga: Tinggi ke Rendah</option>
-              <option value="rating-desc">Rating: Tinggi ke Rendah</option>
-            </select>
+      <h3 class="section-title mt-lg">Testimoni Pengguna</h3>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <svg class="feather testimonial-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <h4 class="testimonial-title">Sangat puas!</h4>
           </div>
-          <div class="grid grid-auto" id="searchResults"></div>
+          <p class="testimonial-text">Proses sewa mudah, apartemen bersih dan sesuai foto.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- Apartment Detail Page -->
-    <section id="apartment" class="section page fade-in hidden">
-      <h1 id="apartment-title"></h1>
-      <div class="gallery mb-lg">
-        <div class="virtual-tour">
-          <img src="https://source.unsplash.com/random/800x600/?apartment,interior" alt="Tur Virtual Interior Apartemen" loading="lazy">
-          <button class="virtual-tour-btn" aria-label="Lihat virtual tour 360°"><span class="material-icons">360</span> Virtual Tour</button>
-        </div>
-        <img src="https://source.unsplash.com/random/400x300/?bedroom" alt="Kamar Tidur" loading="lazy">
-        <img src="https://source.unsplash.com/random/400x300/?kitchen" alt="Dapur" loading="lazy">
-        <img src="https://source.unsplash.com/random/400x300/?living-room" alt="Ruang Tamu" loading="lazy">
-      </div>
-      <div class="grid-2">
-        <div>
-          <h2>Detail</h2>
-          <p>Harga: <span id="apartment-price"></span></p>
-          <p>Lokasi: <span id="apartment-location"></span></p>
-          <p>Fasilitas: <span id="apartment-amenities"></span></p>
-          <canvas class="map-canvas" id="apartmentMap" aria-label="Peta lokasi apartemen"></canvas>
-          <p><a href="https://maps.google.com" target="_blank" aria-label="Lihat di Google Maps">Lihat di Google Maps</a></p>
-          <h3>Ulasan</h3>
-          <div id="apartment-reviews"></div>
-        </div>
-        <div>
-          <h2>Pesan Sekarang</h2>
-          <form class="booking-form">
-            <div class="filter-group">
-              <label for="book-checkin">Check-in</label>
-              <input type="date" id="book-checkin" required aria-label="Tanggal check-in pemesanan">
-            </div>
-            <div class="filter-group">
-              <label for="book-checkout">Check-out</label>
-              <input type="date" id="book-checkout" required aria-label="Tanggal check-out pemesanan">
-            </div>
-            <div class="filter-group">
-              <label for="guests">Tamu</label>
-              <input type="number" id="guests" min="1" value="1" required aria-label="Jumlah tamu">
-            </div>
-            <div class="filter-group">
-              <label>Metode Pembayaran</label>
-              <div class="payment-methods" role="radiogroup" aria-label="Pilih metode pembayaran">
-                <div class="payment-method" data-method="credit" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">credit_card</i> Kartu Kredit</div>
-                <div class="payment-method" data-method="bank" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">account_balance</i> Transfer Bank</div>
-                <div class="payment-method" data-method="ewallet" tabindex="0" role="radio" aria-checked="false"><i class="material-icons">phone_iphone</i> E-Wallet</div>
-              </div>
-            </div>
-            <div class="filter-group">
-              <label><input type="checkbox" id="insurance" aria-label="Tambah asuransi"> Tambah Asuransi (+10%)</label>
-            </div>
-            <div class="cost-breakdown hidden" id="cost-breakdown">
-              <h3>Rincian Biaya</h3>
-              <div class="cost-line"><span>Sewa</span><span id="base-cost"></span></div>
-              <div class="cost-line"><span>Biaya Layanan</span><span id="service-cost"></span></div>
-              <div class="cost-line"><span>Asuransi</span><span id="insurance-cost"></span></div>
-              <div class="cost-line total"><span>Total</span><span id="total-cost"></span></div>
-            </div>
-            <p class="escrow-info">Pembayaran dijamin aman melalui sistem escrow hingga check-in.</p>
-            <button type="submit" class="btn btn-primary"><span class="material-icons">book</span>Konfirmasi Pemesanan</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Profile Page -->
-    <section id="profile" class="section page fade-in hidden">
-      <h1>Profil Pengguna</h1>
-      <div class="grid-2">
-        <div class="card p-lg">
-          <h2>Informasi Akun</h2>
-          <p>Nama: Jane Doe</p>
-          <p>Email: jane@example.com</p>
-          <p>Poin Loyalitas: <span class="loyalty-badge">150</span></p>
-          <button class="btn btn-outline mt-sm">Edit Profil</button>
-        </div>
-        <div class="card p-lg">
-          <h2>Pesan</h2>
-          <div class="chat-window" id="chatWindow" aria-live="polite">
-            <div class="chat-message sent">Apakah apartemen tersedia?</div>
-            <div class="chat-message received">Ya, tersedia!</div>
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <svg class="feather testimonial-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+              </polygon>
+            </svg>
+            <h4 class="testimonial-title">Pelayanan cepat</h4>
           </div>
-          <input type="text" id="chatInput" placeholder="Ketik pesan..." aria-label="Input chat">
-          <button class="btn btn-primary mt-sm" onclick="sendMessage()">Kirim</button>
+          <p class="testimonial-text">Admin responsif, banyak pilihan apartemen.</p>
         </div>
       </div>
-      <h2 class="mt-lg">Riwayat Pemesanan</h2>
-      <div class="grid grid-auto" id="booking-history">
-        <div class="card p-md">
-          <h3>Luxury Penthouse</h3>
-          <p>Check-in: 2025-06-01</p>
-          <p>Check-out: 2025-06-07</p>
-          <p>Total: Rp 175.000.000</p>
-          <p>Status: <span class="status-badge status-active">Terkonfirmasi</span></p>
-        </div>
-        <div class="card p-md">
-          <h3>Modern Studio</h3>
-          <p>Check-in: 2025-07-01</p>
-          <p>Check-out: 2025-07-15</p>
-          <p>Total: Rp 168.000.000</p>
-          <p>Status: <span class="status-badge status-active">Terkonfirmasi</span></p>
-        </div>
-      </div>
-      <h2 class="mt-lg">Notifikasi</h2>
-      <div class="card p-md">
-        <p>Pengingat: Check-in untuk Luxury Penthouse dalam 2 hari.</p>
-      </div>
-    </section>
-
-    <!-- Support Page -->
-    <section id="support" class="section page fade-in hidden">
-      <h1>Dukungan Pelanggan</h1>
-      <div class="grid-3">
-        <div class="card p-md">
-          <h2>Live Chat</h2>
-          <button class="btn btn-primary" onclick="openChat()">Mulai Chat</button>
-        </div>
-        <div class="card p-md">
-          <h2>Email</h2>
-          <p><a href="mailto:support@eliterent.com">support@eliterent.com</a></p>
-        </div>
-        <div class="card p-md">
-          <h2>Telepon</h2>
-          <p><a href="tel:+628001234567">+62-800-123-4567</a></p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Chatbox -->
-  <button class="message-btn" id="messageBtn" aria-label="Buka chat"><span class="material-icons">chat</span></button>
-  <div class="chatbox" id="chatbox">
-    <div class="chat-header">Dukungan Pelanggan</div>
-    <div class="chat-body" id="chatBody" aria-live="polite">
-      <div class="chat-message system">Selamat datang! Bagaimana kami dapat membantu Anda?</div>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="supportChatInput" placeholder="Ketik pesan..." aria-label="Input chat dukungan">
-      <button onclick="sendSupportMessage()" aria-label="Kirim pesan">Kirim</button>
+  <!-- Detail Modal -->
+  <div class="modal" id="detailModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">×</button>
+      <div class="modal-header">
+        <h3 id="modalTitle">Detail Apartemen</h3>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content will be generated dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="favoriteBtn">
+          <svg class="feather icon-sm btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          Tambah ke Favorit
+        </button>
+        <button class="btn btn-primary" id="bookBtn">
+          <svg class="feather icon-sm btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <polyline points="9 11 12 14 22 4"></polyline>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          Pesan Sekarang
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="text-center p-lg" style="background: var(--foreground); color: var(--primary-foreground);">
-    <p>© 2025 EliteRent. Hak cipta dilindungi.</p>
-  </footer>
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    // Mock Data
-    const apartments = [
+    // Sample Data
+    const apartmentsData = [
       {
         id: 1,
-        title: 'Luxury Penthouse',
-        price: 25000000,
-        location: 'Jakarta Pusat',
-        bedrooms: 3,
-        sqft: 2000,
-        type: 'penthouse',
-        amenities: ['pool', 'gym', 'wifi', 'parking', 'ac'],
-        rating: 4.5,
-        images: [
-          'https://source.unsplash.com/random/800x600/?apartment',
-          'https://source.unsplash.com/random/400x300/?bedroom',
-          'https://source.unsplash.com/random/400x300/?kitchen',
-          'https://source.unsplash.com/random/400x300/?living-room'
-        ],
-        description: 'Apartemen modern dengan pemandangan kota, gym, dan keamanan 24/7.',
-        reviews: [
-          { user: 'John Doe', comment: 'Pemandangan kota yang luar biasa dan fasilitas terbaik!', rating: 5 },
-          { user: 'Michael Lee', comment: 'Layanan dan pemandangan luar biasa!', rating: 4 }
-        ],
-        status: 'available'
+        name: "Apartemen Sudirman",
+        location: "Jakarta Pusat",
+        type: "studio",
+        price: 4500000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,1",
+        description: "Apartemen modern di pusat kota dengan akses mudah ke transportasi umum dan pusat perbelanjaan.",
+        facilities: ["AC", "WiFi", "TV Kabel", "Dapur", "Kamar Mandi Dalam"],
+        ratings: 4.5,
+        reviews: 23,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,room,1",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,1",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,1",
+          "https://source.unsplash.com/random/600x400/?apartment,living,1",
+          "https://source.unsplash.com/random/600x400/?apartment,view,1",
+          "https://source.unsplash.com/random/600x400/?apartment,lobby,1"
+        ]
       },
       {
         id: 2,
-        title: 'Modern Studio',
-        price: 12000000,
-        location: 'Jakarta Selatan',
-        bedrooms: 0,
-        sqft: 500,
-        type: 'studio',
-        amenities: ['wifi', 'ac', 'laundry'],
-        rating: 4.2,
-        images: [
-          'https://source.unsplash.com/random/800x600/?modern-apartment',
-          'https://source.unsplash.com/random/400x300/?living-room',
-          'https://source.unsplash.com/random/400x300/?bathroom'
-        ],
-        description: 'Studio kompak cocok untuk profesional muda.',
-        reviews: [
-          { user: 'Jane Smith', comment: 'Lokasi strategis, sangat bersih!', rating: 4 },
-          { user: 'Sarah Johnson', comment: 'Cocok untuk pelancong solo.', rating: 5 }
-        ],
-        status: 'booked'
+        name: "Green Pramuka",
+        location: "Jakarta Timur",
+        type: "2br",
+        price: 6200000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,2",
+        description: "Apartemen keluarga dengan 2 kamar tidur di kawasan hijau dan sejuk, dekat dengan rumah sakit dan sekolah.",
+        facilities: ["AC", "WiFi", "TV Kabel", "Dapur", "2 Kamar Mandi", "Balkon", "Kolam Renang"],
+        ratings: 4.3,
+        reviews: 18,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,room,2",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,2",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,2",
+          "https://source.unsplash.com/random/600x400/?apartment,living,2",
+          "https://source.unsplash.com/random/600x400/?apartment,view,2",
+          "https://source.unsplash.com/random/600x400/?apartment,pool,2"
+        ]
       },
       {
         id: 3,
-        title: 'Family Apartment',
-        price: 18000000,
-        location: 'Jakarta Barat',
-        bedrooms: 2,
-        sqft: 1200,
-        type: 'family',
-        amenities: ['parking', 'ac', 'laundry'],
-        rating: 4.8,
-        images: [
-          'https://source.unsplash.com/random/800x600/?luxury-condo',
-          'https://source.unsplash.com/random/400x300/?bedroom',
-          'https://source.unsplash.com/random/400x300/?kitchen'
-        ],
-        description: 'Apartemen luas cocok untuk keluarga dengan fasilitas lengkap.',
-        reviews: [
-          { user: 'Sarah Johnson', comment: 'Luas dan nyaman untuk keluarga!', rating: 5 }
-        ],
-        status: 'available'
+        name: "Bassura City",
+        location: "Jakarta Timur",
+        type: "1br",
+        price: 5000000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,3",
+        description: "Apartemen 1 kamar tidur dengan lokasi strategis dekat pusat perbelanjaan dan akses mudah ke jalan tol.",
+        facilities: ["AC", "WiFi", "TV Kabel", "Dapur", "Kamar Mandi Dalam", "Kolam Renang", "Gym"],
+        ratings: 4.0,
+        reviews: 12,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,room,3",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,3",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,3",
+          "https://source.unsplash.com/random/600x400/?apartment,living,3",
+          "https://source.unsplash.com/random/600x400/?apartment,view,3",
+          "https://source.unsplash.com/random/600x400/?apartment,gym,3"
+        ]
+      },
+      {
+        id: 4,
+        name: "Kalibata City",
+        location: "Jakarta Selatan",
+        type: "studio",
+        price: 3800000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,4",
+        description: "Studio apartemen modern dengan harga terjangkau, cocok untuk profesional muda atau mahasiswa.",
+        facilities: ["AC", "WiFi", "Dapur Mini", "Kamar Mandi Dalam"],
+        ratings: 3.8,
+        reviews: 30,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,studio,4",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,4",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,4",
+          "https://source.unsplash.com/random/600x400/?apartment,living,4",
+          "https://source.unsplash.com/random/600x400/?apartment,view,4",
+          "https://source.unsplash.com/random/600x400/?apartment,building,4"
+        ]
+      },
+      {
+        id: 5,
+        name: "Taman Anggrek Residence",
+        location: "Jakarta Barat",
+        type: "2br",
+        price: 8500000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,5",
+        description: "Apartemen mewah 2 kamar tidur dengan fasilitas lengkap di komplek terpadu dengan pusat perbelanjaan.",
+        facilities: ["AC", "WiFi", "TV Kabel", "Dapur Lengkap", "2 Kamar Mandi", "Balkon", "Kolam Renang", "Gym", "Sauna"],
+        ratings: 4.7,
+        reviews: 42,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,luxury,5",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,5",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,5",
+          "https://source.unsplash.com/random/600x400/?apartment,bedroom,5",
+          "https://source.unsplash.com/random/600x400/?apartment,living,5",
+          "https://source.unsplash.com/random/600x400/?apartment,pool,5"
+        ]
+      },
+      {
+        id: 6,
+        name: "Menteng Park",
+        location: "Jakarta Pusat",
+        type: "1br",
+        price: 6700000,
+        image: "https://source.unsplash.com/random/400x300/?apartment,6",
+        description: "Apartemen 1 kamar tidur bergaya modern di lokasi prime dengan pemandangan kota yang menakjubkan.",
+        facilities: ["AC", "WiFi", "TV Kabel", "Dapur", "Kamar Mandi Dalam", "Balkon", "Gym"],
+        ratings: 4.2,
+        reviews: 16,
+        gallery: [
+          "https://source.unsplash.com/random/600x400/?apartment,city,6",
+          "https://source.unsplash.com/random/600x400/?apartment,kitchen,6",
+          "https://source.unsplash.com/random/600x400/?apartment,bathroom,6",
+          "https://source.unsplash.com/random/600x400/?apartment,bedroom,6",
+          "https://source.unsplash.com/random/600x400/?apartment,living,6",
+          "https://source.unsplash.com/random/600x400/?apartment,view,6"
+        ]
       }
     ];
 
-    // SPA Routing
-    const pages = document.querySelectorAll('.page');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const favoriteApartments = [];
 
-    function showPage(pageId) {
-      pages.forEach(page => page.classList.toggle('hidden', page.id !== pageId));
-      navLinks.forEach(link => link.classList.toggle('is-active', link.dataset.page === pageId));
-      loadDynamicContent(pageId);
-      window.scrollTo(0, 0);
-    }
+    // DOM Elements
+    const apartmentListings = document.getElementById('apartmentListings');
+    const filterTabs = document.querySelectorAll('.tab');
+    const searchBtn = document.getElementById('searchBtn');
+    const locationInput = document.getElementById('locationInput');
+    const priceInput = document.getElementById('priceInput');
+    const typeInput = document.getElementById('typeInput');
+    const detailModal = document.getElementById('detailModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    const bookBtn = document.getElementById('bookBtn');
+    const toastContainer = document.getElementById('toastContainer');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const paginationItems = document.querySelectorAll('.page-item');
 
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => showPage(link.dataset.page));
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderApartments(apartmentsData);
+      setupEventListeners();
+      setupResponsive();
     });
 
-    window.addEventListener('load', () => showPage('home'));
+    // Event Listeners Setup
+    function setupEventListeners() {
+      // Filter tabs
+      filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          filterTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const filter = tab.dataset.filter;
+          filterApartments(filter);
+        });
+      });
 
-    function navigateToDetail(id) {
-      localStorage.setItem('selectedApartmentId', id);
-      showPage('apartment');
+      // Search button
+      searchBtn.addEventListener('click', searchApartments);
+
+      // Modal close
+      closeModal.addEventListener('click', () => {
+        detailModal.classList.remove('active');
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === detailModal) {
+          detailModal.classList.remove('active');
+        }
+      });
+
+      // Favorite button
+      favoriteBtn.addEventListener('click', () => {
+        const apartmentId = favoriteBtn.dataset.id;
+        toggleFavorite(parseInt(apartmentId));
+      });
+
+      // Book button
+      bookBtn.addEventListener('click', () => {
+        const apartmentId = bookBtn.dataset.id;
+        bookApartment(parseInt(apartmentId));
+      });
+
+      // Pagination
+      paginationItems.forEach(item => {
+        item.addEventListener('click', () => {
+          paginationItems.forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          // Would implement actual pagination here
+          showToast('Info', 'Halaman berubah', 'info');
+        });
+      });
     }
 
-    // Dynamic Content Loading
-    function loadDynamicContent(pageId) {
-      switch (pageId) {
-        case 'search':
-          renderSearchResults();
+    // Responsive Setup
+    function setupResponsive() {
+      const checkWidth = () => {
+        if (window.innerWidth <= 992) {
+          menuToggle.classList.remove('hidden');
+          sidebar.classList.remove('active');
+        } else {
+          menuToggle.classList.add('hidden');
+          sidebar.classList.add('active');
+        }
+      };
+
+      checkWidth();
+      window.addEventListener('resize', checkWidth);
+
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+      });
+    }
+
+    // Render apartments
+    function renderApartments(apartments) {
+      apartmentListings.innerHTML = '';
+
+      if (apartments.length === 0) {
+        apartmentListings.innerHTML = `
+                      <div class="loading">
+                          <p>Tidak ada apartemen yang ditemukan.</p>
+                      </div>
+                  `;
+        return;
+      }
+
+      apartments.forEach(apartment => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+                      <img src="${apartment.image}" alt="${apartment.name}" class="card-img">
+                      <div class="card-content">
+                          <h3 class="card-title">${apartment.name}</h3>
+                          <div class="card-info">
+                              <div class="card-info-item">
+                                  <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                      <circle cx="12" cy="10" r="3"></circle>
+                                  </svg>
+                                  ${apartment.location}
+                              </div>
+                              <div class="card-info-item">
+                                  <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                  </svg>
+                                  ${formatType(apartment.type)}
+                              </div>
+                          </div>
+                          <div class="card-price">Rp${formatPrice(apartment.price)}/bln</div>
+                          <div class="card-actions">
+                              <button class="btn btn-outline detail-btn" data-id="${apartment.id}">Lihat Detail</button>
+                              <button class="btn btn-primary favorite-btn" data-id="${apartment.id}">
+                                  <svg class="feather icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                  </svg>
+                                  Favorit
+                              </button>
+                          </div>
+                      </div>
+                  `;
+
+        const detailBtn = card.querySelector('.detail-btn');
+        detailBtn.addEventListener('click', () => showDetail(apartment.id));
+
+        const favBtn = card.querySelector('.favorite-btn');
+        favBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFavorite(apartment.id);
+        });
+
+        apartmentListings.appendChild(card);
+      });
+    }
+
+    // Filter apartments
+    function filterApartments(filter) {
+      if (filter === 'all') {
+        renderApartments(apartmentsData);
+      } else {
+        const filtered = apartmentsData.filter(apartment => apartment.type === filter);
+        renderApartments(filtered);
+      }
+    }
+
+    // Search apartments
+    function searchApartments() {
+      const location = locationInput.value.toLowerCase();
+      const price = priceInput.value ? parseFloat(priceInput.value.replace(/\./g, '')) : 0;
+      const type = typeInput.value.toLowerCase();
+
+      let results = apartmentsData;
+
+      if (location) {
+        results = results.filter(apt =>
+          apt.location.toLowerCase().includes(location)
+        );
+      }
+
+      if (price) {
+        results = results.filter(apt => apt.price <= price);
+      }
+
+      if (type) {
+        results = results.filter(apt =>
+          apt.type.toLowerCase().includes(type) ||
+          formatType(apt.type).toLowerCase().includes(type)
+        );
+      }
+
+      renderApartments(results);
+      showToast('Sukses', 'Pencarian berhasil', 'success');
+    }
+
+    // Show apartment detail
+    function showDetail(id) {
+      const apartment = apartmentsData.find(apt => apt.id === id);
+
+      if (!apartment) return;
+
+      modalTitle.textContent = apartment.name;
+
+      modalBody.innerHTML = `
+                  <div class="gallery">
+                      ${apartment.gallery.map(img => `
+                          <img src="${img}" alt="${apartment.name}" class="gallery-img">
+                      `).join('')}
+                  </div>
+                  
+                  <div class="property-details">
+                      <p class="mb-md">${apartment.description}</p>
+                      
+                      <div class="property-info">
+                          <div class="property-info-item">
+                              <div class="property-info-value">${formatType(apartment.type)}</div>
+                              <div class="property-info-label">Tipe</div>
+                          </div>
+                          <div class="property-info-item">
+                              <div class="property-info-value">Rp${formatPrice(apartment.price)}</div>
+                              <div class="property-info-label">Harga/Bulan</div>
+                          </div>
+                          <div class="property-info-item">
+                              <div class="property-info-value">${apartment.ratings} <small>(${apartment.reviews} reviews)</small></div>
+                              <div class="property-info-label">Rating</div>
+                          </div>
+                      </div>
+                      
+                      <h4 class="mb-sm">Fasilitas</h4>
+                      <div class="d-flex gap-md flex-wrap mb-md">
+                          ${apartment.facilities.map(facility => `
+                              <span class="property-tag">${facility}</span>
+                          `).join('')}
+                      </div>
+                      
+                      <h4 class="mb-sm">Lokasi</h4>
+                      <p>${apartment.location}</p>
+                  </div>
+              `;
+
+      favoriteBtn.dataset.id = apartment.id;
+      bookBtn.dataset.id = apartment.id;
+
+      const isFavorite = favoriteApartments.includes(apartment.id);
+      favoriteBtn.innerHTML = `
+                  <svg class="feather icon-sm btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                  ${isFavorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}
+              `;
+
+      detailModal.classList.add('active');
+    }
+
+    // Toggle favorite
+    function toggleFavorite(id) {
+      const index = favoriteApartments.indexOf(id);
+
+      if (index === -1) {
+        favoriteApartments.push(id);
+        showToast('Sukses', 'Ditambahkan ke favorit', 'success');
+      } else {
+        favoriteApartments.splice(index, 1);
+        showToast('Info', 'Dihapus dari favorit', 'info');
+      }
+
+      // Update UI if modal is open
+      if (detailModal.classList.contains('active')) {
+        const isFavorite = favoriteApartments.includes(parseInt(favoriteBtn.dataset.id));
+        favoriteBtn.innerHTML = `
+                      <svg class="feather icon-sm btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                      </svg>
+                      ${isFavorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}
+                  `;
+      }
+    }
+
+    // Book apartment
+    function bookApartment(id) {
+      const apartment = apartmentsData.find(apt => apt.id === id);
+
+      if (!apartment) return;
+
+      showToast('Sukses', `Apartemen ${apartment.name} berhasil dipesan!`, 'success');
+      detailModal.classList.remove('active');
+    }
+
+    // Show toast notification
+    function showToast(title, message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+
+      let icon;
+      switch (type) {
+        case 'success':
+          icon = '<svg class="feather toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
           break;
-        case 'apartment':
-          renderApartmentDetails();
+        case 'warning':
+          icon = '<svg class="feather toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+          break;
+        case 'error':
+          icon = '<svg class="feather toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>';
           break;
         default:
-          break;
-      }
-    }
-
-    // Fade-in Animation
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Search and Filter
-    const searchForm = document.querySelector('.search-form');
-    const searchResults = document.getElementById('searchResults');
-    const radiusSlider = document.getElementById('radiusSlider');
-    const radiusValue = document.getElementById('radiusValue');
-    const priceSlider = document.getElementById('priceSlider');
-    const priceValue = document.getElementById('priceValue');
-    const sortSelect = document.getElementById('sort-results');
-
-    radiusSlider.addEventListener('input', () => {
-      radiusValue.textContent = radiusSlider.value;
-    });
-
-    priceSlider.addEventListener('input', () => {
-      priceValue.textContent = priceSlider.value.toLocaleString('id-ID');
-    });
-
-    function renderSearchResults() {
-      const location = document.getElementById('search-location')?.value.toLowerCase() || '';
-      const price = parseInt(priceSlider.value);
-      const amenities = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-      const type = document.querySelector('#apartment-type').value;
-      const sort = sortSelect.value;
-
-      let results = apartments.filter(apartment => {
-        return (
-          (!location || apartment.location.toLowerCase().includes(location)) &&
-          apartment.price <= price &&
-          (!amenities.length || amenities.every(amenity => apartment.amenities.includes(amenity))) &&
-          (!type || apartment.type === type)
-        );
-      });
-
-      if (sort === 'price-asc') {
-        results.sort((a, b) => a.price - b.price);
-      } else if (sort === 'price-desc') {
-        results.sort((a, b) => b.price - a.price);
-      } else if (sort === 'rating-desc') {
-        results.sort((a, b) => b.rating - a.rating);
+          icon = '<svg class="feather toast-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
       }
 
-      searchResults.innerHTML = results.length ? results.map(apartment => `
-        <figure class="property-card">
-          <img src="${apartment.images[0]}" alt="${apartment.title}" loading="lazy">
-          <figcaption>
-            <h3>${apartment.title} <span class="material-icons verified-icon" title="Pemilik Terverifikasi">verified</span></h3>
-            <div class="property-details">
-              <span class="price">Rp ${apartment.price.toLocaleString('id-ID')}/bln</span>
-              <span class="location"><i class="material-icons">location_on</i> ${apartment.location}</span>
-            </div>
-            <div class="property-features">
-              <span><i class="material-icons">hotel</i> ${apartment.bedrooms || 'Studio'} BR</span>
-              <span><i class="material-icons">square_foot</i> ${apartment.sqft} sqft</span>
-              <span><i class="material-icons">star</i> ${apartment.rating}</span>
-            </div>
-            <blockquote>
-              <p>"${apartment.reviews[0]?.comment || 'Tempat yang luar biasa!'}"</p>
-              <footer>- ${apartment.reviews[0]?.user || 'Tamu'} <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
-            </blockquote>
-          </figcaption>
-          <details>
-            <summary>Detail Lebih Lanjut</summary>
-            <p>${apartment.description}</p>
-            <button class="btn btn-primary" onclick="navigateToDetail(${apartment.id})">Lihat Detail</button>
-          </details>
-        </figure>
-      `).join('') : '<p class="text-center">Tidak ada hasil ditemukan.</p>';
-    }
+      toast.innerHTML = `
+                  ${icon}
+                  <div class="toast-message">
+                      <div class="text-bold">${title}</div>
+                      <div>${message}</div>
+                  </div>
+                  <button class="toast-close">×</button>
+              `;
 
-    searchForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      renderSearchResults();
-    });
+      toastContainer.appendChild(toast);
 
-    sortSelect.addEventListener('change', renderSearchResults);
+      // Trigger animation
+      setTimeout(() => {
+        toast.classList.add('active');
+      }, 10);
 
-    // Calendar
-    function renderCalendar(containerId) {
-      const calendar = document.getElementById(containerId);
-      const days = Array(35).fill().map((_, i) => ({
-        day: i + 1,
-        status: Math.random() > 0.3 ? 'available' : 'booked'
-      }));
-
-      calendar.innerHTML = days.map(day => `
-        <div class="calendar-day ${day.status}" role="gridcell" aria-label="${day.status} pada hari ${day.day}">${day.day}</div>
-      `).join('');
-    }
-    renderCalendar('searchCalendar');
-
-    // Map Simulation
-    function drawMap(canvasId) {
-      const canvas = document.getElementById(canvasId);
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#10b981';
-      ctx.beginPath();
-      ctx.arc(canvas.width / 2, canvas.height / 2, 20, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#3b82f6';
-      ctx.fillRect(canvas.width / 2 - 10, canvas.height / 2 - 40, 20, 20);
-    }
-    drawMap('searchMap');
-    drawMap('apartmentMap');
-
-    // Apartment Details
-    function renderApartmentDetails() {
-      const id = parseInt(localStorage.getItem('selectedApartmentId'));
-      const apartment = apartments.find(a => a.id === id);
-      if (!apartment) {
-        document.getElementById('apartment').innerHTML = '<p class="text-center">Apartemen tidak ditemukan.</p>';
-        return;
-      }
-
-      document.getElementById('apartment-title').textContent = apartment.title;
-      document.getElementById('apartment-price').textContent = `Rp ${apartment.price.toLocaleString('id-ID')}/bln`;
-      document.getElementById('apartment-location').textContent = apartment.location;
-      document.getElementById('apartment-amenities').textContent = apartment.amenities.join(', ');
-
-      const reviewsContainer = document.getElementById('apartment-reviews');
-      reviewsContainer.innerHTML = apartment.reviews.map(review => `
-        <blockquote>
-          <p>"${review.comment}"</p>
-          <footer>- ${review.user} (${review.rating}/5) <span class="material-icons report-icon" tabindex="0" onclick="reportReview()" title="Laporkan Ulasan">report</span></footer>
-        </blockquote>
-      `).join('');
-    }
-
-    // Booking Form
-    const bookingForm = document.querySelector('.booking-form');
-    bookingForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const checkin = document.getElementById('book-checkin').value;
-      const checkout = document.getElementById('book-checkout').value;
-      const guests = document.getElementById('guests').value;
-      const insurance = document.getElementById('insurance').checked;
-      const id = parseInt(localStorage.getItem('selectedApartmentId'));
-      const apartment = apartments.find(a => a.id === id);
-
-      if (!checkin || !checkout) {
-        alert('Silakan pilih tanggal check-in dan check-out.');
-        return;
-      }
-
-      const days = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-      if (days <= 0) {
-        alert('Tanggal check-out harus setelah tanggal check-in.');
-        return;
-      }
-
-      const baseCost = apartment.price * days;
-      const serviceFee = baseCost * 0.05;
-      const insuranceFee = insurance ? baseCost * 0.1 : 0;
-      const total = baseCost + serviceFee + insuranceFee;
-
-      document.getElementById('base-cost').textContent = `Rp ${baseCost.toLocaleString('id-ID')}`;
-      document.getElementById('service-cost').textContent = `Rp ${serviceFee.toLocaleString('id-ID')}`;
-      document.getElementById('insurance-cost').textContent = `Rp ${insuranceFee.toLocaleString('id-ID')}`;
-      document.getElementById('total-cost').textContent = `Rp ${total.toLocaleString('id-ID')}`;
-      document.getElementById('cost-breakdown').classList.remove('hidden');
-
-      alert(`Pemesanan dikonfirmasi untuk ${guests} tamu! Periksa email Anda untuk detailnya.`);
-    });
-
-    // Payment Method Selection
-    document.querySelectorAll('.payment-method').forEach(method => {
-      method.addEventListener('click', () => {
-        document.querySelectorAll('.payment-method').forEach(m => {
-          m.classList.remove('selected');
-          m.setAttribute('aria-checked', 'false');
-        });
-        method.classList.add('selected');
-        method.setAttribute('aria-checked', 'true');
-      });
-      method.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          method.click();
-        }
-      });
-    });
-
-    // Chat System
-    function sendMessage() {
-      const chatInput = document.getElementById('chatInput');
-      const chatWindow = document.getElementById('chatWindow');
-      if (chatInput.value.trim()) {
-        chatWindow.innerHTML += `
-          <div class="chat-message sent">${chatInput.value}</div>
-        `;
-        chatInput.value = '';
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+      // Auto close after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('active');
         setTimeout(() => {
-          chatWindow.innerHTML += `
-            <div class="chat-message received">Terima kasih atas pesan Anda! Kami akan segera merespons.</div>
-          `;
-          chatWindow.scrollTop = chatWindow.scrollHeight;
-        }, 1000);
-      }
-    }
+          toastContainer.removeChild(toast);
+        }, 300);
+      }, 3000);
 
-    // Support Chat
-    function sendSupportMessage() {
-      const chatInput = document.getElementById('supportChatInput');
-      const chatBody = document.getElementById('chatBody');
-      if (chatInput.value.trim()) {
-        chatBody.innerHTML += `
-          <div class="chat-message user"><span>${chatInput.value}</span></div>
-        `;
-        chatInput.value = '';
-        chatBody.scrollTop = chatBody.scrollHeight;
+      // Close button
+      const closeBtn = toast.querySelector('.toast-close');
+      closeBtn.addEventListener('click', () => {
+        toast.classList.remove('active');
         setTimeout(() => {
-          chatBody.innerHTML += `
-            <div class="chat-message system"><span>Tim kami akan segera membantu Anda.</span></div>
-          `;
-          chatBody.scrollTop = chatBody.scrollHeight;
-        }, 1000);
-      }
-    }
-
-    document.getElementById('supportChatInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendSupportMessage();
-      }
-    });
-
-    // Report Review
-    function reportReview() {
-      alert('Ulasan dilaporkan. Tim kami akan segera meninjau.');
-    }
-
-    // Open Chat
-    function openChat() {
-      const chatbox = document.getElementById('chatbox');
-      chatbox.style.display = 'flex';
-      document.getElementById('supportChatInput').focus();
-    }
-
-    document.getElementById('messageBtn').addEventListener('click', () => {
-      const chatbox = document.getElementById('chatbox');
-      chatbox.style.display = chatbox.style.display === 'flex' ? 'none' : 'flex';
-    });
-
-    // Virtual Tour Button
-    document.querySelectorAll('.virtual-tour-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        alert('Memulai virtual tour 360°...');
+          toastContainer.removeChild(toast);
+        }, 300);
       });
-    });
+    }
+
+    // Helper Functions
+    function formatPrice(price) {
+      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function formatType(type) {
+      switch (type) {
+        case 'studio':
+          return 'Studio';
+        case '1br':
+          return '1BR';
+        case '2br':
+          return '2BR';
+        default:
+          return type;
+      }
+    }
   </script>
 </body>
+
 </html>
