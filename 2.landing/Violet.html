@@ -1,1120 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modern SaaS Photo Gallery</title>
-  <!-- Updated dependencies -->
+  <title>Violet - Sewa Apartemen Modern & Mudah</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
-  </noscript>
   <style>
-    /* ---------------------------- */
-    /* DESIGN TOKENS (HSL & SYSTEM) */
-    /* ---------------------------- */
-    :root {
-      /* Color Palette (HSL) */
-      --color-primary-h: 220;
-      --color-primary-s: 90%;
-      --color-primary-l: 56%;
-      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
-      --color-primary-light: hsl(var(--color-primary-h), var(--color-primary-s), 70%);
-      --color-primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 36%);
-      --color-secondary: hsl(260, 8%, 40%);
-      --color-accent: hsl(12, 90%, 60%);
-      --color-success: hsl(142, 71%, 45%);
-      --color-warning: hsl(38, 92%, 60%);
-      --color-danger: hsl(0, 80%, 60%);
-      --color-info: hsl(200, 90%, 60%);
-      --color-bg: hsl(0, 0%, 99%);
-      --color-bg-alt: hsl(0, 0%, 96%);
-      --color-surface: hsl(0, 0%, 100%);
-      --color-border: hsl(220, 13%, 91%);
-      --color-text: hsl(220, 15%, 18%);
-      --color-text-muted: hsl(220, 10%, 45%);
-      --color-text-inverse: hsl(0, 0%, 100%);
-      --color-shadow: 220 15% 18%;
-
-      /* Dark mode tokens */
-      --color-bg-dark: hsl(220, 15%, 10%);
-      --color-surface-dark: hsl(220, 15%, 16%);
-      --color-text-dark: hsl(0, 0%, 100%);
-      --color-border-dark: hsl(220, 13%, 25%);
-
-      /* Typography */
-      --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
-      --font-heading: 'Poppins', 'Inter', Arial, sans-serif;
-      --font-mono: 'Fira Mono', 'Menlo', monospace;
-      --font-size-xs: 0.875rem;
-      --font-size-sm: 1rem;
-      --font-size-md: 1.125rem;
-      --font-size-lg: 1.375rem;
-      --font-size-xl: 1.75rem;
-      --font-size-2xl: 2.25rem;
-      --font-size-3xl: 3rem;
-      --font-weight-normal: 400;
-      --font-weight-semibold: 600;
-      --font-weight-bold: 700;
-      --line-height-base: 1.6;
-      --line-height-heading: 1.2;
-
-      /* Spacing (4px scale) */
-      --space-0: 0;
-      --space-1: 0.25rem;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-5: 1.5rem;
-      --space-6: 2rem;
-      --space-7: 3rem;
-      --space-8: 4rem;
-
-      /* Border radius */
-      --radius-xs: 0.25rem;
-      --radius-sm: 0.5rem;
-      --radius-md: 0.75rem;
-      --radius-lg: 1.25rem;
-      --radius-full: 9999px;
-
-      /* Shadows */
-      --shadow-xs: 0 1px 2px 0 hsl(var(--color-shadow) / 0.04);
-      --shadow-sm: 0 2px 8px 0 hsl(var(--color-shadow) / 0.08);
-      --shadow-md: 0 4px 16px 0 hsl(var(--color-shadow) / 0.10);
-      --shadow-lg: 0 8px 32px 0 hsl(var(--color-shadow) / 0.12);
-
-      /* Transitions */
-      --transition-fast: 0.15s cubic-bezier(.4,0,.2,1);
-      --transition-base: 0.25s cubic-bezier(.4,0,.2,1);
-      --transition-slow: 0.4s cubic-bezier(.4,0,.2,1);
-
-      /* Breakpoints */
-      --breakpoint-sm: 480px;
-      --breakpoint-md: 768px;
-      --breakpoint-lg: 1024px;
-      --breakpoint-xl: 1280px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-bg: var(--color-bg-dark);
-        --color-surface: var(--color-surface-dark);
-        --color-text: var(--color-text-dark);
-        --color-border: var(--color-border-dark);
-      }
-    }
-
-    [data-theme="dark"] {
-      --color-bg: var(--color-bg-dark);
-      --color-surface: var(--color-surface-dark);
-      --color-text: var(--color-text-dark);
-      --color-border: var(--color-border-dark);
-    }
-
-    /* Font loading optimization */
-    @font-face {
-      font-family: 'Inter';
-      font-style: normal;
-      font-weight: 400 700;
-      font-display: swap;
-      src: url('https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTcviYw.ttf') format('truetype');
-    }
-    @font-face {
-      font-family: 'Poppins';
-      font-style: normal;
-      font-weight: 600 800;
-      font-display: swap;
-      src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfedw.ttf') format('truetype');
-    }
-
-    /* ---------------------------- */
-    /* BASE & RESET                 */
-    /* ---------------------------- */
-    html {
-      font-size: 100%;
-      box-sizing: border-box;
-      font-family: var(--font-sans);
-      background: var(--color-bg);
-      color: var(--color-text);
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    *, *::before, *::after { box-sizing: inherit; }
     body {
-      min-height: 100vh;
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-size: var(--font-size-sm);
-      line-height: var(--line-height-base);
-      font-family: var(--font-sans);
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f8f9fb;
+      color: #222;
       margin: 0;
       padding: 0;
     }
-    img, picture, video, canvas, svg {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      border-radius: var(--radius-sm);
-      background: var(--color-border);
-      transition: filter var(--transition-base);
-    }
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-      transition: color var(--transition-fast);
-    }
-    a:hover, a:focus {
-      color: var(--color-primary-dark);
-      outline: none;
-    }
-    button, input, select, textarea {
-      font-family: inherit;
-      font-size: inherit;
-      color: inherit;
-      background: none;
-      border: none;
-      outline: none;
-    }
-    button:focus, input:focus, select:focus, textarea:focus {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-    /* ... (lanjutkan ke komponen dan utilitas di tahap berikutnya) ... */
-
-    /* ---------------------------- */
-    /* UTILITY CLASSES              */
-    /* ---------------------------- */
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin-inline: auto;
-      padding-inline: var(--space-4);
-    }
-    .d-flex { display: flex; }
-    .d-grid { display: grid; }
-    .gap-2 { gap: var(--space-2); }
-    .gap-4 { gap: var(--space-4); }
-    .justify-center { justify-content: center; }
-    .align-center { align-items: center; }
-    .text-center { text-align: center; }
-    .mb-4 { margin-bottom: var(--space-4); }
-    .mb-6 { margin-bottom: var(--space-6); }
-    .mt-4 { margin-top: var(--space-4); }
-    .mt-6 { margin-top: var(--space-6); }
-    .w-100 { width: 100%; }
-    .shadow-md { box-shadow: var(--shadow-md); }
-    .rounded-md { border-radius: var(--radius-md); }
-    .bg-surface { background: var(--color-surface); }
-    .border { border: 1px solid var(--color-border); }
-    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-
-    /* ---------------------------- */
-    /* BUTTONS                      */
-    /* ---------------------------- */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-2) var(--space-4);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      border-radius: var(--radius-sm);
-      background: var(--color-primary);
-      color: var(--color-text-inverse);
-      border: none;
-      box-shadow: var(--shadow-xs);
-      cursor: pointer;
-      transition: background var(--transition-base), box-shadow var(--transition-base), transform var(--transition-fast);
-    }
-    .btn:hover, .btn:focus {
-      background: var(--color-primary-dark);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px) scale(1.02);
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--color-primary);
-      border: 1.5px solid var(--color-primary);
-      box-shadow: none;
-    }
-    .btn-outline:hover, .btn-outline:focus {
-      background: var(--color-primary-light);
-      color: var(--color-text-inverse);
-      border-color: var(--color-primary-dark);
-    }
-    .btn[disabled], .btn:disabled {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    /* ---------------------------- */
-    /* INPUTS & FORMS               */
-    /* ---------------------------- */
-    .form-control {
-      width: 100%;
-      padding: var(--space-2) var(--space-3);
-      font-size: var(--font-size-sm);
-      border-radius: var(--radius-xs);
-      border: 1.5px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-text);
-      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .form-control:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px hsl(var(--color-primary-h), var(--color-primary-s), 80%, 0.2);
-    }
-    .form-control.is-invalid {
-      border-color: var(--color-danger);
-      background: hsl(0, 80%, 98%);
-    }
-    .invalid-feedback {
-      color: var(--color-danger);
-      font-size: var(--font-size-xs);
-      margin-top: var(--space-1);
-      display: none;
-    }
-    .form-control.is-invalid + .invalid-feedback {
-      display: block;
-    }
-
-    /* ---------------------------- */
-    /* CARD COMPONENT               */
-    /* ---------------------------- */
-    .card {
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-4);
-      margin-bottom: var(--space-4);
-      border: 1px solid var(--color-border);
-      transition: box-shadow var(--transition-base), transform var(--transition-fast);
-    }
-    .card:hover, .card:focus-within {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px) scale(1.01);
-    }
-    .card-img-wrapper {
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      margin-bottom: var(--space-3);
-      background: var(--color-border);
-      aspect-ratio: 4/3;
+    .hero {
+      background: linear-gradient(120deg, #6a5acd 60%, #fff 100%);
+      color: #fff;
+      padding: 4rem 0 2rem 0;
+      text-align: center;
       position: relative;
+      overflow: hidden;
     }
-    .card-img {
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .lead-magnet {
+      background: #fff;
+      color: #6a5acd;
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      box-shadow: 0 2px 16px rgba(106,90,205,0.08);
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 2px 16px rgba(106,90,205,0.08); }
+      50% { box-shadow: 0 4px 32px rgba(106,90,205,0.18); }
+      100% { box-shadow: 0 2px 16px rgba(106,90,205,0.08); }
+    }
+    .register-form {
+      background: #fff;
+      border-radius: 1.5rem;
+      box-shadow: 0 2px 24px rgba(106,90,205,0.10);
+      max-width: 400px;
+      margin: 0 auto 2rem auto;
+      padding: 2rem 2rem 1.5rem 2rem;
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1s;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .register-form .btn {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: filter var(--transition-base);
-      filter: blur(8px);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
     }
-    .card-img[data-loaded="true"] {
-      filter: blur(0);
+    .register-form .social-btn {
+      background: #f3f3fa;
+      color: #6a5acd;
+      border: 1px solid #e0e0f0;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s;
     }
-    .card-title {
-      font-family: var(--font-heading);
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-bold);
-      margin-bottom: var(--space-2);
-      color: var(--color-text);
+    .register-form .social-btn:hover {
+      background: #ececff;
     }
-    .card-desc {
-      color: var(--color-text-muted);
-      font-size: var(--font-size-xs);
-      margin-bottom: var(--space-3);
+    .featured-section {
+      padding: 3rem 0 2rem 0;
+      background: #fff;
     }
-    /* ... (lanjutkan untuk komponen lain: modal, nav, grid, dsb) ... */
-
-    /* ---------------------------- */
-    /* GRID SYSTEM & RESPONSIVE     */
-    /* ---------------------------- */
-    .gallery-grid {
+    .featured-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #6a5acd;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .apartments {
       display: grid;
       grid-template-columns: 1fr;
-      gap: var(--space-4);
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
     }
-    @media (min-width: 600px) {
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    @media (min-width: 700px) {
+      .apartments { grid-template-columns: 1fr 1fr 1fr; }
     }
-    @media (min-width: 900px) {
-      .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    .main-nav {
-      display: flex;
-      gap: var(--space-4);
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      color: var(--color-primary);
+    .apartment-card {
+      background: #f8f9fb;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(106,90,205,0.06);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
       cursor: pointer;
     }
-    @media (max-width: 768px) {
-      .main-nav {
-        display: none;
-        flex-direction: column;
-        background: var(--color-surface);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        box-shadow: var(--shadow-md);
-        z-index: 100;
-      }
-      .main-nav.open {
-        display: flex;
-      }
-      .nav-toggle {
-        display: block;
-      }
+    .apartment-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(106,90,205,0.13);
     }
-    /* ... (lanjutkan untuk section, heading, dsb) ... */
-
-    .btn, .form-control, .card, .main-nav a {
-      transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), transform var(--transition-fast);
+    .apartment-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
     }
-    .btn:active {
-      transform: scale(0.98);
-      box-shadow: var(--shadow-xs);
+    .apartment-card .info {
+      padding: 1.2rem 1rem 1rem 1rem;
     }
-    .main-nav a:focus, .main-nav a.active {
-      color: var(--color-primary-dark);
-      background: var(--color-primary-light);
-      border-radius: var(--radius-xs);
-      outline: 2px solid var(--color-primary);
+    .apartment-card .info h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #6a5acd;
     }
-    /* ... (lanjutkan untuk modal, toast, dsb) ... */
+    .apartment-card .info p {
+      font-size: 0.98rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+    .apartment-card .rating {
+      color: #f7b731;
+      font-size: 1.1rem;
+    }
+    .testimonials-section {
+      background: #f3f3fa;
+      padding: 3rem 0 2rem 0;
+    }
+    .testimonials-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #6a5acd;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .testimonials {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    @media (min-width: 700px) {
+      .testimonials { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .testimonial-card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(106,90,205,0.06);
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+      text-align: center;
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .testimonial-card:hover {
+      box-shadow: 0 8px 32px rgba(106,90,205,0.13);
+      transform: translateY(-4px) scale(1.02);
+    }
+    .testimonial-card .avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem auto;
+      border: 3px solid #ececff;
+    }
+    .testimonial-card .name {
+      font-weight: 700;
+      color: #6a5acd;
+      margin-bottom: 0.2rem;
+    }
+    .testimonial-card .stars {
+      color: #f7b731;
+      margin-bottom: 0.5rem;
+    }
+    .testimonial-card .text {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 0;
+    }
+    .footer {
+      background: #6a5acd;
+      color: #fff;
+      text-align: center;
+      padding: 1.5rem 0 1rem 0;
+      font-size: 1rem;
+      margin-top: 2rem;
+    }
+    .footer a { color: #fff; text-decoration: underline; }
   </style>
 </head>
-
 <body>
-  <header class="site-header" role="banner" aria-label="Main site header">
-    <nav class="container nav-main" aria-label="Main navigation">
-      <a class="site-logo" href="#" aria-label="Photo Gallery Home">PhotoGallery</a>
-      <button class="nav-toggle" id="navToggle" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span aria-hidden="true">&#9776;</span>
-      </button>
-      <ul class="main-nav" id="mainNav" role="menubar">
-        <li role="none"><a class="nav-link" href="index.html" role="menuitem" tabindex="0">Home</a></li>
-        <li role="none"><a class="nav-link" href="index2.html" role="menuitem" tabindex="0">Gallery</a></li>
-        <li role="none"><a class="nav-link" href="index5.html" role="menuitem" tabindex="0">About</a></li>
-        <li role="none"><a class="nav-link" href="index6.html" role="menuitem" tabindex="0">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main id="main-content" tabindex="-1" aria-label="Main content">
-    <section class="hero" aria-labelledby="heroTitle">
-      <h1 id="heroTitle" class="hero-title">Empower Your Visual Storytelling</h1>
-      <p class="hero-desc">A modern SaaS photo gallery platform for everyone.</p>
-      <div class="u-flex u-flex-center u-mb-lg">
-        <a href="#pricing" class="btn" role="button" aria-label="See Pricing">Get Started</a>
-        <a href="#features" class="btn btn-outline" role="button" aria-label="See Features">Learn More</a>
-      </div>
-    </section>
-
-    <!-- SaaS Features Section -->
-    <section class="features-section" id="features">
-      <div class="container">
-        <h2 class="features-title">Why Choose Our Gallery SaaS?</h2>
-        <div class="features-grid">
-          <div class="feature-card" data-aos="fade-up">
-            <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-            <div class="feature-title">Cloud Storage</div>
-            <div class="feature-desc">Secure, scalable cloud storage for all your photos and assets.</div>
-          </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="feature-icon"><i class="fas fa-users"></i></div>
-            <div class="feature-title">Team Collaboration</div>
-            <div class="feature-desc">Invite team members, assign roles, and manage access easily.</div>
-          </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-            <div class="feature-title">Lightning Fast</div>
-            <div class="feature-desc">Optimized for speed and performance on any device.</div>
-          </div>
-          <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="feature-icon"><i class="fas fa-lock"></i></div>
-            <div class="feature-title">Privacy & Security</div>
-            <div class="feature-desc">Your data is encrypted and protected with industry standards.</div>
-          </div>
+  <section class="hero">
+    <div class="container">
+      <span class="lead-magnet">Dapatkan eBook GRATIS: "Tips Memilih Apartemen Ideal"</span>
+      <h1>Sewa Apartemen Mudah, Aman, & Modern</h1>
+      <p>Platform SaaS #1 untuk pencarian dan penyewaan apartemen terbaik di Indonesia. Temukan hunian impian Anda dengan fitur canggih dan proses yang transparan.</p>
+      <form class="register-form" id="registerForm" autocomplete="off">
+        <div class="mb-3">
+          <input type="email" class="form-control" id="email" placeholder="Email Anda" required />
         </div>
-      </div>
-    </section>
-
-    <section id="gallery" class="py-5">
-      <div class="container">
-        <h2 class="text-center mb-5 fw-bold" style="font-family: var(--font-heading); font-size: 2.1rem;">Our Photo
-          Collection</h2>
-        <div class="row g-4 gallery-grid" data-masonry='{"percentPosition": true }'>
-          <div class="col col-4 gallery-item">
-            <article class="card" tabindex="0" aria-labelledby="gallery-title-1">
-              <div class="card-img-wrapper" style="aspect-ratio: 4/3; background: #e5e7eb;">
-                <img
-                  src="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='400' height='300' fill='%23e5e7eb'/%3E%3C/svg%3E"
-                  data-src="https://images.unsplash.com/photo-1682687981922-7b55dbb30892"
-                  class="card-img"
-                  alt="Scenic landscape"
-                  loading="lazy"
-                  width="400"
-                  height="300"
-                  style="object-fit:cover; width:100%; height:100%; border-radius:var(--radius-md);"
-                />
-              </div>
-              <div class="card-body">
-                <h3 class="card-title" id="gallery-title-1">Scenic Landscape</h3>
-                <p class="card-desc">A breathtaking view of mountains and lakes.</p>
-                <div class="d-flex gap-sm mt-2">
-                  <button class="btn" data-modal="imageModal1" aria-label="View large image">View Large</button>
-                  <button class="btn btn-outline share-btn" aria-label="Share this photo"><i class="fas fa-share-alt"></i> Share</button>
-                </div>
-              </div>
-            </article>
-          </div>
-          <div class="col-md-4 col-sm-6 gallery-item">
-            <div class="card-modern">
-              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca" class="card-img-top" alt="Urban architecture" style="width:100%;" loading="lazy" />
-              <div class="card-body">
-                <h5 class="card-title">Urban Architecture</h5>
-              <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca" class="card-img-top"
-                alt="Urban architecture" style="width:100%;" />
-                  Modern city skyline with impressive buildings.
-                </p>
-                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal2">
-                  View Large
-                </button>
-                <button class="btn-modern btn-outline-primary share-btn">
-                  <i class="fas fa-share-alt"></i> Share
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 gallery-item">
-            <div class="card-modern">
-              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top" alt="Wildlife photography" style="width:100%;" loading="lazy" />
-              <div class="card-body">
-                <h5 class="card-title">Wildlife Photography</h5>
-              <img src="https://images.unsplash.com/photo-1682687982107-14492010e05e" class="card-img-top"
-                alt="Wildlife photography" style="width:100%;" />
-                  Majestic lion captured in its natural habitat.
-                </p>
-                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal3">
-                  View Large
-                </button>
-                <button class="btn-modern btn-outline-primary share-btn">
-                  <i class="fas fa-share-alt"></i> Share
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 gallery-item">
-            <div class="card-modern">
-              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="card-img-top" alt="Aerial beach view" style="width:100%;" loading="lazy" />
-              <div class="card-body">
-                <h5 class="card-title">Aerial Beach View</h5>
-              <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="card-img-top"
-                alt="Aerial beach view" style="width:100%;" />
-                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal4">
-                  View Large
-                </button>
-                <button class="btn-modern btn-outline-primary share-btn">
-                  <i class="fas fa-share-alt"></i> Share
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 gallery-item">
-            <div class="card-modern">
-              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" class="card-img-top" alt="Cultural festival" style="width:100%;" loading="lazy" />
-              <div class="card-body">
-                <h5 class="card-title">Cultural Festival</h5>
-              <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308" class="card-img-top"
-                alt="Cultural festival" style="width:100%;" />
-                  Vibrant colors of a traditional celebration.
-                </p>
-                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal5">
-                  View Large
-                </button>
-                <button class="btn-modern btn-outline-primary share-btn">
-                  <i class="fas fa-share-alt"></i> Share
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-sm-6 gallery-item">
-            <div class="card-modern">
-              <img src="data:image/svg+xml;utf8,<svg ...>" data-src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99" class="card-img-top" alt="Abstract art" style="width:100%;" loading="lazy" />
-              <div class="card-body">
-                <h5 class="card-title">Abstract Art</h5>
-              <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99" class="card-img-top"
-                alt="Abstract art" style="width:100%;" />
-                  Colorful and thought-provoking modern artwork.
-                </p>
-                <button class="btn-modern btn-primary" data-bs-toggle="modal" data-bs-target="#imageModal6">
-                  View Large
-                </button>
-                <button class="btn-modern btn-outline-primary share-btn">
-                  <i class="fas fa-share-alt"></i> Share
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SaaS Testimonials Section -->
-    <section class="testimonials-section" id="testimonials">
-      <div class="container">
-        <h2 class="testimonials-title">What Our Users Say</h2>
-        <div class="testimonials-grid">
-          <div class="testimonial-card" data-aos="fade-up">
-            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User testimonial" class="testimonial-avatar" />
-            <div class="testimonial-name">Alex Johnson</div>
-            <div class="testimonial-role">Photographer</div>
-            <div class="testimonial-text">"The gallery SaaS is a game changer for my workflow. Uploading and sharing is
-              seamless!"</div>
-          </div>
-          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User testimonial"
-              class="testimonial-avatar" />
-            <div class="testimonial-name">Maria Lee</div>
-            <div class="testimonial-role">Marketing Lead</div>
-            <div class="testimonial-text">"Our team collaboration improved drastically. The interface is beautiful and
-              intuitive."</div>
-          </div>
-          <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-            <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="User testimonial" class="testimonial-avatar" />
-            <div class="testimonial-name">Chris Evans</div>
-            <div class="testimonial-role">Startup Founder</div>
-            <div class="testimonial-text">"Highly recommend for any business that values visual content and security."
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SaaS Pricing Section -->
-    <section class="pricing-section" id="pricing">
-      <div class="container">
-        <h2 class="pricing-title">Simple, Transparent Pricing</h2>
-        <div class="pricing-grid">
-          <div class="pricing-card" data-aos="fade-up">
-            <div class="pricing-plan">Starter</div>
-            <div class="pricing-price">$0<span style="font-size:1rem;">/mo</span></div>
-            <ul class="pricing-features">
-              <li>Up to 100 photos</li>
-              <li>Basic sharing</li>
-              <li>Email support</li>
-            </ul>
-            <button class="pricing-cta">Sign Up Free</button>
-          </div>
-          <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="100">
-            <div class="pricing-plan">Pro</div>
-            <div class="pricing-price">$12<span style="font-size:1rem;">/mo</span></div>
-            <ul class="pricing-features">
-              <li>Unlimited photos</li>
-              <li>Team collaboration</li>
-              <li>Priority support</li>
-              <li>Advanced analytics</li>
-            </ul>
-            <button class="pricing-cta">Start Pro</button>
-          </div>
-          <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="pricing-plan">Enterprise</div>
-            <div class="pricing-price">Custom</div>
-            <ul class="pricing-features">
-              <li>Custom integrations</li>
-              <li>Dedicated manager</li>
-              <li>SLAs & compliance</li>
-            </ul>
-            <button class="pricing-cta">Contact Sales</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-5" id="login-section">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <ul class="nav nav-tabs mb-3" id="authTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button"
-                role="tab">Login</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button"
-                role="tab">Register</button>
-            </li>
-          </ul>
-          <div class="tab-content">
-            <div class="tab-pane fade show active" id="login" role="tabpanel">
-              <form id="loginForm" novalidate autocomplete="off">
-                <div class="mb-3">
-                  <label for="loginEmail" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="loginEmail" required autocomplete="off">
-                  <div class="invalid-feedback">Please enter a valid email.</div>
-                </div>
-                <div class="mb-3">
-                  <label for="loginPassword" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="loginPassword" required minlength="6"
-                    autocomplete="off">
-                  <div class="invalid-feedback">Password must be at least 6 characters.</div>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-              </form>
-            </div>
-            <div class="tab-pane fade" id="register" role="tabpanel">
-              <form id="registerForm" novalidate autocomplete="off">
-                <div class="mb-3">
-                  <label for="registerEmail" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="registerEmail" required autocomplete="off">
-                  <div class="invalid-feedback">Please enter a valid email.</div>
-                </div>
-                <div class="mb-3">
-                  <label for="registerPassword" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="registerPassword" required minlength="6"
-                    autocomplete="off">
-                  <div class="invalid-feedback">Password must be at least 6 characters.</div>
-                </div>
-                <div class="mb-3">
-                  <label for="registerConfirm" class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" id="registerConfirm" required autocomplete="off">
-                  <div class="invalid-feedback">Passwords do not match.</div>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Register</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="container py-5" id="search-section">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <form id="searchForm" class="d-flex mb-3" role="search">
-            <input class="form-control me-2" type="search" id="searchInput" placeholder="Search gallery..."
-              aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
-          </form>
-          <div id="searchResults" class="list-group" aria-live="polite"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark mode">
-      <i class="fas fa-moon"></i>
-    </button>
-
-    <!-- Image Modals -->
-    <div id="galleryModals">
-      <!-- Modals will be injected here by JS -->
+        <button type="submit" class="btn btn-primary">Daftar Gratis</button>
+        <div class="text-center my-2">atau daftar dengan</div>
+        <button type="button" class="btn social-btn" onclick="socialSignUp('google')"><i class="fab fa-google"></i> Google</button>
+        <button type="button" class="btn social-btn" onclick="socialSignUp('facebook')"><i class="fab fa-facebook"></i> Facebook</button>
+        <div id="registerMsg" class="mt-2 text-success" style="display:none"></div>
+      </form>
     </div>
-  </main>
-  <footer role="contentinfo" aria-label="Site footer">
-    <div class="footer-links">
-      <a href="#features">Features</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#login-section">Login</a>
-      <a href="#search-section">Search</a>
+  </section>
+  <section class="featured-section">
+    <div class="container">
+      <div class="featured-title">Apartemen Unggulan</div>
+      <div class="apartments" id="apartments">
+        <!-- Cards injected by JS -->
+      </div>
     </div>
-    <form class="footer-newsletter" id="newsletterForm" autocomplete="off">
-      <input type="email" id="newsletterEmail" placeholder="Subscribe to our newsletter" required
-        aria-label="Email address" />
-      <button type="submit">Subscribe</button>
-    </form>
-    <div id="newsletterSuccess" class="text-success d-none" style="margin-top:0.5rem;">Thank you for subscribing!</div>
-    <div class="footer-copyright">
-      &copy; <span id="footerYear"></span> Gallery SaaS. All rights reserved.
+  </section>
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="testimonials-title">Testimoni & Rating Pengguna</div>
+      <div class="testimonials" id="testimonials">
+        <!-- Testimonials injected by JS -->
+      </div>
     </div>
+  </section>
+  <footer class="footer">
+    &copy; 2024 Violet. Semua hak cipta dilindungi. | <a href="#">Kebijakan Privasi</a>
   </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const gallery = document.querySelector(".gallery-grid");
-      if (gallery) {
-        new Masonry(gallery, {
-          itemSelector: ".gallery-item",
-          columnWidth: ".gallery-item",
-          percentPosition: true,
-          transitionDuration: "0.3s",
-        });
-      }
-
-      const galleryImages = [
-        {
-          src: "https://images.unsplash.com/photo-1682687981922-7b55dbb30892",
-          alt: "Scenic landscape",
-          title: "Scenic Landscape"
-        },
-        {
-          src: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca",
-          alt: "Urban architecture",
-          title: "Urban Architecture"
-        },
-        {
-          src: "https://images.unsplash.com/photo-1682687982107-14492010e05e",
-          alt: "Wildlife photography",
-          title: "Wildlife Photography"
-        },
-        {
-          src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-          alt: "Aerial beach view",
-          title: "Aerial Beach View"
-        },
-        {
-          src: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308",
-          alt: "Cultural festival",
-          title: "Cultural Festival"
-        },
-        {
-          src: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99",
-          alt: "Abstract art",
-          title: "Abstract Art"
-        }
-      ];
-      const modalsContainer = document.getElementById('galleryModals');
-      if (modalsContainer) {
-        modalsContainer.innerHTML = galleryImages.map((img, idx) => `
-          <div class="modal fade" id="imageModal${idx + 1}" tabindex="-1" aria-labelledby="imageModalLabel${idx + 1}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="imageModalLabel${idx + 1}">${img.title}</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                  <img src="${img.src}" alt="${img.alt}" class="modal-img-preview" />
-                </div>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          const href = this.getAttribute("href");
-          if (href && href.length > 1) {
-            const target = document.querySelector(href);
-            if (target) {
-              e.preventDefault();
-              target.scrollIntoView({ behavior: "smooth" });
-            }
-          }
-        });
-      });
-
-      document.querySelectorAll(".share-btn").forEach((btn, idx) => {
-        btn.type = "button";
-        btn.addEventListener("click", async () => {
-          try {
-            if (navigator.share) {
-              await navigator.share({
-                title: galleryImages[idx].title,
-                text: "Check out this amazing photo!",
-                url: galleryImages[idx].src,
-              });
-            } else {
-              throw new Error("Web Share API not supported");
-            }
-          } catch (err) {
-            if (!document.getElementById('shareToast')) {
-              const toast = document.createElement('div');
-              toast.id = 'shareToast';
-              toast.className = 'toast align-items-center text-bg-primary border-0 position-fixed bottom-0 end-0 m-3';
-              toast.role = 'alert';
-              toast.ariaLive = 'assertive';
-              toast.ariaAtomic = 'true';
-              toast.innerHTML = '<div class="d-flex"><div class="toast-body">Sharing options coming soon!</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>';
-              document.body.appendChild(toast);
-              new bootstrap.Toast(toast).show();
-            }
-          }
-        });
-      });
-
-      const navLinks = document.querySelectorAll('.nav-link');
-      const current = window.location.pathname.split('/').pop();
-      navLinks.forEach(link => {
-        if (link.getAttribute('href') === current) {
-          link.classList.add('active');
-          link.setAttribute('aria-current', 'page');
-        }
-      });
-
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme) {
-        document.documentElement.setAttribute("data-theme", savedTheme);
-      }
-
-      const themeBtn = document.getElementById('themeToggleBtn');
-      function updateThemeIcon() {
-        if (document.documentElement.getAttribute('data-theme') === 'dark') {
-          themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-        } else {
-          themeBtn.innerHTML = '<i class="fas fa-moon"></i>';
-        }
-      }
-      if (themeBtn) {
-        themeBtn.addEventListener('click', function () {
-          toggleTheme();
-          updateThemeIcon();
-        });
-        updateThemeIcon();
-      }
-
-      const loginForm = document.getElementById('loginForm');
-      if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          let valid = true;
-          const email = loginForm['loginEmail'];
-          const pass = loginForm['loginPassword'];
-          if (!email.value || !email.value.includes('@')) {
-            email.classList.add('is-invalid');
-            valid = false;
-          } else {
-            email.classList.remove('is-invalid');
-          }
-          if (!pass.value || pass.value.length < 6) {
-            pass.classList.add('is-invalid');
-            valid = false;
-          } else {
-            pass.classList.remove('is-invalid');
-          }
-          if (valid) {
-            showToast('loginToast', 'Login successful (dummy)');
-          }
-        });
-      }
-
-      const registerForm = document.getElementById('registerForm');
-      if (registerForm) {
-        registerForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          let valid = true;
-          const email = registerForm['registerEmail'];
-          const pass = registerForm['registerPassword'];
-          const conf = registerForm['registerConfirm'];
-          if (!email.value || !email.value.includes('@')) {
-            email.classList.add('is-invalid');
-            valid = false;
-          } else {
-            email.classList.remove('is-invalid');
-          }
-          if (!pass.value || pass.value.length < 6) {
-            pass.classList.add('is-invalid');
-            valid = false;
-          } else {
-            pass.classList.remove('is-invalid');
-          }
-          if (conf.value !== pass.value || !conf.value) {
-            conf.classList.add('is-invalid');
-            valid = false;
-          } else {
-            conf.classList.remove('is-invalid');
-          }
-          if (valid) {
-            showToast('registerToast', 'Registration successful (dummy)');
-          }
-        });
-      }
-
-      const contactForm = document.getElementById('contactForm');
-      if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          let valid = true;
-          const name = contactForm['contactName'];
-          const email = contactForm['contactEmail'];
-          const msg = contactForm['contactMessage'];
-          if (!name.value) {
-            name.classList.add('is-invalid');
-            valid = false;
-          } else {
-            name.classList.remove('is-invalid');
-          }
-          if (!email.value || !email.value.includes('@')) {
-            email.classList.add('is-invalid');
-            valid = false;
-          } else {
-            email.classList.remove('is-invalid');
-          }
-          if (!msg.value) {
-            msg.classList.add('is-invalid');
-            valid = false;
-          } else {
-            msg.classList.remove('is-invalid');
-          }
-          if (valid) {
-            document.getElementById('contactSuccess').classList.remove('d-none');
-            contactForm.reset();
-          }
-        });
-      }
-
-      const galleryTitles = galleryImages.map(img => img.title);
-      const searchForm = document.getElementById('searchForm');
-      const searchInput = document.getElementById('searchInput');
-      const searchResults = document.getElementById('searchResults');
-      function highlightMatch(text, keyword) {
-        if (!keyword) return text;
-        const re = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        return text.replace(re, '<span class="search-highlight">$1</span>');
-      }
-      if (searchForm && searchInput && searchResults) {
-        searchInput.addEventListener('input', function () {
-          if (!this.value.trim()) searchResults.innerHTML = '';
-        });
-        searchForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const keyword = searchInput.value.trim().toLowerCase();
-          searchResults.innerHTML = '';
-          if (keyword) {
-            const results = galleryTitles.filter(title => title.toLowerCase().includes(keyword));
-            if (results.length) {
-              for (const title of results) {
-                const item = document.createElement('span');
-                item.className = 'list-group-item';
-                item.innerHTML = highlightMatch(title, keyword);
-                searchResults.appendChild(item);
-              }
-            } else {
-              searchResults.innerHTML = '<span class="list-group-item text-danger">No results found.</span>';
-            }
-          }
-        });
-      }
-
-      // Newsletter form logic
-      const newsletterForm = document.getElementById('newsletterForm');
-      if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const email = newsletterForm['newsletterEmail'];
-          if (email.value && email.value.includes('@')) {
-            document.getElementById('newsletterSuccess').classList.remove('d-none');
-            newsletterForm.reset();
-          } else {
-            email.classList.add('is-invalid');
-          }
-        });
-      }
-
-      // Footer year
-      document.getElementById('footerYear').textContent = new Date().getFullYear();
-
-      function toggleTheme() {
-        const html = document.documentElement;
-        const theme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
-        html.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
-      }
-
-      // Add this for accessibility for toasts
-      function showToast(id, message, type = "success") {
-        // Remove existing toast with same id if present
-        const existing = document.getElementById(id);
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.id = id;
-        toast.className = `toast align-items-center text-bg-${type} border-0 position-fixed bottom-0 end-0 m-3`;
-        toast.role = 'alert';
-        toast.ariaLive = 'assertive';
-        toast.ariaAtomic = 'true';
-        toast.innerHTML = `<div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
-        document.body.appendChild(toast);
-        new bootstrap.Toast(toast).show();
-      }
-
-      // Blur-up image loading
-      document.querySelectorAll('.card-img[data-src]').forEach(img => {
-        const realSrc = img.getAttribute('data-src');
-        img.onload = () => img.setAttribute('data-loaded', 'true');
-        img.src = realSrc;
-      });
-
-      // Real-time form validation
-      function validateInput(input, type = "text") {
-        if (type === "email") {
-          return /\S+@\S+\.\S+/.test(input.value);
-        }
-        if (type === "password") {
-          return input.value.length >= 6;
-        }
-        if (type === "confirm") {
-          const pass = document.getElementById('registerPassword');
-          return input.value === pass.value && input.value.length >= 6;
-        }
-        return !!input.value.trim();
-      }
-      document.querySelectorAll('input[required]').forEach(input => {
-        input.addEventListener('input', function () {
-          let valid = true;
-          if (input.type === "email") valid = validateInput(input, "email");
-          else if (input.id === "registerPassword" || input.id === "loginPassword") valid = validateInput(input, "password");
-          else if (input.id === "registerConfirm") valid = validateInput(input, "confirm");
-          else valid = validateInput(input);
-          input.classList.toggle('is-invalid', !valid);
-        });
-      });
-
-      // Keyboard navigation for nav
-      const navToggle = document.getElementById('navToggle');
-      const mainNav = document.getElementById('mainNav');
-      navToggle.addEventListener('click', function () {
-        const expanded = mainNav.classList.toggle('open');
-        navToggle.setAttribute('aria-expanded', expanded);
-        if (expanded) mainNav.querySelector('a').focus();
-      });
-      navToggle.addEventListener('keydown', function (e) {
-        if (e.key === "Enter" || e.key === " ") navToggle.click();
-      });
-
-      // prefers-reduced-motion
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('*').forEach(el => {
-          el.style.transition = 'none !important';
-          el.style.animation = 'none !important';
-        });
-      }
-    });
-  </script>
-  <!-- Masonry JS -->
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <!-- AOS Animation JS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    AOS.init({ once: true, duration: 700 });
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const navToggle = document.querySelector('.navbar-toggler');
-      navToggle.addEventListener('click', () => {
-        document.querySelector('.navbar-collapse').classList.toggle('show');
-      });
+    // Monolithic state management
+    const state = {
+      apartments: [
+        {img:'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80', name:'Apartemen Lavender', desc:'Lokasi strategis di pusat kota, fasilitas lengkap, keamanan 24 jam.', rating:4.9},
+        {img:'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80', name:'Apartemen Sakura', desc:'View pegunungan, lingkungan asri, akses transportasi mudah.', rating:4.8},
+        {img:'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80', name:'Apartemen Melati', desc:'Harga terjangkau, cocok untuk keluarga muda, dekat pusat perbelanjaan.', rating:4.7},
+      ],
+      testimonials: [
+        {avatar:'https://randomuser.me/api/portraits/women/44.jpg', name:'Dewi Lestari', stars:5, text:'Proses sewa sangat mudah dan cepat. Apartemen sesuai ekspektasi!'},
+        {avatar:'https://randomuser.me/api/portraits/men/32.jpg', name:'Budi Santoso', stars:5, text:'Platform Violet sangat membantu, fitur pencarian sangat lengkap.'},
+        {avatar:'https://randomuser.me/api/portraits/women/65.jpg', name:'Siti Rahma', stars:4, text:'Pelayanan customer service ramah dan responsif.'},
+      ]
+    };
+    // Render apartments
+    function renderApartments() {
+      const el = document.getElementById('apartments');
+      el.innerHTML = state.apartments.map(a => `
+        <div class="apartment-card" data-aos="fade-up">
+          <img src="${a.img}" alt="${a.name}" loading="lazy" />
+          <div class="info">
+            <h3>${a.name}</h3>
+            <p>${a.desc}</p>
+            <div class="rating">${'★'.repeat(Math.floor(a.rating))}<span style="color:#ccc;">${'★'.repeat(5-Math.floor(a.rating))}</span> ${a.rating}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+    // Render testimonials
+    function renderTestimonials() {
+      const el = document.getElementById('testimonials');
+      el.innerHTML = state.testimonials.map(t => `
+        <div class="testimonial-card" data-aos="zoom-in">
+          <img src="${t.avatar}" class="avatar" alt="${t.name}" loading="lazy" />
+          <div class="name">${t.name}</div>
+          <div class="stars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+          <div class="text">${t.text}</div>
+        </div>
+      `).join('');
+    }
+    // Registration form logic
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      if(!email.match(/^\S+@\S+\.\S+$/)) {
+        document.getElementById('email').classList.add('is-invalid');
+        return;
+      }
+      document.getElementById('email').classList.remove('is-invalid');
+      document.getElementById('registerMsg').style.display = 'block';
+      document.getElementById('registerMsg').textContent = 'Terima kasih telah mendaftar! Silakan cek email Anda.';
+      setTimeout(()=>{
+        document.getElementById('registerMsg').style.display = 'none';
+        document.getElementById('registerForm').reset();
+      }, 3500);
     });
+    function socialSignUp(platform) {
+      document.getElementById('registerMsg').style.display = 'block';
+      document.getElementById('registerMsg').textContent = 'Fitur sign up dengan ' + platform.charAt(0).toUpperCase() + platform.slice(1) + ' belum tersedia.';
+      setTimeout(()=>{
+        document.getElementById('registerMsg').style.display = 'none';
+      }, 2500);
+    }
+    // Init
+    renderApartments();
+    renderTestimonials();
+    AOS.init({ once: true, duration: 800 });
   </script>
 </body>
 </html>

@@ -2,18 +2,14 @@
 <html lang="id" data-theme="light">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RentalApartemen | Manajemen Penyewaan Apartemen</title>
-
-  <!-- Bootstrap & Icons -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RentalApartemen | Temukan Hunian Impianmu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;700&display=swap"
     rel="stylesheet">
-
   <style>
-    /* CSS Variables */
     :root {
       --color-primary: #3a86ff;
       --color-secondary: #ffbe0b;
@@ -21,9 +17,11 @@
       --color-bg: #f8f9fa;
       --color-text: #212529;
       --radius: 1rem;
-      --transition: 0.3s;
+      --transition: 0.3s ease-in-out;
       --font-heading: 'Poppins', sans-serif;
       --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     [data-theme="dark"] {
@@ -33,7 +31,6 @@
       --color-secondary: #2a5298;
     }
 
-    /* Basic Styles */
     html,
     body {
       margin: 0;
@@ -44,7 +41,6 @@
       transition: background var(--transition), color var(--transition);
     }
 
-    /* Navbar */
     .navbar {
       background: var(--color-bg);
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -55,15 +51,47 @@
       color: var(--color-primary) !important;
     }
 
-    /* Hero Section */
     .hero {
       background: linear-gradient(90deg, var(--color-primary) 60%, var(--color-secondary) 100%);
       color: #fff;
       padding: 4rem 1rem;
       border-radius: var(--radius);
+      text-align: center;
     }
 
-    /* Footer */
+    .hero__cta {
+      transition: transform var(--transition), background var(--transition);
+    }
+
+    .hero__cta:hover {
+      transform: scale(1.05);
+      background: var(--color-accent);
+    }
+
+    .property-card {
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .property-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-control,
+    .btn {
+      border-radius: var(--radius);
+      transition: all var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+    }
+
+    .btn:hover {
+      transform: scale(1.02);
+    }
+
     .footer {
       background: var(--color-primary);
       color: #fff;
@@ -78,32 +106,48 @@
       color: var(--color-secondary);
     }
 
-    /* Form Styles */
-    .form-control {
-      border-radius: var(--radius);
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 2rem 1rem;
+      }
+
+      .property-card {
+        margin-bottom: 1rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Header & Navbar -->
   <header>
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
       <div class="container-xl">
-        <a class="navbar-brand fw-bold" href="#">
-          <i class="fa-solid fa-building me-2"></i>RentalApart
-        </a>
+        <a class="navbar-brand fw-bold" href="#"><i class="fa-solid fa-building me-2"></i>RentalApartemen</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="#">Dasbor</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Apartemen</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Penyewa</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Keuangan</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Laporan</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Pengaturan</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#dashboard">Dasbor</a></li>
+            <li class="nav-item"><a class="nav-link" href="#apartments">Apartemen</a></li>
+            <li class="nav-item"><a class="nav-link" href="#tenants">Penyewa</a></li>
+            <li class="nav-item"><a class="nav-link" href="#finance">Keuangan</a></li>
+            <li class="nav-item"><a class="nav-link" href="#reports">Laporan</a></li>
+            <li class="nav-item"><a class="nav-link" href="#settings">Pengaturan</a></li>
           </ul>
           <button id="theme-toggle" class="btn btn-link ms-3" aria-label="Ganti tema terang/gelap">
             <i class="fa-solid fa-moon"></i>
@@ -113,190 +157,125 @@
     </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="container-xl py-5">
-    <!-- Hero Section -->
-    <section class="hero text-center mb-5">
-      <h1 class="hero__title">RentalApartemen</h1>
-      <p class="hero__subtitle">Platform komprehensif untuk manajemen penyewaan apartemen.</p>
-      <a href="#" class="btn btn-warning btn-lg hero__cta">Mulai Sekarang</a>
+  <main class="container-xl py-5" id="main-content">
+    <section class="hero mb-5">
+      <h1 class="hero__title">Temukan Hunian Impianmu</h1>
+      <p class="hero__subtitle">Kelola apartemen dengan mudah dan efisien bersama RentalApartemen.</p>
+      <a href="#apartments" class="btn btn-warning btn-lg hero__cta">Cari Apartemen Sekarang</a>
     </section>
-    <!-- Dashboard Widgets -->
-    <section class="row g-4 mb-5">
-<!-- Featured Properties Section -->
-<section class="featured-properties mb-5">
-  <div class="row g-4">
-    <div class="col-md-6 col-lg-4">
-      <div class="property-card card h-100 shadow-sm">
-        <img src="assets/images/apartment-1.jpg" class="card-img-top" alt="Luxury Apartment">
-        <div class="card-body">
-          <span class="badge bg-success mb-2">Featured</span>
-          <h5 class="card-title">Luxury Sky Residence</h5>
-          <p class="card-text text-muted">
-            <i class="fas fa-map-marker-alt me-2"></i>Central Jakarta
-          </p>
-          <div class="amenities d-flex gap-3 mb-3">
-            <span><i class="fas fa-bed me-1"></i>2 BR</span>
-            <span><i class="fas fa-bath me-1"></i>2 Bath</span>
-            <span><i class="fas fa-ruler-combined me-1"></i>80m²</span>
-          </div>
-          <h6 class="fw-bold">Rp 2.500.000 / month</h6>
-        </div>
-        <div class="card-footer bg-white border-top-0">
-          <a href="#" class="btn btn-primary w-100">View Details</a>
-        </div>
-      </div>
-    </div>
 
-    <div class="col-md-6 col-lg-4">
-      <div class="property-card card h-100 shadow-sm">
-        <img src="assets/images/apartment-2.jpg" class="card-img-top" alt="Modern Apartment">
-        <div class="card-body">
-          <span class="badge bg-info mb-2">New</span>
-          <h5 class="card-title">Modern Park View</h5>
-          <p class="card-text text-muted">
-            <i class="fas fa-map-marker-alt me-2"></i>South Jakarta
-          </p>
-          <div class="amenities d-flex gap-3 mb-3">
-            <span><i class="fas fa-bed me-1"></i>3 BR</span>
-            <span><i class="fas fa-bath me-1"></i>2 Bath</span>
-            <span><i class="fas fa-ruler-combined me-1"></i>100m²</span>
-          </div>
-          <h6 class="fw-bold">Rp 3.200.000 / month</h6>
-        </div>
-        <div class="card-footer bg-white border-top-0">
-          <a href="#" class="btn btn-primary w-100">View Details</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4">
-      <div class="property-card card h-100 shadow-sm">
-        <img src="assets/images/apartment-3.jpg" class="card-img-top" alt="Studio Apartment">
-        <div class="card-body">
-          <span class="badge bg-warning text-dark mb-2">Best Value</span>
-          <h5 class="card-title">Cozy Studio Plus</h5>
-          <p class="card-text text-muted">
-            <i class="fas fa-map-marker-alt me-2"></i>West Jakarta
-          </p>
-          <div class="amenities d-flex gap-3 mb-3">
-            <span><i class="fas fa-bed me-1"></i>1 BR</span>
-            <span><i class="fas fa-bath me-1"></i>1 Bath</span>
-            <span><i class="fas fa-ruler-combined me-1"></i>45m²</span>
-          </div>
-          <h6 class="fw-bold">Rp 1.800.000 / month</h6>
-        </div>
-        <div class="card-footer bg-white border-top-0">
-          <a href="#" class="btn btn-primary w-100">View Details</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Search Filters Section -->
-<section class="search-filters mb-5">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <form class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">Location</label>
-          <select class="form-select">
-            <option selected>All Areas</option>
-            <option>Central Jakarta</option>
-            <option>North Jakarta</option>
-            <option>South Jakarta</option>
-            <option>East Jakarta</option>
-            <option>West Jakarta</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Price Range</label>
-          <select class="form-select">
-            <option selected>Any Price</option>
-            <option>Under 2M</option>
-            <option>2M - 3M</option>
-            <option>3M - 5M</option>
-            <option>Above 5M</option>
-          </select>
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">Property Type</label>
-          <select class="form-select">
-            <option selected>All Types</option>
-            <option>Studio</option>
-            <option>1 Bedroom</option>
-            <option>2 Bedrooms</option>
-            <option>3+ Bedrooms</option>
-          </select>
-        </div>
-        <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary w-100">
-            <i class="fas fa-search me-2"></i>Search
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
+    <section class="row g-4 mb-5" id="dashboard">
       <div class="col-sm-6 col-md-3">
-        <div class="card widget text-center">
+        <div class="card widget text-center shadow-sm">
           <div class="card-body">
             <h5 class="widget__title">Total Apartemen</h5>
-            <p class="widget__value" id="total-apartments">—</p>
+            <p class="widget__value" id="total-apartments">156</p>
           </div>
         </div>
       </div>
       <div class="col-sm-6 col-md-3">
-        <div class="card widget text-center">
+        <div class="card widget text-center shadow-sm">
           <div class="card-body">
             <h5 class="widget__title">Unit Terisi</h5>
-            <p class="widget__value" id="occupied-units">—</p>
+            <p class="widget__value" id="occupied-units">142</p>
           </div>
         </div>
       </div>
       <div class="col-sm-6 col-md-3">
-        <div class="card widget text-center">
+        <div class="card widget text-center shadow-sm">
           <div class="card-body">
             <h5 class="widget__title">Unit Kosong</h5>
-            <p class="widget__value" id="vacant-units">—</p>
+            <p class="widget__value" id="vacant-units">14</p>
           </div>
         </div>
       </div>
       <div class="col-sm-6 col-md-3">
-        <div class="card widget text-center">
+        <div class="card widget text-center shadow-sm">
           <div class="card-body">
             <h5 class="widget__title">Pendapatan Bulanan</h5>
-            <p class="widget__value" id="monthly-revenue">—</p>
+            <p class="widget__value" id="monthly-revenue">Rp 128,350,000</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Add New Apartment Form -->
-    <section class="py-5">
-      <h2 class="text-center">Tambah Apartemen Baru</h2>
-      <form id="add-apartment-form" class="text-center">
-        <div class="mb-3">
-          <label for="apartment-name" class="form-label">Nama Apartemen</label>
-          <input type="text" class="form-control" id="apartment-name" required>
+    <section class="search-filters mb-5" id="apartments">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form class="row g-3" id="search-form">
+            <div class="col-md-4">
+              <label class="form-label">Lokasi</label>
+              <select class="form-select" id="location-filter">
+                <option selected>Semua Area</option>
+                <option>Jakarta Pusat</option>
+                <option>Jakarta Utara</option>
+                <option>Jakarta Selatan</option>
+                <option>Jakarta Timur</option>
+                <option>Jakarta Barat</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Rentang Harga</label>
+              <select class="form-select" id="price-filter">
+                <option selected>Semua Harga</option>
+                <option>Di bawah 2M</option>
+                <option>2M - 3M</option>
+                <option>3M - 5M</option>
+                <option>Di atas 5M</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Tipe Properti</label>
+              <select class="form-select" id="type-filter">
+                <option selected>Semua Tipe</option>
+                <option>Studio</option>
+                <option>1 Kamar</option>
+                <option>2 Kamar</option>
+                <option>3+ Kamar</option>
+              </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Cari</button>
+            </div>
+          </form>
         </div>
-        <button type="submit" class="btn btn-primary">Tambah Apartemen</button>
-      </form>
+      </div>
     </section>
 
-    <!-- Manage Tenants -->
-    <section class="py-5">
+    <section class="featured-properties mb-5">
+      <h2 class="text-center mb-4">Apartemen Pilihan</h2>
+      <div class="row g-4" id="property-list">
+        <div class="col-md-6 col-lg-4">
+          <div class="property-card card h-100 shadow-sm">
+            <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Luxury Apartment">
+            <div class="card-body">
+              <span class="badge bg-success mb-2">Unggulan</span>
+              <h5 class="card-title">Residensial Langit Mewah</h5>
+              <p class="card-text text-muted"><i class="fas fa-map-marker-alt me-2"></i>Jakarta Pusat</p>
+              <div class="amenities d-flex gap-3 mb-3">
+                <span><i class="fas fa-bed me-1"></i>2 KT</span>
+                <span><i class="fas fa-bath me-1"></i>2 KM</span>
+                <span><i class="fas fa-ruler-combined me-1"></i>80m²</span>
+              </div>
+              <h6 class="fw-bold">Rp 2.500.000 / bulan</h6>
+            </div>
+            <div class="card-footer bg-white border-top-0">
+              <button class="btn btn-primary w-100 view-details" data-id="1">Lihat Detail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5" id="tenants">
       <h2 class="text-center">Kelola Penyewa</h2>
       <div class="mb-3">
         <button class="btn btn-success" id="add-tenant">Tambah Penyewa</button>
       </div>
-      <div id="tenant-list"></div>
+      <div id="tenant-list" class="card shadow-sm p-3"></div>
     </section>
 
-    <!-- Add Rental Payment -->
-    <section class="py-5">
+    <section class="py-5" id="finance">
       <h2 class="text-center">Tambah Pembayaran Sewa</h2>
       <form id="add-rental-payment" class="text-center">
         <div class="mb-3">
@@ -310,21 +289,11 @@
         <button type="submit" class="btn btn-info">Tambah Pembayaran</button>
       </form>
     </section>
-
-    <!-- Search Apartments -->
-    <section class="py-5">
-      <h2 class="text-center">Cari Apartemen</h2>
-      <div class="mb-3">
-        <input type="text" id="search-apartments" class="form-control" placeholder="Cari Apartemen...">
-      </div>
-      <div id="search-results" class="text-center"></div>
-    </section>
   </main>
 
-  <!-- Footer -->
   <footer class="footer text-center py-4">
     <div class="container">
-      <small>&copy; 2025 RentalApartemen. Semua hak dilindungi.</small>
+      <small>© 2025 RentalApartemen. Semua hak dilindungi.</small>
       <nav class="footer__nav mt-2">
         <a href="#" class="me-3">Dokumentasi</a>
         <a href="mailto:support@rentalapartemen.com" class="me-3">Dukungan</a>
@@ -333,82 +302,170 @@
     </div>
   </footer>
 
-  <!-- JS Script -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Modal for Property Details -->
+  <div class="modal fade" id="propertyModal" tabindex="-1" aria-labelledby="propertyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="propertyModalLabel">Detail Properti</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img src="https://via.placeholder.com/300x200" class="img-fluid mb-3" alt="Property">
+          <h5 id="modal-title">Residensial Langit Mewah</h5>
+          <p><i class="fas fa-map-marker-alt me-2"></i><span id="modal-location">Jakarta Pusat</span></p>
+          <p><strong>Harga:</strong> <span id="modal-price">Rp 2.500.000 / bulan</span></p>
+          <p><strong>Fasilitas:</strong> <span id="modal-amenities">2 Kamar Tidur, 2 Kamar Mandi, 80m²</span></p>
+          <form id="booking-form">
+            <div class="mb-3">
+              <label for="booking-name" class="form-label">Nama</label>
+              <input type="text" class="form-control" id="booking-name" required>
+            </div>
+            <div class="mb-3">
+              <label for="booking-email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="booking-email" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Pesan Sekarang</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Toggle Theme
-      const toggle = document.getElementById('theme-toggle');
-      toggle?.addEventListener('click', () => {
+      // Simulated Data
+      const properties = [
+        {
+          id: 1,
+          name: 'Residensial Langit Mewah',
+          location: 'Jakarta Pusat',
+          price: 'Rp 2.500.000 / bulan',
+          amenities: '2 Kamar Tidur, 2 Kamar Mandi, 80m²',
+          image: 'https://via.placeholder.com/300x200'
+        }
+      ];
+
+      const tenants = [];
+
+      // Theme Toggle
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', () => {
         const html = document.documentElement;
         const isDark = html.getAttribute('data-theme') === 'dark';
         html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        toggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+        themeToggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
       });
 
-      // Fetch Dashboard Data
-      fetch('/api/statistics')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('total-apartments').textContent = data.totalApartments;
-          document.getElementById('occupied-units').textContent = data.occupiedUnits;
-          document.getElementById('vacant-units').textContent = data.vacantUnits;
-          document.getElementById('monthly-revenue').textContent = data.monthlyRevenue;
+      // Show Toast Notification
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast bg-${type} text-white show`;
+        toast.innerHTML = `${message}<button class="btn-close btn-close-white ms-3" onclick="this.parentElement.remove()"></button>`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      // SPA Navigation
+      const sections = document.querySelectorAll('section');
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const sectionId = link.getAttribute('href').slice(1);
+          sections.forEach(section => {
+            section.classList.toggle('d-none', section.id !== sectionId);
+          });
+          navLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
         });
-
-      // Handle Add Apartment Form
-      document.getElementById('add-apartment-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const apartmentName = document.getElementById('apartment-name').value;
-        fetch('/api/add-apartment', {
-          method: 'POST',
-          body: JSON.stringify({ name: apartmentName }),
-          headers: { 'Content-Type': 'application/json' }
-        }).then(response => response.json())
-          .then(data => alert('Apartemen berhasil ditambahkan!'));
       });
 
-      // Handle Add Rental Payment
-      document.getElementById('add-rental-payment').addEventListener('submit', (e) => {
+      // Search Form
+      const searchForm = document.getElementById('search-form');
+      searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const tenantName = document.getElementById('tenant-name').value;
-        const paymentAmount = document.getElementById('payment-amount').value;
-        fetch('/api/add-payment', {
-          method: 'POST',
-          body: JSON.stringify({ tenant: tenantName, amount: paymentAmount }),
-          headers: { 'Content-Type': 'application/json' }
-        }).then(response => response.json())
-          .then(data => alert('Pembayaran berhasil ditambahkan!'));
+        const location = document.getElementById('location-filter').value;
+        const price = document.getElementById('price-filter').value;
+        const type = document.getElementById('type-filter').value;
+        showToast('Pencarian berhasil! Menampilkan hasil untuk ' + location, 'info');
+        // Simulate filtering properties
+        const propertyList = document.getElementById('property-list');
+        propertyList.innerHTML = properties.map(prop => `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="property-card card h-100 shadow-sm">
+                            <img src="${prop.image}" class="card-img-top" alt="${prop.name}">
+                            <div class="card-body">
+                                <span class="badge bg-success mb-2">Unggulan</span>
+                                <h5 class="card-title">${prop.name}</h5>
+                                <p class="card-text text-muted"><i class="fas fa-map-marker-alt me-2"></i>${prop.location}</p>
+                                <div class="amenities d-flex gap-3 mb-3">
+                                    <span><i class="fas fa-bed me-1"></i>${prop.amenities.split(',')[0]}</span>
+                                    <span><i class="fas fa-bath me-1"></i>${prop.amenities.split(',')[1]}</span>
+                                    <span><i class="fas fa-ruler-combined me-1"></i>${prop.amenities.split(',')[2]}</span>
+                                </div>
+                                <h6 class="fw-bold">${prop.price}</h6>
+                            </div>
+                            <div class="card-footer bg-white border-top-0">
+                                <button class="btn btn-primary w-100 view-details" data-id="${prop.id}">Lihat Detail</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
       });
 
-      // Manage Tenants (Example)
-      document.getElementById('add-tenant').addEventListener('click', () => {
-        const tenantName = prompt("Masukkan nama penyewa");
-        if (tenantName) {
-          // Simulate adding a tenant to the list
-          const tenantList = document.getElementById('tenant-list');
-          const tenantDiv = document.createElement('div');
-          tenantDiv.textContent = tenantName;
-          tenantList.appendChild(tenantDiv);
+      // Property Details Modal
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('view-details')) {
+          const id = e.target.getAttribute('data-id');
+          const prop = properties.find(p => p.id == id);
+          if (prop) {
+            document.getElementById('modal-title').textContent = prop.name;
+            document.getElementById('modal-location').textContent = prop.location;
+            document.getElementById('modal-price').textContent = prop.price;
+            document.getElementById('modal-amenities').textContent = prop.amenities;
+            document.querySelector('.modal-body img').src = prop.image;
+            new bootstrap.Modal(document.getElementById('propertyModal')).show();
+          }
         }
       });
 
-      // Search Apartments
-      document.getElementById('search-apartments').addEventListener('input', (e) => {
-        const query = e.target.value;
-        fetch(`/api/search-apartments?q=${query}`)
-          .then(response => response.json())
-          .then(results => {
-            const resultsDiv = document.getElementById('search-results');
-            resultsDiv.innerHTML = '';
-            results.forEach(result => {
-              const div = document.createElement('div');
-              div.textContent = result.name;
-              resultsDiv.appendChild(div);
-            });
-          });
+      // Booking Form
+      const bookingForm = document.getElementById('booking-form');
+      bookingForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('booking-name').value;
+        const email = document.getElementById('booking-email').value;
+        showToast(`Pemesanan atas nama ${name} berhasil! Konfirmasi dikirim ke ${email}`, 'success');
+        bookingForm.reset();
+        bootstrap.Modal.getInstance(document.getElementById('propertyModal')).hide();
+        // Simulate payment processing
+        console.log('Processing payment for:', { name, email });
+      });
+
+      // Add Tenant
+      const addTenantBtn = document.getElementById('add-tenant');
+      addTenantBtn.addEventListener('click', () => {
+        const name = prompt('Masukkan nama penyewa:');
+        if (name) {
+          tenants.push({ name });
+          const tenantList = document.getElementById('tenant-list');
+          tenantList.innerHTML = tenants.map(t => `<div class="p-2 border-bottom">${t.name}</div>`).join('');
+          showToast(`Penyewa ${name} berhasil ditambahkan!`, 'success');
+        }
+      });
+
+      // Add Rental Payment
+      const paymentForm = document.getElementById('add-rental-payment');
+      paymentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const tenantName = document.getElementById('tenant-name').value;
+        const amount = document.getElementById('payment-amount').value;
+        showToast(`Pembayaran Rp ${amount} dari ${tenantName} berhasil!`, 'success');
+        paymentForm.reset();
+        // Simulate payment processing
+        console.log('Payment processed:', { tenantName, amount });
       });
     });
   </script>

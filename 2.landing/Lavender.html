@@ -1,848 +1,1035 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"/>
-  <meta name="description" content="Rentelindo - Platform manajemen properti sewa dengan fitur lengkap untuk pemilik dan pengelola properti di Indonesia. Kelola unit, lacak penyewa, dan optimalkan keuangan dalam satu dashboard intuitif." />
-  <meta name="keywords" content="Rental Apartemen, Manajemen Properti, Penyewa, Dashboard Admin, Booking Digital, Tur Virtual, Sistem Pembayaran" />
-  <meta name="author" content="Tim Rentelindo" />
-  <title>Rentelindo - Manajemen Properti Sewa</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>" />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.rel='stylesheet'">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </noscript>
-
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <style>
-    /* =========================
-       1. DESIGN TOKENS MODERN
-    ========================== */
-    :root {
-      --color-primary-h: 214;
-      --color-primary-s: 100%;
-      --color-primary-l: 54%;
-      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
-      --color-primary-dark: hsl(var(--color-primary-h), 100%, 42%);
-      --color-primary-light: hsl(var(--color-primary-h), 100%, 92%);
-      --color-accent: hsl(40, 90%, 60%);
-      --color-success: hsl(140, 60%, 45%);
-      --color-danger: hsl(0, 80%, 56%);
-      --color-warning: hsl(40, 90%, 60%);
-      --color-bg: hsl(220, 16%, 98%);
-      --color-bg-alt: hsl(0, 0%, 100%);
-      --color-text: hsl(220, 24%, 16%);
-      --color-muted: hsl(220, 10%, 50%);
-      --color-border: hsl(220, 20%, 90%);
-      --color-focus: hsl(var(--color-primary-h), 100%, 85%);
-
-      /* Typography Scale */
-      --font-main: 'Inter', system-ui, sans-serif;
-      --font-xs: 0.875rem;
-      --font-sm: 1rem;
-      --font-md: 1.125rem;
-      --font-lg: 1.375rem;
-      --font-xl: 1.75rem;
-      --font-display: 2.25rem;
-
-      /* Spacing Scale */
-      --space-xxs: 0.25rem;
-      --space-xs: 0.5rem;
-      --space-sm: 0.75rem;
-      --space-md: 1rem;
-      --space-lg: 1.5rem;
-      --space-xl: 2rem;
-
-      /* Radius & Shadow */
-      --radius-xs: 0.375rem;
-      --radius-sm: 0.5rem;
-      --radius-md: 0.75rem;
-      --radius-lg: 1rem;
-      --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-      --transition-fast: all 0.2s ease-in-out;
-      --transition-normal: all 0.3s ease-in-out;
-    }
-
-    [data-theme="dark"] {
-      --color-bg: hsl(220, 24%, 16%);
-      --color-bg-alt: hsl(224, 29%, 14%);
-      --color-text: hsl(210, 40%, 98%);
-      --color-muted: hsl(215, 20%, 65%);
-      --color-border: hsl(217, 33%, 20%);
-      --color-focus: hsl(var(--color-primary-h), 100%, 85%);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      font-size: 16px;
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body[data-theme="dark"] {
-      background: var(--color-bg);
-      color: #f8fafc;
-    }
-
-    body {
-      font-family: var(--font-main);
-      background: var(--color-bg);
-      color: var(--color-text);
-      line-height: 1.6;
-      transition: background 0.3s, color 0.3s;
-      padding: var(--space-xl);
-    }
-
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    a:hover {
-      color: var(--color-primary-dark);
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 var(--space-md);
-    }
-
-    .section {
-      padding: var(--space-xl) 0;
-    }
-
-    .grid {
-      display: grid;
-      gap: var(--space-lg);
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-
-    .card {
-      background: #fff;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-lg);
-    }
-
-    .card-header {
-      font-size: var(--font-lg);
-      font-weight: 600;
-      margin-bottom: var(--space-md);
-      border-bottom: 1px solid var(--color-border);
-      padding-bottom: var(--space-sm);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-sm);
-      padding: var(--space-sm) var(--space-xl);
-      font-weight: 500;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .btn-primary {
-      background: var(--color-primary);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background: var(--color-primary-dark);
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--color-primary);
-      color: var(--color-primary);
-    }
-
-    .btn-outline:hover {
-      background: var(--color-primary-light);
-      color: #fff;
-    }
-
-    .form-group {
-      margin-bottom: var(--space-md);
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: var(--space-xs);
-      font-weight: 600;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: var(--space-xs) var(--space-sm);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      font-size: var(--font-sm);
-      background: var(--color-bg-alt);
-      color: var(--color-text);
-      transition: var(--transition-fast);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      background: var(--color-bg);
-      box-shadow: 0 0 0 2px var(--color-focus);
-    }
-
-    .form-error {
-      color: var(--color-danger);
-      font-size: var(--font-xs);
-      display: none;
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-      background: var(--color-primary-dark);
-      color: #fff;
-      min-width: 240px;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      left: 0;
-      padding: var(--space-xl);
-      overflow-y: auto;
-    }
-
-    .sidebar .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      display: block;
-      text-align: center;
-      margin-bottom: var(--space-xl);
-    }
-
-    .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar nav li {
-      margin: var(--space-sm) 0;
-    }
-
-    .sidebar nav a {
-      color: #fff;
-      display: block;
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--radius-sm);
-      transition: background 0.2s, transform 0.15s;
-    }
-
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: var(--color-primary);
-      transform: translateX(4px);
-    }
-
-    /* MAIN CONTENT */
-    .main-content {
-      flex: 1;
-      padding: var(--space-xl);
-      background: var(--color-bg-alt);
-    }
-
-    .main-content h2 {
-      font-size: var(--font-xl);
-      margin-bottom: var(--space-md);
-    }
-
-    .main-content p {
-      color: var(--color-muted);
-      margin-bottom: var(--space-lg);
-    }
-
-    /* HEADER */
-    .header {
-      background: linear-gradient(to right, var(--color-primary), var(--color-primary-dark));
-      color: #fff;
-      padding: var(--space-md) 0;
-      box-shadow: var(--shadow-md);
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: var(--space-md);
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #fff;
-      text-decoration: none;
-    }
-
-    nav[aria-label="Navigasi utama"] {
-      display: flex;
-      gap: var(--space-xl);
-    }
-
-    .nav-link {
-      color: #fff;
-      font-weight: 500;
-      text-decoration: none;
-      position: relative;
-    }
-
-    .nav-link::after,
-    .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      height: 2px;
-      width: 100%;
-      background: #fff;
-      opacity: 0;
-      visibility: hidden;
-      transition: var(--transition-fast);
-    }
-
-    .nav-link:hover::after,
-    .nav-link.active::after {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* HERO SECTION */
-    .hero {
-      background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-      color: #fff;
-      padding: var(--space-xl) 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-      z-index: 0;
-      opacity: 0.3;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 700px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: var(--font-display);
-      margin-bottom: var(--space-md);
-    }
-
-    .hero-desc {
-      font-size: var(--font-lg);
-      margin-bottom: var(--space-xl);
-    }
-
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-sm);
-      justify-content: center;
-    }
-
-    .hero-buttons button {
-      background: #fff;
-      color: var(--color-primary);
-      border: 2px solid #fff;
-    }
-
-    .hero-buttons button:hover {
-      background: var(--color-primary-dark);
-      color: #fff;
-    }
-
-    /* FEATURE TABS */
-    .feature-tabs {
-      display: flex;
-      gap: var(--space-md);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-md);
-    }
-
-    .feature-tab {
-      padding: var(--space-sm) var(--space-xl);
-      font-weight: 500;
-      border-radius: var(--radius-lg);
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .feature-tab.active,
-    .feature-tab:hover {
-      background: var(--color-primary);
-      color: #fff;
-    }
-
-    /* PAYMENT FORM */
-    .payment-form {
-      background: #fff;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-xl);
-    }
-
-    .payment-methods {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: var(--space-md);
-      margin-bottom: var(--space-lg);
-    }
-
-    .payment-method {
-      border: 2px solid var(--color-border);
-      padding: var(--space-md);
-      border-radius: var(--radius-md);
-      text-align: center;
-      cursor: pointer;
-      transition: var(--transition-fast);
-    }
-
-    .payment-method.active {
-      border-color: var(--color-primary);
-      transform: scale(1.03);
-    }
-
-    /* CHAT BOX */
-    .chat-box {
-      background: #fff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-md);
-      height: 400px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-
-    .chat-message {
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--radius-md);
-      max-width: 70%;
-      word-wrap: break-word;
-    }
-
-    .chat-user {
-      background: var(--color-primary-light);
-      align-self: flex-end;
-    }
-
-    .chat-owner {
-      background: var(--color-bg-alt);
-      align-self: flex-start;
-    }
-
-    .chat-input {
-      display: flex;
-      gap: var(--space-sm);
-      margin-top: var(--space-md);
-    }
-
-    .chat-input input {
-      flex: 1;
-      padding: var(--space-sm);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-    }
-
-    .chat-input button {
-      background: var(--color-primary);
-      color: #fff;
-      padding: var(--space-sm) var(--space-lg);
-      border-radius: var(--radius-sm);
-      border: none;
-      cursor: pointer;
-    }
-
-    /* VERIFIED REVIEWS */
-    .review-card {
-      background: #fff;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--space-lg);
-      box-shadow: var(--shadow-sm);
-      margin-bottom: var(--space-lg);
-    }
-
-    .verified-badge {
-      background: var(--color-success);
-      color: #fff;
-      padding: 0.2rem 0.5rem;
-      border-radius: var(--radius-xs);
-      font-size: 0.8rem;
-      margin-left: var(--space-xs);
-    }
-
-    .stars {
-      display: flex;
-      gap: var(--space-xs);
-      margin: var(--space-xs) 0;
-    }
-
-    .stars i {
-      color: var(--color-warning);
-      cursor: pointer;
-    }
-
-    /* VIRTUAL TOUR */
-    .virtual-tour {
-      background: #000;
-      border-radius: var(--radius-md);
-      padding: var(--space-md);
-      aspect-ratio: 16/9;
-      position: relative;
-    }
-
-    .virtual-tour img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: var(--radius-md);
-      transition: transform 0.5s;
-    }
-
-    .tour-controls {
-      position: absolute;
-      bottom: var(--space-md);
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: var(--space-md);
-    }
-
-    .tour-controls button {
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      border: none;
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      font-size: var(--font-sm);
-      color: var(--color-muted);
-      margin-top: var(--space-xl);
-      padding: var(--space-md) 0;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.6s forwards;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .fade-in {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: translateY(0) !important;
-      }
-    }
-
-    /* LAZY LOAD GAMBAR */
-    img.lazy {
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    img.lazy.loaded {
-      opacity: 1;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      .feature-tabs {
-        flex-wrap: wrap;
-        gap: var(--space-sm);
-      }
-
-      .payment-methods {
-        grid-template-columns: 1fr;
-      }
-
-      .chat-input input {
-        font-size: var(--font-sm);
-      }
-    }
-    
-    /* Utility Classes */
-    .d-flex { display: flex; }
-    .flex-column { flex-direction: column; }
-    .justify-between { justify-content: space-between; }
-    .justify-center { justify-content: center; }
-    .align-center { align-items: center; }
-    .text-center { text-align: center; }
-    .text-start { text-align: left; }
-    .text-muted { color: var(--color-muted); }
-    .text-warning { color: var(--color-warning); }
-    .mt-2 { margin-top: 0.5rem; }
-    .mt-3 { margin-top: 0.75rem; }
-    .mt-5 { margin-top: 1.25rem; }
-    .mb-3 { margin-bottom: 0.75rem; }
-    .mb-4 { margin-bottom: 1rem; }
-    .gap-2 { gap: 0.5rem; }
-    .gap-sm { gap: var(--space-sm); }
-    .w-100 { width: 100%; }
-    .fs-xl { font-size: var(--font-xl); }
-    .fw-bold { font-weight: 700; }
-    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
-    .btn-outline-primary { border: 1px solid var(--color-primary); color: var(--color-primary); }
-    .btn-outline-danger { border: 1px solid var(--color-danger); color: var(--color-danger); }
-    .d-block { display: block; }
-    .l-container { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-md); }
-    .c-header { background: var(--color-primary); padding: var(--space-md) 0; }
-    .c-header__logo { color: #fff; font-weight: 700; display: flex; align-items: center; }
-    .c-status-bar { background: var(--color-primary-dark); color: #fff; text-align: center; padding: 0.25rem; }
-    .bg-light { background: var(--color-bg); }
-    .show { opacity: 1 !important; visibility: visible !important; }
-    
-    /* Dashboard Layout */
-    .dashboard {
-      display: flex;
-      min-height: 100vh;
-      margin: -1rem;
-    }
-  </style>
-</head>
-<body class="bg-light">
-
-<!-- STATUS BAR -->
-<div class="c-status-bar" id="connectionBar" role="status" aria-live="polite"></div>
-
-<!-- HEADER -->
-<header class="c-header" role="banner">
-  <div class="l-container d-flex justify-between align-center">
-    <a href="#" class="c-header__logo">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/%3E%3C/svg%3E"
-           alt="Logo Rentelindo" width="24" height="24" loading="lazy" style="margin-right: 0.5rem;" />
-      Rentelindo
-    </a>
-    <button class="theme-toggle btn btn-outline" aria-label="Toggle dark mode">
-      <i class="fas fa-moon"></i> Mode Gelap
-    </button>
-  </div>
-</header>
-
-<!-- SIDEBAR DAN MAIN CONTENT -->
-<div class="dashboard">
-  <!-- SIDEBAR -->
-  <aside class="sidebar" aria-label="Menu Admin">
-    <a href="#" class="logo d-block text-center mb-3">Rentelindo</a>
-    <nav class="d-flex flex-column gap-2">
-      <a href="#beranda" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-home"></i> Beranda</a>
-      <a href="#penyewa" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-users"></i> Penyewa</a>
-      <a href="#unit" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-building"></i> Unit</a>
-      <a href="#laporan" class="btn btn-sm btn-outline-primary w-100 text-start"><i class="fas fa-file-invoice-dollar"></i> Laporan</a>
-      <a href="#" class="btn btn-sm btn-outline-danger w-100 text-start" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</a>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="main-content" id="main-content" tabindex="-1">
-    <!-- HERO SECTION -->
-    <section class="hero fade-in">
-      <div class="container hero-content">
-        <h1 class="hero-title">Kelola Apartemen Anda Secara Digital</h1>
-        <p class="hero-desc">
-          Platform intuitif untuk pemilik dan manajer properti. Monitor penyewa, lacak kontrak, dan optimalkan keuangan dalam satu dashboard.
-        </p>
-        <div class="hero-buttons">
-          <button class="btn btn-primary" onclick="openModal('add-tenant')"><i class="fas fa-user-plus"></i> Tambah Penyewa</button>
-          <button class="btn btn-outline" onclick="openModal('add-unit')"><i class="fas fa-building"></i> Tambah Unit</button>
-          <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Ekspor Data</button>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Manajemen Properti</title>
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* style.css */
+
+/* --- Variabel CSS untuk Tema --- */
+:root {
+    --background-color-light: #f4f7f6;
+    --text-color-light: #333;
+    --card-background-light: #fff;
+    --header-background-light: #e0e0e0;
+    --footer-background-light: #e0e0e0;
+    --button-primary-background-light: #007bff;
+    --button-primary-text-light: #fff;
+    --button-secondary-background-light: #6c757d;
+    --button-secondary-text-light: #fff;
+    --border-color-light: #ddd;
+    --hover-background-light: #f0f0f0;
+    --modal-background-light: rgba(0, 0, 0, 0.5);
+
+    --background-color-dark: #1e1e1e;
+    --text-color-dark: #f4f7f6;
+    --card-background-dark: #2d2d2d;
+    --header-background-dark: #333;
+    --footer-background-dark: #333;
+    --button-primary-background-dark: #0056b3;
+    --button-primary-text-dark: #fff;
+    --button-secondary-background-dark: #5a6268;
+    --button-secondary-text-dark: #fff;
+    --border-color-dark: #444;
+    --hover-background-dark: #3a3a3a;
+    --modal-background-dark: rgba(255, 255, 255, 0.2);
+
+    --background-color: var(--background-color-light);
+    --text-color: var(--text-color-light);
+    --card-background: var(--card-background-light);
+    --header-background: var(--header-background-light);
+    --footer-background: var(--footer-background-light);
+    --button-primary-background: var(--button-primary-background-light);
+    --button-primary-text: var(--button-primary-text-light);
+    --button-secondary-background: var(--button-secondary-background-light);
+    --button-secondary-text: var(--button-secondary-text-light);
+    --border-color: var(--border-color-light);
+    --hover-background: var(--hover-background-light);
+    --modal-background: var(--modal-background-light);
+
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+}
+
+/* --- Tema Gelap --- */
+body.dark-mode {
+    --background-color: var(--background-color-dark);
+    --text-color: var(--text-color-dark);
+    --card-background: var(--card-background-dark);
+    --header-background: var(--header-background-dark);
+    --footer-background: var(--footer-background-dark);
+    --button-primary-background: var(--button-primary-background-dark);
+    --button-primary-text: var(--button-primary-text-dark);
+    --button-secondary-background: var(--button-secondary-background-dark);
+    --button-secondary-text: var(--button-secondary-text-dark);
+    --border-color: var(--border-color-dark);
+    --hover-background: var(--hover-background-dark);
+    --modal-background: var(--modal-background-dark);
+}
+
+/* --- Reset dan Gaya Dasar --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-medium);
+}
+
+a {
+    color: var(--button-primary-background);
+    text-decoration: none;
+    transition: color var(--transition-speed);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- Header --- */
+.site-header {
+    background-color: var(--header-background);
+    color: var(--text-color);
+    padding: var(--spacing-medium) 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.site-title {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.site-nav ul {
+    display: flex;
+    gap: var(--spacing-medium);
+}
+
+.nav-link {
+    font-weight: 600;
+    padding: var(--spacing-small) 0;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--button-primary-background);
+    transition: width var(--transition-speed) ease-in-out;
+}
+
+.nav-link:hover::after,
+.nav-link:focus::after {
+    width: 100%;
+}
+
+.theme-toggle-button {
+    background: none;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+}
+
+.theme-toggle-button:hover {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
+
+/* --- Main Content --- */
+.site-main {
+    padding: var(--spacing-large) var(--spacing-medium);
+}
+
+.dashboard-section {
+    margin-bottom: var(--spacing-large) * 2;
+}
+
+.section-title {
+    font-size: 2em;
+    margin-bottom: var(--spacing-small);
+    color: var(--button-primary-background);
+}
+
+.section-description {
+    margin-bottom: var(--spacing-large);
+    color: var(--text-color);
+}
+
+/* --- Tombol --- */
+.button {
+    display: inline-block;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1em;
+    border: none;
+    text-align: center;
+    transition: background-color var(--transition-speed), opacity var(--transition-speed);
+}
+
+.primary-button {
+    background-color: var(--button-primary-background);
+    color: var(--button-primary-text);
+}
+
+.primary-button:hover {
+    opacity: 0.9;
+}
+
+.secondary-button {
+    background-color: var(--button-secondary-background);
+    color: var(--button-secondary-text);
+}
+
+.secondary-button:hover {
+    opacity: 0.9;
+}
+
+/* --- Grid Properti --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-medium);
+}
+
+.property-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out, background-color var(--transition-speed);
+    cursor: pointer;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.property-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.property-card-content {
+    padding: var(--spacing-medium);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.property-card-content h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-small);
+    font-size: 1.2em;
+    color: var(--button-primary-background);
+}
+
+.property-card-content p {
+    margin-bottom: var(--spacing-small);
+    font-size: 0.9em;
+}
+
+.property-actions {
+    display: flex;
+    gap: var(--spacing-small);
+    margin-top: auto; /* Push actions to the bottom */
+}
+
+.property-actions .button {
+    flex-grow: 1;
+    font-size: 0.9em;
+    padding: var(--spacing-small);
+}
+
+
+/* --- Laporan Keuangan --- */
+.report-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-medium);
+    margin-bottom: var(--spacing-large);
+}
+
+.report-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    text-align: center;
+    transition: background-color var(--transition-speed);
+}
+
+.report-card h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    color: var(--button-primary-background);
+}
+
+.report-value {
+    font-size: 2em;
+    font-weight: 600;
+    margin-top: var(--spacing-small);
+    color: var(--text-color);
+}
+
+.transaction-list {
+    margin-top: var(--spacing-large);
+}
+
+.transaction-list h3 {
+    margin-bottom: var(--spacing-medium);
+    color: var(--button-primary-background);
+}
+
+.transaction-list ul {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: border-color var(--transition-speed);
+}
+
+.transaction-list li {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+.transaction-list li:last-child {
+    border-bottom: none;
+}
+
+.transaction-list li:nth-child(even) {
+    background-color: var(--hover-background); /* Subtle stripe */
+}
+
+
+/* --- Notifikasi --- */
+.notification-list {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: border-color var(--transition-speed);
+}
+
+.notification-list li {
+    padding: var(--spacing-medium);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+.notification-list li:last-child {
+    border-bottom: none;
+}
+
+.notification-list li strong {
+    color: var(--button-primary-background);
+}
+
+/* --- Modal --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: var(--modal-background); /* Black with opacity */
+    backdrop-filter: blur(5px); /* Optional blur effect */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
+    padding-top: 60px;
+    transition: background-color var(--transition-speed);
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: var(--spacing-large);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    width: 90%; /* Could be more responsive */
+    max-width: 600px;
+    position: relative;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+.close-button {
+    color: var(--text-color);
+    position: absolute;
+    top: var(--spacing-medium);
+    right: var(--spacing-medium);
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color var(--transition-speed);
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--button-primary-background);
+    text-decoration: none;
+}
+
+/* --- Form Styling --- */
+.form-group {
+    margin-bottom: var(--spacing-medium);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-small);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="email"],
+.form-group input[type="url"] {
+    width: 100%;
+    padding: var(--spacing-small);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: border-color var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="url"]:focus {
+    outline: none;
+    border-color: var(--button-primary-background);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* --- Detail Modal Specifics --- */
+.detail-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-medium);
+}
+
+.detail-map-placeholder {
+    width: 100%;
+    height: 200px; /* Placeholder height */
+    background-color: var(--hover-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-medium);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+    font-style: italic;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* --- Info Messages --- */
+.info-message {
+    padding: var(--spacing-medium);
+    background-color: var(--hover-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-top: var(--spacing-medium);
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+
+#payment-status {
+    margin-top: var(--spacing-medium);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.payment-success {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green */
+    border-color: #c3e6cb; /* Green border */
+}
+
+.payment-failure {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red */
+    border-color: #f5c6cb; /* Red border */
+}
+
+body.dark-mode .payment-success {
+     background-color: #0f3d1a; /* Darker green */
+    color: #a3e0b4; /* Lighter green */
+    border-color: #1a5a2a; /* Darker green border */
+}
+
+body.dark-mode .payment-failure {
+    background-color: #5a1d24; /* Darker red */
+    color: #f1aeb5; /* Lighter red */
+    border-color: #7a2830; /* Darker red border */
+}
+
+
+/* --- Footer --- */
+.site-footer {
+    background-color: var(--footer-background);
+    color: var(--text-color);
+    text-align: center;
+    padding: var(--spacing-medium) 0;
+    margin-top: var(--spacing-large) * 2;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* --- Responsif --- */
+@media (max-width: 768px) {
+    .site-header .container {
+        flex-direction: column;
+        gap: var(--spacing-medium);
+    }
+
+    .site-nav ul {
+        flex-direction: column;
+        gap: var(--spacing-small);
+        text-align: center;
+    }
+
+    .site-title {
+        margin-bottom: var(--spacing-small);
+    }
+
+    .theme-toggle-button {
+        width: 100%;
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr; /* Stack items on small screens */
+    }
+
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-title {
+        font-size: 1.5em;
+    }
+
+    .section-title {
+        font-size: 1.8em;
+    }
+
+    .report-value {
+        font-size: 1.5em;
+    }
+
+    .property-actions {
+        flex-direction: column;
+        gap: var(--spacing-small);
+    }
+}
+</style>
+    </head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Dashboard Properti</h1>
+            <nav class="site-nav">
+                <ul>
+                    <li><a href="#properti" class="nav-link">Properti Saya</a></li>
+                    <li><a href="#laporan" class="nav-link">Laporan Keuangan</a></li>
+                    <li><a href="#notifikasi" class="nav-link">Notifikasi</a></li>
+                </ul>
+            </nav>
+            <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle light/dark mode">Mode Gelap</button>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <!-- FITUR TABS -->
-    <div class="container mt-5">
-      <div class="feature-tabs">
-        <button class="feature-tab active" data-tab="pembayaran">Pembayaran Online</button>
-        <button class="feature-tab" data-tab="chat">Chat Langsung</button>
-        <button class="feature-tab" data-tab="ulasan">Ulasan Terpercaya</button>
-        <button class="feature-tab" data-tab="tur">Tur Virtual 360°</button>
-      </div>
+    <main class="site-main container">
+        <section id="properti" class="dashboard-section">
+            <h2 class="section-title">Properti Saya</h2>
+            <p class="section-description">Kelola daftar properti Anda dengan mudah. Tambahkan, edit, atau hapus properti kapan saja.</p>
+            <button id="add-property-button" class="button primary-button">Tambah Properti Baru</button>
 
-      <!-- PEMBAYARAN -->
-      <section id="pembayaran" class="fade-in">
-        <div class="payment-form">
-          <h2 class="fs-xl fw-bold mb-3">Sistem Pembayaran Digital</h2>
-          <p class="text-muted mb-4">Lakukan pembayaran secara aman dan cepat melalui platform kami. Semua transaksi dilindungi dengan enkripsi SSL.</p>
-          <div class="payment-methods mb-4">
-            <div class="payment-method active" data-method="bank">
-              <i class="fas fa-university fs-xl"></i>
-              <p class="mt-2">Transfer Bank</p>
+            <div class="property-list grid-container">
+                <!-- Daftar properti akan dimuat di sini oleh JavaScript -->
+                <p id="no-properties-message" class="info-message">Belum ada properti ditambahkan. Klik "Tambah Properti Baru" untuk memulai!</p>
             </div>
-            <div class="payment-method" data-method="qris">
-              <i class="fas fa-qrcode fs-xl"></i>
-              <p class="mt-2">QRIS</p>
+        </section>
+
+        <section id="laporan" class="dashboard-section">
+            <h2 class="section-title">Laporan Keuangan</h2>
+            <p class="section-description">Lihat ringkasan pendapatan dan transaksi properti Anda.</p>
+            <div class="report-summary">
+                <div class="report-card">
+                    <h3>Total Pendapatan (Simulasi)</h3>
+                    <p id="total-revenue" class="report-value">Rp 0</p>
+                </div>
+                <div class="report-card">
+                    <h3>Transaksi Selesai (Simulasi)</h3>
+                    <p id="completed-transactions" class="report-value">0</p>
+                </div>
             </div>
-            <div class="payment-method" data-method="ewallet">
-              <i class="fas fa-wallet fs-xl"></i>
-              <p class="mt-2">E-Wallet</p>
+            <div class="transaction-list">
+                <h3>Detail Transaksi (Simulasi)</h3>
+                <ul id="transaction-items">
+                    <!-- Detail transaksi akan dimuat di sini oleh JavaScript -->
+                    <li class="info-message">Belum ada transaksi tercatat.</li>
+                </ul>
             </div>
-          </div>
-          <form id="paymentForm" class="d-flex flex-column gap-3" novalidate>
-            <div class="form-group">
-              <label for="tenantId">ID Penyewa</label>
-              <input type="text" id="tenantId" name="tenantId" placeholder="Masukkan ID Penyewa" required>
-            </div>
-            <div class="form-group">
-              <label for="unitId">ID Unit</label>
-              <input type="text" id="unitId" name="unitId" placeholder="Masukkan ID Unit" required>
-            </div>
-            <div class="form-group">
-              <label for="amount">Jumlah Pembayaran</label>
-              <input type="number" id="amount" name="amount" placeholder="Masukkan Jumlah Pembayaran" required>
-            </div>
-            <div class="form-group">
-              <label for="paymentMethod">Metode Pembayaran</label>
-              <select id="paymentMethod" name="paymentMethod" required>
-                <option value="bank">Transfer Bank</option>
-                <option value="qris">QRIS</option>
-                <option value="ewallet">E-Wallet</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Bayar Sekarang</button>
-          </form>
+        </section>
+
+        <section id="notifikasi" class="dashboard-section">
+            <h2 class="section-title">Notifikasi</h2>
+            <p class="section-description">Pesan penting dan pembaruan terkait properti Anda.</p>
+            <ul id="notification-list" class="notification-list">
+                <!-- Daftar notifikasi akan dimuat di sini oleh JavaScript -->
+                <li class="info-message">Tidak ada notifikasi baru.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2024 Dashboard Manajemen Properti. Semua Hak Dilindungi.</p>
         </div>
-      </section>
+    </footer>
 
-      <!-- CHAT -->
-      <section id="chat" class="fade-in">
-        <div class="chat-container">
-          <h2 class="fs-xl fw-bold mb-3">Chat Langsung</h2>
-          <p class="text-muted mb-4">Tinggalkan pesan atau pertanyaan langsung kepada penyewa melalui chat kami.</p>
-          <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg system">
-              <p>Selamat datang di Rentelindo! Silakan mulai chat.</p> 
-            </div>
-          </div>
-          <form id="chatForm" class="d-flex gap-3 mb-4">
-            <input type="text" id="chatInput" placeholder="Tulis pesan..." required>
-            <button type="submit" class="btn btn-primary">Kirim</button>
-          </form>
+    <!-- Modal untuk Tambah/Edit Properti -->
+    <div id="property-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="modal-title">Tambah Properti</h2>
+            <form id="property-form">
+                <input type="hidden" id="property-id">
+                <div class="form-group">
+                    <label for="property-name">Nama Properti:</label>
+                    <input type="text" id="property-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-location">Lokasi:</label>
+                    <input type="text" id="property-location" required>
+                </div>
+                <div class="form-group">
+                    <label for="property-price">Harga Sewa per Bulan (Rp):</label>
+                    <input type="number" id="property-price" required min="0">
+                </div>
+                 <div class="form-group">
+                    <label for="property-image">URL Gambar (Opsional):</label>
+                    <input type="url" id="property-image">
+                </div>
+                <button type="submit" class="button primary-button">Simpan Properti</button>
+            </form>
         </div>
-      </section>
     </div>
-  </main>
-</div>
 
-<!-- MODAL -->
-<div class="modal" id="addTenantModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('addTenantModal')">&times;</span>
-    <h2>Tambah Penyewa</h2>
-    <form id="addTenantForm" class="d-flex flex-column gap-3" novalidate>
-      <div class="form-group">
-        <label for="tenantName">Nama Penyewa</label>
-        <input type="text" id="tenantName" name="tenantName" placeholder="Masukkan Nama Penyewa" required>
-      </div>
-      <div class="form-group">
-        <label for="tenantPhone">Nomor Telepon</label>
-        <input type="text" id="tenantPhone" name="tenantPhone" placeholder="Masukkan Nomor Telepon" required>
-      </div>
-      <div class="form-group">
-        <label for="tenantEmail">Email</label>
-        <input type="email" id="tenantEmail" name="tenantEmail" placeholder="Masukkan Email" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Tambah</button>
-    </form>
-  </div>
-</div>
+    <!-- Modal untuk Detail Properti dan Booking -->
+     <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 id="detail-title">Detail Properti</h2>
+            <div id="detail-content">
+                <img id="detail-image" src="" alt="Gambar Properti" class="detail-image">
+                <h3 id="detail-name"></h3>
+                <p><strong>Lokasi:</strong> <span id="detail-location"></span></p>
+                <p><strong>Harga Sewa:</strong> <span id="detail-price"></span> per bulan</p>
+                <div id="detail-map" class="detail-map-placeholder">
+                    <!-- Simulasi Peta -->
+                    <p>Simulasi Tampilan Peta Lokasi</p>
+                </div>
 
-<!-- MODAL -->
-<div class="modal" id="addUnitModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('addUnitModal')">&times;</span>
-    <h2>Tambah Unit</h2>
-    <form id="addUnitForm" class="d-flex flex-column gap-3" novalidate>
-      <div class="form-group">
-        <label for="unitNumber">Nomor Unit</label>
-        <input type="text" id="unitNumber" name="unitNumber" placeholder="Masukkan Nomor Unit" required>
-      </div>
-      <div class="form-group">
-        <label for="unitType">Tipe Unit</label>
-        <input type="text" id="unitType" name="unitType" placeholder="Masukkan Tipe Unit" required>
-      </div>
-      <div class="form-group">
-        <label for="unitPrice">Harga Sewa</label>
-        <input type="number" id="unitPrice" name="unitPrice" placeholder="Masukkan Harga Sewa" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Tambah</button>
-    </form>
-  </div>
-</div>
+                <h4>Tertarik? Ajukan Booking!</h4>
+                <form id="booking-form">
+                    <input type="hidden" id="booking-property-id">
+                     <div class="form-group">
+                        <label for="booking-name">Nama Lengkap:</label>
+                        <input type="text" id="booking-name" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="booking-email">Email:</label>
+                        <input type="email" id="booking-email" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="booking-duration">Durasi Sewa (Bulan):</label>
+                        <input type="number" id="booking-duration" required min="1">
+                    </div>
+                    <button type="submit" class="button primary-button">Ajukan Booking & Lanjutkan Pembayaran</button>
+                </form>
+                 <div id="payment-status" class="info-message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
 
-<!-- MODAL -->
-<div class="modal" id="exportDataModal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal('exportDataModal')">&times;</span>
-    <h2>Ekspor Data</h2>
-    <p>Anda yakin ingin mengunduh data? Data ini akan disimpan dalam format CSV.</p>
-    <button class="btn btn-primary" onclick="exportData()">Unduh</button>
-  </div>
-</div>
- 
-    <h2>Ekspor Data</h2>
-    <p>Anda yakin ingin mengunduh data? Data ini akan disimpan dalam format CSV.</p>
-    <button class="btn btn-primary" onclick="exportData()">Unduh</button>
-  </div>
-</div>
 
-<script src="URL_ADDRESS.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      // script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Data Simulasi ---
+    let properties = [
+        { id: 1, name: 'Apartemen Mewah Pusat Kota', location: 'Jakarta Pusat', price: 15000000, imageUrl: 'https://via.placeholder.com/400x200?text=Apartemen+Pusat+Kota' },
+        { id: 2, name: 'Rumah Minimalis Strategis', location: 'Bandung', price: 8000000, imageUrl: 'https://via.placeholder.com/400x200?text=Rumah+Bandung' },
+        { id: 3, name: 'Studio Nyaman Dekat Kampus', location: 'Yogyakarta', price: 3500000, imageUrl: 'https://via.placeholder.com/400x200?text=Studio+Yogya' },
+    ];
+
+    let transactions = [];
+    let notifications = [
+        { id: 1, message: 'Selamat datang di Dashboard Manajemen Properti Anda!' },
+        { id: 2, message: 'Properti "Apartemen Mewah Pusat Kota" memiliki permintaan tinggi.' },
+    ];
+
+    // --- Elemen DOM ---
+    const propertyList = document.querySelector('.property-list');
+    const noPropertiesMessage = document.getElementById('no-properties-message');
+    const addPropertyButton = document.getElementById('add-property-button');
+    const propertyModal = document.getElementById('property-modal');
+    const detailModal = document.getElementById('detail-modal');
+    const closeModalButtons = document.querySelectorAll('.modal .close-button');
+    const propertyForm = document.getElementById('property-form');
+    const propertyIdInput = document.getElementById('property-id');
+    const propertyNameInput = document.getElementById('property-name');
+    const propertyLocationInput = document.getElementById('property-location');
+    const propertyPriceInput = document.getElementById('property-price');
+    const propertyImageInput = document.getElementById('property-image');
+    const modalTitle = document.getElementById('modal-title');
+
+    const detailTitle = document.getElementById('detail-title');
+    const detailImage = document.getElementById('detail-image');
+    const detailName = document.getElementById('detail-name');
+    const detailLocation = document.getElementById('detail-location');
+    const detailPrice = document.getElementById('detail-price');
+    const detailMapPlaceholder = document.getElementById('detail-map');
+    const bookingForm = document.getElementById('booking-form');
+    const bookingPropertyIdInput = document.getElementById('booking-property-id');
+    const bookingNameInput = document.getElementById('booking-name');
+    const bookingEmailInput = document.getElementById('booking-email');
+    const bookingDurationInput = document.getElementById('booking-duration');
+    const paymentStatusDiv = document.getElementById('payment-status');
+
+    const totalRevenueElement = document.getElementById('total-revenue');
+    const completedTransactionsElement = document.getElementById('completed-transactions');
+    const transactionItemsList = document.getElementById('transaction-items');
+    const notificationListElement = document.getElementById('notification-list');
+    const themeToggleButton = document.getElementById('theme-toggle');
+
+    // --- Fungsi Utilitas ---
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+    };
+
+    const showModal = (modalElement) => {
+        modalElement.style.display = 'block';
+        // Add a slight delay before adding the active class for transition effect
+        setTimeout(() => {
+             modalElement.classList.add('active');
+        }, 10);
+    };
+
+    const hideModal = (modalElement) => {
+         modalElement.classList.remove('active');
+         // Delay display: none until transition finishes
+         setTimeout(() => {
+            modalElement.style.display = 'none';
+         }, 300); // Match CSS transition duration
+    };
+
+    // --- Render Fungsi ---
+    const renderProperties = () => {
+        propertyList.innerHTML = ''; // Bersihkan daftar properti
+        if (properties.length === 0) {
+            noPropertiesMessage.style.display = 'block';
+        } else {
+            noPropertiesMessage.style.display = 'none';
+            properties.forEach(property => {
+                const propertyCard = document.createElement('div');
+                propertyCard.classList.add('property-card');
+                propertyCard.dataset.id = property.id; // Simpan ID properti
+
+                propertyCard.innerHTML = `
+                    <img src="${property.imageUrl || 'https://via.placeholder.com/400x200?text=Tidak+Ada+Gambar'}" alt="Gambar ${property.name}">
+                    <div class="property-card-content">
+                        <h3>${property.name}</h3>
+                        <p><strong>Lokasi:</strong> ${property.location}</p>
+                        <p><strong>Harga:</strong> ${formatCurrency(property.price)} / bulan</p>
+                        <div class="property-actions">
+                            <button class="button secondary-button edit-button">Edit</button>
+                            <button class="button secondary-button delete-button">Hapus</button>
+                        </div>
+                    </div>
+                `;
+                propertyList.appendChild(propertyCard);
+            });
+        }
+    };
+
+    const renderReports = () => {
+        const totalRevenue = transactions.reduce((sum, t) => sum + t.amount, 0);
+        totalRevenueElement.textContent = formatCurrency(totalRevenue);
+        completedTransactionsElement.textContent = transactions.length;
+
+        transactionItemsList.innerHTML = '';
+        if (transactions.length === 0) {
+            const li = document.createElement('li');
+            li.classList.add('info-message');
+            li.textContent = 'Belum ada transaksi tercatat.';
+            transactionItemsList.appendChild(li);
+        } else {
+            transactions.forEach(transaction => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>Transaksi untuk <strong>${transaction.propertyName}</strong> oleh ${transaction.customerName}</span>
+                    <span>${formatCurrency(transaction.amount)}</span>
+                `;
+                transactionItemsList.appendChild(li);
+            });
+        }
+    };
+
+    const renderNotifications = () => {
+        notificationListElement.innerHTML = '';
+        if (notifications.length === 0) {
+             const li = document.createElement('li');
+             li.classList.add('info-message');
+             li.textContent = 'Tidak ada notifikasi baru.';
+             notificationListElement.appendChild(li);
+        } else {
+            notifications.forEach(notification => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Notifikasi:</strong> ${notification.message}`;
+                notificationListElement.appendChild(li);
+            });
+        }
+    };
+
+    // --- Event Listeners ---
+
+    // Buka modal tambah properti
+    addPropertyButton.addEventListener('click', () => {
+        modalTitle.textContent = 'Tambah Properti Baru';
+        propertyForm.reset();
+        propertyIdInput.value = ''; // Kosongkan ID untuk mode tambah
+        showModal(propertyModal);
+    });
+
+    // Tutup modal
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            hideModal(propertyModal);
+            hideModal(detailModal);
+            paymentStatusDiv.style.display = 'none'; // Sembunyikan status pembayaran saat menutup detail modal
+        });
+    });
+
+    // Tutup modal saat klik di luar area modal
+    window.addEventListener('click', (event) => {
+        if (event.target === propertyModal) {
+            hideModal(propertyModal);
+        }
+        if (event.target === detailModal) {
+            hideModal(detailModal);
+             paymentStatusDiv.style.display = 'none'; // Sembunyikan status pembayaran saat menutup detail modal
+        }
+    });
+
+    // Submit form properti (Tambah/Edit)
+    propertyForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const id = propertyIdInput.value ? parseInt(propertyIdInput.value) : Date.now(); // Gunakan timestamp sebagai ID baru
+        const name = propertyNameInput.value;
+        const location = propertyLocationInput.value;
+        const price = parseInt(propertyPriceInput.value);
+        const imageUrl = propertyImageInput.value;
+
+        if (propertyIdInput.value) {
+            // Mode Edit
+            properties = properties.map(prop =>
+                prop.id === id ? { ...prop, name, location, price, imageUrl } : prop
+            );
+            // Tambahkan notifikasi edit
+             notifications.push({ id: Date.now(), message: `Properti "${name}" berhasil diperbarui.` });
+        } else {
+            // Mode Tambah
+            const newProperty = { id, name, location, price, imageUrl };
+            properties.push(newProperty);
+             // Tambahkan notifikasi tambah
+             notifications.push({ id: Date.now(), message: `Properti "${name}" berhasil ditambahkan.` });
+        }
+
+        renderProperties();
+        renderNotifications();
+        hideModal(propertyModal);
+    });
+
+    // Delegasi event untuk tombol Edit dan Hapus pada daftar properti
+    propertyList.addEventListener('click', (event) => {
+        const target = event.target;
+        const propertyCard = target.closest('.property-card');
+        if (!propertyCard) return;
+
+        const propertyId = parseInt(propertyCard.dataset.id);
+        const property = properties.find(prop => prop.id === propertyId);
+
+        if (target.classList.contains('edit-button')) {
+            // Buka modal edit
+            modalTitle.textContent = 'Edit Properti';
+            propertyIdInput.value = property.id;
+            propertyNameInput.value = property.name;
+            propertyLocationInput.value = property.location;
+            propertyPriceInput.value = property.price;
+            propertyImageInput.value = property.imageUrl || '';
+            showModal(propertyModal);
+        } else if (target.classList.contains('delete-button')) {
+            // Hapus properti (dengan konfirmasi sederhana)
+            if (confirm(`Apakah Anda yakin ingin menghapus properti "${property.name}"?`)) {
+                properties = properties.filter(prop => prop.id !== propertyId);
+                renderProperties();
+                 // Tambahkan notifikasi hapus
+                 notifications.push({ id: Date.now(), message: `Properti "${property.name}" berhasil dihapus.` });
+                 renderNotifications();
+            }
+        } else if (property && !target.closest('.property-actions')) {
+             // Buka modal detail jika klik di area card selain tombol aksi
+             detailTitle.textContent = property.name;
+             detailImage.src = property.imageUrl || 'https://via.placeholder.com/400x200?text=Tidak+Ada+Gambar';
+             detailImage.alt = `Gambar ${property.name}`;
+             detailName.textContent = property.name;
+             detailLocation.textContent = property.location;
+             detailPrice.textContent = formatCurrency(property.price);
+             bookingPropertyIdInput.value = property.id; // Set ID properti untuk form booking
+             bookingForm.reset(); // Reset form booking
+             paymentStatusDiv.style.display = 'none'; // Sembunyikan status pembayaran
+             paymentStatusDiv.textContent = ''; // Kosongkan teks status pembayaran
+
+             // Simulasi Peta - bisa diganti dengan library peta sungguhan jika diizinkan
+             detailMapPlaceholder.innerHTML = `<p>Simulasi Tampilan Peta Lokasi: ${property.location}</p>`;
+
+
+             showModal(detailModal);
+        }
+    });
+
+    // Submit form booking (Simulasi Pembayaran)
+    bookingForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const propertyId = parseInt(bookingPropertyIdInput.value);
+        const property = properties.find(prop => prop.id === propertyId);
+        const customerName = bookingNameInput.value;
+        const customerEmail = bookingEmailInput.value;
+        const duration = parseInt(bookingDurationInput.value);
+        const totalAmount = property.price * duration;
+
+        // Simulasi proses pembayaran
+        paymentStatusDiv.style.display = 'block';
+        paymentStatusDiv.textContent = 'Memproses pembayaran...';
+        paymentStatusDiv.className = 'info-message'; // Reset class
+
+        // Simulasi delay pembayaran
+        setTimeout(() => {
+            const isSuccess = Math.random() > 0.2; // 80% sukses, 20% gagal
+
+            if (isSuccess) {
+                const transaction = {
+                    id: Date.now(),
+                    propertyId: property.id,
+                    propertyName: property.name,
+                    customerName: customerName,
+                    amount: totalAmount,
+                    date: new Date().toISOString().split('T')[0] // Tanggal hari ini
+                };
+                transactions.push(transaction);
+                renderReports();
+
+                paymentStatusDiv.textContent = `Pembayaran berhasil! Total: ${formatCurrency(totalAmount)}. Transaksi dicatat.`;
+                paymentStatusDiv.classList.add('payment-success');
+
+                // Tambahkan notifikasi transaksi berhasil
+                notifications.push({ id: Date.now(), message: `Transaksi berhasil untuk properti "${property.name}" oleh ${customerName}.` });
+                renderNotifications();
+
+            } else {
+                paymentStatusDiv.textContent = 'Pembayaran gagal. Silakan coba lagi.';
+                paymentStatusDiv.classList.add('payment-failure');
+
+                 // Tambahkan notifikasi transaksi gagal
+                 notifications.push({ id: Date.now(), message: `Pembayaran gagal untuk properti "${property.name}" oleh ${customerName}.` });
+                 renderNotifications();
+            }
+        }, 2000); // Simulasi 2 detik proses pembayaran
+    });
+
+
+    // Toggle Tema Terang/Gelap
+    themeToggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        themeToggleButton.textContent = isDarkMode ? 'Mode Terang' : 'Mode Gelap';
+        // Simpan preferensi tema di localStorage (opsional)
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+
+    // Muat preferensi tema saat halaman dimuat
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggleButton.textContent = 'Mode Terang';
+    } else {
+         themeToggleButton.textContent = 'Mode Gelap';
+    }
+
+
+    // --- Inisialisasi ---
+    renderProperties();
+    renderReports();
+    renderNotifications();
+});
+    </script>
 </body>
 </html>
