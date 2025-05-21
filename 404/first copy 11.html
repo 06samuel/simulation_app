@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Halaman Tidak Ditemukan | ApartemenKita</title>
+    <style>
+        :root {
+            --primary: #3563E9;
+            --secondary: #FF6C45;
+            --dark: #1A202C;
+            --light: #F7FAFC;
+            --gray: #A0AEC0;
+            --success: #48BB78;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+            filter: blur(10px);
+        }
+
+        .splash-screen.visible {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        .splash-content {
+            text-align: center;
+            color: white;
+            transform: scale(0.8);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1); }
+            100% { transform: scale(0.8); }
+        }
+
+        .splash-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .splash-text {
+            font-size: 1.2rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            filter: blur(10px);
+            transition: opacity 1s ease-out, transform 1s ease-out, filter 1s ease-out;
+        }
+
+        .container.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+            }
+        }
+
+        .error-message {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .error-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .error-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .error-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .error-text {
+            font-size: 1rem;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .primary-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .primary-button:hover {
+            background-color: #2a50c4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(53, 99, 233, 0.3);
+        }
+
+        .secondary-button {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .secondary-button:hover {
+            background-color: rgba(53, 99, 233, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Illustration */
+        .illustration {
+            flex: 1;
+            max-width: 450px;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+            filter: blur(10px);
+            transition: opacity 1s ease-out, filter 1s ease-out;
+        }
+
+        .illustration.visible {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .illustration img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Promo Section */
+        .promo-section {
+            margin-top: 3rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, opacity 1s ease-out, filter 1s ease-out;
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        .promo-section.visible {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        .promo-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .promo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .promo-description {
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-cards {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            scrollbar-width: none;
+        }
+
+        .promo-cards::-webkit-scrollbar {
+            display: none;
+        }
+
+        .promo-card {
+            min-width: 250px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            flex: 1;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            opacity: 0;
+            filter: blur(5px);
+        }
+
+        .promo-card.visible {
+            opacity: 1;
+            filter: blur(0);
+        }
+
+        .promo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .promo-card-img {
+            height: 150px;
+            width: 100%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .promo-card-content {
+            padding: 1.2rem;
+        }
+
+        .promo-card-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .promo-card-text {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .promo-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--success);
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        .footer.visible {
+            opacity: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+                filter: blur(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes unblur {
+            from {
+                filter: blur(10px);
+            }
+            to {
+                filter: blur(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .error-code {
+            position: relative;
+            display: inline-block;
+            font-size: 6rem;
+            font-weight: bold;
+            color: var(--primary);
+            opacity: 0.2;
+            margin-bottom: 1rem;
+        }
+
+        .error-code:hover {
+            animation: shake 0.5s;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .error-title {
+                font-size: 2.5rem;
+            }
+            
+            .error-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .promo-cards {
+                flex-direction: column;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo">ApartemenKita</div>
+            <div class="splash-text">Memuat Halaman...</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="main-content">
+        <div class="header">
+            <div class="logo">ApartemenKita</div>
+        </div>
+
+        <div class="main-content">
+            <div class="error-message">
+                <div class="error-code">404</div>
+                <h1 class="error-title">Halaman Tidak Ditemukan</h1>
+                <h2 class="error-subtitle">Ups! Anda tersesat.</h2>
+                <p class="error-text">
+                    Sepertinya Anda mencari halaman yang tidak tersedia atau telah dipindahkan.
+                    Jangan khawatir, kami memiliki pilihan apartemen terbaik untuk Anda jelajahi.
+                </p>
+                <div class="buttons">
+                    <a href="#" class="button primary-button" id="home-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        Kembali ke Beranda
+                    </a>
+                    <a href="#" class="button secondary-button" id="search-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Cari Apartemen
+                    </a>
+                </div>
+            </div>
+
+            <div class="illustration" id="illustration">
+                <!-- Menggunakan ilustrasi dari undraw.co (Open Source) -->
+                <img src="https://cdnjs.cloudflare.com/ajax/libs/undraw/2308.1/illustrations/undraw_page_not_found_re_e9o6.svg" alt="Ilustrasi Halaman Tidak Ditemukan">
+            </div>
+        </div>
+
+        <div class="promo-section" id="promo-section">
+            <h3 class="promo-title">Penawaran Menarik untuk Anda</h3>
+            <p class="promo-description">Temukan apartemen impian Anda dengan penawaran eksklusif</p>
+            
+            <div class="promo-cards" id="promo-cards">
+                <div class="promo-card" id="promo-card-1">
+                    <div class="promo-card-img">
+                        <img src="https://cdnjs.cloudflare.com/ajax/libs/undraw/2308.1/illustrations/undraw_house_searching_re_stk8.svg" alt="Apartemen Baru" width="80" height="80">
+                    </div>
+                    <div class="promo-card-content">
+                        <h4 class="promo-card-title">Apartemen Baru</h4>
+                        <p class="promo-card-text">Diskon 15% untuk penyewa baru di apartemen premium</p>
+                        <span class="promo-badge">Limited</span>
+                    </div>
+                </div>
+                
+                <div class="promo-card" id="promo-card-2">
+                    <div class="promo-card-img">
+                        <img src="https://cdnjs.cloudflare.com/ajax/libs/undraw/2308.1/illustrations/undraw_time_management_re_tk5w.svg" alt="Sewa Jangka Panjang" width="80" height="80">
+                    </div>
+                    <div class="promo-card-content">
+                        <h4 class="promo-card-title">Sewa Jangka Panjang</h4>
+                        <p class="promo-card-text">Hemat hingga 20% untuk sewa tahunan</p>
+                        <span class="promo-badge">Populer</span>
+                    </div>
+                </div>
+                
+                <div class="promo-card" id="promo-card-3">
+                    <div class="promo-card-img">
+                        <img src="https://cdnjs.cloudflare.com/ajax/libs/undraw/2308.1/illustrations/undraw_calendar_re_ki49.svg" alt="Promo Weekend" width="80" height="80">
+                    </div>
+                    <div class="promo-card-content">
+                        <h4 class="promo-card-title">Promo Weekend</h4>
+                        <p class="promo-card-text">Dapatkan diskon 10% untuk pemesanan di akhir pekan</p>
+                        <span class="promo-badge">Terbatas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer" id="footer">
+            <p>&copy; 2025 ApartemenKita. Semua Hak Dilindungi.</p>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk memunculkan elemen dengan efek unblur dan fadein
+        function showElement(element, delay) {
+            setTimeout(() => {
+                element.classList.add('visible');
+            }, delay);
+        }
+
+        // Splash Screen Animation
+        window.addEventListener('load', function() {
+            const splashScreen = document.getElementById('splash-screen');
+            const mainContent = document.getElementById('main-content');
+            const illustration = document.getElementById('illustration');
+            const promoSection = document.getElementById('promo-section');
+            const footer = document.getElementById('footer');
+            const promoCards = document.querySelectorAll('.promo-card');
+            
+            // Tampilkan splash screen dengan efek unblur
+            showElement(splashScreen, 300);
+            
+            // Sembunyikan splash screen setelah 2 detik
+            setTimeout(function() {
+                splashScreen.style.opacity = '0';
+                
+                setTimeout(function() {
+                    splashScreen.style.display = 'none';
+                    
+                    // Tampilkan konten utama dengan efek unblur dan fadein
+                    showElement(mainContent, 300);
+                    
+                    // Tampilkan ilustrasi setelah konten utama
+                    showElement(illustration, 800);
+                    
+                    // Tampilkan bagian promo dengan delay
+                    showElement(promoSection, 1200);
+                    
+                    // Tampilkan kartu promo secara berurutan
+                    promoCards.forEach((card, index) => {
+                        showElement(card, 1500 + (index * 200));
+                    });
+                    
+                    // Tampilkan footer
+                    showElement(footer, 2000);
+                }, 600);
+            }, 2000);
+        });
+
+        // Button animations
+        document.getElementById('home-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            // In a real app, this would navigate to home
+            // For demo, we'll just show an animation
+            this.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Menuju Beranda...
+            `;
+            
+            // Animasi unblur dan fadein untuk transisi tombol
+            this.style.filter = 'blur(5px)';
+            this.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                this.style.filter = 'blur(0)';
+                this.style.opacity = '1';
+                this.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Kembali ke Beranda
+                `;
+            }, 2000);
+        });
+
+        document.getElementById('search-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            // In a real app, this would navigate to search
+            // For demo, we'll just show an animation
+            this.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Mencari...
+            `;
+            
+            // Animasi unblur dan fadein untuk transisi tombol
+            this.style.filter = 'blur(5px)';
+            this.style.opacity = '0.7';
+            
+            setTimeout(() => {
+                this.style.filter = 'blur(0)';
+                this.style.opacity = '1';
+                this.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    Cari Apartemen
+                `;
+            }, 2000);
+        });
+        
+        // Animasi untuk kartu promo saat hover
+        const promoCards = document.querySelectorAll('.promo-card');
+        promoCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                // Tambahkan efek unblur jika diperlukan
+                this.style.filter = 'blur(0)';
+                this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.15)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+            });
+        });
+    </script>
+</body>
+</html>
