@@ -1,85 +1,232 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#00b7eb" />
-    <title>ApertureFind - Apartments</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="container">
-        <div class="flex justify-between align-center">
-          <a href="index.html" class="logo txt-xl txt-bold">ApertureFind</a>
-          <nav class="nav">
-            <button class="nav-toggle" 
-                    data-nav-toggle
-                    aria-expanded="false" 
-                    aria-label="Toggle navigation">☰</button>
-            <ul class="nav-menu" data-nav-menu>
-              <li><a href="index.html" class="nav-link">Home</a></li>
-              <li>
-                <a href="apartments.html" class="nav-link active">Apartments</a>
-              </li>
-              <li><a href="favorites.html" class="nav-link">Favorites</a></li>
-              <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
-          </nav>
-        </div>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#00b7eb" />
+  <title>Apartemenku - Dashboard Sewa</title>
+  <style>
+    :root {
+      --primary: #00b7eb;
+      --primary-dark: #0094ba;
+      --accent: #ffd600;
+      --background: #f7fafd;
+      --card: #fff;
+      --text: #222b45;
+      --text-muted: #7b8aaf;
+      --border: #e3e9f3;
+      --radius: 1.2rem;
+      --shadow: 0 4px 24px rgba(0,0,0,0.07);
+      --transition: 0.4s cubic-bezier(.4,0,.2,1);
+      --spc: 1.5rem;
+      --font: 'Segoe UI', Arial, sans-serif;
+    }
+    html, body {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: var(--font);
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .splash {
+      position: fixed; inset: 0; background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity var(--transition);
+      opacity: 1; pointer-events: all;
+    }
+    .splash.hide { opacity: 0; pointer-events: none; }
+    .splash-content {
+      text-align: center; color: #fff;
+      animation: fadeIn 1.2s;
+    }
+    .splash-content img { width: 120px; margin-bottom: 1.5rem; filter: drop-shadow(0 4px 16px #0094ba44); }
+    @keyframes fadeIn { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+    header {
+      background: var(--card); box-shadow: var(--shadow);
+      padding: 1.2rem 0; position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
+    nav a {
+      color: var(--text-muted); text-decoration: none; margin: 0 1rem;
+      font-weight: 500; transition: color var(--transition);
+    }
+    nav a.active, nav a:hover { color: var(--primary); }
+    .container {
+      max-width: 1100px; margin: 2.5rem auto; padding: 0 1.2rem;
+    }
+    .dashboard {
+      display: grid; grid-template-columns: 1fr 1fr; gap: var(--spc);
+      margin-bottom: var(--spc);
+    }
+    .card {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: var(--spc);
+      transition: box-shadow var(--transition), transform var(--transition);
+      display: flex; flex-direction: column; align-items: flex-start;
+      min-height: 220px;
+    }
+    .card:hover { box-shadow: 0 8px 32px rgba(0,183,235,0.13); transform: translateY(-4px) scale(1.02); }
+    .card-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .card-desc { color: var(--text-muted); font-size: 1rem; margin-bottom: 1rem; }
+    .card-action {
+      margin-top: auto;
+    }
+    .btn {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: 2rem; padding: 0.7rem 1.5rem;
+      font-size: 1rem; font-weight: 500; cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition);
+      box-shadow: 0 2px 8px #00b7eb22;
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .offers {
+      background: linear-gradient(90deg, #00b7eb 0%, #ffd600 100%);
+      border-radius: var(--radius); color: #222; padding: 2rem 1.5rem;
+      margin-bottom: var(--spc); display: flex; align-items: center; gap: 2rem;
+      box-shadow: var(--shadow);
+      animation: fadeIn 1.2s;
+    }
+    .offers img { width: 110px; }
+    .offers-content { flex: 1; }
+    .offers-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 0.5rem; }
+    .offers-desc { font-size: 1rem; }
+    .offers .btn { background: #fff; color: var(--primary); box-shadow: none; }
+    .offers .btn:hover { background: #f7fafd; }
+    .illustration {
+      width: 100%; max-width: 340px; margin: 2rem auto 0 auto; display: block;
+      filter: drop-shadow(0 8px 32px #00b7eb22);
+      animation: fadeIn 1.2s;
+    }
+    .managerial {
+      margin: 2.5rem 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spc);
+    }
+    .managerial-card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: var(--spc); display: flex; flex-direction: column; align-items: flex-start;
+      min-height: 180px; transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .managerial-card:hover { box-shadow: 0 8px 32px #ffd60033; transform: translateY(-4px) scale(1.02); }
+    .managerial-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .managerial-desc { color: var(--text-muted); font-size: 0.97rem; margin-bottom: 1rem; }
+    .managerial-action { margin-top: auto; }
+    .back-nav {
+      margin: 2rem 0 0 0; text-align: center;
+    }
+    .back-btn {
+      background: none; border: 2px solid var(--primary); color: var(--primary);
+      border-radius: 2rem; padding: 0.7rem 1.5rem; font-size: 1rem; font-weight: 500;
+      cursor: pointer; transition: background var(--transition), color var(--transition);
+    }
+    .back-btn:hover { background: var(--primary); color: #fff; }
+    @media (max-width: 900px) {
+      .dashboard, .managerial { grid-template-columns: 1fr; }
+      .offers { flex-direction: column; text-align: center; }
+      .offers img { margin: 0 auto; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0 0.5rem; }
+      .dashboard, .managerial { gap: 1rem; }
+      .offers { padding: 1.2rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash" id="splash">
+    <div class="splash-content">
+      <img src="https://cdn.storyset.com/illustrations/online-world-bro.svg" alt="Splash Illustration" />
+      <h2>Selamat Datang di Apartemenku!</h2>
+      <p>Mengelola sewa apartemen kini lebih mudah, nyaman, dan modern.</p>
+    </div>
+  </div>
+  <header>
+    <div class="logo">Apartemenku</div>
+    <nav>
+      <a href="#" class="active">Dashboard</a>
+      <a href="#managerial">Manajerial</a>
+      <a href="#offers">Promo</a>
+      <a href="#" onclick="window.location.href='contact.html'">Kontak</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="offers" id="offers">
+      <img src="https://cdn.storyset.com/illustrations/discount-bro.svg" alt="Promo Illustration" />
+      <div class="offers-content">
+        <div class="offers-title">Promo Spesial Bulan Ini!</div>
+        <div class="offers-desc">Dapatkan diskon hingga <b>20%</b> untuk sewa apartemen baru. Nikmati hunian nyaman dengan harga terbaik!</div>
+        <button class="btn" onclick="alert('Promo berhasil diklaim!')">Klaim Promo</button>
       </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-      <section class="apartments-filter">
-        <div class="container">
-          <h1 class="txt-xl txt-bold">Find Your Apartment</h1>
-          <div class="filter-group flex gap-md flex-column">
-            <input type="text" 
-                   data-search="apartments"
-                   class="form-control"
-                   placeholder="Search by name, location..."
-                   aria-label="Search apartments">
-            
-            <select data-filter="price" class="form-control" aria-label="Filter by price">
-            <select data-filter="bedrooms" class="form-control" aria-label="Filter by bedrooms">
-                <option value="all">All Prices</option>
-                <option value="500-1000">$500-$1000</option>
-                <option value="1000-1500">$1000-$1500</option>
-                <option value="1500+">$1500+</option>
-              </select>
-              <select
-                id="bedroomFilter"
-                class="form-control"
-                aria-label="Filter by bedrooms">
-                <option value="all">All Bedrooms</option>
-                <option value="1">1 Bedroom</option>
-                <option value="2">2 Bedrooms</option>
-                <option value="3+">3+ Bedrooms</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="apartments-list">
-        <div class="container">
-          <div class="apartment-grid" id="apartmentsList"></div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container txt-center">
-        <p class="txt-muted">© 2025 ApertureFind. All rights reserved.</p>
+    </section>
+    <section class="dashboard">
+      <div class="card">
+        <div class="card-title">Daftar Apartemen</div>
+        <div class="card-desc">Lihat dan kelola apartemen yang tersedia untuk disewa.</div>
+        <div class="card-action"><button class="btn" onclick="showSection('apartments')">Lihat Apartemen</button></div>
       </div>
-    </footer>
-
-    <script src="main.js"></script>
-  </body>
+      <div class="card">
+        <div class="card-title">Favorit Saya</div>
+        <div class="card-desc">Akses cepat ke apartemen favorit Anda.</div>
+        <div class="card-action"><button class="btn" onclick="showSection('favorites')">Lihat Favorit</button></div>
+      </div>
+    </section>
+    <img class="illustration" src="https://cdn.storyset.com/illustrations/home-bro.svg" alt="Dashboard Illustration" />
+    <section class="managerial" id="managerial">
+      <div class="managerial-card">
+        <div class="managerial-title">Kelola Penyewa</div>
+        <div class="managerial-desc">Tambah, edit, atau hapus data penyewa dengan mudah dan cepat.</div>
+        <div class="managerial-action"><button class="btn" onclick="showSection('tenants')">Kelola Penyewa</button></div>
+      </div>
+      <div class="managerial-card">
+        <div class="managerial-title">Pembayaran & Tagihan</div>
+        <div class="managerial-desc">Pantau status pembayaran dan kelola tagihan apartemen secara real-time.</div>
+        <div class="managerial-action"><button class="btn" onclick="showSection('payments')">Kelola Pembayaran</button></div>
+      </div>
+      <div class="managerial-card">
+        <div class="managerial-title">Laporan & Statistik</div>
+        <div class="managerial-desc">Lihat laporan keuangan dan statistik sewa untuk pengambilan keputusan yang lebih baik.</div>
+        <div class="managerial-action"><button class="btn" onclick="showSection('reports')">Lihat Laporan</button></div>
+      </div>
+    </section>
+    <div class="back-nav">
+      <button class="back-btn" onclick="window.location.href='index.html'">&#8592; Kembali ke Beranda</button>
+    </div>
+  </main>
+  <div id="spa-content" style="display:none;"></div>
+  <script>
+    // Splash screen fade out
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.getElementById('splash').classList.add('hide');
+        setTimeout(function() {
+          document.getElementById('splash').style.display = 'none';
+        }, 600);
+      }, 1300);
+    });
+    // SPA navigation logic
+    function showSection(section) {
+      let content = '';
+      if(section === 'apartments') {
+        content = `<h2>Daftar Apartemen</h2><p>Fitur pencarian, filter, dan daftar apartemen akan tampil di sini.</p>`;
+      } else if(section === 'favorites') {
+        content = `<h2>Favorit Saya</h2><p>Daftar apartemen favorit Anda akan tampil di sini.</p>`;
+      } else if(section === 'tenants') {
+        content = `<h2>Kelola Penyewa</h2><p>Formulir dan daftar penyewa apartemen akan tampil di sini.</p>`;
+      } else if(section === 'payments') {
+        content = `<h2>Pembayaran & Tagihan</h2><p>Riwayat pembayaran dan tagihan apartemen akan tampil di sini.</p>`;
+      } else if(section === 'reports') {
+        content = `<h2>Laporan & Statistik</h2><p>Laporan keuangan dan statistik sewa apartemen akan tampil di sini.</p>`;
+      } else {
+        content = `<h2>404</h2><p>Halaman tidak ditemukan.</p>`;
+      }
+      document.querySelector('main.container').style.display = 'none';
+      const spa = document.getElementById('spa-content');
+      spa.innerHTML = `<div style='animation:fadeIn 1s'><button class='back-btn' onclick='resetSPA()' style='margin-bottom:1.5rem'>&#8592; Kembali</button>${content}</div>`;
+      spa.style.display = 'block';
+    }
+    function resetSPA() {
+      document.getElementById('spa-content').style.display = 'none';
+      document.querySelector('main.container').style.display = 'block';
+    }
+  </script>
+</body>
 </html>

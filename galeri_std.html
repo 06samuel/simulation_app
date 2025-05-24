@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Galeri Dinamis</title>
+    <style>
+        :root {
+            --primary: #0070f3;
+            --primary-foreground: #ffffff;
+            --background: #ffffff;
+            --foreground: #111111;
+            --card: #ffffff;
+            --card-foreground: #111111;
+            --border: #e5e5e5;
+            --radius: 0.5rem;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            /* Spacing scale */
+            --space-0: 0rem;
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 1rem;
+            --space-4: 1.5rem;
+            --space-5: 2rem;
+
+            /* Layout */
+            --container-padding: var(--space-lg);
+            --section-gap: var(--space-xl);
+
+            /* Typography scale */
+            --font-sm: 0.875rem;
+            --font-base: 1rem;
+            --font-lg: 1.5rem;
+            --font-xl: 2rem;
+
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 16px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Padding Utility */
+        .pt-1 {
+            padding-top: var(--space-1);
+        }
+
+        .p-1 {
+            padding: var(--space-1);
+        }
+
+        .pt-2 {
+            padding-top: var(--space-2);
+        }
+
+        .p-2 {
+            padding: var(--space-2);
+        }
+
+        .pt-3 {
+            padding-top: var(--space-3);
+        }
+
+        .p-3 {
+            padding: var(--space-3);
+        }
+
+        .pb-2 {
+            padding-bottom: var(--space-2);
+        }
+
+        .pb-3 {
+            padding-bottom: var(--space-3);
+        }
+
+        /* margin */
+        .m-1 {
+            margin-top: var(--space-1);
+        }
+
+        .mt-1 {
+            margin: var(--space-1);
+        }
+
+        .m-2 {
+            margin-top: var(--space-2);
+        }
+
+        .mt-2 {
+            margin: var(--space-2);
+        }
+
+        .m-3 {
+            margin-top: var(--space-3);
+        }
+
+        .mt-3 {
+            margin: var(--space-3);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--space-2);
+        }
+
+        .mb-3 {
+            margin-bottom: var(--space-3);
+        }
+
+        .mx-4 {
+            margin-left: var(--space-4);
+            margin-right: var(--space-4);
+        }
+
+        /* Layout utilities */
+        .container {
+            width: var(--max-width);
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 var(--space-3);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Position utilities */
+        .relative {
+            position: relative;
+        }
+
+        .sticky {
+            position: sticky;
+            top: 0;
+        }
+
+        .z-base {
+            z-index: var(--z-base);
+        }
+
+        .z-modal {
+            z-index: var(--z-modal);
+        }
+
+        /* Appearance utilities */
+        .rounded {
+            border-radius: var(--border-radius);
+        }
+
+        .shadow {
+            box-shadow: var(--shadow-soft);
+        }
+
+        .transition {
+            transition: all var(--transition-fast);
+        }
+
+        [data-theme="dark"] {
+            --primary: #0070f3;
+            --primary-foreground: #ffffff;
+            --background: #111111;
+            --foreground: #ffffff;
+            --card: #1a1a1a;
+            --card-foreground: #ffffff;
+            --border: #333333;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: sans-serif;
+            margin: 0;
+            padding: 1rem;
+
+            /* Tetap bisa scroll, tapi sembunyikan scrollbar */
+            overflow-y: scroll;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE & Edge Legacy */
+        }
+
+        body::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+            background: transparent;
+            /* WebKit */
+        }
+
+
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .col {
+            flex: 1 1 calc(33.333% - 1rem);
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --container-padding: var(--space-md);
+                --section-gap: var(--space-lg);
+                --font-lg: 1.25rem;
+                --font-xl: 1.5rem;
+            }
+
+            .col {
+                flex: 1 1 calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .col {
+                flex: 1 1 100%;
+            }
+        }
+
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        .card img.loaded {
+            opacity: 1;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            color: var(--card-foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        /* button */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            margin: 0.4rem;
+            float: right;
+            padding: 0.6em 1.5em;
+            font-size: 1rem;
+            min-height: 44px;
+            background-color: steelblue;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .btn * {
+            text-decoration: none;
+            color: aliceblue;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%) rotate(45deg);
+            transition: width 0.4s ease;
+            z-index: 0;
+        }
+
+        .btn:hover::before {
+            width: 140%;
+        }
+
+        .btn:hover {
+            color: aliceblue;
+            background-color: navy;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Toggle Theme Button */
+        .toggle-theme {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="btn toggle-theme">🌗 Toggle Tema</button>
+    <div class="grid">
+
+        <div class="col">
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1035/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 1</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1037/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 2</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1047/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 3</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1050/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 4 </h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1075/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 5</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2" alt="Architecture"
+                    loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 6 </h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/1015/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 7</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/188/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Moderns Building 8 </h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <img src="https://picsum.photos/id/703/1920/1080" alt="Architecture" loading="lazy" />
+                <div class="card-body">
+                    <h3 class="card-title">Modern Building 9</h3>
+                    <button class="btn view-btn">Lihat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Salin untuk galeri lain -->
+    <div class="modal" id="imageModal">
+        <img src="" alt="Preview" />
+    </div>
+
+    <script>
+        // Toggle Tema
+        const toggleBtn = document.querySelector('.toggle-theme');
+        toggleBtn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        });
+
+        // Gambar Lazy Load dengan efek
+        const imgs = document.querySelectorAll('img[loading="lazy"]');
+        imgs.forEach(img => {
+            img.addEventListener('load', () => {
+                img.classList.add('loaded');
+            });
+        });
+
+        // Modal preview gambar
+        const modal = document.getElementById('imageModal');
+        const modalImg = modal.querySelector('img');
+        document.querySelectorAll('.view-btn').forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                const imgSrc = btn.closest('.card').querySelector('img').src;
+                modalImg.src = imgSrc;
+                modal.classList.add('active');
+            });
+        });
+        modal.addEventListener('click', () => modal.classList.remove('active'));
+        btn.addEventListener('click', () => {
+            const imgSrc = btn.closest('.card').querySelector('img').src;
+            modalImg.src = imgSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // ❌ matikan scroll saat modal aktif
+        });
+
+        modal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'scroll'; // ✅ aktifkan kembali scroll
+        });
+
+    </script>
+</body>
+
+</html>

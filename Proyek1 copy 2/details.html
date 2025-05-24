@@ -1,123 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#00b7eb" />
-    <title>ApertureFind - Apartment Details</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="container">
-        <div class="flex justify-between align-center">
-          <a href="index.html" class="logo txt-xl txt-bold">ApertureFind</a>
-          <nav class="nav">
-            <button
-              class="nav-toggle"
-              data-nav-toggle
-              aria-expanded="false"
-              aria-label="Toggle navigation">
-              ☰
-            </button>
-            <ul class="nav-menu" data-nav-menu>
-              <li><a href="index.html" class="nav-link">Home</a></li>
-              <li><a href="apartments.html" class="nav-link">Apartments</a></li>
-              <li><a href="favorites.html" class="nav-link">Favorites</a></li>
-              <li><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
-          </nav>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard User | RumahKita</title>
+  <style>
+    :root {
+      --primary: #00b7eb;
+      --primary-dark: #0099c6;
+      --accent: #ffd600;
+      --bg: #f7fafc;
+      --card: #fff;
+      --text: #222b45;
+      --muted: #6b7280;
+      --radius: 1rem;
+      --shadow: 0 4px 16px rgba(0,0,0,0.07);
+      --trs: 0.3s cubic-bezier(.4,0,.2,1);
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    body {
+      margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh;
+    }
+    .splash {
+      position: fixed; inset: 0; background: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity var(--trs);
+    }
+    .splash.hide { opacity: 0; pointer-events: none; }
+    .splash-logo { width: 80px; animation: bounce 1.2s infinite alternate; }
+    @keyframes bounce { to { transform: translateY(-16px) scale(1.08); } }
+    .splash-tag { color: #fff; font-size: 1.2rem; margin-top: 1rem; letter-spacing: .5px; }
+    header { position: sticky; top: 0; background: var(--card); box-shadow: var(--shadow); z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; }
+    .nav { display: flex; gap: 1.5rem; }
+    .nav a { color: var(--text); text-decoration: none; font-weight: 500; transition: color var(--trs); }
+    .nav a:hover { color: var(--primary); }
+    .user-info { display: flex; align-items: center; gap: .75rem; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--text); }
+    main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+    .hero { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: fadeIn 1s; }
+    @keyframes fadeIn { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: blur(0); } }
+    .hero img { width: 220px; margin-bottom: 1.5rem; }
+    .hero h1 { font-size: 2rem; margin: 0 0 .5rem; }
+    .hero p { color: var(--muted); margin: 0 0 1.5rem; }
+    .promo { background: var(--primary); color: #fff; border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: var(--shadow); }
+    .promo-btn { background: #fff; color: var(--primary); border: none; border-radius: var(--radius); padding: .75rem 1.5rem; font-weight: 600; cursor: pointer; transition: background var(--trs), color var(--trs); }
+    .promo-btn:hover { background: var(--primary-dark); color: #fff; }
+    .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.5rem; }
+    .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; transition: box-shadow var(--trs), transform var(--trs); cursor: pointer; }
+    .card:hover { box-shadow: 0 8px 32px rgba(0,183,235,0.13); transform: translateY(-4px) scale(1.03); }
+    .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: .25rem; }
+    .card-desc { color: var(--muted); font-size: .95rem; }
+    .card-icon { font-size: 2rem; color: var(--primary); }
+    .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--primary); color: #fff; padding: 1rem 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: opacity var(--trs); z-index: 100; }
+    .toast.show { opacity: 1; pointer-events: auto; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { header { flex-direction: column; gap: .5rem; padding: 1rem; } main { padding: 0 .5rem; } .hero { padding: 1rem; } }
+  </style>
+</head>
+<body>
+  <div class="splash" id="splash">
+    <img src="https://cdn.storyset.com/illustration/house-search/bro.svg" alt="Splash" class="splash-logo" />
+    <div class="splash-tag">RumahKita - Temukan apartemen impianmu!</div>
+  </div>
+  <header>
+    <div class="logo" style="font-weight:700;color:var(--primary);font-size:1.3rem;">RumahKita</div>
+    <nav class="nav">
+      <a href="#">Beranda</a>
+      <a href="#">Apartemen</a>
+      <a href="#">Favorit</a>
+      <a href="#">Laporan</a>
+    </nav>
+    <div class="user-info">
+      <div class="avatar">AR</div>
+      <span style="font-weight:500;">Andi Rahman</span>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <img src="https://cdn.storyset.com/illustration/house-search/bro.svg" alt="Ilustrasi Apartemen" />
+      <h1>Selamat Datang, Andi!</h1>
+      <p>Kelola apartemen, pantau pembayaran, dan nikmati promo menarik di RumahKita.</p>
+    </section>
+    <section>
+      <div class="promo">
+        <span><b>Promo Spesial!</b> Dapatkan diskon 10% untuk sewa bulan ini.</span>
+        <button class="promo-btn" onclick="showToast('Promo berhasil diklaim!')">Klaim Sekarang</button>
+      </div>
+      <div class="dashboard">
+        <div class="card" onclick="showToast('Fitur manajemen apartemen!')">
+          <span class="card-icon">🏢</span>
+          <div class="card-title">Daftar Apartemen</div>
+          <div class="card-desc">Lihat dan kelola apartemen yang kamu miliki atau sewa.</div>
+        </div>
+        <div class="card" onclick="showToast('Fitur kontrak & penyewa!')">
+          <span class="card-icon">📝</span>
+          <div class="card-title">Penyewa & Kontrak</div>
+          <div class="card-desc">Kelola data penyewa, kontrak, dan status sewa.</div>
+        </div>
+        <div class="card" onclick="showToast('Fitur pembayaran!')">
+          <span class="card-icon">💳</span>
+          <div class="card-title">Pembayaran</div>
+          <div class="card-desc">Pantau pembayaran sewa dan riwayat transaksi.</div>
+        </div>
+        <div class="card" onclick="showToast('Fitur laporan & analitik!')">
+          <span class="card-icon">📊</span>
+          <div class="card-title">Laporan & Analitik</div>
+          <div class="card-desc">Lihat laporan keuangan dan statistik sewa.</div>
+        </div>
+        <div class="card" onclick="showToast('Fitur favorit & wishlist!')">
+          <span class="card-icon">❤️</span>
+          <div class="card-title">Favorit & Wishlist</div>
+          <div class="card-desc">Kelola apartemen favorit dan wishlist kamu.</div>
+        </div>
+        <div class="card" onclick="showToast('Fitur bantuan & support!')">
+          <span class="card-icon">🛠️</span>
+          <div class="card-title">Bantuan & Support</div>
+          <div class="card-desc">Dapatkan bantuan dan hubungi support RumahKita.</div>
         </div>
       </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-      <!-- Breadcrumb Navigation -->
-      <nav class="breadcrumb container" aria-label="breadcrumb">
-        <ol class="breadcrumb-list">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="apartments.html">Apartments</a></li>
-          <li aria-current="page">Details</li>
-        </ol>
-      </nav>
-
-      <!-- Image Gallery -->
-      <section class="image-gallery container">
-        <div id="galleryPreview" class="gallery-preview"></div>
-        <div id="galleryThumbnails" class="gallery-thumbnails"></div>
-      </section>
-
-      <!-- Apartment Details -->
-      <section class="apartment-details">
-        <div class="container">
-          <div
-            id="apartmentDetails"
-            class="apartment-details-content grid-12 gap-md">
-            <!-- Content will be dynamically inserted here -->
-          </div>
-
-          <!-- Additional Features -->
-          <div class="features-grid grid-12 gap-md mt-md">
-            <div class="col-span-4 feature-card fade-in">
-              <div class="feature-icon">📍</div>
-              <h3>Location</h3>
-              <p>
-                Prime location with easy access to transportation and amenities
-              </p>
-            </div>
-            <div class="col-span-4 feature-card fade-in">
-              <div class="feature-icon">🏠</div>
-              <h3>Building</h3>
-              <p>Modern building with 24/7 security and maintenance</p>
-            </div>
-            <div class="col-span-4 feature-card fade-in">
-              <div class="feature-icon">🌟</div>
-              <h3>Quality</h3>
-              <p>High-quality finishes and modern appliances included</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Call to Action -->
-      <section class="call-to-action mt-md">
-        <div class="container">
-          <div class="cta-content txt-center">
-            <h2 class="txt-xl txt-bold">Ready to Make This Your Home?</h2>
-            <p class="txt-md txt-muted mb-md">
-              Contact us now to schedule a viewing or learn more about this
-              property.
-            </p>
-            <div class="flex gap-sm justify-center">
-              <a href="contact.html" class="btn btn-primary btn-lg"
-                >Contact Us</a
-              >
-              <button id="shareButton" class="btn btn-secondary btn-lg">
-                Share Property
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Similar Properties -->
-      <section class="similar-properties container">
-        <h2 class="txt-xl txt-bold">Similar Properties</h2>
-        <div id="similarProperties" class="apartment-grid"></div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container txt-center">
-        <p class="txt-muted">© 2025 ApertureFind. All rights reserved.</p>
-      </div>
-    </footer>
-
-    <script src="main.js"></script>
-  </body>
+    </section>
+  </main>
+  <div class="toast" id="toast"></div>
+  <footer style="text-align:center;padding:2rem 0;color:var(--muted);font-size:.95rem;">
+    &copy; 2024 RumahKita. Temukan apartemen impianmu.
+  </footer>
+  <script>
+    // Splash screen fade-out
+    window.addEventListener('DOMContentLoaded',()=>{
+      setTimeout(()=>{
+        document.getElementById('splash').classList.add('hide');
+      },1200);
+    });
+    // Toast notification
+    function showToast(msg){
+      const t=document.getElementById('toast');
+      t.textContent=msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),2200);
+    }
+  </script>
+</body>
 </html>

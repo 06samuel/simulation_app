@@ -1,1317 +1,215 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#1e88e5" />
-    <title>ApartmentFinder - Home</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <!-- Connection Bar -->
-    <div
-      class="c-status-bar"
-      id="connectionBar"
-      role="status"
-      aria-live="polite"></div>
-
-    <!-- Header -->
-    <header class="c-header">
-      <div class="l-container">
-        <div class="l-flex justify-between align-center">
-          <a href="index.html" class="c-header__logo">ApartmentFinder</a>
-          <nav class="c-nav">
-            <button
-              class="c-nav__toggle"
-              aria-expanded="false"
-              aria-label="Toggle navigation">
-              <span class="c-nav__toggle-icon"></span>
-            </button>
-            <ul class="c-nav__menu">
-              <li>
-                <a href="index.html" class="c-nav__link c-nav__link--active"
-                  >Home</a
-                >
-              </li>
-              <li>
-                <a href="apartments.html" class="c-nav__link">Apartments</a>
-              </li>
-              <li><a href="contact.html" class="c-nav__link">Contact</a></li>
-              <li><a href="details.html" class="c-nav__link">Details</a></li>
-            </ul>
-          </nav>
-        </div>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#1e88e5" />
+  <title>RentalKu - Dashboard</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #64748b;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --background: #f9fafb;
+      --surface: #fff;
+      --text: #0f172a;
+      --muted: #94a3b8;
+      --shadow: 0 4px 24px rgba(37,99,235,0.08);
+    }
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background: var(--background); color: var(--text); margin: 0; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; }
+    .nav-brand { font-size: 2rem; font-weight: 700; color: var(--primary); letter-spacing: 1px; }
+    .nav-menu { display: flex; gap: 2rem; }
+    .nav-link { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.2s; }
+    .nav-link:hover { color: var(--primary); }
+    .hero { text-align: center; padding: 4rem 0 2rem 0; }
+    .hero-title { font-size: 2.6rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: 0.5px; }
+    .hero-subtitle { font-size: 1.2rem; color: var(--secondary); margin-bottom: 2rem; }
+    .btn { padding: 0.8rem 2rem; border-radius: 0.6rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-size: 1rem; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #e0e7ef; color: var(--primary); }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; padding: 2rem 0; }
+    .feature-card { background: var(--surface); border-radius: 1.2rem; box-shadow: var(--shadow); padding: 2rem 1.5rem; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; align-items: center; }
+    .feature-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 8px 32px rgba(37,99,235,0.13); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary); }
+    .feature-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-description { color: var(--secondary); text-align: center; }
+    .managerial { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .managerial-card { background: #f1f5f9; border-radius: 1rem; padding: 1.5rem; box-shadow: var(--shadow); transition: box-shadow 0.2s; }
+    .managerial-card:hover { box-shadow: 0 8px 32px rgba(37,99,235,0.13); }
+    .managerial-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-dark); }
+    .managerial-desc { color: var(--muted); font-size: 1rem; }
+    .promo-section { text-align: center; padding: 2.5rem 0; }
+    .promo-box { display: inline-block; background: #e0f2fe; border-radius: 1.2rem; padding: 2rem 2.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
+    .promo-title { color: var(--primary); font-weight: 700; font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .promo-desc { color: var(--primary); margin-bottom: 1rem; }
+    .notfound-section { text-align: center; padding: 3rem 0 2rem 0; }
+    .notfound-img { width: 220px; max-width: 90vw; margin-bottom: 1.5rem; animation: floating 2.5s infinite alternate; }
+    .notfound-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+    .notfound-desc { color: var(--secondary); margin-bottom: 1.5rem; }
+    .nav-actions { text-align: center; margin-top: 2rem; }
+    .breathe { margin-bottom: 2rem; }
+    @media (max-width: 900px) { .container { padding: 1rem; } .features, .managerial { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .hero-title { font-size: 1.5rem; } .promo-box { padding: 1.2rem; } }
+    @keyframes floating { 0% { transform: translateY(0); } 100% { transform: translateY(-18px); } }
+    .fadein { opacity: 0; filter: blur(8px); transition: opacity 0.7s, filter 0.7s; }
+    .fadein.show { opacity: 1; filter: blur(0); }
+  </style>
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash" style="position:fixed;z-index:9999;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.98);" class="fadein">
+    <div style="text-align:center;">
+      <img src="https://storyset.com/illustration/online-world/rafiki" alt="Selamat Datang" style="width:180px;max-width:80vw;animation:floating 2.5s infinite alternate;">
+      <h2 style="margin-top:1.5rem;font-weight:700;color:#2563eb;">Selamat Datang di RentalKu</h2>
+      <p style="color:#555;font-size:1.1rem;">Memuat dashboard pribadi Anda...</p>
+    </div>
+  </div>
+  <div id="app" class="fadein" style="opacity:0;filter:blur(8px);">
+    <nav class="nav container">
+      <div class="nav-brand">RentalKu</div>
+      <div class="nav-menu">
+        <a href="#beranda" class="nav-link">Beranda</a>
+        <a href="#fitur" class="nav-link">Fitur</a>
+        <a href="#manajer" class="nav-link">Manajerial</a>
+        <a href="#promo" class="nav-link">Promo</a>
+        <a href="#kontak" class="nav-link">Kontak</a>
+        <a href="#masuk" class="nav-link">Masuk</a>
       </div>
-    </header>
-
-    <!-- Main Content -->
+    </nav>
     <main>
-      <!-- Hero Section -->
-      <section class="c-hero">
-        <div class="c-hero__content l-container u-flow">
-          <h1 class="c-hero__title">Find Your Perfect Apartment</h1>
-          <p class="c-hero__subtitle">
-            Discover a wide range of apartments that suit your needs and budget.
-          </p>
-          <a href="apartments.html" class="c-button c-button--accent"
-            >Explore Now</a
-          >
+      <section class="hero container breathe" id="beranda">
+        <img src="https://storyset.com/illustration/online-world/rafiki" alt="Dashboard" class="notfound-img">
+        <h1 class="hero-title">Dashboard Sewa Apartemen Modern</h1>
+        <p class="hero-subtitle">Kelola apartemen, penyewa, jadwal, dan keuangan Anda dengan mudah, cepat, dan nyaman.</p>
+        <button class="btn btn-primary" id="mulaiBtn">Mulai Sekarang</button>
+      </section>
+      <section class="features container breathe" id="fitur">
+        <div class="feature-card">
+          <div class="feature-icon">🏢</div>
+          <div class="feature-title">Manajemen Apartemen</div>
+          <div class="feature-description">Tambah, edit, dan pantau unit apartemen Anda secara real-time.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">👥</div>
+          <div class="feature-title">Manajemen Penyewa</div>
+          <div class="feature-description">Kelola data penyewa, histori sewa, dan status pembayaran dengan mudah.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <div class="feature-title">Penjadwalan & Reminder</div>
+          <div class="feature-description">Atur jadwal sewa, pengingat pembayaran, dan notifikasi otomatis.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <div class="feature-title">Transaksi & Laporan</div>
+          <div class="feature-description">Pantau transaksi, laporan keuangan, dan statistik performa bisnis Anda.</div>
         </div>
       </section>
-
-      <!-- Featured Apartments -->
-      <section class="l-container u-flow">
-        <h2 class="text-2xl">Featured Apartments</h2>
-        <div class="l-grid" id="featuredApartments">
-          <!-- Dynamic content will be inserted here -->
+      <section class="managerial container breathe" id="manajer">
+        <div class="managerial-card">
+          <div class="managerial-title">Tambah Unit Baru</div>
+          <div class="managerial-desc">Mudah menambah unit apartemen baru ke dalam sistem hanya dengan beberapa klik.</div>
+        </div>
+        <div class="managerial-card">
+          <div class="managerial-title">Kelola Penyewa</div>
+          <div class="managerial-desc">Edit, hapus, atau tambahkan penyewa baru secara efisien dan aman.</div>
+        </div>
+        <div class="managerial-card">
+          <div class="managerial-title">Riwayat Transaksi</div>
+          <div class="managerial-desc">Lihat riwayat pembayaran, status sewa, dan laporan keuangan secara detail.</div>
+        </div>
+        <div class="managerial-card">
+          <div class="managerial-title">Pengingat Otomatis</div>
+          <div class="managerial-desc">Sistem akan mengirimkan pengingat otomatis untuk pembayaran dan jatuh tempo sewa.</div>
         </div>
       </section>
-
-      <!-- Call to Action -->
-      <section class="c-cta">
-        <div class="c-cta__content l-container u-flow">
-          <h2 class="c-cta__title text-2xl">Ready to Find Your New Home?</h2>
-          <p class="c-cta__text text-lg">
-            Browse our listings and start your apartment search today!
-          </p>
-          <a href="apartments.html" class="c-button">View All Apartments</a>
+      <section class="promo-section container breathe" id="promo">
+        <div class="promo-box">
+          <div class="promo-title">Penawaran Spesial: Diskon 20%!</div>
+          <div class="promo-desc">Dapatkan diskon 20% untuk sewa pertama Anda bulan ini. Berlaku terbatas!</div>
+          <button class="btn btn-primary" id="claimPromo">Klaim Promo</button>
         </div>
       </section>
-
-      <!-- User Reviews -->
-      <section class="l-container u-flow">
-        <h2 class="text-2xl">What Our Clients Say</h2>
-        <div class="l-grid" id="reviewContainer">
-          <!-- Dynamic content will be inserted here -->
-        </div>
+      <section class="notfound-section container breathe" id="notfound" style="display:none;">
+        <img src="https://storyset.com/illustration/page-not-found/rafiki" alt="Halaman Tidak Ditemukan" class="notfound-img">
+        <div class="notfound-title">Halaman Tidak Ditemukan</div>
+        <div class="notfound-desc">Maaf, halaman yang Anda cari tidak tersedia. Silakan kembali ke beranda atau hubungi kami jika butuh bantuan.</div>
+        <button class="btn btn-primary" onclick="window.location.href='index.html'">Kembali ke Beranda</button>
       </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="c-footer">
-      <div class="l-container text-center">
-        <p class="text-sm">&copy; 2025 ApartmentFinder. All rights reserved.</p>
+      <div class="nav-actions">
+        <button class="btn btn-primary" onclick="window.location.href='index.html'">Ke Halaman Utama</button>
+        <button class="btn btn-secondary" style="margin-left:1rem;" onclick="window.scrollTo({top:0,behavior:'smooth'})">Kembali ke Atas</button>
       </div>
-    </footer>
-
-<script>
-  /**
- * Connection Status Handler
- * Monitors online/offline status and updates UI accordingly
- */
-(function() {
-    'use strict';
-
-    // DOM elements
-    const statusBar = document.getElementById('connection-status');
-    const statusText = statusBar ? statusBar.querySelector('.c-status-bar__text') : null;
-    
-    // Constants
-    const ONLINE_TEXT = 'Terhubung dengan server';
-    const OFFLINE_TEXT = 'Tidak ada koneksi internet';
-    const SLOW_CONNECTION_TEXT = 'Koneksi internet lambat';
-    
-    // Connection check interval (in milliseconds)
-    const CHECK_INTERVAL = 30000; // 30 seconds
-    
-    /**
-     * Handle online status change
-     */
-    function updateOnlineStatus() {
-        if (!statusBar || !statusText) return;
-        
-        if (navigator.onLine) {
-            statusBar.classList.remove('c-status-bar--offline');
-            statusText.textContent = ONLINE_TEXT;
-            checkConnectionQuality();
-        } else {
-            statusBar.classList.add('c-status-bar--offline');
-            statusText.textContent = OFFLINE_TEXT;
+    </main>
+  </div>
+  <script>
+    // Splash screen fade/unblur animation
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.getElementById('splash').classList.add('show');
+        setTimeout(function() {
+          document.getElementById('splash').style.display = 'none';
+          var app = document.getElementById('app');
+          app.classList.add('show');
+          app.style.opacity = '1';
+          app.style.filter = 'blur(0px)';
+        }, 900);
+      }, 1200);
+    });
+    // SPA Navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = e.target.getAttribute('href').substring(1);
+        const target = document.getElementById(targetId);
+        if(target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        } else if(targetId === 'notfound') {
+          document.getElementById('notfound').style.display = 'block';
+          document.getElementById('app').style.display = 'none';
         }
-    }
-    
-    /**
-     * Check connection quality
-     */
-    function checkConnectionQuality() {
-        if (!statusBar || !statusText) return;
-        
-        // Only run if online
-        if (!navigator.onLine) return;
-        
-        const startTime = Date.now();
-        
-        // Create a tiny image request to measure response time
-        fetch('https://www.google.com/favicon.ico', { 
-            method: 'HEAD',
-            mode: 'no-cors',
-            cache: 'no-cache'
-        })
-        .then(() => {
-            const endTime = Date.now();
-            const responseTime = endTime - startTime;
-            
-            if (responseTime > 1000) { // Response time > 1 second
-                statusBar.style.backgroundColor = 'var(--color-warning)';
-                statusText.textContent = SLOW_CONNECTION_TEXT;
-            } else {
-                statusBar.style.backgroundColor = 'var(--color-success)';
-                statusText.textContent = ONLINE_TEXT;
-            }
-        })
-        .catch(() => {
-            // If fetch fails but browser says we're online, we likely have limited connectivity
-            if (navigator.onLine) {
-                statusBar.style.backgroundColor = 'var(--color-warning)';
-                statusText.textContent = SLOW_CONNECTION_TEXT;
-            }
-        });
-    }
-    
-    /**
-     * Initialize connection status monitoring
-     */
-    function initConnectionMonitor() {
-        if (!statusBar || !statusText) return;
-        
-        // Set initial status
-        updateOnlineStatus();
-        
-        // Add event listeners for network status changes
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        
-        // Handle connection quality monitoring
-        window.addEventListener('load', function() {
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            
-            if (connection) {
-                connection.addEventListener('change', function() {
-                    updateOnlineStatus();
-                });
-            }
-            
-            // Check connection quality periodically
-            setInterval(checkConnectionQuality, CHECK_INTERVAL);
-        });
-        
-        // Add click listener to retry connection
-        statusBar.addEventListener('click', function() {
-            if (!navigator.onLine) {
-                // Visual feedback for retry attempt
-                statusText.textContent = 'Mencoba menghubungkan kembali...';
-                statusBar.classList.add('retrying');
-                
-                // Try to reconnect
-                setTimeout(() => {
-                    updateOnlineStatus();
-                    statusBar.classList.remove('retrying');
-                }, 1500);
-            }
-        });
-    }
-    
-    // Initialize when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initConnectionMonitor);
-})();
-/**
- * Rental Manager
- * Handles the rental calculator and booking functionality
- */
- (function() {
-    'use strict';
-
-    // DOM elements - Calculator
-    const rentalDuration = document.getElementById('rental-duration');
-    const moveInDate = document.getElementById('move-in-date');
-    const rentalCost = document.getElementById('rental-cost');
-    const depositCost = document.getElementById('deposit-cost');
-    const serviceFee = document.getElementById('service-fee');
-    const totalCost = document.getElementById('total-cost');
-    
-    // DOM elements - Modal
-    const bookNowButton = document.getElementById('book-now-button');
-    const bookModal = document.getElementById('book-modal');
-    const closeModal = document.getElementById('close-modal');
-    
-    // DOM elements - Summary
-    const summaryDuration = document.getElementById('summary-duration');
-    const summaryDate = document.getElementById('summary-date');
-    const summaryRental = document.getElementById('summary-rental');
-    const summaryDeposit = document.getElementById('summary-deposit');
-    const summaryFee = document.getElementById('summary-fee');
-    const summaryTotal = document.getElementById('summary-total');
-    
-    // Constants
-    const MONTHS_IN_YEAR = 12;
-    
-    /**
-     * Initialize rental manager
-     */
-    function initRentalManager() {
-        // Check if we're on a page with rental calculator
-        if (rentalDuration && moveInDate) {
-            // Set default move-in date to 7 days from now if not already set
-            if (!moveInDate.value) {
-                const defaultDate = new Date();
-                defaultDate.setDate(defaultDate.getDate() + 7);
-                moveInDate.valueAsDate = defaultDate;
-            }
-            
-            // Set min date to today
-            const today = new Date().toISOString().split('T')[0];
-            moveInDate.setAttribute('min', today);
-            
-            // Add event listeners to calculator inputs
-            rentalDuration.addEventListener('change', updateCalculator);
-            moveInDate.addEventListener('change', updateCalculator);
-            
-            // Calculate initial values
-            updateCalculator();
-        }
-        
-        // Initialize modal if on a page with booking functionality
-        if (bookNowButton && bookModal) {
-            bookNowButton.addEventListener('click', openBookingModal);
-            
-            if (closeModal) {
-                closeModal.addEventListener('click', closeBookingModal);
-            }
-            
-            // Close modal when clicking outside of content
-            window.addEventListener('click', function(event) {
-                if (event.target === bookModal) {
-                    closeBookingModal();
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && bookModal.classList.contains('is-active')) {
-                    closeBookingModal();
-                }
-            });
-            
-            // Handle booking form submission
-            const bookingForm = document.getElementById('booking-form');
-            if (bookingForm) {
-                bookingForm.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    if (validateBookingForm()) {
-                        processBooking();
-                    }
-                });
-            }
-        }
-        
-        // Save button functionality
-        const saveButton = document.getElementById('save-button');
-        const saveIcon = document.getElementById('save-icon');
-        
-        if (saveButton && saveIcon) {
-            // Check if this apartment was previously saved
-            const savedApartments = getSavedApartments();
-            const currentPath = window.location.pathname;
-            
-            if (savedApartments.includes(currentPath)) {
-                saveIcon.classList.remove('fa-regular');
-                saveIcon.classList.add('fa-solid');
-            }
-            
-            saveButton.addEventListener('click', function() {
-                toggleSaveApartment(saveIcon);
-            });
-        }
-        
-        // Share button functionality
-        const shareButton = document.getElementById('share-button');
-        if (shareButton) {
-            shareButton.addEventListener('click', shareApartment);
-        }
-        
-        // Schedule visit button
-        const scheduleVisitButton = document.getElementById('schedule-visit');
-        if (scheduleVisitButton) {
-            scheduleVisitButton.addEventListener('click', function() {
-                scheduleVisit();
-            });
-        }
-    }
-    
-    /**
-     * Update the rental calculator
-     */
-    function updateCalculator() {
-        if (!rentalDuration || !moveInDate) return;
-        
-        // Get the base price from the page
-        const basePrice = getBasePriceFromPage();
-        if (!basePrice) return;
-        
-        // Calculate costs
-        const months = parseInt(rentalDuration.value, 10);
-        const rentalTotal = basePrice * months;
-        const deposit = basePrice; // Deposit is usually one month's rent
-        const fee = basePrice * 0.05; // Service fee is 5% of one month's rent
-        const total = rentalTotal + deposit + fee;
-        
-        // Update UI with formatted values
-        rentalCost.textContent = formatCurrency(rentalTotal);
-        depositCost.textContent = formatCurrency(deposit);
-        serviceFee.textContent = formatCurrency(fee);
-        totalCost.textContent = formatCurrency(total);
-        
-        // Update summary values if they exist
-        if (summaryDuration) {
-            summaryDuration.textContent = `${months} Bulan`;
-        }
-        
-        if (summaryDate) {
-            const date = new Date(moveInDate.value);
-            summaryDate.textContent = formatDate(date);
-        }
-        
-        if (summaryRental) {
-            summaryRental.textContent = formatCurrency(rentalTotal);
-        }
-        
-        if (summaryDeposit) {
-            summaryDeposit.textContent = formatCurrency(deposit);
-        }
-        
-        if (summaryFee) {
-            summaryFee.textContent = formatCurrency(fee);
-        }
-        
-        if (summaryTotal) {
-            summaryTotal.textContent = formatCurrency(total);
-        }
-    }
-    
-    /**
-     * Extract the base price from the page
-     * @returns {number} The base price
-     */
-    function getBasePriceFromPage() {
-        try {
-            // Try to get price from the header text
-            const priceHeader = document.querySelector('.c-price-card__header h3');
-            if (priceHeader) {
-                const priceText = priceHeader.textContent;
-                // Extract numbers from string like "Rp 5.500.000/bulan"
-                const price = parseInt(priceText.replace(/[^0-9]/g, ''), 10);
-                return price;
-            }
-            
-            // Fallback to a default price
-            return 5500000;
-        } catch (error) {
-            console.error('Error extracting price:', error);
-            return 5500000; // Default fallback price
-        }
-    }
-    
-    /**
-     * Format a number as Indonesian currency
-     * @param {number} amount - The amount to format
-     * @returns {string} Formatted currency string
-     */
-    function formatCurrency(amount) {
-        return 'Rp ' + amount.toLocaleString('id-ID');
-    }
-    
-    /**
-     * Format a date in Indonesian format
-     * @param {Date} date - The date to format
-     * @returns {string} Formatted date string
-     */
-    function formatDate(date) {
-        if (isNaN(date.getTime())) {
-            return 'Tanggal tidak valid';
-        }
-        
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return date.toLocaleDateString('id-ID', options);
-    }
-    
-    /**
-     * Validate the booking form
-     * @returns {boolean} Whether the form is valid
-     */
-    function validateBookingForm() {
-        const bookingForm = document.getElementById('booking-form');
-        if (!bookingForm) return false;
-        
-        let isValid = true;
-        
-        // Get form fields
-        const nameInput = bookingForm.querySelector('#booking-name');
-        const emailInput = bookingForm.querySelector('#booking-email');
-        const phoneInput = bookingForm.querySelector('#booking-phone');
-        const idInput = bookingForm.querySelector('#booking-id');
-        const termsCheckbox = bookingForm.querySelector('#terms-agree');
-        
-        // Validate each field using the form validation helper
-        if (window.formValidation) {
-            if (!window.formValidation.validateInput(nameInput)) isValid = false;
-            if (!window.formValidation.validateInput(emailInput)) isValid = false;
-            if (!window.formValidation.validateInput(phoneInput)) isValid = false;
-            if (!window.formValidation.validateInput(idInput)) isValid = false;
-            if (!window.formValidation.validateCheckbox(termsCheckbox)) isValid = false;
-        } else {
-            // Basic validation if form validation helper is not available
-            if (!nameInput.value.trim()) isValid = false;
-            if (!emailInput.value.trim()) isValid = false;
-            if (!phoneInput.value.trim()) isValid = false;
-            if (!idInput.value.trim()) isValid = false;
-            if (termsCheckbox && !termsCheckbox.checked) isValid = false;
-        }
-        
-        return isValid;
-    }
-    
-    /**
-     * Open the booking modal
-     */
-    function openBookingModal() {
-        if (bookModal) {
-            bookModal.classList.add('is-active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling of background
-            
-            // Update summary information
-            updateCalculator();
-            
-            // Focus on first input field
-            setTimeout(() => {
-                const firstInput = bookModal.querySelector('input');
-                if (firstInput) firstInput.focus();
-            }, 300);
-        }
-    }
-    
-    /**
-     * Close the booking modal
-     */
-    function closeBookingModal() {
-        if (bookModal) {
-            bookModal.classList.remove('is-active');
-            document.body.style.overflow = '';
-        }
-    }
-    
-    /**
-     * Process the booking (simulate)
-     */
-    function processBooking() {
-        // Show loading state
-        const submitButton = document.querySelector('#booking-form button[type="submit"]');
-        const originalButtonText = submitButton.textContent;
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-        
-        // In a real app, this would submit form data to a backend API
-        setTimeout(() => {
-            // Create a success modal
-            const successModal = document.createElement('div');
-            successModal.className = 'c-modal is-active';
-            successModal.innerHTML = `
-                <div class="c-modal__content" style="max-width: 500px;">
-                    <div class="c-modal__header">
-                        <h3>Pembayaran Berhasil</h3>
-                        <button class="c-modal__close">
-                            <i class="fa-solid fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="c-modal__body text-center">
-                        <div style="font-size: 3rem; color: var(--color-success); margin-bottom: var(--spacing-4);">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <h4>Terima Kasih!</h4>
-                        <p>Permintaan sewa Anda telah diproses. Kami akan menghubungi Anda segera untuk konfirmasi lebih lanjut.</p>
-                        <p>Nomor Referensi: <strong>AP${Date.now().toString().substring(6)}</strong></p>
-                        <button class="c-button c-button--primary" style="margin-top: var(--spacing-4);">
-                            Kembali ke Halaman Utama
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // Close the booking modal
-            closeBookingModal();
-            
-            // Reset the button
-            submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
-            
-            // Show the success modal
-            document.body.appendChild(successModal);
-            
-            // Handle success modal close
-            const closeSuccessButton = successModal.querySelector('.c-modal__close');
-            const mainButton = successModal.querySelector('.c-button--primary');
-            
-            if (closeSuccessButton) {
-                closeSuccessButton.addEventListener('click', function() {
-                    document.body.removeChild(successModal);
-                });
-            }
-            
-            if (mainButton) {
-                mainButton.addEventListener('click', function() {
-                    document.body.removeChild(successModal);
-                    window.location.href = '/';
-                });
-            }
-        }, 2000);
-    }
-    
-    /**
-     * Schedule a visit
-     */
-    function scheduleVisit() {
-        // Create a visit scheduling modal
-        const modal = document.createElement('div');
-        modal.className = 'c-modal is-active';
-        modal.innerHTML = `
-            <div class="c-modal__content" style="max-width: 600px;">
-                <div class="c-modal__header">
-                    <h3>Jadwalkan Kunjungan</h3>
-                    <button class="c-modal__close">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </div>
-                <div class="c-modal__body">
-                    <p>Pilih waktu kunjungan yang sesuai dengan jadwal Anda:</p>
-                    <form id="visit-form">
-                        <div class="c-form-group">
-                            <div class="c-input-group">
-                                <label for="visit-date">Tanggal Kunjungan</label>
-                                <input type="date" id="visit-date" class="c-input" required min="${new Date().toISOString().split('T')[0]}">
-                            </div>
-                            <div class="c-input-group">
-                                <label for="visit-time">Waktu Kunjungan</label>
-                                <select id="visit-time" class="c-select" required>
-                                    <option value="">Pilih waktu</option>
-                                    <option value="09:00">09:00 - 10:00</option>
-                                    <option value="10:00">10:00 - 11:00</option>
-                                    <option value="11:00">11:00 - 12:00</option>
-                                    <option value="13:00">13:00 - 14:00</option>
-                                    <option value="14:00">14:00 - 15:00</option>
-                                    <option value="15:00">15:00 - 16:00</option>
-                                    <option value="16:00">16:00 - 17:00</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="c-form-group">
-                            <div class="c-input-group">
-                                <label for="visit-name">Nama Lengkap</label>
-                                <input type="text" id="visit-name" class="c-input" required>
-                            </div>
-                            <div class="c-input-group">
-                                <label for="visit-phone">Nomor Telepon</label>
-                                <input type="tel" id="visit-phone" class="c-input" required>
-                            </div>
-                        </div>
-                        <div class="c-input-group">
-                            <label for="visit-note">Catatan Tambahan (opsional)</label>
-                            <textarea id="visit-note" class="c-input" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="c-button c-button--primary c-button--block">
-                            Konfirmasi Jadwal Kunjungan
-                        </button>
-                    </form>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        document.body.style.overflow = 'hidden';
-        
-        // Set focus on first input
-        setTimeout(() => {
-            const firstInput = modal.querySelector('input');
-            if (firstInput) firstInput.focus();
-        }, 300);
-        
-        // Close modal when clicking the close button
-        const closeButton = modal.querySelector('.c-modal__close');
-        if (closeButton) {
-            closeButton.addEventListener('click', function() {
-                document.body.removeChild(modal);
-                document.body.style.overflow = '';
-            });
-        }
-        
-        // Close modal when clicking outside the content
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                document.body.removeChild(modal);
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Handle form submission
-        const visitForm = modal.querySelector('#visit-form');
-        if (visitForm) {
-            visitForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                // Show loading state
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalButtonText = submitButton.textContent;
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-                
-                // Simulate submission
-                setTimeout(() => {
-                    const visitDate = document.getElementById('visit-date').value;
-                    const visitTime = document.getElementById('visit-time').value;
-                    
-                    // Close the current modal
-                    document.body.removeChild(modal);
-                    
-                    // Show success message
-                    const successModal = document.createElement('div');
-                    successModal.className = 'c-modal is-active';
-                    successModal.innerHTML = `
-                        <div class="c-modal__content" style="max-width: 500px;">
-                            <div class="c-modal__header">
-                                <h3>Jadwal Kunjungan Dikonfirmasi</h3>
-                                <button class="c-modal__close">
-                                    <i class="fa-solid fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="c-modal__body text-center">
-                                <div style="font-size: 3rem; color: var(--color-success); margin-bottom: var(--spacing-4);">
-                                    <i class="fa-solid fa-calendar-check"></i>
-                                </div>
-                                <h4>Kunjungan Anda Telah Dijadwalkan!</h4>
-                                <p>Kami telah mencatat jadwal kunjungan Anda pada:</p>
-                                <p><strong>${formatDate(new Date(visitDate))}</strong> pukul <strong>${visitTime}</strong></p>
-                                <p style="margin-top: var(--spacing-4);">Agen kami akan menghubungi Anda untuk konfirmasi. Jika ada perubahan, silakan hubungi kami.</p>
-                                <button class="c-button c-button--primary" style="margin-top: var(--spacing-4);">
-                                    Tutup
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.body.appendChild(successModal);
-                    
-                    // Handle success modal close
-                    const closeSuccessButton = successModal.querySelector('.c-modal__close');
-                    const closeButton = successModal.querySelector('.c-button--primary');
-                    
-                    const closeSuccessModal = function() {
-                        document.body.removeChild(successModal);
-                        document.body.style.overflow = '';
-                    };
-                    
-                    if (closeSuccessButton) {
-                        closeSuccessButton.addEventListener('click', closeSuccessModal);
-                    }
-                    
-                    if (closeButton) {
-                        closeButton.addEventListener('click', closeSuccessModal);
-                    }
-                }, 1500);
-            });
-        }
-    }
-    
-    /**
-     * Get saved apartments from local storage
-     * @returns {Array} Array of saved apartment paths
-     */
-    function getSavedApartments() {
-        const saved = localStorage.getItem('savedApartments');
-        return saved ? JSON.parse(saved) : [];
-    }
-    
-    /**
-     * Save or unsave an apartment
-     * @param {HTMLElement} saveIcon - The save button icon element
-     */
-    function toggleSaveApartment(saveIcon) {
-        const currentPath = window.location.pathname;
-        const savedApartments = getSavedApartments();
-        const isSaved = savedApartments.includes(currentPath);
-        
-        if (isSaved) {
-            // Unsave apartment
-            const index = savedApartments.indexOf(currentPath);
-            if (index > -1) {
-                savedApartments.splice(index, 1);
-            }
-            
-            // Animation for unsaving
-            saveIcon.classList.remove('fa-solid');
-            saveIcon.classList.add('fa-heart-broken');
-            setTimeout(() => {
-                saveIcon.classList.remove('fa-heart-broken');
-                saveIcon.classList.add('fa-regular');
-                saveIcon.classList.add('fa-heart');
-            }, 300);
-            
-            // Show toast
-            showToast('Apartemen dihapus dari favorit', 'warning');
-        } else {
-            // Save apartment
-            savedApartments.push(currentPath);
-            
-            // Animation for saving
-            saveIcon.classList.remove('fa-regular');
-            saveIcon.classList.add('fa-solid');
-            
-            // Show toast
-            showToast('Apartemen disimpan ke favorit', 'success');
-        }
-        
-        // Save to local storage
-        localStorage.setItem('savedApartments', JSON.stringify(savedApartments));
-    }
-    
-    /**
-     * Show a toast notification
-     * @param {string} message - The message to display
-     * @param {string} type - The type of toast (success, warning, error)
-     */
-    function showToast(message, type = 'info') {
-        // Create toast element if it doesn't exist
-        let toast = document.getElementById('toast-notification');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'toast-notification';
-            toast.className = 'c-toast';
-            document.body.appendChild(toast);
-            
-            // Add styles if not already in CSS
-            const style = document.createElement('style');
-            style.textContent = `
-                .c-toast {
-                    position: fixed;
-                    bottom: 20px;
-                    right: 20px;
-                    padding: 12px 20px;
-                    background-color: var(--color-info);
-                    color: white;
-                    border-radius: var(--radius-md);
-                    box-shadow: var(--shadow-md);
-                    opacity: 0;
-                    transform: translateY(20px);
-                    transition: opacity 0.3s, transform 0.3s;
-                    z-index: var(--z-toast, 400);
-                }
-                .c-toast--success { background-color: var(--color-success); }
-                .c-toast--warning { background-color: var(--color-warning); }
-                .c-toast--error { background-color: var(--color-error); }
-                .c-toast.show {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
-        // Set toast content and show
-        toast.textContent = message;
-        toast.className = 'c-toast';
-        
-        if (type) {
-            toast.classList.add(`c-toast--${type}`);
-        }
-        
-        // Show the toast
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 10);
-        
-        // Hide after 3 seconds
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-    
-    /**
-     * Share apartment functionality
-     */
-    function shareApartment() {
-        // Get apartment details
-        const apartmentName = document.querySelector('.c-apartment-header h1')?.textContent || 'Apartemen';
-        const shareData = {
-            title: document.title,
-            text: `Cek apartemen ini di TemukanApartemen: ${apartmentName}`,
-            url: window.location.href
-        };
-        
-        // Check if Web Share API is supported
-        if (navigator.share) {
-            navigator.share(shareData)
-            .then(() => {
-                console.log('Shared successfully');
-            })
-            .catch(error => {
-                console.log('Error sharing:', error);
-                fallbackShare();
-            });
-        } else {
-            fallbackShare();
-        }
-        
-        // Fallback for browsers that don't support Web Share API
-        function fallbackShare() {
-            // Create a share modal
-            const modal = document.createElement('div');
-            modal.className = 'c-modal is-active';
-            modal.innerHTML = `
-                <div class="c-modal__content" style="max-width: 500px;">
-                    <div class="c-modal__header">
-                        <h3>Bagikan Apartemen</h3>
-                        <button class="c-modal__close">
-                            <i class="fa-solid fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="c-modal__body">
-                        <p>Bagikan tautan apartemen ini:</p>
-                        <div class="c-input-group" style="display: flex; margin-top: var(--spacing-4);">
-                            <input type="text" class="c-input" value="${window.location.href}" readonly style="flex: 1;">
-                            <button class="c-button c-button--primary" id="copy-link-btn" style="margin-left: var(--spacing-2);">
-                                <i class="fa-regular fa-copy"></i> Salin
-                            </button>
-                        </div>
-                        <div style="margin-top: var(--spacing-6);">
-                            <p>Atau bagikan melalui media sosial:</p>
-                            <div style="display: flex; gap: var(--spacing-4); margin-top: var(--spacing-4); justify-content: center;">
-                                <a href="https://wa.me/?text=${encodeURIComponent(`${shareData.text} ${shareData.url}`)}" target="_blank" class="c-button c-button--outline" style="display: inline-flex; align-items: center; gap: 8px;">
-                                    <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp
-                                </a>
-                                <a href="https://telegram.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}" target="_blank" class="c-button c-button--outline" style="display: inline-flex; align-items: center; gap: 8px;">
-                                    <i class="fa-brands fa-telegram" style="color: #0088cc;"></i> Telegram
-                                </a>
-                                <a href="mailto:?subject=${encodeURIComponent(shareData.title)}&body=${encodeURIComponent(`${shareData.text} ${shareData.url}`)}" class="c-button c-button--outline" style="display: inline-flex; align-items: center; gap: 8px;">
-                                    <i class="fa-regular fa-envelope"></i> Email
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            document.body.style.overflow = 'hidden';
-            
-            // Handle copy link button
-            const copyButton = modal.querySelector('#copy-link-btn');
-            const linkInput = modal.querySelector('input');
-            
-            if (copyButton && linkInput) {
-                copyButton.addEventListener('click', function() {
-                    linkInput.select();
-                    document.execCommand('copy');
-                    
-                    copyButton.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin';
-                    copyButton.style.backgroundColor = 'var(--color-success)';
-                    
-                    setTimeout(() => {
-                        copyButton.innerHTML = '<i class="fa-regular fa-copy"></i> Salin';
-                        copyButton.style.backgroundColor = '';
-                    }, 2000);
-                });
-            }
-            
-            // Close modal when clicking the close button
-            const closeButton = modal.querySelector('.c-modal__close');
-            if (closeButton) {
-                closeButton.addEventListener('click', function() {
-                    document.body.removeChild(modal);
-                    document.body.style.overflow = '';
-                });
-            }
-            
-            // Close modal when clicking outside the content
-            modal.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    document.body.removeChild(modal);
-                    document.body.style.overflow = '';
-                }
-            });
-        }
-    }
-    
-    // Initialize when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initRentalManager);
-})();
-/**
- * Image Gallery Handler
- * Manages the apartment image gallery functionality
- */
- (function() {
-    'use strict';
-
-    // DOM elements
-    const mainImage = document.getElementById('main-image');
-    const thumbnails = document.querySelectorAll('.c-image-gallery__thumbnail');
-    const virtualTourButton = document.getElementById('virtual-tour');
-    
-    // Gallery state
-    let currentIndex = 0;
-    let totalImages = thumbnails.length;
-    let isTransitioning = false;
-    
-    /**
-     * Initialize the image gallery
-     */
-    function initImageGallery() {
-        if (!mainImage || thumbnails.length === 0) {
-            return;
-        }
-        
-        // Set initial active thumbnail
-        currentIndex = 0;
-        
-        // Add click event listeners to all thumbnails
-        thumbnails.forEach((thumbnail, index) => {
-            thumbnail.addEventListener('click', function() {
-                if (isTransitioning) return;
-                selectThumbnail(index);
-            });
-        });
-        
-        // Handle virtual tour button
-        if (virtualTourButton) {
-            virtualTourButton.addEventListener('click', showVirtualTour);
-        }
-        
-        // Add keyboard navigation for gallery
-        document.addEventListener('keydown', handleKeyboardNavigation);
-        
-        // Add swipe events for mobile
-        initSwipeEvents();
-        
-        // Add preloading for smoother transitions
-        preloadImages();
-    }
-    
-    /**
-     * Preload all gallery images for smoother transitions
-     */
-    function preloadImages() {
-        thumbnails.forEach(thumbnail => {
-            const img = thumbnail.querySelector('img');
-            if (img && img.src) {
-                const preloadImg = new Image();
-                preloadImg.src = img.src;
-            }
-        });
-    }
-    
-    /**
-     * Initialize swipe events for mobile
-     */
-    function initSwipeEvents() {
-        const gallery = mainImage.parentElement;
-        if (!gallery) return;
-        
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        gallery.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-        
-        gallery.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, { passive: true });
-        
-        function handleSwipe() {
-            const threshold = 50; // Minimum distance to register a swipe
-            
-            if (touchEndX < touchStartX - threshold) {
-                // Swipe left - next image
-                navigateGallery(1);
-            } else if (touchEndX > touchStartX + threshold) {
-                // Swipe right - previous image
-                navigateGallery(-1);
-            }
-        }
-    }
-    
-    /**
-     * Handle keyboard navigation
-     * @param {KeyboardEvent} e - The keyboard event
-     */
-    function handleKeyboardNavigation(e) {
-        // Only handle keyboard navigation if gallery is visible in viewport
-        if (!mainImage || !isElementInViewport(mainImage)) return;
-        
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-            navigateGallery(1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-            navigateGallery(-1);
-        }
-    }
-    
-    /**
-     * Check if element is in viewport
-     * @param {Element} el - The element to check
-     * @returns {boolean} - Whether the element is in viewport
-     */
-    function isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-    
-    /**
-     * Navigate the gallery in a direction
-     * @param {number} direction - The direction to navigate (1 for next, -1 for previous)
-     */
-    function navigateGallery(direction) {
-        if (isTransitioning) return;
-        
-        let newIndex = currentIndex + direction;
-        
-        // Handle wrapping
-        if (newIndex < 0) {
-            newIndex = totalImages - 1;
-        } else if (newIndex >= totalImages) {
-            newIndex = 0;
-        }
-        
-        selectThumbnail(newIndex);
-    }
-    
-    /**
-     * Select a thumbnail and update the main image
-     * @param {number} index - The index of the selected thumbnail
-     */
-    function selectThumbnail(index) {
-        if (isTransitioning || index === currentIndex) return;
-        
-        isTransitioning = true;
-        
-        // Update active thumbnail state
-        thumbnails.forEach(thumb => {
-            thumb.classList.remove('c-image-gallery__thumbnail--active');
-        });
-        
-        const selectedThumbnail = thumbnails[index];
-        if (selectedThumbnail) {
-            selectedThumbnail.classList.add('c-image-gallery__thumbnail--active');
-            
-            // Get the image source from the selected thumbnail
-            const imgSrc = selectedThumbnail.querySelector('img').getAttribute('src');
-            const imgAlt = selectedThumbnail.querySelector('img').getAttribute('alt');
-            
-            // Scroll thumbnail into view if needed
-            if (!isElementInView(selectedThumbnail)) {
-                selectedThumbnail.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'nearest',
-                    inline: 'center'
-                });
-            }
-            
-            // Update main image with cross-fade effect
-            mainImage.style.opacity = '0';
-            
-            setTimeout(() => {
-                mainImage.setAttribute('src', imgSrc);
-                mainImage.setAttribute('alt', imgAlt);
-                mainImage.style.opacity = '1';
-                currentIndex = index;
-                
-                setTimeout(() => {
-                    isTransitioning = false;
-                }, 200);
-            }, 200);
-        }
-    }
-    
-    /**
-     * Check if element is fully in view within its container
-     * @param {Element} el - The element to check
-     * @returns {boolean} - Whether the element is in view
-     */
-    function isElementInView(el) {
-        const container = el.parentElement;
-        if (!container) return false;
-        
-        const containerRect = container.getBoundingClientRect();
-        const elRect = el.getBoundingClientRect();
-        
-        return (
-            elRect.left >= containerRect.left &&
-            elRect.right <= containerRect.right
-        );
-    }
-    
-    /**
-     * Handle virtual tour button click
-     * In a real app, this would launch a 3D or panoramic viewer
-     */
-    function showVirtualTour() {
-        // Create a modal to showcase the virtual tour feature
-        const modal = document.createElement('div');
-        modal.className = 'c-modal is-active';
-        modal.innerHTML = `
-            <div class="c-modal__content" style="max-width: 800px;">
-                <div class="c-modal__header">
-                    <h3>Tur Virtual</h3>
-                    <button class="c-modal__close">
-                        <i class="fa-solid fa-times"></i>
-                    </button>
-                </div>
-                <div class="c-modal__body">
-                    <div class="c-location-map__placeholder" style="height: 400px;">
-                        <i class="fa-solid fa-vr-cardboard" style="font-size: 3rem;"></i>
-                        <p>Fitur tur virtual sedang dalam pengembangan.</p>
-                        <p style="margin-top: var(--spacing-2);">Segera hadir untuk meningkatkan pengalaman pencarian apartemen Anda!</p>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        document.body.style.overflow = 'hidden';
-        
-        // Close modal when clicking the close button
-        const closeButton = modal.querySelector('.c-modal__close');
-        if (closeButton) {
-            closeButton.addEventListener('click', function() {
-                document.body.removeChild(modal);
-                document.body.style.overflow = '';
-            });
-        }
-        
-        // Close modal when clicking outside the content
-        modal.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                document.body.removeChild(modal);
-                document.body.style.overflow = '';
-            }
-        });
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function escHandler(event) {
-            if (event.key === 'Escape') {
-                document.body.removeChild(modal);
-                document.body.style.overflow = '';
-                document.removeEventListener('keydown', escHandler);
-            }
-        });
-    }
-    
-    // Initialize gallery when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initImageGallery);
-})();/**
- * Theme Switcher
- * Handles theme switching between light and dark modes
- */
-(function() {
-    'use strict';
-
-    // DOM elements
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIconLight = document.getElementById('theme-icon-light');
-    const themeIconDark = document.getElementById('theme-icon-dark');
-    
-    // Theme constants
-    const THEME_LIGHT = 'light';
-    const THEME_DARK = 'dark';
-    const STORAGE_KEY = 'temukanApartemen-theme';
-    
-    /**
-     * Initialize theme
-     */
-    function initTheme() {
-        const savedTheme = localStorage.getItem(STORAGE_KEY);
-        
-        if (savedTheme) {
-            applyTheme(savedTheme);
-        } else {
-            // Check for user preference from system
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(prefersDark ? THEME_DARK : THEME_LIGHT);
-        }
-        
-        // Add event listener to theme toggle button
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-        
-        // Listen for system preference changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!localStorage.getItem(STORAGE_KEY)) {
-                applyTheme(e.matches ? THEME_DARK : THEME_LIGHT);
-            }
-        });
-    }
-    
-    /**
-     * Apply theme to the document
-     * @param {string} theme - The theme to apply (light or dark)
-     */
-    function applyTheme(theme) {
-        // Set data-theme attribute on HTML element
-        html.setAttribute('data-theme', theme);
-        
-        // Update icon visibility
-        if (themeIconLight && themeIconDark) {
-            if (theme === THEME_DARK) {
-                themeIconLight.style.display = 'block';
-                themeIconDark.style.display = 'none';
-            } else {
-                themeIconLight.style.display = 'none';
-                themeIconDark.style.display = 'block';
-            }
-        }
-        
-        // Save to localStorage
-        localStorage.setItem(STORAGE_KEY, theme);
-        
-        // Update meta theme-color for mobile
-        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-        if (metaThemeColor) {
-            metaThemeColor.setAttribute('content', theme === THEME_DARK ? '#1f2937' : '#2563eb');
-        }
-        
-        // Dispatch custom event
-        document.dispatchEvent(new CustomEvent('themeChanged', { 
-            detail: { theme: theme }
-        }));
-    }
-    
-    /**
-     * Toggle between light and dark themes
-     */
-    function toggleTheme() {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === THEME_LIGHT ? THEME_DARK : THEME_LIGHT;
-        
-        // Add animation class
-        document.body.classList.add('theme-transition');
-        
-        // Apply the new theme
-        applyTheme(newTheme);
-        
-        // Remove animation class after transition completes
-        setTimeout(() => {
-            document.body.classList.remove('theme-transition');
-        }, 300);
-    }
-    
-    // Initialize theme when DOM is loaded
-    document.addEventListener('DOMContentLoaded', initTheme);
-})();
-</script>
-  </body>
+      });
+    });
+    // Micro Interactions
+    document.querySelectorAll('.feature-card, .managerial-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.backgroundColor = '#e0e7ef';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.backgroundColor = card.classList.contains('feature-card') ? '#fff' : '#f1f5f9';
+      });
+    });
+    // Button Click Animation
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mousedown', function() {
+        this.style.transform = 'scale(0.96)';
+      });
+      btn.addEventListener('mouseup', function() {
+        this.style.transform = 'scale(1)';
+      });
+      btn.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
+    });
+    // Promo Button
+    document.getElementById('claimPromo').addEventListener('click', function() {
+      this.innerText = 'Promo Berhasil Diklaim!';
+      this.disabled = true;
+      this.style.background = '#22c55e';
+      this.style.color = '#fff';
+    });
+    // Mulai Button
+    document.getElementById('mulaiBtn').addEventListener('click', function() {
+      this.innerText = 'Selamat Menjelajah!';
+      setTimeout(() => { this.innerText = 'Mulai Sekarang'; }, 1500);
+    });
+  </script>
+</body>
 </html>
