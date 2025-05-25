@@ -1,0 +1,2788 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Platform penyewaan apartemen dengan pencarian canggih, pembayaran aman, dan manajemen booking efisien">
+    <meta name="keywords" content="penyewaan apartemen, manajemen properti, sistem sewa">
+    <meta name="author" content="Rentelindo">
+    <title>Rentelindo - Penyewaan Apartemen</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ======= DESIGN TOKENS ======= */
+        :root {
+            /* Colors */
+            --color-primary: hsl(210, 90%, 45%);
+            --color-primary-light: hsl(210, 90%, 55%);
+            --color-primary-dark: hsl(210, 90%, 35%);
+            --color-accent: hsl(25, 95%, 55%);
+            --color-success: hsl(142, 76%, 42%);
+            --color-danger: hsl(0, 84%, 55%);
+            --color-warning: hsl(36, 100%, 45%);
+            --color-bg: hsl(210, 20%, 98%);
+            --color-surface: hsl(0, 0%, 100%);
+            --color-surface-hover: hsl(210, 15%, 97%);
+            --color-border: hsl(210, 16%, 88%);
+            --color-muted: hsl(210, 12%, 55%);
+            --color-foreground: hsl(210, 25%, 15%);
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+
+            /* Typography */
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-md: 1.125rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 1.75rem;
+            --font-size-3xl: 2rem;
+            --line-height-normal: 1.6;
+
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 1rem;
+            --space-4: 1.5rem;
+            --space-5: 2rem;
+            --space-6: 3rem;
+
+            /* Border radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 400ms ease;
+        }
+
+        /* ======= BASE STYLES ======= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            font-family: var(--font-family);
+            background: var(--color-bg);
+            color: var(--color-foreground);
+            line-height: var(--line-height-normal);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        a:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+            font-size: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        /* ======= UTILITY CLASSES ======= */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-3);
+        }
+
+        /* Layout */
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .gap-1 {
+            gap: var(--space-1);
+        }
+
+        .gap-2 {
+            gap: var(--space-2);
+        }
+
+        .gap-3 {
+            gap: var(--space-3);
+        }
+
+        .gap-4 {
+            gap: var(--space-4);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Spacing */
+        .p-2 {
+            padding: var(--space-2);
+        }
+
+        .p-3 {
+            padding: var(--space-3);
+        }
+
+        .p-4 {
+            padding: var(--space-4);
+        }
+
+        .py-2 {
+            padding-top: var(--space-2);
+            padding-bottom: var(--space-2);
+        }
+
+        .py-3 {
+            padding-top: var(--space-3);
+            padding-bottom: var(--space-3);
+        }
+
+        .py-4 {
+            padding-top: var(--space-4);
+            padding-bottom: var(--space-4);
+        }
+
+        .px-3 {
+            padding-left: var(--space-3);
+            padding-right: var(--space-3);
+        }
+
+        .mb-1 {
+            margin-bottom: var(--space-1);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--space-2);
+        }
+
+        .mb-3 {
+            margin-bottom: var(--space-3);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--space-4);
+        }
+
+        .mt-2 {
+            margin-top: var(--space-2);
+        }
+
+        .mt-3 {
+            margin-top: var(--space-3);
+        }
+
+        /* Typography */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: var(--color-muted);
+        }
+
+        .text-primary {
+            color: var(--color-primary);
+        }
+
+        .text-success {
+            color: var(--color-success);
+        }
+
+        .text-danger {
+            color: var(--color-danger);
+        }
+
+        .text-warning {
+            color: var(--color-warning);
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-sm {
+            font-size: var(--font-size-sm);
+        }
+
+        .text-base {
+            font-size: var(--font-size-base);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .text-xl {
+            font-size: var(--font-size-xl);
+        }
+
+        .text-2xl {
+            font-size: var(--font-size-2xl);
+        }
+
+        .text-3xl {
+            font-size: var(--font-size-3xl);
+        }
+
+        /* Visual */
+        .rounded {
+            border-radius: var(--radius-md);
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius-lg);
+        }
+
+        .shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .shadow-md {
+            box-shadow: var(--shadow-md);
+        }
+
+        .shadow-lg {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bg-surface {
+            background-color: var(--color-surface);
+        }
+
+        .bg-primary {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .transition {
+            transition: all var(--transition-normal);
+        }
+
+        /* ======= COMPONENTS ======= */
+        /* Navigation */
+        .navbar {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-2) var(--space-3);
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--space-3);
+        }
+
+        .nav-link {
+            padding: var(--space-2);
+            font-weight: 500;
+            color: var(--color-foreground);
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--color-primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 2px;
+            background: var(--color-primary);
+            border-radius: 2px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-badge::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: var(--color-danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-foreground);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: hsl(142, 76%, 50%);
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: hsl(0, 84%, 60%);
+        }
+
+        .btn-sm {
+            padding: var(--space-1) var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-lg {
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-lg);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-body {
+            padding: var(--space-3);
+        }
+
+        .card-footer {
+            padding: var(--space-3);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .property-card {
+            position: relative;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: var(--space-2);
+            left: var(--space-2);
+            background: var(--color-surface);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .property-price {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            color: var(--color-muted);
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            color: var(--color-warning);
+        }
+
+        .property-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wishlist-btn {
+            color: var(--color-muted);
+        }
+
+        .wishlist-btn.active {
+            color: var(--color-danger);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: var(--space-3);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-1);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px hsla(210, 90%, 45%, 0.2);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right var(--space-2) center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: var(--space-6);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            cursor: pointer;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            appearance: none;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .checkbox-input:checked {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .checkbox-input:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: var(--font-size-sm);
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--color-border);
+            border-radius: 3px;
+            outline: none;
+            margin: var(--space-2) 0;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .modal-open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: all var(--transition-normal);
+        }
+
+        .modal-open .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: var(--space-3);
+        }
+
+        .modal-footer {
+            padding: var(--space-3);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-2);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            color: var(--color-muted);
+        }
+
+        .modal-close:hover {
+            color: var(--color-foreground);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--space-3);
+        }
+
+        .tab {
+            padding: var(--space-2) var(--space-3);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .alert-success {
+            background: hsla(142, 76%, 42%, 0.1);
+            color: var(--color-success);
+        }
+
+        .alert-danger {
+            background: hsla(0, 84%, 55%, 0.1);
+            color: var(--color-danger);
+        }
+
+        .alert-warning {
+            background: hsla(36, 100%, 45%, 0.1);
+            color: var(--color-warning);
+        }
+
+        /* Reviews */
+        .review {
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+        }
+
+        .review-author {
+            font-weight: 500;
+        }
+
+        .review-date {
+            color: var(--color-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .review-rating {
+            color: var(--color-warning);
+        }
+
+        .review-body {
+            margin-top: var(--space-2);
+        }
+
+        /* Chat */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+            background: var(--color-surface-hover);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: var(--space-3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-lg);
+            position: relative;
+        }
+
+        .chat-message.sent {
+            align-self: flex-end;
+            background: var(--color-primary);
+            color: white;
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-message.received {
+            align-self: flex-start;
+            background: var(--color-surface-hover);
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+            margin-top: var(--space-1);
+            color: var(--color-muted);
+        }
+
+        .chat-input-container {
+            padding: var(--space-2);
+            border-top: 1px solid var(--color-border);
+            background: var(--color-surface-hover);
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            resize: none;
+        }
+
+        /* Booking Timeline */
+        .timeline {
+            position: relative;
+            padding-left: var(--space-4);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+            width: 2px;
+            background: var(--color-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-3);
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -15px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+        }
+
+        .timeline-content {
+            padding: var(--space-2);
+            background: var(--color-surface-hover);
+            border-radius: var(--radius-sm);
+        }
+
+        .timeline-date {
+            font-size: var(--font-size-sm);
+            color: var(--color-muted);
+        }
+
+        /* Map */
+        .map-container {
+            height: 300px;
+            background: var(--color-surface-hover);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 var(--space-2);
+            }
+
+            .property-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .search-form {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--color-surface);
+                flex-direction: column;
+                align-items: center;
+                padding: var(--space-4);
+                transform: translateX(-100%);
+                transition: transform var(--transition-normal);
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .nav-link {
+                padding: var(--space-3);
+            }
+
+            .mobile-menu-btn {
+                display: block !important;
+            }
+
+            .property-detail-layout {
+                flex-direction: column !important;
+            }
+
+            .property-sidebar {
+                width: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-lg {
+                padding: var(--space-2) var(--space-3);
+                font-size: var(--font-size-base);
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="sr-only">Lewati ke konten utama</a>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <i class="fas fa-building"></i>
+                <span>Rentelindo</span>
+            </a>
+
+            <button class="mobile-menu-btn btn-icon hidden" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" class="nav-link active" data-route="home">Beranda</a></li>
+                <li><a href="#search" class="nav-link" data-route="search">Cari</a></li>
+                <li><a href="#wishlist" class="nav-link" data-route="wishlist">Favorit</a></li>
+                <li><a href="#bookings" class="nav-link" data-route="bookings">Pesanan</a></li>
+            </ul>
+
+            <div class="user-menu">
+                <button class="notification-badge btn-icon" data-count="3">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="user-avatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container py-4">
+        <!-- Home -->
+        <section id="home" class="view">
+            <div class="hero text-center mb-6">
+                <h1 class="text-3xl font-bold mb-2">Temukan Apartemen Impian Anda</h1>
+                <p class="text-lg text-muted mb-4">Cari dan sewa apartemen dengan mudah dan aman</p>
+
+                <form class="search-form grid gap-3 mb-6"
+                    style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label for="quick-location" class="form-label">Lokasi</label>
+                        <input type="text" id="quick-location" class="form-control" placeholder="Masukkan kota"
+                            aria-describedby="quick-location-desc">
+                        <small id="quick-location-desc" class="sr-only">Masukkan nama kota atau landmark untuk mencari
+                            apartemen</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-checkin" class="form-label">Check-in</label>
+                        <input type="date" id="quick-checkin" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-checkout" class="form-label">Check-out</label>
+                        <input type="date" id="quick-checkout" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-type" class="form-label">Tipe</label>
+                        <select id="quick-type" class="form-control form-select">
+                            <option value="">Semua Tipe</option>
+                            <option value="studio">Studio</option>
+                            <option value="1br">1 Kamar</option>
+                            <option value="2br">2 Kamar</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        <span>Cari</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-4">Rekomendasi Untuk Anda</h2>
+                <div class="property-grid grid gap-4"
+                    style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));" id="recommendedProperties">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-4">Populer di Jakarta</h2>
+                <div class="property-grid grid gap-4"
+                    style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));" id="popularProperties"></div>
+            </div>
+        </section>
+
+        <!-- Search -->
+        <section id="search" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Pencarian Apartemen</h1>
+
+            <div class="d-flex gap-4">
+                <aside style="flex: 1; max-width: 300px;">
+                    <form class="search-form card p-3">
+                        <div class="form-group">
+                            <label for="search-location" class="form-label">Lokasi</label>
+                            <input type="text" id="search-location" class="form-control"
+                                placeholder="Kota atau landmark" aria-describedby="search-location-desc">
+                            <small id="search-location-desc" class="sr-only">Masukkan nama kota atau landmark untuk
+                                mencari apartemen</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price-range" class="form-label">Harga Maks: Rp <span
+                                    id="price-value">25.000.000</span></label>
+                            <input type="range" id="price-range" min="1000000" max="50000000" value="25000000"
+                                step="1000000" class="range-slider">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tipe Unit</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="studio">
+                                    <span>Studio</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="1br">
+                                    <span>1 Kamar</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="2br">
+                                    <span>2 Kamar</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="penthouse">
+                                    <span>Penthouse</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Fasilitas</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="pool">
+                                    <span>Kolam Renang</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="gym">
+                                    <span>Gym</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="wifi">
+                                    <span>WiFi</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" class="checkbox-input" value="parking">
+                                    <span>Parkir</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-full">
+                            <i class="fas fa-filter"></i>
+                            <span>Terapkan Filter</span>
+                        </button>
+                    </form>
+                </aside>
+
+                <div style="flex: 3;">
+                    <div class="map-container mb-4">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt text-3xl mb-2"></i>
+                            <p>Peta Interaktif</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Hasil Pencarian</h2>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-sort"></i>
+                                <span>Urutkan</span>
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Peta</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="property-grid grid gap-4"
+                        style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));" id="searchResults"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Property Detail -->
+        <section id="property" class="view hidden">
+            <div class="d-flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold" id="property-title">Luxury Penthouse</h1>
+                <button class="btn btn-outline" id="back-to-search">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </button>
+            </div>
+
+            <div class="gallery grid gap-3 mb-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <figure class="card">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/29/05/15/architecture-1867187_1280.jpg"
+                        alt="Apartemen" class="w-full rounded">
+                    <figcaption class="p-2 text-center text-sm text-muted">Gambar Utama</figcaption>
+                </figure>
+                <figure class="card">
+                    <img src="https://source.unsplash.com/random/800x600/?apartment,2" alt="Apartemen"
+                        class="w-full rounded">
+                    <figcaption class="p-2 text-center text-sm text-muted">Ruang Tamu</figcaption>
+                </figure>
+                <figure class="card">
+                    <img src="https://source.unsplash.com/random/800x600/?apartment,3" alt="Apartemen"
+                        class="w-full rounded">
+                    <figcaption class="p-2 text-center text-sm text-muted">Kamar Tidur</figcaption>
+                </figure>
+                <figure class="card">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/29/05/15/architecture-1867187_1280.jpg"
+                        alt="Apartemen" class="w-full rounded">
+                    <figcaption class="p-2 text-center text-sm text-muted">Dapur</figcaption>
+                </figure>
+            </div>
+
+            <div class="property-detail-layout d-flex gap-4">
+                <div style="flex: 2;">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-between items-center mb-3">
+                                <h2 class="text-xl font-bold">Deskripsi</h2>
+                                <div class="property-price text-xl font-bold">Rp 25.000.000/bulan</div>
+                            </div>
+
+                            <div class="d-flex gap-4 mb-3">
+                                <div class="d-flex items-center gap-1">
+                                    <i class="fas fa-map-marker-alt text-muted"></i>
+                                    <span id="property-location">Jakarta Pusat</span>
+                                </div>
+                                <div class="d-flex items-center gap-1">
+                                    <i class="fas fa-bed text-muted"></i>
+                                    <span>2 Kamar Tidur</span>
+                                </div>
+                                <div class="d-flex items-center gap-1">
+                                    <i class="fas fa-bath text-muted"></i>
+                                    <span>2 Kamar Mandi</span>
+                                </div>
+                                <div class="d-flex items-center gap-1">
+                                    <i class="fas fa-ruler-combined text-muted"></i>
+                                    <span>120 m²</span>
+                                </div>
+                            </div>
+
+                            <p id="property-description" class="mb-3">
+                                Penthouse mewah dengan pemandangan kota yang menakjubkan. Terletak di lantai atas dengan
+                                akses ke fasilitas premium seperti kolam renang infinity, gym, dan lounge eksklusif.
+                                Interior modern dengan perabotan berkualitas tinggi.
+                            </p>
+
+                            <div class="property-rating mb-3">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>4.5 (24 ulasan)</span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span>Bagikan</span>
+                                </button>
+                                <button class="btn btn-outline" id="wishlist-toggle">
+                                    <i class="far fa-heart"></i>
+                                    <span>Simpan</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Fasilitas</h2>
+                            <div class="grid gap-3"
+                                style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-wifi text-primary"></i>
+                                    <span>WiFi</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-swimming-pool text-primary"></i>
+                                    <span>Kolam Renang</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-dumbbell text-primary"></i>
+                                    <span>Gym</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-car text-primary"></i>
+                                    <span>Parkir</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-utensils text-primary"></i>
+                                    <span>Dapur</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-tv text-primary"></i>
+                                    <span>TV</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-snowflake text-primary"></i>
+                                    <span>AC</span>
+                                </div>
+                                <div class="d-flex items-center gap-2">
+                                    <i class="fas fa-lock text-primary"></i>
+                                    <span>Keamanan 24/7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Lokasi</h2>
+                            <div class="map-container mb-3">
+                                <div class="map-placeholder">
+                                    <i class="fas fa-map-marked-alt text-3xl mb-2"></i>
+                                    <p>Peta Lokasi</p>
+                                </div>
+                            </div>
+                            <p id="property-address">Jl. Sudirman No. 1, Jakarta Pusat, DKI Jakarta</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Ulasan</h2>
+
+                            <div class="review">
+                                <div class="review-header">
+                                    <div class="review-author">Budi Santoso</div>
+                                    <div class="review-date">15 Mei 2025</div>
+                                </div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="review-body">
+                                    <p>Pengalaman menginap yang luar biasa! Apartemennya sangat nyaman dan lokasinya
+                                        strategis. Pemiliknya juga sangat responsif.</p>
+                                </div>
+                            </div>
+
+                            <div class="review">
+                                <div class="review-header">
+                                    <div class="review-author">Anita Rahayu</div>
+                                    <div class="review-date">10 April 2025</div>
+                                </div>
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <div class="review-body">
+                                    <p>Apartemennya bagus dan bersih, hanya saja suara dari lantai atas kadang
+                                        terdengar.</p>
+                                </div>
+                            </div>
+
+                            <form class="review-form mt-4">
+                                <div class="form-group">
+                                    <label for="review-text" class="form-label">Tulis Ulasan</label>
+                                    <textarea id="review-text" class="form-control" rows="4"
+                                        placeholder="Bagikan pengalaman Anda"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="review-rating" class="form-label">Rating</label>
+                                    <select id="review-rating" class="form-control form-select">
+                                        <option value="5">5 Bintang</option>
+                                        <option value="4">4 Bintang</option>
+                                        <option value="3">3 Bintang</option>
+                                        <option value="2">2 Bintang</option>
+                                        <option value="1">1 Bintang</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Kirim Ulasan</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="flex: 1;">
+                    <div class="card sticky-top" style="top: 80px;">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Pesan Sekarang</h2>
+
+                            <form class="booking-form">
+                                <div class="form-group">
+                                    <label for="checkin-date" class="form-label">Check-in</label>
+                                    <input type="date" id="checkin-date" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="checkout-date" class="form-label">Check-out</label>
+                                    <input type="date" id="checkout-date" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="guests" class="form-label">Jumlah Tamu</label>
+                                    <select id="guests" class="form-control form-select">
+                                        <option value="1">1 Tamu</option>
+                                        <option value="2">2 Tamu</option>
+                                        <option value="3">3 Tamu</option>
+                                        <option value="4">4 Tamu</option>
+                                        <option value="5">5+ Tamu</option>
+                                    </select>
+                                </div>
+
+                                <div class="alert alert-success mb-3">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Tersedia untuk tanggal yang dipilih</span>
+                                </div>
+
+                                <div class="d-flex justify-between mb-3">
+                                    <span>Rp 25.000.000 x 1 bulan</span>
+                                    <span>Rp 25.000.000</span>
+                                </div>
+
+                                <div class="d-flex justify-between mb-3">
+                                    <span>Biaya Layanan</span>
+                                    <span>Rp 500.000</span>
+                                </div>
+
+                                <div class="d-flex justify-between font-bold text-lg mb-4">
+                                    <span>Total</span>
+                                    <span>Rp 25.500.000</span>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-full">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Pesan Sekarang</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Pemilik</h2>
+                            <div class="d-flex items-center gap-3 mb-3">
+                                <div class="user-avatar">AR</div>
+                                <div>
+                                    <div class="font-bold">Ahmad Rahman</div>
+                                    <div class="text-muted">Member sejak 2022</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-between mb-2">
+                                <span class="text-muted">Response Rate</span>
+                                <span>100%</span>
+                            </div>
+
+                            <div class="d-flex justify-between mb-2">
+                                <span class="text-muted">Response Time</span>
+                                <span>dalam 1 jam</span>
+                            </div>
+
+                            <button class="btn btn-outline w-full mt-3" id="open-chat">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>Hubungi Pemilik</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wishlist -->
+        <section id="wishlist" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Favorit Anda</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Apartemen Tersimpan</h2>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-sort"></i>
+                                <span>Urutkan</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="property-grid grid gap-4"
+                        style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));" id="wishlistProperties">
+                    </div>
+
+                    <div class="text-center py-6" id="empty-wishlist">
+                        <i class="fas fa-heart text-4xl text-muted mb-3"></i>
+                        <h3 class="text-xl font-bold mb-2">Daftar Favorit Kosong</h3>
+                        <p class="text-muted mb-3">Simpan properti favorit Anda untuk melihatnya nanti</p>
+                        <a href="#search" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            <span>Cari Apartemen</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bookings -->
+        <section id="bookings" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Pesanan Anda</h1>
+
+            <div class="tabs mb-4">
+                <div class="tab active" data-tab="upcoming">Mendatang</div>
+                <div class="tab" data-tab="completed">Selesai</div>
+                <div class="tab" data-tab="cancelled">Dibatalkan</div>
+            </div>
+
+            <div class="tab-content active" id="upcoming-bookings">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-between items-center mb-3">
+                            <h2 class="text-xl font-bold">Luxury Penthouse</h2>
+                            <span class="badge bg-success text-white">Dikonfirmasi</span>
+                        </div>
+
+                        <div class="d-flex gap-4 mb-3">
+                            <div class="d-flex items-center gap-1">
+                                <i class="fas fa-map-marker-alt text-muted"></i>
+                                <span>Jakarta Pusat</span>
+                            </div>
+                            <div class="d-flex items-center gap-1">
+                                <i class="fas fa-calendar-alt text-muted"></i>
+                                <span>1 Jun - 30 Jun 2025</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-between items-center">
+                            <div class="property-price text-lg font-bold">Rp 25.000.000</div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <span>Detail</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times"></i>
+                                    <span>Batalkan</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center py-6" id="no-upcoming-bookings">
+                    <i class="fas fa-calendar-check text-4xl text-muted mb-3"></i>
+                    <h3 class="text-xl font-bold mb-2">Tidak Ada Pesanan Mendatang</h3>
+                    <p class="text-muted mb-3">Temukan apartemen impian Anda dan mulai petualangan baru</p>
+                    <a href="#search" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        <span>Cari Apartemen</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="tab-content" id="completed-bookings">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-between items-center mb-3">
+                            <h2 class="text-xl font-bold">Modern Studio</h2>
+                            <span class="badge bg-muted text-white">Selesai</span>
+                        </div>
+
+                        <div class="d-flex gap-4 mb-3">
+                            <div class="d-flex items-center gap-1">
+                                <i class="fas fa-map-marker-alt text-muted"></i>
+                                <span>Jakarta Selatan</span>
+                            </div>
+                            <div class="d-flex items-center gap-1">
+                                <i class="fas fa-calendar-alt text-muted"></i>
+                                <span>1 Mei - 30 Mei 2025</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-between items-center">
+                            <div class="property-price text-lg font-bold">Rp 12.000.000</div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline btn-sm">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <span>Detail</span>
+                                </button>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-redo"></i>
+                                    <span>Pesan Lagi</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="cancelled-bookings">
+                <div class="text-center py-6">
+                    <i class="fas fa-ban text-4xl text-muted mb-3"></i>
+                    <h3 class="text-xl font-bold mb-2">Tidak Ada Pesanan Dibatalkan</h3>
+                    <p class="text-muted">Anda belum membatalkan pesanan apapun</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Detail -->
+        <section id="booking-detail" class="view hidden">
+            <div class="d-flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Detail Pesanan</h1>
+                <button class="btn btn-outline" id="back-to-bookings">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </button>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Luxury Penthouse</h2>
+                        <span class="badge bg-success text-white">Dikonfirmasi</span>
+                    </div>
+
+                    <div class="grid gap-4" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <div>
+                            <h3 class="font-bold mb-2">Detail Pesanan</h3>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">ID Pesanan</span>
+                                <span>#RTL20250001</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Tanggal Pesan</span>
+                                <span>15 Mei 2025</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Check-in</span>
+                                <span>1 Jun 2025</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Check-out</span>
+                                <span>30 Jun 2025</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Durasi</span>
+                                <span>1 bulan</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Jumlah Tamu</span>
+                                <span>2 orang</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold mb-2">Detail Pembayaran</h3>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Harga Sewa</span>
+                                <span>Rp 25.000.000</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Biaya Layanan</span>
+                                <span>Rp 500.000</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Diskon</span>
+                                <span>- Rp 0</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Total</span>
+                                <span class="font-bold">Rp 25.500.000</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Metode Pembayaran</span>
+                                <span>Transfer Bank (BCA)</span>
+                            </div>
+                            <div class="d-flex justify-between mb-1">
+                                <span class="text-muted">Status Pembayaran</span>
+                                <span class="text-success">Lunas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="text-xl font-bold mb-3">Status Pesanan</h2>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="font-bold">Pesanan Dibuat</h3>
+                                <p class="timeline-date">15 Mei 2025, 14:30</p>
+                                <p>Anda telah membuat pesanan untuk Luxury Penthouse</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="font-bold">Pembayaran Diterima</h3>
+                                <p class="timeline-date">15 Mei 2025, 15:45</p>
+                                <p>Pembayaran Anda telah dikonfirmasi</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="font-bold">Pemilik Mengkonfirmasi</h3>
+                                <p class="timeline-date">15 Mei 2025, 16:20</p>
+                                <p>Pemilik telah mengkonfirmasi ketersediaan apartemen</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <h3 class="font-bold">Menunggu Check-in</h3>
+                                <p class="timeline-date">Akan diperbarui pada 1 Jun 2025</p>
+                                <p>Anda dapat check-in pada tanggal yang telah ditentukan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-xl font-bold mb-3">Informasi Check-in</h2>
+
+                    <div class="mb-3">
+                        <h3 class="font-bold mb-1">Alamat Lengkap</h3>
+                        <p>Apartemen Sudirman Tower, Lantai 35, Unit 3501, Jl. Sudirman No. 1, Jakarta Pusat</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h3 class="font-bold mb-1">Kontak Pemilik</h3>
+                        <p>Ahmad Rahman - +62 812-3456-7890</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h3 class="font-bold mb-1">Instruksi Check-in</h3>
+                        <p>Silakan datang ke resepsionis dan tunjukkan bukti pembayaran dan identitas Anda. Anda akan
+                            diberikan kunci dan kartu akses.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h3 class="font-bold mb-1">Waktu Check-in/out</h3>
+                        <p>Check-in: 14:00 | Check-out: 12:00</p>
+                    </div>
+
+                    <button class="btn btn-primary">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Hubungi Pemilik</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat -->
+        <section id="chat" class="view hidden">
+            <div class="d-flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Obrolan</h1>
+                <button class="btn btn-outline" id="back-from-chat">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Kembali</span>
+                </button>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="d-flex items-center gap-2">
+                        <div class="user-avatar">AR</div>
+                        <div>
+                            <div class="font-bold">Ahmad Rahman</div>
+                            <div class="text-sm text-muted">Pemilik Luxury Penthouse</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-messages">
+                    <div class="chat-message received">
+                        <p>Halo, ada yang bisa saya bantu?</p>
+                        <div class="chat-meta">
+                            <span>Ahmad Rahman</span>
+                            <span>10:30</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-message sent">
+                        <p>Halo, saya tertarik dengan apartemen Anda. Apakah masih tersedia untuk tanggal 1-30 Juni?</p>
+                        <div class="chat-meta">
+                            <span>Anda</span>
+                            <span>10:35</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-message received">
+                        <p>Ya, masih tersedia. Anda bisa langsung melakukan pemesanan melalui platform ini.</p>
+                        <div class="chat-meta">
+                            <span>Ahmad Rahman</span>
+                            <span>10:37</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-message received">
+                        <p>Jika ada pertanyaan lain, silakan tanyakan saja.</p>
+                        <div class="chat-meta">
+                            <span>Ahmad Rahman</span>
+                            <span>10:38</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <form class="d-flex gap-2">
+                        <input type="text" class="chat-input flex-grow" placeholder="Ketik pesan...">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface py-6 mt-6">
+        <div class="container">
+            <div class="grid gap-6" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Rentelindo</h3>
+                    <p class="text-muted">Platform penyewaan apartemen terpercaya di Indonesia</p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Tautan Cepat</h3>
+                    <ul class="d-flex flex-col gap-2">
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#search">Cari Apartemen</a></li>
+                        <li><a href="#wishlist">Favorit</a></li>
+                        <li><a href="#bookings">Pesanan</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Bantuan</h3>
+                    <ul class="d-flex flex-col gap-2">
+                        <li><a href="#support">Dukungan Pelanggan</a></li>
+                        <li><a href="#terms">Syarat & Ketentuan</a></li>
+                        <li><a href="#privacy">Kebijakan Privasi</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Hubungi Kami</h3>
+                    <ul class="d-flex flex-col gap-2">
+                        <li class="d-flex items-center gap-2">
+                            <i class="fas fa-envelope text-muted"></i>
+                            <span>hello@rentelindo.com</span>
+                        </li>
+                        <li class="d-flex items-center gap-2">
+                            <i class="fas fa-phone text-muted"></i>
+                            <span>+62 21 1234 5678</span>
+                        </li>
+                        <li class="d-flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-muted"></i>
+                            <span>Jakarta, Indonesia</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-color-border mt-6 pt-6 d-flex justify-between items-center">
+                <p class="text-muted">© 2025 Rentelindo. All rights reserved.</p>
+                <div class="d-flex gap-3">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="booking-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Konfirmasi Pemesanan</h2>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-success mb-4">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Apartemen tersedia untuk tanggal yang dipilih!</span>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="font-bold mb-2">Luxury Penthouse</h3>
+                    <div class="d-flex gap-4">
+                        <div class="d-flex items-center gap-1">
+                            <i class="fas fa-map-marker-alt text-muted"></i>
+                            <span>Jakarta Pusat</span>
+                        </div>
+                        <div class="d-flex items-center gap-1">
+                            <i class="fas fa-calendar-alt text-muted"></i>
+                            <span>1 Jun - 30 Jun 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="font-bold mb-2">Ringkasan Pembayaran</h3>
+                    <div class="d-flex justify-between mb-1">
+                        <span class="text-muted">Harga Sewa (1 bulan)</span>
+                        <span>Rp 25.000.000</span>
+                    </div>
+                    <div class="d-flex justify-between mb-1">
+                        <span class="text-muted">Biaya Layanan</span>
+                        <span>Rp 500.000</span>
+                    </div>
+                    <div class="d-flex justify-between mb-1">
+                        <span class="text-muted">Pajak</span>
+                        <span>Rp 0</span>
+                    </div>
+                    <div class="d-flex justify-between font-bold text-lg mb-3">
+                        <span>Total</span>
+                        <span>Rp 25.500.000</span>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="payment-method" class="form-label">Metode Pembayaran</label>
+                    <select id="payment-method" class="form-control form-select">
+                        <option value="">Pilih metode pembayaran</option>
+                        <option value="bca">Transfer Bank (BCA)</option>
+                        <option value="mandiri">Transfer Bank (Mandiri)</option>
+                        <option value="bni">Transfer Bank (BNI)</option>
+                        <option value="gopay">Gopay</option>
+                        <option value="ovo">OVO</option>
+                        <option value="dana">DANA</option>
+                        <option value="cc">Kartu Kredit</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="checkbox-input" required>
+                        <span>Saya setuju dengan <a href="#terms">Syarat & Ketentuan</a> dan <a
+                                href="#privacy">Kebijakan Privasi</a></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-booking">Batal</button>
+                <button class="btn btn-primary" id="confirm-booking">
+                    <i class="fas fa-lock"></i>
+                    <span>Bayar Sekarang</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Pembayaran</h2>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-success mb-4">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Pesanan Anda telah dibuat! Silakan selesaikan pembayaran.</span>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="font-bold mb-2">Transfer Bank (BCA)</h3>
+                    <div class="card p-3 mb-2">
+                        <div class="d-flex justify-between mb-1">
+                            <span class="text-muted">Nomor Rekening</span>
+                            <span class="font-bold">1234567890</span>
+                        </div>
+                        <div class="d-flex justify-between mb-1">
+                            <span class="text-muted">Atas Nama</span>
+                            <span class="font-bold">PT Rentelindo Indonesia</span>
+                        </div>
+                        <div class="d-flex justify-between mb-1">
+                            <span class="text-muted">Jumlah Transfer</span>
+                            <span class="font-bold">Rp 25.500.000</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-muted">Silakan transfer tepat sesuai jumlah di atas. Pesanan akan diproses
+                        setelah pembayaran diterima.</p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="font-bold mb-2">Instruksi Pembayaran</h3>
+                    <ol class="d-flex flex-col gap-2 pl-4">
+                        <li>Masuk ke aplikasi mobile banking atau ATM BCA</li>
+                        <li>Pilih menu Transfer</li>
+                        <li>Masukkan nomor rekening di atas</li>
+                        <li>Masukkan jumlah transfer tepat Rp 25.500.000</li>
+                        <li>Konfirmasi dan selesaikan transaksi</li>
+                        <li>Simpan bukti transfer</li>
+                    </ol>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="payment-proof" class="form-label">Upload Bukti Transfer (Opsional)</label>
+                    <input type="file" id="payment-proof" class="form-control">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-payment">Nanti Saja</button>
+                <button class="btn btn-primary" id="confirm-payment">
+                    <i class="fas fa-check"></i>
+                    <span>Saya Sudah Bayar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" id="notification-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Notifikasi</h2>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-flex flex-col gap-3">
+                    <div class="d-flex gap-3 p-2 rounded hover:bg-surface-hover">
+                        <div class="user-avatar">AR</div>
+                        <div>
+                            <div class="font-bold">Ahmad Rahman</div>
+                            <p class="text-sm">Mengirim pesan baru tentang Luxury Penthouse</p>
+                            <p class="text-xs text-muted">10 menit yang lalu</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 p-2 rounded hover:bg-surface-hover">
+                        <div class="user-avatar bg-success">RL</div>
+                        <div>
+                            <div class="font-bold">Rentelindo</div>
+                            <p class="text-sm">Pembayaran Anda untuk Luxury Penthouse telah dikonfirmasi</p>
+                            <p class="text-xs text-muted">2 jam yang lalu</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 p-2 rounded hover:bg-surface-hover">
+                        <div class="user-avatar">AR</div>
+                        <div>
+                            <div class="font-bold">Ahmad Rahman</div>
+                            <p class="text-sm">Menerima permintaan booking Anda untuk Luxury Penthouse</p>
+                            <p class="text-xs text-muted">1 hari yang lalu</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 p-2 rounded hover:bg-surface-hover">
+                        <div class="user-avatar bg-success">RL</div>
+                        <div>
+                            <div class="font-bold">Rentelindo</div>
+                            <p class="text-sm">Panduan check-in untuk apartemen Anda</p>
+                            <p class="text-xs text-muted">3 hari yang lalu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary w-full">Tandai Sudah Dibaca</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        const state = {
+            currentView: 'home',
+            currentProperty: null,
+            user: {
+                name: 'John Doe',
+                email: 'john@example.com',
+                avatar: 'JD',
+                verified: true,
+                wishlist: ['prop-1'],
+                bookings: [
+                    {
+                        id: 'book-1',
+                        propertyId: 'prop-1',
+                        status: 'confirmed',
+                        checkin: '2025-06-01',
+                        checkout: '2025-06-30',
+                        guests: 2,
+                        price: 25000000,
+                        fee: 500000,
+                        paymentMethod: 'bca',
+                        paymentStatus: 'paid'
+                    },
+                    {
+                        id: 'book-2',
+                        propertyId: 'prop-2',
+                        status: 'completed',
+                        checkin: '2025-05-01',
+                        checkout: '2025-05-30',
+                        guests: 1,
+                        price: 12000000,
+                        fee: 300000,
+                        paymentMethod: 'gopay',
+                        paymentStatus: 'paid'
+                    }
+                ],
+                notifications: [
+                    {
+                        id: 'notif-1',
+                        type: 'message',
+                        from: 'Ahmad Rahman',
+                        message: 'Mengirim pesan baru tentang Luxury Penthouse',
+                        time: '10 minutes ago',
+                        read: false
+                    },
+                    {
+                        id: 'notif-2',
+                        type: 'payment',
+                        from: 'Rentelindo',
+                        message: 'Pembayaran Anda untuk Luxury Penthouse telah dikonfirmasi',
+                        time: '2 hours ago',
+                        read: false
+                    }
+                ]
+            },
+            properties: [
+                {
+                    id: 'prop-1',
+                    title: 'Luxury Penthouse',
+                    location: 'Jakarta Pusat',
+                    type: 'penthouse',
+                    price: 25000000,
+                    beds: 2,
+                    baths: 2,
+                    size: 120,
+                    image: 'https://picsum.photos/300/200?random=1',
+                    images: [
+                        'https://picsum.photos/300/200?random=2',
+                        'https://picsum.photos/300/200?random=3',
+                        'https://picsum.photos/300/200?',
+                        'https://source.unsplash.com/random/800x600/?apartment,4'
+                    ],
+                    rating: 4.5,
+                    reviews: 24,
+                    amenities: ['wifi', 'pool', 'gym', 'parking', 'kitchen', 'tv', 'ac', 'security'],
+                    description: 'Penthouse mewah dengan pemandangan kota yang menakjubkan. Terletak di lantai atas dengan akses ke fasilitas premium seperti kolam renang infinity, gym, dan lounge eksklusif. Interior modern dengan perabotan berkualitas tinggi.',
+                    address: 'Apartemen Sudirman Tower, Lantai 35, Unit 3501, Jl. Sudirman No. 1, Jakarta Pusat',
+                    owner: {
+                        name: 'Ahmad Rahman',
+                        avatar: 'AR',
+                        since: '2022',
+                        responseRate: 100,
+                        responseTime: 'dalam 1 jam'
+                    }
+                },
+                {
+                    id: 'prop-2',
+                    title: 'Modern Studio',
+                    location: 'Jakarta Selatan',
+                    type: 'studio',
+                    price: 12000000,
+                    beds: 1,
+                    baths: 1,
+                    size: 45,
+                    image: 'https://picsum.photos/300/200?',
+                    images: [
+                        'https://source.unsplash.com/random/800x600/?apartment,5',
+                        'https://source.unsplash.com/random/800x600/?apartment,6',
+                        'https://picsum.photos/300/200?'
+                    ],
+                    rating: 4.2,
+                    reviews: 15,
+                    amenities: ['wifi', 'parking', 'kitchen', 'tv', 'ac'],
+                    description: 'Studio modern dengan desain minimalis dan fasilitas lengkap. Lokasi strategis dekat dengan pusat perbelanjaan dan transportasi umum.',
+                    address: 'Jl. Panglima Polim No. 10, Jakarta Selatan',
+                    owner: {
+                        name: 'Siti Rahayu',
+                        avatar: 'SR',
+                        since: '2021',
+                        responseRate: 95,
+                        responseTime: 'dalam 2 jam'
+                    }
+                },
+                {
+                    id: 'prop-3',
+                    title: 'Cozy 1BR Apartment',
+                    location: 'Bandung',
+                    type: '1br',
+                    price: 8000000,
+                    beds: 1,
+                    baths: 1,
+                    size: 50,
+                    image: 'https://picsum.photos/300/200?random=4',
+                    images: [
+                        'https://placeimg.com/300/200/arch',
+                        'https://placeimg.com/300/200/arch?'
+                    ],
+                    rating: 4.7,
+                    reviews: 8,
+                    amenities: ['wifi', 'parking', 'kitchen', 'tv', 'ac'],
+                    description: 'Apartemen cozy dengan suasana tenang dan nyaman. Dekat dengan pusat kuliner Bandung dan tempat wisata.',
+                    address: 'Jl. Dago No. 25, Bandung',
+                    owner: {
+                        name: 'Budi Santoso',
+                        avatar: 'BS',
+                        since: '2023',
+                        responseRate: 100,
+                        responseTime: 'dalam 1 jam'
+                    }
+                },
+                {
+                    id: 'prop-4',
+                    title: 'Luxury 2BR with View',
+                    location: 'Bali',
+                    type: '2br',
+                    price: 35000000,
+                    beds: 2,
+                    baths: 2,
+                    size: 150,
+                    image: 'https://picsum.photos/300/200?random=6',
+                    images: [
+                        'https://placeimg.com/200/150/arch',
+                        'https://picsum.photos/300/200?random=9',
+                        'https://picsum.photos/300/200?random=8'
+                    ],
+                    rating: 4.9,
+                    reviews: 12,
+                    amenities: ['wifi', 'pool', 'gym', 'parking', 'kitchen', 'tv', 'ac', 'security', 'beach'],
+                    description: 'Apartemen mewah dengan pemandangan laut langsung. Fasilitas lengkap termasuk akses ke pantai pribadi dan spa.',
+                    address: 'Jl. Pantai Kuta No. 5, Bali',
+                    owner: {
+                        name: 'Ketut Wijaya',
+                        avatar: 'KW',
+                        since: '2020',
+                        responseRate: 90,
+                        responseTime: 'dalam 3 jam'
+                    }
+                }
+            ],
+            searchFilters: {
+                location: '',
+                price: 25000000,
+                type: '',
+                amenities: [],
+                checkin: '',
+                checkout: '',
+                guests: 1
+            },
+            chatMessages: [
+                {
+                    id: 'msg-1',
+                    from: 'owner',
+                    text: 'Halo, ada yang bisa saya bantu?',
+                    time: '10:30'
+                },
+                {
+                    id: 'msg-2',
+                    from: 'user',
+                    text: 'Halo, saya tertarik dengan apartemen Anda. Apakah masih tersedia untuk tanggal 1-30 Juni?',
+                    time: '10:35'
+                },
+                {
+                    id: 'msg-3',
+                    from: 'owner',
+                    text: 'Ya, masih tersedia. Anda bisa langsung melakukan pemesanan melalui platform ini.',
+                    time: '10:37'
+                },
+                {
+                    id: 'msg-4',
+                    from: 'owner',
+                    text: 'Jika ada pertanyaan lain, silakan tanyakan saja.',
+                    time: '10:38'
+                }
+            ]
+        };
+
+        // Utility Functions
+        const utils = {
+            formatPrice: (price) => {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0
+                }).format(price);
+            },
+            formatDate: (dateString) => {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString('id-ID', options);
+            },
+            getPropertyById: (id) => {
+                return state.properties.find(property => property.id === id);
+            },
+            getWishlistProperties: () => {
+                return state.properties.filter(property =>
+                    state.user.wishlist.includes(property.id)
+                );
+            },
+            filterProperties: (filters) => {
+                return state.properties.filter(property => {
+                    // Filter by location
+                    if (filters.location && !property.location.toLowerCase().includes(filters.location.toLowerCase())) {
+                        return false;
+                    }
+
+                    // Filter by price
+                    if (filters.price && property.price > filters.price) {
+                        return false;
+                    }
+
+                    // Filter by type
+                    if (filters.type && property.type !== filters.type) {
+                        return false;
+                    }
+
+                    // Filter by amenities
+                    if (filters.amenities && filters.amenities.length > 0) {
+                        const hasAllAmenities = filters.amenities.every(amenity =>
+                            property.amenities.includes(amenity)
+                        );
+                        if (!hasAllAmenities) return false;
+                    }
+
+                    return true;
+                });
+            },
+            debounce: (func, delay) => {
+                let timeoutId;
+                return function (...args) {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        func.apply(this, args);
+                    }, delay);
+                };
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            views: document.querySelectorAll('.view'),
+            navLinks: document.querySelectorAll('.nav-link'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            navLinksContainer: document.getElementById('navLinks'),
+            notificationBtn: document.querySelector('.notification-badge'),
+            wishlistToggle: document.getElementById('wishlist-toggle'),
+            backToSearch: document.getElementById('back-to-search'),
+            backToBookings: document.getElementById('back-to-bookings'),
+            backFromChat: document.getElementById('back-from-chat'),
+            openChat: document.getElementById('open-chat'),
+            recommendedProperties: document.getElementById('recommendedProperties'),
+            popularProperties: document.getElementById('popularProperties'),
+            searchResults: document.getElementById('searchResults'),
+            wishlistProperties: document.getElementById('wishlistProperties'),
+            emptyWishlist: document.getElementById('empty-wishlist'),
+            noUpcomingBookings: document.getElementById('no-upcoming-bookings'),
+            propertyTitle: document.getElementById('property-title'),
+            propertyLocation: document.getElementById('property-location'),
+            propertyDescription: document.getElementById('property-description'),
+            propertyPrice: document.getElementById('property-price'),
+            propertyAddress: document.getElementById('property-address'),
+            priceRange: document.getElementById('price-range'),
+            priceValue: document.getElementById('price-value'),
+            bookingModal: document.getElementById('booking-modal'),
+            paymentModal: document.getElementById('payment-modal'),
+            notificationModal: document.getElementById('notification-modal'),
+            cancelBooking: document.getElementById('cancel-booking'),
+            confirmBooking: document.getElementById('confirm-booking'),
+            cancelPayment: document.getElementById('cancel-payment'),
+            confirmPayment: document.getElementById('confirm-payment'),
+            tabs: document.querySelectorAll('.tab'),
+            tabContents: document.querySelectorAll('.tab-content')
+        };
+
+        // Render Functions
+        const render = {
+            propertyCard: (property) => {
+                const isInWishlist = state.user.wishlist.includes(property.id);
+                return `
+                    <div class="property-card card" data-id="${property.id}">
+                        <div class="relative">
+                            <img src="${property.image}" alt="${property.title}" class="property-image" loading="lazy">
+                            <div class="property-badge">${property.type === 'penthouse' ? 'Penthouse' : property.type === 'studio' ? 'Studio' : property.type === '1br' ? '1BR' : '2BR'}</div>
+                            <button class="wishlist-btn absolute top-2 right-2 text-xl ${isInWishlist ? 'active' : ''}" data-id="${property.id}">
+                                <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-bold mb-1">${property.title}</h3>
+                            <div class="property-price mb-1">${utils.formatPrice(property.price)}/bulan</div>
+                            <div class="property-location mb-2">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${property.location}</span>
+                            </div>
+                            <div class="property-rating">
+                                <i class="fas fa-star"></i>
+                                <span>${property.rating} (${property.reviews} ulasan)</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            recommendedProperties: () => {
+                const recommended = state.properties.slice(0, 4);
+                elements.recommendedProperties.innerHTML = recommended.map(property =>
+                    render.propertyCard(property)
+                ).join('');
+            },
+            popularProperties: () => {
+                const popular = [...state.properties].sort((a, b) => b.rating - a.rating).slice(0, 4);
+                elements.popularProperties.innerHTML = popular.map(property =>
+                    render.propertyCard(property)
+                ).join('');
+            },
+            searchResults: () => {
+                const filtered = utils.filterProperties(state.searchFilters);
+                elements.searchResults.innerHTML = filtered.map(property =>
+                    render.propertyCard(property)
+                ).join('');
+            },
+            wishlistProperties: () => {
+                const wishlist = utils.getWishlistProperties();
+                if (wishlist.length > 0) {
+                    elements.emptyWishlist.classList.add('hidden');
+                    elements.wishlistProperties.innerHTML = wishlist.map(property =>
+                        render.propertyCard(property)
+                    ).join('');
+                } else {
+                    elements.emptyWishlist.classList.remove('hidden');
+                    elements.wishlistProperties.innerHTML = '';
+                }
+            },
+            propertyDetail: (property) => {
+                elements.propertyTitle.textContent = property.title;
+                elements.propertyLocation.textContent = property.location;
+                elements.propertyDescription.textContent = property.description;
+                elements.propertyPrice.textContent = utils.formatPrice(property.price);
+                elements.propertyAddress.textContent = property.address;
+            },
+            updatePriceValue: (value) => {
+                elements.priceValue.textContent = utils.formatPrice(value);
+            }
+        };
+
+        // View Management
+        const view = {
+            show: (viewId) => {
+                // Hide all views
+                elements.views.forEach(view => view.classList.add('hidden'));
+
+                // Show the requested view
+                const currentView = document.getElementById(viewId);
+                if (currentView) {
+                    currentView.classList.remove('hidden');
+                    state.currentView = viewId;
+
+                    // Update active nav link
+                    elements.navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('data-route') === viewId);
+                    });
+
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                }
+            },
+            init: () => {
+                // Handle hash changes
+                window.addEventListener('hashchange', () => {
+                    const viewId = window.location.hash.substring(1) || 'home';
+                    view.show(viewId);
+                });
+
+                // Initial view based on hash
+                const initialView = window.location.hash.substring(1) || 'home';
+                view.show(initialView);
+            }
+        };
+
+        // Event Handlers
+        const handlers = {
+            init: () => {
+                // Mobile menu toggle
+                elements.mobileMenuBtn.addEventListener('click', () => {
+                    elements.navLinksContainer.classList.toggle('active');
+                });
+
+                // Navigation links
+                elements.navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const viewId = link.getAttribute('data-route');
+                        view.show(viewId);
+                        window.history.pushState(null, '', `#${viewId}`);
+
+                        // Close mobile menu if open
+                        elements.navLinksContainer.classList.remove('active');
+                    });
+                });
+
+                // Back buttons
+                elements.backToSearch.addEventListener('click', () => view.show('search'));
+                elements.backToBookings.addEventListener('click', () => view.show('bookings'));
+                elements.backFromChat.addEventListener('click', () => view.show(state.currentView === 'property' ? 'property' : 'home'));
+                elements.openChat.addEventListener('click', () => view.show('chat'));
+
+                // Wishlist toggle
+                elements.wishlistToggle.addEventListener('click', () => {
+                    const propertyId = state.currentProperty.id;
+                    const index = state.user.wishlist.indexOf(propertyId);
+
+                    if (index === -1) {
+                        // Add to wishlist
+                        state.user.wishlist.push(propertyId);
+                        elements.wishlistToggle.innerHTML = '<i class="fas fa-heart"></i><span>Disimpan</span>';
+                    } else {
+                        // Remove from wishlist
+                        state.user.wishlist.splice(index, 1);
+                        elements.wishlistToggle.innerHTML = '<i class="far fa-heart"></i><span>Simpan</span>';
+                    }
+
+                    // Update wishlist view if open
+                    if (state.currentView === 'wishlist') {
+                        render.wishlistProperties();
+                    }
+                });
+
+                // Property card clicks
+                document.addEventListener('click', (e) => {
+                    const propertyCard = e.target.closest('.property-card');
+                    if (propertyCard) {
+                        const propertyId = propertyCard.getAttribute('data-id');
+                        state.currentProperty = utils.getPropertyById(propertyId);
+                        render.propertyDetail(state.currentProperty);
+                        view.show('property');
+                        window.history.pushState(null, '', `#property`);
+                    }
+
+                    // Wishlist button
+                    const wishlistBtn = e.target.closest('.wishlist-btn');
+                    if (wishlistBtn) {
+                        e.stopPropagation();
+                        const propertyId = wishlistBtn.getAttribute('data-id');
+                        const index = state.user.wishlist.indexOf(propertyId);
+
+                        if (index === -1) {
+                            // Add to wishlist
+                            state.user.wishlist.push(propertyId);
+                            wishlistBtn.classList.add('active');
+                            wishlistBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                        } else {
+                            // Remove from wishlist
+                            state.user.wishlist.splice(index, 1);
+                            wishlistBtn.classList.remove('active');
+                            wishlistBtn.innerHTML = '<i class="far fa-heart"></i>';
+                        }
+
+                        // Update notification count
+                        elements.notificationBtn.setAttribute('data-count', state.user.notifications.filter(n => !n.read).length);
+                    }
+                });
+
+                // Price range slider
+                elements.priceRange.addEventListener('input', utils.debounce(() => {
+                    const value = parseInt(elements.priceRange.value);
+                    state.searchFilters.price = value;
+                    render.updatePriceValue(value);
+                    render.searchResults();
+                }, 300));
+
+                // Search form submission
+                document.querySelectorAll('.search-form').forEach(form => {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(form);
+
+                        // Update search filters
+                        state.searchFilters.location = formData.get('location') || '';
+                        state.searchFilters.type = formData.get('type') || '';
+                        state.searchFilters.checkin = formData.get('checkin') || '';
+                        state.searchFilters.checkout = formData.get('checkout') || '';
+
+                        // Get checked amenities
+                        state.searchFilters.amenities = [];
+                        form.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                            state.searchFilters.amenities.push(checkbox.value);
+                        });
+
+                        // Show search results
+                        render.searchResults();
+                        view.show('search');
+                        window.history.pushState(null, '', `#search`);
+                    });
+                });
+
+                // Booking form submission
+                document.querySelector('.booking-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    handlers.showModal('booking-modal');
+                });
+
+                // Modal handlers
+                elements.cancelBooking.addEventListener('click', () => handlers.hideModal('booking-modal'));
+                elements.confirmBooking.addEventListener('click', () => {
+                    handlers.hideModal('booking-modal');
+                    handlers.showModal('payment-modal');
+                });
+                elements.cancelPayment.addEventListener('click', () => handlers.hideModal('payment-modal'));
+                elements.confirmPayment.addEventListener('click', () => {
+                    // In a real app, this would verify payment
+                    handlers.hideModal('payment-modal');
+
+                    // Add to bookings
+                    const newBooking = {
+                        id: `book-${Date.now()}`,
+                        propertyId: state.currentProperty.id,
+                        status: 'confirmed',
+                        checkin: document.getElementById('checkin-date').value,
+                        checkout: document.getElementById('checkout-date').value,
+                        guests: parseInt(document.getElementById('guests').value),
+                        price: state.currentProperty.price,
+                        fee: 500000,
+                        paymentMethod: document.getElementById('payment-method').value,
+                        paymentStatus: 'paid'
+                    };
+
+                    state.user.bookings.unshift(newBooking);
+
+                    // Show success message
+                    alert('Pembayaran berhasil! Pesanan Anda telah dikonfirmasi.');
+                    view.show('bookings');
+                });
+
+                // Notification button
+                elements.notificationBtn.addEventListener('click', () => {
+                    handlers.showModal('notification-modal');
+
+                    // Mark notifications as read
+                    state.user.notifications.forEach(notification => {
+                        notification.read = true;
+                    });
+
+                    // Update notification badge
+                    elements.notificationBtn.setAttribute('data-count', 0);
+                });
+
+                // Tabs
+                elements.tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+
+                        // Update active tab
+                        elements.tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        // Show corresponding content
+                        elements.tabContents.forEach(content => {
+                            content.classList.toggle('active', content.id === `${tabId}-bookings`);
+                        });
+                    });
+                });
+            },
+            showModal: (modalId) => {
+                const modal = document.getElementById(modalId);
+                modal.classList.add('modal-open');
+
+                // Close modal when clicking outside
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        handlers.hideModal(modalId);
+                    }
+                });
+
+                // Close modal with escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        handlers.hideModal(modalId);
+                    }
+                });
+            },
+            hideModal: (modalId) => {
+                document.getElementById(modalId).classList.remove('modal-open');
+            }
+        };
+
+        // Initialize the app
+        const init = () => {
+            view.init();
+            handlers.init();
+
+            // Initial renders
+            render.recommendedProperties();
+            render.popularProperties();
+            render.searchResults();
+            render.wishlistProperties();
+
+            // Set current date as min for check-in
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkin-date').min = today;
+            document.getElementById('book-checkin').min = today;
+
+            // Update notification badge
+            elements.notificationBtn.setAttribute('data-count',
+                state.user.notifications.filter(n => !n.read).length
+            );
+        };
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Platform penyewaan apartemen dengan fitur pencarian lanjutan dan pemesanan yang mudah.">
+    <title>Platform Penyewaan Apartemen</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter :wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons " rel="stylesheet">
+
+    <!-- Desain Token -->
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #a855f7;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --white: #ffffff;
+            --gray-light: #f3f4f6;
+            --gray-medium: #e5e7eb;
+            --gray-dark: #4b5563;
+
+            --font-main: 'Inter', 'Noto Sans', sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-full: 9999px;
+
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+            --transition-fast: 0.2s ease-in-out;
+            --transition-normal: 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--gray-medium);
+            padding: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        nav a {
+            color: var(--gray-dark);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-right: var(--spacing-md);
+            transition: all var(--transition-fast);
+        }
+
+        nav a:hover,
+        nav a.active {
+            background-color: var(--gray-light);
+            color: var(--primary);
+        }
+
+        main {
+            flex: 1;
+            padding: var(--spacing-lg);
+        }
+
+        section {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h1 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+        }
+
+        h2 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Kartu Properti */
+        .card {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform var(--transition-fast);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            padding: var(--spacing-md);
+            background-color: var(--gray-light);
+            border-bottom: 1px solid var(--gray-medium);
+        }
+
+        .card-body {
+            padding: var(--spacing-md);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .property-name {
+            font-size: var(--font-size-base);
+            font-weight: 600;
+        }
+
+        .property-wins {
+            font-size: var(--font-size-sm);
+            color: var(--gray-dark);
+        }
+
+        /* Tombol */
+        .btn {
+            display: inline-block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-accent {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--white);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid currentColor;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Formulir */
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--gray-medium);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Grid */
+        .grid-auto-fill {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        /* Footer Navigasi Bawah */
+        footer.bottom-nav {
+            background-color: var(--white);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-xs);
+            color: var(--gray-dark);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+        }
+
+        footer.page-footer {
+            background-color: var(--gray-light);
+            padding: var(--spacing-md);
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--gray-dark);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen flex flex-col" style="font-family: Inter, 'Noto Sans', sans-serif;">
+
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
+        <div class="logo">
+            <span class="material-icons" style="color: var(--primary);">apartment</span>
+            <h1 class="text-xl font-bold ml-2">LuxStay</h1>
+        </div>
+        <nav aria-label="Navigasi utama">
+            <a href="#dashboard" data-route="dashboard" class="active">Beranda</a>
+            <a href="#properti" data-route="properti">Properti</a>
+            <a href="#pesan" data-route="pesan">Pesan</a>
+            <a href="#profil" data-route="profil">Profil</a>
+        </nav>
+    </header>
+
+    <!-- Konten Utama -->
+    <main id="main-content" class="flex-1 px-4 py-6">
+        <!-- Dashboard -->
+        <section id="dashboard" class="page active">
+            <h1>Selamat Datang di LuxStay</h1>
+            <p>Platform penyewaan properti premium dengan antarmuka intuitif dan visual menarik.</p>
+            <div class="grid-auto-fill">
+                <article class="card">
+                    <div class="property-image"
+                        style="background-image: url('https://picsum.photos/300/200?random=2');">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="property-name">Villa Bali</h3>
+                        <p>Bali • Rp500.000/malam</p>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="property-image"
+                        style="background-image: url('https://picsum.photos/300/200?random=3');">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="property-name">Apartemen Jakarta</h3>
+                        <p>Jakarta • Rp300.000/malam</p>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="property-image"
+                        style="background-image: url('https://picsum.photos/300/200?random=1');">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="property-name">Kondominium Bandung</h3>
+                        <p>Bandung • Rp400.000/malam</p>
+                    </div>
+                </article>
+            </div>
+            <button class="btn btn-primary w-full" onclick="navigateTo('pesan')">Cari Properti</button>
+        </section>
+
+        <!-- Properti -->
+        <section id="properti" class="page hidden">
+            <h1>Properti Saya</h1>
+            <p>Kelola daftar properti Anda di sini.</p>
+            <div class="grid-auto-fill" id="propertyGrid"></div>
+        </section>
+
+        <!-- Pesan -->
+        <section id="pesan" class="page hidden">
+            <h1>Cari & Pesan</h1>
+            <p>Temukan dan pesan properti impian Anda sekarang.</p>
+            <form id="searchForm" novalidate autocomplete="off">
+                <label for="location" class="block mb-2">Lokasi</label>
+                <input type="text" id="location" placeholder="Misalnya: Bali" class="form-control mb-3" required />
+
+                <label for="check-in" class="block mb-2">Tanggal Masuk</label>
+                <input type="date" id="check-in" class="form-control mb-3" required />
+
+                <label for="check-out" class="block mb-2">Tanggal Keluar</label>
+                <input type="date" id="check-out" class="form-control mb-3" required />
+
+                <button type="submit" class="btn btn-outline">Cari Properti</button>
+            </form>
+        </section>
+
+        <!-- Profil -->
+        <section id="profil" class="page hidden">
+            <h1>Profil Pengguna</h1>
+            <p>Kelola informasi akun dan aktivitas Anda di platform ini.</p>
+            <form id="profileForm" novalidate autocomplete="off">
+                <label for="name" class="block mb-2">Nama</label>
+                <input type="text" id="name" value="Pengguna" class="form-control mb-3" required />
+
+                <label for="email" class="block mb-2">Email</label>
+                <input type="email" id="email" value="user@example.com" class="form-control mb-3" required />
+
+                <button type="submit" class="btn btn-outline">Simpan</button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Navigasi Bawah -->
+    <footer class="bottom-nav" role="navigation" aria-label="Navigasi bawah">
+        <a href="#dashboard" data-route="dashboard" class="nav-item active">
+            <span class="material-icons nav-icon">home</span>
+            <span>Beranda</span>
+        </a>
+        <a href="#properti" data-route="properti" class="nav-item">
+            <span class="material-icons nav-icon">place</span>
+            <span>Properti</span>
+        </a>
+        <a href="#pesan" data-route="pesan" class="nav-item">
+            <span class="material-icons nav-icon">search</span>
+            <span>Pesan</span>
+        </a>
+        <a href="#profil" data-route="profil" class="nav-item">
+            <span class="material-icons nav-icon">person</span>
+            <span>Profil</span>
+        </a>
+    </footer>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        &copy; <span id="tahunFooter"></span> LuxStay - Sewa Properti Premium
+    </footer>
+
+    <!-- Script Utama -->
+    <script>
+        // State Management
+        const state = {
+            halamanAktif: 'dashboard',
+            properties: [
+                { id: 1, nama: 'Villa Bali', lokasi: 'Bali', harga: 500000 },
+                { id: 2, nama: 'Apartemen Jakarta', lokasi: 'Jakarta', harga: 300000 },
+                { id: 3, nama: 'Kondominium Bandung', lokasi: 'Bandung', harga: 400000 }
+            ],
+            user: {
+                nama: 'Pengguna',
+                email: 'user@example.com'
+            }
+        };
+
+        // Utility Functions
+        const $ = selector => document.querySelector(selector);
+        const $$ = selector => document.querySelectorAll(selector);
+
+        function navigateTo(page) {
+            $$('section').forEach(el => el.classList.add('hidden'));
+            $(`#${page}`).classList.remove('hidden');
+            $$('[data-route]').forEach(link => link.classList.toggle('active', link.getAttribute('data-route') === page));
+            state.halamanAktif = page;
+        }
+
+        function renderProperties() {
+            const container = $('#propertyGrid');
+            if (!container) return;
+            container.innerHTML = '';
+            state.properties.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+          <div class="card-header">${p.nama}</div>
+          <div class="card-body">
+            <p>Lokasi: ${p.lokasi}</p>
+            <p>Harga: Rp${p.harga.toLocaleString()}</p>
+          </div>
+        `;
+                container.appendChild(card);
+            });
+        }
+
+        function setupEventListeners() {
+            // Navigasi
+            $$('[data-route]').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    navigateTo(link.dataset.route);
+                });
+            });
+
+            // Submit form pencarian
+            $('#searchForm')?.addEventListener('submit', e => {
+                e.preventDefault();
+                const location = $('#location').value.trim();
+                alert(`Mencari properti di ${location}`);
+                navigateTo('properti');
+                renderProperties();
+            });
+
+            // Submit form profil
+            $('#profileForm')?.addEventListener('submit', e => {
+                e.preventDefault();
+                const name = $('#name').value.trim();
+                const email = $('#email').value.trim();
+
+                if (!name || !/\S+@\S+\.\S+/.test(email)) {
+                    alert("Silakan isi nama dan email valid.");
+                    return;
+                }
+
+                state.user.name = name;
+                state.user.email = email;
+                alert("Profil berhasil diperbarui!");
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            $('#tahunFooter').textContent = new Date().getFullYear();
+            renderProperties();
+            setupEventListeners();
+            navigateTo(state.halamanAktif);
+        });
+    </script>
+</body>
+
+</html>
