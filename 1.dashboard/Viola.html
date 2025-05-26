@@ -7,126 +7,189 @@
   <title>RentApart - Dashboard Rental Apartemen</title>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     :root {
-      --primary-500: #2c3e50;
-      /* Dark blue */
-      --primary-300: #34495e;
-      /* Light blue */
-      --accent-500: #3498db;
-      /* Bright blue */
-      --accent-300: #2980b9;
-      /* Darker blue */
+      --primary-color: #4361ee;
+      /* Biru Utama */
+      --primary-light-color: #eef2ff;
+      /* Biru Muda */
+      --secondary-color: #3f37c9;
+      /* Biru Sekunder */
+      --accent-color: #f72585;
+      /* Merah Muda Aksen */
+      --dark-color: #1e1e24;
+      /* Abu-abu Gelap Pekat */
+      --light-color: #f8f9fa;
+      /* Putih Gading */
+      --gray-color: #6c757d;
+      /* Abu-abu Netral */
+      --success-color: #4cc9f0;
+      /* Biru Muda Sukses */
+      --warning-color: #f8961e;
+      /* Oranye Peringatan */
+      --danger-color: #ef233c;
+      /* Merah Bahaya */
       --neutral-100: #ffffff;
-      /* White */
-      --neutral-200: #fafafa;
-      /* Light Grey */
-      --neutral-500: #bdc3c7;
-      /* Grey */
-      --neutral-900: #2c3e50;
-      /* Dark Grey */
-      --primary: #4361ee;
-      --primary-light: #eef2ff;
-      --secondary: #3f37c9;
-      --accent: #f72585;
-      --dark: #1e1e24;
-      --light: #f8f9fa;
-      --gray: #6c757d;
-      --success: #4cc9f0;
-      --warning: #f8961e;
-      --danger: #ef233c;
-      --border-radius: 12px;
-      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      --transition: all 0.3s ease;
+      /* Putih */
+      --neutral-200: #f5f7fb;
+      /* Abu-abu Sangat Muda (Latar Belakang Utama) */
+      --neutral-300: #e0e0e0;
+      /* Abu-abu Garis Batas */
+      --border-radius-std: 12px;
+      /* Radius Border Standar */
+      --box-shadow-std: 0 10px 30px rgba(0, 0, 0, 0.05);
+      /* Bayangan Kotak Standar */
+      --transition-std: all 0.3s ease-in-out;
+      /* Transisi Standar */
+      --sidebar-width: 280px;
+      /* Lebar Sidebar */
+      --sidebar-width-collapsed: 80px;
+      /* Lebar Sidebar saat diciutkan (opsional) */
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: "Poppins", sans-serif;
-      background-color: #f5f7fb;
-      color: var(--dark);
+      background-color: var(--neutral-200);
+      color: var(--dark-color);
       line-height: 1.6;
       display: flex;
       min-height: 100vh;
+      overflow-x: hidden;
+      /* Mencegah scroll horizontal yang tidak diinginkan */
+    }
+
+    /* Utilitas CSS */
+    .hidden {
+      display: none !important;
+    }
+
+    .sr-only {
+      /* Screen-reader only */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
     }
 
     /* Sidebar Styles */
     #sidebar {
-      width: 280px;
-      background: white;
+      width: var(--sidebar-width);
+      background-color: var(--neutral-100);
       height: 100vh;
       position: fixed;
+      top: 0;
+      left: 0;
       padding: 2rem 1.5rem;
-      box-shadow: var(--box-shadow);
-      transition: var(--transition);
+      box-shadow: var(--box-shadow-std);
+      transition: transform var(--transition-std), width var(--transition-std);
       z-index: 1000;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar-brand {
       display: flex;
       align-items: center;
       margin-bottom: 2.5rem;
-      color: var(--primary);
+      color: var(--primary-color);
       font-weight: 700;
       font-size: 1.5rem;
+      text-decoration: none;
     }
 
     .sidebar-brand i {
       margin-right: 0.75rem;
       font-size: 1.8rem;
+      transition: margin var(--transition-std);
     }
 
     .sidebar-menu {
       list-style: none;
+      flex-grow: 1;
     }
 
     .sidebar-item {
       margin-bottom: 0.5rem;
-      border-radius: var(--border-radius);
-      transition: var(--transition);
+      border-radius: var(--border-radius-std);
+      transition: background-color var(--transition-std);
     }
 
     .sidebar-item:hover {
-      background-color: var(--primary-light);
+      background-color: var(--primary-light-color);
+    }
+
+    .sidebar-item:hover .sidebar-link {
+      color: var(--primary-color);
     }
 
     .sidebar-item.active {
-      background-color: var(--primary);
+      background-color: var(--primary-color);
     }
 
-    .sidebar-item.active a {
-      color: white;
+    .sidebar-item.active .sidebar-link {
+      color: var(--neutral-100);
+      font-weight: 600;
+    }
+
+    .sidebar-item.active .sidebar-link i {
+      color: var(--neutral-100);
     }
 
     .sidebar-link {
       display: flex;
       align-items: center;
-      padding: 0.75rem 1rem;
-      color: var(--gray);
+      padding: 0.85rem 1rem;
+      color: var(--gray-color);
       text-decoration: none;
       font-weight: 500;
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-std);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .sidebar-link i {
-      margin-right: 0.75rem;
+      margin-right: 0.85rem;
       font-size: 1.1rem;
       width: 24px;
       text-align: center;
+      color: var(--gray-color);
+      transition: margin var(--transition-std);
     }
+
+    .sidebar-link span {
+      transition: opacity 0.2s ease-in-out;
+    }
+
 
     /* Main Content Styles */
     #main-content {
       flex: 1;
-      margin-left: 280px;
+      margin-left: var(--sidebar-width);
       padding: 2rem;
-      transition: var(--transition);
+      transition: margin-left var(--transition-std);
+      min-width: 0;
+      /* Mencegah konten memanjang tak terbatas */
     }
 
     /* Header Styles */
@@ -136,27 +199,44 @@
       align-items: center;
       margin-bottom: 2rem;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid var(--neutral-300);
+      flex-wrap: wrap;
+      /* Agar responsif jika judul panjang */
     }
 
     .header-title h1 {
       font-size: 1.75rem;
       font-weight: 600;
-      color: var(--dark);
+      color: var(--dark-color);
+      margin-bottom: 0.25rem;
     }
 
     .header-title p {
-      color: var(--gray);
+      color: var(--gray-color);
       font-size: 0.9rem;
     }
 
     .header-actions {
       display: flex;
       gap: 1rem;
+      align-items: center;
+    }
+
+    /* Page Container */
+    .page {
+      display: none;
+      /* Semua halaman disembunyikan secara default */
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+
+    .page.active {
+      display: block;
+      /* Hanya halaman aktif yang ditampilkan */
     }
 
     /* Dashboard Summary Cards */
-    #dashboard-summary {
+    #dashboard-summary-cards {
+      /* Ganti ID agar lebih spesifik */
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.5rem;
@@ -164,15 +244,35 @@
     }
 
     .summary-card {
-      background: white;
-      border-radius: var(--border-radius);
+      background-color: var(--neutral-100);
+      border-radius: var(--border-radius-std);
       padding: 1.5rem;
-      box-shadow: var(--box-shadow);
-      transition: var(--transition);
+      box-shadow: var(--box-shadow-std);
+      transition: transform var(--transition-std), box-shadow var(--transition-std);
+      animation: fadeInItem 0.5s ease-out forwards;
+      /* Animasi untuk setiap kartu */
     }
+
+    .summary-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .summary-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .summary-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .summary-card:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
 
     .summary-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
     }
 
     .summary-card-header {
@@ -184,7 +284,7 @@
 
     .summary-card-title {
       font-size: 0.9rem;
-      color: var(--gray);
+      color: var(--gray-color);
       font-weight: 500;
     }
 
@@ -195,14 +295,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: var(--primary-light);
-      color: var(--primary);
+      background-color: var(--primary-light-color);
+      color: var(--primary-color);
+      font-size: 1.1rem;
     }
 
     .summary-card-value {
       font-size: 1.75rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--dark-color);
     }
 
     .summary-card-change {
@@ -216,39 +318,50 @@
     }
 
     .positive-change {
-      color: var(--success);
+      color: var(--success-color);
     }
 
     .negative-change {
-      color: var(--danger);
+      color: var(--danger-color);
     }
 
     /* Card Styles */
     .card {
-      background: white;
-      border-radius: var(--border-radius);
+      background-color: var(--neutral-100);
+      border-radius: var(--border-radius-std);
       padding: 1.75rem;
       margin-bottom: 2rem;
-      box-shadow: var(--box-shadow);
+      box-shadow: var(--box-shadow-std);
+      opacity: 0;
+      /* Untuk animasi */
+      animation: fadeInItem 0.6s ease-out forwards;
     }
+
+    .card:not(:first-of-type) {
+      animation-delay: 0.15s;
+      /* delay untuk card berikutnya */
+    }
+
 
     .section-title {
       font-size: 1.25rem;
       margin-bottom: 1.5rem;
-      color: var(--dark);
+      color: var(--dark-color);
       display: flex;
       align-items: center;
+      font-weight: 600;
     }
 
     .section-title i {
       margin-right: 0.75rem;
-      color: var(--primary);
+      color: var(--primary-color);
+      font-size: 1.1em;
     }
 
     /* Form Grid System */
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
     }
 
@@ -260,41 +373,36 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
-      color: var(--dark);
+      color: var(--dark-color);
       font-size: 0.9rem;
     }
 
-    .modern-input {
+    .modern-input,
+    .modern-select,
+    textarea.modern-input {
       width: 100%;
       padding: 0.75rem 1rem;
-      border: 1px solid #e0e0e0;
-      border-radius: var(--border-radius);
+      border: 1px solid var(--neutral-300);
+      border-radius: var(--border-radius-std);
       font-family: inherit;
       font-size: 0.95rem;
-      transition: var(--transition);
+      transition: var(--transition-std);
+      background-color: var(--neutral-100);
+      color: var(--dark-color);
     }
 
-    .modern-input:focus {
+    .modern-input::placeholder,
+    textarea.modern-input::placeholder {
+      color: var(--gray-color);
+      opacity: 0.7;
+    }
+
+    .modern-input:focus,
+    .modern-select:focus,
+    textarea.modern-input:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-    }
-
-    .modern-select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 1px solid #e0e0e0;
-      border-radius: var(--border-radius);
-      font-family: inherit;
-      font-size: 0.95rem;
-      background-color: white;
-      transition: var(--transition);
-    }
-
-    .modern-select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
     }
 
     textarea.modern-input {
@@ -308,48 +416,67 @@
       align-items: center;
       justify-content: center;
       padding: 0.75rem 1.5rem;
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-std);
       font-family: inherit;
       font-weight: 500;
       font-size: 0.95rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: var(--transition-std);
       border: none;
       gap: 0.5rem;
+      text-decoration: none;
+      /* Jika tombol adalah link */
     }
 
     .btn i {
       font-size: 1rem;
     }
 
-    .primary-btn {
-      background-color: var(--primary);
-      color: white;
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--neutral-100);
     }
 
-    .primary-btn:hover {
-      background-color: var(--secondary);
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
     }
 
-    .danger-btn {
-      background-color: var(--danger);
-      color: white;
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: var(--neutral-100);
     }
 
-    .danger-btn:hover {
+    .btn-danger:hover {
       background-color: #d90429;
+      /* Darker red */
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 35, 60, 0.3);
     }
 
-    .outline-btn {
+    .btn-outline {
       background-color: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
+      border: 1px solid var(--primary-color);
+      color: var(--primary-color);
     }
 
-    .outline-btn:hover {
-      background-color: var(--primary-light);
+    .btn-outline:hover {
+      background-color: var(--primary-light-color);
+      color: var(--primary-color);
+      /* Pastikan teks tetap terbaca */
+    }
+
+    .btn-subtle {
+      background-color: var(--primary-light-color);
+      color: var(--primary-color);
+      border: 1px solid transparent;
+    }
+
+    .btn-subtle:hover {
+      background-color: var(--primary-color);
+      color: var(--neutral-100);
+      transform: translateY(-2px);
     }
 
     /* Toggle Switch */
@@ -358,6 +485,8 @@
       display: inline-block;
       width: 50px;
       height: 24px;
+      vertical-align: middle;
+      /* Agar sejajar dengan teks */
     }
 
     .toggle-switch input {
@@ -366,7 +495,8 @@
       height: 0;
     }
 
-    .slider {
+    .toggle-slider {
+      /* Ganti nama kelas agar tidak bentrok */
       position: absolute;
       cursor: pointer;
       top: 0;
@@ -374,27 +504,27 @@
       right: 0;
       bottom: 0;
       background-color: #ccc;
-      transition: var(--transition);
+      transition: var(--transition-std);
       border-radius: 34px;
     }
 
-    .slider:before {
+    .toggle-slider:before {
       position: absolute;
       content: "";
       height: 16px;
       width: 16px;
       left: 4px;
       bottom: 4px;
-      background-color: white;
-      transition: var(--transition);
+      background-color: var(--neutral-100);
+      transition: var(--transition-std);
       border-radius: 50%;
     }
 
-    input:checked+.slider {
-      background-color: var(--primary);
+    input:checked+.toggle-slider {
+      background-color: var(--primary-color);
     }
 
-    input:checked+.slider:before {
+    input:checked+.toggle-slider:before {
       transform: translateX(26px);
     }
 
@@ -402,54 +532,85 @@
     .payment-methods-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
+      gap: 1.5rem;
+      /* Perbesar gap */
     }
 
     .payment-method {
       display: flex;
       align-items: center;
-      padding: 1rem;
-      background-color: var(--primary-light);
-      border-radius: var(--border-radius);
+      justify-content: space-between;
+      /* Agar toggle di ujung */
+      padding: 1.25rem;
+      /* Perbesar padding */
+      background-color: var(--primary-light-color);
+      border-radius: var(--border-radius-std);
       gap: 1rem;
+      transition: background-color var(--transition-std);
+    }
+
+    .payment-method:hover {
+      background-color: #dbe4ff;
+      /* Sedikit lebih gelap saat hover */
+    }
+
+    .payment-method-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-grow: 1;
     }
 
     .method-icon {
       width: 40px;
       height: 40px;
+      min-width: 40px;
+      /* Pastikan ukuran tetap */
       border-radius: 50%;
-      background-color: white;
+      background-color: var(--neutral-100);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary);
+      color: var(--primary-color);
       font-size: 1.25rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .payment-method h4 {
       font-size: 0.95rem;
       margin-bottom: 0.25rem;
+      color: var(--dark-color);
     }
 
     .payment-method p {
       font-size: 0.8rem;
-      color: var(--gray);
+      color: var(--gray-color);
     }
 
     /* Checkbox Group */
     .checkbox-group {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
     .checkbox-group label {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      /* Perbesar gap */
       font-size: 0.9rem;
       cursor: pointer;
+      color: var(--dark-color);
     }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary-color);
+      /* Modern styling for checkbox */
+    }
+
 
     /* Range Input */
     input[type="range"] {
@@ -457,79 +618,130 @@
       height: 8px;
       -webkit-appearance: none;
       appearance: none;
-      background: #e0e0e0;
+      background: var(--neutral-300);
       border-radius: 5px;
       outline: none;
-      margin: 1rem 0;
+      margin: 1rem 0 0.5rem;
+      /* Atur margin */
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
+      appearance: none;
       width: 20px;
       height: 20px;
-      background: var(--primary);
+      background: var(--primary-color);
       border-radius: 50%;
       cursor: pointer;
+      transition: background-color var(--transition-std);
     }
 
-    .range-value {
+    input[type="range"]::-moz-range-thumb {
+      /* Firefox */
+      width: 20px;
+      height: 20px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      transition: background-color var(--transition-std);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover,
+    input[type="range"]::-moz-range-thumb:hover {
+      background: var(--secondary-color);
+    }
+
+
+    .range-value-display {
+      /* Ganti nama kelas */
       font-weight: 600;
-      color: var(--primary);
-      text-align: center;
+      color: var(--primary-color);
+      text-align: right;
+      /* Biasanya di kanan atau bawah input */
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
     }
 
     /* Help Text */
     .help-text {
       font-size: 0.8rem;
-      color: var(--gray);
+      color: var(--gray-color);
       display: block;
-      margin-top: 0.25rem;
+      margin-top: 0.35rem;
     }
 
     /* Connected Apps */
-    .connected-apps {
+    .connected-apps-section {
+      /* Ganti nama kelas */
       display: grid;
       gap: 1rem;
     }
+
+    .connected-apps-section h3 {
+      font-size: 1.1rem;
+      color: var(--dark-color);
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--neutral-300);
+    }
+
+    .connected-apps-section h3:first-of-type {
+      margin-top: 0;
+    }
+
 
     .app-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem;
-      background-color: var(--primary-light);
-      border-radius: var(--border-radius);
+      padding: 1rem 1.25rem;
+      /* Perbesar padding */
+      background-color: var(--primary-light-color);
+      border-radius: var(--border-radius-std);
+      gap: 1rem;
     }
 
     .app-info h4 {
       font-size: 0.95rem;
       margin-bottom: 0.25rem;
+      color: var(--dark-color);
     }
 
     .app-info p {
       font-size: 0.8rem;
-      color: var(--gray);
+      color: var(--gray-color);
     }
 
     /* Form Actions */
     .form-actions {
       grid-column: 1 / -1;
+      /* Agar span full width di grid */
       display: flex;
+      flex-wrap: wrap;
+      /* Responsif untuk tombol */
       gap: 1rem;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      /* Perbesar margin */
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--neutral-300);
     }
 
     /* Notification Settings */
-    .notification-settings {
+    .notification-settings-grid {
+      /* Ganti nama kelas */
       display: grid;
       gap: 1.5rem;
     }
 
     .notification-type {
-      background-color: white;
-      border-radius: var(--border-radius);
+      background-color: var(--neutral-100);
+      border-radius: var(--border-radius-std);
       padding: 1.5rem;
-      box-shadow: var(--box-shadow);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+      /* Bayangan lebih halus */
+      border: 1px solid var(--neutral-300);
     }
 
     .notification-header {
@@ -541,111 +753,62 @@
 
     .notification-title {
       font-weight: 600;
-      color: var(--dark);
+      color: var(--dark-color);
+      font-size: 1.05rem;
+      /* Sedikit lebih besar */
     }
 
-    /* Refund Policy */
-    .refund-policy {
-      background-color: white;
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      box-shadow: var(--box-shadow);
-      margin-bottom: 2rem;
-    }
-
-    .policy-header {
+    /* Placeholder Pages Styling */
+    .placeholder-page {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 60vh;
+      color: var(--gray-color);
+    }
+
+    .placeholder-page i {
+      font-size: 4rem;
       margin-bottom: 1rem;
+      color: var(--neutral-300);
     }
 
-    .policy-title {
-      font-weight: 600;
-      color: var(--dark);
+    .placeholder-page h2 {
+      font-size: 1.5rem;
+      color: var(--dark-color);
+      margin-bottom: 0.5rem;
     }
 
-    /* Responsive Design */
-    @media (max-width: 1200px) {
-      #sidebar {
-        width: 240px;
-        padding: 1.5rem 1rem;
-      }
-
-      #main-content {
-        margin-left: 240px;
-      }
-    }
-
-    @media (max-width: 992px) {
-      #sidebar {
-        transform: translateX(-100%);
-        position: fixed;
-        z-index: 1000;
-        height: 100vh;
-        background: white;
-      }
-
-      #sidebar.active {
-        transform: translateX(0);
-      }
-
-      #main-content {
-        margin-left: 0;
-        width: 100%;
-      }
-
-      .sidebar-toggle {
-        display: block !important;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .payment-methods-grid {
-        grid-template-columns: 1fr;
-      }
-
-      #dashboard-summary {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 576px) {
-      #dashboard-summary {
-        grid-template-columns: 1fr;
-      }
-
-      .header-actions {
-        gap: 0.5rem;
-      }
-
-      .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-      }
-    }
 
     /* Mobile Toggle Button */
-    .sidebar-toggle {
+    .sidebar-toggle-btn {
+      /* Ganti nama kelas */
       display: none;
+      /* Sembunyikan di desktop */
       position: fixed;
       top: 1rem;
       left: 1rem;
-      z-index: 999;
-      background: var(--primary);
-      color: white;
+      z-index: 1001;
+      /* Di atas sidebar saat tertutup */
+      background: var(--primary-color);
+      color: var(--neutral-100);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 1.25rem;
+      width: 45px;
+      /* Perbesar sedikit */
+      height: 45px;
+      font-size: 1.35rem;
       cursor: pointer;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: var(--transition-std);
     }
+
+    .sidebar-toggle-btn:hover {
+      background-color: var(--secondary-color);
+    }
+
 
     /* Overlay for mobile sidebar */
     .sidebar-overlay {
@@ -656,18 +819,59 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.5);
       z-index: 999;
+      /* Di bawah sidebar, di atas konten */
       display: none;
+      opacity: 0;
+      transition: opacity var(--transition-std);
     }
 
     .sidebar-overlay.active {
       display: block;
+      opacity: 1;
     }
 
-    /* Animation */
+    /* Toast Notification */
+    #toast-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--dark-color);
+      color: var(--neutral-100);
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius-std);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 2000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    #toast-notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #toast-notification.success {
+      background-color: var(--success-color);
+      color: var(--dark-color);
+    }
+
+    #toast-notification.error {
+      background-color: var(--danger-color);
+    }
+
+    #toast-notification.warning {
+      background-color: var(--warning-color);
+      color: var(--dark-color);
+    }
+
+
+    /* Animations */
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
       }
 
       to {
@@ -676,554 +880,1046 @@
       }
     }
 
-    .card {
-      animation: fadeIn 0.5s ease forwards;
+    @keyframes fadeInItem {
+
+      /* Animasi untuk item individual dalam card */
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .card:nth-child(2) {
-      animation-delay: 0.1s;
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      #sidebar {
+        transform: translateX(-100%);
+      }
+
+      #sidebar.active {
+        transform: translateX(0);
+        box-shadow: var(--box-shadow-std);
+        /* Pastikan shadow terlihat */
+      }
+
+      #main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .sidebar-toggle-btn {
+        display: flex;
+        /* Tampilkan tombol toggle di mobile */
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-title h1 {
+        font-size: 1.5rem;
+      }
     }
 
-    .card:nth-child(3) {
-      animation-delay: 0.2s;
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+        /* Satu kolom untuk form */
+      }
+
+      .payment-methods-grid {
+        grid-template-columns: 1fr;
+        /* Satu kolom untuk metode pembayaran */
+      }
+
+      #dashboard-summary-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* Sesuaikan untuk tablet */
+      }
+
+      .header-actions {
+        margin-top: 1rem;
+        /* Beri jarak jika header title panjang */
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .btn {
+        padding: 0.65rem 1.2rem;
+        font-size: 0.9rem;
+      }
     }
 
-    .card:nth-child(4) {
-      animation-delay: 0.3s;
+    @media (max-width: 576px) {
+      #dashboard-summary-cards {
+        grid-template-columns: 1fr;
+        /* Satu kolom untuk mobile kecil */
+      }
+
+      .header-actions {
+        gap: 0.5rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        width: 100%;
+        /* Tombol header bisa full width */
+      }
+
+      .btn .desktop-text {
+        display: none;
+      }
+
+      /* Sembunyikan teks di tombol mobile jika perlu */
+      .btn i {
+        margin-right: 0;
+      }
+
+      /* Hapus margin jika teks disembunyikan */
+
+      #main-content {
+        padding: 1.5rem;
+      }
+
+      .card {
+        padding: 1.25rem;
+      }
+
+      .section-title {
+        font-size: 1.15rem;
+      }
+
+      .sidebar-toggle-btn {
+        top: 0.75rem;
+        left: 0.75rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Mobile Toggle Button -->
-  <button class="sidebar-toggle" id="sidebarToggle">
+  <!-- Tombol Toggle Sidebar untuk Mobile -->
+  <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle navigasi" aria-expanded="false">
     <i class="fas fa-bars"></i>
   </button>
 
-  <!-- Sidebar Overlay -->
+  <!-- Overlay Sidebar untuk Mobile -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- Sidebar Navigation -->
+  <!-- Navigasi Sidebar -->
   <aside id="sidebar">
-    <div class="sidebar-brand">
+    <a href="#beranda" class="sidebar-brand">
       <i class="fas fa-building"></i>
       <span>RentApart</span>
-    </div>
+    </a>
 
-    <ul class="sidebar-menu">
-      <li class="sidebar-item active">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-home"></i>
-          <span>Beranda</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-city"></i>
-          <span>Daftar Apartemen</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-users"></i>
-          <span>Penyewa Apartemen</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-calendar-check"></i>
-          <span>Transaksi Sewa</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-chart-bar"></i>
-          <span>Laporan</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a href="#" class="sidebar-link">
-          <i class="fas fa-cog"></i>
-          <span>Pengaturan</span>
-        </a>
-      </li>
-    </ul>
+    <nav>
+      <ul class="sidebar-menu" id="sidebarMenu">
+        <li class="sidebar-item">
+          <a href="#beranda" class="sidebar-link" data-page="beranda">
+            <i class="fas fa-home" aria-hidden="true"></i>
+            <span>Beranda</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#daftar-apartemen" class="sidebar-link" data-page="daftar-apartemen">
+            <i class="fas fa-city" aria-hidden="true"></i>
+            <span>Daftar Apartemen</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#penyewa-apartemen" class="sidebar-link" data-page="penyewa-apartemen">
+            <i class="fas fa-users" aria-hidden="true"></i>
+            <span>Penyewa</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#transaksi-sewa" class="sidebar-link" data-page="transaksi-sewa">
+            <i class="fas fa-calendar-check" aria-hidden="true"></i>
+            <span>Transaksi Sewa</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#laporan" class="sidebar-link" data-page="laporan">
+            <i class="fas fa-chart-bar" aria-hidden="true"></i>
+            <span>Laporan</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="#pengaturan" class="sidebar-link" data-page="pengaturan">
+            <i class="fas fa-cog" aria-hidden="true"></i>
+            <span>Pengaturan</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Konten Utama -->
   <main id="main-content">
-    <!-- Header -->
+    <!-- Header Utama -->
     <header id="main-header">
       <div class="header-title">
-        <h1>Dashboard Admin Rental Apartemen</h1>
-        <p>Selamat datang kembali, Admin! Kelola apartemen dan penyewa dengan mudah.</p>
+        <h1 id="pageTitle">Dashboard Admin</h1>
+        <p id="pageSubtitle">Selamat datang kembali, Admin! Kelola apartemen dan penyewa dengan mudah.</p>
       </div>
       <div class="header-actions">
-        <button class="btn outline-btn">
-          <i class="fas fa-bell"></i>
+        <button class="btn btn-outline">
+          <i class="fas fa-bell" aria-hidden="true"></i>
           <span class="desktop-text">Notifikasi</span>
+          <span class="sr-only">Lihat Notifikasi</span>
         </button>
-        <button class="btn outline-btn">
-          <i class="fas fa-user-circle"></i>
+        <button class="btn btn-outline">
+          <i class="fas fa-user-circle" aria-hidden="true"></i>
           <span class="desktop-text">Profil</span>
+          <span class="sr-only">Lihat Profil Pengguna</span>
         </button>
       </div>
     </header>
 
-    <!-- Dashboard Summary -->
-    <section id="dashboard-summary">
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <span class="summary-card-title">Total Apartemen</span>
-          <div class="summary-card-icon">
-            <i class="fas fa-city"></i>
+    <!-- Kontainer untuk halaman-halaman SPA -->
+    <div id="page-container">
+      <!-- Halaman Beranda -->
+      <section id="beranda" class="page">
+        <div id="dashboard-summary-cards">
+          <!-- Kartu summary akan di-generate oleh JavaScript -->
+        </div>
+        <div class="card">
+          <h2 class="section-title"><i class="fas fa-chart-line"></i> Statistik Cepat</h2>
+          <p>Grafik dan data penting lainnya akan ditampilkan di sini untuk memberikan gambaran umum performa.</p>
+          <!-- Contoh placeholder untuk grafik -->
+          <div
+            style="height: 200px; background-color: var(--neutral-200); display:flex; align-items:center; justify-content:center; border-radius: var(--border-radius-std); margin-top:1rem;">
+            <p style="color: var(--gray-color);">Konten Grafik Placeholder</p>
           </div>
         </div>
-        <div class="summary-card-value">42</div>
-        <div class="summary-card-change positive-change">
-          <i class="fas fa-arrow-up"></i> 8% dari bulan lalu
-        </div>
-      </div>
+      </section>
 
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <span class="summary-card-title">Apartemen Disewa</span>
-          <div class="summary-card-icon">
-            <i class="fas fa-key"></i>
-          </div>
-        </div>
-        <div class="summary-card-value">32</div>
-        <div class="summary-card-change positive-change">
-          <i class="fas fa-arrow-up"></i> 12% dari bulan lalu
-        </div>
-      </div>
+      <!-- Halaman Daftar Apartemen -->
+      <section id="daftar-apartemen" class="page placeholder-page">
+        <i class="fas fa-city"></i>
+        <h2>Daftar Apartemen</h2>
+        <p>Fitur untuk mengelola daftar apartemen akan tersedia di sini.</p>
+      </section>
 
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <span class="summary-card-title">Pendapatan Sewa Bulan Ini</span>
-          <div class="summary-card-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-        </div>
-        <div class="summary-card-value">Rp 87.500.000</div>
-        <div class="summary-card-change positive-change">
-          <i class="fas fa-arrow-up"></i> 15% dari bulan lalu
-        </div>
-      </div>
+      <!-- Halaman Penyewa Apartemen -->
+      <section id="penyewa-apartemen" class="page placeholder-page">
+        <i class="fas fa-users"></i>
+        <h2>Manajemen Penyewa</h2>
+        <p>Fitur untuk mengelola data penyewa akan tersedia di sini.</p>
+      </section>
 
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <span class="summary-card-title">Total Penyewa</span>
-          <div class="summary-card-icon">
-            <i class="fas fa-users"></i>
-          </div>
-        </div>
-        <div class="summary-card-value">128</div>
-        <div class="summary-card-change positive-change">
-          <i class="fas fa-arrow-up"></i> 5% dari bulan lalu
-        </div>
-      </div>
-    </section>
+      <!-- Halaman Transaksi Sewa -->
+      <section id="transaksi-sewa" class="page placeholder-page">
+        <i class="fas fa-calendar-check"></i>
+        <h2>Riwayat Transaksi Sewa</h2>
+        <p>Fitur untuk melihat dan mengelola transaksi sewa akan ada di sini.</p>
+      </section>
 
-    <!-- Integration Container -->
-    <div class="integration-container">
-      <!-- Transaction Notifications -->
-      <div class="card" id="transaction-notifications">
-        <h2 class="section-title">
-          <i class="fas fa-bell"></i> Notifikasi Transaksi Sewa
-        </h2>
+      <!-- Halaman Laporan -->
+      <section id="laporan" class="page placeholder-page">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Laporan & Analitik</h2>
+        <p>Fitur laporan keuangan, okupansi, dan lainnya akan tersedia di sini.</p>
+      </section>
 
-        <div class="notification-settings">
-          <div class="notification-type">
-            <div class="notification-header">
-              <h3 class="notification-title">Email Notifikasi</h3>
-              <label class="toggle-switch">
-                <input type="checkbox" checked id="email-notification-toggle" />
-                <span class="slider"></span>
-              </label>
+      <!-- Halaman Pengaturan -->
+      <section id="pengaturan" class="page">
+        <!-- Notifikasi Transaksi Sewa -->
+        <div class="card" id="transaction-notifications-settings">
+          <h2 class="section-title">
+            <i class="fas fa-bell" aria-hidden="true"></i> Notifikasi Transaksi Sewa
+          </h2>
+
+          <div class="notification-settings-grid">
+            <div class="notification-type">
+              <div class="notification-header">
+                <h3 class="notification-title">Email Notifikasi</h3>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked id="email-notification-toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="notification-email">Alamat Email Notifikasi</label>
+                <input type="email" id="notification-email" class="modern-input" placeholder="admin@rentapart.id"
+                  value="admin@rentapart.id" />
+              </div>
             </div>
+
+            <div class="notification-type">
+              <div class="notification-header">
+                <h3 class="notification-title">SMS Notifikasi</h3>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="sms-notification-toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="notification-phone">Nomor Telepon Notifikasi</label>
+                <input type="tel" id="notification-phone" class="modern-input" placeholder="+628123456789" />
+              </div>
+            </div>
+
+            <div class="notification-type">
+              <div class="notification-header">
+                <h3 class="notification-title">Notifikasi Dalam Aplikasi</h3>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked id="app-notification-toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <p class="help-text">Notifikasi akan muncul di dashboard admin ini.</p>
+            </div>
+          </div>
+
+          <h3 style="margin: 2rem 0 1rem; font-size: 1.1rem; color: var(--dark-color);">Jenis Notifikasi yang Diaktifkan
+          </h3>
+          <div class="form-grid">
             <div class="form-group">
-              <label class="form-label" for="notification-email">Alamat Email</label>
-              <input type="email" id="notification-email" class="modern-input" placeholder="admin@rentapart.id" />
+              <label class="form-label">Status Transaksi Sewa</label>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" checked id="payment-success-notif" />
+                  Pembayaran Sewa Berhasil
+                </label>
+                <label>
+                  <input type="checkbox" checked id="payment-failed-notif" />
+                  Pembayaran Sewa Gagal
+                </label>
+                <label>
+                  <input type="checkbox" checked id="booking-confirmed-notif" />
+                  Sewa Dikonfirmasi
+                </label>
+              </div>
             </div>
-          </div>
 
-          <div class="notification-type">
-            <div class="notification-header">
-              <h3 class="notification-title">SMS Notifikasi</h3>
-              <label class="toggle-switch">
-                <input type="checkbox" id="sms-notification-toggle" />
-                <span class="slider"></span>
-              </label>
-            </div>
             <div class="form-group">
-              <label class="form-label" for="notification-phone">Nomor Telepon</label>
-              <input type="tel" id="notification-phone" class="modern-input" placeholder="+628123456789" />
+              <label class="form-label">Pengembalian Dana (Refund)</label>
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" checked id="refund-requested-notif" />
+                  Permintaan Refund Diterima
+                </label>
+                <label>
+                  <input type="checkbox" checked id="refund-processed-notif" />
+                  Refund Sedang Diproses
+                </label>
+                <label>
+                  <input type="checkbox" checked id="refund-completed-notif" />
+                  Refund Selesai Diproses
+                </label>
+              </div>
             </div>
           </div>
 
-          <div class="notification-type">
-            <div class="notification-header">
-              <h3 class="notification-title">Notifikasi Aplikasi</h3>
-              <label class="toggle-switch">
-                <input type="checkbox" checked id="app-notification-toggle" />
-                <span class="slider"></span>
-              </label>
-            </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" data-action="save-notification-settings">
+              <i class="fas fa-save" aria-hidden="true"></i> Simpan Pengaturan Notifikasi
+            </button>
+            <button class="btn btn-outline" data-action="disable-all-notifications">
+              <i class="fas fa-bell-slash" aria-hidden="true"></i> Nonaktifkan Semua
+            </button>
           </div>
         </div>
 
-        <h3 style="margin: 1.5rem 0 1rem">Jenis Notifikasi</h3>
-        <div class="form-grid">
+        <!-- Pengaturan Refund -->
+        <div class="card" id="refund-settings-card">
+          <h2 class="section-title">
+            <i class="fas fa-undo" aria-hidden="true"></i> Pengaturan Refund Sewa
+          </h2>
           <div class="form-group">
-            <label class="form-label">Status Transaksi Sewa</label>
-            <div class="checkbox-group">
-              <label>
-                <input type="checkbox" checked id="payment-success-notif" />
-                Pembayaran Sewa Berhasil
-              </label>
-              <label>
-                <input type="checkbox" checked id="payment-failed-notif" />
-                Pembayaran Sewa Gagal
-              </label>
-              <label>
-                <input type="checkbox" checked id="booking-confirmed-notif" />
-                Sewa Dikonfirmasi
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Pengembalian Dana</label>
-            <div class="checkbox-group">
-              <label>
-                <input type="checkbox" checked id="refund-requested-notif" />
-                Permintaan Refund
-              </label>
-              <label>
-                <input type="checkbox" checked id="refund-processed-notif" />
-                Refund Diproses
-              </label>
-              <label>
-                <input type="checkbox" checked id="refund-completed-notif" />
-                Refund Selesai
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn primary-btn">
-            <i class="fas fa-save"></i> Simpan Pengaturan
-          </button>
-          <button class="btn outline-btn">
-            <i class="fas fa-bell-slash"></i> Nonaktifkan Semua
-          </button>
-        </div>
-      </div>
-
-      <!-- Refund Settings -->
-      <div class="card" id="refund-settings">
-        <h2 class="section-title">
-          <i class="fas fa-undo"></i> Pengaturan Refund Sewa
-        </h2>
-
-        <div class="refund-policy">
-          <div class="policy-header">
-            <h3 class="policy-title">Kebijakan Pengembalian Dana Sewa</h3>
-          </div>
-          <div class="form-group">
-            <textarea class="modern-input" id="refund-policy"
-              placeholder="Masukkan kebijakan pengembalian dana yang jelas dan transparan">
-Penyewa apartemen dapat meminta pengembalian dana (refund) jika pembatalan dilakukan minimal 7 hari sebelum tanggal mulai sewa. Refund akan diproses dalam waktu 5-7 hari kerja setelah permintaan disetujui. Biaya administrasi sebesar 10% akan dikenakan untuk setiap transaksi refund sewa apartemen.</textarea>
+            <label class="form-label" for="refund-policy-text">Kebijakan Pengembalian Dana Sewa</label>
+            <textarea class="modern-input" id="refund-policy-text" rows="5"
+              placeholder="Masukkan kebijakan pengembalian dana yang jelas dan transparan">Penyewa apartemen dapat meminta pengembalian dana (refund) jika pembatalan dilakukan minimal 7 hari sebelum tanggal mulai sewa. Refund akan diproses dalam waktu 5-7 hari kerja setelah permintaan disetujui. Biaya administrasi sebesar 10% akan dikenakan untuk setiap transaksi refund sewa apartemen.</textarea>
             <small class="help-text">Kebijakan ini akan ditampilkan kepada penyewa apartemen sebelum melakukan
               pemesanan.</small>
           </div>
-        </div>
 
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label" for="refund-approval">Persetujuan Refund</label>
-            <select class="modern-select" id="refund-approval">
-              <option value="auto">
-                Otomatis (untuk pembatalan < 24 jam) </option>
-              <option value="manual" selected>
-                Manual (semua refund perlu disetujui)
-              </option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="refund-period">Periode Maksimum Refund</label>
-            <select class="modern-select" id="refund-period">
-              <option value="7">7 hari sebelum mulai sewa</option>
-              <option value="14" selected>14 hari sebelum mulai sewa</option>
-              <option value="30">30 hari sebelum mulai sewa</option>
-              <option value="custom">Kustom</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="refund-percentage">Persentase Refund</label>
-            <input type="range" id="refund-percentage" min="0" max="100" value="90" />
-            <div class="range-value">90%</div>
-            <small class="help-text">Persentase dari total pembayaran yang akan dikembalikan</small>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="admin-fee">Biaya Administrasi</label>
-            <input type="number" id="admin-fee" class="modern-input" value="10" min="0" max="100" />
-            <small class="help-text">Persentase biaya administrasi yang dikenakan</small>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn primary-btn">
-            <i class="fas fa-save"></i> Simpan Pengaturan
-          </button>
-          <button class="btn danger-btn">
-            <i class="fas fa-history"></i> Reset ke Default
-          </button>
-        </div>
-      </div>
-
-      <!-- API Configuration -->
-      <div class="card" id="api-configuration">
-        <h2 class="section-title">
-          <i class="fas fa-key"></i> Konfigurasi API Pembayaran & Integrasi
-        </h2>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label" for="api-provider">Penyedia Layanan</label>
-            <select class="modern-select" id="api-provider">
-              <option>Google Maps</option>
-              <option>Midtrans</option>
-              <option>PayPal</option>
-              <option>Stripe</option>
-              <option>Xendit</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="api-key">API Key</label>
-            <input type="text" id="api-key" class="modern-input" placeholder="Masukkan API Key" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="api-secret">Secret Key</label>
-            <input type="password" id="api-secret" class="modern-input" placeholder="Masukkan Secret Key" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="api-environment">Lingkungan</label>
-            <select class="modern-select" id="api-environment">
-              <option>Production</option>
-              <option>Sandbox</option>
-              <option>Development</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn primary-btn">
-            <i class="fas fa-save"></i> Simpan Konfigurasi
-          </button>
-          <button class="btn outline-btn">
-            <i class="fas fa-redo"></i> Reset
-          </button>
-          <button class="btn danger-btn">
-            <i class="fas fa-plug"></i> Test Koneksi
-          </button>
-        </div>
-      </div>
-
-      <!-- Payment Methods -->
-      <div class="card" id="payment-methods">
-        <h2 class="section-title">
-          <i class="fas fa-credit-card"></i> Metode Pembayaran Sewa
-        </h2>
-
-        <div class="payment-methods-grid">
-          <div class="payment-method">
-            <div class="method-icon">
-              <i class="fas fa-credit-card"></i>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="refund-approval-mode">Mode Persetujuan Refund</label>
+              <select class="modern-select" id="refund-approval-mode">
+                <option value="auto">Otomatis (misal: pembatalan < 24 jam dari pemesanan)</option>
+                <option value="manual" selected>Manual (semua refund perlu persetujuan admin)</option>
+              </select>
             </div>
-            <div>
-              <h4>Kartu Kredit</h4>
-              <p>Visa, Mastercard, JCB</p>
+
+            <div class="form-group">
+              <label class="form-label" for="refund-max-period">Periode Maksimum Pengajuan Refund</label>
+              <select class="modern-select" id="refund-max-period">
+                <option value="7">7 hari sebelum tanggal mulai sewa</option>
+                <option value="14" selected>14 hari sebelum tanggal mulai sewa</option>
+                <option value="30">30 hari sebelum tanggal mulai sewa</option>
+                <option value="custom">Kustom (atur manual)</option>
+              </select>
             </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked id="credit-card-toggle" />
-              <span class="slider"></span>
-            </label>
+
+            <div class="form-group">
+              <label class="form-label" for="refund-percentage-range">Persentase Refund Diberikan</label>
+              <input type="range" id="refund-percentage-range" min="0" max="100" value="90" />
+              <div class="range-value-display" id="refund-percentage-value">90%</div>
+              <small class="help-text">Persentase dari total pembayaran yang akan dikembalikan kepada penyewa.</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="admin-fee-percentage">Biaya Administrasi Refund (% dari Total)</label>
+              <input type="number" id="admin-fee-percentage" class="modern-input" value="10" min="0" max="100" />
+              <small class="help-text">Persentase biaya administrasi yang dikenakan pada setiap refund.</small>
+            </div>
           </div>
 
-          <div class="payment-method">
-            <div class="method-icon">
-              <i class="fas fa-university"></i>
-            </div>
-            <div>
-              <h4>Transfer Bank</h4>
-              <p>BCA, Mandiri, BRI, BNI</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked id="bank-transfer-toggle" />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="payment-method">
-            <div class="method-icon">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div>
-              <h4>E-Wallet</h4>
-              <p>OVO, GoPay, Dana, LinkAja</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" id="ewallet-toggle" />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="payment-method">
-            <div class="method-icon">
-              <i class="fas fa-store"></i>
-            </div>
-            <div>
-              <h4>Minimarket</h4>
-              <p>Alfamart, Indomaret</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" id="minimarket-toggle" />
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn primary-btn">
-            <i class="fas fa-save"></i> Simpan Perubahan
-          </button>
-        </div>
-      </div>
-
-      <!-- Connected Apps -->
-      <div class="card" id="connected-apps">
-        <h2 class="section-title">
-          <i class="fas fa-plug"></i> Aplikasi Terhubung
-        </h2>
-
-        <h3 style="margin-bottom: 1rem">Aktif</h3>
-        <div class="connected-apps">
-          <div class="app-item">
-            <div class="app-info">
-              <h4>Google Calendar</h4>
-              <p>Sinkronisasi jadwal penyewaan</p>
-            </div>
-            <button class="btn danger-btn">
-              <i class="fas fa-unlink"></i> Putuskan
+          <div class="form-actions">
+            <button class="btn btn-primary" data-action="save-refund-settings">
+              <i class="fas fa-save" aria-hidden="true"></i> Simpan Pengaturan Refund
             </button>
-          </div>
-
-          <div class="app-item">
-            <div class="app-info">
-              <h4>Midtrans</h4>
-              <p>Gateway pembayaran aktif</p>
-            </div>
-            <button class="btn danger-btn">
-              <i class="fas fa-unlink"></i> Putuskan
+            <button class="btn btn-danger" data-action="reset-refund-settings">
+              <i class="fas fa-history" aria-hidden="true"></i> Reset ke Default
             </button>
           </div>
         </div>
 
-        <h3 style="margin: 1.5rem 0 1rem">Tersedia</h3>
-        <div class="connected-apps">
-          <div class="app-item">
-            <div class="app-info">
-              <h4>WhatsApp Business</h4>
-              <p>Notifikasi otomatis ke penyewa</p>
+        <!-- Konfigurasi API -->
+        <div class="card" id="api-configuration-settings">
+          <h2 class="section-title">
+            <i class="fas fa-key" aria-hidden="true"></i> Konfigurasi API & Integrasi Pihak Ketiga
+          </h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="api-provider-select">Penyedia Layanan API</label>
+              <select class="modern-select" id="api-provider-select">
+                <option value="google-maps">Google Maps (Peta & Lokasi)</option>
+                <option value="midtrans" selected>Midtrans (Gateway Pembayaran)</option>
+                <option value="xendit">Xendit (Gateway Pembayaran)</option>
+                <option value="whatsapp">WhatsApp Business (Notifikasi)</option>
+              </select>
             </div>
-            <button class="btn primary-btn">
-              <i class="fas fa-plug"></i> Hubungkan
-            </button>
+
+            <div class="form-group">
+              <label class="form-label" for="api-key-input">Kunci API (API Key)</label>
+              <input type="text" id="api-key-input" class="modern-input" placeholder="Masukkan Kunci API Anda" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="api-secret-input">Kunci Rahasia (Secret Key / Server Key)</label>
+              <input type="password" id="api-secret-input" class="modern-input"
+                placeholder="Masukkan Kunci Rahasia Anda" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="api-environment-select">Lingkungan API</label>
+              <select class="modern-select" id="api-environment-select">
+                <option value="production">Production (Aktif)</option>
+                <option value="sandbox" selected>Sandbox (Pengujian)</option>
+                <option value="development">Development (Lokal)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="app-item">
-            <div class="app-info">
-              <h4>Zoom Meeting</h4>
-              <p>Virtual tour apartemen</p>
-            </div>
-            <button class="btn primary-btn">
-              <i class="fas fa-plug"></i> Hubungkan
+          <div class="form-actions">
+            <button class="btn btn-primary" data-action="save-api-config">
+              <i class="fas fa-save" aria-hidden="true"></i> Simpan Konfigurasi API
+            </button>
+            <button class="btn btn-subtle" data-action="test-api-connection">
+              <i class="fas fa-plug" aria-hidden="true"></i> Tes Koneksi API
+            </button>
+            <button class="btn btn-outline" data-action="reset-api-config">
+              <i class="fas fa-redo" aria-hidden="true"></i> Reset Form
             </button>
           </div>
         </div>
-      </div>
-    </div>
+
+        <!-- Metode Pembayaran -->
+        <div class="card" id="payment-methods-settings">
+          <h2 class="section-title">
+            <i class="fas fa-credit-card" aria-hidden="true"></i> Metode Pembayaran Sewa Aktif
+          </h2>
+
+          <div class="payment-methods-grid">
+            <div class="payment-method">
+              <div class="payment-method-info">
+                <div class="method-icon"><i class="fas fa-credit-card"></i></div>
+                <div>
+                  <h4>Kartu Kredit/Debit</h4>
+                  <p>Visa, Mastercard, JCB, American Express</p>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="credit-card-toggle" data-method="credit-card" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="payment-method">
+              <div class="payment-method-info">
+                <div class="method-icon"><i class="fas fa-university"></i></div>
+                <div>
+                  <h4>Transfer Bank</h4>
+                  <p>BCA, Mandiri, BRI, BNI, Virtual Account</p>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked id="bank-transfer-toggle" data-method="bank-transfer" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="payment-method">
+              <div class="payment-method-info">
+                <div class="method-icon"><i class="fas fa-mobile-alt"></i></div>
+                <div>
+                  <h4>E-Wallet (Dompet Digital)</h4>
+                  <p>OVO, GoPay, Dana, LinkAja, ShopeePay</p>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="ewallet-toggle" data-method="ewallet" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="payment-method">
+              <div class="payment-method-info">
+                <div class="method-icon"><i class="fas fa-store"></i></div>
+                <div>
+                  <h4>Gerai Ritel / Minimarket</h4>
+                  <p>Alfamart, Indomaret, Kantor Pos</p>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="minimarket-toggle" data-method="retail-outlet" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" data-action="save-payment-methods">
+              <i class="fas fa-save" aria-hidden="true"></i> Simpan Perubahan Metode Pembayaran
+            </button>
+          </div>
+        </div>
+
+        <!-- Aplikasi Terhubung -->
+        <div class="card" id="connected-apps-integrations">
+          <h2 class="section-title">
+            <i class="fas fa-link" aria-hidden="true"></i> Aplikasi & Layanan Terhubung
+          </h2>
+
+          <div class="connected-apps-section">
+            <h3>Terhubung Saat Ini</h3>
+            <div class="app-item">
+              <div class="app-info">
+                <h4>Google Calendar</h4>
+                <p>Sinkronisasi jadwal ketersediaan dan pemesanan apartemen.</p>
+              </div>
+              <button class="btn btn-danger btn-sm" data-app="google-calendar" data-action="disconnect-app">
+                <i class="fas fa-unlink" aria-hidden="true"></i> Putuskan
+              </button>
+            </div>
+
+            <div class="app-item">
+              <div class="app-info">
+                <h4>Midtrans Payment Gateway</h4>
+                <p>Digunakan untuk pemrosesan pembayaran online.</p>
+              </div>
+              <button class="btn btn-danger btn-sm" data-app="midtrans" data-action="disconnect-app">
+                <i class="fas fa-unlink" aria-hidden="true"></i> Putuskan
+              </button>
+            </div>
+          </div>
+
+          <div class="connected-apps-section">
+            <h3>Integrasi Tersedia</h3>
+            <div class="app-item">
+              <div class="app-info">
+                <h4>WhatsApp Business API</h4>
+                <p>Kirim notifikasi otomatis dan interaksi pelanggan via WhatsApp.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" data-app="whatsapp" data-action="connect-app">
+                <i class="fas fa-plug" aria-hidden="true"></i> Hubungkan
+              </button>
+            </div>
+
+            <div class="app-item">
+              <div class="app-info">
+                <h4>Zoom Meeting / Google Meet</h4>
+                <p>Integrasi untuk layanan virtual tour apartemen terjadwal.</p>
+              </div>
+              <button class="btn btn-primary btn-sm" data-app="video-conference" data-action="connect-app">
+                <i class="fas fa-plug" aria-hidden="true"></i> Hubungkan
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- Akhir #page-container -->
   </main>
 
+  <!-- Toast Notification Element -->
+  <div id="toast-notification">Pesan notifikasi</div>
+
   <script>
-    // Mobile sidebar toggle
-    const sidebarToggle = document.getElementById("sidebarToggle");
-    const sidebar = document.getElementById("sidebar");
-    const sidebarOverlay = document.getElementById("sidebarOverlay");
-
-    sidebarToggle.addEventListener("click", () => {
-      sidebar.classList.add("active");
-      sidebarOverlay.classList.add("active");
-    });
-
-    sidebarOverlay.addEventListener("click", () => {
-      sidebar.classList.remove("active");
-      sidebarOverlay.classList.remove("active");
-    });
-
-    // Range input value display
-    const rangeInput = document.getElementById("refund-percentage");
-    const rangeValue = document.querySelector(".range-value");
-
-    if (rangeInput && rangeValue) {
-      rangeInput.addEventListener("input", function () {
-        rangeValue.textContent = this.value + "%";
-      });
-    }
-
-    // Active sidebar item
-    const sidebarItems = document.querySelectorAll(".sidebar-item");
-
-    sidebarItems.forEach((item) => {
-      item.addEventListener("click", function () {
-        sidebarItems.forEach((i) => i.classList.remove("active"));
-        this.classList.add("active");
-
-        // Close sidebar on mobile after selection
-        if (window.innerWidth < 992) {
-          sidebar.classList.remove("active");
-          sidebarOverlay.classList.remove("active");
+    // Namespace aplikasi untuk menghindari polusi global
+    const RentApartApp = (() => {
+      // STATE APLIKASI
+      const appState = {
+        currentPage: 'beranda',
+        sidebarOpenOnMobile: false,
+        settings: {
+          notifications: {
+            emailEnabled: true,
+            emailAddress: 'admin@rentapart.id',
+            smsEnabled: false,
+            smsNumber: '',
+            appEnabled: true,
+            types: {
+              paymentSuccess: true,
+              paymentFailed: true,
+              bookingConfirmed: true,
+              refundRequested: true,
+              refundProcessed: true,
+              refundCompleted: true,
+            }
+          },
+          refund: {
+            policyText: `Penyewa apartemen dapat meminta pengembalian dana (refund) jika pembatalan dilakukan minimal 7 hari sebelum tanggal mulai sewa. Refund akan diproses dalam waktu 5-7 hari kerja setelah permintaan disetujui. Biaya administrasi sebesar 10% akan dikenakan untuk setiap transaksi refund sewa apartemen.`,
+            approvalMode: 'manual',
+            maxPeriod: '14', // days
+            percentage: 90, // %
+            adminFee: 10 // %
+          },
+          apiConfig: {
+            provider: 'midtrans',
+            apiKey: '',
+            secretKey: '',
+            environment: 'sandbox'
+          },
+          paymentMethods: {
+            'credit-card': true,
+            'bank-transfer': true,
+            'ewallet': false,
+            'retail-outlet': false
+          },
+          connectedApps: {
+            'google-calendar': true,
+            'midtrans': true,
+            'whatsapp': false,
+            'video-conference': false
+          }
+        },
+        dashboardData: [
+          { title: "Total Apartemen", value: "42", change: "+8%", changeType: "positive", icon: "fa-city" },
+          { title: "Apartemen Disewa", value: "32", change: "+12%", changeType: "positive", icon: "fa-key" },
+          { title: "Pendapatan Bulan Ini", value: "Rp 87.5jt", change: "+15%", changeType: "positive", icon: "fa-money-bill-wave" },
+          { title: "Total Penyewa Aktif", value: "128", change: "+5%", changeType: "positive", icon: "fa-users" }
+        ],
+        pageDetails: {
+          'beranda': { title: 'Dashboard Admin', subtitle: 'Selamat datang kembali, Admin! Kelola apartemen dan penyewa dengan mudah.' },
+          'daftar-apartemen': { title: 'Daftar Apartemen', subtitle: 'Kelola semua unit apartemen yang tersedia.' },
+          'penyewa-apartemen': { title: 'Manajemen Penyewa', subtitle: 'Lihat dan kelola data penyewa apartemen.' },
+          'transaksi-sewa': { title: 'Transaksi Sewa', subtitle: 'Pantau semua transaksi penyewaan apartemen.' },
+          'laporan': { title: 'Laporan & Analitik', subtitle: 'Analisis data untuk pengambilan keputusan yang lebih baik.' },
+          'pengaturan': { title: 'Pengaturan Aplikasi', subtitle: 'Konfigurasi berbagai aspek sistem RentApart.' }
         }
-      });
-    });
+      };
 
-    // Responsive text for buttons
-    function checkScreenSize() {
-      const desktopTexts = document.querySelectorAll(".desktop-text");
+      // UTILITIES / HELPERS
+      const utils = {
+        qs: (selector, parent = document) => parent.querySelector(selector),
+        qsa: (selector, parent = document) => parent.querySelectorAll(selector),
+        showToast: (message, type = 'info', duration = 3000) => {
+          const toast = utils.qs('#toast-notification');
+          if (!toast) return;
 
-      if (window.innerWidth < 576) {
-        desktopTexts.forEach((text) => {
-          text.style.display = "none";
-        });
-      } else {
-        desktopTexts.forEach((text) => {
-          text.style.display = "inline";
-        });
-      }
-    }
+          toast.textContent = message;
+          toast.className = 'show'; // Reset classes
+          if (type) toast.classList.add(type);
 
-    // Run on load and resize
-    window.addEventListener("load", checkScreenSize);
-    window.addEventListener("resize", checkScreenSize);
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, duration);
+        }
+      };
+
+      // DOM ELEMENTS CACHING
+      const DOMElements = {
+        sidebar: utils.qs('#sidebar'),
+        sidebarToggleBtn: utils.qs('#sidebarToggleBtn'),
+        sidebarOverlay: utils.qs('#sidebarOverlay'),
+        mainContent: utils.qs('#main-content'),
+        pageContainer: utils.qs('#page-container'),
+        allPages: utils.qsa('.page'),
+        sidebarMenu: utils.qs('#sidebarMenu'),
+        pageTitle: utils.qs('#pageTitle'),
+        pageSubtitle: utils.qs('#pageSubtitle'),
+        // Pengaturan: Notifikasi
+        emailNotificationToggle: utils.qs('#email-notification-toggle'),
+        notificationEmailInput: utils.qs('#notification-email'),
+        smsNotificationToggle: utils.qs('#sms-notification-toggle'),
+        notificationPhoneInput: utils.qs('#notification-phone'),
+        appNotificationToggle: utils.qs('#app-notification-toggle'),
+        // Pengaturan: Refund
+        refundPolicyText: utils.qs('#refund-policy-text'),
+        refundApprovalModeSelect: utils.qs('#refund-approval-mode'),
+        refundMaxPeriodSelect: utils.qs('#refund-max-period'),
+        refundPercentageRange: utils.qs('#refund-percentage-range'),
+        refundPercentageValue: utils.qs('#refund-percentage-value'),
+        adminFeePercentageInput: utils.qs('#admin-fee-percentage'),
+        // Pengaturan: API
+        apiProviderSelect: utils.qs('#api-provider-select'),
+        apiKeyInput: utils.qs('#api-key-input'),
+        apiSecretInput: utils.qs('#api-secret-input'),
+        apiEnvironmentSelect: utils.qs('#api-environment-select'),
+        // Pengaturan: Metode Pembayaran
+        paymentMethodsToggles: utils.qsa('#payment-methods-settings input[type="checkbox"]'),
+        // Pengaturan: Aplikasi Terhubung
+        connectedAppsContainer: utils.qs('#connected-apps-integrations'),
+      };
+
+      // RENDER FUNCTIONS
+      const render = {
+        sidebarState: () => {
+          if (appState.sidebarOpenOnMobile) {
+            DOMElements.sidebar.classList.add('active');
+            DOMElements.sidebarOverlay.classList.add('active');
+            DOMElements.sidebarToggleBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            DOMElements.sidebar.classList.remove('active');
+            DOMElements.sidebarOverlay.classList.remove('active');
+            DOMElements.sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+          }
+        },
+        activePage: () => {
+          DOMElements.allPages.forEach(page => page.classList.remove('active'));
+          const activePageElement = utils.qs(`#${appState.currentPage}`, DOMElements.pageContainer);
+          if (activePageElement) {
+            activePageElement.classList.add('active');
+          }
+
+          // Update header title and subtitle
+          const pageDetail = appState.pageDetails[appState.currentPage];
+          if (pageDetail) {
+            DOMElements.pageTitle.textContent = pageDetail.title;
+            DOMElements.pageSubtitle.textContent = pageDetail.subtitle;
+          } else { // Fallback for pages not in pageDetails
+            const fallbackTitle = appState.currentPage.charAt(0).toUpperCase() + appState.currentPage.slice(1).replace(/-/g, ' ');
+            DOMElements.pageTitle.textContent = fallbackTitle;
+            DOMElements.pageSubtitle.textContent = `Kelola ${fallbackTitle.toLowerCase()} Anda di sini.`;
+          }
+
+
+          // Update active class on sidebar
+          utils.qsa('.sidebar-item', DOMElements.sidebarMenu).forEach(item => item.classList.remove('active'));
+          const activeLink = utils.qs(`.sidebar-link[data-page="${appState.currentPage}"]`, DOMElements.sidebarMenu);
+          if (activeLink) {
+            activeLink.closest('.sidebar-item').classList.add('active');
+            activeLink.setAttribute('aria-current', 'page');
+          }
+        },
+        dashboardSummaryCards: () => {
+          const container = utils.qs('#dashboard-summary-cards');
+          if (!container) return;
+          container.innerHTML = ''; // Clear existing cards
+          appState.dashboardData.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'summary-card';
+            cardElement.innerHTML = `
+              <div class="summary-card-header">
+                <span class="summary-card-title">${card.title}</span>
+                <div class="summary-card-icon">
+                  <i class="fas ${card.icon}"></i>
+                </div>
+              </div>
+              <div class="summary-card-value">${card.value}</div>
+              <div class="summary-card-change ${card.changeType === 'positive' ? 'positive-change' : 'negative-change'}">
+                <i class="fas ${card.changeType === 'positive' ? 'fa-arrow-up' : 'fa-arrow-down'}"></i> ${card.change}
+              </div>
+            `;
+            container.appendChild(cardElement);
+          });
+        },
+        settingsForms: () => {
+          // Notifikasi
+          if (DOMElements.emailNotificationToggle) DOMElements.emailNotificationToggle.checked = appState.settings.notifications.emailEnabled;
+          if (DOMElements.notificationEmailInput) DOMElements.notificationEmailInput.value = appState.settings.notifications.emailAddress;
+          if (DOMElements.smsNotificationToggle) DOMElements.smsNotificationToggle.checked = appState.settings.notifications.smsEnabled;
+          if (DOMElements.notificationPhoneInput) DOMElements.notificationPhoneInput.value = appState.settings.notifications.smsNumber;
+          if (DOMElements.appNotificationToggle) DOMElements.appNotificationToggle.checked = appState.settings.notifications.appEnabled;
+
+          utils.qsa('#transaction-notifications-settings input[type="checkbox"][id$="-notif"]').forEach(chk => {
+            const key = chk.id.replace('-notif', '').replace(/-/g, '_').replace(/([A-Z])/g, '_$1').toLowerCase().split('_').map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('');
+            if (appState.settings.notifications.types.hasOwnProperty(key)) {
+              chk.checked = appState.settings.notifications.types[key];
+            }
+          });
+
+          // Refund
+          if (DOMElements.refundPolicyText) DOMElements.refundPolicyText.value = appState.settings.refund.policyText;
+          if (DOMElements.refundApprovalModeSelect) DOMElements.refundApprovalModeSelect.value = appState.settings.refund.approvalMode;
+          if (DOMElements.refundMaxPeriodSelect) DOMElements.refundMaxPeriodSelect.value = appState.settings.refund.maxPeriod;
+          if (DOMElements.refundPercentageRange) {
+            DOMElements.refundPercentageRange.value = appState.settings.refund.percentage;
+            if (DOMElements.refundPercentageValue) DOMElements.refundPercentageValue.textContent = `${appState.settings.refund.percentage}%`;
+          }
+          if (DOMElements.adminFeePercentageInput) DOMElements.adminFeePercentageInput.value = appState.settings.refund.adminFee;
+
+          // API Config
+          if (DOMElements.apiProviderSelect) DOMElements.apiProviderSelect.value = appState.settings.apiConfig.provider;
+          if (DOMElements.apiKeyInput) DOMElements.apiKeyInput.value = appState.settings.apiConfig.apiKey;
+          if (DOMElements.apiSecretInput) DOMElements.apiSecretInput.value = appState.settings.apiConfig.secretKey;
+          if (DOMElements.apiEnvironmentSelect) DOMElements.apiEnvironmentSelect.value = appState.settings.apiConfig.environment;
+
+          // Payment Methods
+          DOMElements.paymentMethodsToggles.forEach(toggle => {
+            const method = toggle.dataset.method;
+            if (appState.settings.paymentMethods.hasOwnProperty(method)) {
+              toggle.checked = appState.settings.paymentMethods[method];
+            }
+          });
+
+          // Connected Apps - This part might need dynamic rendering if apps list changes
+          // For now, we assume the HTML structure is static and only button states might change
+          // based on appState.settings.connectedApps.
+          utils.qsa('#connected-apps-integrations .btn[data-app]').forEach(button => {
+            const appName = button.dataset.app;
+            const action = button.dataset.action;
+            if (appState.settings.connectedApps[appName]) { // App is connected
+              if (action === 'connect-app') button.classList.add('hidden');
+              if (action === 'disconnect-app') button.classList.remove('hidden');
+            } else { // App is not connected
+              if (action === 'connect-app') button.classList.remove('hidden');
+              if (action === 'disconnect-app') button.classList.add('hidden');
+            }
+          });
+        }
+      };
+
+      // EVENT HANDLERS & ACTIONS
+      const handlers = {
+        toggleSidebar: () => {
+          appState.sidebarOpenOnMobile = !appState.sidebarOpenOnMobile;
+          render.sidebarState();
+        },
+        navigateTo: (pageId) => {
+          if (!pageId || pageId === '#') pageId = 'beranda'; // default or empty hash
+          pageId = pageId.startsWith('#') ? pageId.substring(1) : pageId;
+
+          // Cek apakah halaman ada
+          const targetPage = utils.qs(`#${pageId}`, DOMElements.pageContainer);
+          if (!targetPage && pageId !== 'beranda') { // Jika halaman tidak ada dan bukan beranda, redirect ke beranda
+            console.warn(`Halaman "${pageId}" tidak ditemukan. Mengarahkan ke Beranda.`);
+            pageId = 'beranda';
+            window.location.hash = `#${pageId}`; // Update URL hash
+          }
+
+          appState.currentPage = pageId;
+          render.activePage();
+
+          // Close sidebar on mobile after navigation
+          if (window.innerWidth < 992 && appState.sidebarOpenOnMobile) {
+            appState.sidebarOpenOnMobile = false;
+            render.sidebarState();
+          }
+          window.scrollTo(0, 0); // Scroll to top of page
+        },
+        handleHashChange: () => {
+          handlers.navigateTo(window.location.hash);
+        },
+        handleSidebarLinkClick: (event) => {
+          const link = event.target.closest('.sidebar-link');
+          if (link && link.dataset.page) {
+            event.preventDefault();
+            const pageId = link.dataset.page;
+            if (appState.currentPage !== pageId) { // Hanya navigasi jika halaman berbeda
+              window.location.hash = `#${pageId}`; // This will trigger handleHashChange
+            } else if (window.innerWidth < 992 && appState.sidebarOpenOnMobile) {
+              // Jika halaman sama tapi sidebar mobile terbuka, tutup sidebar
+              appState.sidebarOpenOnMobile = false;
+              render.sidebarState();
+            }
+          }
+        },
+        updateRefundPercentageDisplay: (event) => {
+          if (DOMElements.refundPercentageValue) {
+            DOMElements.refundPercentageValue.textContent = `${event.target.value}%`;
+          }
+        },
+        handleSettingsActions: (event) => {
+          const button = event.target.closest('button[data-action]');
+          if (!button) return;
+
+          const action = button.dataset.action;
+          // Note: In a real app, these would typically involve API calls and more robust state management.
+          // Here, we'll mostly log to console and show a toast.
+          switch (action) {
+            case 'save-notification-settings':
+              appState.settings.notifications.emailEnabled = DOMElements.emailNotificationToggle.checked;
+              appState.settings.notifications.emailAddress = DOMElements.notificationEmailInput.value;
+              appState.settings.notifications.smsEnabled = DOMElements.smsNotificationToggle.checked;
+              appState.settings.notifications.smsNumber = DOMElements.notificationPhoneInput.value;
+              appState.settings.notifications.appEnabled = DOMElements.appNotificationToggle.checked;
+              utils.qsa('#transaction-notifications-settings input[type="checkbox"][id$="-notif"]').forEach(chk => {
+                const key = chk.id.replace('-notif', '').replace(/-/g, '_').replace(/([A-Z])/g, '_$1').toLowerCase().split('_').map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)).join('');
+                if (appState.settings.notifications.types.hasOwnProperty(key)) {
+                  appState.settings.notifications.types[key] = chk.checked;
+                }
+              });
+              console.log('Pengaturan Notifikasi disimpan:', appState.settings.notifications);
+              utils.showToast('Pengaturan notifikasi berhasil disimpan!', 'success');
+              break;
+            case 'disable-all-notifications':
+              DOMElements.emailNotificationToggle.checked = false;
+              DOMElements.smsNotificationToggle.checked = false;
+              DOMElements.appNotificationToggle.checked = false;
+              utils.qsa('#transaction-notifications-settings input[type="checkbox"][id$="-notif"]').forEach(chk => chk.checked = false);
+              // Update state as well
+              appState.settings.notifications.emailEnabled = false;
+              appState.settings.notifications.smsEnabled = false;
+              appState.settings.notifications.appEnabled = false;
+              Object.keys(appState.settings.notifications.types).forEach(key => appState.settings.notifications.types[key] = false);
+              console.log('Semua notifikasi dinonaktifkan.');
+              utils.showToast('Semua notifikasi telah dinonaktifkan.', 'warning');
+              break;
+            case 'save-refund-settings':
+              appState.settings.refund.policyText = DOMElements.refundPolicyText.value;
+              appState.settings.refund.approvalMode = DOMElements.refundApprovalModeSelect.value;
+              appState.settings.refund.maxPeriod = DOMElements.refundMaxPeriodSelect.value;
+              appState.settings.refund.percentage = parseInt(DOMElements.refundPercentageRange.value, 10);
+              appState.settings.refund.adminFee = parseInt(DOMElements.adminFeePercentageInput.value, 10);
+              console.log('Pengaturan Refund disimpan:', appState.settings.refund);
+              utils.showToast('Pengaturan refund berhasil disimpan!', 'success');
+              break;
+            case 'reset-refund-settings':
+              // Reset to initial default values (could be fetched from a 'defaultState' object)
+              const defaultRefundSettings = { // Example default
+                policyText: `Penyewa apartemen dapat meminta pengembalian dana (refund) jika pembatalan dilakukan minimal 7 hari sebelum tanggal mulai sewa. Refund akan diproses dalam waktu 5-7 hari kerja setelah permintaan disetujui. Biaya administrasi sebesar 10% akan dikenakan untuk setiap transaksi refund sewa apartemen.`,
+                approvalMode: 'manual',
+                maxPeriod: '14',
+                percentage: 90,
+                adminFee: 10
+              };
+              appState.settings.refund = { ...defaultRefundSettings };
+              render.settingsForms(); // Re-render the form with default values
+              console.log('Pengaturan Refund direset ke default.');
+              utils.showToast('Pengaturan refund direset ke default.', 'info');
+              break;
+            case 'save-api-config':
+              appState.settings.apiConfig.provider = DOMElements.apiProviderSelect.value;
+              appState.settings.apiConfig.apiKey = DOMElements.apiKeyInput.value;
+              appState.settings.apiConfig.secretKey = DOMElements.apiSecretInput.value;
+              appState.settings.apiConfig.environment = DOMElements.apiEnvironmentSelect.value;
+              console.log('Konfigurasi API disimpan:', appState.settings.apiConfig);
+              utils.showToast('Konfigurasi API berhasil disimpan!', 'success');
+              break;
+            case 'test-api-connection':
+              utils.showToast(`Menguji koneksi untuk ${DOMElements.apiProviderSelect.options[DOMElements.apiProviderSelect.selectedIndex].text}...`, 'info');
+              // Simulate API test
+              setTimeout(() => {
+                // Randomly succeed or fail for demo
+                if (Math.random() > 0.3) {
+                  utils.showToast('Koneksi API berhasil!', 'success');
+                } else {
+                  utils.showToast('Koneksi API gagal. Periksa kredensial Anda.', 'error');
+                }
+              }, 1500);
+              break;
+            case 'reset-api-config':
+              DOMElements.apiKeyInput.value = '';
+              DOMElements.apiSecretInput.value = '';
+              // Optionally reset provider and environment to defaults if needed
+              // DOMElements.apiProviderSelect.value = 'midtrans'; 
+              // DOMElements.apiEnvironmentSelect.value = 'sandbox';
+              utils.showToast('Form konfigurasi API telah direset.', 'info');
+              break;
+            case 'save-payment-methods':
+              DOMElements.paymentMethodsToggles.forEach(toggle => {
+                appState.settings.paymentMethods[toggle.dataset.method] = toggle.checked;
+              });
+              console.log('Metode Pembayaran disimpan:', appState.settings.paymentMethods);
+              utils.showToast('Metode pembayaran berhasil diperbarui!', 'success');
+              break;
+            case 'connect-app':
+            case 'disconnect-app':
+              const appName = button.dataset.app;
+              const isConnecting = action === 'connect-app';
+              appState.settings.connectedApps[appName] = isConnecting;
+              render.settingsForms(); // Re-render to update button visibility
+              console.log(`Aplikasi ${appName} ${isConnecting ? 'terhubung' : 'diputuskan'}.`);
+              utils.showToast(`Aplikasi ${appName} berhasil ${isConnecting ? 'dihubungkan' : 'diputuskan'}.`, 'success');
+              break;
+
+          }
+        },
+        responsiveButtonText: () => {
+          const desktopTexts = utils.qsa(".desktop-text");
+          if (window.innerWidth < 576) {
+            desktopTexts.forEach(text => text.style.display = "none");
+            utils.qsa('.header-actions .btn i').forEach(icon => icon.style.marginRight = '0');
+          } else {
+            desktopTexts.forEach(text => text.style.display = "inline");
+            utils.qsa('.header-actions .btn i').forEach(icon => icon.style.marginRight = ''); // Reset to CSS default
+          }
+        }
+      };
+
+      // INITIALIZATION
+      const init = () => {
+        // Event Listeners
+        DOMElements.sidebarToggleBtn.addEventListener('click', handlers.toggleSidebar);
+        DOMElements.sidebarOverlay.addEventListener('click', handlers.toggleSidebar);
+        DOMElements.sidebarMenu.addEventListener('click', handlers.handleSidebarLinkClick);
+        window.addEventListener('hashchange', handlers.handleHashChange);
+        window.addEventListener('resize', handlers.responsiveButtonText);
+
+        if (DOMElements.refundPercentageRange) {
+          DOMElements.refundPercentageRange.addEventListener('input', handlers.updateRefundPercentageDisplay);
+        }
+
+        // Listen for actions on settings pages (event delegation on parent elements)
+        const settingsPage = utils.qs('#pengaturan.page');
+        if (settingsPage) {
+          settingsPage.addEventListener('click', handlers.handleSettingsActions);
+        }
+
+
+        // Initial render
+        handlers.responsiveButtonText(); // Call on load
+        render.dashboardSummaryCards(); // Render dynamic cards for Beranda
+        render.settingsForms(); // Populate settings forms with initial state
+
+        // Handle initial page load (based on hash or default to 'beranda')
+        const initialHash = window.location.hash || '#beranda';
+        handlers.navigateTo(initialHash);
+
+        // Set aria-current on the initially active link
+        const activeLink = utils.qs(`.sidebar-link[href="${initialHash}"]`);
+        if (activeLink) {
+          activeLink.setAttribute('aria-current', 'page');
+        }
+
+        console.log("RentApartApp Inisialisasi Selesai.");
+      };
+
+      // Public API (if any, for debugging or external calls)
+      return {
+        init,
+        getState: () => appState, // For debugging
+        utils: utils // Expose utils for convenience
+      };
+
+    })();
+
+    // Start the application once the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', RentApartApp.init);
   </script>
 </body>
 

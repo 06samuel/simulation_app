@@ -1,671 +1,1345 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RentalApartemen Dashboard</title>
-  <!-- Bootstrap 5.3 CSS -->
+  <!-- Bootstrap 5.3 CSS (tetap digunakan untuk layout dasar dan komponen UI) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts: Inter & Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       /* SaaS Light Theme Variables */
       --bs-body-bg: #f6f8fb;
       --bs-body-color: #23272f;
-      --sidebar-bg: #fff;
+      --sidebar-bg: #ffffff;
       --sidebar-color: #23272f;
-      --card-bg: #fff;
+      --card-bg: #ffffff;
       --card-color: #23272f;
-      --navbar-bg: #fff;
+      --navbar-bg: #ffffff;
       --navbar-color: #23272f;
       --stat-card-bg: #f1f3f9;
+      /* Sedikit lebih terang dari body untuk kontras */
       --stat-card-color: #23272f;
       --accent: #6366f1;
       --accent-hover: #4f46e5;
       --cta-bg: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
-      --cta-color: #fff;
+      --cta-color: #ffffff;
       --hero-bg: #eef2ff;
       --hero-color: #23272f;
       --sidebar-width: 250px;
+      --input-bg: #ffffff;
+      --input-border: #ced4da;
+      --btn-outline-secondary-color: #6c757d;
+      --btn-outline-secondary-border: #6c757d;
+      --btn-outline-secondary-hover-bg: #6c757d;
+      --btn-outline-secondary-hover-color: #ffffff;
+      --dropdown-bg: #ffffff;
+      --dropdown-item-color: #23272f;
+      --dropdown-item-hover-bg: #e9ecef;
+      --dropdown-item-hover-color: #23272f;
+      --table-border-color: #dee2e6;
+      --badge-success-bg: #198754;
+      --badge-secondary-bg: #6c757d;
     }
+
     [data-theme="dark"] {
       --bs-body-bg: #181a1b;
-      --bs-body-color: #f1f1f1;
+      --bs-body-color: #e0e0e0;
+      /* Sedikit lebih lembut dari putih murni */
       --sidebar-bg: #23272b;
-      --sidebar-color: #f1f1f1;
+      --sidebar-color: #e0e0e0;
       --card-bg: #23272b;
-      --card-color: #f1f1f1;
+      --card-color: #e0e0e0;
       --navbar-bg: #23272b;
-      --navbar-color: #f1f1f1;
-      --stat-card-bg: #252a34;
-      --stat-card-color: #f1f1f1;
+      --navbar-color: #e0e0e0;
+      --stat-card-bg: #2a2e34;
+      /* Lebih gelap dari card biasa */
+      --stat-card-color: #e0e0e0;
       --accent: #7f9cf5;
       --accent-hover: #6366f1;
       --cta-bg: linear-gradient(90deg, #7f9cf5 0%, #60a5fa 100%);
-      --cta-color: #fff;
+      --cta-color: #111111;
+      /* Warna teks lebih gelap untuk kontras di CTA gelap */
       --hero-bg: #23272b;
-      --hero-color: #f1f1f1;
-      --sidebar-width: 250px;
-      --card-color: #f1f1f1;
-      --navbar-bg: #23272b;
-      --navbar-color: #f1f1f1;
-      --stat-card-bg: #252a34;
-      --stat-card-color: #f1f1f1;
-      --accent: #7f9cf5;
+      /* Sama dengan card untuk konsistensi */
+      --hero-color: #e0e0e0;
+      --input-bg: #2a2e34;
+      --input-border: #495057;
+      --btn-outline-secondary-color: #adb5bd;
+      --btn-outline-secondary-border: #adb5bd;
+      --btn-outline-secondary-hover-bg: #adb5bd;
+      --btn-outline-secondary-hover-color: #181a1b;
+      --dropdown-bg: #2a2e34;
+      --dropdown-item-color: #e0e0e0;
+      --dropdown-item-hover-bg: #343a40;
+      --dropdown-item-hover-color: #e0e0e0;
+      --table-border-color: #495057;
+      --badge-success-bg: #28a745;
+      --badge-secondary-bg: #adb5bd;
     }
-    html, body {
+
+    html,
+    body {
       height: 100%;
-      background: var(--bs-body-bg);
+      background-color: var(--bs-body-bg);
       color: var(--bs-body-color);
       font-family: 'Inter', 'Poppins', Arial, sans-serif;
-      transition: background 0.3s, color 0.3s;
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      font-size: 15px;
+      /* Sedikit lebih kecil untuk tampilan dashboard yang padat */
     }
+
     /* Sidebar */
     .sidebar {
-      background: var(--sidebar-bg);
+      background-color: var(--sidebar-bg);
       color: var(--sidebar-color);
       min-height: 100vh;
       width: var(--sidebar-width);
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 1030;
-      transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
-      box-shadow: 2px 0 16px rgba(0,0,0,0.06);
-      border-right: 1px solid #e5e7eb;
+      z-index: 1031;
+      /* Di atas navbar mobile, di bawah overlay */
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), box-shadow 0.3s;
+      box-shadow: 2px 0 16px rgba(0, 0, 0, 0.06);
+      border-right: 1px solid var(--table-border-color);
     }
-    .sidebar.collapsed {
-      transform: translateX(-100%);
+
+    .sidebar.collapsed-desktop {
+      /* Untuk collapse di desktop */
+      transform: translateX(calc(-1 * var(--sidebar-width)));
       box-shadow: none;
     }
+
     .sidebar .nav-link {
       color: var(--sidebar-color);
       font-weight: 500;
       border-radius: 0.5rem;
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1.15rem;
+      /* Padding lebih nyaman */
       margin-bottom: 0.25rem;
-      transition: background 0.2s, color 0.2s;
+      transition: background-color 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
     }
-    .sidebar .nav-link.active, .sidebar .nav-link:focus, .sidebar .nav-link:hover {
-      background: var(--accent);
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:focus,
+    .sidebar .nav-link:hover {
+      background-color: var(--accent);
       color: #fff;
       outline: none;
     }
-    .sidebar .nav-link .fa-solid {
-      min-width: 1.5em;
+
+    .sidebar .nav-link .fa-fw {
+      /* Menggunakan fa-fw untuk ikon lebar tetap */
+      min-width: 1.75em;
+      /* Jarak ikon sedikit lebih besar */
       text-align: center;
     }
+
     .sidebar .brand {
       font-family: 'Poppins', 'Inter', Arial, sans-serif;
       font-size: 1.7rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       color: var(--accent);
+      padding: 0.75rem 1rem;
     }
+
     .sidebar .sidebar-footer {
       margin-top: auto;
-      padding-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--table-border-color);
+      /* Garis pemisah halus */
     }
+
     /* Sidebar overlay for mobile */
     #sidebarOverlay {
       display: none;
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(30,41,59,0.45);
-      z-index: 1040;
-      transition: opacity 0.3s;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(30, 41, 59, 0.55);
+      /* Sedikit lebih gelap */
+      z-index: 1030;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
     }
-    #sidebarOverlay.show { display: block; }
+
+    #sidebarOverlay.show {
+      display: block;
+      opacity: 1;
+    }
+
     /* Main content */
     .main-content {
       margin-left: var(--sidebar-width);
       min-height: 100vh;
-      background: var(--bs-body-bg);
-      transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+      background-color: var(--bs-body-bg);
+      transition: margin-left 0.3s cubic-bezier(.4, 0, .2, 1);
+      padding: 1.5rem;
+      /* Padding default untuk konten utama */
     }
+
+    .main-content.sidebar-collapsed {
+      /* Untuk collapse di desktop */
+      margin-left: 0;
+    }
+
     @media (max-width: 991.98px) {
       .sidebar {
-        transform: translateX(-100%);
+        transform: translateX(calc(-1 * var(--sidebar-width)));
+        /* Sembunyi default */
       }
+
       .sidebar.show {
+        /* Tampil saat di-trigger di mobile */
         transform: none;
-        box-shadow: 2px 0 16px rgba(0,0,0,0.14);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        /* Shadow lebih jelas di mobile */
       }
+
       .main-content {
         margin-left: 0;
       }
-      #sidebarOverlay { display: none; }
-      .sidebar.show ~ #sidebarOverlay { display: block; }
+
+      .sidebar.collapsed-desktop {
+        /* Abaikan collapse desktop di mobile */
+        transform: translateX(calc(-1 * var(--sidebar-width)));
+      }
+
+      .main-content.sidebar-collapsed {
+        /* Abaikan penyesuaian margin di mobile */
+        margin-left: 0;
+      }
     }
+
     /* Navbar */
-    .navbar {
-      background: var(--navbar-bg);
+    .navbar-custom {
+      /* Menggunakan kelas custom untuk menghindari konflik Bootstrap */
+      background-color: var(--navbar-bg);
       color: var(--navbar-color);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
       min-height: 64px;
+      position: sticky;
+      /* Membuat navbar tetap di atas saat scroll */
+      top: 0;
+      z-index: 1020;
+      /* Di bawah sidebar mobile, di atas konten */
+      padding: 0.5rem 1rem;
     }
+
+    .navbar-brand-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
     /* Hero Section */
     .hero-section {
-      background: var(--hero-bg);
+      background-color: var(--hero-bg);
       color: var(--hero-color);
-      border-radius: 1.25rem;
-      padding: 2.5rem 2rem 2rem 2rem;
-      margin-bottom: 2.5rem;
-      box-shadow: 0 2px 16px rgba(99,102,241,0.06);
+      border-radius: 1rem;
+      /* Radius lebih konsisten */
+      padding: 2rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
       position: relative;
       overflow: hidden;
     }
+
     .hero-section .hero-title {
       font-family: 'Poppins', 'Inter', Arial, sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
+
     .hero-section .hero-desc {
-      font-size: 1.15rem;
-      margin-bottom: 1.25rem;
-      color: #6366f1;
+      font-size: 1.05rem;
+      /* Sedikit lebih kecil */
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+      /* Lebih menonjol */
+      max-width: 90%;
+      /* Agar tidak terlalu lebar */
     }
+
     .hero-section .cta-btn {
       background: var(--cta-bg);
       color: var(--cta-color);
       border: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
-      border-radius: 0.75rem;
-      padding: 0.75rem 2rem;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.10);
+      border-radius: 0.5rem;
+      padding: 0.65rem 1.5rem;
+      transition: filter 0.2s, transform 0.2s;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.10);
     }
-    .hero-section .cta-btn:hover, .hero-section .cta-btn:focus {
-      background: var(--accent-hover);
-      color: #fff;
+
+    .hero-section .cta-btn:hover,
+    .hero-section .cta-btn:focus {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      color: var(--cta-color);
       outline: none;
     }
+
+    .hero-section .hero-image {
+      max-width: 200px;
+      height: auto;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Search & Filter Section */
+    .search-filter-section .input-group-text {
+      background-color: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--accent);
+    }
+
+    .search-filter-section .form-control,
+    .search-filter-section .form-select {
+      background-color: var(--input-bg);
+      color: var(--bs-body-color);
+      border-color: var(--input-border);
+    }
+
+    .search-filter-section .form-control::placeholder {
+      color: #6c757d;
+    }
+
+    .search-filter-section .form-control:focus,
+    .search-filter-section .form-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.25rem rgba(var(--accent), 0.25);
+      /* Menggunakan var(--accent) yang diubah ke RGB jika perlu */
+    }
+
+    [data-theme="dark"] .search-filter-section .form-control:focus,
+    [data-theme="dark"] .search-filter-section .form-select:focus {
+      box-shadow: 0 0 0 0.25rem rgba(127, 156, 245, 0.25);
+      /* Warna shadow untuk dark theme */
+    }
+
+    .search-filter-section .btn-outline-secondary {
+      color: var(--btn-outline-secondary-color);
+      border-color: var(--btn-outline-secondary-border);
+    }
+
+    .search-filter-section .btn-outline-secondary:hover {
+      background-color: var(--btn-outline-secondary-hover-bg);
+      color: var(--btn-outline-secondary-hover-color);
+    }
+
+    .search-filter-section .dropdown-menu {
+      background-color: var(--dropdown-bg);
+      border-color: var(--input-border);
+    }
+
+    .search-filter-section .dropdown-item {
+      color: var(--dropdown-item-color);
+    }
+
+    .search-filter-section .dropdown-item:hover,
+    .search-filter-section .dropdown-item:focus {
+      background-color: var(--dropdown-item-hover-bg);
+      color: var(--dropdown-item-hover-color);
+    }
+
+
     /* Statistic Cards */
     .stat-card {
-      background: var(--stat-card-bg);
+      background-color: var(--stat-card-bg);
       color: var(--stat-card-color);
-      border: none;
-      border-radius: 1.1rem;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.07);
-      transition: background 0.3s, color 0.3s;
+      border: 1px solid var(--table-border-color);
+      /* Border halus */
+      border-radius: 0.75rem;
+      /* Radius konsisten */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s, color 0.3s, transform 0.2s, box-shadow 0.2s;
       min-height: 120px;
     }
-    .stat-card .icon {
-      font-size: 2.5rem;
-      color: var(--accent);
-      background: #eef2ff;
-      border-radius: 0.7rem;
-      padding: 0.7rem;
-      margin-right: 0.7rem;
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
+
+    .stat-card .icon-wrapper {
+      /* Wrapper untuk ikon agar styling lebih fleksibel */
+      font-size: 1.8rem;
+      /* Ukuran ikon sedikit lebih kecil */
+      color: var(--accent);
+      background-color: rgba(var(--accent-rgb, 99, 102, 241), 0.1);
+      /* Background transparan dari accent */
+      border-radius: 0.5rem;
+      padding: 0.8rem;
+      width: 50px;
+      /* Ukuran tetap */
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+
+    [data-theme="dark"] .stat-card .icon-wrapper {
+      background-color: rgba(var(--accent-rgb-dark, 127, 156, 245), 0.15);
+    }
+
+
     /* Chart Placeholder */
     .chart-placeholder {
-      background: var(--card-bg);
+      background-color: var(--card-bg);
       color: var(--card-color);
-      border-radius: 1rem;
-      min-height: 300px;
+      border-radius: 0.75rem;
+      min-height: 350px;
+      /* Lebih tinggi */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      border: 1px dashed #adb5bd;
+      font-size: 1.1rem;
+      border: 1px dashed var(--input-border);
       margin-bottom: 2rem;
+      flex-direction: column;
+      /* Untuk menumpuk ikon dan teks */
     }
-    /* Table Section */
-    .table-section {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      padding: 1.2rem 1rem;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.03);
-      margin-bottom: 2rem;
-    }
-    /* Theme & Sidebar Toggles */
-    .theme-toggle, .sidebar-toggle {
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-size: 1.5rem;
-      color: var(--navbar-color);
-      transition: color 0.3s;
-    }
-    .sidebar-toggle { margin-right: 1rem; }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      background: var(--sidebar-bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #dee2e6;
-      border-radius: 4px;
-    }
-    [data-theme="dark"] ::-webkit-scrollbar-thumb {
-      background: #444;
-    } 
-    
-    html, body {
-      height: 100%;
-      background: var(--bs-body-bg);
-      color: var(--bs-body-color);
-      font-family: 'Inter', 'Poppins', Arial, sans-serif;
-      transition: background 0.3s, color 0.3s;
-    }
-    .sidebar {
-      background: var(--sidebar-bg);
-      color: var(--sidebar-color);
-      min-height: 100vh;
-      width: 240px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1030;
-      transition: transform 0.3s ease-in-out;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.03);
-    }
-    .sidebar.collapsed {
-      transform: translateX(-100%);
-    }
-    .sidebar .nav-link {
-      color: var(--sidebar-color);
-      font-weight: 500;
-      transition: background 0.2s;
-    }
-    .sidebar .nav-link.active, .sidebar .nav-link:hover {
-      background: var(--accent);
-      color: #fff;
-      border-radius: 0.375rem;
-    }
-    .main-content {
-      margin-left: 240px;
-      min-height: 100vh;
-      background: var(--bs-body-bg);
-      transition: margin-left 0.3s;
-    }
-    @media (max-width: 991.98px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-      .sidebar.show {
-        transform: none;
-      }
-      .main-content {
-        margin-left: 0;
-      }
-    }
-    .navbar {
-      background: var(--navbar-bg);
-      color: var(--navbar-color);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.01);
-    }
-    .stat-card {
-      background: var(--stat-card-bg);
-      color: var(--stat-card-color);
-      border: none;
-      border-radius: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      transition: background 0.3s, color 0.3s;
-    }
-    .stat-card .icon {
+
+    .chart-placeholder i {
       font-size: 2.5rem;
+      margin-bottom: 0.5rem;
       color: var(--accent);
     }
-    .chart-placeholder {
-      background: var(--card-bg);
-      color: var(--card-color);
-      border-radius: 1rem;
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      border: 1px dashed #adb5bd;
+
+    /* Table Section */
+    .table-section {
+      background-color: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
       margin-bottom: 2rem;
     }
-    .table-responsive {
-      background: var(--card-bg);
-      border-radius: 1rem;
-      padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
+    .table {
+      color: var(--card-color);
+      border-color: var(--table-border-color);
     }
-    .theme-toggle {
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-size: 1.4rem;
-      color: var(--navbar-color);
-      transition: color 0.3s;
+
+    .table th {
+      font-weight: 600;
     }
+
+    .table td,
+    .table th {
+      vertical-align: middle;
+    }
+
+    .table .badge {
+      font-weight: 500;
+      padding: 0.4em 0.7em;
+    }
+
+    .badge.bg-success {
+      background-color: var(--badge-success-bg) !important;
+    }
+
+    .badge.bg-secondary {
+      background-color: var(--badge-secondary-bg) !important;
+    }
+
+    .badge.bg-warning {
+      background-color: #ffc107 !important;
+      color: #000 !important;
+    }
+
+    .badge.bg-danger {
+      background-color: #dc3545 !important;
+    }
+
+    /* Theme & Sidebar Toggles */
+    .theme-toggle,
     .sidebar-toggle {
       cursor: pointer;
       border: none;
-      background: none;
+      background-color: transparent;
       font-size: 1.4rem;
       color: var(--navbar-color);
-      margin-right: 1rem;
+      transition: color 0.3s, transform 0.2s;
+      padding: 0.5rem;
+      /* Area klik lebih besar */
     }
+
+    .theme-toggle:hover,
+    .sidebar-toggle:hover {
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .sidebar-toggle {
+      margin-right: 0.5rem;
+    }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
-      background: var(--sidebar-bg);
+      height: 8px;
+      background-color: var(--sidebar-bg);
+      /* Atau var(--bs-body-bg) */
     }
+
     ::-webkit-scrollbar-thumb {
-      background: #dee2e6;
+      background-color: #adb5bd;
+      /* Warna netral */
       border-radius: 4px;
     }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #888;
+    }
+
     [data-theme="dark"] ::-webkit-scrollbar-thumb {
-      background: #444;
+      background-color: #495057;
+    }
+
+    [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+
+    /* Galeri Styling */
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+      background-color: var(--card-bg);
+      color: var(--card-color);
+      border-radius: 0.75rem;
+    }
+
+    .modal-header,
+    .modal-footer {
+      border-color: var(--table-border-color);
+    }
+
+    .modal-title {
+      color: var(--accent);
+    }
+
+    .btn-close {
+      filter: var(--bs-body-color) "#e0e0e0" invert(1) none;
+      /* Agar tombol close terlihat di dark mode */
+    }
+
+    [data-theme="dark"] .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Form CRUD styling */
+    #apartmentFormContainer {
+      background-color: var(--card-bg);
+      border: 1px solid var(--table-border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #apartmentFormContainer .form-label {
+      font-weight: 500;
+    }
+
+    #apartmentFormContainer .form-control {
+      background-color: var(--input-bg);
+      color: var(--bs-body-color);
+      border-color: var(--input-border);
+    }
+
+    #apartmentFormContainer .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 0.25rem rgba(var(--accent-rgb, 99, 102, 241), 0.25);
+    }
+
+    [data-theme="dark"] #apartmentFormContainer .form-control:focus {
+      box-shadow: 0 0 0 0.25rem rgba(var(--accent-rgb-dark, 127, 156, 245), 0.25);
     }
   </style>
 </head>
+
 <body data-theme="light">
+
   <!-- Sidebar Navigation -->
-  <aside class="sidebar d-lg-block d-none" aria-label="Sidebar Navigation">
+  <aside class="sidebar" id="appSidebar" aria-label="Navigasi Utama">
     <div class="d-flex flex-column h-100 p-3">
-      <a href="#" class="brand mb-4 text-decoration-none d-flex align-items-center">
-        <i class="fa-solid fa-building fa-2x me-2"></i>
-        RentApart
+      <a href="#dashboard" class="brand mb-4 text-decoration-none d-flex align-items-center">
+        <i class="fa-solid fa-building-columns fa-fw me-2"></i> <!-- Ikon diganti dan diberi fa-fw -->
+        <span>RentApart</span>
       </a>
-      <nav aria-label="Main Navigation" class="flex-grow-1">
+      <nav aria-label="Menu Utama" class="flex-grow-1">
         <ul class="nav flex-column gap-1" role="menu">
-          <li class="nav-item"><a class="nav-link active" href="#" aria-current="page"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-image me-2"></i> Galeri</a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-database me-2"></i> CRUD Data</a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-file-alt me-2"></i> Dokumentasi</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link" href="#dashboard" aria-current="page"
+              data-page="dashboard"><i class="fa-solid fa-gauge fa-fw me-2"></i> Dasbor</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link" href="#galeri" data-page="galeri"><i
+                class="fa-solid fa-images fa-fw me-2"></i> Galeri</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link" href="#crud" data-page="crud"><i
+                class="fa-solid fa-database fa-fw me-2"></i> Kelola Data</a></li>
+          <li class="nav-item" role="presentation"><a class="nav-link" href="#dokumentasi" data-page="dokumentasi"><i
+                class="fa-solid fa-file-lines fa-fw me-2"></i> Dokumentasi</a></li>
         </ul>
       </nav>
       <div class="sidebar-footer pt-3">
-        <button class="btn btn-outline-primary w-100" id="sidebarCollapse" aria-label="Sembunyikan Sidebar"><i class="fa-solid fa-angle-left"></i> Sembunyikan</button>
+        <button class="btn btn-outline-primary w-100" id="sidebarDesktopCollapse" aria-label="Sembunyikan Sidebar">
+          <i class="fa-solid fa-angles-left me-1"></i> Sembunyikan
+        </button>
       </div>
     </div>
   </aside>
+
   <!-- Sidebar Overlay for Mobile -->
-  <div id="sidebarOverlay" class="d-lg-none"></div>
-  <!-- Main Content -->
-  <main class="main-content">
+  <div id="sidebarOverlay"></div>
+
+  <!-- Main Content Area -->
+  <div class="main-content" id="mainContentArea">
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg px-3" aria-label="Top Navigation">
-      <div class="container-fluid">
-        <button class="sidebar-toggle d-lg-none" id="sidebarShow" aria-label="Tampilkan Sidebar"><i class="fa-solid fa-bars"></i></button>
-        <span class="navbar-brand fw-bold">Dashboard</span>
+    <header class="navbar-custom px-3 mb-4" aria-label="Navigasi Atas">
+      <div class="container-fluid p-0">
+        <button class="sidebar-toggle d-lg-none" id="sidebarShowMobile" aria-label="Tampilkan Sidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <span class="navbar-brand-text ms-2" id="pageTitle">Dasbor</span>
         <div class="ms-auto d-flex align-items-center gap-2">
-          <button class="theme-toggle" id="themeToggle" aria-label="Toggle Tema" title="Toggle Tema">
+          <button class="theme-toggle" id="themeToggle" aria-label="Ganti Tema" title="Ganti Tema">
             <i class="fa-solid fa-moon" id="themeIcon"></i>
           </button>
           <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="btn btn-light dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="background-color: var(--stat-card-bg); border: none; color: var(--stat-card-color);">
               <i class="fa-solid fa-user-circle me-1"></i> Admin
             </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-              <li><a class="dropdown-item" href="#">Profil</a></li>
-              <li><a class="dropdown-item" href="#">Pengaturan</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Keluar</a></li>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu"
+              style="background-color: var(--dropdown-bg); border-color: var(--input-border);">
+              <li><a class="dropdown-item" href="#" style="color: var(--dropdown-item-color);">Profil</a></li>
+              <li><a class="dropdown-item" href="#" style="color: var(--dropdown-item-color);">Pengaturan</a></li>
+              <li>
+                <hr class="dropdown-divider" style="border-color: var(--table-border-color);">
+              </li>
+              <li><a class="dropdown-item" href="#" style="color: var(--dropdown-item-color);">Keluar</a></li>
             </ul>
           </div>
         </div>
       </div>
-    </nav>
-    <!-- Hero Section with CTA -->
-    <section class="hero-section mb-4" aria-label="Hero">
-      <div class="container-fluid px-0">
-        <div class="row align-items-center">
-          <div class="col-md-8">
-            <h1 class="hero-title">Selamat Datang di RentalApartemen</h1>
-            <p class="hero-desc">Kelola apartemen, penyewa, dan pendapatan Anda dengan dashboard modern dan mudah digunakan. Semua data, notifikasi, dan statistik dalam satu tempat.</p>
-            <a href="#" class="cta-btn" role="button" aria-label="Tambah Apartemen Baru"><i class="fa-solid fa-plus me-2"></i>Tambah Apartemen Baru</a>
-<!-- Search & Filter Section -->
-<div class="search-filter-section mt-4">
-  <div class="row g-3">
-    <!-- Location Search -->
-    <div class="col-md-4">
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="fa-solid fa-location-dot"></i></span>
-        <input type="text" class="form-control" placeholder="Cari lokasi atau landmark" id="locationSearch">
-      </div>
-    </div>
-    
-    <!-- Date Range -->
-    <div class="col-md-4">
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="fa-solid fa-calendar"></i></span>
-        <input type="date" class="form-control" id="checkInDate">
-        <input type="date" class="form-control" id="checkOutDate">
-      </div>
-    </div>
+    </header>
 
-    <!-- Price Range -->
-    <div class="col-md-4">
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="fa-solid fa-money-bill"></i></span>
-        <select class="form-select" id="priceRange">
-          <option value="">Rentang Harga</option>
-          <option value="0-2000000">< Rp 2.000.000</option>
-          <option value="2000000-5000000">Rp 2.000.000 - 5.000.000</option>
-          <option value="5000000-10000000">Rp 5.000.000 - 10.000.000</option>
-          <option value="10000000+">> Rp 10.000.000</option>
-        </select>
-      </div>
-    </div>
+    <!-- Konten Halaman Dinamis akan dimuat di sini oleh JavaScript -->
+    <main id="pageContentContainer">
+      <!-- Placeholder, akan diganti oleh JS -->
+    </main>
 
-    <!-- Advanced Filters -->
-    <div class="col-12">
-      <div class="d-flex flex-wrap gap-2">
-        <!-- Apartment Type -->
-        <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-building me-1"></i> Tipe Apartemen
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Studio</a></li>
-            <li><a class="dropdown-item" href="#">1 Kamar Tidur</a></li>
-            <li><a class="dropdown-item" href="#">2 Kamar Tidur</a></li>
-            <li><a class="dropdown-item" href="#">3+ Kamar Tidur</a></li>
-          </ul>
+  </div>
+
+  <!-- Modal untuk Galeri -->
+  <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="galleryModalLabel">Detail Gambar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
         </div>
-
-        <!-- Facilities -->
-        <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-list-check me-1"></i> Fasilitas
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-wifi me-2"></i>WiFi</a></li>
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-dumbbell me-2"></i>Gym</a></li>
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-water-ladder me-2"></i>Kolam Renang</a></li>
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-car me-2"></i>Parkir</a></li>
-          </ul>
-        </div>
-
-        <!-- Sort By -->
-        <div class="dropdown ms-auto">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="fa-solid fa-sort me-1"></i> Urutkan
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Harga Terendah</a></li>
-            <li><a class="dropdown-item" href="#">Harga Tertinggi</a></li>
-            <li><a class="dropdown-item" href="#">Rating Tertinggi</a></li>
-            <li><a class="dropdown-item" href="#">Terbaru</a></li>
-          </ul>
+        <div class="modal-body text-center">
+          <img src="" id="modalImage" class="img-fluid rounded" alt="Gambar Diperbesar">
         </div>
       </div>
     </div>
   </div>
-</div>
-          </div>
-          <div class="col-md-4 d-none d-md-flex justify-content-end align-items-end">
-            <img src="https://cdn.pixabay.com/photo/2017/01/13/19/39/apartment-1979389_1280.png" alt="Hero Illustration" style="max-width: 220px; height: auto; border-radius: 1rem; box-shadow: 0 2px 16px rgba(99,102,241,0.08);">
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Main Dashboard Section -->
-    <section aria-label="Statistik dan Notifikasi">
-      <div class="container-fluid px-0">
-        <!-- Statistic Cards -->
-        <div class="row g-4 mb-4">
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card stat-card h-100" tabindex="0" aria-label="Total Apartemen">
-              <div class="card-body d-flex align-items-center gap-3">
-                <span class="icon"><i class="fa-solid fa-building"></i></span>
-                <div>
-                  <h6 class="fw-semibold mb-0">Total Apartemen</h6>
-                  <span class="fs-4 fw-bold" id="statTotalApt">24</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card stat-card h-100" tabindex="0" aria-label="Apartemen Disewa">
-              <div class="card-body d-flex align-items-center gap-3">
-                <span class="icon"><i class="fa-solid fa-key"></i></span>
-                <div>
-                  <h6 class="fw-semibold mb-0">Apartemen Disewa</h6>
-                  <span class="fs-4 fw-bold" id="statRentedApt">14</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card stat-card h-100" tabindex="0" aria-label="Pendapatan Bulanan">
-              <div class="card-body d-flex align-items-center gap-3">
-                <span class="icon"><i class="fa-solid fa-coins"></i></span>
-                <div>
-                  <h6 class="fw-semibold mb-0">Pendapatan Bulanan</h6>
-                  <span class="fs-4 fw-bold" id="statRevenue">Rp 48.000.000</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card stat-card h-100" tabindex="0" aria-label="Total Penyewa">
-              <div class="card-body d-flex align-items-center gap-3">
-                <span class="icon"><i class="fa-solid fa-users"></i></span>
-                <div>
-                  <h6 class="fw-semibold mb-0">Total Penyewa</h6>
-                  <span class="fs-4 fw-bold" id="statTenants">19</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Chart and Notification -->
-        <div class="row mb-4">
-          <div class="col-12 col-lg-8">
-            <div class="chart-placeholder" aria-label="Grafik Placeholder">
-              <span><i class="fa-solid fa-chart-line me-2"></i>Grafik Statistik (Placeholder)</span>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="card stat-card h-100">
-              <div class="card-body">
-                <h6 class="fw-semibold mb-3">Notifikasi</h6>
-                <ul class="list-unstyled mb-0" id="notifList">
-                  <li class="mb-2"><i class="fa-solid fa-bell text-warning me-2"></i> 2 apartemen butuh perawatan.</li>
-                  <li class="mb-2"><i class="fa-solid fa-bell text-success me-2"></i> 1 penyewa baru mendaftar.</li>
-                  <li><i class="fa-solid fa-bell text-info me-2"></i> Pembayaran bulan Mei diterima.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Table Section -->
-    <section aria-label="Tabel Data Penyewa">
-      <div class="container-fluid px-0">
-        <div class="row">
-          <div class="col-12">
-            <div class="table-section table-responsive">
-              <table class="table align-middle mb-0" aria-label="Tabel Data Penyewa">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nama Penyewa</th>
-                    <th>Apartemen</th>
-                    <th>Mulai Sewa</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="tenantTableBody">
-                  <!-- Demo data will be inserted by JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Main JS -->
   <script>
-    // Demo data for tenants
-    const tenantData = [
-      { id: 1, name: 'Andi Wijaya', apt: 'Apt. 101', start: '2024-12-01', status: 'Aktif' },
-      { id: 2, name: 'Siti Rahma', apt: 'Apt. 203', start: '2025-01-15', status: 'Aktif' },
-      { id: 3, name: 'Budi Santoso', apt: 'Apt. 305', start: '2025-03-01', status: 'Berakhir' },
-      { id: 4, name: 'Dewi Lestari', apt: 'Apt. 402', start: '2025-04-10', status: 'Aktif' },
-      { id: 5, name: 'Rizky Pratama', apt: 'Apt. 210', start: '2025-05-01', status: 'Aktif' }
-    ];
-    // Populate table
+    // Utilitas Sederhana
+    const qs = (selector, parent = document) => parent.querySelector(selector);
+    const qsa = (selector, parent = document) => parent.querySelectorAll(selector);
+
+    // State Aplikasi
+    const appState = {
+      currentPage: 'dashboard',
+      theme: localStorage.getItem('theme') || 'light',
+      tenantData: [
+        { id: 1, name: 'Andi Wijaya', apt: 'Apt. Mawar 101', start: '2024-12-01', status: 'Aktif' },
+        { id: 2, name: 'Siti Rahmawati', apt: 'Apt. Melati 203', start: '2025-01-15', status: 'Aktif' },
+        { id: 3, name: 'Budi Santoso', apt: 'Apt. Anggrek 305', start: '2025-03-01', status: 'Berakhir' },
+        { id: 4, name: 'Dewi Lestari', apt: 'Apt. Tulip 402', start: '2025-04-10', status: 'Aktif' },
+        { id: 5, name: 'Rizky Pratama', apt: 'Apt. Mawar 210', start: '2025-05-01', status: 'Aktif' }
+      ],
+      apartmentsData: [
+        { id: 1, name: 'Apartemen Mawar Residence', location: 'Jakarta Pusat', price: 5000000 },
+        { id: 2, name: 'Apartemen Melati Towers', location: 'Surabaya Timur', price: 3500000 },
+        { id: 3, name: 'Apartemen Anggrek View', location: 'Bandung Utara', price: 4200000 },
+      ],
+      galleryImages: [
+        { src: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwbGl2aW5nJTIwcm9vbXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60', alt: 'Ruang Tamu Modern' },
+        { src: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', alt: 'Interior Apartemen Minimalis' },
+        { src: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', alt: 'Kamar Tidur Nyaman' },
+        { src: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXBhcnRtZW50JTIwYnVpbGRpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', alt: 'Gedung Apartemen Eksterior' },
+        { src: 'https://images.unsplash.com/photo-1580041064293-35f594460167?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGFwYXJ0bWVudCUyMGtpdGNoZW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', alt: 'Dapur Apartemen Elegan' },
+        { src: 'https://images.unsplash.com/photo-1615875605825-5eb9bb5d52ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGFwYXJ0bWVudCUyMGJhbGNvbnl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', alt: 'Balkon dengan Pemandangan' },
+      ],
+      nextApartmentId: 4 // Untuk ID data CRUD selanjutnya
+    };
+
+    // Elemen DOM Utama
+    const body = document.body;
+    const sidebar = qs('#appSidebar');
+    const sidebarOverlay = qs('#sidebarOverlay');
+    const sidebarShowMobileBtn = qs('#sidebarShowMobile');
+    const sidebarDesktopCollapseBtn = qs('#sidebarDesktopCollapse');
+    const mainContentArea = qs('#mainContentArea');
+    const pageContentContainer = qs('#pageContentContainer');
+    const pageTitleElement = qs('#pageTitle');
+    const themeToggleBtn = qs('#themeToggle');
+    const themeIcon = qs('#themeIcon');
+
+    // Templat HTML untuk Halaman
+    const pageTemplates = {
+      dashboard: () => `
+        <section class="hero-section mb-4" aria-label="Hero">
+          <div class="container-fluid px-0">
+            <div class="row align-items-center">
+              <div class="col-md-8">
+                <h1 class="hero-title">Selamat Datang di RentApart!</h1>
+                <p class="hero-desc">Kelola apartemen, penyewa, dan pendapatan Anda dengan dasbor modern ini. Semua data penting ada di sini.</p>
+                <a href="#crud" class="cta-btn nav-link-internal" role="button" aria-label="Tambah Apartemen Baru"><i class="fa-solid fa-plus me-2"></i>Tambah Apartemen Baru</a>
+              </div>
+              <div class="col-md-4 d-none d-md-flex justify-content-end align-items-center mt-3 mt-md-0">
+                <img src="https://cdn.pixabay.com/photo/2017/01/13/19/39/apartment-1979389_640.png" alt="Ilustrasi Hero" class="hero-image">
+              </div>
+            </div>
+            <!-- Search & Filter Section -->
+            <div class="search-filter-section mt-4 pt-4 border-top border-secondary-subtle">
+              <h5 class="mb-3 fw-semibold">Cari Properti Ideal Anda</h5>
+              <div class="row g-3">
+                <div class="col-lg-3 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-location-dot"></i></span>
+                    <input type="text" class="form-control" placeholder="Cari lokasi..." id="locationSearch">
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                    <input type="date" class="form-control" id="checkInDate" aria-label="Tanggal Check-in">
+                    <span class="input-group-text">-</span>
+                    <input type="date" class="form-control" id="checkOutDate" aria-label="Tanggal Check-out">
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-money-bill-wave"></i></span>
+                    <select class="form-select" id="priceRange">
+                      <option value="">Semua Harga</option>
+                      <option value="0-2000000">< Rp 2.000.000</option>
+                      <option value="2000000-5000000">Rp 2jt - 5jt</option>
+                      <option value="5000000-10000000">Rp 5jt - 10jt</option>
+                      <option value="10000000+">> Rp 10.000.000</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <button class="btn btn-primary w-100" style="background: var(--accent); border-color: var(--accent);"><i class="fa-solid fa-search me-1"></i> Cari</button>
+                </div>
+                <div class="col-12">
+                  <div class="d-flex flex-wrap gap-2 mt-2">
+                    <div class="dropdown">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-building me-1"></i> Tipe Apartemen
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Studio</a></li>
+                        <li><a class="dropdown-item" href="#">1 Kamar Tidur</a></li>
+                        <li><a class="dropdown-item" href="#">2 Kamar Tidur</a></li>
+                      </ul>
+                    </div>
+                    <div class="dropdown">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-list-check me-1"></i> Fasilitas
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-wifi fa-fw me-2"></i>WiFi</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-dumbbell fa-fw me-2"></i>Gym</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-water-ladder fa-fw me-2"></i>Kolam Renang</a></li>
+                      </ul>
+                    </div>
+                    <div class="dropdown ms-auto">
+                      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-sort me-1"></i> Urutkan
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Harga Terendah</a></li>
+                        <li><a class="dropdown-item" href="#">Harga Tertinggi</a></li>
+                        <li><a class="dropdown-item" href="#">Terbaru</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Statistik dan Notifikasi">
+          <div class="container-fluid px-0">
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card stat-card h-100" tabindex="0" aria-label="Total Apartemen">
+                  <div class="card-body d-flex align-items-center">
+                    <span class="icon-wrapper"><i class="fa-solid fa-city"></i></span>
+                    <div>
+                      <h6 class="fw-semibold mb-1 text-secondary">Total Apartemen</h6>
+                      <span class="fs-4 fw-bold" id="statTotalApt">${appState.apartmentsData.length}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card stat-card h-100" tabindex="0" aria-label="Apartemen Disewa">
+                  <div class="card-body d-flex align-items-center">
+                    <span class="icon-wrapper"><i class="fa-solid fa-key"></i></span>
+                    <div>
+                      <h6 class="fw-semibold mb-1 text-secondary">Apartemen Disewa</h6>
+                      <span class="fs-4 fw-bold" id="statRentedApt">${appState.tenantData.filter(t => t.status === 'Aktif').length}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card stat-card h-100" tabindex="0" aria-label="Pendapatan Bulanan Estimasi">
+                  <div class="card-body d-flex align-items-center">
+                    <span class="icon-wrapper"><i class="fa-solid fa-coins"></i></span>
+                    <div>
+                      <h6 class="fw-semibold mb-1 text-secondary">Estimasi Pendapatan</h6>
+                      <span class="fs-4 fw-bold" id="statRevenue">Rp 48jt</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card stat-card h-100" tabindex="0" aria-label="Total Penyewa Aktif">
+                  <div class="card-body d-flex align-items-center">
+                    <span class="icon-wrapper"><i class="fa-solid fa-users"></i></span>
+                    <div>
+                      <h6 class="fw-semibold mb-1 text-secondary">Penyewa Aktif</h6>
+                      <span class="fs-4 fw-bold" id="statTenants">${appState.tenantData.filter(t => t.status === 'Aktif').length}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-lg-8">
+                <div class="chart-placeholder" aria-label="Grafik Placeholder">
+                  <i class="fa-solid fa-chart-line"></i>
+                  <span>Grafik Statistik (Placeholder)</span>
+                  <small class="text-muted mt-2">Fitur grafik akan segera hadir!</small>
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <div class="card stat-card h-100">
+                  <div class="card-body">
+                    <h5 class="fw-semibold mb-3">Notifikasi Penting</h5>
+                    <ul class="list-unstyled mb-0" id="notifList">
+                      <li class="mb-2 d-flex align-items-start"><i class="fa-solid fa-bell text-warning me-2 mt-1"></i> <div>2 apartemen butuh perawatan segera. <a href="#" class="small">Lihat detail</a></div></li>
+                      <li class="mb-2 d-flex align-items-start"><i class="fa-solid fa-user-plus text-success me-2 mt-1"></i> <div>1 penyewa baru telah mendaftar. <a href="#" class="small">Verifikasi</a></div></li>
+                      <li class="d-flex align-items-start"><i class="fa-solid fa-money-check-dollar text-info me-2 mt-1"></i> <div>Pembayaran bulan ini telah diterima dari 80% penyewa.</div></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section aria-label="Tabel Data Penyewa Terbaru">
+          <div class="container-fluid px-0">
+            <div class="row">
+              <div class="col-12">
+                <div class="table-section">
+                  <h5 class="fw-semibold mb-3">Daftar Penyewa Terbaru</h5>
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" aria-label="Tabel Data Penyewa">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Nama Penyewa</th>
+                          <th>Apartemen</th>
+                          <th>Mulai Sewa</th>
+                          <th>Status</th>
+                          <th>Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tenantTableBody">
+                        <!-- Data penyewa akan dimuat oleh JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `,
+      galeri: () => `
+        <section aria-label="Galeri Apartemen">
+          <div class="container-fluid px-0">
+            <h2 class="mb-4 fw-bold">Galeri Apartemen</h2>
+            <p class="mb-4 text-secondary">Lihat berbagai pilihan interior dan eksterior apartemen yang kami tawarkan.</p>
+            <div class="row g-3" id="galleryContainer">
+              <!-- Gambar akan dimuat oleh JS -->
+            </div>
+          </div>
+        </section>
+      `,
+      crud: () => `
+        <section aria-label="Manajemen Data Apartemen">
+          <div class="container-fluid px-0">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold mb-0">Kelola Data Apartemen</h2>
+                <button class="btn btn-primary" id="showAddApartmentFormBtn" style="background: var(--accent); border-color: var(--accent);">
+                    <i class="fa-solid fa-plus me-2"></i>Tambah Apartemen
+                </button>
+            </div>
+
+            <div id="apartmentFormContainer" class="mb-4" style="display:none;">
+              <h4 class="mb-3 fw-semibold" id="apartmentFormTitle">Tambah Apartemen Baru</h4>
+              <form id="apartmentForm">
+                <input type="hidden" id="apartmentId">
+                <div class="row g-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="apartmentName" class="form-label">Nama Apartemen</label>
+                        <input type="text" class="form-control" id="apartmentName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="apartmentLocation" class="form-label">Lokasi</label>
+                        <input type="text" class="form-control" id="apartmentLocation" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="apartmentPrice" class="form-label">Harga (Rp)</label>
+                        <input type="number" class="form-control" id="apartmentPrice" required min="0">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="apartmentTypeCrud" class="form-label">Tipe Apartemen</label>
+                        <select class="form-select" id="apartmentTypeCrud">
+                            <option value="Studio">Studio</option>
+                            <option value="1BR">1 Kamar Tidur</option>
+                            <option value="2BR">2 Kamar Tidur</option>
+                            <option value="3BR+">3+ Kamar Tidur</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <button type="submit" class="btn btn-success me-2"><i class="fa-solid fa-save me-1"></i> Simpan</button>
+                    <button type="button" class="btn btn-secondary" id="cancelApartmentFormBtn"><i class="fa-solid fa-times me-1"></i> Batal</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="table-section">
+              <h5 class="fw-semibold mb-3">Daftar Apartemen Terdaftar</h5>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Nama Apartemen</th>
+                      <th>Lokasi</th>
+                      <th>Harga</th>
+                      <th>Tipe</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="apartmentTableBody">
+                    <!-- Data akan dimuat oleh JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      `,
+      dokumentasi: () => `
+        <section aria-label="Dokumentasi Aplikasi">
+          <div class="container-fluid px-0">
+            <h2 class="mb-4 fw-bold">Dokumentasi Aplikasi</h2>
+            <div class="card" style="background-color: var(--card-bg); border-color: var(--table-border-color);">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold" style="color: var(--accent);">Panduan Penggunaan Dasbor RentApart</h5>
+                <p class="mt-3">Selamat datang di dokumentasi RentApart. Halaman ini berisi informasi mengenai cara penggunaan berbagai fitur yang tersedia dalam sistem manajemen penyewaan apartemen ini.</p>
+                
+                <h6 class="mt-4 fw-semibold">Navigasi Utama</h6>
+                <p>Gunakan menu di sidebar kiri untuk berpindah antar halaman utama:</p>
+                <ul>
+                  <li><strong>Dasbor:</strong> Halaman utama yang menampilkan ringkasan statistik, notifikasi, dan akses cepat ke fitur lain.</li>
+                  <li><strong>Galeri:</strong> Menampilkan koleksi gambar apartemen yang tersedia.</li>
+                  <li><strong>Kelola Data:</strong> Memungkinkan Anda untuk menambah, melihat, mengubah, dan menghapus data apartemen.</li>
+                  <li><strong>Dokumentasi:</strong> Halaman ini yang sedang Anda baca.</li>
+                </ul>
+
+                <h6 class="mt-4 fw-semibold">Pengaturan Tampilan</h6>
+                <p>Anda dapat mengubah tema tampilan antara mode terang (light) dan gelap (dark) menggunakan ikon bulan/matahari <i class="fa-solid fa-moon"></i> / <i class="fa-solid fa-sun"></i> yang terletak di pojok kanan atas navbar.</p>
+
+                <h6 class="mt-4 fw-semibold">Manajemen Data Apartemen (CRUD)</h6>
+                <p>Pada halaman "Kelola Data":</p>
+                <ul>
+                  <li><strong>Menambah Data:</strong> Klik tombol "Tambah Apartemen", isi formulir yang muncul, lalu klik "Simpan".</li>
+                  <li><strong>Mengubah Data:</strong> Klik ikon pensil <i class="fa-solid fa-pen"></i> pada baris data yang ingin diubah. Formulir akan terisi data yang ada, ubah sesuai kebutuhan, lalu klik "Simpan".</li>
+                  <li><strong>Menghapus Data:</strong> Klik ikon tong sampah <i class="fa-solid fa-trash"></i> pada baris data yang ingin dihapus. Akan ada konfirmasi sebelum data dihapus permanen.</li>
+                </ul>
+                 <h6 class="mt-4 fw-semibold">Filter dan Pencarian (Dasbor)</h6>
+                <p>Pada bagian atas halaman Dasbor, Anda akan menemukan fitur pencarian dan filter untuk membantu menemukan properti berdasarkan lokasi, rentang tanggal, harga, tipe apartemen, dan fasilitas. Saat ini, fitur ini adalah placeholder antarmuka dan belum terhubung ke fungsionalitas pencarian data sebenarnya.</p>
+
+                <p class="mt-4"><em>Dokumentasi ini akan terus diperbarui seiring dengan pengembangan fitur baru.</em></p>
+              </div>
+            </div>
+          </div>
+        </section>
+      `
+    };
+
+    // Fungsi Tema
+    function applyTheme(theme) {
+      body.setAttribute('data-theme', theme);
+      themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+      localStorage.setItem('theme', theme);
+      appState.theme = theme;
+
+      // Update variabel CSS-RGB untuk background transparan
+      if (theme === 'dark') {
+        document.documentElement.style.setProperty('--accent-rgb-dark', '127,156,245');
+      } else {
+        document.documentElement.style.setProperty('--accent-rgb', '99,102,241');
+      }
+    }
+    themeToggleBtn.addEventListener('click', () => {
+      applyTheme(appState.theme === 'light' ? 'dark' : 'light');
+    });
+
+    // Fungsi Sidebar
+    function toggleDesktopSidebar() {
+      sidebar.classList.toggle('collapsed-desktop');
+      mainContentArea.classList.toggle('sidebar-collapsed');
+      const isCollapsed = sidebar.classList.contains('collapsed-desktop');
+      sidebarDesktopCollapseBtn.innerHTML = isCollapsed ?
+        `<i class="fa-solid fa-angles-right me-1"></i> Tampilkan` :
+        `<i class="fa-solid fa-angles-left me-1"></i> Sembunyikan`;
+      sidebarDesktopCollapseBtn.setAttribute('aria-label', isCollapsed ? 'Tampilkan Sidebar' : 'Sembunyikan Sidebar');
+    }
+    sidebarDesktopCollapseBtn.addEventListener('click', toggleDesktopSidebar);
+
+    function toggleMobileSidebar(show) {
+      if (show) {
+        sidebar.classList.add('show');
+        sidebarOverlay.classList.add('show');
+      } else {
+        sidebar.classList.remove('show');
+        sidebarOverlay.classList.remove('show');
+      }
+    }
+    sidebarShowMobileBtn.addEventListener('click', () => toggleMobileSidebar(true));
+    sidebarOverlay.addEventListener('click', () => toggleMobileSidebar(false));
+
+    // Fungsi Render Halaman
+    function renderPageContent(pageKey) {
+      if (pageTemplates[pageKey]) {
+        pageContentContainer.innerHTML = pageTemplates[pageKey]();
+        appState.currentPage = pageKey;
+        updatePageTitle(pageKey);
+        setActiveNavLink(pageKey);
+        window.scrollTo(0, 0); // Scroll ke atas halaman
+
+        // Inisialisasi spesifik halaman
+        if (pageKey === 'dashboard') {
+          populateTenantTable();
+          initializeDashboardFilters(); // Untuk event listener filter jika perlu
+        } else if (pageKey === 'galeri') {
+          populateGallery();
+        } else if (pageKey === 'crud') {
+          initializeCRUDPage();
+        }
+        // Bootstrap tooltips (jika ada yang ditambahkan dinamis)
+        initializeTooltips();
+      } else {
+        pageContentContainer.innerHTML = `<div class="alert alert-danger">Halaman tidak ditemukan: ${pageKey}</div>`;
+        pageTitleElement.textContent = 'Error';
+      }
+    }
+
+    function initializeTooltips() {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    }
+
+    function updatePageTitle(pageKey) {
+      const titles = {
+        dashboard: 'Dasbor',
+        galeri: 'Galeri Apartemen',
+        crud: 'Kelola Data Apartemen',
+        dokumentasi: 'Dokumentasi'
+      };
+      pageTitleElement.textContent = titles[pageKey] || 'RentApart';
+    }
+
+    function setActiveNavLink(pageKey) {
+      qsa('.sidebar .nav-link').forEach(link => {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+        if (link.dataset.page === pageKey) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    }
+
+    // Router Sederhana
+    function handleRouteChange() {
+      const hash = window.location.hash.substring(1) || 'dashboard';
+      renderPageContent(hash);
+    }
+
+    // Inisialisasi Event Listener Navigasi
+    qsa('.sidebar .nav-link, .nav-link-internal').forEach(link => {
+      link.addEventListener('click', function (e) {
+        // Jika link sidebar mobile diklik, tutup sidebar
+        if (sidebar.classList.contains('show')) {
+          toggleMobileSidebar(false);
+        }
+        // Biarkan default action (mengubah hash) terjadi, router akan menangani sisanya
+      });
+    });
+
+    // Fungsi untuk Dashboard
     function populateTenantTable() {
-      const tbody = document.getElementById('tenantTableBody');
-      tbody.innerHTML = '';
-      tenantData.forEach((t, idx) => {
+      const tbody = qs('#tenantTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = ''; // Kosongkan tabel
+      appState.tenantData.slice(0, 5).forEach((tenant, idx) => { // Tampilkan 5 data terbaru
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${idx + 1}</td>
-          <td>${t.name}</td>
-          <td>${t.apt}</td>
-          <td>${t.start}</td>
-          <td><span class="badge ${t.status==='Aktif'?'bg-success':'bg-secondary'}">${t.status}</span></td>
           <td>
-            <button class="btn btn-sm btn-primary" title="Edit" aria-label="Edit ${t.name}"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm btn-danger" title="Hapus" aria-label="Hapus ${t.name}"><i class="fa-solid fa-trash"></i></button>
+            <div class="d-flex align-items-center">
+                <img src="https://i.pravatar.cc/40?u=${tenant.name.replace(/\s/g, '')}" alt="Avatar ${tenant.name}" class="rounded-circle me-2" width="30" height="30">
+                <span>${tenant.name}</span>
+            </div>
+          </td>
+          <td>${tenant.apt}</td>
+          <td>${new Date(tenant.start).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+          <td><span class="badge ${tenant.status === 'Aktif' ? 'bg-success' : 'bg-secondary'}">${tenant.status}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" title="Edit Penyewa" aria-label="Edit ${tenant.name}"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-sm btn-outline-danger ms-1" title="Hapus Penyewa" aria-label="Hapus ${tenant.name}"><i class="fa-solid fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
-    // Theme toggle logic
-    function setTheme(theme) {
-      document.body.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-      document.getElementById('themeIcon').className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    function initializeDashboardFilters() {
+      // Fungsi ini bisa diisi dengan event listener untuk filter jika diperlukan interaksi lebih lanjut
+      // Contoh:
+      // const locationSearch = qs('#locationSearch');
+      // if (locationSearch) {
+      //     locationSearch.addEventListener('input', (e) => console.log('Mencari lokasi:', e.target.value));
+      // }
     }
-    document.getElementById('themeToggle').addEventListener('click', () => {
-      const current = document.body.getAttribute('data-theme');
-      setTheme(current === 'light' ? 'dark' : 'light');
+
+
+    // Fungsi untuk Galeri
+    function populateGallery() {
+      const galleryContainer = qs('#galleryContainer');
+      if (!galleryContainer) return;
+      galleryContainer.innerHTML = '';
+      appState.galleryImages.forEach(img => {
+        const col = document.createElement('div');
+        col.className = 'col-lg-3 col-md-4 col-sm-6 mb-3';
+        col.innerHTML = `
+          <div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-img-src="${img.src}" data-img-alt="${img.alt}">
+            <img src="${img.src}" alt="${img.alt}" class="img-fluid">
+          </div>
+        `;
+        galleryContainer.appendChild(col);
+      });
+    }
+    // Event listener untuk modal galeri (gunakan event delegation)
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('.gallery-item')) {
+        const item = event.target.closest('.gallery-item');
+        qs('#modalImage').src = item.dataset.imgSrc;
+        qs('#modalImage').alt = item.dataset.imgAlt;
+        qs('#galleryModalLabel').textContent = item.dataset.imgAlt;
+      }
     });
-    // Sidebar toggle for mobile
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-    document.getElementById('sidebarShow').addEventListener('click', () => {
-      sidebar.classList.add('show');
-      sidebarOverlay.style.display = 'block';
+
+    // Fungsi untuk CRUD
+    let editingApartmentId = null; // Untuk melacak ID apartemen yang diedit
+
+    function initializeCRUDPage() {
+      const showFormBtn = qs('#showAddApartmentFormBtn');
+      const formContainer = qs('#apartmentFormContainer');
+      const apartmentForm = qs('#apartmentForm');
+      const cancelFormBtn = qs('#cancelApartmentFormBtn');
+      const formTitle = qs('#apartmentFormTitle');
+
+      if (showFormBtn) {
+        showFormBtn.addEventListener('click', () => {
+          formContainer.style.display = 'block';
+          formTitle.textContent = 'Tambah Apartemen Baru';
+          apartmentForm.reset();
+          editingApartmentId = null;
+          showFormBtn.style.display = 'none'; // Sembunyikan tombol tambah
+        });
+      }
+
+      if (cancelFormBtn) {
+        cancelFormBtn.addEventListener('click', () => {
+          formContainer.style.display = 'none';
+          apartmentForm.reset();
+          editingApartmentId = null;
+          if (showFormBtn) showFormBtn.style.display = 'inline-block'; // Tampilkan lagi tombol tambah
+        });
+      }
+
+      if (apartmentForm) {
+        apartmentForm.addEventListener('submit', handleApartmentFormSubmit);
+      }
+      displayApartments();
+    }
+
+    function displayApartments() {
+      const tbody = qs('#apartmentTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      appState.apartmentsData.forEach((apt, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td>${apt.name}</td>
+                <td>${apt.location}</td>
+                <td>Rp ${apt.price.toLocaleString('id-ID')}</td>
+                <td>${apt.type || 'Studio'}</td> <!-- Menambahkan tipe jika ada -->
+                <td>
+                    <button class="btn btn-sm btn-outline-primary edit-apt-btn" data-id="${apt.id}" title="Edit Apartemen"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-sm btn-outline-danger delete-apt-btn ms-1" data-id="${apt.id}" title="Hapus Apartemen"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            `;
+        tbody.appendChild(tr);
+      });
+
+      // Tambah event listener untuk tombol edit dan hapus
+      qsa('.edit-apt-btn', tbody).forEach(btn => btn.addEventListener('click', prepareEditApartment));
+      qsa('.delete-apt-btn', tbody).forEach(btn => btn.addEventListener('click', deleteApartment));
+    }
+
+    function handleApartmentFormSubmit(event) {
+      event.preventDefault();
+      const name = qs('#apartmentName').value;
+      const location = qs('#apartmentLocation').value;
+      const price = parseInt(qs('#apartmentPrice').value);
+      const type = qs('#apartmentTypeCrud').value; // Ambil nilai tipe
+
+      if (editingApartmentId) { // Mode Edit
+        const index = appState.apartmentsData.findIndex(apt => apt.id === editingApartmentId);
+        if (index > -1) {
+          appState.apartmentsData[index] = { ...appState.apartmentsData[index], name, location, price, type };
+        }
+      } else { // Mode Tambah
+        const newApartment = { id: appState.nextApartmentId++, name, location, price, type };
+        appState.apartmentsData.push(newApartment);
+      }
+
+      displayApartments();
+      qs('#apartmentFormContainer').style.display = 'none';
+      qs('#apartmentForm').reset();
+      editingApartmentId = null;
+      if (qs('#showAddApartmentFormBtn')) qs('#showAddApartmentFormBtn').style.display = 'inline-block';
+
+      // Update stat di dashboard jika halaman dashboard yang aktif atau setelahnya
+      if (qs('#statTotalApt')) { // Cek jika elemen stat ada (berarti di dashboard)
+        qs('#statTotalApt').textContent = appState.apartmentsData.length;
+      }
+    }
+
+    function prepareEditApartment(event) {
+      const id = parseInt(event.currentTarget.dataset.id);
+      const apartment = appState.apartmentsData.find(apt => apt.id === id);
+      if (apartment) {
+        editingApartmentId = id;
+        qs('#apartmentId').value = apartment.id;
+        qs('#apartmentName').value = apartment.name;
+        qs('#apartmentLocation').value = apartment.location;
+        qs('#apartmentPrice').value = apartment.price;
+        qs('#apartmentTypeCrud').value = apartment.type || 'Studio';
+
+        qs('#apartmentFormTitle').textContent = 'Edit Data Apartemen';
+        qs('#apartmentFormContainer').style.display = 'block';
+        if (qs('#showAddApartmentFormBtn')) qs('#showAddApartmentFormBtn').style.display = 'none';
+        qs('#apartmentName').focus();
+      }
+    }
+
+    function deleteApartment(event) {
+      const id = parseInt(event.currentTarget.dataset.id);
+      if (confirm('Apakah Anda yakin ingin menghapus data apartemen ini?')) {
+        appState.apartmentsData = appState.apartmentsData.filter(apt => apt.id !== id);
+        displayApartments();
+        // Update stat di dashboard
+        if (qs('#statTotalApt')) {
+          qs('#statTotalApt').textContent = appState.apartmentsData.length;
+        }
+      }
+    }
+
+
+    // Inisialisasi Aplikasi
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTheme(appState.theme); // Terapkan tema awal
+      handleRouteChange(); // Render halaman awal berdasarkan hash atau default
+      window.addEventListener('hashchange', handleRouteChange);
+
+      // Inisialisasi sidebar collapse desktop jika layar lebar
+      if (window.innerWidth >= 992) {
+        // Uncomment jika ingin sidebar collapsed by default di desktop
+        // toggleDesktopSidebar(); 
+      }
+      initializeTooltips(); // Inisialisasi tooltip global
     });
-    document.getElementById('sidebarCollapse').addEventListener('click', () => {
-      sidebar.classList.remove('show');
-      sidebarOverlay.style.display = 'none';
-    });
-    sidebarOverlay.addEventListener('click', () => {
-      sidebar.classList.remove('show');
-      sidebarOverlay.style.display = 'none';
-    });
-    // Init theme from localStorage
-    (function() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) setTheme(savedTheme);
-    })();
-    // Init table
-    populateTenantTable();
+
   </script>
 </body>
+
 </html>
