@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Valley LuxStay - Akomodasi Mewah</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!-- Google Font Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 1. Arsitektur Antarmuka Pengguna: Variabel CSS */
+        :root {
+            --primary-color: #4CAF50;
+            /* Green Valley Green */
+            --secondary-color: #2E7D32;
+            /* Darker Green */
+            --accent-color: #FFC107;
+            /* Amber for CTAs */
+            --light-gray-color: #f8f9fa;
+            --dark-gray-color: #343a40;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --font-family-main: 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-main);
+            background-color: var(--light-gray-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 2. Strategi Visual */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .navbar-brand strong {
+            color: var(--primary-color);
+        }
+
+        /* 3. Interaktivitas dan Pengalaman Pengguna: Navigasi */
+        .navbar-nav .nav-link {
+            color: var(--dark-gray-color);
+            transition: color 0.3s ease, background-color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .navbar-nav .nav-link.active {
+            font-weight: 500;
+        }
+
+        /* Komponen Kartu */
+        .apartment-card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            /* For image */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            /* Make cards same height in a row */
+        }
+
+        .apartment-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .apartment-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .apartment-card .card-body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            /* Allows footer to stick to bottom */
+        }
+
+        .apartment-card .card-title {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .apartment-card .card-text {
+            font-size: 0.9rem;
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .apartment-card .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .apartment-card .rating {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tombol CTA */
+        .btn-cta {
+            background-color: var(--accent-color);
+            color: var(--dark-gray-color);
+            font-weight: 500;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-cta:hover {
+            background-color: #FFB300;
+            /* Darker Amber */
+            color: var(--dark-gray-color);
+            transform: scale(1.05);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: scale(1.03);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--dark-gray-color);
+            color: var(--light-gray-color);
+            padding: 2rem 0;
+            margin-top: auto;
+            /* Push to bottom */
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Helper class for smooth section transitions */
+        .page-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .page-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Placeholder for future map */
+        #map-placeholder {
+            height: 300px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header & Navigasi -->
+    <header class="sticky-top shadow-sm bg-white">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand fs-4" href="#home">Green Valley <strong>LuxStay</strong></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#home">Beranda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#listings">Daftar Properti</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">Tentang Kami</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Kontak</a>
+                        </li>
+                    </ul>
+                    <div class="ms-lg-3 mt-2 mt-lg-0">
+                        <button class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal"
+                            data-bs-target="#loginModal">Login</button>
+                        <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#registerModal">Daftar</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Konten Utama (SPA Target) -->
+    <main id="app-root" class="container py-4 flex-grow-1">
+        <!-- Konten akan dimuat di sini oleh JavaScript -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>© <span id="currentYear"></span> Green Valley LuxStay. Semua hak dilindungi.</p>
+            <p>Desain oleh Tim LuxStay | <a href="#privacy">Kebijakan Privasi</a> | <a href="#terms">Syarat &
+                    Ketentuan</a></p>
+        </div>
+    </footer>
+
+    <!-- === TEMPLATES UNTUK "SINGLE FILE COMPONENTS" (SFC) === -->
+    <!-- Setiap template merepresentasikan sebuah "halaman" atau "komponen" -->
+
+    <!-- Template: Halaman Beranda -->
+    <template id="home-page-template">
+        <section id="home" class="page-content">
+            <div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">Selamat Datang di Green Valley LuxStay</h1>
+                    <p class="col-md-8 fs-4">Temukan akomodasi mewah dan nyaman untuk liburan atau perjalanan bisnis
+                        Anda. Kualitas dan kenyamanan adalah prioritas kami.</p>
+                    <a href="#listings" class="btn btn-cta btn-lg" type="button">Lihat Properti Unggulan</a>
+                </div>
+            </div>
+
+            <h2 class="mb-4">Properti Pilihan Kami</h2>
+            <div id="featured-listings" class="row g-4">
+                <!-- Kartu properti unggulan akan dimuat di sini -->
+            </div>
+            <div class="text-center mt-4">
+                <a href="#listings" class="btn btn-primary-custom">Lihat Semua Properti</a>
+            </div>
+        </section>
+    </template>
+
+    <!-- Template: Halaman Daftar Properti -->
+    <template id="listings-page-template">
+        <section id="listings" class="page-content">
+            <h1 class="mb-4">Daftar Properti Kami</h1>
+            <!-- Filter Pencarian Lanjutan (Placeholder) -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <input type="text" class="form-control form-control-lg"
+                        placeholder="Cari berdasarkan lokasi, nama, atau fasilitas...">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select form-select-lg">
+                        <option selected>Tipe Properti</option>
+                        <option value="1">Apartemen</option>
+                        <option value="2">Villa</option>
+                        <option value="3">Rumah</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary-custom btn-lg w-100">Cari</button>
+                </div>
+            </div>
+
+            <div id="all-listings" class="row g-4">
+                <!-- Semua kartu properti akan dimuat di sini -->
+            </div>
+        </section>
+    </template>
+
+    <!-- Template: Komponen Kartu Apartemen/Properti (SFC) -->
+    <template id="apartment-card-template">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <article class="apartment-card">
+                <img src="{{image}}" class="card-img-top" alt="{{name}}">
+                <div class="card-body">
+                    <h5 class="card-title">{{name}}</h5>
+                    <p class="card-text text-muted"><small>{{location}}</small></p>
+                    <p class="card-text description">{{description}}</p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="price">Rp {{price}}/malam</span>
+                        <span class="rating">⭐ {{rating}} ({{reviews}} ulasan)</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 p-3">
+                    <a href="#property/{{id}}" class="btn btn-primary-custom w-100 view-details-btn"
+                        data-id="{{id}}">Lihat Detail</a>
+                </div>
+            </article>
+        </div>
+    </template>
+
+    <!-- Template: Halaman Detail Properti -->
+    <template id="property-detail-page-template">
+        <section id="property-detail" class="page-content">
+            <div class="row">
+                <div class="col-md-8">
+                    <img src="{{image}}" class="img-fluid rounded shadow-sm mb-4" alt="{{name}}"
+                        style="width:100%; max-height: 500px; object-fit: cover;">
+                    <h1 class="mb-3">{{name}}</h1>
+                    <p class="text-muted fs-5"><i class="fas fa-map-marker-alt"></i> {{location}}</p>
+                    <hr>
+                    <h3 class="mt-4">Deskripsi</h3>
+                    <p>{{description_long}}</p>
+
+                    <h3 class="mt-4">Fasilitas</h3>
+                    <ul class="list-group list-group-flush">
+                        {{facilities}}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <div class="card sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h3 class="card-title">Rp {{price}}/malam</h3>
+                            <p class="rating">⭐ {{rating}} ({{reviews}} ulasan)</p>
+                            <hr>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="checkin" class="form-label">Check-in</label>
+                                    <input type="date" class="form-control" id="checkin">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="checkout" class="form-label">Check-out</label>
+                                    <input type="date" class="form-control" id="checkout">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="guests" class="form-label">Tamu</label>
+                                    <select class="form-select" id="guests">
+                                        <option value="1">1 Tamu</option>
+                                        <option value="2" selected>2 Tamu</option>
+                                        <option value="3">3 Tamu</option>
+                                        <option value="4">4 Tamu</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-cta w-100">Pesan Sekarang</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h3>Lokasi Peta (Placeholder)</h3>
+                <div id="map-placeholder">Peta Interaktif Akan Ditampilkan Disini</div>
+            </div>
+
+            <div class="mt-5">
+                <h3>Ulasan Pengguna (Placeholder)</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <p>Sistem review dan rating akan dikembangkan.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a href="#listings" class="btn btn-outline-secondary">« Kembali ke Daftar Properti</a>
+            </div>
+        </section>
+    </template>
+
+
+    <!-- Template: Halaman Tentang Kami -->
+    <template id="about-page-template">
+        <section id="about" class="page-content">
+            <h1 class="mb-4">Tentang Green Valley LuxStay</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+                        class="img-fluid rounded shadow-sm mb-3" alt="Interior LuxStay">
+                </div>
+                <div class="col-md-6">
+                    <p class="fs-5">Green Valley LuxStay didirikan dengan misi untuk menyediakan pengalaman menginap
+                        yang tak terlupakan. Kami percaya bahwa kenyamanan, kemewahan, dan pelayanan prima adalah kunci
+                        utama kepuasan pelanggan.</p>
+                    <p>Setiap properti yang kami kelola dipilih secara cermat dan dirancang untuk memenuhi standar
+                        tertinggi. Mulai dari apartemen modern di pusat kota hingga villa mewah dengan pemandangan
+                        menakjubkan, kami memiliki pilihan untuk setiap kebutuhan.</p>
+                    <h3 class="mt-4">Visi Kami</h3>
+                    <p>Menjadi platform penyedia akomodasi mewah terdepan yang mengutamakan kualitas, inovasi, dan
+                        kepuasan pelanggan.</p>
+                    <h3 class="mt-4">Misi Kami</h3>
+                    <ul>
+                        <li>Menyediakan pilihan akomodasi berkualitas tinggi.</li>
+                        <li>Memberikan pelayanan pelanggan yang responsif dan profesional.</li>
+                        <li>Menggunakan teknologi untuk mempermudah proses pemesanan.</li>
+                        <li>Berkontribusi pada pariwisata lokal yang berkelanjutan.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Template: Halaman Kontak -->
+    <template id="contact-page-template">
+        <section id="contact" class="page-content">
+            <h1 class="mb-4">Hubungi Kami</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Kami senang mendengar dari Anda! Silakan gunakan formulir di bawah ini atau informasi kontak yang
+                        tersedia untuk menghubungi tim Green Valley LuxStay.</p>
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="contactName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label">Alamat Email</label>
+                            <input type="email" class="form-control" id="contactEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactSubject" class="form-label">Subjek</label>
+                            <input type="text" class="form-control" id="contactSubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactMessage" class="form-label">Pesan Anda</label>
+                            <textarea class="form-control" id="contactMessage" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-cta">Kirim Pesan</button>
+                    </form>
+                </div>
+                <div class="col-md-5 offset-md-1">
+                    <h4>Informasi Kontak</h4>
+                    <p><strong>Alamat:</strong><br>Jl. Lembah Hijau No. 123, Kota Imajinasi, ID 45678</p>
+                    <p><strong>Telepon:</strong><br><a href="tel:+62211234567">+62 21 1234 567</a></p>
+                    <p><strong>Email:</strong><br><a
+                            href="mailto:info@greenvalleyluxstay.com">info@greenvalleyluxstay.com</a></p>
+                    <h4 class="mt-4">Jam Operasional</h4>
+                    <p>Senin - Jumat: 09:00 - 17:00 WIB<br>Sabtu: 09:00 - 13:00 WIB<br>Minggu & Hari Libur: Tutup</p>
+                    <h4 class="mt-4">Peta Lokasi (Placeholder)</h4>
+                    <div id="map-placeholder">Kantor Pusat Kami</div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Modal Login (Placeholder) -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Fitur autentikasi pengguna akan segera hadir. Untuk saat ini, silakan lanjutkan sebagai tamu.</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" disabled>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100" disabled>Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Register (Placeholder) -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Daftar Akun Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Fitur pendaftaran pengguna akan segera hadir. Nantikan pembaruan dari kami!</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="registerName" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" disabled>
+                        </div>
+                        <button type="submit" class="btn btn-primary-custom w-100" disabled>Daftar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap 5 JS Bundle (Popper.js included) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <!-- Font Awesome for icons (optional but good for rating stars, map markers etc) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const appRoot = document.getElementById('app-root');
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // --- Data Mockup untuk Properti ---
+            const propertiesData = [
+                {
+                    id: 1,
+                    name: "Apartemen Modern Pusat Kota",
+                    location: "Jakarta Pusat, DKI Jakarta",
+                    price: "1.200.000",
+                    rating: 4.8,
+                    reviews: 120,
+                    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+                    description: "Apartemen 2 kamar tidur dengan desain modern dan fasilitas lengkap di jantung kota.",
+                    description_long: "Nikmati kemewahan tinggal di apartemen modern yang terletak strategis di pusat kota Jakarta. Dengan dua kamar tidur yang luas, ruang tamu yang nyaman, dan dapur lengkap, unit ini sempurna untuk keluarga kecil atau profesional muda. Fasilitas gedung meliputi kolam renang, gym, dan keamanan 24 jam. Dekat dengan pusat perbelanjaan, restoran, dan akses transportasi publik.",
+                    facilities: ["WiFi Cepat", "AC", "TV Kabel", "Dapur Lengkap", "Kolam Renang Bersama", "Gym", "Parkir Gratis"]
+                },
+                {
+                    id: 2,
+                    name: "Villa Tepi Pantai Seminyak",
+                    location: "Seminyak, Bali",
+                    price: "3.500.000",
+                    rating: 4.9,
+                    reviews: 95,
+                    image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+                    description: "Villa mewah 3 kamar tidur dengan kolam renang pribadi, selangkah dari pantai Seminyak.",
+                    description_long: "Rasakan pengalaman liburan tropis yang tak terlupakan di villa tepi pantai kami di Seminyak, Bali. Villa ini menawarkan tiga kamar tidur ensuite yang elegan, ruang tamu terbuka yang menghadap ke kolam renang pribadi dan taman tropis yang rimbun. Dapur modern yang lengkap dan area makan outdoor menjadikannya tempat yang ideal untuk bersantai dan menjamu tamu. Hanya beberapa langkah dari pantai berpasir putih, butik-butik trendi, dan restoran kelas dunia.",
+                    facilities: ["Kolam Renang Pribadi", "WiFi Cepat", "AC di setiap kamar", "Dapur Gourmet", "Layanan Kebersihan Harian", "Dekat Pantai"]
+                },
+                {
+                    id: 3,
+                    name: "Rumah Klasik Bandung Utara",
+                    location: "Dago Pakar, Bandung",
+                    price: "2.000.000",
+                    rating: 4.7,
+                    reviews: 78,
+                    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG91c2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+                    description: "Rumah keluarga yang nyaman dengan taman luas dan udara sejuk di kawasan elit Bandung.",
+                    description_long: "Rumah klasik yang menawan ini terletak di kawasan Dago Pakar yang sejuk dan asri di Bandung Utara. Menawarkan empat kamar tidur, ruang keluarga yang luas dengan perapian, dan taman yang indah, rumah ini adalah pilihan sempurna untuk liburan keluarga. Udara segar pegunungan dan pemandangan kota Bandung yang menakjubkan dapat dinikmati dari balkon. Dekat dengan berbagai kafe populer, lapangan golf, dan tempat wisata alam.",
+                    facilities: ["Taman Luas", "Perapian", "WiFi", "AC", "Dapur", "Area BBQ", "Pemandangan Kota"]
+                },
+                {
+                    id: 4,
+                    name: "Studio Minimalis Surabaya",
+                    location: "Surabaya Timur, Jawa Timur",
+                    price: "750.000",
+                    rating: 4.5,
+                    reviews: 150,
+                    image: "https://images.unsplash.com/photo-1616046229478-9901c5536a45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3R1ZGlvJTIwYXBhcnRtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+                    description: "Studio apartemen fungsional dan stylish, cocok untuk pebisnis atau solo traveler.",
+                    description_long: "Apartemen studio minimalis ini menawarkan kenyamanan dan fungsionalitas bagi para pelancong bisnis maupun solo traveler di Surabaya. Dengan desain interior yang cerdas, unit ini memaksimalkan ruang tanpa mengorbankan gaya. Dilengkapi dengan tempat tidur queen-size yang nyaman, area kerja kecil, dapur mini, dan kamar mandi modern. Lokasinya strategis dekat dengan pusat bisnis dan mal.",
+                    facilities: ["WiFi Cepat", "AC", "Smart TV", "Dapur Mini", "Area Kerja", "Keamanan 24 Jam"]
+                }
+            ];
+
+            // --- FUNGSI RENDER KOMPONEN ---
+
+            // Render Kartu Properti (SFC)
+            function renderApartmentCard(property) {
+                const template = document.getElementById('apartment-card-template').content.cloneNode(true);
+                template.querySelector('.card-img-top').src = property.image;
+                template.querySelector('.card-img-top').alt = property.name;
+                template.querySelector('.card-title').textContent = property.name;
+                template.querySelector('.text-muted small').textContent = property.location;
+                template.querySelector('.description').textContent = property.description;
+                template.querySelector('.price').textContent = `Rp ${property.price}/malam`;
+                template.querySelector('.rating').textContent = `⭐ ${property.rating} (${property.reviews} ulasan)`;
+                const detailButton = template.querySelector('.view-details-btn');
+                detailButton.href = `#property/${property.id}`;
+                detailButton.dataset.id = property.id;
+                return template;
+            }
+
+            // Render Halaman Beranda
+            function renderHomePage() {
+                const template = document.getElementById('home-page-template').content.cloneNode(true);
+                const featuredListingsContainer = template.getElementById('featured-listings');
+
+                // Tampilkan 3 properti unggulan
+                propertiesData.slice(0, 3).forEach(property => {
+                    featuredListingsContainer.appendChild(renderApartmentCard(property));
+                });
+
+                return template;
+            }
+
+            // Render Halaman Daftar Properti
+            function renderListingsPage() {
+                const template = document.getElementById('listings-page-template').content.cloneNode(true);
+                const allListingsContainer = template.getElementById('all-listings');
+                propertiesData.forEach(property => {
+                    allListingsContainer.appendChild(renderApartmentCard(property));
+                });
+                return template;
+            }
+
+            // Render Halaman Detail Properti
+            function renderPropertyDetailPage(propertyId) {
+                const property = propertiesData.find(p => p.id === parseInt(propertyId));
+                if (!property) {
+                    return document.createTextNode("Properti tidak ditemukan.");
+                }
+
+                const template = document.getElementById('property-detail-page-template').content.cloneNode(true);
+
+                template.querySelector('h1').textContent = property.name;
+                template.querySelector('img').src = property.image;
+                template.querySelector('img').alt = property.name;
+                template.querySelector('.text-muted.fs-5').innerHTML = `<i class="fas fa-map-marker-alt me-2"></i> ${property.location}`; // Added icon
+                template.querySelector('p:nth-of-type(2)').textContent = property.description_long; // Assuming this is the long description
+                template.querySelectorAll('.card-title')[1].textContent = `Rp ${property.price}/malam`; // Target specific card-title for price
+                template.querySelector('.rating').textContent = `⭐ ${property.rating} (${property.reviews} ulasan)`;
+
+                const facilitiesList = template.querySelector('.list-group');
+                property.facilities.forEach(facility => {
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item');
+                    li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i> ${facility}`; // Added icon
+                    facilitiesList.appendChild(li);
+                });
+
+                // Fill placeholders with actual data by replacing {{key}}
+                let htmlContent = template.querySelector('section').innerHTML;
+                htmlContent = htmlContent.replace(/\{\{name\}\}/g, property.name)
+                    .replace(/\{\{location\}\}/g, property.location)
+                    .replace(/\{\{image\}\}/g, property.image)
+                    .replace(/\{\{description_long\}\}/g, property.description_long)
+                    .replace(/\{\{price\}\}/g, property.price)
+                    .replace(/\{\{rating\}\}/g, property.rating)
+                    .replace(/\{\{reviews\}\}/g, property.reviews);
+
+                // This is a bit hacky for complex templates, better to target elements directly
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlContent;
+
+                // Re-assign facilities as they might be overwritten by the general replace
+                const newFacilitiesList = tempDiv.querySelector('.list-group');
+                newFacilitiesList.innerHTML = ''; // Clear previous generic replaces if any
+                property.facilities.forEach(facility => {
+                    const li = document.createElement('li');
+                    li.classList.add('list-group-item');
+                    li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i> ${facility}`;
+                    newFacilitiesList.appendChild(li);
+                });
+
+                // Clear the template and append the modified content
+                const sectionElement = document.getElementById('property-detail-page-template').content.querySelector('section').cloneNode(false); // clone empty section
+                while (tempDiv.firstChild) {
+                    sectionElement.appendChild(tempDiv.firstChild);
+                }
+                return sectionElement;
+            }
+
+            // Render Halaman Tentang Kami
+            function renderAboutPage() {
+                return document.getElementById('about-page-template').content.cloneNode(true);
+            }
+
+            // Render Halaman Kontak
+            function renderContactPage() {
+                const template = document.getElementById('contact-page-template').content.cloneNode(true);
+                // Add event listener for form submission
+                const contactForm = template.getElementById('contactForm');
+                if (contactForm) {
+                    contactForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        alert('Terima kasih! Pesan Anda telah terkirim (simulasi).');
+                        contactForm.reset();
+                    });
+                }
+                return template;
+            }
+
+            // --- ROUTER SEDERHANA ---
+            function router() {
+                const hash = window.location.hash || '#home';
+                appRoot.innerHTML = ''; // Kosongkan konten sebelumnya
+
+                let pageContent;
+
+                if (hash.startsWith('#property/')) {
+                    const propertyId = hash.substring('#property/'.length);
+                    pageContent = renderPropertyDetailPage(propertyId);
+                    setActiveLink(null); // No specific nav link for detail page
+                } else {
+                    switch (hash) {
+                        case '#home':
+                            pageContent = renderHomePage();
+                            setActiveLink(hash);
+                            break;
+                        case '#listings':
+                            pageContent = renderListingsPage();
+                            setActiveLink(hash);
+                            break;
+                        case '#about':
+                            pageContent = renderAboutPage();
+                            setActiveLink(hash);
+                            break;
+                        case '#contact':
+                            pageContent = renderContactPage();
+                            setActiveLink(hash);
+                            break;
+                        default:
+                            // Halaman tidak ditemukan atau default ke home
+                            pageContent = renderHomePage();
+                            setActiveLink('#home');
+                            window.location.hash = '#home'; // Update hash for unknown routes
+                    }
+                }
+
+                appRoot.appendChild(pageContent);
+
+                // Trigger transition
+                setTimeout(() => {
+                    const newPageElement = appRoot.querySelector('.page-content, section[id*="property-detail"]'); // property-detail section
+                    if (newPageElement) {
+                        newPageElement.classList.add('visible');
+                    }
+                }, 50); // Small delay to ensure DOM is updated
+
+                window.scrollTo(0, 0); // Scroll ke atas setiap pindah halaman
+            }
+
+            // Set link navigasi aktif
+            function setActiveLink(hash) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Event listener untuk perubahan hash (navigasi SPA)
+            window.addEventListener('hashchange', router);
+
+            // Panggil router untuk pertama kali memuat halaman
+            router();
+        });
+    </script>
+</body>
+
+</html>

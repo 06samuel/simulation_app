@@ -1,40 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Product Category Carousel</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Galeri Produk Interaktif</title>
+  <!-- Bootstrap Icons (satu-satunya dependensi eksternal, untuk ikonografi) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
+    /* Global Resets and Base Styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     :root {
-      /* Color System */
+      /* Color System - Light Theme (Default) */
       --primary: #0070f3;
+      /* Biru cerah */
       --primary-light: #3291ff;
       --primary-dark: #0366d6;
       --primary-foreground: #ffffff;
+      /* Teks di atas primary */
 
-      --secondary: #f5f5f5;
-      --secondary-light: #fafafa;
-      --secondary-dark: #e5e5e5;
-      --secondary-foreground: #111111;
+      --secondary: #e9ecef;
+      /* Abu-abu muda */
+      --secondary-light: #f8f9fa;
+      --secondary-dark: #dee2e6;
+      --secondary-foreground: #212529;
+      /* Teks di atas secondary */
 
-      --accent: #007aff;
+      --accent: #6f42c1;
+      /* Ungu */
       --accent-foreground: #ffffff;
 
       --background: #ffffff;
-      --foreground: #111111;
+      /* Latar belakang utama */
+      --foreground: #212529;
+      /* Warna teks utama */
       --card: #ffffff;
-      --card-foreground: #111111;
-      --border: #e5e5e5;
-      --input: #ffffff;
-      --ring: #0070f3;
+      /* Latar belakang kartu */
+      --card-foreground: #212529;
+      /* Teks di kartu */
+      --border: #ced4da;
+      /* Warna border */
+      --input-bg: #ffffff;
+      --input-border: #ced4da;
+      --ring-focus: rgba(0, 112, 243, 0.25);
 
-      --success: #22c55e;
-      --error: #ef4444;
-      --warning: #f59e0b;
-      --info: #3b82f6;
+      --success: #198754;
+      /* Hijau */
+      --error: #dc3545;
+      /* Merah */
+      --warning: #ffc107;
+      /* Kuning */
+      --info: #0dcaf0;
+      /* Biru muda info */
+      --success-foreground: #ffffff;
+      --error-foreground: #ffffff;
+      --warning-foreground: #000000;
+      --info-foreground: #000000;
 
       /* Spacing Scale */
       --space-0: 0;
@@ -48,11 +76,10 @@
       --space-10: 2.5rem;
       --space-12: 3rem;
       --space-16: 4rem;
-      --space-20: 5rem;
-      --space-24: 6rem;
-      --space-32: 8rem;
 
       /* Typography */
+      --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-mono: 'Courier New', Courier, monospace;
       --text-xs: 0.75rem;
       --text-sm: 0.875rem;
       --text-base: 1rem;
@@ -60,221 +87,259 @@
       --text-xl: 1.25rem;
       --text-2xl: 1.5rem;
       --text-3xl: 1.875rem;
-      --text-4xl: 2.25rem;
-      --text-5xl: 3rem;
-      --text-6xl: 3.75rem;
-
-      --font-sans: system-ui, -apple-system, sans-serif;
-      --font-mono: ui-monospace, monospace;
 
       /* Shadows */
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
-      /* Border */
-      --radius-sm: 0.125rem;
-      --radius: 0.25rem;
-      --radius-md: 0.375rem;
-      --radius-lg: 0.5rem;
-      --radius-xl: 0.75rem;
-      --radius-2xl: 1rem;
+      /* Border Radius */
+      --radius-sm: 0.2rem;
+      --radius: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
       --radius-full: 9999px;
 
-      /* Transition */
-      --transition-fast: all 0.15s ease;
-      --transition: all 0.3s ease;
-      --transition-slow: all 0.5s ease;
+      /* Transitions */
+      --transition-fast: all 0.15s ease-in-out;
+      --transition: all 0.3s ease-in-out;
+      --transition-slow: all 0.5s ease-in-out;
 
-      /* Dark Mode Variables */
-      --dark-primary: #3291ff;
-      --dark-primary-foreground: #ffffff;
-      --dark-secondary: #1e1e1e;
-      --dark-secondary-foreground: #f5f5f5;
-      --dark-background: #121212;
-      --dark-foreground: #ffffff;
-      --dark-card: #1e1e1e;
-      --dark-card-foreground: #ffffff;
-      --dark-border: #333333;
+      /* Z-index */
+      --z-modal-backdrop: 1040;
+      --z-modal: 1050;
+      --z-sticky: 1020;
+      --z-header: 1030;
+      --z-connection-status: 1060;
+      --z-theme-toggle: 1000;
     }
 
-    /* Dark Mode */
+    /* Dark Mode Variables */
     [data-theme="dark"] {
-      --primary: var(--dark-primary);
-      --primary-foreground: var(--dark-primary-foreground);
-      --secondary: var(--dark-secondary);
-      --secondary-foreground: var(--dark-secondary-foreground);
-      --background: var(--dark-background);
-      --foreground: var(--dark-foreground);
-      --card: var(--dark-card);
-      --card-foreground: var(--dark-card-foreground);
-      --border: var(--dark-border);
+      --primary: #3b82f6;
+      /* Biru lebih terang untuk dark mode */
+      --primary-foreground: #ffffff;
+      --secondary: #374151;
+      /* Abu-abu gelap */
+      --secondary-foreground: #f3f4f6;
+      --accent: #8b5cf6;
+      /* Ungu lebih terang */
+      --accent-foreground: #ffffff;
+      --background: #111827;
+      /* Latar belakang sangat gelap */
+      --foreground: #f3f4f6;
+      /* Teks terang */
+      --card: #1f2937;
+      /* Kartu lebih gelap */
+      --card-foreground: #f3f4f6;
+      --border: #4b5563;
+      /* Border lebih terang */
+      --input-bg: #374151;
+      --input-border: #4b5563;
+      --ring-focus: rgba(59, 130, 246, 0.3);
+
+      --warning-foreground: #000000;
+      /* Tetap hitam untuk kontras kuning */
+      --info-foreground: #000000;
+      /* Tetap hitam untuk kontras biru muda */
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      /* Base font size */
     }
 
     body {
       font-family: var(--font-sans);
       background-color: var(--background);
       color: var(--foreground);
-      transition: var(--transition);
+      line-height: 1.6;
+      transition: background-color var(--transition), color var(--transition);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    /* Utility Classes */
-    .text-primary {
+    /* Utility Classes (Minimal) */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* App Header */
+    .app-header {
+      background-color: var(--card);
+      padding: var(--space-3) var(--space-4);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-header h1 {
+      font-size: var(--text-xl);
       color: var(--primary);
+      font-weight: 600;
     }
 
-    .bg-primary {
-      background-color: var(--primary);
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background-color: transparent;
+      color: var(--foreground);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: var(--text-lg);
     }
 
-    .border-primary {
-      border-color: var(--primary);
-    }
-
-    .text-secondary {
+    .theme-toggle:hover {
+      background-color: var(--secondary);
       color: var(--secondary-foreground);
     }
 
-    .bg-secondary {
+    .theme-toggle:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    /* Main Container Layout (Sidebar + Content) */
+    .main-container {
+      display: flex;
+      flex-grow: 1;
+      padding: var(--space-4);
+      gap: var(--space-6);
+    }
+
+    /* Sidebar (Categories) */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background-color: var(--card);
+      padding: var(--space-4);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      align-self: flex-start;
+      /* Keep sidebar from stretching full height */
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-title {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-4);
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: var(--space-2);
+    }
+
+    .category-list {
+      list-style: none;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-3);
+      margin-bottom: var(--space-2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid transparent;
+      position: relative;
+      /* For sync indicator */
+    }
+
+    .category-item:hover {
       background-color: var(--secondary);
+      border-color: var(--border);
     }
 
-    .border-secondary {
-      border-color: var(--secondary);
-    }
-
-    .text-accent {
-      color: var(--accent);
-    }
-
-    .bg-accent {
-      background-color: var(--accent);
-    }
-
-    .border-accent {
-      border-color: var(--accent);
-    }
-
-    .shadow-sm {
+    .category-item.active {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      font-weight: 600;
       box-shadow: var(--shadow-sm);
     }
 
-    .shadow {
-      box-shadow: var(--shadow);
-    }
-
-    .shadow-md {
-      box-shadow: var(--shadow-md);
-    }
-
-    .shadow-lg {
-      box-shadow: var(--shadow-lg);
-    }
-
-    .shadow-xl {
-      box-shadow: var(--shadow-xl);
-    }
-
-    .rounded-sm {
-      border-radius: var(--radius-sm);
-    }
-
-    .rounded {
-      border-radius: var(--radius);
-    }
-
-    .rounded-md {
-      border-radius: var(--radius-md);
-    }
-
-    .rounded-lg {
-      border-radius: var(--radius-lg);
-    }
-
-    .rounded-xl {
-      border-radius: var(--radius-xl);
-    }
-
-    .rounded-2xl {
-      border-radius: var(--radius-2xl);
-    }
-
-    .rounded-full {
-      border-radius: var(--radius-full);
-    }
-
-    .transition-fast {
-      transition: var(--transition-fast);
-    }
-
-    .transition {
-      transition: var(--transition);
-    }
-
-    .transition-slow {
-      transition: var(--transition-slow);
-    }
-
-    /* Category Grid */
-    .category-container {
-      padding: var(--space-6);
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: var(--space-4);
-    }
-
-    .category-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-4);
-      background: var(--card);
-      border: 2px solid var(--border);
-      border-radius: var(--radius-lg);
-      transition: var(--transition);
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      text-align: center;
-      min-height: 120px;
-    }
-
-    .category-card i {
-      font-size: var(--text-3xl);
-      margin-bottom: var(--space-2);
-      transition: var(--transition);
-    }
-
-    .category-card.active {
-      background: var(--primary);
+    .category-item.active .category-icon {
       color: var(--primary-foreground);
-      transform: scale(1.05);
-      border-color: var(--primary);
-      box-shadow: var(--shadow-md);
     }
 
-    .category-card:hover:not(.active) {
-      background: var(--secondary);
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-md);
+    .category-item .category-icon {
+      font-size: var(--text-xl);
+      margin-right: var(--space-3);
+      color: var(--primary);
+      width: 24px;
+      /* Fixed width for alignment */
+      text-align: center;
     }
 
-    /* Product Cards */
-    .product-card {
-      background: var(--card);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow);
+    /* Sync Indicator (shared by category and product) */
+    .sync-indicator {
+      position: absolute;
+      top: var(--space-2);
+      right: var(--space-2);
+      width: 10px;
+      height: 10px;
+      border-radius: var(--radius-full);
       transition: var(--transition);
-      border: 1px solid var(--border);
-      height: 100%;
+      z-index: 1;
+      box-shadow: 0 0 0 2px var(--card);
+      /* Halo effect to stand out */
+    }
+
+    [data-sync-state="syncing"] .sync-indicator {
+      background-color: var(--warning);
+      animation: pulse 1.5s infinite;
+    }
+
+    [data-sync-state="synced"] .sync-indicator {
+      background-color: var(--success);
+    }
+
+    [data-sync-state="error"] .sync-indicator {
+      background-color: var(--error);
+    }
+
+    /* Content Area (Product Display) */
+    .content-area {
+      flex-grow: 1;
+      min-width: 0;
+      /* Prevent flex item overflow */
+    }
+
+    /* Product Card */
+    .product-card {
+      background-color: var(--card);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: var(--transition-slow);
       display: flex;
       flex-direction: column;
+      height: 100%;
+      /* For consistent card height in carousel/grid */
+      border: 1px solid var(--border);
+      position: relative;
+      /* For sync indicator */
     }
 
     .product-card:hover {
@@ -282,15 +347,22 @@
       box-shadow: var(--shadow-lg);
     }
 
-    .product-card img {
-      height: 300px;
-      object-fit: cover;
+    .product-image-container {
       width: 100%;
-      transition: var(--transition);
+      height: 200px;
+      /* Fixed height for product images */
+      overflow: hidden;
     }
 
-    .product-card:hover img {
-      transform: scale(1.02);
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-image {
+      transform: scale(1.05);
     }
 
     .product-info {
@@ -300,135 +372,370 @@
       flex-direction: column;
     }
 
-    .price {
-      color: var(--primary);
-      font-size: var(--text-2xl);
-      font-weight: bold;
-      margin: var(--space-2) 0;
+    .product-name {
+      font-size: var(--text-lg);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+      color: var(--card-foreground);
     }
 
-    /* Carousel Controls */
-    .carousel-control-prev,
-    .carousel-control-next {
-      width: 50px;
-      height: 50px;
-      background: var(--primary);
-      border-radius: 50%;
+    .product-description {
+      font-size: var(--text-sm);
+      color: var(--foreground);
+      opacity: 0.8;
+      margin-bottom: var(--space-2);
+      flex-grow: 1;
+      /* Pushes price and actions down */
+    }
+
+    .product-price {
+      font-size: var(--text-xl);
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .product-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    /* Buttons (General Styling) */
+    .btn {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-base);
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 500;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--secondary-foreground);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+
+    /* Carousel (Vanilla JS Implementation) */
+    .product-carousel {
+      position: relative;
+      overflow: hidden;
+      /* Hides parts of items that are off-screen */
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      padding-bottom: var(--space-10);
+      /* Space for indicators */
+      background-color: var(--secondary-light);
+      /* Slight background for carousel area */
+      border: 1px solid var(--border);
+    }
+
+    .carousel-inner-wrapper {
+      overflow: hidden;
+      /* Crucial for hiding non-active items */
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform var(--transition-slow) ease-in-out;
+      list-style: none;
+      /* Remove bullets from ul */
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      /* Each item takes full width of the carousel-inner */
+      flex-shrink: 0;
+      /* Prevent items from shrinking */
+      padding: var(--space-4);
+      /* Padding around each card within the slide */
+      /* Adjust based on number of cards per slide */
+    }
+
+    /* For multiple items per slide (example: 3 items) */
+    .carousel-item.multi-item {
+      min-width: calc(100% / 3);
+      /* Adjust for number of items */
+    }
+
+    .carousel-control {
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      opacity: 0.9;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      border-radius: var(--radius-full);
+      width: 40px;
+      height: 40px;
+      font-size: var(--text-xl);
+      z-index: 10;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition);
+    }
+
+    .carousel-control:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .carousel-control.prev {
+      left: var(--space-3);
+    }
+
+    .carousel-control.next {
+      right: var(--space-3);
+    }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: var(--space-3);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: var(--space-2);
+      z-index: 10;
+      list-style: none;
+    }
+
+    .carousel-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: var(--radius-full);
+      background-color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      cursor: pointer;
       transition: var(--transition);
     }
 
-    .carousel-control-prev:hover,
-    .carousel-control-next:hover {
+    .carousel-indicator.active {
+      background-color: var(--primary);
+      border-color: var(--primary-dark);
+    }
+
+    .carousel-indicator:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Modal (Vanilla JS Implementation) */
+    .modal-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-fast), visibility 0s var(--transition-fast);
+      z-index: var(--z-modal);
+    }
+
+    .modal-container.open {
       opacity: 1;
-      transform: translateY(-50%) scale(1.1);
+      visibility: visible;
+      transition-delay: 0s;
+      /* Override default delay for hiding */
     }
 
-    .carousel-control-prev {
-      left: -25px;
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: var(--z-modal-backdrop);
     }
 
-    .carousel-control-next {
-      right: -25px;
-    }
-
-    /* Modal */
-    .modal-content {
+    .modal-dialog {
+      background-color: var(--card);
+      color: var(--card-foreground);
       border-radius: var(--radius-lg);
-      border: none;
-      background: var(--card);
-      color: var(--foreground);
+      box-shadow: var(--shadow-lg);
+      width: 90%;
+      max-width: 700px;
+      /* Max width for the modal */
+      z-index: var(--z-modal);
+      transform: scale(0.95);
+      transition: transform var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+      /* Max height and allow scrolling */
+    }
+
+    .modal-container.open .modal-dialog {
+      transform: scale(1);
     }
 
     .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4);
       border-bottom: 1px solid var(--border);
     }
 
-    .modal-footer {
-      border-top: 1px solid var(--border);
+    .modal-title-text {
+      font-size: var(--text-xl);
+      font-weight: 600;
     }
+
+    .modal-close-button {
+      background: none;
+      border: none;
+      font-size: var(--text-2xl);
+      color: var(--foreground);
+      opacity: 0.7;
+      cursor: pointer;
+      padding: var(--space-1);
+    }
+
+    .modal-close-button:hover {
+      opacity: 1;
+    }
+
+    .modal-body {
+      padding: var(--space-4);
+      overflow-y: auto;
+      /* Scroll for long content */
+    }
+
+    .modal-product-layout {
+      display: flex;
+      gap: var(--space-4);
+    }
+
+    .modal-product-image-container {
+      flex: 0 0 40%;
+      /* Image takes 40% width */
+      max-width: 250px;
+    }
+
+    .modal-product-image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .modal-product-details {
+      flex: 1;
+    }
+
+    .modal-product-name {
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-2);
+      color: var(--primary);
+    }
+
+    .modal-product-description-full {
+      font-size: var(--text-base);
+      margin-bottom: var(--space-3);
+      line-height: 1.7;
+    }
+
+    .modal-product-price {
+      font-size: var(--text-xl);
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: var(--space-4);
+    }
+
+    .modal-footer {
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--border);
+      text-align: right;
+    }
+
 
     /* Connection Status */
     .connection-status {
       position: fixed;
       bottom: -60px;
-      left: 0;
-      right: 0;
-      padding: var(--space-3);
-      text-align: center;
-      transition: var(--transition);
-      z-index: 9999;
-      color: white;
+      /* Initially hidden */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: var(--shadow-md);
+      transition: bottom var(--transition-slow);
+      z-index: var(--z-connection-status);
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: var(--space-2);
       font-weight: 500;
+      color: var(--primary-foreground);
+      /* Default for colored backgrounds */
     }
 
     .connection-status.active {
       bottom: 0;
     }
 
-    .connection-status.online {
-      background: transparent;
-      /* color: var(--secondary-foreground); */
-      color: var(--success);
+    .connection-status .status-icon {
+      font-size: var(--text-lg);
+    }
 
-      /* background: var(--success); */
+    .connection-status.online {
+      background-color: var(--success);
+      color: var(--success-foreground);
     }
 
     .connection-status.offline {
-      background: var(--error);
+      background-color: var(--error);
+      color: var(--error-foreground);
     }
 
     .connection-status.reconnecting {
-      background: var(--warning);
-    }
-
-    /* Sync Indicators */
-    .sync-indicator {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      transition: var(--transition);
-      z-index: 1;
-    }
-
-    [data-sync-state="syncing"] .sync-indicator {
-      background: var(--warning);
-      animation: pulse 1.5s infinite;
-    }
-
-    [data-sync-state="synced"] .sync-indicator {
-      background: var(--success);
-    }
-
-    [data-sync-state="error"] .sync-indicator {
-      background: var(--error);
-      animation: none;
+      background-color: var(--warning);
+      color: var(--warning-foreground);
     }
 
     /* Animations */
     @keyframes pulse {
-      0% {
-        transform: scale(0.8);
-        opacity: 0.8;
+
+      0%,
+      100% {
+        transform: scale(0.9);
+        opacity: 0.7;
       }
 
       50% {
         transform: scale(1.1);
         opacity: 1;
-      }
-
-      100% {
-        transform: scale(0.8);
-        opacity: 0.8;
       }
     }
 
@@ -442,409 +749,769 @@
       }
     }
 
-    @keyframes slideIn {
-      from {
-        transform: translateY(20px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Theme Toggle */
-    .theme-toggle {
-      position: fixed;
-      bottom: var(--space-4);
-      right: var(--space-4);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--shadow-md);
-      z-index: 100;
-      border: none;
-      transition: var(--transition);
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.1);
-    }
-
-    /* Responsive Breakpoints */
-    @media (max-width: 1400px) {
-      .category-grid {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-    }
-
+    /* Responsive Design */
     @media (max-width: 1200px) {
-      .category-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      }
-
-      .product-card img {
-        height: 250px;
+      .carousel-item.multi-item {
+        min-width: calc(100% / 2);
+        /* 2 items per slide */
       }
     }
 
     @media (max-width: 992px) {
-      .category-grid {
-        grid-template-columns: repeat(3, 1fr);
+      .main-container {
+        flex-direction: column;
       }
 
-      .carousel-control-prev,
-      .carousel-control-next {
-        display: none;
+      .sidebar {
+        width: 100%;
+        margin-bottom: var(--space-4);
+      }
+
+      .category-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--space-2);
+      }
+
+      .category-item {
+        justify-content: center;
+        /* Center content in grid */
+      }
+
+      .carousel-control {
+        /* Hide controls on smaller screens if touch is primary */
+        /* display: none; */
       }
     }
 
     @media (max-width: 768px) {
-      .category-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .carousel-item.multi-item {
+        min-width: 100%;
+        /* 1 item per slide */
       }
 
-      .product-card img {
-        height: 220px;
+      .modal-product-layout {
+        flex-direction: column;
+      }
+
+      .modal-product-image-container {
+        max-width: 100%;
+        /* Full width image in modal on small screens */
+        margin-bottom: var(--space-3);
+      }
+
+      .app-header h1 {
+        font-size: var(--text-lg);
       }
     }
 
     @media (max-width: 576px) {
-      .category-grid {
-        grid-template-columns: 1fr;
+      .product-actions {
+        flex-direction: column;
       }
 
-      .product-card img {
-        height: 200px;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .category-container {
-        padding: var(--space-4);
+      .btn {
+        width: 100%;
       }
 
-      .product-card img {
-        height: 180px;
+      .main-container {
+        padding: var(--space-2);
+        gap: var(--space-2);
+      }
+
+      .sidebar {
+        padding: var(--space-2);
+      }
+
+      .product-info {
+        padding: var(--space-3);
+      }
+
+      .modal-dialog {
+        width: 95%;
       }
     }
   </style>
 </head>
 
-<body>
-  <!-- Connection Status -->
-  <div class="connection-status" id="connectionStatus">
-    <i class="bi bi-circle-fill status-icon"></i>
-    <span class="status-text" id="statusText">Checking connection...</span>
-  </div>
+<body data-theme="light"> <!-- Default theme -->
+  <div id="appRoot">
+    <header class="app-header">
+      <h1>Galeri Produk Interaktif</h1>
+      <button id="themeToggleBtn" class="theme-toggle" aria-label="Alihkan Mode Gelap/Terang" title="Alihkan Tema">
+        <i class="bi bi-moon-stars-fill" id="themeIconEle"></i>
+      </button>
+    </header>
 
-  <!-- Theme Toggle -->
-  <button class="theme-toggle" id="themeToggle">
-    <i class="bi bi-moon-fill" id="themeIcon"></i>
-  </button>
+    <div class="main-container">
+      <aside class="sidebar" id="categorySidebar">
+        <h2 class="sidebar-title">Kategori</h2>
+        <nav aria-label="Navigasi Kategori Produk">
+          <ul id="categoryListContainer" class="category-list" role="tablist">
+            <!-- Kategori akan dirender oleh JavaScript menggunakan template di bawah -->
+          </ul>
+        </nav>
+      </aside>
 
-  <div class="container-fluid py-5">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="category-container">
-          <h4 class="mb-4">Categories</h4>
-          <div class="category-grid" role="tablist">
-            <button class="category-card active" data-bs-toggle="pill" data-bs-target="#electronics"
-              data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <i class="bi bi-laptop"></i>
-              <span>Electronics</span>
-            </button>
-            <button class="category-card" data-bs-toggle="pill" data-bs-target="#clothing" data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <i class="bi bi-scissors"></i>
-              <span>Clothing</span>
-            </button>
-            <button class="category-card" data-bs-toggle="pill" data-bs-target="#home-decor" data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <i class="bi bi-house-heart"></i>
-              <span>Home Decor</span>
-            </button>
-            <button class="category-card" data-bs-toggle="pill" data-bs-target="#accessories" data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <i class="bi bi-watch"></i>
-              <span>Accessories</span>
-            </button>
-            <button class="category-card" data-bs-toggle="pill" data-bs-target="#furniture" data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <i class="bi bi-lamp"></i>
-              <span>Furniture</span>
-            </button>
-          </div>
-        </div>
+      <main id="mainContentArea" class="content-area" role="main" aria-live="polite">
+        <!-- Konten produk (carousel) akan dirender di sini -->
+        <p id="initialMessage">Pilih kategori untuk melihat produk.</p>
+      </main>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="productModal" class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modalTitleText"
+      aria-hidden="true">
+      <div class="modal-overlay" data-close-modal></div>
+      <div class="modal-dialog">
+        <header class="modal-header">
+          <h3 id="modalTitleText" class="modal-title-text">Detail Produk</h3>
+          <button class="modal-close-button" aria-label="Tutup Modal" data-close-modal>
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </header>
+        <section id="modalBodyContent" class="modal-body">
+          <!-- Konten detail produk akan dirender di sini -->
+        </section>
+        <footer class="modal-footer">
+          <button id="modalAddToCartBtn" class="btn btn-primary">Tambah ke Keranjang</button>
+          <button class="btn btn-secondary" data-close-modal>Tutup</button>
+        </footer>
       </div>
-      <div class="col-md-9">
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="electronics">
-            <div id="electronicsCarousel" class="carousel slide" data-bs-ride="carousel" data-sync-state="synced">
-              <div class="sync-indicator"></div>
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" class="d-block w-100"
-                      alt="Headphones" loading="lazy">
-                    <div class="product-info p-4">
-                      <h3>Premium Headphones</h3>
-                      <p>High-quality wireless headphones with noise cancellation</p>
-                      <div class="price mb-3">$299.99</div>
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-primary">Add to Cart</button>
-                        <button class="btn btn-outline-secondary" data-bs-toggle="modal"
-                          data-bs-target="#productModal">Quick View</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45" class="d-block w-100"
-                      alt="Laptop" loading="lazy">
-                    <div class="product-info p-4">
-                      <h3>Ultra Slim Laptop</h3>
-                      <p>Powerful performance in a sleek design</p>
-                      <div class="price mb-3">$1299.99</div>
-                      <div class="d-flex gap-2">
-                        <button class="btn btn-primary">Add to Cart</button>
-                        <button class="btn btn-outline-secondary" data-bs-toggle="modal"
-                          data-bs-target="#productModal">Quick View</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#electronicsCarousel"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#electronicsCarousel"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
+
+    <!-- Connection Status Indicator -->
+    <div id="connectionStatusNotifier" class="connection-status">
+      <i id="connectionIcon" class="bi status-icon"></i>
+      <span id="connectionText" class="status-text">Memeriksa koneksi...</span>
     </div>
   </div>
 
-  <!-- Product Modal -->
-  <div class="modal fade" id="productModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Product Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <!-- Templates for Dynamic Content -->
+  <template id="categoryItemTemplate">
+    <li class="category-item" role="tab" tabindex="0">
+      <div class="sync-indicator" data-sync-state="synced"></div>
+      <i class="category-icon bi"></i> <!-- Specific icon class added by JS -->
+      <span class="category-name">Nama Kategori</span>
+    </li>
+  </template>
+
+  <template id="productCardTemplate">
+    <article class="product-card fade-in" tabindex="0">
+      <div class="sync-indicator" data-sync-state="synced"></div>
+      <figure class="product-image-container">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Gambar produk"
+          class="product-image" loading="eager">
+      </figure>
+      <div class="product-info">
+        <h4 class="product-name">Nama Produk</h4>
+        <p class="product-description">Deskripsi singkat.</p>
+        <p class="product-price">Rp 0</p>
+        <div class="product-actions">
+          <button class="btn btn-primary add-to-cart-btn" data-product-id="">Tambah ke Keranjang</button>
+          <button class="btn btn-secondary quick-view-btn" data-product-id="">Lihat Detail</button>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e" class="img-fluid rounded"
-                alt="Product" loading="lazy">
-            </div>
-            <div class="col-md-6">
-              <h3>Premium Headphones</h3>
-              <p class="text-muted">High-quality wireless headphones with noise cancellation</p>
-              <div class="price h4 mb-3">$299.99</div>
-              <p>Experience crystal-clear sound with our premium wireless headphones. Features include active noise
-                cancellation, 30-hour battery life, and premium comfort.</p>
-              <div class="mt-4">
-                <button class="btn btn-primary">Add to Cart</button>
-              </div>
-            </div>
-          </div>
+      </div>
+    </article>
+  </template>
+
+  <template id="carouselShellTemplate">
+    <section class="product-carousel" aria-roledescription="carousel" aria-label="Produk Unggulan">
+      <h3 class="carousel-category-title visually-hidden"></h3> <!-- Category name for context -->
+      <div class="sync-indicator" data-sync-state="synced"></div>
+      <div class="carousel-inner-wrapper">
+        <ul class="carousel-inner">
+          <!-- Product cards (as carousel items) will be appended here -->
+        </ul>
+      </div>
+      <button class="carousel-control prev" aria-label="Slide Sebelumnya"><i class="bi bi-chevron-left"></i></button>
+      <button class="carousel-control next" aria-label="Slide Berikutnya"><i class="bi bi-chevron-right"></i></button>
+      <div class="carousel-indicators" role="tablist" aria-label="Navigasi Slide">
+        <!-- Indicators will be appended here -->
+      </div>
+    </section>
+  </template>
+
+  <template id="modalProductDetailsTemplate">
+    <div class="modal-product-layout">
+      <div class="modal-product-image-container">
+        <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          alt="Gambar produk detail" class="modal-product-image" loading="eager">
+      </div>
+      <div class="modal-product-details">
+        <h4 class="modal-product-name-detail">Nama Produk Detail</h4>
+        <p class="modal-product-description-full">Deskripsi lengkap produk...</p>
+        <p class="modal-product-price-detail">Harga</p>
+        <!-- Bisa ditambahkan info lain seperti stok, varian, dll. -->
+        <div class="product-rating" aria-label="Peringkat Produk">
+          <!-- Contoh: <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> ... -->
         </div>
       </div>
     </div>
-  </div>
+  </template>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    class ProductCarouselApp {
+    // JavaScript akan ada di sini
+    class ProductApp {
       constructor() {
-        this.init();
-      }
-
-      init() {
-        this.setupEventListeners();
-        this.setupConnectivity();
-        this.setupThemeToggle();
-        this.setupSyncSimulation();
-        this.initializeCarousels();
-        this.setupIntersectionObserver();
-        this.updateConnectionUI();
-      }
-
-      setupEventListeners() {
-        window.addEventListener('online', () => this.handleConnectivityChange(true));
-        window.addEventListener('offline', () => this.handleConnectivityChange(false));
-        window.addEventListener('resize', this.debounce(this.handleResize, 200));
-      }
-
-      setupConnectivity() {
-        this.connectionState = {
-          online: navigator.onLine,
-          retries: 0,
-          maxRetries: 5,
-          retryInterval: 5000
+        this.DOM = {
+          appRoot: document.getElementById('appRoot'),
+          themeToggleBtn: document.getElementById('themeToggleBtn'),
+          themeIconEle: document.getElementById('themeIconEle'),
+          categoryListContainer: document.getElementById('categoryListContainer'),
+          mainContentArea: document.getElementById('mainContentArea'),
+          initialMessage: document.getElementById('initialMessage'),
+          productModal: document.getElementById('productModal'),
+          modalTitleText: document.getElementById('modalTitleText'),
+          modalBodyContent: document.getElementById('modalBodyContent'),
+          modalAddToCartBtn: document.getElementById('modalAddToCartBtn'),
+          connectionStatusNotifier: document.getElementById('connectionStatusNotifier'),
+          connectionIcon: document.getElementById('connectionIcon'),
+          connectionText: document.getElementById('connectionText'),
         };
-      }
 
-      handleConnectivityChange(online) {
-        this.connectionState.online = online;
+        this.TEMPLATES = {
+          categoryItem: document.getElementById('categoryItemTemplate'),
+          productCard: document.getElementById('productCardTemplate'),
+          carouselShell: document.getElementById('carouselShellTemplate'),
+          modalProductDetails: document.getElementById('modalProductDetailsTemplate'),
+        };
 
-        if (!online) {
-          this.scheduleReconnection();
-        } else {
-          this.connectionState.retries = 0;
-          this.syncAllComponents();
-        }
+        this.config = {
+          itemsPerCarouselSlide: 3, // Default, bisa diubah berdasarkan viewport
+          autoPlayCarousel: true,
+          autoPlayDelay: 5000,
+          maxConnectionRetries: 5,
+          connectionRetryInterval: 5000,
+        };
 
-        this.updateConnectionUI();
-      }
+        this.state = {
+          currentCategory: null,
+          products: {}, // { categoryId: [productObjects] }
+          categories: [],
+          theme: localStorage.getItem('theme') || 'light',
+          isOnline: navigator.onLine,
+          connectionRetries: 0,
+          syncStates: {}, // { 'cat-elektronik': 'synced', 'prod-xyz': 'syncing' }
+          activeCarousel: null, // instance of Carousel class
+          activeModalProduct: null, // product ID for modal's add to cart
+        };
 
-      scheduleReconnection() {
-        if (this.connectionState.retries < this.connectionState.maxRetries) {
-          setTimeout(() => {
-            if (!navigator.onLine) {
-              this.connectionState.retries++;
-              this.updateConnectionUI();
-              this.scheduleReconnection();
-            }
-          }, this.connectionState.retryInterval);
-        }
-      }
-
-      updateConnectionUI() {
-        const status = document.getElementById('connectionStatus');
-        const statusText = document.getElementById('statusText');
-
-        status.className = 'connection-status active';
-        statusText.textContent = 'Online';
-
-        if (!this.connectionState.online) {
-          status.classList.add('offline');
-          statusText.textContent = this.connectionState.retries > 0
-            ? `Offline - Reconnecting (${this.connectionState.retries}/${this.connectionState.maxRetries})...`
-            : 'Offline - Connection lost';
-        } else {
-          status.classList.add('online');
-          if (this.connectionState.retries > 0) {
-            statusText.textContent = 'Connection restored!';
-            setTimeout(() => {
-              if (statusText.textContent === 'Connection restored!') {
-                statusText.textContent = 'Online';
-              }
-            }, 3000);
+        // Data Dummy (dalam aplikasi nyata, ini akan dari API)
+        this.APP_DATA = {
+          categories: [
+            { id: 'elektronik', name: 'Elektronik', icon: 'bi-laptop', syncState: 'synced' },
+            { id: 'pakaian', name: 'Pakaian', icon: 'bi-person-arms-up', syncState: 'synced' },
+            { id: 'rumah-tangga', name: 'Rumah Tangga', icon: 'bi-house-heart', syncState: 'synced' },
+            { id: 'aksesoris', name: 'Aksesoris', icon: 'bi-watch', syncState: 'synced' },
+            { id: 'furnitur', name: 'Furnitur', icon: 'bi-lamp', syncState: 'synced' },
+          ],
+          products: {
+            'elektronik': [
+              { id: 'elek001', name: 'Headphone Pro', description: 'Kualitas suara superior, noise-cancelling.', price: 'Rp 2.500.000', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aGVhZHBob25lc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=300&q=60', fullDescription: 'Rasakan pengalaman audio imersif dengan Headphone Pro. Dilengkapi teknologi noise-cancelling canggih, driver audio presisi, dan bantalan telinga yang nyaman untuk penggunaan jangka panjang. Baterai tahan hingga 20 jam.', syncState: 'synced' },
+              { id: 'elek002', name: 'Laptop UltraBook', description: 'Tipis, ringan, performa tinggi.', price: 'Rp 15.000.000', image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wfGVufDB8fDB8fHww&auto=format&fit=crop&w=300&q=60', fullDescription: 'Laptop UltraBook generasi terbaru dengan prosesor Intel Core i7, RAM 16GB, dan SSD 512GB. Layar QHD+ yang jernih dan desain premium yang elegan.', syncState: 'synced' },
+              { id: 'elek003', name: 'Smartwatch Generasi 5', description: 'Pelacak kebugaran dan notifikasi.', price: 'Rp 3.800.000', image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c21hcnR3YXRjaHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=300&q=60', fullDescription: 'Tetap terhubung dan sehat dengan Smartwatch Generasi 5. Monitor detak jantung, SpO2, kualitas tidur, dan berbagai mode olahraga. Tahan air hingga 50m.', syncState: 'synced' },
+              { id: 'elek004', name: 'Kamera Mirrorless', description: 'Hasil foto profesional, ringkas.', price: 'Rp 12.500.000', image: 'https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FtZXJhfGVufDB8fDB8fHww&auto=format&fit=crop&w=300&q=60', fullDescription: 'Abadikan momen berharga dengan kualitas terbaik menggunakan Kamera Mirrorless ini. Sensor full-frame, stabilisasi gambar internal, dan kemampuan video 4K.', syncState: 'synced' },
+            ],
+            'pakaian': [
+              { id: 'pak001', name: 'Kemeja Flanel Kotak', description: 'Nyaman dan stylish untuk kasual.', price: 'Rp 350.000', image: 'https://images.unsplash.com/photo-1603252109302-5f7a7633b076?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c2hpcnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=300&q=60', fullDescription: 'Kemeja flanel klasik dengan motif kotak-kotak yang tak lekang oleh waktu. Terbuat dari bahan katun berkualitas tinggi yang lembut dan hangat.', syncState: 'synced' },
+              { id: 'pak002', name: 'Celana Jeans Slim Fit', description: 'Potongan modern, bahan stretch.', price: 'Rp 550.000', image: 'https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8amVhbnN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=300&q=60', fullDescription: 'Tampil percaya diri dengan celana jeans slim fit ini. Dibuat dari denim stretch yang nyaman untuk bergerak, dengan detail jahitan yang rapi.', syncState: 'synced' },
+              { id: 'pak003', name: 'Gaun Midi Motif Bunga', description: 'Elegan untuk acara spesial.', price: 'Rp 750.000', image: 'https://images.unsplash.com/photo-1595777457583-436919e345a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZHJlc3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=300&q=60', fullDescription: 'Gaun midi yang menawan dengan motif bunga yang cerah. Cocok untuk pesta kebun, kencan, atau acara formal lainnya. Bahan ringan dan flowy.', syncState: 'synced' },
+            ],
+            // Tambahkan data untuk kategori lain jika diperlukan
+            'rumah-tangga': [], 'aksesoris': [], 'furnitur': [],
           }
+        };
+
+        this._init();
+      }
+
+      _init() {
+        // Load data
+        this.state.categories = this.APP_DATA.categories;
+        this.state.products = this.APP_DATA.products;
+        this.state.categories.forEach(cat => this.state.syncStates[`cat-${cat.id}`] = cat.syncState || 'synced');
+        Object.values(this.state.products).flat().forEach(prod => this.state.syncStates[`prod-${prod.id}`] = prod.syncState || 'synced');
+
+        this._setupEventListeners();
+        this._applyTheme();
+        this._updateConnectionStatusUI(); // Initial check
+        this._renderCategories();
+        this._setupRouter(); // Panggil setelah kategori dirender
+        this._startSyncSimulations();
+        this._updateItemsPerSlide(); // Adjust carousel items based on viewport
+      }
+
+      _setupEventListeners() {
+        this.DOM.themeToggleBtn.addEventListener('click', () => this._toggleTheme());
+
+        // Event delegation for categories
+        this.DOM.categoryListContainer.addEventListener('click', (e) => {
+          const categoryItem = e.target.closest('.category-item');
+          if (categoryItem && categoryItem.dataset.categoryId) {
+            this._handleCategorySelect(categoryItem.dataset.categoryId);
+          }
+        });
+        // Keyboard accessibility for categories
+        this.DOM.categoryListContainer.addEventListener('keydown', (e) => {
+          const categoryItem = e.target.closest('.category-item');
+          if (categoryItem && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            this._handleCategorySelect(categoryItem.dataset.categoryId);
+          }
+        });
+
+        // Event delegation for product actions in main content
+        this.DOM.mainContentArea.addEventListener('click', (e) => {
+          const quickViewBtn = e.target.closest('.quick-view-btn');
+          const addToCartBtn = e.target.closest('.add-to-cart-btn');
+
+          if (quickViewBtn && quickViewBtn.dataset.productId) {
+            this._handleQuickView(quickViewBtn.dataset.productId);
+          } else if (addToCartBtn && addToCartBtn.dataset.productId) {
+            this._handleAddToCart(addToCartBtn.dataset.productId, e.target);
+          }
+        });
+
+        // Modal close buttons
+        this.DOM.productModal.addEventListener('click', (e) => {
+          if (e.target.hasAttribute('data-close-modal')) {
+            this._closeModal();
+          }
+        });
+        this.DOM.productModal.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.DOM.productModal.classList.contains('open')) {
+            this._closeModal();
+          }
+        });
+        this.DOM.modalAddToCartBtn.addEventListener('click', () => {
+          if (this.state.activeModalProduct) {
+            this._handleAddToCart(this.state.activeModalProduct, this.DOM.modalAddToCartBtn);
+          }
+        });
+
+        window.addEventListener('online', () => this._handleConnectivityChange(true));
+        window.addEventListener('offline', () => this._handleConnectivityChange(false));
+        window.addEventListener('resize', this._debounce(() => this._updateItemsPerSlide(), 250));
+        window.addEventListener('hashchange', () => this._route());
+      }
+
+      _setupRouter() {
+        // Initial route handling
+        if (window.location.hash) {
+          this._route();
+        } else if (this.state.categories.length > 0) {
+          // Default to first category if no hash
+          const firstCategoryId = this.state.categories[0].id;
+          this._navigateToCategory(firstCategoryId, false); // false to not update hash if it's already default
         }
       }
 
-      setupThemeToggle() {
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        // Set initial theme
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && prefersDark)) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
-        }
-
-        themeToggle.addEventListener('click', () => {
-          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-          if (isDark) {
-            document.documentElement.removeAttribute('data-theme');
-            themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-            localStorage.setItem('theme', 'light');
+      _route() {
+        const hash = window.location.hash.substring(1); // Remove #
+        if (hash.startsWith('kategori/')) {
+          const categoryId = hash.split('/')[1];
+          if (this.state.categories.find(c => c.id === categoryId)) {
+            this._handleCategorySelect(categoryId, false); // false to not update hash again
           } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
-            localStorage.setItem('theme', 'dark');
+            console.warn(`Kategori tidak ditemukan untuk hash: ${hash}`);
+            if (this.state.categories.length > 0) this._navigateToCategory(this.state.categories[0].id);
           }
-        });
-      }
-
-      initializeCarousels() {
-        this.carousels = {
-          electronics: new bootstrap.Carousel('#electronicsCarousel', {
-            interval: 5000,
-            wrap: true,
-            touch: true
-          })
-        };
-      }
-
-      setupIntersectionObserver() {
-        this.observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
+        } else if (hash.startsWith('produk/')) {
+          const productId = hash.split('/')[1];
+          // Find product and its category
+          let product, categoryId;
+          for (const catId in this.state.products) {
+            const foundProduct = this.state.products[catId].find(p => p.id === productId);
+            if (foundProduct) {
+              product = foundProduct;
+              categoryId = catId;
+              break;
             }
-          });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.category-card, .product-card').forEach(card => {
-          this.observer.observe(card);
-        });
-      }
-
-      setupSyncSimulation() {
-        // Initial sync
-        setTimeout(() => this.syncAllComponents(), 2000);
-
-        // Periodic sync every 30 seconds
-        setInterval(() => {
-          if (this.connectionState.online) {
-            this.syncAllComponents();
           }
-        }, 30000);
+          if (product) {
+            if (this.state.currentCategory !== categoryId) {
+              this._handleCategorySelect(categoryId, false); // Select category first
+            }
+            this._openModal(product);
+          } else {
+            console.warn(`Produk tidak ditemukan untuk hash: ${hash}`);
+            if (this.state.categories.length > 0) this._navigateToCategory(this.state.categories[0].id);
+          }
+        } else if (!hash && this.state.categories.length > 0) {
+          // If hash is empty, default to the first category
+          this._navigateToCategory(this.state.categories[0].id, false);
+        }
       }
 
-      syncAllComponents() {
-        document.querySelectorAll('[data-sync-state]').forEach(el => {
-          this.simulateSync(el);
+      _navigateToCategory(categoryId, updateHash = true) {
+        if (updateHash) {
+          window.location.hash = `kategori/${categoryId}`;
+        } else {
+          // If not updating hash, means hashchange already triggered or it's an initial load
+          this._handleCategorySelect(categoryId, false);
+        }
+      }
+
+      _navigateToProduct(productId) {
+        window.location.hash = `produk/${productId}`;
+        // The _route method will handle opening the modal
+      }
+
+      _toggleTheme() {
+        this.state.theme = (this.state.theme === 'light') ? 'dark' : 'light';
+        localStorage.setItem('theme', this.state.theme);
+        this._applyTheme();
+      }
+
+      _applyTheme() {
+        document.body.dataset.theme = this.state.theme;
+        if (this.state.theme === 'dark') {
+          this.DOM.themeIconEle.classList.remove('bi-moon-stars-fill');
+          this.DOM.themeIconEle.classList.add('bi-sun-fill');
+        } else {
+          this.DOM.themeIconEle.classList.remove('bi-sun-fill');
+          this.DOM.themeIconEle.classList.add('bi-moon-stars-fill');
+        }
+      }
+
+      _handleConnectivityChange(isOnline) {
+        this.state.isOnline = isOnline;
+        if (isOnline) {
+          this.state.connectionRetries = 0;
+          this._updateConnectionStatusUI('online', 'Terhubung kembali!');
+          setTimeout(() => this._updateConnectionStatusUI('online', 'Online'), 3000);
+          // Potentially trigger data sync here for all components
+          this._syncAllVisibleComponents();
+        } else {
+          this._updateConnectionStatusUI('offline', 'Koneksi terputus. Mencoba menyambung ulang...');
+          this._scheduleReconnection();
+        }
+      }
+
+      _scheduleReconnection() {
+        if (!this.state.isOnline && this.state.connectionRetries < this.config.maxConnectionRetries) {
+          setTimeout(() => {
+            if (!navigator.onLine) { // Check again before retrying
+              this.state.connectionRetries++;
+              this._updateConnectionStatusUI('reconnecting', `Offline - Menyambung ulang (${this.state.connectionRetries}/${this.config.maxConnectionRetries})...`);
+              this._scheduleReconnection();
+            } else {
+              this._handleConnectivityChange(true); // It came back online
+            }
+          }, this.config.connectionRetryInterval);
+        } else if (!this.state.isOnline) {
+          this._updateConnectionStatusUI('offline', 'Gagal menyambung. Periksa koneksi internet Anda.');
+        }
+      }
+
+      _updateConnectionStatusUI(statusType = null, text = null) {
+        const notifier = this.DOM.connectionStatusNotifier;
+        const iconEl = this.DOM.connectionIcon;
+        const textEl = this.DOM.connectionText;
+
+        notifier.classList.remove('online', 'offline', 'reconnecting', 'active');
+
+        if (!statusType) { // Determine status if not provided
+          statusType = this.state.isOnline ? 'online' : (this.state.connectionRetries > 0 ? 'reconnecting' : 'offline');
+        }
+
+        if (statusType === 'online') {
+          notifier.classList.add('online');
+          iconEl.className = 'bi bi-wifi status-icon';
+          textEl.textContent = text || 'Online';
+        } else if (statusType === 'offline') {
+          notifier.classList.add('offline');
+          iconEl.className = 'bi bi-wifi-off status-icon';
+          textEl.textContent = text || 'Offline - Koneksi hilang';
+        } else if (statusType === 'reconnecting') {
+          notifier.classList.add('reconnecting');
+          iconEl.className = 'bi bi-arrow-repeat status-icon'; // Or bi-broadcast
+          textEl.textContent = text || `Menyambung ulang... (${this.state.connectionRetries}/${this.config.maxConnectionRetries})`;
+        }
+
+        // Make status visible for a while, then hide if online, or keep if offline/reconnecting
+        if (statusType === 'online' && text === 'Online') { // Standard online message
+          setTimeout(() => {
+            if (this.state.isOnline && textEl.textContent === 'Online') { // Check if still online and message hasn't changed
+              notifier.classList.remove('active');
+            }
+          }, 5000); // Hide after 5s if it's just "Online"
+        }
+        notifier.classList.add('active');
+      }
+
+      _renderCategories() {
+        this.DOM.categoryListContainer.innerHTML = ''; // Clear existing
+        this.state.categories.forEach(category => {
+          const categoryNode = this.TEMPLATES.categoryItem.content.cloneNode(true);
+          const li = categoryNode.querySelector('.category-item');
+          li.dataset.categoryId = category.id;
+          li.setAttribute('aria-controls', `content-${category.id}`); // For ARIA
+          li.querySelector('.category-icon').classList.add(category.icon || 'bi-tag-fill');
+          li.querySelector('.category-name').textContent = category.name;
+
+          const syncIndicator = li.querySelector('.sync-indicator');
+          syncIndicator.parentElement.dataset.syncId = `cat-${category.id}`; // For easier targeting
+          this._updateSyncIndicator(`cat-${category.id}`, this.state.syncStates[`cat-${category.id}`]);
+
+          this.DOM.categoryListContainer.appendChild(categoryNode);
         });
       }
 
-      simulateSync(element) {
-        // Set to syncing state
-        element.setAttribute('data-sync-state', 'syncing');
+      _handleCategorySelect(categoryId, updateHash = true) {
+        if (this.state.currentCategory === categoryId && this.DOM.mainContentArea.querySelector('.product-carousel')) {
+          // If same category is clicked and content is already there, do nothing or maybe just ensure it's visible
+          return;
+        }
 
-        // Simulate sync delay
-        const delay = 1000 + Math.random() * 2000;
+        this.state.currentCategory = categoryId;
+        if (this.DOM.initialMessage) {
+          this.DOM.initialMessage.remove();
+          this.DOM.initialMessage = null; // Ensure it's only removed once
+        }
+
+        // Update active class on category list
+        this.DOM.categoryListContainer.querySelectorAll('.category-item').forEach(item => {
+          item.classList.toggle('active', item.dataset.categoryId === categoryId);
+          item.setAttribute('aria-selected', item.dataset.categoryId === categoryId);
+          if (item.dataset.categoryId === categoryId) item.focus(); // Focus on active category
+        });
+
+        this._renderProductCarousel(categoryId);
+
+        if (updateHash && window.location.hash !== `#kategori/${categoryId}`) {
+          this._navigateToCategory(categoryId);
+        }
+        // Simulate sync for the selected category (visual only)
+        this._simulateSyncForElement(`cat-${categoryId}`);
+      }
+
+      _renderProductCarousel(categoryId) {
+        const products = this.state.products[categoryId] || [];
+        this.DOM.mainContentArea.innerHTML = ''; // Clear previous content
+
+        if (products.length === 0) {
+          this.DOM.mainContentArea.innerHTML = `<p class="fade-in">Tidak ada produk dalam kategori ini.</p>`;
+          return;
+        }
+
+        const carouselShellNode = this.TEMPLATES.carouselShell.content.cloneNode(true);
+        const carouselElement = carouselShellNode.querySelector('.product-carousel');
+        carouselElement.id = `carousel-${categoryId}`;
+        carouselElement.querySelector('.carousel-category-title').textContent = `Produk dalam kategori ${this.state.categories.find(c => c.id === categoryId).name}`;
+        carouselElement.dataset.syncId = `carousel-data-${categoryId}`; // For sync indicator of the carousel data itself
+        this._updateSyncIndicator(`carousel-data-${categoryId}`, 'synced'); // Default to synced
+
+        const carouselInner = carouselElement.querySelector('.carousel-inner');
+
+        products.forEach(product => {
+          const productCardNode = this.TEMPLATES.productCard.content.cloneNode(true);
+          const card = productCardNode.querySelector('.product-card');
+          card.dataset.productId = product.id;
+          card.setAttribute('aria-label', product.name);
+
+          const img = card.querySelector('.product-image');
+          img.src = product.image;
+          img.alt = product.name; // More descriptive alt
+
+          card.querySelector('.product-name').textContent = product.name;
+          card.querySelector('.product-description').textContent = product.description;
+          card.querySelector('.product-price').textContent = product.price;
+          card.querySelector('.quick-view-btn').dataset.productId = product.id;
+          card.querySelector('.add-to-cart-btn').dataset.productId = product.id;
+
+          const syncIndicator = card.querySelector('.sync-indicator');
+          syncIndicator.parentElement.dataset.syncId = `prod-${product.id}`;
+          this._updateSyncIndicator(`prod-${product.id}`, this.state.syncStates[`prod-${product.id}`]);
+
+          // Wrap card in a carousel-item li
+          const carouselItemLi = document.createElement('li');
+          carouselItemLi.className = 'carousel-item';
+          if (this.config.itemsPerCarouselSlide > 1) {
+            carouselItemLi.classList.add('multi-item');
+            carouselItemLi.style.minWidth = `calc(100% / ${this.config.itemsPerCarouselSlide})`;
+          }
+          carouselItemLi.appendChild(card);
+          carouselInner.appendChild(carouselItemLi);
+        });
+
+        this.DOM.mainContentArea.appendChild(carouselShellNode);
+
+        if (this.state.activeCarousel) {
+          this.state.activeCarousel.destroy(); // Clean up previous carousel instance
+        }
+        this.state.activeCarousel = new Carousel(carouselElement, {
+          itemsPerSlide: this.config.itemsPerCarouselSlide,
+          autoPlay: this.config.autoPlayCarousel,
+          autoPlayDelay: this.config.autoPlayDelay,
+          onSlideChange: (newIndex) => { /* console.log(`Carousel ${categoryId} slid to ${newIndex}`); */ }
+        });
+      }
+
+      _updateItemsPerSlide() {
+        if (window.innerWidth <= 768) {
+          this.config.itemsPerCarouselSlide = 1;
+        } else if (window.innerWidth <= 1200) {
+          this.config.itemsPerCarouselSlide = 2;
+        } else {
+          this.config.itemsPerCarouselSlide = 3;
+        }
+        // Re-render carousel if one is active
+        if (this.state.currentCategory && this.state.activeCarousel) {
+          this._renderProductCarousel(this.state.currentCategory);
+        }
+      }
+
+
+      _handleQuickView(productId) {
+        let productToView;
+        // Find product across all categories (though it should be in currentCategory's products)
+        for (const catId in this.state.products) {
+          const found = this.state.products[catId].find(p => p.id === productId);
+          if (found) {
+            productToView = found;
+            break;
+          }
+        }
+
+        if (productToView) {
+          this._openModal(productToView);
+          this._navigateToProduct(productId); // Update URL
+        } else {
+          console.error("Produk tidak ditemukan untuk Quick View:", productId);
+        }
+      }
+
+      _openModal(product) {
+        this.state.activeModalProduct = product.id;
+        const modalContentNode = this.TEMPLATES.modalProductDetails.content.cloneNode(true);
+
+        this.DOM.modalTitleText.textContent = product.name; // Update modal title
+        modalContentNode.querySelector('.modal-product-name-detail').textContent = product.name;
+        modalContentNode.querySelector('.modal-product-description-full').textContent = product.fullDescription || product.description; // Fallback to short desc
+        modalContentNode.querySelector('.modal-product-price-detail').textContent = product.price;
+        modalContentNode.querySelector('.modal-product-image').src = product.image;
+        modalContentNode.querySelector('.modal-product-image').alt = product.name;
+
+        this.DOM.modalBodyContent.innerHTML = ''; // Clear previous
+        this.DOM.modalBodyContent.appendChild(modalContentNode);
+
+        this.DOM.productModal.classList.add('open');
+        this.DOM.productModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Prevent background scroll
+        this.DOM.productModal.querySelector('.modal-close-button').focus(); // Focus on close button
+      }
+
+      _closeModal() {
+        this.DOM.productModal.classList.remove('open');
+        this.DOM.productModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = ''; // Restore scroll
+        this.state.activeModalProduct = null;
+        // If current hash points to a product, navigate back to its category or clear hash
+        if (window.location.hash.startsWith('#produk/')) {
+          if (this.state.currentCategory) {
+            this._navigateToCategory(this.state.currentCategory);
+          } else {
+            window.location.hash = ''; // Or to a default route
+          }
+        }
+      }
+
+      _handleAddToCart(productId, buttonElement) {
+        // Find product (can be in any category if modal is open from direct link)
+        let product;
+        Object.values(this.state.products).flat().find(p => {
+          if (p.id === productId) product = p;
+        });
+
+        if (!product) {
+          console.error("Produk tidak ditemukan untuk ditambahkan ke keranjang:", productId);
+          return;
+        }
+
+        console.log(`Produk "${product.name}" (ID: ${productId}) ditambahkan ke keranjang.`);
+        // UX: Change button text temporarily
+        const originalText = buttonElement.textContent;
+        buttonElement.innerHTML = `<i class="bi bi-check-lg"></i> Ditambahkan!`;
+        buttonElement.disabled = true;
 
         setTimeout(() => {
-          // Randomly choose success or error (mostly success)
-          const success = Math.random() > 0.1;
-          element.setAttribute('data-sync-state', success ? 'synced' : 'error');
+          buttonElement.textContent = originalText;
+          buttonElement.disabled = false;
+        }, 2000);
 
-          // If error, retry after delay
-          if (!success) {
-            setTimeout(() => this.simulateSync(element), 3000);
+        // Simulate sync for this product
+        this._simulateSyncForElement(`prod-${productId}`);
+      }
+
+      // Sync Simulation Logic
+      _startSyncSimulations() {
+        // Periodically try to "sync" elements that might be in error state or just for show
+        setInterval(() => {
+          if (this.state.isOnline) {
+            this._syncAllVisibleComponents();
+          }
+        }, 30000); // e.g., every 30 seconds
+      }
+
+      _syncAllVisibleComponents() {
+        // Sync currently active category
+        if (this.state.currentCategory) {
+          this._simulateSyncForElement(`cat-${this.state.currentCategory}`);
+          // Sync products in the current category's carousel
+          (this.state.products[this.state.currentCategory] || []).forEach(prod => {
+            this._simulateSyncForElement(`prod-${prod.id}`);
+          });
+          // Sync carousel data itself
+          this._simulateSyncForElement(`carousel-data-${this.state.currentCategory}`);
+        }
+      }
+
+      _simulateSyncForElement(elementId) { // elementId is like 'cat-elektronik' or 'prod-xyz'
+        if (!this.state.isOnline && this.state.syncStates[elementId] !== 'error') {
+          this._updateSyncIndicator(elementId, 'error'); // Can't sync if offline
+          this.state.syncStates[elementId] = 'error';
+          return;
+        }
+
+        this._updateSyncIndicator(elementId, 'syncing');
+        this.state.syncStates[elementId] = 'syncing';
+
+        const delay = 1000 + Math.random() * 2000; // 1-3 seconds
+        setTimeout(() => {
+          if (!this.state.isOnline) { // Check again after delay
+            this._updateSyncIndicator(elementId, 'error');
+            this.state.syncStates[elementId] = 'error';
+            return;
+          }
+          const success = Math.random() > 0.1; // 90% success rate
+          const newState = success ? 'synced' : 'error';
+          this._updateSyncIndicator(elementId, newState);
+          this.state.syncStates[elementId] = newState;
+
+          if (!success) { // If error, schedule a retry
+            setTimeout(() => this._simulateSyncForElement(elementId), 5000);
           }
         }, delay);
       }
 
-      handleResize() {
-        // Handle responsive adjustments
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-        document.body.classList.toggle('mobile-view', isMobile);
+      _updateSyncIndicator(elementId, state) { // state: 'syncing', 'synced', 'error'
+        const elements = document.querySelectorAll(`[data-sync-id="${elementId}"] .sync-indicator`);
+        elements.forEach(indicator => {
+          if (indicator) { // Ensure indicator element exists
+            indicator.parentElement.dataset.syncState = state; // Update attribute on parent
+          }
+        });
+        this.state.syncStates[elementId] = state; // Update app state
       }
 
-      debounce(func, wait) {
+      // Utility
+      _debounce(func, wait) {
         let timeout;
         return (...args) => {
           clearTimeout(timeout);
@@ -853,9 +1520,178 @@
       }
     }
 
+    // Carousel Class (Vanilla JS)
+    class Carousel {
+      constructor(carouselElement, options = {}) {
+        this.carouselElement = carouselElement;
+        this.inner = carouselElement.querySelector('.carousel-inner');
+        this.items = Array.from(this.inner.children); // These are LIs containing product cards
+        this.indicatorsContainer = carouselElement.querySelector('.carousel-indicators');
+
+        this.options = {
+          itemsPerSlide: 1,
+          initialIndex: 0,
+          autoPlay: false,
+          autoPlayDelay: 5000,
+          loop: true,
+          onSlideChange: () => { },
+          ...options
+        };
+
+        this.currentIndex = this.options.initialIndex;
+        this.totalSlides = Math.ceil(this.items.length / this.options.itemsPerSlide);
+        this.itemWidth = this.items.length > 0 ? this.items[0].offsetWidth : 0; // Assuming all items have same width
+        this.autoPlayTimer = null;
+
+        this._setupControls();
+        this._setupIndicators();
+        this._updateCarousel();
+
+        if (this.options.autoPlay) {
+          this.startAutoPlay();
+        }
+        this._setupTouchEvents();
+      }
+
+      _setupControls() {
+        this.prevButton = this.carouselElement.querySelector('.carousel-control.prev');
+        this.nextButton = this.carouselElement.querySelector('.carousel-control.next');
+
+        if (this.prevButton) this.prevButton.addEventListener('click', () => this.prev());
+        if (this.nextButton) this.nextButton.addEventListener('click', () => this.next());
+
+        // Hide controls if not enough items or not looping
+        if (this.totalSlides <= 1 && !this.options.loop) {
+          if (this.prevButton) this.prevButton.style.display = 'none';
+          if (this.nextButton) this.nextButton.style.display = 'none';
+        }
+      }
+
+      _setupIndicators() {
+        if (!this.indicatorsContainer) return;
+        this.indicatorsContainer.innerHTML = ''; // Clear existing
+        if (this.totalSlides <= 1) { // Don't show indicators for single slide
+          this.indicatorsContainer.style.display = 'none';
+          return;
+        }
+        this.indicatorsContainer.style.display = 'flex';
+
+        for (let i = 0; i < this.totalSlides; i++) {
+          const button = document.createElement('button');
+          button.classList.add('carousel-indicator');
+          button.setAttribute('role', 'tab');
+          button.setAttribute('aria-label', `Slide ${i + 1}`);
+          button.setAttribute('aria-selected', i === this.currentIndex);
+          button.addEventListener('click', () => this.goTo(i));
+          this.indicatorsContainer.appendChild(button);
+        }
+        this._updateIndicators();
+      }
+
+      _updateIndicators() {
+        if (!this.indicatorsContainer) return;
+        const indicators = Array.from(this.indicatorsContainer.children);
+        indicators.forEach((indicator, i) => {
+          indicator.classList.toggle('active', i === this.currentIndex);
+          indicator.setAttribute('aria-selected', i === this.currentIndex);
+        });
+      }
+
+      _updateCarousel() {
+        // This calculates translation based on grouped slides, not individual items
+        const slideWidth = this.carouselElement.querySelector('.carousel-inner-wrapper').offsetWidth;
+        const translateX = -this.currentIndex * slideWidth;
+        this.inner.style.transform = `translateX(${translateX}px)`;
+
+        this._updateIndicators();
+        this.options.onSlideChange(this.currentIndex);
+
+        // Disable/enable prev/next if not looping
+        if (!this.options.loop) {
+          if (this.prevButton) this.prevButton.disabled = this.currentIndex === 0;
+          if (this.nextButton) this.nextButton.disabled = this.currentIndex === this.totalSlides - 1;
+        }
+      }
+
+      goTo(index) {
+        if (index < 0 || index >= this.totalSlides) {
+          if (this.options.loop) {
+            this.currentIndex = (index + this.totalSlides) % this.totalSlides;
+          } else {
+            return; // Don't move if not looping and out of bounds
+          }
+        } else {
+          this.currentIndex = index;
+        }
+        this._updateCarousel();
+        this.resetAutoPlay();
+      }
+
+      next() {
+        this.goTo(this.currentIndex + 1);
+      }
+
+      prev() {
+        this.goTo(this.currentIndex - 1);
+      }
+
+      startAutoPlay() {
+        if (!this.options.autoPlay || this.totalSlides <= 1) return;
+        this.stopAutoPlay(); // Clear existing timer
+        this.autoPlayTimer = setInterval(() => this.next(), this.options.autoPlayDelay);
+      }
+
+      stopAutoPlay() {
+        clearInterval(this.autoPlayTimer);
+        this.autoPlayTimer = null;
+      }
+
+      resetAutoPlay() {
+        if (this.options.autoPlay) {
+          this.startAutoPlay();
+        }
+      }
+
+      _setupTouchEvents() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const swipeThreshold = 50; // Minimum pixels for a swipe
+
+        this.inner.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+          this.stopAutoPlay();
+        }, { passive: true });
+
+        this.inner.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          this._handleSwipe(touchStartX, touchEndX, swipeThreshold);
+          this.resetAutoPlay();
+        }, { passive: true });
+      }
+
+      _handleSwipe(startX, endX, threshold) {
+        const deltaX = endX - startX;
+        if (Math.abs(deltaX) > threshold) { // Check if swipe is significant
+          if (deltaX < 0) { // Swipe left
+            this.next();
+          } else { // Swipe right
+            this.prev();
+          }
+        }
+      }
+
+      destroy() {
+        this.stopAutoPlay();
+        // Remove event listeners if any were added directly (not delegated)
+        // For this implementation, most are delegated or on elements that get replaced.
+        // If resize listeners were added, they should be removed.
+        // console.log("Carousel instance destroyed");
+      }
+    }
+
     // Initialize the application
     document.addEventListener('DOMContentLoaded', () => {
-      window.productApp = new ProductCarouselApp();
+      window.app = new ProductApp();
     });
   </script>
 </body>

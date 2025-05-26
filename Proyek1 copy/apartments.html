@@ -1,1644 +1,2246 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#1976d2" />
-    <title>ApartmentFinder - Apartments</title>
-<style>
-  /* Root Variables - Design Tokens */
-:root {
-  /* Colors - Palette yang harmonis dan konsisten */
-  --clr-primary: #1976d2;
-  --clr-primary-hover: #1565c0;
-  --clr-primary-light: #bbdefb;
-  --clr-primary-transparent: rgba(25, 118, 210, 0.1);
-  --clr-secondary: #f5f5f5;
-  --clr-secondary-hover: #e0e0e0;
-  --clr-accent: #ff4081;
-  --clr-accent-hover: #f50057;
-  --clr-accent-light: #ff80ab;
-  --clr-background: #ffffff;
-  --clr-foreground: #212121;
-  --clr-muted: #757575;
-  --clr-border: #e0e0e0;
-  --clr-success: #4caf50;
-  --clr-warning: #ff9800;
-  --clr-error: #f44336;
-  --clr-info: #2196f3;
-  --clr-surface: #fafafa;
-  --clr-overlay: rgba(0, 0, 0, 0.5);
-  --clr-overlay-light: rgba(0, 0, 0, 0.2);
-
-  /* Spacing - Sistem jarak yang konsisten */
-  --spc-xxs: 0.25rem;
-  --spc-xs: 0.5rem;
-  --spc-sm: 1rem;
-  --spc-md: 1.5rem;
-  --spc-lg: 2rem;
-  --spc-xl: 3rem;
-  --spc-xxl: 4rem;
-
-  /* Typography - Hirarki teks yang jelas */
-  --txt-xs: 0.75rem;
-  --txt-sm: 0.875rem;
-  --txt-md: 1rem;
-  --txt-lg: 1.25rem;
-  --txt-xl: 1.5rem;
-  --txt-2xl: 2rem;
-  --txt-3xl: 2.5rem;
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-loose: 1.8;
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 700;
-
-  /* Shadows - Kedalaman visual */
-  --shd-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shd-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shd-md: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --shd-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
-  --shd-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
-  --shd-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shd-focus: 0 0 0 3px rgba(25, 118, 210, 0.25);
-  --shd-hover: 0 6px 12px rgba(0, 0, 0, 0.1);
-
-  /* Border Radius - Konsistensi bentuk */
-  --rad-xs: 0.125rem;
-  --rad-sm: 0.25rem;
-  --rad-md: 0.5rem;
-  --rad-lg: 1rem;
-  --rad-xl: 1.5rem;
-  --rad-full: 9999px;
-
-  /* Transitions - Gerakan yang halus */
-  --trs-fast: 0.2s ease;
-  --trs-md: 0.3s ease;
-  --trs-slow: 0.5s ease;
-  --trs-bounce: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --trs-elastic: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family);
-  background-color: var(--clr-background);
-  color: var(--clr-foreground);
-  line-height: 1.5;
-}
-
-/* Utility Classes */
-/* Margins */
-.m-0 {
-  margin: 0;
-}
-.m-xs {
-  margin: var(--spc-xs);
-}
-.m-sm {
-  margin: var(--spc-sm);
-}
-.m-md {
-  margin: var(--spc-md);
-}
-.m-lg {
-  margin: var(--spc-lg);
-}
-.m-xl {
-  margin: var(--spc-xl);
-}
-/* Padding */
-.p-0 {
-  padding: 0;
-}
-.p-xs {
-  padding: var(--spc-xs);
-}
-.p-sm {
-  padding: var(--spc-sm);
-}
-.p-md {
-  padding: var(--spc-md);
-}
-.p-lg {
-  padding: var(--spc-lg);
-}
-.p-xl {
-  padding: var(--spc-xl);
-}
-/* Typography */
-.txt-xs {
-  font-size: var(--txt-xs);
-}
-.txt-sm {
-  font-size: var(--txt-sm);
-}
-.txt-md {
-  font-size: var(--txt-md);
-}
-.txt-lg {
-  font-size: var(--txt-lg);
-}
-.txt-xl {
-  font-size: var(--txt-xl);
-}
-.txt-2xl {
-  font-size: var(--txt-2xl);
-}
-.txt-bold {
-  font-weight: 700;
-}
-.txt-center {
-  text-align: center;
-}
-.txt-muted {
-  color: var(--clr-muted);
-}
-.txt-white {
-  color: white;
-}
-/* Flexbox */
-.flex {
-  display: flex;
-}
-.flex-column {
-  flex-direction: column;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.align-center {
-  align-items: center;
-}
-.gap-xs {
-  gap: var(--spc-xs);
-}
-.gap-sm {
-  gap: var(--spc-sm);
-}
-.gap-md {
-  gap: var(--spc-md);
-}
-/* Grid System */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spc-md);
-}
-
-.grid-12 {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--spc-md);
-}
-
-.col-span-3 {
-  grid-column: span 3;
-}
-.col-span-4 {
-  grid-column: span 4;
-}
-.col-span-6 {
-  grid-column: span 6;
-}
-.col-span-8 {
-  grid-column: span 8;
-}
-.col-span-12 {
-  grid-column: span 12;
-}
-.apartment-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spc-md);
-}
-
-/* Components */
-/* Header */
-.header {
-  background-color: var(--clr-background);
-  box-shadow: var(--shd-sm);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: var(--spc-sm) 0;
-}
-
-.nav-menu {
-  display: flex;
-  gap: var(--spc-md);
-  list-style: none;
-}
-
-.nav-link {
-  color: var(--clr-foreground);
-  text-decoration: none;
-  transition: color var(--trs-fast);
-}
-
-.nav-link:hover {
-  color: var(--clr-primary);
-}
-
-.nav-link.active {
-  color: var(--clr-primary);
-  font-weight: 600;
-}
-
-/* Hero Section */
-.hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("/hero-bg.jpg") center/cover;
-  padding: var(--spc-xxl) 0;
-  color: white;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  min-height: 60vh;
-  display: flex;
-  align-items: center;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    45deg,
-    var(--clr-primary-transparent),
-    transparent
-  );
-  opacity: 0.6;
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.hero-title {
-  font-size: var(--txt-3xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spc-md);
-  animation: fadeIn 1s ease-out, slideIn 1s ease-out;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.hero-subtitle {
-  font-size: var(--txt-xl);
-  margin-bottom: var(--spc-lg);
-  opacity: 0.9;
-  animation: fadeIn 1s ease-out 0.3s both, slideIn 1s ease-out 0.3s both;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.hero-cta {
-  animation: fadeIn 1s ease-out 0.6s both, scaleIn 1s ease-out 0.6s both;
-  display: inline-block;
-}
-
-/* Apartment Card */
-.apartment-card {
-  background: var(--clr-background);
-  border-radius: var(--rad-md);
-  box-shadow: var(--shd-sm);
-  overflow: hidden;
-  transition: all var(--trs-md);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.apartment-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shd-hover);
-}
-
-.apartment-card:focus-within {
-  outline: none;
-  box-shadow: var(--shd-focus), var(--shd-md);
-}
-
-.apartment-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  transition: transform var(--trs-md);
-}
-
-.apartment-card:hover img {
-  transform: scale(1.05);
-}
-
-.apartment-card-content {
-  padding: var(--spc-md);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.apartment-card-title {
-  font-size: var(--txt-lg);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spc-xs);
-  color: var(--clr-foreground);
-}
-
-.apartment-card-price {
-  font-size: var(--txt-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--clr-primary);
-  margin-bottom: var(--spc-sm);
-}
-
-.apartment-card-features {
-  display: flex;
-  gap: var(--spc-sm);
-  margin-bottom: var(--spc-sm);
-}
-
-.apartment-card-feature {
-  display: flex;
-  align-items: center;
-  gap: var(--spc-xxs);
-  font-size: var(--txt-sm);
-  color: var(--clr-muted);
-}
-
-.apartment-card-actions {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.apartment-card-badge {
-  position: absolute;
-  top: var(--spc-sm);
-  right: var(--spc-sm);
-  background-color: var(--clr-accent);
-  color: white;
-  padding: var(--spc-xxs) var(--spc-xs);
-  border-radius: var(--rad-sm);
-  font-size: var(--txt-xs);
-  font-weight: var(--font-weight-bold);
-  z-index: 1;
-  box-shadow: var(--shd-sm);
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spc-sm) var(--spc-md);
-  border-radius: var(--rad-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--trs-fast);
-  border: none;
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  letter-spacing: 0.5px;
-}
-
-.btn::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.5);
-  opacity: 0;
-  border-radius: 100%;
-  transform: scale(1, 1) translate(-50%);
-  transform-origin: 50% 50%;
-}
-
-.btn:focus {
-  outline: none;
-  box-shadow: var(--shd-focus);
-}
-
-.btn:active::after {
-  animation: ripple 1s ease-out;
-}
-
-@keyframes ripple {
-  0% {
-    transform: scale(0, 0);
-    opacity: 0.5;
-  }
-  20% {
-    transform: scale(25, 25);
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(40, 40);
-  }
-}
-
-.btn-primary {
-  background-color: var(--clr-primary);
-  color: white;
-  box-shadow: var(--shd-xs);
-}
-
-.btn-primary:hover {
-  background-color: var(--clr-primary-hover);
-  box-shadow: var(--shd-sm);
-  transform: translateY(-2px);
-}
-
-.btn-lg {
-  padding: var(--spc-md) var(--spc-lg);
-  font-size: var(--txt-md);
-  border-radius: var(--rad-md);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-secondary {
-  background-color: var(--clr-secondary);
-  color: var(--clr-foreground);
-  box-shadow: var(--shd-xs);
-}
-
-.btn-secondary:hover {
-  background-color: var(--clr-secondary-hover);
-  box-shadow: var(--shd-sm);
-  transform: translateY(-2px);
-}
-
-.btn-accent {
-  background-color: var(--clr-accent);
-  color: white;
-  box-shadow: var(--shd-xs);
-}
-
-.btn-accent:hover {
-  background-color: var(--clr-accent-hover);
-  box-shadow: var(--shd-sm);
-  transform: translateY(-2px);
-}
-
-/* Forms */
-.form-group {
-  margin-bottom: var(--spc-md);
-  position: relative;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: var(--spc-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--clr-foreground);
-  transition: color var(--trs-fast);
-}
-
-.form-control {
-  width: 100%;
-  padding: var(--spc-sm);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--rad-sm);
-  transition: all var(--trs-fast);
-  background-color: var(--clr-background);
-  font-size: var(--txt-md);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--clr-primary);
-  box-shadow: var(--shd-focus);
-}
-
-.form-control:hover:not(:focus) {
-  border-color: var(--clr-muted);
-}
-
-.form-group:focus-within .form-label {
-  color: var(--clr-primary);
-}
-
-.form-hint {
-  display: block;
-  margin-top: var(--spc-xs);
-  font-size: var(--txt-sm);
-  color: var(--clr-muted);
-}
-
-.form-error {
-  display: block;
-  margin-top: var(--spc-xs);
-  font-size: var(--txt-sm);
-  color: var(--clr-error);
-  animation: slideIn var(--trs-fast);
-}
-
-/* Custom checkbox */
-.form-checkbox {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-.form-checkbox input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkbox-custom {
-  position: relative;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  margin-right: var(--spc-xs);
-  background-color: var(--clr-background);
-  border: 1px solid var(--clr-border);
-  border-radius: var(--rad-xs);
-  transition: all var(--trs-fast);
-}
-
-.form-checkbox input:checked ~ .checkbox-custom {
-  background-color: var(--clr-primary);
-  border-color: var(--clr-primary);
-}
-
-.checkbox-custom:after {
-  content: "";
-  position: absolute;
-  display: none;
-  left: 6px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-}
-
-.form-checkbox input:checked ~ .checkbox-custom:after {
-  display: block;
-}
-
-/* Add visual feedback for active filters */
-.filter-active {
-  background-color: rgba(25, 118, 210, 0.1);
-  border-color: var(--clr-primary);
-}
-
-/* Responsive Design - Adaptasi untuk berbagai perangkat */
-@media (max-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
-
-  .apartment-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  }
-}
-
-@media (max-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-
-  .hero-title {
-    font-size: var(--txt-2xl);
-  }
-
-  .hero-subtitle {
-    font-size: var(--txt-lg);
-  }
-
-  .process-steps {
-    gap: var(--spc-sm);
-  }
-
-  .apartment-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    max-width: 720px;
-    padding: 0 var(--spc-md);
-  }
-
-  .hero {
-    min-height: 50vh;
-    padding: var(--spc-xl) 0;
-  }
-
-  .nav-toggle {
-    display: block;
-    cursor: pointer;
-    transition: transform var(--trs-fast);
-  }
-
-  .nav-toggle:hover {
-    transform: scale(1.1);
-  }
-
-  .nav-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--clr-background);
-    padding: var(--spc-md);
-    box-shadow: var(--shd-sm);
-    border-radius: 0 0 var(--rad-md) var(--rad-md);
-    animation: slideDown var(--trs-md);
-    transform-origin: top center;
-    z-index: 100;
-  }
-
-  @keyframes slideDown {
-    from {
-      transform: scaleY(0);
-      opacity: 0;
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#1976d2" />
+  <title>ApartmentFinder - Temukan Apartemen Impian Anda</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Root Variables - Design Tokens */
+    :root {
+      /* Colors - Palette yang harmonis dan konsisten */
+      --clr-primary: #1976d2;
+      --clr-primary-hover: #1565c0;
+      --clr-primary-light: #bbdefb;
+      --clr-primary-transparent: rgba(25, 118, 210, 0.1);
+      --clr-secondary: #f5f5f5;
+      /* Digunakan untuk latar belakang beberapa section */
+      --clr-secondary-hover: #e0e0e0;
+      --clr-accent: #ff4081;
+      --clr-accent-hover: #f50057;
+      --clr-accent-light: #ff80ab;
+      --clr-background: #ffffff;
+      --clr-surface: #fafafa;
+      /* Mirip dengan --clr-secondary, bisa disatukan jika sama persis */
+      --clr-foreground: #212121;
+      /* Warna teks utama */
+      --clr-muted: #757575;
+      /* Warna teks sekunder/hint */
+      --clr-border: #e0e0e0;
+      --clr-success: #4caf50;
+      --clr-warning: #ff9800;
+      --clr-error: #f44336;
+      --clr-info: #2196f3;
+      --clr-overlay: rgba(0, 0, 0, 0.5);
+      --clr-overlay-light: rgba(0, 0, 0, 0.2);
+
+      /* Spacing - Sistem jarak yang konsisten */
+      --spc-xxs: 0.25rem;
+      /* 4px */
+      --spc-xs: 0.5rem;
+      /* 8px */
+      --spc-sm: 1rem;
+      /* 16px */
+      --spc-md: 1.5rem;
+      /* 24px */
+      --spc-lg: 2rem;
+      /* 32px */
+      --spc-xl: 3rem;
+      /* 48px */
+      --spc-xxl: 4rem;
+      /* 64px */
+
+      /* Typography - Hirarki teks yang jelas */
+      --txt-xs: 0.75rem;
+      --txt-sm: 0.875rem;
+      --txt-md: 1rem;
+      --txt-lg: 1.25rem;
+      --txt-xl: 1.5rem;
+      --txt-2xl: 2rem;
+      --txt-3xl: 2.5rem;
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.5;
+      --line-height-loose: 1.8;
+      --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-bold: 700;
+
+      /* Shadows - Kedalaman visual */
+      --shd-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shd-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shd-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+      --shd-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+      --shd-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+      --shd-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shd-focus: 0 0 0 3px rgba(25, 118, 210, 0.25);
+      --shd-hover: 0 6px 12px rgba(0, 0, 0, 0.1);
+
+      /* Border Radius - Konsistensi bentuk */
+      --rad-xs: 0.125rem;
+      /* 2px */
+      --rad-sm: 0.25rem;
+      /* 4px */
+      --rad-md: 0.5rem;
+      /* 8px */
+      --rad-lg: 1rem;
+      /* 16px */
+      --rad-xl: 1.5rem;
+      /* 24px */
+      --rad-full: 9999px;
+
+      /* Transitions - Gerakan yang halus */
+      --trs-fast: 0.2s ease;
+      --trs-md: 0.3s ease;
+      --trs-slow: 0.5s ease;
+      --trs-bounce: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --trs-elastic: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+      /* Specific Dashboard Colors (can be part of main palette if desired) */
+      --clr-dashboard-primary: #2563eb;
+      --clr-dashboard-accent: #f59e0b;
     }
-    to {
-      transform: scaleY(1);
+
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--clr-background);
+      /* Changed from #f8fafc to use token */
+      color: var(--clr-foreground);
+      /* Changed from #0f172a to use token */
+      line-height: var(--line-height-normal);
+      font-size: var(--txt-md);
+    }
+
+    /* Utility Classes */
+    .m-0 {
+      margin: 0;
+    }
+
+    .m-xs {
+      margin: var(--spc-xs);
+    }
+
+    .m-sm {
+      margin: var(--spc-sm);
+    }
+
+    .m-md {
+      margin: var(--spc-md);
+    }
+
+    .m-lg {
+      margin: var(--spc-lg);
+    }
+
+    .m-xl {
+      margin: var(--spc-xl);
+    }
+
+    .p-0 {
+      padding: 0;
+    }
+
+    .p-xs {
+      padding: var(--spc-xs);
+    }
+
+    .p-sm {
+      padding: var(--spc-sm);
+    }
+
+    .p-md {
+      padding: var(--spc-md);
+    }
+
+    .p-lg {
+      padding: var(--spc-lg);
+    }
+
+    .p-xl {
+      padding: var(--spc-xl);
+    }
+
+    .txt-xs {
+      font-size: var(--txt-xs);
+    }
+
+    .txt-sm {
+      font-size: var(--txt-sm);
+    }
+
+    .txt-md {
+      font-size: var(--txt-md);
+    }
+
+    .txt-lg {
+      font-size: var(--txt-lg);
+    }
+
+    .txt-xl {
+      font-size: var(--txt-xl);
+    }
+
+    .txt-2xl {
+      font-size: var(--txt-2xl);
+    }
+
+    .txt-bold {
+      font-weight: var(--font-weight-bold);
+    }
+
+    .txt-medium {
+      font-weight: var(--font-weight-medium);
+    }
+
+    .txt-center {
+      text-align: center;
+    }
+
+    .txt-muted {
+      color: var(--clr-muted);
+    }
+
+    .txt-white {
+      color: white;
+    }
+
+    .txt-primary {
+      color: var(--clr-primary);
+    }
+
+    .txt-accent {
+      color: var(--clr-accent);
+    }
+
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-column {
+      flex-direction: column;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .align-center {
+      align-items: center;
+    }
+
+    .gap-xs {
+      gap: var(--spc-xs);
+    }
+
+    .gap-sm {
+      gap: var(--spc-sm);
+    }
+
+    .gap-md {
+      gap: var(--spc-md);
+    }
+
+    .gap-lg {
+      gap: var(--spc-lg);
+    }
+
+
+    /* Grid System */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spc-md);
+    }
+
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--spc-md);
+    }
+
+    .col-span-3 {
+      grid-column: span 3;
+    }
+
+    .col-span-4 {
+      grid-column: span 4;
+    }
+
+    .col-span-6 {
+      grid-column: span 6;
+    }
+
+    .col-span-8 {
+      grid-column: span 8;
+    }
+
+    .col-span-12 {
+      grid-column: span 12;
+    }
+
+    .apartment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--spc-md);
+    }
+
+    /* Components */
+    /* Header */
+    .header {
+      background-color: var(--clr-background);
+      box-shadow: var(--shd-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      /* Increased z-index */
+      padding: var(--spc-sm) 0;
+    }
+
+    .logo {
+      text-decoration: none;
+      color: var(--clr-primary);
+    }
+
+    .logo i {
+      margin-right: var(--spc-xs);
+    }
+
+    .nav-toggle {
+      display: none;
+      /* Hidden by default, shown in media query */
+      background: none;
+      border: none;
+      font-size: var(--txt-2xl);
+      color: var(--clr-foreground);
+      cursor: pointer;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: var(--spc-md);
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--clr-foreground);
+      text-decoration: none;
+      transition: color var(--trs-fast);
+      padding: var(--spc-xs) var(--spc-sm);
+      border-radius: var(--rad-sm);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--clr-primary);
+      background-color: var(--clr-primary-transparent);
+    }
+
+    .nav-link.active {
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url("https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80") center/cover;
+      /* Placeholder image */
+      padding: var(--spc-xxl) 0;
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Center content */
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg,
+          var(--clr-primary-transparent),
+          transparent);
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: var(--txt-3xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spc-md);
+      animation: fadeIn 1s ease-out, slideInUp 1s ease-out;
+      /* Changed slideIn to slideInUp */
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-subtitle {
+      font-size: var(--txt-xl);
+      margin-bottom: var(--spc-lg);
+      opacity: 0.9;
+      animation: fadeIn 1s ease-out 0.3s both, slideInUp 1s ease-out 0.3s both;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-cta {
+      animation: fadeIn 1s ease-out 0.6s both, scaleIn 1s ease-out 0.6s both;
+      display: inline-block;
+    }
+
+    /* Apartment Card */
+    .apartment-card {
+      background: var(--clr-background);
+      border-radius: var(--rad-md);
+      box-shadow: var(--shd-sm);
+      overflow: hidden;
+      transition: all var(--trs-md);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      /* For consistent height in grid */
+    }
+
+    .apartment-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shd-hover);
+    }
+
+    .apartment-card:focus-within {
+      outline: none;
+      box-shadow: var(--shd-focus), var(--shd-md);
+    }
+
+    .apartment-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform var(--trs-md);
+    }
+
+    .apartment-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .apartment-card-content {
+      /* Renamed from apartment-details for clarity */
+      padding: var(--spc-md);
+      flex-grow: 1;
+      /* Allow content to grow */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .apartment-card-title {
+      font-size: var(--txt-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spc-xs);
+      color: var(--clr-foreground);
+    }
+
+    .apartment-card-price {
+      font-size: var(--txt-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--clr-primary);
+      margin-bottom: var(--spc-sm);
+    }
+
+    .apartment-card-location {
+      color: var(--clr-muted);
+      font-size: var(--txt-sm);
+      margin-bottom: var(--spc-sm);
+      display: flex;
+      align-items: center;
+      gap: var(--spc-xxs);
+    }
+
+    .apartment-card-features {
+      display: flex;
+      gap: var(--spc-sm);
+      margin-bottom: var(--spc-sm);
+      flex-wrap: wrap;
+      /* Allow features to wrap */
+    }
+
+    .apartment-card-feature {
+      display: flex;
+      align-items: center;
+      gap: var(--spc-xxs);
+      font-size: var(--txt-sm);
+      color: var(--clr-muted);
+      background-color: var(--clr-secondary);
+      padding: var(--spc-xxs) var(--spc-xs);
+      border-radius: var(--rad-sm);
+    }
+
+    .apartment-card-feature i {
+      color: var(--clr-primary);
+    }
+
+    .apartment-card-actions {
+      margin-top: auto;
+      /* Push actions to the bottom */
+      padding-top: var(--spc-sm);
+      /* Add some space before actions */
+    }
+
+    .apartment-card-badge {
+      position: absolute;
+      top: var(--spc-sm);
+      right: var(--spc-sm);
+      background-color: var(--clr-accent);
+      color: white;
+      padding: var(--spc-xxs) var(--spc-xs);
+      border-radius: var(--rad-sm);
+      font-size: var(--txt-xs);
+      font-weight: var(--font-weight-bold);
+      z-index: 1;
+      box-shadow: var(--shd-sm);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spc-sm) var(--spc-md);
+      /* Default padding */
+      border-radius: var(--rad-md);
+      /* Changed to --rad-md from --rad-sm */
+      font-weight: var(--font-weight-medium);
+      /* Changed from 600 */
+      font-size: var(--txt-md);
+      /* Default font size */
+      cursor: pointer;
+      transition: all var(--trs-fast);
+      border: none;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      text-align: center;
+      /* Ensure text is centered */
+    }
+
+    .btn i {
+      margin-right: var(--spc-xs);
+    }
+
+    .btn::after {
+      /* Ripple effect */
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%, -50%);
+      /* Corrected translate */
+      transform-origin: 50% 50%;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--shd-focus);
+    }
+
+    .btn:active::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0) translate(-50%, -50%);
+        opacity: 0.5;
+      }
+
+      20% {
+        transform: scale(25, 25) translate(-50%, -50%);
+        opacity: 0.3;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(40, 40) translate(-50%, -50%);
+      }
+    }
+
+    .btn-primary {
+      background-color: var(--clr-primary);
+      color: white;
+      box-shadow: var(--shd-xs);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--clr-primary-hover);
+      box-shadow: var(--shd-sm);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background-color: var(--clr-secondary);
+      color: var(--clr-foreground);
+      box-shadow: var(--shd-xs);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--clr-secondary-hover);
+      box-shadow: var(--shd-sm);
+      transform: translateY(-2px);
+    }
+
+    .btn-accent {
+      background-color: var(--clr-accent);
+      color: white;
+      box-shadow: var(--shd-xs);
+    }
+
+    .btn-accent:hover {
+      background-color: var(--clr-accent-hover);
+      box-shadow: var(--shd-sm);
+      transform: translateY(-2px);
+    }
+
+    .btn-lg {
+      padding: var(--spc-md) var(--spc-lg);
+      font-size: var(--txt-lg);
+      /* Increased from --txt-md */
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: var(--spc-md);
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--spc-xs);
+      font-weight: var(--font-weight-medium);
+      color: var(--clr-foreground);
+      transition: color var(--trs-fast);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: var(--spc-sm);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--rad-sm);
+      transition: all var(--trs-fast);
+      background-color: var(--clr-background);
+      font-size: var(--txt-md);
+      line-height: var(--line-height-normal);
+      /* Ensure consistent line height */
+    }
+
+    select.form-control {
+      /* Ensure select height matches input */
+      height: calc(var(--spc-sm) * 2 + var(--txt-md) * var(--line-height-normal) + 2px);
+    }
+
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--clr-primary);
+      box-shadow: var(--shd-focus);
+    }
+
+    .form-control:hover:not(:focus) {
+      border-color: var(--clr-muted);
+    }
+
+    .form-group:focus-within .form-label {
+      color: var(--clr-primary);
+    }
+
+    .form-hint {
+      display: block;
+      margin-top: var(--spc-xs);
+      font-size: var(--txt-sm);
+      color: var(--clr-muted);
+    }
+
+    .form-error {
+      display: block;
+      margin-top: var(--spc-xs);
+      font-size: var(--txt-sm);
+      color: var(--clr-error);
+      animation: slideInUp var(--trs-fast);
+      /* Changed to slideInUp */
+    }
+
+    /* Custom checkbox */
+    .form-checkbox {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      padding: var(--spc-sm) 0;
+      /* Ensure clickable area */
+    }
+
+    .form-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkbox-custom {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      /* Increased size */
+      height: 20px;
+      /* Increased size */
+      margin-right: var(--spc-sm);
+      /* Increased margin */
+      background-color: var(--clr-background);
+      border: 2px solid var(--clr-border);
+      /* Thicker border */
+      border-radius: var(--rad-xs);
+      transition: all var(--trs-fast);
+    }
+
+    .form-checkbox input:checked~.checkbox-custom {
+      background-color: var(--clr-primary);
+      border-color: var(--clr-primary);
+    }
+
+    .checkbox-custom:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 5px;
+      /* Adjusted for new size */
+      top: 1px;
+      /* Adjusted for new size */
+      width: 6px;
+      /* Adjusted for new size */
+      height: 12px;
+      /* Adjusted for new size */
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      /* Thicker checkmark */
+      transform: rotate(45deg);
+    }
+
+    .form-checkbox input:checked~.checkbox-custom:after {
+      display: block;
+    }
+
+    /* Dashboard-like Sections Styling */
+    .section-title {
+      text-align: center;
+      margin-bottom: var(--spc-lg);
+    }
+
+    .section-title h2 {
+      font-size: var(--txt-2xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spc-xs);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      /* Thicker line */
+      background-color: var(--clr-primary);
+      border-radius: var(--rad-full);
+    }
+
+    .section-title p {
+      font-size: var(--txt-lg);
+      color: var(--clr-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Offers Section (Dashboard Style) */
+    .offers-section {
+      background: linear-gradient(90deg, var(--clr-dashboard-primary) 60%, var(--clr-dashboard-accent) 100%);
+      color: #fff;
+      padding: var(--spc-xl) 0;
+      text-align: center;
+    }
+
+    .offer-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--rad-lg);
+      /* Increased from 16px */
+      padding: var(--spc-lg);
+      margin: 0 auto;
+      max-width: 600px;
+      box-shadow: var(--shd-md);
+      /* Use token */
+    }
+
+    .offer-card h2 {
+      font-size: var(--txt-xl);
+      margin-bottom: var(--spc-sm);
+    }
+
+    .offer-card p {
+      font-size: var(--txt-md);
+      margin-bottom: var(--spc-md);
+    }
+
+    .offer-card .btn-primary {
+      /* Specific styling for this primary button */
+      background: var(--clr-dashboard-accent);
+      color: #fff;
+      /* Ensure contrast */
+    }
+
+    .offer-card .btn-primary:hover {
+      background: #e68a00;
+      /* Darker shade of accent */
+    }
+
+
+    /* Features Section (Dashboard Style) */
+    .features-section {
+      /* Renamed from .features */
+      background: var(--clr-background);
+      /* Use token */
+      padding: var(--spc-xl) 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      /* Min width 280px */
+      gap: var(--spc-lg);
+      /* Increased gap */
+    }
+
+    .feature-card {
+      background: var(--clr-surface);
+      /* Use token */
+      border-radius: var(--rad-lg);
+      padding: var(--spc-lg);
+      text-align: center;
+      box-shadow: var(--shd-sm);
+      transition: transform var(--trs-md), box-shadow var(--trs-md);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: var(--shd-lg);
+      /* Use token for hover shadow */
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--clr-dashboard-primary);
+      color: #fff;
+      border-radius: var(--rad-md);
+      /* Rounded square */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--txt-2xl);
+      margin: 0 auto var(--spc-md);
+    }
+
+    .feature-card h3 {
+      font-size: var(--txt-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spc-xs);
+    }
+
+    .feature-card p {
+      font-size: var(--txt-md);
+      color: var(--clr-muted);
+    }
+
+
+    /* Registration Section (Dashboard Style) */
+    .register-section {
+      background: var(--clr-secondary);
+      /* Light gray background */
+      padding: var(--spc-xl) 0;
+    }
+
+    .register-card {
+      max-width: 450px;
+      /* Increased max-width */
+      margin: 0 auto;
+      background: var(--clr-background);
+      /* White card */
+      border-radius: var(--rad-lg);
+      box-shadow: var(--shd-md);
+      padding: var(--spc-lg);
+    }
+
+    .register-card h2 {
+      text-align: center;
+      font-size: var(--txt-xl);
+      margin-bottom: var(--spc-md);
+      color: var(--clr-primary);
+    }
+
+    .register-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spc-md);
+      /* Increased gap */
+    }
+
+    .register-form input {
+      /* Uses .form-control styles now */
+      font-size: var(--txt-md);
+    }
+
+    .register-form .btn-primary {
+      width: 100%;
+    }
+
+    /* Full width button */
+
+    .social-login {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spc-sm);
+      margin-top: var(--spc-md);
+      padding-top: var(--spc-md);
+      border-top: 1px solid var(--clr-border);
+    }
+
+    .social-login .btn {
+      width: 100%;
+    }
+
+    /* Full width social buttons */
+    .btn-google {
+      background: #fff;
+      color: #db4437;
+      /* Google red */
+      border: 1px solid var(--clr-border);
+    }
+
+    .btn-google:hover {
+      background-color: #f5f5f5;
+    }
+
+    .btn-facebook {
+      background: #1877f2;
+      /* Facebook blue */
+      color: #fff;
+      border: none;
+    }
+
+    .btn-facebook:hover {
+      background-color: #166fe5;
+    }
+
+    /* Apartment Filter Section */
+    .apartments-filter-section {
+      /* Renamed for clarity */
+      padding: var(--spc-lg) 0;
+      background-color: var(--clr-surface);
+    }
+
+    .apartments-filter-section h1 {
+      margin-bottom: var(--spc-md);
+      text-align: center;
+      color: var(--clr-primary);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      /* Allow wrapping on small screens */
+      gap: var(--spc-md);
+      align-items: flex-end;
+      /* Align items to bottom for better label alignment */
+    }
+
+    .filter-group .form-group {
+      flex: 1;
+      /* Allow form groups to grow */
+      min-width: 200px;
+      /* Minimum width for each filter item */
+    }
+
+    /* Apartments List Section */
+    .apartments-list-section {
+      /* Renamed for clarity */
+      padding: var(--spc-lg) 0;
+    }
+
+    .no-apartments {
+      text-align: center;
+      padding: var(--spc-xl);
+      font-size: var(--txt-lg);
+      color: var(--clr-muted);
+    }
+
+    /* Apartment Detail Page Specific Styles */
+    .apartment-detail-section {
+      padding: var(--spc-xl) 0;
+    }
+
+    .apartment-detail-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: var(--rad-lg);
+      box-shadow: var(--shd-lg);
+      margin-bottom: var(--spc-lg);
+    }
+
+    .apartment-detail-content h1 {
+      font-size: var(--txt-2xl);
+      color: var(--clr-primary);
+      margin-bottom: var(--spc-sm);
+    }
+
+    .apartment-detail-content .price {
+      font-size: var(--txt-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--clr-accent);
+      margin-bottom: var(--spc-md);
+    }
+
+    .apartment-detail-info p {
+      margin-bottom: var(--spc-xs);
+      font-size: var(--txt-md);
+    }
+
+    .apartment-detail-info strong {
+      color: var(--clr-foreground);
+    }
+
+    .apartment-detail-amenities {
+      margin-top: var(--spc-md);
+      margin-bottom: var(--spc-lg);
+    }
+
+    .apartment-detail-amenities h3 {
+      font-size: var(--txt-lg);
+      margin-bottom: var(--spc-sm);
+    }
+
+    .amenities-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spc-sm);
+    }
+
+    .amenities-list li {
+      background-color: var(--clr-primary-transparent);
+      color: var(--clr-primary);
+      padding: var(--spc-xs) var(--spc-sm);
+      border-radius: var(--rad-full);
+      font-size: var(--txt-sm);
+    }
+
+    .amenities-list li i {
+      margin-right: var(--spc-xxs);
+    }
+
+
+    /* Featured Apartments Section */
+    .featured-apartments-section {
+      /* Renamed */
+      padding: var(--spc-xl) 0;
+    }
+
+    /* User Reviews Section */
+    .user-reviews-section {
+      /* Renamed */
+      background-color: var(--clr-surface);
+      padding: var(--spc-xl) 0;
+    }
+
+    .review-card {
+      /* Style for individual review */
+      background-color: var(--clr-background);
+      padding: var(--spc-lg);
+      border-radius: var(--rad-md);
+      box-shadow: var(--shd-sm);
+      margin-bottom: var(--spc-md);
+      /* if in a single column */
+      transition: transform var(--trs-md), box-shadow var(--trs-md);
+    }
+
+    .review-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shd-hover);
+    }
+
+    .review-card p:first-child {
+      font-style: italic;
+      margin-bottom: var(--spc-sm);
+      color: var(--clr-foreground);
+    }
+
+    .review-card .author {
+      text-align: right;
+      font-weight: var(--font-weight-medium);
+      color: var(--clr-primary);
+    }
+
+    .review-container {
+      /* Grid for reviews */
+      margin-top: var(--spc-lg);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--spc-md);
+    }
+
+    /* Process Steps Section */
+    .process-steps-section {
+      /* Renamed */
+      padding: var(--spc-xl) 0;
+      background-color: var(--clr-background);
+      /* Ensure background for ::before */
+    }
+
+    .process-steps {
+      position: relative;
+      display: grid;
+      /* Using grid for steps */
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spc-lg);
+    }
+
+    .process-steps::before {
+      /* Decorative line for larger screens */
+      content: "";
+      position: absolute;
+      top: 50px;
+      /* Align with center of step numbers */
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: linear-gradient(to right,
+          var(--clr-primary-light),
+          var(--clr-primary),
+          var(--clr-primary-light));
+      z-index: 0;
+      border-radius: var(--rad-full);
+      display: none;
+      /* Hidden by default, shown on larger screens */
+    }
+
+    @media (min-width: 769px) {
+      .process-steps::before {
+        display: block;
+      }
+    }
+
+    .process-step {
+      padding: var(--spc-lg);
+      border-radius: var(--rad-md);
+      background-color: var(--clr-secondary);
+      transition: all var(--trs-md);
+      border: 1px solid transparent;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shd-xs);
+      z-index: 1;
+      /* Above the ::before line */
+      text-align: center;
+      /* Center content */
+    }
+
+    .process-step::after {
+      /* Top border animation on hover */
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: var(--clr-accent);
+      /* Changed to accent for more pop */
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--trs-md);
+    }
+
+    .process-step:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shd-md);
+      border-color: var(--clr-accent-light);
+      /* Use accent color */
+    }
+
+    .process-step:hover::after {
+      transform: scaleX(1);
+    }
+
+    .process-step:hover .step-number {
+      transform: scale(1.1);
+      background-color: var(--clr-accent);
+    }
+
+    .process-step:hover .step-number::before {
       opacity: 1;
     }
-  }
 
-  .nav-menu.active {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .nav-link {
-    padding: var(--spc-sm);
-    position: relative;
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid var(--clr-border);
-  }
-
-  .nav-link:last-child {
-    border-bottom: none;
-  }
-
-  .nav-link::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--clr-primary);
-    transition: width var(--trs-md);
-  }
-
-  .nav-link:hover::before {
-    width: 100%;
-  }
-
-  .col-span-3,
-  .col-span-4,
-  .col-span-6 {
-    grid-column: span 12;
-  }
-
-  .filter-group {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .filter-group .form-control {
-    margin-bottom: var(--spc-sm);
-  }
-
-  .hero {
-    padding: var(--spc-xl) 0;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-  }
-
-  .hero-content {
-    padding: 0 var(--spc-md);
-    width: 100%;
-  }
-
-  .process-step {
-    margin-bottom: var(--spc-md);
-  }
-
-  .apartment-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-
-  .apartment-card-features {
-    flex-wrap: wrap;
-  }
-}
-
-@media (max-width: 576px) {
-  .container {
-    max-width: 100%;
-    padding: 0 var(--spc-sm);
-  }
-
-  .hero-title {
-    font-size: var(--txt-xl);
-  }
-
-  .hero-subtitle {
-    font-size: var(--txt-md);
-    margin-bottom: var(--spc-md);
-  }
-
-  .hero {
-    min-height: 350px;
-    text-align: center;
-    padding: var(--spc-lg) 0;
-  }
-
-  .apartment-grid {
-    grid-template-columns: 1fr;
-    gap: var(--spc-sm);
-  }
-
-  .apartment-card {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .btn-lg {
-    padding: var(--spc-sm) var(--spc-md);
-    width: 100%;
-    margin-bottom: var(--spc-sm);
-  }
-
-  .process-steps {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spc-md);
-  }
-
-  .header {
-    padding: var(--spc-xs) 0;
-  }
-
-  .form-group {
-    margin-bottom: var(--spc-sm);
-  }
-
-  .grid-12 {
-    gap: var(--spc-sm);
-  }
-
-  /* Improve touch targets for mobile */
-  .btn,
-  .nav-link,
-  .form-control {
-    min-height: 44px;
-  }
-
-  /* Adjust spacing for mobile */
-  .p-md {
-    padding: var(--spc-sm);
-  }
-
-  .m-md {
-    margin: var(--spc-sm);
-  }
-}
-
-/* Animations - Gerakan untuk menarik perhatian */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Accessibility Enhancements */
-:focus {
-  outline: 2px solid var(--clr-primary);
-  outline-offset: 2px;
-}
-
-:focus:not(:focus-visible) {
-  outline: none;
-}
-
-:focus-visible {
-  outline: 2px solid var(--clr-primary);
-  outline-offset: 2px;
-}
-
-/* Improved touch targets for all interactive elements */
-button,
-.btn,
-.nav-link,
-.form-control,
-input[type="checkbox"],
-input[type="radio"] {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-/* Skip to content link for keyboard users */
-.skip-to-content {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--clr-primary);
-  color: white;
-  padding: var(--spc-xs) var(--spc-sm);
-  z-index: 1000;
-  transition: top var(--trs-fast);
-}
-
-.skip-to-content:focus {
-  top: 0;
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .step-number,
-  .pulse,
-  .shimmer {
-    animation: none !important;
-  }
-
-  .hero-title,
-  .hero-subtitle,
-  .hero-cta,
-  .fade-in,
-  .slide-in,
-  .slide-in-right,
-  .slide-in-left,
-  .slide-in-up,
-  .scale-in {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    transform: translateX(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideInUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -100% 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
-}
-
-/* Animation Utility Classes */
-.fade-in {
-  animation: fadeIn var(--trs-md);
-}
-
-.slide-in {
-  animation: slideIn var(--trs-md);
-}
-
-.slide-in-right {
-  animation: slideInRight var(--trs-md);
-}
-
-.slide-in-left {
-  animation: slideInLeft var(--trs-md);
-}
-
-.slide-in-up {
-  animation: slideInUp var(--trs-md);
-}
-
-.scale-in {
-  animation: scaleIn var(--trs-md);
-}
-
-.pulse {
-  animation: pulse 2s infinite;
-}
-
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* Animation Delay Utilities */
-.delay-100 {
-  animation-delay: 0.1s;
-}
-
-.delay-200 {
-  animation-delay: 0.2s;
-}
-
-.delay-300 {
-  animation-delay: 0.3s;
-}
-
-.delay-400 {
-  animation-delay: 0.4s;
-}
-
-.delay-500 {
-  animation-delay: 0.5s;
-}
-
-/* Process Steps - Narasi visual */
-.step-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: var(--clr-primary);
-  color: white;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--txt-lg);
-  margin: 0 auto var(--spc-md);
-  box-shadow: var(--shd-md);
-  transition: transform var(--trs-bounce), background-color var(--trs-fast);
-  position: relative;
-  z-index: 1;
-  animation: pulse 3s infinite;
-}
-
-/* Footer Section */
-.footer {
-  background-color: var(--clr-secondary);
-  padding: var(--spc-md) 0;
-  margin-top: var(--spc-xl);
-  border-top: 1px solid var(--clr-border);
-}
-
-/* Featured Apartments Section */
-.featured-apartments {
-  padding: var(--spc-xl) 0;
-}
-
-.featured-apartments h2 {
-  margin-bottom: var(--spc-lg);
-  position: relative;
-  display: inline-block;
-}
-
-.featured-apartments h2::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background-color: var(--clr-primary);
-  border-radius: var(--rad-full);
-}
-
-/* Call to Action Section */
-.call-to-action {
-  background-color: var(--clr-primary-transparent);
-  padding: var(--spc-xl) 0;
-  margin: var(--spc-xl) 0;
-}
-
-.cta-content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: var(--spc-lg);
-  background-color: var(--clr-background);
-  border-radius: var(--rad-md);
-  box-shadow: var(--shd-md);
-}
-
-/* User Reviews Section */
-.user-review {
-  background-color: var(--clr-surface);
-  padding: var(--spc-xl) 0;
-}
-
-.review-container {
-  margin-top: var(--spc-lg);
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--spc-md);
-}
-
-.step-number::before {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  background-color: var(--clr-primary-transparent);
-  border-radius: 50%;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity var(--trs-md);
-}
-
-.process-step {
-  padding: var(--spc-lg);
-  border-radius: var(--rad-md);
-  background-color: var(--clr-secondary);
-  transition: all var(--trs-md);
-  border: 1px solid transparent;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shd-xs);
-}
-
-.process-step::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: var(--clr-primary);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--trs-md);
-}
-
-.process-step:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shd-md);
-  border-color: var(--clr-primary-light);
-}
-
-.process-step:hover::after {
-  transform: scaleX(1);
-}
-
-.process-step:hover .step-number {
-  transform: scale(1.1);
-  background-color: var(--clr-accent);
-}
-
-.process-step:hover .step-number::before {
-  opacity: 1;
-}
-
-.process-steps {
-  position: relative;
-}
-
-.process-steps::before {
-  content: "";
-  position: absolute;
-  top: 30px;
-  left: 10%;
-  right: 10%;
-  height: 3px;
-  background: linear-gradient(
-    to right,
-    var(--clr-primary-light),
-    var(--clr-primary),
-    var(--clr-primary-light)
-  );
-  z-index: 0;
-  border-radius: var(--rad-full);
-}
-
-@media (max-width: 768px) {
-  .process-steps::before {
-    display: none;
-  }
-}
-
-</style>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="container">
-        <div class="flex justify-between align-center">
-          <a href="#" class="logo txt-xl txt-bold"><i class="fas fa-building"></i> RentEase</a>
-          <nav class="nav">
-            <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">☰</button>
-            <ul class="nav-menu">
-              <li><a href="#offers" class="nav-link">Penawaran</a></li>
-              <li><a href="#features" class="nav-link">Fitur</a></li>
-              <li><a href="#register" class="nav-link">Daftar</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-      <!-- Special Offers Section -->
-      <section id="offers" class="offers-section">
-        <div class="container">
-          <div class="offer-card animate-in">
-            <h2>Promo Spesial! Diskon 20% untuk Penyewa Baru</h2>
-            <p>Daftar sekarang dan nikmati penawaran terbatas ini. Berlaku hingga akhir bulan!</p>
-            <button class="btn btn-primary" onclick="scrollToSection('register')">Daftar Sekarang</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <section id="features" class="features">
-        <div class="container">
-          <div class="section-title">
-            <h2>Fitur Unggulan</h2>
-            <p>Platform kami menawarkan fitur terbaik untuk pengalaman sewa apartemen yang mudah dan aman.</p>
-          </div>
-          <div class="features-grid">
-            <div class="feature-card animate-in">
-              <div class="feature-icon"><i class="fas fa-search"></i></div>
-              <h3>Pencarian Pintar</h3>
-              <p>Temukan apartemen sesuai preferensi Anda dengan filter canggih.</p>
-            </div>
-            <div class="feature-card animate-in">
-              <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-              <h3>Transaksi Aman</h3>
-              <p>Pembayaran terjamin dengan sistem escrow dan enkripsi data.</p>
-            </div>
-            <div class="feature-card animate-in">
-              <div class="feature-icon"><i class="fas fa-clock"></i></div>
-              <h3>Virtual Tour 24/7</h3>
-              <p>Lihat apartemen secara virtual kapan saja, di mana saja.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Registration Form Section -->
-      <section id="register" class="register-section">
-        <div class="container">
-          <div class="register-card animate-in">
-            <h2>Daftar Sekarang</h2>
-            <form class="register-form">
-              <input type="text" placeholder="Nama Lengkap" required />
-              <input type="email" placeholder="Email" required />
-              <input type="password" placeholder="Password" required />
-              <button type="submit" class="btn btn-primary">Daftar</button>
-              <div class="social-login">
-                <button type="button" class="btn btn-google"><i class="fab fa-google"></i> Daftar dengan Google</button>
-                <button type="button" class="btn btn-facebook"><i class="fab fa-facebook"></i> Daftar dengan Facebook</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container txt-center">
-        <p class="txt-muted">© 2025 RentEase. All rights reserved.</p>
-      </div>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script>
-      // Toggle mobile navigation
-      const navToggle = document.querySelector('.nav-toggle');
-      const navMenu = document.querySelector('.nav-menu');
-      navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-      });
-      // Smooth scroll to sections
-      function scrollToSection(id) {
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--clr-primary);
+      color: white;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--txt-lg);
+      margin: 0 auto var(--spc-md);
+      box-shadow: var(--shd-md);
+      transition: transform var(--trs-bounce), background-color var(--trs-fast);
+      position: relative;
+      z-index: 1;
+      animation: pulseStep 3s infinite ease-in-out;
+      /* Subtle pulse */
+    }
+
+    @keyframes pulseStep {
+
+      0%,
+      100% {
+        transform: scale(1);
       }
-      // Intersection Observer for animations
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-          }
-        });
-      }, { threshold: 0.1 });
-      document.querySelectorAll('.animate-in').forEach((el) => observer.observe(el));
-      // Registration form submit (dummy)
-      document.querySelector('.register-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Registrasi berhasil!');
-      });
-    </script>
-    <style>
-      /* Add/override CSS for dashboard design, responsive, and interactivity */
-      body { font-family: 'Poppins', sans-serif; background: #f8fafc; color: #0f172a; }
-      .offers-section { background: linear-gradient(90deg, #2563eb 60%, #f59e0b 100%); color: #fff; padding: 3rem 0 2rem; text-align: center; }
-      .offer-card { background: rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; margin: 0 auto; max-width: 600px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-      .btn { padding: 1rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1.1rem; cursor: pointer; border: none; transition: all 0.3s; }
-      .btn-primary { background: #f59e0b; color: #fff; }
-      .btn-google { background: #fff; color: #ea4335; border: 1px solid #ea4335; margin-top: 1rem; }
-      .btn-facebook { background: #1877f3; color: #fff; border: none; margin-top: 0.5rem; }
-      .features { background: #fff; padding: 4rem 0; }
-      .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
-      .feature-card { background: #f8fafc; border-radius: 16px; padding: 2rem; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: transform 0.3s; }
-      .feature-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-      .feature-icon { width: 64px; height: 64px; background: #2563eb; color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; }
-      .register-section { background: #fff; padding: 4rem 0; }
-      .register-card { max-width: 400px; margin: 0 auto; background: #f8fafc; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.06); padding: 2rem; }
-      .register-form { display: flex; flex-direction: column; gap: 1rem; }
-      .register-form input { padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #d1d5db; font-size: 1rem; }
-      .register-form input:focus { outline: 2px solid #2563eb; }
-      .social-login { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
-      @media (max-width: 768px) {
-        .features-grid { grid-template-columns: 1fr; }
-        .offer-card, .register-card { padding: 1rem; }
+
+      50% {
+        transform: scale(1.05);
       }
-      .animate-in { opacity: 1 !important; transform: none !important; transition: all 0.6s; }
-    </style>
-    <section class="apartments-filter">
-      <div class="container">
-        <h1 class="txt-xl txt-bold">Browse Apartments</h1>
-        <div class="filter-group flex gap-md">
-          <div class="form-group">
-            <label for="searchApartments" class="form-label">Search</label>
-            <input
-              type="text"
-              id="searchApartments"
-              class="form-control"
-              placeholder="Search by name or location..."
-              aria-label="Search apartments" />
-          </div>
-          <div class="form-group">
-            <label for="priceFilter" class="form-label">Price Range</label>
-            <select
-              id="priceFilter"
-              class="form-control"
-              aria-label="Filter by price">
-              <option value="all">All Prices</option>
-              <option value="500-1000">$500-$1000</option>
-              <option value="1000-1500">$1000-$1500</option>
-              <option value="1500+">$1500+</option>
-            </select>
-          </div>
-          <select
-            id="locationFilter"
-            class="form-control"
-            aria-label="Filter by location">
-          <option value="all">All Locations</option>
-          <option value="city-center">City Center</option>
-          <option value="downtown">Downtown</option>
-          <option value="uptown">Uptown</option>
-          <option value="suburban">Suburban</option>
-          </select>
-          </div>
-        </div>
-      </section>
+    }
 
-      <section class="apartments-list">
-        <div class="container">
-          <div class="apartment-grid" id="apartmentsList"></div>
-        </div>
-      </section>
-    </main>
+    .step-number::before {
+      /* Ring effect on hover */
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      background-color: var(--clr-accent-transparent, rgba(255, 64, 129, 0.2));
+      /* Accent transparent */
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity var(--trs-md);
+    }
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container txt-center">
-        <p class="txt-muted">© 2025 ApartmentFinder. All rights reserved.</p>
+    .process-step h3 {
+      font-size: var(--txt-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spc-xs);
+      color: var(--clr-foreground);
+    }
+
+    .process-step p {
+      font-size: var(--txt-sm);
+      color: var(--clr-muted);
+    }
+
+    /* Call to Action Section */
+    .call-to-action-section {
+      /* Renamed */
+      background-color: var(--clr-primary-transparent);
+      padding: var(--spc-xl) 0;
+      margin: var(--spc-xl) 0;
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spc-lg);
+      background-color: var(--clr-background);
+      border-radius: var(--rad-md);
+      box-shadow: var(--shd-md);
+      text-align: center;
+      /* Center CTA content */
+    }
+
+    .cta-content h2 {
+      font-size: var(--txt-xl);
+      margin-bottom: var(--spc-sm);
+      color: var(--clr-primary);
+    }
+
+    .cta-content p {
+      font-size: var(--txt-md);
+      margin-bottom: var(--spc-md);
+      color: var(--clr-muted);
+    }
+
+
+    /* Footer Section */
+    .footer {
+      background-color: var(--clr-secondary);
+      padding: var(--spc-lg) 0;
+      /* Increased padding */
+      margin-top: var(--spc-xl);
+      border-top: 1px solid var(--clr-border);
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: var(--txt-sm);
+      /* Slightly smaller footer text */
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .container {
+        max-width: 1140px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        max-width: 960px;
+      }
+
+      .hero-title {
+        font-size: var(--txt-2xl);
+      }
+
+      .hero-subtitle {
+        font-size: var(--txt-lg);
+      }
+
+      .apartment-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        max-width: 720px;
+        padding: 0 var(--spc-sm);
+      }
+
+      /* Reduced padding */
+      .hero {
+        min-height: 50vh;
+        padding: var(--spc-xl) 0;
+      }
+
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-menu {
+        display: none;
+        /* Controlled by JS */
+        position: absolute;
+        top: 100%;
+        /* Position below header */
+        left: 0;
+        right: 0;
+        background: var(--clr-background);
+        flex-direction: column;
+        padding: var(--spc-md);
+        box-shadow: var(--shd-md);
+        /* Deeper shadow */
+        border-radius: 0 0 var(--rad-md) var(--rad-md);
+        animation: slideDownNav var(--trs-md);
+        transform-origin: top center;
+        z-index: 999;
+        /* Below header but above content */
+        gap: 0;
+        /* Reset gap for column layout */
+      }
+
+      .nav-menu.active {
+        display: flex;
+      }
+
+      @keyframes slideDownNav {
+        from {
+          transform: scaleY(0.95);
+          opacity: 0;
+        }
+
+        to {
+          transform: scaleY(1);
+          opacity: 1;
+        }
+      }
+
+      .nav-link {
+        padding: var(--spc-sm);
+        width: 100%;
+        text-align: left;
+        /* Align text left for dropdown feel */
+        border-bottom: 1px solid var(--clr-border);
+      }
+
+      .nav-link:last-child {
+        border-bottom: none;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: var(--clr-primary-light);
+        color: var(--clr-primary-hover);
+      }
+
+      .col-span-3,
+      .col-span-4,
+      .col-span-6,
+      .col-span-8 {
+        grid-column: span 12;
+      }
+
+      .filter-group {
+        flex-direction: column;
+      }
+
+      .filter-group .form-group {
+        width: 100%;
+      }
+
+      .process-steps::before {
+        display: none;
+      }
+
+      /* Hide connector line on mobile */
+      .apartment-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+
+      .apartment-detail-image {
+        margin-bottom: var(--spc-md);
+      }
+    }
+
+    @media (max-width: 576px) {
+      :root {
+        /* Slightly smaller text and spacing for very small screens */
+        --txt-sm: 0.8rem;
+        --txt-md: 0.9rem;
+        --txt-lg: 1.1rem;
+        --spc-sm: 0.75rem;
+        --spc-md: 1.25rem;
+      }
+
+      .container {
+        padding: 0 var(--spc-xs);
+      }
+
+      /* Further reduced padding */
+      .hero {
+        min-height: 40vh;
+        padding: var(--spc-lg) 0;
+      }
+
+      .hero-title {
+        font-size: var(--txt-xl);
+      }
+
+      .hero-subtitle {
+        font-size: var(--txt-md);
+        margin-bottom: var(--spc-md);
+      }
+
+      .apartment-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spc-sm);
+      }
+
+      .apartment-card {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Full width on mobile */
+
+      .btn-lg {
+        padding: var(--spc-sm) var(--spc-md);
+        width: 100%;
+      }
+
+      .header {
+        padding: var(--spc-xs) 0;
+      }
+
+      .form-group {
+        margin-bottom: var(--spc-sm);
+      }
+
+      .grid-12 {
+        gap: var(--spc-sm);
+      }
+
+      .p-md {
+        padding: var(--spc-sm);
+      }
+
+      .m-md {
+        margin: var(--spc-sm);
+      }
+
+      .offer-card,
+      .register-card,
+      .feature-card,
+      .review-card,
+      .process-step,
+      .cta-content {
+        padding: var(--spc-md);
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -100% 0;
+      }
+
+      100% {
+        background-position: 100% 0;
+      }
+    }
+
+    .view-section {
+      /* Base class for sections within views */
+      padding: var(--spc-xl) 0;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .view-section.bg-secondary {
+      background-color: var(--clr-secondary);
+    }
+
+    .view-section.bg-surface {
+      background-color: var(--clr-surface);
+    }
+
+    .animate-on-scroll {
+      /* For Intersection Observer */
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .animate-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+
+    /* Accessibility Enhancements */
+    :focus-visible {
+      /* Only show outline when tabbing */
+      outline: 3px solid var(--clr-primary);
+      outline-offset: 2px;
+      box-shadow: var(--shd-focus);
+    }
+
+    .skip-to-content {
+      position: absolute;
+      top: -100px;
+      /* Further off-screen */
+      left: 0;
+      background: var(--clr-primary);
+      color: white;
+      padding: var(--spc-sm) var(--spc-md);
+      /* Larger padding */
+      z-index: 2000;
+      /* Highest z-index */
+      transition: top var(--trs-fast);
+      border-radius: 0 0 var(--rad-md) 0;
+      /* Rounded corner */
+    }
+
+    .skip-to-content:focus {
+      top: 0;
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      .animate-on-scroll {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#app-content" class="skip-to-content">Lompat ke Konten Utama</a>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="flex justify-between align-center">
+        <a href="#" class="logo txt-xl txt-bold"><i class="fas fa-building"></i> RentEase</a>
+        <nav class="nav">
+          <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+          </button>
+          <ul class="nav-menu">
+            <li><a href="#/" class="nav-link" data-route="home">Beranda</a></li>
+            <li><a href="#/apartemen" class="nav-link" data-route="apartments">Apartemen</a></li>
+            <li><a href="#/#offers-section" class="nav-link" data-route-section="offers-section">Penawaran</a></li>
+            <li><a href="#/#features-section" class="nav-link" data-route-section="features-section">Fitur</a></li>
+            <li><a href="#/#register-section" class="nav-link" data-route-section="register-section">Daftar</a></li>
+          </ul>
+        </nav>
       </div>
-    </footer>
-<script>class ApartmentFinder {
-  constructor() {
-      // Main page elements
-      this.featuredApartments = document.getElementById('featuredApartments');
-      this.apartmentsList = document.getElementById('apartmentsList');
-      this.apartmentDetails = document.getElementById('apartmentDetails');
-      this.reviewContainer = document.getElementById('reviewContainer');
-      
-      // Navigation elements
-      this.navToggle = document.querySelector('.nav-toggle');
-      this.navMenu = document.querySelector('.nav-menu');
-      this.navLinks = document.querySelectorAll('.nav-link');
-      
-      // Search and filter elements
-      this.searchInput = document.getElementById('searchApartments');
-      this.priceFilter = document.getElementById('priceFilter');
-      this.locationFilter = document.getElementById('locationFilter');
-      
-      // Contact form elements
-      this.contactForm = document.querySelector('.contact-form');
-      
-      // Initialize state
-      this.state = {
-          currentPage: this.getCurrentPage(),
+    </div>
+  </header>
+
+  <!-- Main Content Area for SPA -->
+  <main id="app-content">
+    <!-- Konten dinamis akan dimuat di sini oleh JavaScript -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="txt-muted">© <span id="currentYear"></span> RentEase. Hak cipta dilindungi.</p>
+    </div>
+  </footer>
+
+  <script>
+    class ApartmentFinderSPA {
+      constructor() {
+        this.appContent = document.getElementById('app-content');
+        this.navToggle = document.querySelector('.nav-toggle');
+        this.navMenu = document.querySelector('.nav-menu');
+        this.navLinks = document.querySelectorAll('.nav-menu .nav-link');
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        this.state = {
+          currentView: 'home',
           apartments: [
-              {
-                  id: 1,
-                  name: "Luxury Apartment",
-                  location: "City Center",
-                  price: 1500,
-                  image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
-                  details: { bedrooms: 2, bathrooms: 2, area: "1200 sqft", amenities: ["Pool", "Gym"] }
-              },
-              {
-                  id: 2,
-                  name: "Cozy Studio",
-                  location: "Downtown",
-                  price: 900,
-                  image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-                  details: { bedrooms: 1, bathrooms: 1, area: "600 sqft", amenities: ["Parking"] }
-              },
-              {
-                  id: 3,
-                  name: "Modern Loft",
-                  location: "Uptown",
-                  price: 1200,
-                  image: "https://images.unsplash.com/photo-1494203484021-3ce26331d648",
-                  details: { bedrooms: 1, bathrooms: 1, area: "800 sqft", amenities: ["Balcony"] }
-              },
-              {
-                  id: 4,
-                  name: "Family Suite",
-                  location: "Sub-urban",
-                  price: 1600,
-                  image: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8",
-                  details: { bedrooms: 3, bathrooms: 2, area: "1500 sqft", amenities: ["Garden", "Playroom"] }
-              }
+            { id: 1, name: "Apartemen Mewah Pusat Kota", location: "Pusat Kota", price: 25000000, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 3, bathrooms: 2, area: "120 m²", amenities: ["Kolam Renang", "Gym", "Parkir Bawah Tanah", "Keamanan 24 Jam"] }, badge: "Baru" },
+            { id: 2, name: "Studio Nyaman di Jantung Kota", location: "Area Bisnis", price: 12000000, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 1, bathrooms: 1, area: "45 m²", amenities: ["Dapur Lengkap", "Wi-Fi Cepat", "Smart TV"] } },
+            { id: 3, name: "Loft Modern dengan Pemandangan", location: "Distrik Kreatif", price: 18000000, image: "https://images.unsplash.com/photo-1494203484021-3ce26331d648?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 2, bathrooms: 1, area: "80 m²", amenities: ["Balkon Luas", "Desain Industrial", "Dekat Kafe"] }, badge: "Populer" },
+            { id: 4, name: "Suite Keluarga di Lingkungan Tenang", location: "Pinggir Kota", price: 22000000, image: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 4, bathrooms: 3, area: "150 m²", amenities: ["Taman Pribadi", "Area Bermain Anak", "Dekat Sekolah Internasional"] } },
+            { id: 5, name: "Apartemen Minimalis Dekat Transportasi", location: "Transit Hub", price: 9000000, image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 1, bathrooms: 1, area: "35 m²", amenities: ["Akses Langsung ke MRT", "Furnitur Multifungsi"] } },
+            { id: 6, name: "Penthouse Eksklusif Pemandangan 360°", location: "Pusat Kota Atas", price: 55000000, image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60", details: { bedrooms: 5, bathrooms: 4, area: "300 m²", amenities: ["Lift Pribadi", "Rooftop Jacuzzi", "Layanan Concierge"] }, badge: "Premium" }
           ],
           filteredApartments: [],
           reviews: [
-              { text: "I found my perfect apartment quickly and easily through this website. Highly recommended!", author: "Jane Doe" },
-              { text: "Excellent service and a great selection of apartments. I couldn't be happier with my new place.", author: "John Smith" }
-          ]
-      };
-      
-      this.init();
-  }
+            { text: "Proses sewa sangat mudah dan cepat. Apartemennya sesuai dengan yang diiklankan. Sangat puas!", author: "Rina Amelia", avatar: "https://randomuser.me/api/portraits/women/68.jpg" },
+            { text: "Pilihan apartemennya banyak dan berkualitas. Fitur pencarian sangat membantu menemukan yang pas.", author: "Budi Santoso", avatar: "https://randomuser.me/api/portraits/men/32.jpg" },
+            { text: "Customer service responsif dan ramah. Pengalaman sewa terbaik sejauh ini!", author: "Citra Dewi", avatar: "https://randomuser.me/api/portraits/women/44.jpg" }
+          ],
+          searchQuery: '',
+          priceRange: 'all',
+          locationFilter: 'all',
+          scrollToAfterRender: null
+        };
+        this.state.filteredApartments = [...this.state.apartments];
+        this.init();
+      }
 
-  getCurrentPage() {
-      const path = window.location.pathname;
-      if (path.includes('apartments.html')) return 'apartments';
-      if (path.includes('details.html')) return 'details';
-      if (path.includes('contact.html')) return 'contact';
-      return 'home';
-  }
+      init() {
+        this.setupEventListeners();
+        window.addEventListener('hashchange', () => this.router());
+        this.router(); // Initial routing
+      }
 
-  init() {
-      this.state.filteredApartments = [...this.state.apartments];
-      this.setActiveNavLink();
-      this.setupEventListeners();
-      this.renderContent();
-      this.setupIntersectionObserver();
-  }
-
-  setActiveNavLink() {
-      if (this.navLinks) {
-          this.navLinks.forEach(link => {
-              if (link.getAttribute('href').includes(this.state.currentPage)) {
-                  link.classList.add('active');
-              } else {
-                  link.classList.remove('active');
-              }
-          });
-      }
-  }
-
-  renderContent() {
-      if (this.featuredApartments) {
-          this.featuredApartments.innerHTML = this.state.apartments.slice(0, 3).map(apartment => this.renderApartmentCard(apartment)).join('');
-      }
-      if (this.apartmentsList) {
-          this.apartmentsList.innerHTML = this.state.filteredApartments.map(apartment => this.renderApartmentCard(apartment)).join('');
-      }
-      if (this.apartmentDetails) {
-          const id = new URLSearchParams(window.location.search).get('id');
-          const apartment = this.state.apartments.find(a => a.id == id);
-          if (apartment) {
-              this.apartmentDetails.innerHTML = `
-                  <div class="grid-12 gap-md">
-                      <img src="${apartment.image}" alt="${apartment.name}" class="col-span-6" style="width: 100%; border-radius: var(--rad-md);">
-                      <div class="col-span-6 flex-column gap-md">
-                          <h1 class="txt-xl txt-bold">${apartment.name}</h1>
-                          <p><strong>Location:</strong> ${apartment.location}</p>
-                          <p><strong>Price:</strong> $${apartment.price}/month</p>
-                          <p><strong>Bedrooms:</strong> ${apartment.details.bedrooms}</p>
-                          <p><strong>Bathrooms:</strong> ${apartment.details.bathrooms}</p>
-                          <p><strong>Area:</strong> ${apartment.details.area}</p>
-                          <p><strong>Amenities:</strong> ${apartment.details.amenities.join(', ')}</p>
-                          <a href="contact.html" class="btn btn-primary">Contact Us</a>
-                      </div>
-                  </div>
-              `;
-          } else {
-              this.apartmentDetails.innerHTML = '<p class="txt-center">Apartment not found.</p>';
-          }
-      }
-      if (this.reviewContainer) {
-          this.reviewContainer.innerHTML = this.state.reviews.map(review => `
-              <div class="review-card fade-in">
-                  <p>"${review.text}"</p>
-                  <p class="txt-muted txt-sm">— ${review.author}</p>
-              </div>
-          `).join('');
-      }
-  }
-
-  renderApartmentCard(apartment) {
-      return `
-          <div class="apartment-card fade-in">
-              <img src="${apartment.image}" alt="${apartment.name}">
-              <div class="apartment-details">
-                  <h3 class="txt-lg txt-bold">${apartment.name}</h3>
-                  <p><strong>Location:</strong> ${apartment.location}</p>
-                  <p><strong>Price:</strong> $${apartment.price}/month</p>
-                  <a href="details.html?id=${apartment.id}" class="btn btn-secondary">View Details</a>
-              </div>
-          </div>
-      `;
-  }
-
-  setupEventListeners() {
-      if (this.searchInput) {
-          this.searchInput.addEventListener('input', this.debounce(e => this.handleSearch(e.target.value), 300));
-      }
-      if (this.priceFilter) {
-          this.priceFilter.addEventListener('change', e => this.handleFilter(e.target.value));
-      }
-      if (this.navToggle) {
+      setupEventListeners() {
+        if (this.navToggle) {
           this.navToggle.addEventListener('click', () => this.toggleNav());
-      }
-      document.querySelectorAll('.contact-form')?.forEach(form => {
-          form.addEventListener('submit', e => this.handleContactForm(e));
-      });
-  }
+        }
+        // Close nav menu when a link is clicked (for mobile)
+        this.navLinks.forEach(link => {
+          link.addEventListener('click', (event) => {
+            const href = link.getAttribute('href');
+            const routeSection = link.dataset.routeSection;
 
-  handleSearch(query) {
-      this.state.searchQuery = query.trim().toLowerCase();
-      this.filterApartments();
-  }
-
-  handleFilter(priceRange) {
-      this.state.priceRange = priceRange;
-      this.filterApartments();
-  }
-
-  filterApartments() {
-      this.state.filteredApartments = this.state.apartments.filter(apartment => {
-          const matchesSearch = !this.state.searchQuery ||
-              apartment.name.toLowerCase().includes(this.state.searchQuery) ||
-              apartment.location.toLowerCase().includes(this.state.searchQuery);
-          const matchesPrice = this.state.priceRange === 'all' ||
-              (this.state.priceRange === '500-1000' && apartment.price >= 500 && apartment.price <= 1000) ||
-              (this.state.priceRange === '1000-1500' && apartment.price > 1000 && apartment.price <= 1500) ||
-              (this.state.priceRange === '1500+' && apartment.price > 1500);
-          return matchesSearch && matchesPrice;
-      });
-      this.renderContent();
-  }
-
-  handleContactForm(e) {
-      e.preventDefault();
-      alert('Message sent successfully!');
-      e.target.reset();
-  }
-
-  toggleNav() {
-      const isExpanded = this.navToggle.getAttribute('aria-expanded') === 'true';
-      this.navToggle.setAttribute('aria-expanded', !isExpanded);
-      this.navMenu.classList.toggle('active');
-  }
-
-  setupIntersectionObserver() {
-      const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                  entry.target.classList.add('fade-in');
-                  observer.unobserve(entry.target);
+            if (routeSection) { // It's a section link
+              event.preventDefault();
+              const targetView = href.split('/#')[0] || '#/'; // Assumes sections are on home page
+              if (window.location.hash !== targetView) {
+                this.state.scrollToAfterRender = `#${routeSection}`;
+                window.location.hash = targetView;
+              } else {
+                this.scrollToSection(`#${routeSection}`);
               }
-          });
-      }, { rootMargin: '50px', threshold: 0.1 });
-      document.querySelectorAll('.apartment-card, .review-card').forEach(el => observer.observe(el));
-  }
+            }
+            // No explicit else, default hash navigation will trigger router
 
-  debounce(fn, wait) {
-      let timeout;
-      return (...args) => {
+            if (this.navMenu.classList.contains('active')) {
+              this.toggleNav();
+            }
+          });
+        });
+      }
+
+      toggleNav() {
+        const isExpanded = this.navMenu.classList.toggle('active');
+        this.navToggle.setAttribute('aria-expanded', isExpanded);
+        this.navToggle.innerHTML = isExpanded ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+      }
+
+      setActiveNavLink(currentRoute) {
+        this.navLinks.forEach(link => {
+          const linkRoute = link.getAttribute('href');
+          const routeAttr = link.dataset.route;
+          const routeSectionAttr = link.dataset.routeSection;
+
+          // For direct view links (e.g., #/apartemen)
+          if (routeAttr && linkRoute === `#/${currentRoute.split('/')[0]}`) {
+            link.classList.add('active');
+          }
+          // For section links on home page (e.g., #/#offers-section)
+          else if (routeSectionAttr && currentRoute === 'home' && window.location.hash.includes(routeSectionAttr)) {
+            link.classList.add('active');
+          }
+          else if (routeSectionAttr && currentRoute === 'home' && (window.location.hash === '#/' || window.location.hash === '')) {
+            // If on home and hash is just '/', make "Beranda" active
+            if (link.dataset.route === 'home') link.classList.add('active');
+            else link.classList.remove('active');
+          }
+          else {
+            link.classList.remove('active');
+          }
+        });
+        // Special case for "Beranda" when hash is empty or just "#/"
+        if (currentRoute === 'home' && (window.location.hash === '' || window.location.hash === '#/')) {
+          const homeLink = document.querySelector('.nav-link[data-route="home"]');
+          if (homeLink) homeLink.classList.add('active');
+        }
+      }
+
+      router() {
+        const hash = window.location.hash.replace('#/', '').split('/');
+        const view = hash[0] || 'home';
+        const param = hash[1];
+
+        this.state.currentView = view;
+        this.appContent.innerHTML = ''; // Clear previous content
+
+        switch (view) {
+          case 'apartemen':
+            if (param) this.renderApartmentDetailView(param);
+            else this.renderApartmentsListView();
+            break;
+          case 'home':
+          default:
+            this.renderHomeView();
+            break;
+        }
+        this.setActiveNavLink(view);
+        window.scrollTo(0, 0); // Scroll to top on view change
+
+        if (this.state.scrollToAfterRender) {
+          this.scrollToSection(this.state.scrollToAfterRender);
+          this.state.scrollToAfterRender = null;
+        }
+        this.setupIntersectionObserverForCurrentView();
+      }
+
+      scrollToSection(selector) {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      formatCurrency(amount) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+      }
+
+      // --- View Rendering Methods ---
+      renderHomeView() {
+        this.appContent.innerHTML = `
+          <section class="hero">
+            <div class="hero-content">
+              <h1 class="hero-title">Temukan Apartemen Impian Anda Bersama RentEase</h1>
+              <p class="hero-subtitle">Platform terpercaya untuk pencarian sewa apartemen yang mudah, cepat, dan aman.</p>
+              <div class="hero-cta">
+                <a href="#/apartemen" class="btn btn-primary btn-lg">Mulai Cari Apartemen</a>
+              </div>
+            </div>
+          </section>
+
+          <section id="offers-section" class="offers-section view-section">
+            <div class="container">
+              <div class="offer-card animate-on-scroll">
+                <h2><i class="fas fa-tags"></i> Promo Spesial Bulan Ini!</h2>
+                <p>Diskon hingga 20% untuk penyewa baru di apartemen pilihan. Daftar sekarang dan nikmati penawaran terbatas ini. Berlaku hingga akhir bulan!</p>
+                <button class="btn btn-primary" onclick="document.querySelector('.nav-link[data-route-section=\\'register-section\\']').click()">Daftar Sekarang <i class="fas fa-arrow-right"></i></button>
+              </div>
+            </div>
+          </section>
+
+          <section id="features-section" class="features-section view-section">
+            <div class="container">
+              <div class="section-title animate-on-scroll">
+                <h2>Fitur Unggulan Kami</h2>
+                <p>Kami menyediakan semua yang Anda butuhkan untuk pengalaman sewa apartemen yang tak terlupakan.</p>
+              </div>
+              <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                  <div class="feature-icon"><i class="fas fa-search-location"></i></div>
+                  <h3>Pencarian Pintar & Filter Lengkap</h3>
+                  <p>Temukan apartemen ideal dengan filter lokasi, harga, jumlah kamar, dan fasilitas.</p>
+                </div>
+                <div class="feature-card animate-on-scroll" style="animation-delay: 0.1s;">
+                  <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                  <h3>Transaksi Aman & Terverifikasi</h3>
+                  <p>Pembayaran terjamin aman melalui sistem escrow dan semua properti telah diverifikasi.</p>
+                </div>
+                <div class="feature-card animate-on-scroll" style="animation-delay: 0.2s;">
+                  <div class="feature-icon"><i class="fas fa-vr-cardboard"></i></div>
+                  <h3>Virtual Tour 360°</h3>
+                  <p>Jelajahi setiap sudut apartemen secara virtual kapan saja, di mana saja sebelum visit langsung.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <section class="process-steps-section view-section">
+            <div class="container">
+              <div class="section-title animate-on-scroll">
+                <h2>Proses Mudah Sewa Apartemen</h2>
+                <p>Hanya dengan beberapa langkah sederhana, Anda bisa mendapatkan apartemen idaman.</p>
+              </div>
+              <div class="process-steps">
+                <div class="process-step animate-on-scroll">
+                  <div class="step-number">1</div>
+                  <h3>Cari & Pilih</h3>
+                  <p>Gunakan filter untuk menemukan apartemen yang sesuai dengan kriteria Anda.</p>
+                </div>
+                <div class="process-step animate-on-scroll" style="animation-delay: 0.1s;">
+                  <div class="step-number">2</div>
+                  <h3>Jadwalkan Kunjungan</h3>
+                  <p>Atur jadwal kunjungan langsung atau nikmati virtual tour 360°.</p>
+                </div>
+                <div class="process-step animate-on-scroll" style="animation-delay: 0.2s;">
+                  <div class="step-number">3</div>
+                  <h3>Booking & Bayar</h3>
+                  <p>Lakukan booking dan pembayaran aman melalui platform kami.</p>
+                </div>
+                <div class="process-step animate-on-scroll" style="animation-delay: 0.3s;">
+                  <div class="step-number">4</div>
+                  <h3>Siap Huni!</h3>
+                  <p>Setelah semua beres, apartemen impian siap Anda tempati.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="featured-apartments-section view-section bg-surface">
+            <div class="container">
+              <div class="section-title animate-on-scroll">
+                <h2>Apartemen Unggulan</h2>
+                <p>Lihat beberapa pilihan apartemen terbaik yang kami rekomendasikan untuk Anda.</p>
+              </div>
+              <div class="apartment-grid" id="featuredApartmentsContainer">
+                ${this.state.apartments.slice(0, 3).map(apt => this.renderApartmentCard(apt, true)).join('')}
+              </div>
+            </div>
+          </section>
+
+          <section class="user-reviews-section view-section">
+            <div class="container">
+              <div class="section-title animate-on-scroll">
+                <h2>Apa Kata Mereka?</h2>
+                <p>Pendapat jujur dari para pengguna yang telah menemukan apartemen impiannya melalui RentEase.</p>
+              </div>
+              <div class="review-container">
+                ${this.state.reviews.map(review => `
+                  <div class="review-card animate-on-scroll">
+                    <p><i class="fas fa-quote-left" style="margin-right: 0.5em; color: var(--clr-primary-light);"></i>${review.text}<i class="fas fa-quote-right" style="margin-left: 0.5em; color: var(--clr-primary-light);"></i></p>
+                    <div class="flex align-center justify-end gap-sm">
+                        <img src="${review.avatar}" alt="${review.author}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                        <p class="author txt-medium">${review.author}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </section>
+          
+          <section class="call-to-action-section view-section">
+            <div class="container">
+                <div class="cta-content animate-on-scroll">
+                    <h2>Siap Menemukan Apartemen Impian Anda?</h2>
+                    <p>Jangan tunda lagi! Ribuan pilihan apartemen menanti Anda. Mulai pencarian Anda sekarang dan rasakan kemudahannya.</p>
+                    <a href="#/apartemen" class="btn btn-primary btn-lg">Telusuri Semua Apartemen <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+          </section>
+
+          <section id="register-section" class="register-section view-section">
+            <div class="container">
+              <div class="register-card animate-on-scroll">
+                <h2><i class="fas fa-user-plus"></i> Daftar & Dapatkan Info Terbaru</h2>
+                <form class="register-form">
+                  <div class="form-group">
+                    <label for="regName" class="form-label">Nama Lengkap</label>
+                    <input type="text" id="regName" class="form-control" placeholder="Masukkan nama lengkap Anda" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="regEmail" class="form-label">Email</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="Masukkan alamat email Anda" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="regPassword" class="form-label">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Buat password Anda" required />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Daftar Sekarang</button>
+                  <div class="social-login">
+                    <p class="txt-center txt-muted txt-sm">Atau daftar dengan:</p>
+                    <button type="button" class="btn btn-google"><i class="fab fa-google"></i> Daftar dengan Google</button>
+                    <button type="button" class="btn btn-facebook"><i class="fab fa-facebook-f"></i> Daftar dengan Facebook</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        `;
+        this.addFormSubmitListener('.register-form', 'Registrasi berhasil! Kami akan segera menghubungi Anda.');
+      }
+
+      renderApartmentsListView() {
+        this.appContent.innerHTML = `
+          <section class="apartments-filter-section view-section bg-surface">
+            <div class="container">
+              <h1 class="txt-xl txt-bold">Telusuri Apartemen</h1>
+              <div class="filter-group">
+                <div class="form-group">
+                  <label for="searchApartments" class="form-label">Cari Apartemen</label>
+                  <input type="text" id="searchApartments" class="form-control" placeholder="Nama, lokasi, atau kata kunci..." value="${this.state.searchQuery}" aria-label="Cari apartemen" />
+                </div>
+                <div class="form-group">
+                  <label for="priceFilter" class="form-label">Rentang Harga (per bulan)</label>
+                  <select id="priceFilter" class="form-control" aria-label="Filter berdasarkan harga">
+                    <option value="all" ${this.state.priceRange === 'all' ? 'selected' : ''}>Semua Harga</option>
+                    <option value="0-10000000" ${this.state.priceRange === '0-10000000' ? 'selected' : ''}>${this.formatCurrency(0)} - ${this.formatCurrency(10000000)}</option>
+                    <option value="10000001-20000000" ${this.state.priceRange === '10000001-20000000' ? 'selected' : ''}>${this.formatCurrency(10000001)} - ${this.formatCurrency(20000000)}</option>
+                    <option value="20000001-30000000" ${this.state.priceRange === '20000001-30000000' ? 'selected' : ''}>${this.formatCurrency(20000001)} - ${this.formatCurrency(30000000)}</option>
+                    <option value="30000001+" ${this.state.priceRange === '30000001+' ? 'selected' : ''}>Diatas ${this.formatCurrency(30000000)}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="locationFilter" class="form-label">Lokasi</label>
+                  <select id="locationFilter" class="form-control" aria-label="Filter berdasarkan lokasi">
+                    <option value="all" ${this.state.locationFilter === 'all' ? 'selected' : ''}>Semua Lokasi</option>
+                    <option value="Pusat Kota" ${this.state.locationFilter === 'Pusat Kota' ? 'selected' : ''}>Pusat Kota</option>
+                    <option value="Area Bisnis" ${this.state.locationFilter === 'Area Bisnis' ? 'selected' : ''}>Area Bisnis</option>
+                    <option value="Distrik Kreatif" ${this.state.locationFilter === 'Distrik Kreatif' ? 'selected' : ''}>Distrik Kreatif</option>
+                    <option value="Pinggir Kota" ${this.state.locationFilter === 'Pinggir Kota' ? 'selected' : ''}>Pinggir Kota</option>
+                    <option value="Transit Hub" ${this.state.locationFilter === 'Transit Hub' ? 'selected' : ''}>Transit Hub</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="apartments-list-section view-section">
+            <div class="container">
+              <div class="apartment-grid" id="apartmentsListContainer">
+                ${this.state.filteredApartments.length > 0
+            ? this.state.filteredApartments.map(apt => this.renderApartmentCard(apt)).join('')
+            : '<p class="no-apartments col-span-12">Tidak ada apartemen yang cocok dengan kriteria Anda.</p>'
+          }
+              </div>
+            </div>
+          </section>
+        `;
+        document.getElementById('searchApartments').addEventListener('input', this.debounce(e => this.handleSearch(e.target.value), 300));
+        document.getElementById('priceFilter').addEventListener('change', e => this.handlePriceFilter(e.target.value));
+        document.getElementById('locationFilter').addEventListener('change', e => this.handleLocationFilter(e.target.value));
+      }
+
+      renderApartmentDetailView(apartmentId) {
+        const id = parseInt(apartmentId);
+        const apartment = this.state.apartments.find(a => a.id === id);
+
+        if (apartment) {
+          this.appContent.innerHTML = `
+            <section class="apartment-detail-section view-section">
+              <div class="container">
+                <div class="grid-12 gap-lg">
+                  <div class="col-span-12 md-col-span-7">
+                     <img src="${apartment.image}" alt="${apartment.name}" class="apartment-detail-image">
+                  </div>
+                  <div class="col-span-12 md-col-span-5 apartment-detail-content">
+                    <h1 class="txt-2xl txt-bold">${apartment.name}</h1>
+                    <p class="price">${this.formatCurrency(apartment.price)} / bulan</p>
+                    <div class="apartment-detail-info">
+                        <p><i class="fas fa-map-marker-alt txt-primary"></i> <strong>Lokasi:</strong> ${apartment.location}</p>
+                        <p><i class="fas fa-bed txt-primary"></i> <strong>Kamar Tidur:</strong> ${apartment.details.bedrooms}</p>
+                        <p><i class="fas fa-bath txt-primary"></i> <strong>Kamar Mandi:</strong> ${apartment.details.bathrooms}</p>
+                        <p><i class="fas fa-ruler-combined txt-primary"></i> <strong>Luas:</strong> ${apartment.details.area}</p>
+                    </div>
+                    <div class="apartment-detail-amenities">
+                        <h3>Fasilitas Unggulan:</h3>
+                        <ul class="amenities-list">
+                            ${apartment.details.amenities.map(amenity => `<li><i class="fas fa-check-circle"></i> ${amenity}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <a href="https://wa.me/6281234567890?text=Saya%20tertarik%20dengan%20apartemen%20${encodeURIComponent(apartment.name)}%20(ID:%20${apartment.id})" target="_blank" class="btn btn-primary btn-lg"><i class="fab fa-whatsapp"></i> Hubungi Agen Sekarang</a>
+                  </div>
+                </div>
+                 <a href="#/apartemen" class="btn btn-secondary m-t-lg"><i class="fas fa-arrow-left"></i> Kembali ke Daftar Apartemen</a>
+              </div>
+            </section>
+          `;
+        } else {
+          this.appContent.innerHTML = `
+            <section class="view-section">
+              <div class="container txt-center">
+                <h1 class="txt-xl txt-bold">Apartemen Tidak Ditemukan</h1>
+                <p>Maaf, apartemen yang Anda cari tidak dapat ditemukan.</p>
+                <a href="#/apartemen" class="btn btn-primary m-t-md">Kembali ke Daftar Apartemen</a>
+              </div>
+            </section>
+          `;
+        }
+      }
+
+      renderApartmentCard(apartment, isFeatured = false) {
+        return `
+          <div class="apartment-card animate-on-scroll">
+            ${apartment.badge ? `<div class="apartment-card-badge">${apartment.badge}</div>` : ''}
+            <img src="${apartment.image}" alt="${apartment.name}">
+            <div class="apartment-card-content">
+              <h3 class="apartment-card-title">${apartment.name}</h3>
+              <p class="apartment-card-location"><i class="fas fa-map-marker-alt"></i> ${apartment.location}</p>
+              <p class="apartment-card-price">${this.formatCurrency(apartment.price)}<span class="txt-sm txt-muted"> / bulan</span></p>
+              <div class="apartment-card-features">
+                <span class="apartment-card-feature"><i class="fas fa-bed"></i> ${apartment.details.bedrooms} KT</span>
+                <span class="apartment-card-feature"><i class="fas fa-bath"></i> ${apartment.details.bathrooms} KM</span>
+                <span class="apartment-card-feature"><i class="fas fa-ruler-combined"></i> ${apartment.details.area}</span>
+              </div>
+              <div class="apartment-card-actions">
+                <a href="#/apartemen/${apartment.id}" class="btn btn-primary" style="width: 100%;">Lihat Detail</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // --- Event Handlers & Logic ---
+      handleSearch(query) {
+        this.state.searchQuery = query.trim().toLowerCase();
+        this.filterApartments();
+      }
+      handlePriceFilter(priceRange) {
+        this.state.priceRange = priceRange;
+        this.filterApartments();
+      }
+      handleLocationFilter(location) {
+        this.state.locationFilter = location;
+        this.filterApartments();
+      }
+
+      filterApartments() {
+        this.state.filteredApartments = this.state.apartments.filter(apartment => {
+          const matchesSearch = !this.state.searchQuery ||
+            apartment.name.toLowerCase().includes(this.state.searchQuery) ||
+            apartment.location.toLowerCase().includes(this.state.searchQuery);
+
+          const matchesPrice = this.state.priceRange === 'all' ||
+            (this.state.priceRange === '0-10000000' && apartment.price >= 0 && apartment.price <= 10000000) ||
+            (this.state.priceRange === '10000001-20000000' && apartment.price >= 10000001 && apartment.price <= 20000000) ||
+            (this.state.priceRange === '20000001-30000000' && apartment.price >= 20000001 && apartment.price <= 30000000) ||
+            (this.state.priceRange === '30000001+' && apartment.price >= 30000001);
+
+          const matchesLocation = this.state.locationFilter === 'all' ||
+            apartment.location === this.state.locationFilter;
+
+          return matchesSearch && matchesPrice && matchesLocation;
+        });
+
+        // Re-render only the list part if on apartments list view
+        if (this.state.currentView === 'apartemen' && !window.location.hash.includes('/apartemen/')) { // Check not on detail page
+          const container = document.getElementById('apartmentsListContainer');
+          if (container) {
+            container.innerHTML = this.state.filteredApartments.length > 0
+              ? this.state.filteredApartments.map(apt => this.renderApartmentCard(apt)).join('')
+              : '<p class="no-apartments col-span-12">Tidak ada apartemen yang cocok dengan kriteria Anda.</p>';
+            this.setupIntersectionObserverForCurrentView(); // Re-apply for new cards
+          }
+        }
+      }
+
+      addFormSubmitListener(formSelector, successMessage) {
+        const form = document.querySelector(formSelector);
+        if (form) {
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert(successMessage);
+            form.reset();
+          });
+        }
+      }
+
+      setupIntersectionObserverForCurrentView() {
+        const animatedElements = this.appContent.querySelectorAll('.animate-on-scroll');
+        if (animatedElements.length === 0) return;
+
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              obs.unobserve(entry.target); // Optional: unobserve after animation
+            }
+          });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => observer.observe(el));
+      }
+
+      debounce(fn, wait) {
+        let timeout;
+        return (...args) => {
           clearTimeout(timeout);
           timeout = setTimeout(() => fn.apply(this, args), wait);
-      };
-  }
-}
+        };
+      }
+    }
 
-document.addEventListener('DOMContentLoaded', () => new ApartmentFinder());</script>
-  </body>
+    document.addEventListener('DOMContentLoaded', () => new ApartmentFinderSPA());
+  </script>
+</body>
+
 </html>

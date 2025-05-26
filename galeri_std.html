@@ -1,471 +1,1287 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="id" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galeri Dinamis</title>
+    <title>Galeri Foto Dinamis Interaktif</title>
+    <meta name="description"
+        content="Sebuah galeri foto dinamis yang dibangun dengan HTML, CSS, dan JavaScript murni, menampilkan arsitektur SPA sederhana dan berbagai fitur interaktif.">
+    <!-- Favicon sederhana sebagai contoh -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+
     <style>
-        :root {
-            --primary: #0070f3;
-            --primary-foreground: #ffffff;
-            --background: #ffffff;
-            --foreground: #111111;
-            --card: #ffffff;
-            --card-foreground: #111111;
-            --border: #e5e5e5;
-            --radius: 0.5rem;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            /* Spacing scale */
-            --space-0: 0rem;
-            --space-1: 0.25rem;
-            --space-2: 0.5rem;
-            --space-3: 1rem;
-            --space-4: 1.5rem;
-            --space-5: 2rem;
+        /* === STYLE GUIDE & DESIGN PRINCIPLES ===
+         * 1. Vanilla Native: Tidak ada framework/library eksternal.
+         * 2. Monolith: Semua kode dalam satu file HTML.
+         * 3. Semantic HTML5: Penggunaan tag HTML yang tepat.
+         * 4. CSS Custom Properties (Variables): Untuk tema dan konsistensi.
+         * 5. Utility-First Approach (parsial): Untuk spacing, flex, dll.
+         * 6. Mobile-First Responsive Design.
+         * 7. Clean Code: Terstruktur, mudah dibaca, dan dikomentari.
+         * 8. Reusable Components (konsep): Kartu galeri, modal.
+         * 9. User Experience: Interaksi halus, lazy loading, tema.
+         * 10. Accessibility (dasar): Alt text untuk gambar, aria-label.
+         * 11. Hirarki: Struktur HTML, CSS, dan JS yang jelas.
+         * 12. Paradigma: Event-driven, fungsional (parsial) dalam JS.
+         * 13. Keterangan Teks: Bahasa Indonesia (kecuali tag, properti, atribut).
+        /* ====================================== */
 
-            /* Layout */
-            --container-padding: var(--space-lg);
-            --section-gap: var(--space-xl);
-
-            /* Typography scale */
-            --font-sm: 0.875rem;
-            --font-base: 1rem;
-            --font-lg: 1.5rem;
-            --font-xl: 2rem;
-
-            /* Border radius */
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 16px;
-
-            /* Shadows */
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+        /* === CSS RESET SEDERHANA & BASE STYLES === */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Padding Utility */
-        .pt-1 {
-            padding-top: var(--space-1);
-        }
-
-        .p-1 {
-            padding: var(--space-1);
-        }
-
-        .pt-2 {
-            padding-top: var(--space-2);
-        }
-
-        .p-2 {
-            padding: var(--space-2);
-        }
-
-        .pt-3 {
-            padding-top: var(--space-3);
-        }
-
-        .p-3 {
-            padding: var(--space-3);
-        }
-
-        .pb-2 {
-            padding-bottom: var(--space-2);
-        }
-
-        .pb-3 {
-            padding-bottom: var(--space-3);
-        }
-
-        /* margin */
-        .m-1 {
-            margin-top: var(--space-1);
-        }
-
-        .mt-1 {
-            margin: var(--space-1);
-        }
-
-        .m-2 {
-            margin-top: var(--space-2);
-        }
-
-        .mt-2 {
-            margin: var(--space-2);
-        }
-
-        .m-3 {
-            margin-top: var(--space-3);
-        }
-
-        .mt-3 {
-            margin: var(--space-3);
-        }
-
-        .mb-2 {
-            margin-bottom: var(--space-2);
-        }
-
-        .mb-3 {
-            margin-bottom: var(--space-3);
-        }
-
-        .mx-4 {
-            margin-left: var(--space-4);
-            margin-right: var(--space-4);
-        }
-
-        /* Layout utilities */
-        .container {
-            width: var(--max-width);
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 0 var(--space-3);
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .center {
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Position utilities */
-        .relative {
-            position: relative;
-        }
-
-        .sticky {
-            position: sticky;
-            top: 0;
-        }
-
-        .z-base {
-            z-index: var(--z-base);
-        }
-
-        .z-modal {
-            z-index: var(--z-modal);
-        }
-
-        /* Appearance utilities */
-        .rounded {
-            border-radius: var(--border-radius);
-        }
-
-        .shadow {
-            box-shadow: var(--shadow-soft);
-        }
-
-        .transition {
-            transition: all var(--transition-fast);
-        }
-
-        [data-theme="dark"] {
-            --primary: #0070f3;
-            --primary-foreground: #ffffff;
-            --background: #111111;
-            --foreground: #ffffff;
-            --card: #1a1a1a;
-            --card-foreground: #ffffff;
-            --border: #333333;
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            /* Basis untuk satuan REM */
         }
 
         body {
-            background-color: var(--background);
-            color: var(--foreground);
-            font-family: sans-serif;
-            margin: 0;
-            padding: 1rem;
-
-            /* Tetap bisa scroll, tapi sembunyikan scrollbar */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--color-background);
+            color: var(--color-foreground);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            /* Selalu tampilkan scrollbar untuk mencegah lompatan layout, tapi sembunyikan visualnya */
             overflow-y: scroll;
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE & Edge Legacy */
         }
 
+        /* Sembunyikan scrollbar secara visual tapi tetap fungsional */
         body::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
-            background: transparent;
-            /* WebKit */
+            display: none;
         }
 
+        /* Webkit (Chrome, Safari, Opera) */
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
 
-        .grid {
+        /* IE, Edge Legacy, Firefox */
+
+        img,
+        picture,
+        video,
+        canvas,
+        svg {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* ======================================= */
+
+
+        /* === CSS VARIABLES (THEMING & DESIGN TOKENS) === */
+        :root {
+            /* Skala Warna (Dasar: Light Theme) */
+            --color-primary: #007bff;
+            --color-primary-hover: #0056b3;
+            --color-primary-foreground: #ffffff;
+            --color-secondary: #6c757d;
+            /* Warna sekunder untuk elemen pendukung */
+            --color-background: #f8f9fa;
+            /* Latar belakang utama aplikasi */
+            --color-foreground: #212529;
+            /* Warna teks utama */
+            --color-card-background: #ffffff;
+            /* Latar belakang kartu */
+            --color-card-foreground: #343a40;
+            /* Warna teks pada kartu */
+            --color-border: #dee2e6;
+            /* Warna border standar */
+            --color-muted-foreground: #6c757d;
+            /* Warna teks yang lebih lembut (deskripsi, dll) */
+
+            /* RGB individual untuk box-shadow (digunakan dalam :focus pada tombol) */
+            --color-primary-rgb: 0, 123, 255;
+
+
+            /* Tipografi */
+            --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-xs: 0.75rem;
+            /* 12px */
+            --font-size-sm: 0.875rem;
+            /* 14px */
+            --font-size-base: 1rem;
+            /* 16px */
+            --font-size-md: 1.125rem;
+            /* 18px */
+            --font-size-lg: 1.5rem;
+            /* 24px */
+            --font-size-xl: 2rem;
+            /* 32px */
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+
+            /* Spasi (Konsisten dengan skala dasar 0.25rem atau 4px) */
+            --space-0: 0rem;
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+
+            /* Border & Radius */
+            --border-width: 1px;
+            --radius-sm: 0.2rem;
+            /* ~3px */
+            --radius-md: 0.375rem;
+            /* ~6px */
+            --radius-lg: 0.5rem;
+            /* 8px */
+            --radius-xl: 1rem;
+            /* 16px */
+            --radius-pill: 9999px;
+            /* Untuk elemen berbentuk pil */
+
+            /* Shadow */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+            /* Transisi */
+            --transition-duration-fast: 150ms;
+            --transition-duration-base: 300ms;
+            --transition-duration-slow: 500ms;
+            --transition-timing-function: ease-in-out;
+
+            /* Z-Index (Skala untuk mengatur tumpukan elemen) */
+            --z-index-sticky: 1020;
+            --z-index-modal-backdrop: 1040;
+            --z-index-modal: 1050;
+
+            /* Ukuran Kontainer */
+            --container-max-width: 1200px;
+            --container-padding-x: var(--space-4);
+            /* Padding horizontal untuk kontainer */
+        }
+
+        [data-theme="dark"] {
+            --color-primary: #3b82f6;
+            /* Biru yang sedikit lebih terang untuk dark mode */
+            --color-primary-hover: #2563eb;
+            --color-background: #111827;
+            /* Abu-abu gelap kebiruan */
+            --color-foreground: #f3f4f6;
+            /* Putih keabu-abuan */
+            --color-card-background: #1f2937;
+            /* Abu-abu lebih gelap untuk kartu */
+            --color-card-foreground: #e5e7eb;
+            --color-border: #374151;
+            /* Border lebih gelap */
+            --color-muted-foreground: #9ca3af;
+            --color-primary-rgb: 59, 130, 246;
+            /* RGB untuk tema gelap */
+        }
+
+        /* ======================================= */
+
+
+        /* === UTILITY CLASSES === */
+        /* Display */
+        .d-none {
+            display: none !important;
+        }
+
+        .d-block {
+            display: block !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        /* Flexbox */
+        .flex-col {
+            flex-direction: column !important;
+        }
+
+        .justify-center {
+            justify-content: center !important;
+        }
+
+        .justify-between {
+            justify-content: space-between !important;
+        }
+
+        .items-center {
+            align-items: center !important;
+        }
+
+        .flex-grow-1 {
+            flex-grow: 1 !important;
+        }
+
+        /* Spacing (m-margin, p-padding, t-top, b-bottom, l-left, r-right, x-horizontal, y-vertical) */
+        .m-0 {
+            margin: var(--space-0) !important;
+        }
+
+        .m-1 {
+            margin: var(--space-1) !important;
+        }
+
+        .m-2 {
+            margin: var(--space-2) !important;
+        }
+
+        .m-3 {
+            margin: var(--space-3) !important;
+        }
+
+        .m-4 {
+            margin: var(--space-4) !important;
+        }
+
+        .m-6 {
+            margin: var(--space-6) !important;
+        }
+
+        .m-8 {
+            margin: var(--space-8) !important;
+        }
+
+        .mt-0 {
+            margin-top: var(--space-0) !important;
+        }
+
+        .mt-1 {
+            margin-top: var(--space-1) !important;
+        }
+
+        .mt-2 {
+            margin-top: var(--space-2) !important;
+        }
+
+        .mt-3 {
+            margin-top: var(--space-3) !important;
+        }
+
+        .mt-4 {
+            margin-top: var(--space-4) !important;
+        }
+
+        .mt-6 {
+            margin-top: var(--space-6) !important;
+        }
+
+        .mt-8 {
+            margin-top: var(--space-8) !important;
+        }
+
+        .mb-0 {
+            margin-bottom: var(--space-0) !important;
+        }
+
+        .mb-1 {
+            margin-bottom: var(--space-1) !important;
+        }
+
+        .mb-2 {
+            margin-bottom: var(--space-2) !important;
+        }
+
+        .mb-3 {
+            margin-bottom: var(--space-3) !important;
+        }
+
+        .mb-4 {
+            margin-bottom: var(--space-4) !important;
+        }
+
+        .mb-6 {
+            margin-bottom: var(--space-6) !important;
+        }
+
+        .mb-8 {
+            margin-bottom: var(--space-8) !important;
+        }
+
+        .mx-auto {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        .p-0 {
+            padding: var(--space-0) !important;
+        }
+
+        .p-1 {
+            padding: var(--space-1) !important;
+        }
+
+        .p-2 {
+            padding: var(--space-2) !important;
+        }
+
+        .p-3 {
+            padding: var(--space-3) !important;
+        }
+
+        .p-4 {
+            padding: var(--space-4) !important;
+        }
+
+        .p-6 {
+            padding: var(--space-6) !important;
+        }
+
+        .p-8 {
+            padding: var(--space-8) !important;
+        }
+
+        .pt-0 {
+            padding-top: var(--space-0) !important;
+        }
+
+        .pt-1 {
+            padding-top: var(--space-1) !important;
+        }
+
+        .pt-2 {
+            padding-top: var(--space-2) !important;
+        }
+
+        .pt-3 {
+            padding-top: var(--space-3) !important;
+        }
+
+        .pt-4 {
+            padding-top: var(--space-4) !important;
+        }
+
+        .pt-6 {
+            padding-top: var(--space-6) !important;
+        }
+
+        .pt-8 {
+            padding-top: var(--space-8) !important;
+        }
+
+        .pb-0 {
+            padding-bottom: var(--space-0) !important;
+        }
+
+        .pb-1 {
+            padding-bottom: var(--space-1) !important;
+        }
+
+        .pb-2 {
+            padding-bottom: var(--space-2) !important;
+        }
+
+        .pb-3 {
+            padding-bottom: var(--space-3) !important;
+        }
+
+        .pb-4 {
+            padding-bottom: var(--space-4) !important;
+        }
+
+        .pb-6 {
+            padding-bottom: var(--space-6) !important;
+        }
+
+        .pb-8 {
+            padding-bottom: var(--space-8) !important;
+        }
+
+        .px-0 {
+            padding-left: var(--space-0) !important;
+            padding-right: var(--space-0) !important;
+        }
+
+        .px-1 {
+            padding-left: var(--space-1) !important;
+            padding-right: var(--space-1) !important;
+        }
+
+        .px-2 {
+            padding-left: var(--space-2) !important;
+            padding-right: var(--space-2) !important;
+        }
+
+        .px-3 {
+            padding-left: var(--space-3) !important;
+            padding-right: var(--space-3) !important;
+        }
+
+        .px-4 {
+            padding-left: var(--space-4) !important;
+            padding-right: var(--space-4) !important;
+        }
+
+        .px-6 {
+            padding-left: var(--space-6) !important;
+            padding-right: var(--space-6) !important;
+        }
+
+        .px-8 {
+            padding-left: var(--space-8) !important;
+            padding-right: var(--space-8) !important;
+        }
+
+        .py-0 {
+            padding-top: var(--space-0) !important;
+            padding-bottom: var(--space-0) !important;
+        }
+
+        .py-1 {
+            padding-top: var(--space-1) !important;
+            padding-bottom: var(--space-1) !important;
+        }
+
+        .py-2 {
+            padding-top: var(--space-2) !important;
+            padding-bottom: var(--space-2) !important;
+        }
+
+        .py-3 {
+            padding-top: var(--space-3) !important;
+            padding-bottom: var(--space-3) !important;
+        }
+
+        .py-4 {
+            padding-top: var(--space-4) !important;
+            padding-bottom: var(--space-4) !important;
+        }
+
+        .py-6 {
+            padding-top: var(--space-6) !important;
+            padding-bottom: var(--space-6) !important;
+        }
+
+        .py-8 {
+            padding-top: var(--space-8) !important;
+            padding-bottom: var(--space-8) !important;
+        }
+
+        /* Text */
+        .text-center {
+            text-align: center !important;
+        }
+
+        .font-normal {
+            font-weight: var(--font-weight-normal) !important;
+        }
+
+        .font-medium {
+            font-weight: var(--font-weight-medium) !important;
+        }
+
+        .font-bold {
+            font-weight: var(--font-weight-bold) !important;
+        }
+
+        .text-primary {
+            color: var(--color-primary) !important;
+        }
+
+        .text-muted {
+            color: var(--color-muted-foreground) !important;
+        }
+
+        .text-xl {
+            font-size: var(--font-size-xl) !important;
+        }
+
+        /* Rounded corners */
+        .rounded-md {
+            border-radius: var(--radius-md) !important;
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius-lg) !important;
+        }
+
+        .rounded-pill {
+            border-radius: var(--radius-pill) !important;
+        }
+
+        /* Shadows */
+        .shadow-sm {
+            box-shadow: var(--shadow-sm) !important;
+        }
+
+        .shadow-md {
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        .shadow-lg {
+            box-shadow: var(--shadow-lg) !important;
+        }
+
+        /* ======================================= */
+
+
+        /* === LAYOUT COMPONENTS === */
+        .app-header {
+            background-color: var(--color-card-background);
+            /* Menggunakan warna kartu agar konsisten */
+            padding: var(--space-3) var(--container-padding-x);
+            box-shadow: var(--shadow-sm);
+            border-bottom: var(--border-width) solid var(--color-border);
+            position: sticky;
+            /* Header tetap terlihat saat scroll */
+            top: 0;
+            z-index: var(--z-index-sticky);
+            transition: background-color var(--transition-duration-base) var(--transition-timing-function),
+                border-color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .app-header .container {
+            /* Inner container untuk header */
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .col {
-            flex: 1 1 calc(33.333% - 1rem);
-            box-sizing: border-box;
+        .app-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .app-title:hover {
+            color: var(--color-primary-hover);
+        }
+
+        .app-main {
+            padding-top: var(--space-6);
+            padding-bottom: var(--space-8);
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--container-padding-x);
+            padding-right: var(--container-padding-x);
+        }
+
+        .app-footer {
+            background-color: var(--color-card-background);
+            color: var(--color-muted-foreground);
+            padding: var(--space-4) var(--container-padding-x);
+            text-align: center;
+            font-size: var(--font-size-sm);
+            border-top: var(--border-width) solid var(--color-border);
+            transition: background-color var(--transition-duration-base) var(--transition-timing-function),
+                border-color var(--transition-duration-base) var(--transition-timing-function),
+                color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        /* ======================================= */
+
+        /* === COMPONENT: BUTTON === */
+        .btn {
+            display: inline-flex;
+            /* Agar bisa align-items dan justify-content */
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /* Untuk efek ripple */
+            padding: var(--space-2) var(--space-4);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            line-height: 1.5;
+            /* Ketinggian baris standar */
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            border: var(--border-width) solid transparent;
+            /* Border transparan untuk konsistensi ukuran */
+            transition: background-color var(--transition-duration-fast) var(--transition-timing-function),
+                border-color var(--transition-duration-fast) var(--transition-timing-function),
+                color var(--transition-duration-fast) var(--transition-timing-function),
+                box-shadow var(--transition-duration-fast) var(--transition-timing-function);
+            overflow: hidden;
+            /* Penting untuk efek ripple */
+            user-select: none;
+            /* Mencegah seleksi teks pada tombol */
+            min-height: 44px;
+            /* Ukuran minimum untuk aksesibilitas sentuh (target size) */
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
+        }
+
+        .btn:focus {
+            /* Generic focus style, bisa disesuaikan per varian */
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.5);
+        }
+
+        /* Tombol Toggle Tema (varian khusus) */
+        .btn-toggle-theme {
+            background-color: var(--color-secondary);
+            color: var(--color-primary-foreground);
+            /* Biasanya foreground primary cocok di sini */
+            padding: var(--space-2);
+            font-size: var(--font-size-lg);
+            /* Ukuran ikon lebih besar */
+            min-width: 44px;
+            /* Pastikan ukuran target terpenuhi */
+            height: 44px;
+            border-color: var(--color-secondary);
+        }
+
+        .btn-toggle-theme:hover,
+        .btn-toggle-theme:focus {
+            background-color: var(--color-muted-foreground);
+            /* Warna hover lebih gelap */
+            border-color: var(--color-muted-foreground);
+        }
+
+        /* Efek ripple sederhana pada tombol */
+        .btn::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            /* Warna ripple */
+            width: 100px;
+            /* Ukuran awal ripple */
+            height: 100px;
+            margin-top: -50px;
+            /* Posisi tengah */
+            margin-left: -50px;
+            top: 50%;
+            left: 50%;
+            transform: scale(0);
+            /* Mulai dari kecil */
+            opacity: 0;
+            pointer-events: none;
+            /* Agar tidak menghalangi klik */
+        }
+
+        .btn:active::after {
+            /* Efek saat tombol ditekan */
+            transform: scale(3);
+            /* Perbesar ripple */
+            opacity: 1;
+            transition: transform 0.5s ease-out, opacity 0.7s ease-out;
+            /* Animasi ripple */
+        }
+
+        /* ======================================= */
+
+        /* === COMPONENT: GALLERY GRID === */
+        .gallery-grid {
+            display: grid;
+            /* Membuat kolom responsif: mengisi sebanyak mungkin kolom dengan lebar minimal 300px */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-6);
+            /* Jarak antar item galeri */
         }
 
         @media (max-width: 768px) {
-            :root {
-                --container-padding: var(--space-md);
-                --section-gap: var(--space-lg);
-                --font-lg: 1.25rem;
-                --font-xl: 1.5rem;
-            }
 
-            .col {
-                flex: 1 1 calc(50% - 1rem);
+            /* Tablet dan perangkat lebih kecil */
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: var(--space-4);
             }
         }
 
         @media (max-width: 480px) {
-            .col {
-                flex: 1 1 100%;
+
+            /* Ponsel */
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                /* Satu kolom pada layar sangat kecil */
+                gap: var(--space-4);
             }
         }
 
+        /* ======================================= */
+
+        /* === COMPONENT: CARD (untuk item galeri) === */
         .card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            background-color: var(--color-card-background);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
             overflow: hidden;
+            /* Agar gambar tidak keluar dari border radius */
+            display: flex;
+            flex-direction: column;
+            /* Susun gambar di atas, konten di bawah */
+            transition: transform var(--transition-duration-base) var(--transition-timing-function),
+                box-shadow var(--transition-duration-base) var(--transition-timing-function),
+                background-color var(--transition-duration-base) var(--transition-timing-function),
+                border-color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            /* Efek angkat saat hover */
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image-wrapper {
             position: relative;
-        }
-
-
-        .card img {
+            /* Untuk positioning gambar absolut di dalamnya */
             width: 100%;
-            height: 220px;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.6s ease;
+            /* Aspect ratio 3:2 (tinggi = 2/3 dari lebar). Sesuaikan jika perlu (misal 16:9 -> 56.25%) */
+            padding-top: 66.66%;
+            overflow: hidden;
+            /* Untuk efek zoom pada hover gambar jika diinginkan */
+            background-color: var(--color-border);
+            /* Placeholder color sebelum gambar load */
         }
 
-        .card img.loaded {
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Pastikan gambar menutupi area tanpa distorsi */
+            opacity: 0;
+            /* Awalnya transparan untuk efek fade-in saat lazy loading */
+            transition: opacity var(--transition-duration-slow) var(--transition-timing-function),
+                transform var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .card:hover .card-image {
+            /* transform: scale(1.03); */
+            /* Efek zoom halus pada gambar saat hover kartu (opsional) */
+        }
+
+        .card-image.loaded {
+            /* Kelas ditambahkan oleh JS setelah gambar dimuat */
             opacity: 1;
         }
 
         .card-body {
-            padding: 1rem;
+            padding: var(--space-4);
+            flex-grow: 1;
+            /* Agar body mengisi sisa ruang jika card punya tinggi berbeda-beda */
+            display: flex;
+            flex-direction: column;
+            /* Konten body tersusun vertikal */
         }
 
         .card-title {
-            font-weight: bold;
-            color: var(--card-foreground);
-            margin-bottom: 0.5rem;
+            font-size: var(--font-size-md);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-card-foreground);
+            margin-bottom: var(--space-2);
+            transition: color var(--transition-duration-base) var(--transition-timing-function);
         }
 
-        /* button */
-        .btn {
-            position: relative;
-            overflow: hidden;
-            margin: 0.4rem;
-            float: right;
-            padding: 0.6em 1.5em;
-            font-size: 1rem;
-            min-height: 44px;
-            background-color: steelblue;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: color 0.3s ease;
+        .card-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-muted-foreground);
+            margin-bottom: var(--space-3);
+            flex-grow: 1;
+            /* Dorong tombol ke bawah jika ada teks deskripsi */
+            transition: color var(--transition-duration-base) var(--transition-timing-function);
         }
 
-        .btn * {
-            text-decoration: none;
-            color: aliceblue;
+        .card .btn {
+            /* Styling khusus untuk tombol di dalam card */
+            margin-top: auto;
+            /* Dorong tombol ke bagian bawah card-body */
+            align-self: flex-end;
+            /* Rata kanan tombol */
         }
 
-        .btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0%;
-            height: 300%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%) rotate(45deg);
-            transition: width 0.4s ease;
-            z-index: 0;
-        }
+        /* ======================================= */
 
-        .btn:hover::before {
-            width: 140%;
-        }
-
-        .btn:hover {
-            color: aliceblue;
-            background-color: navy;
-        }
-
-        .btn span {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Toggle Theme Button */
-        .toggle-theme {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 10;
-        }
-
-        /* Modal */
-        .modal {
+        /* === COMPONENT: MODAL === */
+        .modal-overlay {
             display: none;
+            /* Awalnya tersembunyi */
             position: fixed;
-            z-index: 100;
+            /* Menutupi seluruh viewport */
             top: 0;
             left: 0;
-            height: 100vh;
             width: 100%;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
+            /* Latar belakang gelap transparan */
+            z-index: var(--z-index-modal-backdrop);
+            opacity: 0;
+            /* Awalnya transparan untuk animasi */
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function);
+            /* Menggunakan flex untuk memusatkan konten modal */
             justify-content: center;
             align-items: center;
+            padding: var(--space-4);
+            /* Padding agar konten modal tidak menempel tepi layar */
         }
 
-        .modal img {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        .modal.active {
+        .modal-overlay.active {
+            /* Kelas saat modal aktif */
             display: flex;
+            /* Menjadi flex untuk memusatkan */
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: var(--color-card-background);
+            /* Sama dengan card untuk konsistensi */
+            padding: var(--space-2);
+            /* Padding kecil di sekitar gambar */
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 95vw;
+            /* Lebar maksimal konten modal */
+            max-height: 95vh;
+            /* Tinggi maksimal konten modal */
+            display: flex;
+            /* Untuk centering gambar jika padding besar */
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* Untuk tombol close absolut */
+            transform: scale(0.9);
+            /* Efek scale-up saat muncul */
+            opacity: 0;
+            transition: transform var(--transition-duration-base) var(--transition-timing-function),
+                opacity var(--transition-duration-base) var(--transition-timing-function),
+                background-color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .modal-overlay.active .modal-content {
+            /* Animasi saat modal aktif */
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-image {
+            display: block;
+            max-width: 100%;
+            /* Tinggi gambar dikurangi padding modal agar pas */
+            max-height: calc(95vh - (var(--space-2) * 2) - (var(--space-4) * 2));
+            border-radius: var(--radius-md);
+            /* Radius lebih kecil dari modal-content */
+            object-fit: contain;
+            /* Agar seluruh gambar terlihat tanpa crop */
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: calc(var(--space-3) * -1 - var(--space-1));
+            /* Posisikan di luar sedikit */
+            right: calc(var(--space-3) * -1 - var(--space-1));
+            background: var(--color-card-background);
+            color: var(--color-foreground);
+            border: var(--border-width) solid var(--color-border);
+            border-radius: var(--radius-pill);
+            /* Tombol bulat */
+            width: 40px;
+            height: 40px;
+            font-size: var(--font-size-lg);
+            line-height: 1;
+            /* Untuk centering teks/simbol X */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-duration-fast), color var(--transition-duration-fast), transform var(--transition-duration-fast);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-primary-foreground);
+            border-color: var(--color-primary);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ======================================= */
+
+        /* === STATE CLASSES === */
+        /* Mencegah scroll pada body saat modal aktif */
+        body.modal-open {
+            overflow: hidden;
         }
     </style>
 </head>
 
 <body>
-    <button class="btn toggle-theme">🌗 Toggle Tema</button>
-    <div class="grid">
+    <!-- Wadah utama untuk aplikasi SPA (Single Page Application) -->
+    <div id="app-container">
+        <!-- Header Aplikasi -->
+        <header class="app-header">
+            <div class="container">
+                <a href="#" class="app-title" aria-label="Beranda Galeri Foto Interaktif">Galeri Foto Interaktif</a>
+                <button id="theme-toggle-btn" class="btn btn-toggle-theme" aria-label="Toggle Tema">
+                    <!-- Ikon akan diisi oleh JavaScript berdasarkan tema saat ini -->
+                </button>
+            </div>
+        </header>
 
-        <div class="col">
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1035/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 1</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
+        <!-- Konten Utama Aplikasi -->
+        <main id="main-content" class="app-main">
+            <div class="container">
+                <h1 class="text-center font-bold text-xl mb-6">Koleksi Gambar Pilihan Kami</h1>
+                <section id="gallery-section" aria-labelledby="gallery-title-heading">
+                    <h2 id="gallery-title-heading" class="d-none">Galeri Gambar</h2>
+                    <!-- Judul tersembunyi untuk aksesibilitas -->
+                    <div class="gallery-grid" id="gallery-grid-container">
+                        <!-- Item galeri akan dirender secara dinamis oleh JavaScript -->
+                        <!-- Contoh placeholder jika JS gagal (opsional) -->
+                        <!-- <p class="text-center text-muted">Memuat galeri...</p> -->
+                    </div>
+                </section>
             </div>
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1037/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 2</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1047/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 3</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1050/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 4 </h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1075/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 5</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2" alt="Architecture"
-                    loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 6 </h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/1015/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 7</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/188/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Moderns Building 8 </h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-            <div class="card mt-3">
-                <img src="https://picsum.photos/id/703/1920/1080" alt="Architecture" loading="lazy" />
-                <div class="card-body">
-                    <h3 class="card-title">Modern Building 9</h3>
-                    <button class="btn view-btn">Lihat</button>
-                </div>
-            </div>
-        </div>
+        </main>
+
+        <!-- Footer Aplikasi -->
+        <footer class="app-footer">
+            <p>© <span id="current-year"></span> Galeri Foto Dinamis. Dibuat dengan Penuh Semangat oleh Pengembang.</p>
+        </footer>
     </div>
 
-    <!-- Salin untuk galeri lain -->
-    <div class="modal" id="imageModal">
-        <img src="" alt="Preview" />
+    <!-- Modal untuk Preview Gambar -->
+    <div id="image-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="modal-image-title">
+        <div class="modal-content">
+            <!-- Judul modal untuk aksesibilitas, bisa diisi dari alt gambar -->
+            <h3 id="modal-image-title" class="d-none">Pratinjau Gambar Diperbesar</h3>
+            <button id="modal-close-btn" class="modal-close-btn" aria-label="Tutup Pratinjau Gambar">×</button>
+            <img id="modal-image-content" src="" alt="Pratinjau Gambar Diperbesar" class="modal-image">
+        </div>
     </div>
 
     <script>
-        // Toggle Tema
-        const toggleBtn = document.querySelector('.toggle-theme');
-        toggleBtn.addEventListener('click', () => {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-        });
+        // === JAVASCRIPT APPLICATION LOGIC ===
+        "use strict"; // Mengaktifkan mode ketat untuk penulisan kode yang lebih aman dan mencegah error umum.
 
-        // Gambar Lazy Load dengan efek
-        const imgs = document.querySelectorAll('img[loading="lazy"]');
-        imgs.forEach(img => {
-            img.addEventListener('load', () => {
-                img.classList.add('loaded');
-            });
-        });
+        /**
+         * AppState: Menyimpan state global aplikasi.
+         * Ini adalah pendekatan sederhana untuk state management dalam aplikasi vanilla JS.
+         */
+        const appState = {
+            currentTheme: localStorage.getItem('appPreferredTheme') ||
+                (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+            isModalOpen: false,
+            galleryData: [ // Data galeri yang akan dirender secara dinamis
+                {
+                    id: "img1",
+                    src: "https://picsum.photos/id/1035/800/533", // Aspect ratio 3:2
+                    alt: "Arsitektur gedung modern dengan langit biru",
+                    title: "Struktur Megah",
+                    description: "Pemandangan detail arsitektur gedung modern yang menjulang tinggi di bawah langit biru cerah."
+                },
+                {
+                    id: "img2",
+                    src: "https://picsum.photos/id/1037/800/533",
+                    alt: "Jalanan kota yang sibuk di malam hari dengan jejak lampu kendaraan",
+                    title: "Kilau Malam Kota",
+                    description: "Suasana dinamis jalanan kota metropolitan pada malam hari, dihiasi jejak cahaya lampu kendaraan."
+                },
+                {
+                    id: "img3",
+                    src: "https://picsum.photos/id/1047/800/533",
+                    alt: "Pegunungan yang diselimuti kabut tebal di pagi hari",
+                    title: "Kabut Pagi di Lembah",
+                    description: "Lanskap pegunungan yang dramatis dan misterius, diselimuti kabut tebal saat fajar menyingsing."
+                },
+                {
+                    id: "img4",
+                    src: "https://picsum.photos/id/1050/800/533",
+                    alt: "Pantai tropis yang indah dengan perahu nelayan tradisional",
+                    title: "Surga Tropis Tersembunyi",
+                    description: "Keindahan pantai eksotis dengan pasir putih lembut, air laut jernih, dan perahu nelayan tradisional."
+                },
+                {
+                    id: "img5",
+                    src: "https://picsum.photos/id/1075/800/533",
+                    alt: "Hutan pinus yang lebat dengan sinar matahari menembus dedaunan",
+                    title: "Kedamaian Hutan Pinus",
+                    description: "Jajaran pohon pinus yang tinggi menjulang menciptakan suasana tenang, damai, dan menyegarkan."
+                },
+                {
+                    id: "img6",
+                    src: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=533&q=80",
+                    alt: "Jembatan gantung kayu di atas sungai deras di tengah hutan hijau",
+                    title: "Jembatan Petualangan",
+                    description: "Sebuah jembatan gantung kayu yang kokoh melintasi sungai deras, menghubungkan dua sisi hutan lebat."
+                },
+                {
+                    id: "img7",
+                    src: "https://picsum.photos/id/1015/800/533",
+                    alt: "Danau pegunungan dengan air jernih memantulkan langit dan pepohonan",
+                    title: "Refleksi Sempurna Alam",
+                    description: "Permukaan danau pegunungan yang tenang bagai cermin, memantulkan keindahan langit biru dan hijaunya pepohonan."
+                },
+                {
+                    id: "img8",
+                    src: "https://picsum.photos/id/188/800/533",
+                    alt: "Buku terbuka di atas meja kayu dengan secangkir kopi di sampingnya",
+                    title: "Momen Relaksasi Pribadi",
+                    description: "Kombinasi sempurna untuk relaksasi: buku bacaan menarik ditemani secangkir kopi hangat mengepul."
+                },
+                {
+                    id: "img9",
+                    src: "https://picsum.photos/id/703/800/533",
+                    alt: "Jalan setapak berkelok di taman kota yang rimbun dengan bunga",
+                    title: "Jelajah Taman Kota Asri",
+                    description: "Jalan setapak yang mengundang untuk berjalan santai dan menjelajahi keindahan serta keteduhan taman kota."
+                }
+            ]
+        };
 
-        // Modal preview gambar
-        const modal = document.getElementById('imageModal');
-        const modalImg = modal.querySelector('img');
-        document.querySelectorAll('.view-btn').forEach((btn, i) => {
-            btn.addEventListener('click', () => {
-                const imgSrc = btn.closest('.card').querySelector('img').src;
-                modalImg.src = imgSrc;
-                modal.classList.add('active');
-            });
-        });
-        modal.addEventListener('click', () => modal.classList.remove('active'));
-        btn.addEventListener('click', () => {
-            const imgSrc = btn.closest('.card').querySelector('img').src;
-            modalImg.src = imgSrc;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // ❌ matikan scroll saat modal aktif
-        });
+        /**
+         * DOM Element Selectors: Mengumpulkan semua elemen DOM yang sering diakses.
+         * Ini meningkatkan keterbacaan, memudahkan maintenance, dan sedikit meningkatkan performa
+         * dengan mengurangi query DOM berulang.
+         */
+        const DOMElements = {
+            html: document.documentElement,
+            body: document.body,
+            themeToggleButton: document.getElementById('theme-toggle-btn'),
+            galleryGridContainer: document.getElementById('gallery-grid-container'),
+            modalOverlay: document.getElementById('image-modal-overlay'),
+            modalImageContent: document.getElementById('modal-image-content'),
+            modalImageTitle: document.getElementById('modal-image-title'),
+            modalCloseButton: document.getElementById('modal-close-btn'),
+            currentYearSpan: document.getElementById('current-year'),
+        };
 
-        modal.addEventListener('click', () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'scroll'; // ✅ aktifkan kembali scroll
-        });
+        /**
+         * UTILITIES: Kumpulan fungsi-fungsi bantuan (helper functions) yang reusable.
+         */
+        const Utils = {
+            /**
+             * Menerapkan tema (terang atau gelap) ke aplikasi.
+             * @param {string} theme - Nama tema yang akan diterapkan ('light' atau 'dark').
+             */
+            applyTheme: (theme) => {
+                DOMElements.html.setAttribute('data-theme', theme);
+                appState.currentTheme = theme;
+                localStorage.setItem('appPreferredTheme', theme); // Simpan preferensi tema pengguna
+
+                // Update ikon dan aria-label tombol tema
+                if (DOMElements.themeToggleButton) {
+                    DOMElements.themeToggleButton.innerHTML = theme === 'dark' ? '☀️<span class="d-none"> Ganti ke Tema Terang</span>' : '🌙<span class="d-none"> Ganti ke Tema Gelap</span>';
+                    DOMElements.themeToggleButton.setAttribute('aria-label', theme === 'dark' ? 'Ganti ke Tema Terang' : 'Ganti ke Tema Gelap');
+                }
+            },
+
+            /**
+             * Toggle tema antara terang dan gelap.
+             */
+            toggleTheme: () => {
+                const newTheme = appState.currentTheme === 'light' ? 'dark' : 'light';
+                Utils.applyTheme(newTheme);
+            },
+
+            /**
+             * Membuka modal dengan gambar yang dipilih.
+             * @param {string} imageSrc - URL sumber gambar.
+             * @param {string} imageAlt - Teks alternatif untuk gambar (digunakan juga untuk judul modal).
+             */
+            openModal: (imageSrc, imageAlt) => {
+                if (!DOMElements.modalOverlay || !DOMElements.modalImageContent || !DOMElements.modalImageTitle) return;
+
+                DOMElements.modalImageContent.src = imageSrc;
+                DOMElements.modalImageContent.alt = imageAlt; // Penting untuk aksesibilitas
+                DOMElements.modalImageTitle.textContent = imageAlt; // Gunakan alt sebagai judul modal
+
+                DOMElements.modalOverlay.classList.add('active');
+                DOMElements.body.classList.add('modal-open'); // Mencegah scroll body saat modal terbuka
+
+                // Fokus ke tombol tutup modal untuk navigasi keyboard yang lebih baik
+                DOMElements.modalCloseButton.focus();
+                appState.isModalOpen = true;
+            },
+
+            /**
+             * Menutup modal.
+             */
+            closeModal: () => {
+                if (!DOMElements.modalOverlay) return;
+                DOMElements.modalOverlay.classList.remove('active');
+                DOMElements.body.classList.remove('modal-open'); // Aktifkan kembali scroll body
+                appState.isModalOpen = false;
+            },
+
+            /**
+             * Membuat elemen kartu galeri HTML secara dinamis.
+             * @param {object} itemData - Data untuk satu item galeri (id, src, alt, title, description).
+             * @returns {HTMLElement} Elemen kartu (<article class="card">) yang sudah jadi.
+             */
+            createGalleryCard: (itemData) => {
+                const card = document.createElement('article');
+                card.className = 'card shadow-md rounded-lg'; // Tambahkan kelas utilitas langsung
+                card.setAttribute('data-image-id', itemData.id);
+                card.setAttribute('aria-labelledby', `card-title-${itemData.id}`);
+
+                const imageWrapper = document.createElement('div');
+                imageWrapper.className = 'card-image-wrapper';
+
+                const img = document.createElement('img');
+                img.className = 'card-image';
+                img.src = itemData.src;
+                img.alt = itemData.alt;
+                img.loading = 'lazy'; // Atribut native HTML5 untuk lazy loading gambar
+                // Efek fade-in setelah gambar dimuat
+                img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+                img.addEventListener('error', () => { // Fallback jika gambar gagal dimuat
+                    img.alt = `Gagal memuat gambar: ${itemData.alt}`;
+                    imageWrapper.style.backgroundColor = '#e0e0e0'; // Warna placeholder error
+                }, { once: true });
+
+
+                imageWrapper.appendChild(img);
+
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+
+                const title = document.createElement('h3');
+                title.className = 'card-title';
+                title.id = `card-title-${itemData.id}`;
+                title.textContent = itemData.title;
+
+                const description = document.createElement('p');
+                description.className = 'card-text text-muted';
+                description.textContent = itemData.description;
+
+                const viewButton = document.createElement('button');
+                viewButton.className = 'btn btn-primary view-image-btn';
+                viewButton.textContent = 'Lihat Detail';
+                viewButton.setAttribute('aria-label', `Lihat detail gambar: ${itemData.title}`);
+
+                cardBody.appendChild(title);
+                cardBody.appendChild(description);
+                cardBody.appendChild(viewButton);
+                card.appendChild(imageWrapper);
+                card.appendChild(cardBody);
+
+                return card;
+            },
+
+            /**
+             * Merender semua item galeri ke dalam kontainer DOM.
+             */
+            renderGallery: () => {
+                if (!DOMElements.galleryGridContainer) {
+                    console.error("Kontainer galeri tidak ditemukan.");
+                    return;
+                }
+                // Kosongkan kontainer sebelum merender ulang (jika ada data baru/filter di masa depan)
+                DOMElements.galleryGridContainer.innerHTML = '';
+
+                if (appState.galleryData.length === 0) {
+                    DOMElements.galleryGridContainer.innerHTML = '<p class="text-center text-muted">Tidak ada gambar untuk ditampilkan saat ini.</p>';
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment(); // Optimasi untuk penambahan banyak elemen
+                appState.galleryData.forEach(item => {
+                    const cardElement = Utils.createGalleryCard(item);
+                    fragment.appendChild(cardElement);
+                });
+                DOMElements.galleryGridContainer.appendChild(fragment);
+            }
+        };
+
+        /**
+         * EVENT LISTENERS: Mengatur semua event listener untuk interaksi pengguna.
+         */
+        const EventListeners = {
+            init: () => {
+                // Event listener untuk tombol toggle tema
+                if (DOMElements.themeToggleButton) {
+                    DOMElements.themeToggleButton.addEventListener('click', Utils.toggleTheme);
+                }
+
+                // Event listener untuk menutup modal
+                if (DOMElements.modalOverlay) {
+                    DOMElements.modalOverlay.addEventListener('click', (e) => {
+                        // Tutup modal hanya jika klik dilakukan pada area overlay (latar belakang),
+                        // bukan pada konten modal itu sendiri.
+                        if (e.target === DOMElements.modalOverlay) {
+                            Utils.closeModal();
+                        }
+                    });
+                }
+                if (DOMElements.modalCloseButton) {
+                    DOMElements.modalCloseButton.addEventListener('click', Utils.closeModal);
+                }
+
+                // Event listener untuk menutup modal dengan tombol 'Escape' pada keyboard
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && appState.isModalOpen) {
+                        Utils.closeModal();
+                    }
+                });
+
+                // Event delegation untuk tombol "Lihat Detail" di dalam setiap kartu galeri.
+                // Ini lebih efisien daripada menambahkan event listener ke setiap tombol secara individual.
+                if (DOMElements.galleryGridContainer) {
+                    DOMElements.galleryGridContainer.addEventListener('click', (e) => {
+                        const viewButton = e.target.closest('.view-image-btn');
+                        if (viewButton) {
+                            const card = viewButton.closest('.card');
+                            const imageElement = card.querySelector('.card-image');
+                            if (imageElement) {
+                                Utils.openModal(imageElement.src, imageElement.alt);
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+        /**
+         * App Initialization: Fungsi utama untuk memulai aplikasi.
+         * Dipanggil setelah seluruh struktur DOM siap.
+         */
+        function initializeApp() {
+            // 1. Terapkan tema awal (dari localStorage atau preferensi sistem)
+            Utils.applyTheme(appState.currentTheme);
+
+            // 2. Render item-item galeri secara dinamis
+            Utils.renderGallery();
+
+            // 3. Set tahun saat ini di footer (untuk copyright)
+            if (DOMElements.currentYearSpan) {
+                DOMElements.currentYearSpan.textContent = new Date().getFullYear();
+            }
+
+            // 4. Inisialisasi semua event listener
+            EventListeners.init();
+
+            // (Untuk pengembangan SPA lebih lanjut, di sini bisa ditambahkan logika routing sederhana)
+            console.log("Aplikasi Galeri Foto Dinamis berhasil diinisialisasi dengan sukses.");
+        }
+
+        // Jalankan fungsi inisialisasi aplikasi setelah DOM sepenuhnya dimuat dan siap.
+        document.addEventListener('DOMContentLoaded', initializeApp);
 
     </script>
 </body>

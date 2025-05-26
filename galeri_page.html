@@ -1,27 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Scroll Overlap Cards</title>
+    <title>Galeri Kartu Interaktif - SPA</title>
     <style>
-        * {
+        /* --- Variabel CSS Global --- */
+        :root {
+            --primary-color: #3498db;
+            /* Biru Cerah */
+            --secondary-color: #2ecc71;
+            /* Hijau Segar */
+            --background-color: #f4f7f6;
+            /* Abu-abu Sangat Muda */
+            --text-color: #333333;
+            /* Abu-abu Tua */
+            --card-overlay-color: rgba(0, 0, 0, 0.4);
+            --figcaption-bg-color: rgba(255, 255, 255, 0.85);
+            --button-bg-color: var(--primary-color);
+            --button-hover-bg-color: #2980b9;
+            /* Biru Lebih Tua */
+            --button-text-color: white;
+            --font-family-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --base-font-size: 16px;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        /* --- Reset & Gaya Dasar --- */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+            font-size: var(--base-font-size);
+        }
+
         body {
-            height: 100vh;
-            font-family: sans-serif;
-            overflow: auto;
-            /* tetap bisa scroll */
+            font-family: var(--font-family-sans-serif);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Mencegah scroll horizontal yang tidak diinginkan */
+        }
+
+        /* Menyembunyikan scrollbar standar untuk konsistensi lintas browser */
+        body {
             scrollbar-width: none;
             /* Firefox */
             -ms-overflow-style: none;
             /* IE 10+ */
-            scroll-behavior: smooth;
         }
 
         body::-webkit-scrollbar {
@@ -29,201 +69,676 @@
             /* Chrome, Safari, Opera */
         }
 
-        .card-container {
-            position: relative;
-        }
-
-        .card {
-            position: sticky;
-            top: 0;
-            height: 106vh;
+        /* --- Struktur Utama SPA --- */
+        .app-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #app-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1rem;
+            position: fixed;
+            /* Header tetap di atas */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            /* Pastikan header di atas konten lain */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: var(--header-height);
+            display: flex;
             align-items: center;
-            z-index: 1;
+            justify-content: space-between;
         }
 
-        .card-content {
-            width: 100%;
-            height: 102%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        #app-header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
         }
 
-        .card img {
-            width: 100%;
-            height: 130vh;
-            object-fit: cover;
-            display: block;
+        #app-nav .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--border-radius);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
         }
 
-        /* button */
+        #app-nav .nav-link:hover,
+        #app-nav .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #f1f1f1;
+        }
+
+        #app-main {
+            flex-grow: 1;
+            padding-top: var(--header-height);
+            /* Mencegah konten tertutup header */
+            /* padding-bottom: var(--footer-height); Akan diurus oleh konten halaman */
+        }
+
+        #app-footer {
+            background-color: #333;
+            color: #f4f4f4;
+            text-align: center;
+            padding: 1rem;
+            height: var(--footer-height);
+            flex-shrink: 0;
+            /* Mencegah footer mengecil jika konten sedikit */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* --- Gaya Konten Halaman (Umum) --- */
+        .page-content {
+            padding: 2rem 1rem;
+            animation: fadeIn var(--transition-speed) ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-content p {
+            margin-bottom: 0.8rem;
+        }
+
+        /* --- Komponen: Tombol --- */
         .btn {
             position: relative;
             overflow: hidden;
             margin: 0.4rem;
-            float: right;
             padding: 0.6em 1.5em;
             font-size: 1rem;
             min-height: 44px;
-            background-color: steelblue;
-            color: white;
+            /* Aksesibilitas ukuran target sentuh */
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
             border: none;
-            border-radius: 6px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform 0.2s ease;
+            text-decoration: none;
+            /* Untuk elemen <a> yang diberi kelas .btn */
+            display: inline-block;
+            /* Agar margin dan padding bekerja dengan baik */
+            text-align: center;
         }
 
-        .btn * {
-            text-decoration: none;
-            color: aliceblue;
+        .btn span {
+            /* Untuk teks di dalam tombol agar tetap di atas efek ripple */
+            position: relative;
+            z-index: 1;
+            color: inherit;
+            /* Mewarisi warna dari .btn */
         }
+
+        .btn a,
+        .btn a:visited,
+        .btn a:hover,
+        .btn a:active {
+            text-decoration: none;
+            color: inherit;
+            /* Agar link di dalam tombol tidak memiliki gaya default browser */
+        }
+
 
         .btn::before {
+            /* Efek ripple */
             content: "";
             position: absolute;
             top: 50%;
             left: 50%;
             width: 0%;
-            height: 300%;
+            height: 0%;
+            /* Mulai dari 0% height agar efeknya lebih 'mengembang' */
             background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%) rotate(45deg);
-            transition: width 0.4s ease;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            /* Transisi terpisah untuk width dan height */
             z-index: 0;
         }
 
-        .btn:hover::before {
-            width: 140%;
+        .btn:hover::before,
+        .btn:focus::before {
+            width: 250%;
+            /* Ukuran ripple yang lebih besar untuk menutupi tombol */
+            height: 250%;
         }
 
-        .btn:hover {
-            color: #001F3F;
-            background-color: navy;
+        .btn:hover,
+        .btn:focus {
+            background-color: var(--button-hover-bg-color);
+            color: white;
+            /* Pastikan teks tetap kontras */
+            transform: translateY(-2px);
+            /* Efek angkat kecil */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
-        .btn span {
+        .btn:active {
+            transform: translateY(0px);
+            /* Kembali ke posisi saat ditekan */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Komponen: Kartu Tumpang Tindih (Scroll Overlap Cards) --- */
+        .card-stack-container {
             position: relative;
+            /* Konteks untuk elemen sticky */
+            /* Tidak perlu height eksplisit, akan ditentukan oleh total tinggi card */
+        }
+
+        .card-item {
+            position: sticky;
+            top: var(--header-height);
+            /* Kartu akan menempel di bawah header */
+            height: calc(100vh - var(--header-height));
+            /* Tinggi kartu mengisi sisa viewport */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Mencegah konten gambar keluar dari batas kartu */
+            /* z-index akan diatur secara dinamis oleh JavaScript atau secara berurutan oleh CSS */
+        }
+
+        /* Memberikan z-index agar kartu di atas menutupi kartu di bawahnya saat sticky */
+        .card-item:nth-child(1) {
             z-index: 1;
         }
 
-        @media (max-width: 600px) {
-            .btn {
-                font-size: 0.875rem;
-                padding: 0.5em 1.2em;
-            }
-        }
-
-        /* Layering with increasing z-index for stacking effect */
-        .card:nth-child(1) {
-            z-index: 1;
-        }
-
-        .card:nth-child(2) {
+        .card-item:nth-child(2) {
             z-index: 2;
         }
 
-        .card:nth-child(3) {
+        .card-item:nth-child(3) {
             z-index: 3;
         }
 
-        .card:nth-child(4) {
+        .card-item:nth-child(4) {
             z-index: 4;
         }
 
-        /* Optional: add a fade or zoom-in effect */
-        .card figure {
+        /* Tambahkan jika ada lebih banyak kartu, atau atur via JS */
+
+        .card-item-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            /* Untuk positioning absolut di dalamnya */
+        }
+
+        .card-item-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Gambar menutupi area, mungkin terpotong */
+            display: block;
+            transition: transform 0.5s ease-out;
+            /* Efek zoom halus */
+        }
+
+        .card-item:hover .card-item-content img {
+            transform: scale(1.05);
+            /* Sedikit zoom pada hover kartu */
+        }
+
+        .card-item figure {
             margin: 0;
+            width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: space-between;
+            /* Mendorong figcaption ke bawah */
+            position: relative;
+            /* Untuk overlay */
             color: white;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
+            /* Teks default di atas gambar (jika tidak ada figcaption) */
         }
 
-        .img {
-            object-fit: fill;
-            width: 100vw !important;
-            height: 100vh !important;
+        .card-item figure::before {
+            /* Overlay gelap untuk kontras teks */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--card-overlay-color);
+            z-index: 1;
+            /* Di bawah teks figcaption tapi di atas gambar */
         }
 
-        figcaption {
-            margin: 0;
-            padding: 3rem 0 4rem 3rem;
-            color: black;
-            z-index: 120;
-            background-color: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .card-item figcaption {
+            position: relative;
+            /* Agar di atas overlay figur */
+            z-index: 2;
+            /* Di atas overlay figur */
+            padding: 1.5rem 2rem;
+            background-color: var(--figcaption-bg-color);
+            color: var(--text-color);
+            backdrop-filter: blur(5px);
+            /* Efek frosted glass jika didukung */
+            -webkit-backdrop-filter: blur(5px);
+            border-top: 3px solid var(--primary-color);
+            margin-top: auto;
+            /* Mendorong ke bawah jika konten di atasnya sedikit */
         }
 
-        figcaption h2 {
-            margin: 0.3rem 0;
-            padding: 0.01em 0;
+        .card-item figcaption h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .card-item figcaption p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Tombol di dalam kartu */
+        .card-item .btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 3;
+            /* Di atas segalanya di dalam kartu */
+        }
+
+
+        /* --- Utilitas CSS --- */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* --- Media Queries untuk Responsivitas --- */
+        @media (max-width: 768px) {
+            :root {
+                --base-font-size: 15px;
+                --header-height: 60px;
+            }
+
+            #app-header {
+                padding: 0.5rem 1rem;
+                flex-direction: column;
+                height: auto;
+                /* Biarkan tinggi header menyesuaikan */
+                align-items: flex-start;
+            }
+
+            #app-header .logo {
+                margin-bottom: 0.5rem;
+            }
+
+            #app-nav {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                /* Atau flex-start jika terlalu banyak item */
+            }
+
+            #app-nav .nav-link {
+                margin-left: 0;
+                font-size: 0.9rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            #app-main {
+                padding-top: 100px;
+                /* Sesuaikan dengan tinggi header baru */
+            }
+
+            .page-content {
+                padding: 1.5rem 0.8rem;
+            }
+
+            .card-item figcaption {
+                padding: 1rem 1.5rem;
+            }
+
+            .card-item figcaption h3 {
+                font-size: 1.5rem;
+            }
+
+            .card-item figcaption p {
+                font-size: 0.9rem;
+            }
+
+            .card-item .btn {
+                font-size: 0.9rem;
+                padding: 0.5em 1.2em;
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --base-font-size: 14px;
+            }
+
+            #app-nav .nav-link {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.5rem;
+            }
+
+            .card-item figcaption h3 {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 
 <body>
+    <div class="app-container">
+        <header id="app-header">
+            <a href="#/" class="logo" data-route="/">GaleriKu</a>
+            <nav id="app-nav">
+                <a href="#/" class="nav-link active" data-route="/">Beranda (Kartu)</a>
+                <a href="#/tentang" class="nav-link" data-route="/tentang">Tentang Aplikasi</a>
+                <a href="#/detail/kartu-1" class="nav-link" data-route="/detail/kartu-1">Contoh Detail</a>
+            </nav>
+        </header>
 
-    <div class="card-container">
-        <div class="card">
-            <div class="card-content">
-                <figure>
-                    <button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1001/1920/1080" loading="lazy" class="img" alt="Image 1" />
-                    <figcaption>
-                        <h2>Kartu 1</h2>
-                        <p>Ini adalah isi dari kartu pertama.</p>
+        <main id="app-main">
+            <!-- Konten dinamis akan dirender di sini oleh JavaScript -->
+        </main>
 
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1020/1920/1080" loading="lazy" class="img" alt="Image 2" />
-                    <figcaption>
-                        <h2>Kartu 2</h2>
-                        <p>Ini adalah isi dari kartu kedua.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1002/1920/1080" loading="lazy" class="img" alt="Image 3" />
-                    <figcaption>
-                        <h2>Kartu 3</h2>
-                        <p>Ini adalah isi dari kartu ketiga.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn"
-                        style="position: absolute !important; top: 27px !important; margin-top: 27px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1012/1920/1080" loading="lazy" class="img" alt="Image 4" />
-                    <figcaption>
-                        <h2>Kartu 4</h2>
-                        <p>Ini adalah isi dari kartu keempat.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
+        <footer id="app-footer">
+            <p>© <span id="current-year"></span> Aplikasi Galeri Kartu Interaktif. Dibuat dengan Cinta.</p>
+        </footer>
     </div>
 
+    <script>
+        // --- State Aplikasi & Data ---
+        const state = {
+            currentPage: '/',
+            cardData: [
+                {
+                    id: 'kartu-1',
+                    title: 'Pemandangan Gunung Memukau',
+                    description: 'Nikmati keindahan puncak gunung yang tertutup salju abadi dengan langit biru cerah.',
+                    imageUrl: 'https://picsum.photos/id/10/1920/1080',
+                    link: '#/detail/kartu-1',
+                    linkText: 'Selengkapnya'
+                },
+                {
+                    id: 'kartu-2',
+                    title: 'Hutan Pinus yang Tenang',
+                    description: 'Jelajahi kedamaian hutan pinus dengan kabut pagi yang menyelimuti.',
+                    imageUrl: 'https://picsum.photos/id/1015/1920/1080',
+                    link: '#/detail/kartu-2',
+                    linkText: 'Lihat Detail'
+                },
+                {
+                    id: 'kartu-3',
+                    title: 'Pantai Tropis Tersembunyi',
+                    description: 'Temukan surga tropis dengan pasir putih lembut dan air laut yang jernih.',
+                    imageUrl: 'https://picsum.photos/id/1016/1920/1080',
+                    link: '#/detail/kartu-3',
+                    linkText: 'Jelajahi'
+                },
+                {
+                    id: 'kartu-4',
+                    title: 'Kota Metropolitan Malam Hari',
+                    description: 'Saksikan gemerlap lampu kota metropolitan yang tidak pernah tidur dari ketinggian.',
+                    imageUrl: 'https://picsum.photos/id/1021/1920/1080',
+                    link: '#/detail/kartu-4',
+                    linkText: 'Observasi'
+                }
+            ],
+            // Tambahkan data lain jika diperlukan
+        };
+
+        // --- Utilitas DOM Sederhana ---
+        const $ = (selector, parent = document) => parent.querySelector(selector);
+        const $$ = (selector, parent = document) => parent.querySelectorAll(selector);
+        const createElement = (tag, attributes = {}, children = []) => {
+            const element = document.createElement(tag);
+            for (const key in attributes) {
+                if (key === 'className') {
+                    element.className = attributes[key];
+                } else if (key === 'textContent') {
+                    element.textContent = attributes[key];
+                } else if (key.startsWith('data-')) {
+                    element.setAttribute(key, attributes[key]);
+                }
+                else {
+                    element.setAttribute(key, attributes[key]);
+                }
+            }
+            children.forEach(child => {
+                if (typeof child === 'string') {
+                    element.appendChild(document.createTextNode(child));
+                } else {
+                    element.appendChild(child);
+                }
+            });
+            return element;
+        };
+
+        // --- Templating Komponen ---
+
+        // Fungsi untuk membuat elemen kartu individual
+        function createCardItemElement(card) {
+            const figcaption = createElement('figcaption', {}, [
+                createElement('h3', { textContent: card.title }),
+                createElement('p', { textContent: card.description }),
+            ]);
+
+            const figure = createElement('figure', {}, [
+                createElement('img', { src: card.imageUrl, alt: card.title, loading: 'lazy' }),
+                figcaption
+            ]);
+
+            const button = createElement('a', {
+                href: card.link,
+                className: 'btn card-action-btn',
+                'data-route': card.link.substring(1) // Simpan route untuk navigasi SPA
+            }, [
+                createElement('span', { textContent: card.linkText || 'Lihat' })
+            ]);
+
+            const cardContent = createElement('div', { className: 'card-item-content' }, [figure]);
+
+            const cardItem = createElement('section', {
+                className: 'card-item',
+                id: `card-item-${card.id}`
+            }, [
+                button, // Tombol diletakkan di luar figure agar bisa absolute thd card-item
+                cardContent
+            ]);
+
+            return cardItem;
+        }
+
+        // Fungsi untuk membuat halaman "Tentang"
+        function createAboutPageElement() {
+            return createElement('div', { className: 'page-content container' }, [
+                createElement('h2', { textContent: 'Tentang Aplikasi Galeri Kartu Interaktif' }),
+                createElement('p', { textContent: 'Aplikasi ini adalah contoh implementasi efek kartu tumpang tindih (scroll-overlap cards) menggunakan HTML, CSS, dan JavaScript murni (vanilla). Ini dibangun sebagai Single Page Application (SPA) monolitik tanpa menggunakan framework atau library eksternal.' }),
+                createElement('p', { textContent: 'Fitur Utama:' }),
+                createElement('ul', {}, [
+                    createElement('li', { textContent: 'Efek scroll tumpang tindih yang menarik secara visual.' }),
+                    createElement('li', { textContent: 'Navigasi SPA menggunakan hash routes.' }),
+                    createElement('li', { textContent: 'Desain responsif untuk berbagai ukuran layar.' }),
+                    createElement('li', { textContent: 'Kode yang bersih, terstruktur, dan mengikuti best practices.' }),
+                    createElement('li', { textContent: 'Pemuatan gambar secara lazy untuk optimasi performa.' }),
+                    createElement('li', { textContent: 'Tombol dengan efek interaktif.' })
+                ]),
+                createElement('p', { textContent: 'Tujuan dari proyek ini adalah untuk mendemonstrasikan kemampuan membangun aplikasi web yang interaktif dan modern hanya dengan teknologi web dasar.' })
+            ]);
+        }
+
+        // Fungsi untuk membuat halaman detail kartu (placeholder)
+        function createDetailPageElement(cardId) {
+            const card = state.cardData.find(c => c.id === cardId);
+            if (!card) {
+                return createNotFoundPageElement(`Detail untuk kartu dengan ID "${cardId}" tidak ditemukan.`);
+            }
+
+            return createElement('div', { className: 'page-content container' }, [
+                createElement('h2', { textContent: `Detail untuk: ${card.title}` }),
+                createElement('img', { src: card.imageUrl, alt: card.title, style: 'max-width: 100%; height: auto; border-radius: var(--border-radius); margin-bottom: 1rem;' }),
+                createElement('p', { textContent: card.description }),
+                createElement('p', { textContent: 'Ini adalah halaman detail untuk kartu yang Anda pilih. Konten lebih lanjut dapat ditambahkan di sini.' }),
+                createElement('a', { href: '#/', className: 'btn', 'data-route': '/' }, [
+                    createElement('span', { textContent: 'Kembali ke Beranda' })
+                ])
+            ]);
+        }
+
+        // Fungsi untuk membuat halaman "Tidak Ditemukan" (404)
+        function createNotFoundPageElement(message = 'Halaman yang Anda cari tidak ditemukan.') {
+            return createElement('div', { className: 'page-content container text-center' }, [
+                createElement('h2', { textContent: 'Oops! (404)' }),
+                createElement('p', { textContent: message }),
+                createElement('a', { href: '#/', className: 'btn', 'data-route': '/' }, [
+                    createElement('span', { textContent: 'Kembali ke Beranda' })
+                ])
+            ]);
+        }
+
+
+        // --- Logika Rendering Halaman ---
+        const appMain = $('#app-main');
+
+        function renderHomePage() {
+            appMain.innerHTML = ''; // Bersihkan konten sebelumnya
+            const cardStackContainer = createElement('div', { className: 'card-stack-container' });
+
+            state.cardData.forEach((cardInfo, index) => {
+                const cardElement = createCardItemElement(cardInfo);
+                // Atur z-index secara eksplisit jika diperlukan, meskipun CSS nth-child sudah menangani
+                // cardElement.style.zIndex = index + 1; // Semakin besar index, semakin atas
+                cardStackContainer.appendChild(cardElement);
+            });
+            appMain.appendChild(cardStackContainer);
+            // Pastikan body bisa di-scroll jika kontennya adalah card stack
+            document.body.style.overflowY = 'auto';
+        }
+
+        function renderAboutPage() {
+            appMain.innerHTML = '';
+            appMain.appendChild(createAboutPageElement());
+            document.body.style.overflowY = 'auto'; // Atau 'hidden' jika halaman pendek
+        }
+
+        function renderDetailPage(cardId) {
+            appMain.innerHTML = '';
+            appMain.appendChild(createDetailPageElement(cardId));
+            document.body.style.overflowY = 'auto';
+        }
+
+        function renderNotFoundPage() {
+            appMain.innerHTML = '';
+            appMain.appendChild(createNotFoundPageElement());
+            document.body.style.overflowY = 'auto';
+        }
+
+        // --- Router Sederhana ---
+        function router() {
+            const path = window.location.hash.slice(1) || '/'; // Dapatkan path dari hash, default ke '/'
+            state.currentPage = path;
+
+            // Sembunyikan semua konten dulu (opsional, tergantung strategi render)
+            // appMain.innerHTML = ''; 
+
+            if (path === '/') {
+                renderHomePage();
+            } else if (path === '/tentang') {
+                renderAboutPage();
+            } else if (path.startsWith('/detail/')) {
+                const cardId = path.substring('/detail/'.length);
+                renderDetailPage(cardId);
+            }
+            else {
+                renderNotFoundPage();
+            }
+            updateActiveNavLink();
+            window.scrollTo(0, 0); // Scroll ke atas setiap pindah halaman
+        }
+
+        // --- Manajemen Navigasi & State UI ---
+        function updateActiveNavLink() {
+            const navLinks = $$('#app-nav .nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-route') === state.currentPage ||
+                    (state.currentPage.startsWith('/detail/') && link.getAttribute('data-route').startsWith('/detail/'))) { // Handle active state for detail pages
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        function updateCurrentYear() {
+            const yearSpan = $('#current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        }
+
+        // --- Event Listeners ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Inisialisasi aplikasi
+            router(); // Render halaman awal berdasarkan hash
+            updateCurrentYear();
+
+            // Delegasi event untuk link navigasi dan tombol di dalam kartu
+            document.body.addEventListener('click', (event) => {
+                const targetLink = event.target.closest('a[data-route]');
+                if (targetLink) {
+                    event.preventDefault(); // Mencegah navigasi default browser
+                    const newRoute = targetLink.getAttribute('data-route');
+                    if (window.location.hash.slice(1) !== newRoute) {
+                        window.location.hash = newRoute; // Mengubah hash akan memicu 'hashchange'
+                    } else {
+                        // Jika route sama, panggil router secara manual untuk re-render jika diperlukan (misalnya, data berubah)
+                        // Untuk kasus ini, biasanya tidak perlu jika hanya pindah ke route yang sama
+                        router();
+                    }
+                }
+            });
+        });
+
+        window.addEventListener('hashchange', router); // Panggil router setiap kali hash URL berubah
+
+        // --- Inisialisasi Skrip Efek Tambahan (jika ada) ---
+        // (Untuk saat ini, efek scroll sudah ditangani oleh CSS `position: sticky`)
+
+        console.log('Aplikasi Galeri Kartu Interaktif SPA telah dimuat.');
+    </script>
 </body>
 
 </html>
