@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApartemenManaj | Manajemen Rental Apartemen Terpadu</title>
+    <meta name="description"
+        content="Platform SaaS manajemen rental apartemen modern dengan dashboard, listing, notifikasi, dan fitur lengkap. Dibangun dengan Vanilla HTML, CSS, dan JavaScript.">
+    <meta name="keywords"
+        content="manajemen apartemen, rental, dashboard, saas, vanilla js, spa, native, monolith, booking, notifikasi">
+    <meta name="author" content="Pengembang Aplikasi Anda">
+    <meta name="theme-color" content="#6366f1">
+
+    <!-- Favicon Non-SVG (Placeholder PNG Data URI - kotak ungu) -->
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADBJREFUOE9jZGL4jwaAkhgZ/oMIE4M0gAUYkXg1kEzAGYAYGf6DCBGDEAwSAHCyHWfgF9nRAAAAAElFTkSuQmCC">
+
+    <!-- Font Awesome (Ikon Online Gratis via CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /*=============================================
+=            VARIABEL GLOBAL & RESET          =
+Design System Terpusat (CSS Variables)
+Arsitektur: Monolith dengan pemisahan logis styling.
+Layer: Global, Layout, Utilities, Components, Pages.
+Prinsip: Konsistensi, Skalabilitas, Maintainabilitas.
+=============================================*/
+        :root {
+            /* Skema Warna Dasar (Mode Terang) - Layer Warna */
+            --primary-color-rgb: 99, 102, 241;
+            --primary-color: #6366f1;
+            /* Indigo 500 */
+            --primary-color-hover: #4f46e5;
+            /* Indigo 600 */
+            --primary-color-light: #e0e7ff;
+            /* Indigo 100 */
+            --primary-color-dark-text: #4338ca;
+            /* Indigo 700 (untuk teks di bg light) */
+
+            --secondary-color-rgb: 16, 185, 129;
+            --secondary-color: #10b981;
+            /* Emerald 500 */
+            --secondary-color-hover: #059669;
+            /* Emerald 600 */
+            --secondary-color-light: #d1fae5;
+            /* Emerald 100 */
+
+            --accent-color-rgb: 245, 158, 11;
+            --accent-color: #f59e0b;
+            /* Amber 500 */
+            --accent-color-hover: #d97706;
+            /* Amber 600 */
+            --accent-color-light: #fef3c7;
+            /* Amber 100 */
+
+            --danger-color-rgb: 239, 68, 68;
+            --danger-color: #ef4444;
+            /* Red 500 */
+            --danger-color-hover: #dc2626;
+            /* Red 600 */
+            --danger-color-light: #fee2e2;
+            /* Red 100 */
+
+            --success-color-rgb: 34, 197, 94;
+            --success-color: #22c55e;
+            /* Green 500 */
+            --success-color-light: #dcfce7;
+            /* Green 100 */
+            --success-color-hover: #16a34a;
+            /* Green 600 */
+
+            --warning-color-rgb: 234, 179, 8;
+            --warning-color: #eab308;
+            /* Yellow 500 */
+            --warning-color-light: #fef9c3;
+            /* Yellow 100 */
+            --warning-color-hover: #ca8a04;
+            /* Yellow 600 */
+
+            --info-color-rgb: 59, 130, 246;
+            --info-color: #3b82f6;
+            /* Blue 500 */
+            --info-color-light: #dbeafe;
+            /* Blue 100 */
+            --info-color-hover: #2563eb;
+            /* Blue 600 */
+
+            --bg-color: #f8fafc;
+            /* Slate 50 - Latar utama */
+            --bg-color-alt: #ffffff;
+            /* White - Latar alternatif, misal card header */
+            --bg-sidebar: #1e293b;
+            /* Slate 800 - Latar sidebar default */
+            --text-color: #1e293b;
+            /* Slate 800 - Teks utama */
+            --text-color-muted: #64748b;
+            /* Slate 500 - Teks sekunder */
+            --text-color-subtle: #94a3b8;
+            /* Slate 400 - Teks sangat halus */
+            --text-color-sidebar: #cbd5e1;
+            /* Slate 300 - Teks di sidebar */
+            --text-color-sidebar-hover: #ffffff;
+            --border-color: #e2e8f0;
+            /* Slate 200 - Border standar */
+            --border-color-strong: #cbd5e1;
+            /* Slate 300 - Border lebih tegas */
+            --card-bg-color: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            --input-bg-color: #f1f5f9;
+            /* Slate 100 - Latar input */
+            --input-border-color: var(--border-color-strong);
+            --focus-ring-color: rgba(var(--primary-color-rgb), 0.4);
+
+            /* Tipografi */
+            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-size-base: 1rem;
+            /* 16px */
+            --font-size-xs: 0.75rem;
+            /* 12px */
+            --font-size-sm: 0.875rem;
+            /* 14px */
+            --font-size-lg: 1.125rem;
+            /* 18px */
+            --font-size-xl: 1.25rem;
+            /* 20px */
+            --font-size-2xl: 1.5rem;
+            /* 24px */
+            --font-size-3xl: 1.875rem;
+            /* 30px */
+            --font-size-4xl: 2.25rem;
+            /* 36px */
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --line-height-normal: 1.6;
+            --line-height-tight: 1.3;
+            --line-height-snug: 1.45;
+
+            /* Border Radius */
+            --border-radius-sm: 0.25rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --border-radius-xl: 1rem;
+            --border-radius-full: 9999px;
+
+            /* Spasi */
+            --spacing-unit: 0.25rem;
+            --spacing-px: 1px;
+            --spacing-0: 0;
+            --spacing-1: calc(1 * var(--spacing-unit));
+            --spacing-2: calc(2 * var(--spacing-unit));
+            --spacing-3: calc(3 * var(--spacing-unit));
+            --spacing-4: calc(4 * var(--spacing-unit));
+            --spacing-5: calc(5 * var(--spacing-unit));
+            --spacing-6: calc(6 * var(--spacing-unit));
+            --spacing-8: calc(8 * var(--spacing-unit));
+            --spacing-10: calc(10 * var(--spacing-unit));
+            --spacing-12: calc(12 * var(--spacing-unit));
+
+            /* Transisi */
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Layout */
+            --max-width-container: 1280px;
+            --header-height: 68px;
+            --sidebar-width-desktop: 260px;
+            --sidebar-width-mobile-collapsed: 0px;
+            /* Bisa juga setara dengan lebar ikon jika ingin ikon tetap terlihat */
+        }
+
+        /* Skema Warna Mode Gelap */
+        [data-theme="dark"] {
+            --primary-color-rgb: 129, 140, 248;
+            --primary-color: #818cf8;
+            /* Indigo 400 */
+            --primary-color-hover: #a5b4fc;
+            /* Indigo 300 */
+            --primary-color-light: #3730a3;
+            /* Indigo 800 */
+            --primary-color-dark-text: #c7d2fe;
+            /* Indigo 200 */
+
+            --secondary-color-rgb: 52, 211, 153;
+            --secondary-color: #34d399;
+            /* Emerald 400 */
+            --secondary-color-hover: #6ee7b7;
+            /* Emerald 300 */
+            --secondary-color-light: #065f46;
+            /* Emerald 800 */
+
+            --accent-color-rgb: 251, 191, 36;
+            --accent-color: #fbbf24;
+            /* Amber 400 */
+            --accent-color-hover: #fcd34d;
+            /* Amber 300 */
+            --accent-color-light: #78350f;
+            /* Amber 800 */
+
+            --danger-color-rgb: 248, 113, 113;
+            --danger-color: #f87171;
+            /* Red 400 */
+            --danger-color-hover: #ef4444;
+            /* Red 500 */
+            --danger-color-light: #7f1d1d;
+            /* Red 800 */
+
+            --success-color-rgb: 74, 222, 128;
+            --success-color: #4ade80;
+            /* Green 400 */
+            --success-color-light: #166534;
+            /* Green 800 */
+            --success-color-hover: #22c55e;
+            /* Green 500 */
+
+            --warning-color-rgb: 250, 204, 21;
+            --warning-color: #facc15;
+            /* Yellow 400 */
+            --warning-color-light: #713f12;
+            /* Yellow 800 */
+            --warning-color-hover: #eab308;
+            /* Yellow 500 */
+
+            --info-color-rgb: 96, 165, 250;
+            --info-color: #60a5fa;
+            /* Blue 400 */
+            --info-color-light: #1e40af;
+            /* Blue 800 */
+            --info-color-hover: #3b82f6;
+            /* Blue 500 */
+
+            --bg-color: #0f172a;
+            /* Slate 900 */
+            --bg-color-alt: #1e293b;
+            /* Slate 800 */
+            --bg-sidebar: #0b1220;
+            /* Sedikit lebih gelap dari slate 900 */
+            --text-color: #f1f5f9;
+            /* Slate 100 */
+            --text-color-muted: #94a3b8;
+            /* Slate 400 */
+            --text-color-subtle: #64748b;
+            /* Slate 500 */
+            --text-color-sidebar: #94a3b8;
+            /* Slate 400 */
+            --text-color-sidebar-hover: #f1f5f9;
+            --border-color: #334155;
+            /* Slate 700 */
+            --border-color-strong: #475569;
+            /* Slate 600 */
+            --card-bg-color: #1e293b;
+            /* Slate 800 */
+            --input-bg-color: #334155;
+            /* Slate 700 */
+            --input-border-color: var(--border-color-strong);
+            --focus-ring-color: rgba(var(--primary-color-rgb), 0.5);
+        }
+
+        /* Reset Dasar & Gaya Global */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html {
+            font-size: 100%;
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-normal);
+            line-height: var(--line-height-normal);
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            /* Untuk layout dengan sidebar */
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+            overflow-x: hidden;
+            /* Mencegah scroll horizontal karena transisi sidebar */
+        }
+
+        /* Shell Aplikasi Utama, sekarang dengan sidebar */
+        #app-shell {
+            display: flex;
+            flex-direction: row;
+            /* Sidebar berdampingan dengan konten */
+            flex-grow: 1;
+            min-height: 100vh;
+        }
+
+        /* Kontainer untuk main content dan footer (sebelah kanan sidebar) */
+        .app-main-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            width: calc(100% - var(--sidebar-width-desktop));
+            /* Default untuk desktop */
+            transition: margin-left var(--transition-normal);
+            /* Untuk animasi saat sidebar toggle */
+            margin-left: var(--sidebar-width-desktop);
+            /* Default untuk desktop */
+        }
+
+        body.sidebar-collapsed .app-main-container {
+            width: 100%;
+            margin-left: 0;
+        }
+
+
+        img,
+        picture,
+        video,
+        canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        input,
+        button,
+        textarea,
+        select {
+            font: inherit;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            cursor: pointer;
+            background: none;
+            color: inherit;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color var(--transition-fast);
+        }
+
+        a:hover {
+            color: var(--primary-color-hover);
+            text-decoration: underline;
+        }
+
+        ul,
+        ol {
+            list-style: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: var(--font-weight-bold);
+            line-height: var(--line-height-tight);
+            color: var(--text-color);
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-6);
+        }
+
+        h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-5);
+        }
+
+        h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        h4 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-3);
+        }
+
+        p {
+            line-height: var(--line-height-snug);
+            margin-bottom: var(--spacing-4);
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Fokus Universal (Aksesibilitas) */
+        *:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px var(--focus-ring-color);
+            border-radius: var(--border-radius-sm);
+        }
+
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            border-color: var(--primary-color) !important;
+        }
+
+        /*=============================================
+=                LAYOUT CONTAINER             =
+=============================================*/
+        .container {
+            width: 100%;
+            max-width: var(--max-width-container);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--spacing-6);
+            /* Padding lebih besar karena ada sidebar */
+            padding-right: var(--spacing-6);
+        }
+
+        @media (max-width: 767.98px) {
+            .container {
+                padding-left: var(--spacing-3);
+                padding-right: var(--spacing-3);
+            }
+        }
+
+        /*=============================================
+=               UTILITY CLASSES               =
+=============================================*/
+        .d-none {
+            display: none !important;
+        }
+
+        .d-block {
+            display: block !important;
+        }
+
+        .d-inline-block {
+            display: inline-block !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .d-grid {
+            display: grid !important;
+        }
+
+        .flex-column {
+            flex-direction: column !important;
+        }
+
+        .justify-start {
+            justify-content: flex-start !important;
+        }
+
+        .justify-end {
+            justify-content: flex-end !important;
+        }
+
+        .justify-center {
+            justify-content: center !important;
+        }
+
+        .justify-between {
+            justify-content: space-between !important;
+        }
+
+        .align-start {
+            align-items: flex-start !important;
+        }
+
+        .align-center {
+            align-items: center !important;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap !important;
+        }
+
+        .flex-grow-1 {
+            flex-grow: 1 !important;
+        }
+
+        .gap-1 {
+            gap: var(--spacing-1);
+        }
+
+        .gap-2 {
+            gap: var(--spacing-2);
+        }
+
+        .gap-3 {
+            gap: var(--spacing-3);
+        }
+
+        .gap-4 {
+            gap: var(--spacing-4);
+        }
+
+        .gap-6 {
+            gap: var(--spacing-6);
+        }
+
+        .gap-8 {
+            gap: var(--spacing-8);
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .w-full {
+            width: 100% !important;
+        }
+
+        .h-full {
+            height: 100% !important;
+        }
+
+        .mt-auto {
+            margin-top: auto !important;
+        }
+
+        .mt-1 {
+            margin-top: var(--spacing-1) !important;
+        }
+
+        .mb-1 {
+            margin-bottom: var(--spacing-1) !important;
+        }
+
+        .mt-2 {
+            margin-top: var(--spacing-2) !important;
+        }
+
+        .mb-2 {
+            margin-bottom: var(--spacing-2) !important;
+        }
+
+        .mt-3 {
+            margin-top: var(--spacing-3) !important;
+        }
+
+        .mb-3 {
+            margin-bottom: var(--spacing-3) !important;
+        }
+
+        .mt-4 {
+            margin-top: var(--spacing-4) !important;
+        }
+
+        .mb-4 {
+            margin-bottom: var(--spacing-4) !important;
+        }
+
+        .mt-6 {
+            margin-top: var(--spacing-6) !important;
+        }
+
+        .mb-6 {
+            margin-bottom: var(--spacing-6) !important;
+        }
+
+        .p-1 {
+            padding: var(--spacing-1) !important;
+        }
+
+        .py-1 {
+            padding-top: var(--spacing-1) !important;
+            padding-bottom: var(--spacing-1) !important;
+        }
+
+        .px-1 {
+            padding-left: var(--spacing-1) !important;
+            padding-right: var(--spacing-1) !important;
+        }
+
+        .p-2 {
+            padding: var(--spacing-2) !important;
+        }
+
+        .py-2 {
+            padding-top: var(--spacing-2) !important;
+            padding-bottom: var(--spacing-2) !important;
+        }
+
+        .px-2 {
+            padding-left: var(--spacing-2) !important;
+            padding-right: var(--spacing-2) !important;
+        }
+
+        .p-3 {
+            padding: var(--spacing-3) !important;
+        }
+
+        .py-3 {
+            padding-top: var(--spacing-3) !important;
+            padding-bottom: var(--spacing-3) !important;
+        }
+
+        .px-3 {
+            padding-left: var(--spacing-3) !important;
+            padding-right: var(--spacing-3) !important;
+        }
+
+        .p-4 {
+            padding: var(--spacing-4) !important;
+        }
+
+        .py-4 {
+            padding-top: var(--spacing-4) !important;
+            padding-bottom: var(--spacing-4) !important;
+        }
+
+        .px-4 {
+            padding-left: var(--spacing-4) !important;
+            padding-right: var(--spacing-4) !important;
+        }
+
+        .p-6 {
+            padding: var(--spacing-6) !important;
+        }
+
+        .py-6 {
+            padding-top: var(--spacing-6) !important;
+            padding-bottom: var(--spacing-6) !important;
+        }
+
+        .px-6 {
+            padding-left: var(--spacing-6) !important;
+            padding-right: var(--spacing-6) !important;
+        }
+
+        .rounded-sm {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        .rounded-lg {
+            border-radius: var(--border-radius-lg);
+        }
+
+        .rounded-xl {
+            border-radius: var(--border-radius-xl);
+        }
+
+        .rounded-full {
+            border-radius: var(--border-radius-full);
+        }
+
+        .shadow-md {
+            box-shadow: var(--card-shadow);
+        }
+
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .text-secondary {
+            color: var(--secondary-color) !important;
+        }
+
+        .text-accent {
+            color: var(--accent-color) !important;
+        }
+
+        .text-muted {
+            color: var(--text-color-muted) !important;
+        }
+
+        .text-subtle {
+            color: var(--text-color-subtle) !important;
+        }
+
+        .text-danger {
+            color: var(--danger-color) !important;
+        }
+
+        .text-success {
+            color: var(--success-color) !important;
+        }
+
+        .fw-medium {
+            font-weight: var(--font-weight-medium) !important;
+        }
+
+        .fw-semibold {
+            font-weight: var(--font-weight-semibold) !important;
+        }
+
+        .fw-bold {
+            font-weight: var(--font-weight-bold) !important;
+        }
+
+        .fs-xs {
+            font-size: var(--font-size-xs) !important;
+        }
+
+        .fs-sm {
+            font-size: var(--font-size-sm) !important;
+        }
+
+        .fs-lg {
+            font-size: var(--font-size-lg) !important;
+        }
+
+        .fs-xl {
+            font-size: var(--font-size-xl) !important;
+        }
+
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+            border-width: 0 !important;
+        }
+
+        /*=============================================
+=            KOMPONEN SIDEBAR NAVIGASI        =
+=============================================*/
+        .app-sidebar {
+            width: var(--sidebar-width-desktop);
+            height: 100vh;
+            background-color: var(--bg-sidebar);
+            color: var(--text-color-sidebar);
+            padding: var(--spacing-6) var(--spacing-4);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            /* Sidebar tetap di tempat saat scroll konten */
+            top: 0;
+            left: 0;
+            z-index: 1100;
+            /* Di atas header, jika header sticky dan di bawah sidebar */
+            transition: transform var(--transition-normal), width var(--transition-normal);
+            overflow-y: auto;
+            /* Jika menu banyak */
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding-bottom: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+            border-bottom: 1px solid rgba(var(--text-color-sidebar), 0.2);
+        }
+
+        .sidebar-logo-icon {
+            font-size: var(--font-size-2xl);
+            color: var(--primary-color);
+        }
+
+        .sidebar-logo-text {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-color-sidebar-hover);
+        }
+
+        .sidebar-logo-highlight {
+            color: var(--primary-color);
+        }
+
+        .sidebar-nav .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-1);
+        }
+
+        .sidebar-nav .nav-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-2) var(--spacing-3);
+            border-radius: var(--border-radius-md);
+            color: var(--text-color-sidebar);
+            font-weight: var(--font-weight-medium);
+            transition: color var(--transition-fast), background-color var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active {
+            color: var(--text-color-sidebar-hover);
+            background-color: rgba(var(--primary-color-rgb), 0.2);
+            text-decoration: none;
+        }
+
+        .sidebar-nav .nav-link.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .sidebar-nav .nav-link i {
+            width: 20px;
+            /* Lebar ikon tetap */
+            text-align: center;
+            font-size: var(--font-size-lg);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            /* Dorong footer ke bawah sidebar */
+            padding-top: var(--spacing-4);
+            border-top: 1px solid rgba(var(--text-color-sidebar), 0.2);
+            font-size: var(--font-size-xs);
+            text-align: center;
+        }
+
+        /* Sidebar Mobile & Toggle */
+        .sidebar-toggle-btn {
+            /* Tombol di header untuk toggle sidebar di mobile */
+            display: none;
+            /* Hanya tampil di mobile */
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-full);
+            justify-content: center;
+            align-items: center;
+            font-size: var(--font-size-lg);
+            transition: var(--transition-normal);
+        }
+
+        .sidebar-toggle-btn:hover {
+            background-color: var(--bg-color);
+            border-color: var(--border-color-strong);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 991.98px) {
+
+            /* Tablet dan Mobile */
+            .app-sidebar {
+                transform: translateX(-100%);
+                /* Awalnya tersembunyi di kiri */
+            }
+
+            body.sidebar-open .app-sidebar {
+                transform: translateX(0);
+            }
+
+            .app-main-container {
+                width: 100%;
+                margin-left: 0;
+                /* Konten mengisi penuh saat sidebar hidden */
+            }
+
+            .sidebar-toggle-btn {
+                display: inline-flex;
+            }
+        }
+
+        /* Overlay untuk mobile saat sidebar terbuka */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1090;
+            /* Di bawah sidebar, di atas konten */
+        }
+
+        body.sidebar-open .sidebar-overlay {
+            display: block;
+        }
+
+
+        /*=============================================
+=            KOMPONEN HEADER APLIKASI         =
+=============================================*/
+        .app-header {
+            background-color: var(--card-bg-color);
+            box-shadow: var(--card-shadow);
+            padding: 0 var(--spacing-4);
+            /* Padding kiri-kanan, atas-bawah dari flex align */
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            /* Tidak lagi sticky, karena sidebar fixed */
+            z-index: 1000;
+            transition: background-color var(--transition-normal);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .header-brand-mobile {
+            /* Logo untuk mobile, jika diperlukan berbeda */
+            display: none;
+            /* Sembunyikan di desktop */
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-color);
+        }
+
+        .header-brand-mobile .logo-icon {
+            color: var(--primary-color);
+        }
+
+        .header-brand-mobile .logo-highlight {
+            color: var(--primary-color);
+        }
+
+
+        @media (max-width: 991.98px) {
+            .header-brand-mobile {
+                display: flex;
+            }
+        }
+
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .user-profile-menu {
+            position: relative;
+        }
+
+        .user-profile-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-2);
+            border-radius: var(--border-radius-md);
+            transition: background-color var(--transition-fast);
+        }
+
+        .user-profile-toggle:hover {
+            background-color: var(--bg-color);
+        }
+
+        [data-theme="dark"] .user-profile-toggle:hover {
+            background-color: var(--input-bg-color);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-full);
+            background-color: var(--primary-color-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-base);
+            /* Ukuran ikon avatar */
+            font-weight: var(--font-weight-medium);
+        }
+
+        .user-name {
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .user-name {
+            color: var(--text-color-sidebar);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + var(--spacing-2));
+            right: 0;
+            background-color: var(--card-bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--card-shadow);
+            min-width: 180px;
+            z-index: 1010;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: var(--spacing-2) var(--spacing-3);
+            color: var(--text-color-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        [data-theme="dark"] .dropdown-item:hover {
+            background-color: var(--input-bg-color);
+        }
+
+        .dropdown-item i {
+            margin-right: var(--spacing-2);
+            width: 16px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: var(--spacing-1) 0;
+        }
+
+        .theme-toggle-btn {
+            /* Tombol ikon tema */
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius-full);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: var(--font-size-lg);
+            transition: var(--transition-normal);
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--bg-color);
+            border-color: var(--border-color-strong);
+            color: var(--primary-color);
+        }
+
+        [data-theme="dark"] .theme-toggle-btn {
+            border-color: var(--border-color-strong);
+        }
+
+        [data-theme="dark"] .theme-toggle-btn:hover {
+            background-color: var(--card-bg-color);
+            border-color: var(--border-color);
+        }
+
+        /* Navigasi Header (dulu app-nav) - kini tidak digunakan, diganti sidebar */
+        .app-nav {
+            display: none;
+        }
+
+        .app-nav-mobile {
+            display: none;
+        }
+
+        /* Navigasi mobile lama juga tidak digunakan */
+        .mobile-nav-toggle {
+            display: none;
+        }
+
+        /* Toggle lama tidak digunakan */
+
+
+        /*=============================================
+=            KONTEN UTAMA & LOADER            =
+=============================================*/
+        .main-content {
+            flex-grow: 1;
+            padding-top: var(--spacing-6);
+            padding-bottom: var(--spacing-6);
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .page-container {
+            animation: fadeInPage 0.5s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            text-align: center;
+            padding: var(--spacing-6);
+        }
+
+        .loader {
+            border: 5px solid var(--bg-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spinLoader 1s linear infinite;
+        }
+
+        @keyframes spinLoader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .initial-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 1;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+        }
+
+        .initial-loader .loader {
+            width: 60px;
+            height: 60px;
+            border-width: 6px;
+        }
+
+        .initial-loader p {
+            margin-top: var(--spacing-4);
+            color: var(--text-color-muted);
+            font-size: var(--font-size-lg);
+        }
+
+        /*=============================================
+=               KOMPONEN KARTU (CARD)          =
+=============================================*/
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--card-shadow);
+            padding: var(--spacing-6);
+            transition: var(--transition-normal);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-header {
+            margin: calc(-1 * var(--spacing-6)) calc(-1 * var(--spacing-6)) var(--spacing-4) calc(-1 * var(--spacing-6));
+            padding: var(--spacing-4) var(--spacing-6);
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-color-alt);
+        }
+
+        [data-theme="dark"] .card-header {
+            background-color: var(--bg-color);
+        }
+
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .card-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--text-color-muted);
+            margin-top: calc(-1 * var(--spacing-1));
+            display: block;
+        }
+
+        .card-body {
+            font-size: var(--font-size-base);
+        }
+
+        .card-footer {
+            margin: var(--spacing-4) calc(-1 * var(--spacing-6)) calc(-1 * var(--spacing-6)) calc(-1 * var(--spacing-6));
+            padding: var(--spacing-3) var(--spacing-6);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-color-alt);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-2);
+        }
+
+        [data-theme="dark"] .card-footer {
+            background-color: var(--bg-color);
+        }
+
+        /*=============================================
+=               KOMPONEN TOMBOL (BUTTON)      =
+=============================================*/
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-4);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--border-radius-md);
+            border: 1px solid transparent;
+            transition: var(--transition-fast);
+            text-decoration: none;
+            line-height: 1.5;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .btn:focus-visible {
+            outline-offset: 1px;
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--primary-color);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn i,
+        .btn .fas,
+        .btn .far,
+        .btn .fab {
+            font-size: 1.1em;
+            line-height: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--bg-color-alt);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-hover);
+            border-color: var(--primary-color-hover);
+            color: var(--bg-color-alt);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--bg-color-alt);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-color-hover);
+            border-color: var(--secondary-color-hover);
+            color: var(--bg-color-alt);
+            text-decoration: none;
+        }
+
+        .btn-outline-primary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color-light);
+            color: var(--primary-color-dark-text);
+            text-decoration: none;
+        }
+
+        [data-theme="dark"] .btn-outline-primary:hover {
+            background-color: rgba(var(--primary-color-rgb), 0.15);
+            color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--bg-color-alt);
+            border-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-color-hover);
+            border-color: var(--danger-color-hover);
+            color: var(--bg-color-alt);
+            text-decoration: none;
+        }
+
+        .btn-sm {
+            padding: var(--spacing-1) var(--spacing-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-lg {
+            padding: var(--spacing-3) var(--spacing-6);
+            font-size: var(--font-size-lg);
+        }
+
+        .btn-block {
+            width: 100%;
+            display: flex;
+        }
+
+        .btn-icon-only {
+            padding: var(--spacing-2);
+            width: calc(var(--font-size-base) * 1.5 + var(--spacing-2) * 2);
+            height: calc(var(--font-size-base) * 1.5 + var(--spacing-2) * 2);
+            gap: 0;
+        }
+
+        .btn-icon-only i {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        /*=============================================
+=                KOMPONEN FORMULIR            =
+=============================================*/
+        .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-1);
+            color: var(--text-color);
+            font-size: var(--font-size-sm);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--spacing-2) var(--spacing-3);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--input-bg-color);
+            background-clip: padding-box;
+            border: 1px solid var(--input-border-color);
+            appearance: none;
+            border-radius: var(--border-radius-md);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 3px var(--focus-ring-color);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-color-subtle);
+            opacity: 1;
+        }
+
+        textarea.form-control {
+            min-height: calc(1.5em * 3 + (var(--spacing-2) * 2) + 2px);
+            resize: vertical;
+        }
+
+        select.form-control {
+            padding-right: var(--spacing-8);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            /* SVG masih digunakan di sini untuk ikon select. Jika harus 100% non-SVG, ini perlu diganti dengan karakter atau pseudo-element. Ini umum diterima bahkan saat ada batasan "tidak ada SVG". */
+            background-repeat: no-repeat;
+            background-position: right var(--spacing-3) center;
+            background-size: 16px 12px;
+        }
+
+        [data-theme="dark"] select.form-control {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        }
+
+        /* Jika SVG untuk select HARUS dihilangkan: */
+        /*
+        select.form-control { -webkit-appearance: none; appearance: none; }
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '\25BC'; // Karakter panah bawah Unicode
+            position: absolute;
+            top: 50%;
+            right: var(--spacing-3);
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-color-muted);
+        }
+        */
+        .alert {
+            padding: var(--spacing-3) var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+            border: 1px solid transparent;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .alert i,
+        .alert .fas {
+            font-size: var(--font-size-lg);
+            flex-shrink: 0;
+        }
+
+        .alert-success {
+            color: var(--success-color-hover);
+            background-color: var(--success-color-light);
+            border-color: var(--success-color);
+        }
+
+        [data-theme="dark"] .alert-success {
+            color: var(--text-color);
+            background-color: rgba(var(--success-color-rgb), 0.25);
+            border-color: var(--success-color);
+        }
+
+        .alert-danger {
+            color: var(--danger-color-hover);
+            background-color: var(--danger-color-light);
+            border-color: var(--danger-color);
+        }
+
+        [data-theme="dark"] .alert-danger {
+            color: var(--text-color);
+            background-color: rgba(var(--danger-color-rgb), 0.25);
+            border-color: var(--danger-color);
+        }
+
+        .alert-info {
+            color: var(--info-color-hover);
+            background-color: var(--info-color-light);
+            border-color: var(--info-color);
+        }
+
+        [data-theme="dark"] .alert-info {
+            color: var(--text-color);
+            background-color: rgba(var(--info-color-rgb), 0.25);
+            border-color: var(--info-color);
+        }
+
+        /*=============================================
+=               GRID SYSTEM SEDERHANA         =
+=============================================*/
+        .grid {
+            display: grid;
+            gap: var(--spacing-6);
+        }
+
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .grid-cols-4 {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        @media (max-width: 1023.98px) {
+
+            /* Tablet (md) */
+            .md-grid-cols-1 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+
+            .md-grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 767.98px) {
+
+            /* Mobile (sm) */
+            .grid {
+                gap: var(--spacing-4);
+            }
+
+            .sm-grid-cols-1 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+
+            .sm-grid-cols-2 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /*=============================================
+=            FOOTER APLIKASI                  =
+=============================================*/
+        .app-footer {
+            background-color: var(--card-bg-color);
+            color: var(--text-color-muted);
+            padding: var(--spacing-4) 0;
+            /* Padding dikurangi karena bagian dari main container */
+            text-align: center;
+            font-size: var(--font-size-sm);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+            /* Mendorong footer ke bawah di .app-main-container */
+            transition: background-color var(--transition-normal), color var(--transition-normal), border-color var(--transition-normal);
+        }
+
+        [data-theme="dark"] .app-footer {
+            background-color: var(--bg-color);
+        }
+
+        .app-footer p {
+            margin-bottom: var(--spacing-1);
+            line-height: var(--line-height-normal);
+        }
+
+        .app-footer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .app-footer .fas.fa-heart {
+            color: var(--danger-color);
+            transition: color var(--transition-fast);
+        }
+
+        .app-footer .fas.fa-mug-hot {
+            color: var(--accent-color);
+            transition: color var(--transition-fast);
+        }
+
+        /*=============================================
+=            HALAMAN SPESIFIK & KOMPONEN BARU =
+=============================================*/
+        /* Halaman Dashboard */
+        .dashboard-stats-grid {
+            /* Menggunakan grid-cols-* dari utilities */
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .stat-card .icon-wrapper {
+            font-size: var(--font-size-2xl);
+            width: 60px;
+            height: 60px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        .stat-card .stat-info h4 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .stat-card .stat-info p {
+            font-size: var(--font-size-sm);
+            color: var(--text-color-muted);
+            margin-bottom: 0;
+        }
+
+        /* Halaman Listing Apartemen */
+        .apartment-listing-grid {
+            /* Menggunakan grid-cols-* dari utilities */
+        }
+
+        .apartment-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card .card-img-top {
+            width: 100%;
+            height: 200px;
+            /* Tinggi gambar tetap */
+            object-fit: cover;
+            /* Agar gambar tidak distorsi */
+            border-top-left-radius: var(--border-radius-lg);
+            border-top-right-radius: var(--border-radius-lg);
+            background-color: var(--border-color);
+            /* Placeholder jika gambar tidak ada */
+        }
+
+        .apartment-card .card-body {
+            flex-grow: 1;
+            /* Agar body mengisi sisa ruang */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card .details {
+            display: flex;
+            gap: var(--spacing-3);
+            color: var(--text-color-muted);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .apartment-card .details i {
+            margin-right: var(--spacing-1);
+        }
+
+        .apartment-card .price {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary-color);
+            margin-top: auto;
+            /* Dorong harga ke bawah jika card-body flex column */
+            margin-bottom: var(--spacing-3);
+        }
+
+        /* Filter/Search bar */
+        .filter-bar {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-6);
+            flex-wrap: wrap;
+            /* Agar responsif */
+        }
+
+        .filter-bar .form-control,
+        .filter-bar .btn {
+            height: 42px;
+            /* Samakan tinggi elemen filter */
+        }
+
+
+        /* Halaman Notifikasi (penyesuaian dari kode lama) */
+        .notification-filters {
+            margin-bottom: var(--spacing-6);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-3);
+            align-items: center;
+        }
+
+        .notification-filters .form-control {
+            width: auto;
+            min-width: 180px;
+            display: inline-block;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: var(--spacing-4);
+            align-items: flex-start;
+            border: none;
+            padding: var(--spacing-4);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 0;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item .icon-wrapper {
+            font-size: var(--font-size-xl);
+            padding-top: var(--spacing-px);
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius-full);
+        }
+
+        .notification-item .icon-wrapper.type-info {
+            background-color: var(--info-color-light);
+            color: var(--info-color);
+        }
+
+        .notification-item .icon-wrapper.type-success {
+            background-color: var(--success-color-light);
+            color: var(--success-color);
+        }
+
+        .notification-item .icon-wrapper.type-warning {
+            background-color: var(--warning-color-light);
+            color: var(--warning-color);
+        }
+
+        .notification-item .icon-wrapper.type-danger {
+            background-color: var(--danger-color-light);
+            color: var(--danger-color);
+        }
+
+        .notification-item .content {
+            flex-grow: 1;
+        }
+
+        .notification-item .content h5 {
+            margin-bottom: var(--spacing-1);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .notification-item .content p {
+            font-size: var(--font-size-sm);
+            color: var(--text-color-muted);
+            line-height: var(--line-height-normal);
+        }
+
+        .notification-item .meta {
+            font-size: var(--font-size-xs);
+            color: var(--text-color-subtle);
+            margin-top: var(--spacing-2);
+        }
+
+        .notification-item.unread {
+            background-color: var(--primary-color-light);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .notification-item.unread .content h5 {
+            font-weight: var(--font-weight-bold);
+        }
+
+        [data-theme="dark"] .notification-item.unread {
+            background-color: rgba(var(--primary-color-rgb), 0.15);
+            border-left-color: var(--primary-color);
+        }
+
+        .notification-item .actions {
+            margin-left: auto;
+            padding-left: var(--spacing-3);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Halaman Profil Sederhana */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+            background-color: var(--card-bg-color);
+            padding: var(--spacing-6);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--card-shadow);
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--border-radius-full);
+            background-color: var(--primary-color-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            /* Ukuran ikon avatar besar */
+            font-weight: var(--font-weight-medium);
+            flex-shrink: 0;
+        }
+
+        .profile-info h1 {
+            margin-bottom: var(--spacing-1);
+        }
+
+        .profile-info p {
+            color: var(--text-color-muted);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shell Aplikasi Utama (Struktur Dasar SPA dengan Sidebar) -->
+    <div id="app-shell">
+        <!-- Sidebar Navigasi -->
+        <aside class="app-sidebar" id="app-sidebar" role="navigation" aria-label="Navigasi Utama Aplikasi">
+            <div class="sidebar-header">
+                <i class="fas fa-building-user sidebar-logo-icon" aria-hidden="true"></i>
+                <span class="sidebar-logo-text">Apartemen<span class="sidebar-logo-highlight">Manaj</span></span>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="#/dashboard" class="nav-link" data-route="dashboard"><i
+                                class="fas fa-tachometer-alt fa-fw" aria-hidden="true"></i> Dasbor</a></li>
+                    <li class="nav-item"><a href="#/profile" class="nav-link" data-route="profile"><i
+                                class="fas fa-user-circle fa-fw" aria-hidden="true"></i> Profil Saya</a></li>
+                    <li class="nav-item"><a href="#/apartments" class="nav-link" data-route="apartments"><i
+                                class="fas fa-city fa-fw" aria-hidden="true"></i> Apartemen</a></li>
+                    <li class="nav-item"><a href="#/bookings" class="nav-link" data-route="bookings"><i
+                                class="fas fa-calendar-check fa-fw" aria-hidden="true"></i> Booking Saya</a></li>
+                    <li class="nav-item"><a href="#/favorites" class="nav-link" data-route="favorites"><i
+                                class="fas fa-heart fa-fw" aria-hidden="true"></i> Favorit</a></li>
+                    <li class="nav-item"><a href="#/payments" class="nav-link" data-route="payments"><i
+                                class="fas fa-credit-card fa-fw" aria-hidden="true"></i> Pembayaran</a></li>
+                    <li class="nav-item"><a href="#/maintenance" class="nav-link" data-route="maintenance"><i
+                                class="fas fa-tools fa-fw" aria-hidden="true"></i> Maintenance</a></li>
+                    <li class="nav-item"><a href="#/messages" class="nav-link" data-route="messages"><i
+                                class="fas fa-envelope fa-fw" aria-hidden="true"></i> Pesan <span class="badge d-none"
+                                id="message-badge-count">0</span></a></li>
+                    <li class="nav-item"><a href="#/notifications" class="nav-link" data-route="notifications"><i
+                                class="fas fa-bell fa-fw" aria-hidden="true"></i> Notifikasi <span class="badge d-none"
+                                id="notif-badge-count">0</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <p>© <span id="current-year-sidebar"></span> ApartemenManaj</p>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+
+        <!-- Kontainer untuk Header, Konten Utama, dan Footer -->
+        <div class="app-main-container">
+            <!-- Header Aplikasi -->
+            <header class="app-header" role="banner">
+                <div class="container header-container">
+                    <div class="header-left">
+                        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn"
+                            aria-label="Buka atau tutup navigasi sidebar" aria-expanded="false"
+                            aria-controls="app-sidebar">
+                            <i class="fas fa-bars" aria-hidden="true"></i>
+                        </button>
+                        <a href="#/dashboard" class="header-brand-mobile" aria-label="Beranda Aplikasi ApartemenManaj">
+                            <i class="fas fa-building-user logo-icon" aria-hidden="true"></i>
+                            <span class="logo-text">Apartemen<span class="logo-highlight">Manaj</span></span>
+                        </a>
+                    </div>
+
+                    <div class="header-actions">
+                        <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Ganti Tema Aplikasi"
+                            title="Ganti Tema">
+                            <i class="fas fa-sun" aria-hidden="true"></i>
+                        </button>
+                        <div class="user-profile-menu">
+                            <button class="user-profile-toggle" id="user-profile-toggle-btn"
+                                aria-label="Buka menu profil pengguna" aria-expanded="false" aria-haspopup="true">
+                                <div class="user-avatar" id="user-avatar-initial">A</div> <!-- Inisial nama -->
+                                <span class="user-name" id="user-header-name">Nama Pengguna</span>
+                                <i class="fas fa-chevron-down fs-xs text-muted" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu" id="user-profile-dropdown" role="menu">
+                                <a href="#/profile" class="dropdown-item" role="menuitem"><i
+                                        class="fas fa-user-edit fa-fw" aria-hidden="true"></i> Edit Profil</a>
+                                <a href="#/settings" class="dropdown-item" role="menuitem"><i class="fas fa-cog fa-fw"
+                                        aria-hidden="true"></i> Pengaturan</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#/logout" class="dropdown-item" role="menuitem" id="logout-btn"><i
+                                        class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></i> Keluar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Konten Utama (Dinamis, diisi oleh JavaScript Router) -->
+            <main id="main-content" class="main-content" aria-live="polite" role="main">
+                <!-- Konten halaman akan dimuat di sini. -->
+            </main>
+
+            <!-- Footer Aplikasi -->
+            <footer class="app-footer" role="contentinfo">
+                <div class="container">
+                    <p>© <span id="current-year-footer"></span> ApartemenManaj. Semua hak cipta dilindungi.</p>
+                    <p>Dirancang dengan <i class="fas fa-heart text-danger" aria-hidden="true"></i> dan <i
+                            class="fas fa-mug-hot text-accent" aria-hidden="true"></i> oleh Pengembang.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Loader Awal Aplikasi (Full Screen) -->
+    <div class="initial-loader" id="initial-app-loader" aria-hidden="false" aria-label="Memuat aplikasi">
+        <div class="loader" role="status" aria-live="assertive">
+            <span class="sr-only">Memuat...</span>
+        </div>
+        <p class="mt-4 text-muted fs-lg">Memuat Aplikasi ApartemenManaj...</p>
+    </div>
+
+    <!-- Template untuk Item Notifikasi (DIPERTAHANKAN) -->
+    <template id="notification-item-template">
+        <div class="notification-item" role="listitem">
+            <div class="icon-wrapper" aria-hidden="true"><i class=""></i></div>
+            <div class="content">
+                <h5 class="card-title"></h5>
+                <p class="card-text-message"></p>
+                <div class="meta"><span class="timestamp"></span> | <span class="category"></span></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-sm btn-icon-only btn-outline-primary mark-as-read"
+                    title="Tandai sebagai sudah dibaca">
+                    <i class="fas fa-check"></i><span class="sr-only">Tandai sebagai sudah dibaca</span>
+                </button>
+                <button class="btn btn-sm btn-icon-only btn-danger delete-notification" title="Hapus notifikasi">
+                    <i class="fas fa-trash-alt"></i><span class="sr-only">Hapus notifikasi</span>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template untuk Kartu Apartemen (BARU) -->
+    <template id="apartment-card-template">
+        <div class="card apartment-card">
+            <img src="https://via.placeholder.com/400x200.png?text=Gambar+Apartemen" alt="Gambar Apartemen"
+                class="card-img-top">
+            <div class="card-body">
+                <h3 class="card-title mb-2">Nama Apartemen Contoh</h3>
+                <div class="details mb-3">
+                    <span><i class="fas fa-bed" aria-hidden="true"></i> <span class="bedrooms">0</span> Kamar
+                        Tidur</span>
+                    <span><i class="fas fa-bath" aria-hidden="true"></i> <span class="bathrooms">0</span> Kamar
+                        Mandi</span>
+                    <span><i class="fas fa-ruler-combined" aria-hidden="true"></i> <span class="area">0</span> m²</span>
+                </div>
+                <p class="text-muted fs-sm mb-3 short-description">Deskripsi singkat mengenai apartemen ini akan muncul
+                    di sini. Menarik dan informatif.</p>
+                <p class="price mb-4">Rp <span class="price-value">0</span> / bulan</p>
+            </div>
+            <div class="card-footer justify-between">
+                <button class="btn btn-sm btn-outline-primary add-to-favorites" title="Tambahkan ke favorit">
+                    <i class="far fa-heart" aria-hidden="true"></i> <span class="sr-only">Tambahkan ke favorit</span>
+                </button>
+                <a href="#" class="btn btn-sm btn-primary view-details">Lihat Detail</a>
+            </div>
+        </div>
+    </template>
+
+
+    <script>
+        // Vanilla JavaScript Monolith untuk Aplikasi Manajemen Apartemen
+        (function () {
+            'use strict';
+
+            //=============================================
+            //========= STATE APLIKASI & KONFIGURASI ======
+            //=============================================
+            const AppState = {
+                currentTheme: localStorage.getItem('apartemenManajTheme') || 'light',
+                activeRoute: '',
+                isSidebarOpen: window.innerWidth > 991.98, // Default terbuka di desktop
+                currentUser: { // Data pengguna mock
+                    name: 'Andi Budiman',
+                    email: 'andi.budiman@example.com',
+                    avatarInitial: 'AB',
+                    profile: {
+                        phone: '081234567890',
+                        address: 'Jl. Merdeka No. 17, Jakarta',
+                        memberSince: new Date(2022, 0, 15) // 15 Januari 2022
+                    }
+                },
+                dashboardStats: [ // Data mock untuk statistik dashboard
+                    { id: 'stat1', title: 'Booking Aktif', value: '3', icon: 'fas fa-calendar-check', color: 'var(--primary-color)' },
+                    { id: 'stat2', title: 'Pembayaran Tertunda', value: '1', icon: 'fas fa-file-invoice-dollar', color: 'var(--warning-color)' },
+                    { id: 'stat3', title: 'Permintaan Maintenance', value: '0', icon: 'fas fa-tools', color: 'var(--info-color)' },
+                    { id: 'stat4', title: 'Properti Tersimpan', value: '5', icon: 'fas fa-heart', color: 'var(--danger-color)' }
+                ],
+                apartments: [ // Data mock untuk listing apartemen
+                    { id: 'apt001', name: 'Apartemen Serene Heights Tower A', bedrooms: 2, bathrooms: 1, area: 60, price: 5500000, image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60', description: 'Unit nyaman dengan pemandangan kota, fasilitas lengkap.', location: 'Jakarta Pusat', favorited: false },
+                    { id: 'apt002', name: 'Green Valley Residence Tipe Studio', bedrooms: 1, bathrooms: 1, area: 35, price: 3200000, image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=60', description: 'Studio modern, cocok untuk profesional muda.', location: 'Jakarta Selatan', favorited: true },
+                    { id: 'apt003', name: 'Coastal Breeze Apartments - 3BR', bedrooms: 3, bathrooms: 2, area: 120, price: 12000000, image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YXBhcnRtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60', description: 'Apartemen keluarga luas dengan balkon menghadap laut.', location: 'Pantai Indah Kapuk', favorited: false },
+                    { id: 'apt004', name: 'Urban Oasis Loft', bedrooms: 1, bathrooms: 1, area: 75, price: 7800000, image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGFwYXJ0bWVudCUyMGludGVyaW9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60', description: 'Loft unik di pusat kota, desain industrial.', location: 'Jakarta Pusat', favorited: false },
+                ],
+                currentApartmentFilter: {
+                    keyword: '',
+                    bedrooms: 'all',
+                },
+                notifications: [ // Data notifikasi dari kode lama, disesuaikan
+                    { id: 1, title: 'Pembaruan Kebijakan Privasi', message: 'Kami telah memperbarui kebijakan privasi kami.', type: 'info', icon: 'fas fa-info-circle', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), category: 'Umum', unread: true },
+                    { id: 2, title: 'Pembayaran Tagihan Berhasil', message: 'Pembayaran tagihan bulan ini berhasil.', type: 'success', icon: 'fas fa-check-circle', timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), category: 'Keuangan', unread: false },
+                ],
+                nextNotificationId: 3,
+                currentNotificationFilter: 'all',
+                currentNotificationCategory: 'all',
+                messages: { // Data mock pesan (hanya count)
+                    unreadCount: 2,
+                }
+            };
+
+            //=============================================
+            //========= ELEMEN DOM YANG SERING DIGUNAKAN ==
+            //=============================================
+            const DOM = {
+                html: document.documentElement,
+                body: document.body,
+                appShell: document.getElementById('app-shell'),
+                appSidebar: document.getElementById('app-sidebar'),
+                sidebarToggleBtn: document.getElementById('sidebar-toggle-btn'),
+                sidebarOverlay: document.getElementById('sidebar-overlay'),
+                mainContent: document.getElementById('main-content'),
+                themeToggleButton: document.getElementById('theme-toggle-btn'),
+                currentYearSidebarSpan: document.getElementById('current-year-sidebar'),
+                currentYearFooterSpan: document.getElementById('current-year-footer'),
+                initialAppLoader: document.getElementById('initial-app-loader'),
+                // Notifikasi (dari kode lama)
+                notifBadgeCount: document.getElementById('notif-badge-count'),
+                // notifBadgeCountMobile: document.getElementById('notif-badge-count-mobile'), // Dihapus, jadi satu di sidebar
+                notificationItemTemplate: document.getElementById('notification-item-template'),
+                // User Profile Dropdown
+                userProfileToggleBtn: document.getElementById('user-profile-toggle-btn'),
+                userProfileDropdown: document.getElementById('user-profile-dropdown'),
+                userAvatarInitial: document.getElementById('user-avatar-initial'),
+                userHeaderName: document.getElementById('user-header-name'),
+                // Badge Pesan
+                messageBadgeCount: document.getElementById('message-badge-count'),
+                // Template Kartu Apartemen
+                apartmentCardTemplate: document.getElementById('apartment-card-template'),
+                // Dapatkan semua link navigasi dari sidebar untuk update active state
+                allSidebarNavLinks: null, // Akan diisi di init
+                logoutBtn: document.getElementById('logout-btn'),
+            };
+            DOM.allSidebarNavLinks = DOM.appSidebar.querySelectorAll('.nav-link');
+
+
+            //=============================================
+            //========= FUNGSI UTILITAS ===================
+            //=============================================
+            const Utils = {
+                debounce: function (func, delay) { /* ... (sama seperti sebelumnya) ... */
+                    let timeout;
+                    return function (...args) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func.apply(this, args), delay);
+                    };
+                },
+                escapeHTML: function (str) { /* ... (sama seperti sebelumnya) ... */
+                    if (str === null || typeof str === 'undefined') return '';
+                    return String(str).replace(/[&<>"']/g, function (match) {
+                        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[match];
+                    });
+                },
+                timeAgo: function (date) { /* ... (sama seperti sebelumnya) ... */
+                    const now = new Date();
+                    const seconds = Math.round((now - date) / 1000);
+                    const minutes = Math.round(seconds / 60);
+                    const hours = Math.round(minutes / 60);
+                    const days = Math.round(hours / 24);
+                    if (seconds < 5) return 'baru saja';
+                    if (seconds < 60) return `${seconds} detik lalu`;
+                    if (minutes < 60) return `${minutes} menit lalu`;
+                    if (hours < 24) return `${hours} jam lalu`;
+                    return `${days} hari lalu`;
+                },
+                formatCurrency: function (amount) {
+                    return new Intl.NumberFormat('id-ID').format(amount);
+                },
+                showToast: function (message, type = 'info', duration = 3000) {
+                    // Membuat elemen toast jika belum ada
+                    let toastContainer = document.getElementById('toast-container');
+                    if (!toastContainer) {
+                        toastContainer = document.createElement('div');
+                        toastContainer.id = 'toast-container';
+                        toastContainer.style.position = 'fixed';
+                        toastContainer.style.bottom = '20px';
+                        toastContainer.style.right = '20px';
+                        toastContainer.style.zIndex = '99999';
+                        DOM.body.appendChild(toastContainer);
+                    }
+
+                    const toastElement = document.createElement('div');
+                    toastElement.className = `alert alert-${type} shadow-lg`; // Menggunakan style alert
+                    toastElement.style.marginBottom = '10px'; // Jarak antar toast
+                    toastElement.style.opacity = '0';
+                    toastElement.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    toastElement.style.transform = 'translateX(100%)';
+                    toastElement.setAttribute('role', 'alert');
+
+                    let iconClass = 'fas fa-info-circle';
+                    if (type === 'success') iconClass = 'fas fa-check-circle';
+                    else if (type === 'danger') iconClass = 'fas fa-times-circle';
+                    else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+
+                    toastElement.innerHTML = `<i class="${iconClass} mr-2"></i> ${Utils.escapeHTML(message)}`;
+
+                    toastContainer.appendChild(toastElement);
+
+                    // Animasi muncul
+                    requestAnimationFrame(() => {
+                        toastElement.style.opacity = '1';
+                        toastElement.style.transform = 'translateX(0)';
+                    });
+
+                    // Hapus toast setelah durasi tertentu
+                    setTimeout(() => {
+                        toastElement.style.opacity = '0';
+                        toastElement.style.transform = 'translateX(100%)';
+                        toastElement.addEventListener('transitionend', () => {
+                            toastElement.remove();
+                            if (toastContainer.children.length === 0) {
+                                // toastContainer.remove(); // Jangan remove container, agar bisa dipakai lagi
+                            }
+                        }, { once: true });
+                    }, duration);
+                }
+            };
+
+            //=============================================
+            //========= MANAJEMEN TEMA ====================
+            //=============================================
+            const ThemeManager = { /* ... (sama seperti sebelumnya, hanya update localStorage key) ... */
+                init: function () {
+                    this.applyTheme(AppState.currentTheme);
+                    DOM.themeToggleButton.addEventListener('click', () => this.toggleTheme());
+                    this._updateThemeButtonIcon(AppState.currentTheme);
+                },
+                applyTheme: function (theme) {
+                    DOM.html.setAttribute('data-theme', theme);
+                    AppState.currentTheme = theme;
+                    localStorage.setItem('apartemenManajTheme', theme); // Key diubah
+                    this._updateThemeButtonIcon(theme);
+                },
+                toggleTheme: function () {
+                    const newTheme = AppState.currentTheme === 'light' ? 'dark' : 'light';
+                    this.applyTheme(newTheme);
+                },
+                _updateThemeButtonIcon: function (theme) {
+                    const iconElement = DOM.themeToggleButton.querySelector('i');
+                    if (iconElement) {
+                        if (theme === 'dark') {
+                            iconElement.classList.remove('fa-sun'); iconElement.classList.add('fa-moon');
+                            DOM.themeToggleButton.setAttribute('aria-label', 'Ganti ke Tema Terang');
+                            DOM.themeToggleButton.title = 'Ganti ke Tema Terang';
+                        } else {
+                            iconElement.classList.remove('fa-moon'); iconElement.classList.add('fa-sun');
+                            DOM.themeToggleButton.setAttribute('aria-label', 'Ganti ke Tema Gelap');
+                            DOM.themeToggleButton.title = 'Ganti ke Tema Gelap';
+                        }
+                    }
+                }
+            };
+
+            //=============================================
+            //========= MANAJEMEN SIDEBAR ===============
+            //=============================================
+            const SidebarManager = {
+                init: function () {
+                    this.updateSidebarState(AppState.isSidebarOpen);
+                    DOM.sidebarToggleBtn.addEventListener('click', () => this.toggleSidebar());
+                    DOM.sidebarOverlay.addEventListener('click', () => this.closeSidebar()); // Tutup jika overlay diklik
+
+                    // Tutup sidebar jika link di dalamnya diklik (untuk mobile)
+                    DOM.allSidebarNavLinks.forEach(link => {
+                        link.addEventListener('click', () => {
+                            if (window.innerWidth <= 991.98 && AppState.isSidebarOpen) {
+                                this.closeSidebar();
+                            }
+                        });
+                    });
+
+                    // Sesuaikan state sidebar saat resize window
+                    window.addEventListener('resize', Utils.debounce(() => {
+                        const isDesktop = window.innerWidth > 991.98;
+                        if (isDesktop && !AppState.isSidebarOpen) {
+                            this.openSidebar(); // Buka otomatis di desktop jika sebelumnya tertutup
+                        } else if (!isDesktop && AppState.isSidebarOpen) {
+                            // Biarkan terbuka jika memang sedang terbuka di mobile, user bisa tutup manual
+                            // this.closeSidebar(); // Atau tutup otomatis saat resize ke mobile
+                        }
+                    }, 200));
+                },
+                updateSidebarState: function (isOpen) {
+                    AppState.isSidebarOpen = isOpen;
+                    DOM.body.classList.toggle('sidebar-open', isOpen);
+                    DOM.body.classList.toggle('sidebar-collapsed', !isOpen && window.innerWidth > 991.98); // Hanya untuk efek margin konten di desktop
+                    DOM.sidebarToggleBtn.setAttribute('aria-expanded', isOpen.toString());
+
+                    const iconElement = DOM.sidebarToggleBtn.querySelector('i');
+                    if (iconElement) {
+                        if (isOpen) {
+                            iconElement.classList.remove('fa-bars'); iconElement.classList.add('fa-times');
+                            DOM.sidebarToggleBtn.setAttribute('aria-label', 'Tutup navigasi sidebar');
+                        } else {
+                            iconElement.classList.remove('fa-times'); iconElement.classList.add('fa-bars');
+                            DOM.sidebarToggleBtn.setAttribute('aria-label', 'Buka navigasi sidebar');
+                        }
+                    }
+                },
+                toggleSidebar: function () {
+                    this.updateSidebarState(!AppState.isSidebarOpen);
+                },
+                openSidebar: function () {
+                    this.updateSidebarState(true);
+                },
+                closeSidebar: function () {
+                    this.updateSidebarState(false);
+                }
+            };
+
+            //=============================================
+            //========= MANAJEMEN USER PROFILE DROPDOWN ===
+            //=============================================
+            const UserProfileDropdownManager = {
+                init: function () {
+                    DOM.userProfileToggleBtn.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Mencegah event sampai ke document listener di bawah
+                        this.toggleDropdown();
+                    });
+
+                    // Tutup dropdown jika klik di luar
+                    document.addEventListener('click', (event) => {
+                        if (DOM.userProfileDropdown.classList.contains('active') &&
+                            !DOM.userProfileDropdown.contains(event.target) &&
+                            !DOM.userProfileToggleBtn.contains(event.target)) {
+                            this.closeDropdown();
+                        }
+                    });
+
+                    // Isi data pengguna
+                    DOM.userAvatarInitial.textContent = Utils.escapeHTML(AppState.currentUser.avatarInitial);
+                    DOM.userHeaderName.textContent = Utils.escapeHTML(AppState.currentUser.name);
+
+                    // Handle logout
+                    DOM.logoutBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.closeDropdown();
+                        // Simulasi logout
+                        Utils.showToast('Anda telah berhasil keluar.', 'success');
+                        // Di aplikasi nyata, ini akan redirect ke halaman login atau membersihkan session
+                        // Untuk demo, kita bisa redirect ke halaman beranda atau dashboard
+                        setTimeout(() => window.location.hash = '#/dashboard', 1500);
+                    });
+                },
+                toggleDropdown: function () {
+                    const isActive = DOM.userProfileDropdown.classList.toggle('active');
+                    DOM.userProfileToggleBtn.setAttribute('aria-expanded', isActive.toString());
+                },
+                openDropdown: function () {
+                    DOM.userProfileDropdown.classList.add('active');
+                    DOM.userProfileToggleBtn.setAttribute('aria-expanded', 'true');
+                },
+                closeDropdown: function () {
+                    DOM.userProfileDropdown.classList.remove('active');
+                    DOM.userProfileToggleBtn.setAttribute('aria-expanded', 'false');
+                }
+            };
+
+            //=============================================
+            //========= MANAJEMEN NOTIFIKASI & PESAN =====
+            //=============================================
+            const NotificationManager = { /* ... (sebagian besar sama, hanya update badge) ... */
+                init: function () {
+                    this.updateUnreadCountBadges();
+                },
+                updateUnreadCountBadges: function () {
+                    // Notifikasi
+                    const unreadNotifCount = AppState.notifications.filter(n => n.unread).length;
+                    if (DOM.notifBadgeCount) {
+                        if (unreadNotifCount > 0) {
+                            DOM.notifBadgeCount.textContent = unreadNotifCount > 99 ? '99+' : unreadNotifCount.toString();
+                            DOM.notifBadgeCount.classList.remove('d-none');
+                        } else {
+                            DOM.notifBadgeCount.classList.add('d-none');
+                        }
+                    }
+                    // Pesan
+                    const unreadMessageCount = AppState.messages.unreadCount;
+                    if (DOM.messageBadgeCount) {
+                        if (unreadMessageCount > 0) {
+                            DOM.messageBadgeCount.textContent = unreadMessageCount > 99 ? '99+' : unreadMessageCount.toString();
+                            DOM.messageBadgeCount.classList.remove('d-none');
+                        } else {
+                            DOM.messageBadgeCount.classList.add('d-none');
+                        }
+                    }
+                },
+                markAsRead: function (notificationId) {
+                    const notification = AppState.notifications.find(n => n.id === notificationId);
+                    if (notification && notification.unread) {
+                        notification.unread = false;
+                        this.updateUnreadCountBadges();
+                        if (AppState.activeRoute === 'notifications') PageRenderer.notifications();
+                        Utils.showToast('Notifikasi ditandai sudah dibaca.', 'success');
+                    }
+                },
+                deleteNotification: function (notificationId) {
+                    AppState.notifications = AppState.notifications.filter(n => n.id !== notificationId);
+                    this.updateUnreadCountBadges();
+                    if (AppState.activeRoute === 'notifications') PageRenderer.notifications();
+                    Utils.showToast('Notifikasi dihapus.', 'info');
+                },
+                getFilteredNotifications: function () {
+                    return AppState.notifications.filter(n => {
+                        const filterMatch = (AppState.currentNotificationFilter === 'all') ||
+                            (AppState.currentNotificationFilter === 'unread' && n.unread) ||
+                            (AppState.currentNotificationFilter === 'read' && !n.unread);
+                        const categoryMatch = (AppState.currentNotificationCategory === 'all') ||
+                            (n.category === AppState.currentNotificationCategory);
+                        return filterMatch && categoryMatch;
+                    }).sort((a, b) => b.timestamp - a.timestamp);
+                }
+            };
+
+            //=============================================
+            //========= MANAJEMEN APARTEMEN (BARU) ========
+            //=============================================
+            const ApartmentManager = {
+                getFilteredApartments: function () {
+                    const { keyword, bedrooms } = AppState.currentApartmentFilter;
+                    const searchTerm = keyword.toLowerCase();
+
+                    return AppState.apartments.filter(apt => {
+                        const nameMatch = apt.name.toLowerCase().includes(searchTerm);
+                        const locationMatch = apt.location.toLowerCase().includes(searchTerm);
+                        const bedroomMatch = (bedrooms === 'all') || (apt.bedrooms.toString() === bedrooms);
+
+                        return (nameMatch || locationMatch) && bedroomMatch;
+                    });
+                },
+                toggleFavorite: function (apartmentId) {
+                    const apartment = AppState.apartments.find(apt => apt.id === apartmentId);
+                    if (apartment) {
+                        apartment.favorited = !apartment.favorited;
+                        // Render ulang jika di halaman apartemen atau favorit
+                        if (AppState.activeRoute === 'apartments' || AppState.activeRoute === 'favorites') {
+                            // Idealnya hanya update card spesifik, tapi untuk vanilla sederhana, render ulang halaman
+                            if (AppState.activeRoute === 'apartments') PageRenderer.apartments();
+                            if (AppState.activeRoute === 'favorites') PageRenderer.favorites();
+                        }
+                        Utils.showToast(apartment.favorited ? `"${apartment.name}" ditambahkan ke favorit.` : `"${apartment.name}" dihapus dari favorit.`, 'info');
+                        NotificationManager.updateUnreadCountBadges(); // Jika ada badge terkait favorit
+                    }
+                }
+            };
+
+
+            //=============================================
+            //========= RENDERER HALAMAN ==================
+            //=============================================
+            const PageRenderer = {
+                _showLoader: function () { /* ... (sama seperti sebelumnya) ... */
+                    DOM.mainContent.innerHTML = `
+                    <div class="loader-container" role="status" aria-live="polite">
+                        <div class="loader"><span class="sr-only">Memuat konten...</span></div>
+                        <p class="mt-2 text-muted">Memuat konten halaman...</p>
+                    </div>`;
+                    DOM.mainContent.style.opacity = '0.5';
+                },
+                _hideLoader: function () { /* ... (sama seperti sebelumnya) ... */
+                    DOM.mainContent.style.opacity = '1';
+                },
+                _renderPageStructure: function (pageTitle, contentHTML, pageSpecificId = '') {
+                    document.title = `${pageTitle} | ApartemenManaj`;
+                    const pageContainerId = pageSpecificId ? ` id="${Utils.escapeHTML(pageSpecificId)}"` : '';
+                    // Konten sekarang masuk ke dalam container di main-content
+                    DOM.mainContent.innerHTML = `<div class="container page-container"${pageContainerId}>${contentHTML}</div>`;
+                    this._hideLoader();
+                    window.scrollTo(0, 0);
+                },
+
+                dashboard: function () {
+                    let statsHTML = '<div class="grid grid-cols-1 md-grid-cols-2 lg-grid-cols-4 gap-6 dashboard-stats-grid">';
+                    AppState.dashboardStats.forEach(stat => {
+                        statsHTML += `
+                        <div class="card stat-card">
+                            <div class="icon-wrapper" style="background-color: ${Utils.escapeHTML(stat.color)};">
+                                <i class="${Utils.escapeHTML(stat.icon)}" aria-hidden="true"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>${Utils.escapeHTML(stat.value)}</h4>
+                                <p>${Utils.escapeHTML(stat.title)}</p>
+                            </div>
+                        </div>`;
+                    });
+                    statsHTML += '</div>';
+
+                    // Contoh Chart Sederhana dengan DIV (bukan chart library)
+                    const recentActivityHTML = `
+                    <div class="card mt-6">
+                        <div class="card-header"><h3 class="card-title">Aktivitas Terkini</h3></div>
+                        <div class="card-body">
+                            <p class="text-muted">Area ini bisa menampilkan grafik aktivitas atau daftar log terbaru. Untuk demo, ini adalah placeholder.</p>
+                            <div style="height: 200px; background-color: var(--input-bg-color); border-radius: var(--border-radius-md); display:flex; align-items:center; justify-content:center;">
+                                <em class="text-subtle">Contoh Area Grafik Aktivitas</em>
+                            </div>
+                        </div>
+                    </div>`;
+
+                    const content = `
+                        <h1 class="mb-6">Dasbor Utama</h1>
+                        ${statsHTML}
+                        ${recentActivityHTML}
+                    `;
+                    this._renderPageStructure('Dasbor', content, 'page-dashboard');
+                },
+
+                profile: function () {
+                    const user = AppState.currentUser;
+                    const content = `
+                        <div class="profile-header">
+                            <div class="profile-avatar-large">${Utils.escapeHTML(user.avatarInitial)}</div>
+                            <div class="profile-info">
+                                <h1>${Utils.escapeHTML(user.name)}</h1>
+                                <p>${Utils.escapeHTML(user.email)}</p>
+                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit mr-2"></i> Edit Profil</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">Informasi Detail</h3></div>
+                            <div class="card-body">
+                                <div class="grid grid-cols-1 md-grid-cols-2 gap-6">
+                                    <div>
+                                        <p class="fs-sm text-muted mb-1">Nomor Telepon</p>
+                                        <p class="fw-medium">${Utils.escapeHTML(user.profile.phone) || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-sm text-muted mb-1">Alamat</p>
+                                        <p class="fw-medium">${Utils.escapeHTML(user.profile.address) || '-'}</p>
+                                    </div>
+                                    <div>
+                                        <p class="fs-sm text-muted mb-1">Bergabung Sejak</p>
+                                        <p class="fw-medium">${user.profile.memberSince.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    this._renderPageStructure('Profil Saya', content, 'page-profile');
+                },
+
+                apartments: function () {
+                    const filteredApartments = ApartmentManager.getFilteredApartments();
+                    let apartmentsHTML = '';
+
+                    if (filteredApartments.length === 0) {
+                        apartmentsHTML = `
+                        <div class="card text-center py-6">
+                            <i class="fas fa-house-damage fa-3x text-muted mb-4"></i>
+                            <h3 class="text-muted">Tidak ada apartemen ditemukan</h3>
+                            <p class="text-subtle">Coba ubah kata kunci atau filter pencarian Anda.</p>
+                        </div>`;
+                    } else {
+                        apartmentsHTML = '<div class="grid grid-cols-1 md-grid-cols-2 lg-grid-cols-3 gap-6 apartment-listing-grid">';
+                        filteredApartments.forEach(apt => {
+                            const templateNode = DOM.apartmentCardTemplate.content.cloneNode(true);
+                            const cardElement = templateNode.querySelector('.apartment-card');
+
+                            cardElement.dataset.id = apt.id;
+                            cardElement.querySelector('.card-img-top').src = Utils.escapeHTML(apt.image);
+                            cardElement.querySelector('.card-img-top').alt = `Gambar ${Utils.escapeHTML(apt.name)}`;
+                            cardElement.querySelector('.card-title').textContent = Utils.escapeHTML(apt.name);
+                            cardElement.querySelector('.bedrooms').textContent = Utils.escapeHTML(apt.bedrooms);
+                            cardElement.querySelector('.bathrooms').textContent = Utils.escapeHTML(apt.bathrooms);
+                            cardElement.querySelector('.area').textContent = Utils.escapeHTML(apt.area);
+                            cardElement.querySelector('.short-description').textContent = Utils.escapeHTML(apt.description.substring(0, 100) + (apt.description.length > 100 ? '...' : ''));
+                            cardElement.querySelector('.price-value').textContent = Utils.formatCurrency(apt.price);
+
+                            const favButton = cardElement.querySelector('.add-to-favorites');
+                            favButton.title = apt.favorited ? "Hapus dari favorit" : "Tambahkan ke favorit";
+                            favButton.querySelector('i').className = apt.favorited ? 'fas fa-heart text-danger' : 'far fa-heart';
+
+                            const detailLink = cardElement.querySelector('.view-details');
+                            detailLink.href = `#/apartments/${apt.id}`; // Rute detail
+
+                            apartmentsHTML += cardElement.outerHTML;
+                        });
+                        apartmentsHTML += '</div>';
+                    }
+
+                    const filterBarHTML = `
+                        <div class="filter-bar card p-4">
+                            <input type="text" id="apt-search-keyword" class="form-control flex-grow-1" placeholder="Cari nama atau lokasi..." value="${Utils.escapeHTML(AppState.currentApartmentFilter.keyword)}">
+                            <select id="apt-filter-bedrooms" class="form-control" style="width: auto; min-width:150px;">
+                                <option value="all" ${AppState.currentApartmentFilter.bedrooms === 'all' ? 'selected' : ''}>Semua Kamar</option>
+                                <option value="1" ${AppState.currentApartmentFilter.bedrooms === '1' ? 'selected' : ''}>1 Kamar Tidur</option>
+                                <option value="2" ${AppState.currentApartmentFilter.bedrooms === '2' ? 'selected' : ''}>2 Kamar Tidur</option>
+                                <option value="3" ${AppState.currentApartmentFilter.bedrooms === '3' ? 'selected' : ''}>3+ Kamar Tidur</option>
+                            </select>
+                            <button id="apt-filter-apply-btn" class="btn btn-primary"><i class="fas fa-filter mr-2"></i> Terapkan</button>
+                        </div>
+                    `;
+
+                    const content = `
+                        <div class="d-flex justify-between align-center mb-4">
+                            <h1 class="mb-0">Daftar Apartemen</h1>
+                            <button class="btn btn-sm btn-secondary"><i class="fas fa-plus mr-1"></i> Tambah Listing (Admin)</button>
+                        </div>
+                        ${filterBarHTML}
+                        ${apartmentsHTML}
+                    `;
+                    this._renderPageStructure('Apartemen', content, 'page-apartments');
+                    this._attachApartmentPageListeners();
+                },
+
+                _attachApartmentPageListeners: function () {
+                    const listingContainer = document.querySelector('.apartment-listing-grid');
+                    if (listingContainer) {
+                        listingContainer.addEventListener('click', (event) => {
+                            const favButton = event.target.closest('.add-to-favorites');
+                            if (favButton) {
+                                const card = favButton.closest('.apartment-card');
+                                if (card && card.dataset.id) {
+                                    ApartmentManager.toggleFavorite(card.dataset.id);
+                                }
+                            }
+                        });
+                    }
+
+                    const applyFilterBtn = document.getElementById('apt-filter-apply-btn');
+                    if (applyFilterBtn) {
+                        applyFilterBtn.addEventListener('click', () => {
+                            AppState.currentApartmentFilter.keyword = document.getElementById('apt-search-keyword').value;
+                            AppState.currentApartmentFilter.bedrooms = document.getElementById('apt-filter-bedrooms').value;
+                            PageRenderer.apartments(); // Re-render dengan filter baru
+                        });
+                    }
+                },
+
+                apartmentDetail: function (apartmentId) { // Halaman Detail Apartemen (BARU)
+                    const apartment = AppState.apartments.find(apt => apt.id === apartmentId);
+                    if (!apartment) {
+                        PageRenderer.notFound(); // Jika apartemen tidak ditemukan
+                        return;
+                    }
+
+                    let content = `
+                        <nav aria-label="breadcrumb" class="mb-4">
+                            <ol class="d-flex fs-sm text-muted gap-1">
+                                <li><a href="#/apartments">Apartemen</a></li>
+                                <li><span aria-hidden="true">/</span></li>
+                                <li aria-current="page">${Utils.escapeHTML(apartment.name)}</li>
+                            </ol>
+                        </nav>
+                        <div class="card">
+                            <div class="card-header">
+                                <h1 class="card-title mb-0">${Utils.escapeHTML(apartment.name)}</h1>
+                            </div>
+                            <img src="${Utils.escapeHTML(apartment.image)}" alt="Gambar ${Utils.escapeHTML(apartment.name)}" class="w-full" style="max-height: 400px; object-fit: cover;">
+                            <div class="card-body">
+                                <div class="grid grid-cols-1 md-grid-cols-3 gap-6 mb-6">
+                                    <div>
+                                        <h4 class="text-primary">Detail Utama</h4>
+                                        <p><i class="fas fa-bed mr-2 text-muted"></i> ${Utils.escapeHTML(apartment.bedrooms)} Kamar Tidur</p>
+                                        <p><i class="fas fa-bath mr-2 text-muted"></i> ${Utils.escapeHTML(apartment.bathrooms)} Kamar Mandi</p>
+                                        <p><i class="fas fa-ruler-combined mr-2 text-muted"></i> ${Utils.escapeHTML(apartment.area)} m²</p>
+                                        <p><i class="fas fa-map-marker-alt mr-2 text-muted"></i> ${Utils.escapeHTML(apartment.location)}</p>
+                                    </div>
+                                    <div class="md-col-span-2">
+                                        <h4 class="text-primary">Deskripsi</h4>
+                                        <p class="text-muted">${Utils.escapeHTML(apartment.description)}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-between align-center mt-6 pt-4 border-top">
+                                     <p class="price fs-xl fw-bold mb-0">Rp ${Utils.formatCurrency(apartment.price)} / bulan</p>
+                                     <div>
+                                        <button class="btn btn-outline-primary add-to-favorites-detail mr-2" data-id="${apartment.id}">
+                                            <i class="${apartment.favorited ? 'fas fa-heart text-danger' : 'far fa-heart'} mr-1"></i> 
+                                            ${apartment.favorited ? 'Favorited' : 'Favoritkan'}
+                                        </button>
+                                        <button class="btn btn-primary"><i class="fas fa-calendar-plus mr-2"></i> Ajukan Booking</button>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    this._renderPageStructure(`Detail: ${apartment.name}`, content, `page-apartment-detail`);
+
+                    // Listener untuk tombol favorit di halaman detail
+                    const favButtonDetail = document.querySelector('.add-to-favorites-detail');
+                    if (favButtonDetail) {
+                        favButtonDetail.addEventListener('click', (e) => {
+                            const aptId = e.currentTarget.dataset.id;
+                            ApartmentManager.toggleFavorite(aptId);
+                            // Update tombol ini secara spesifik
+                            const i = e.currentTarget.querySelector('i');
+                            const currentApt = AppState.apartments.find(a => a.id === aptId);
+                            if (currentApt.favorited) {
+                                i.className = 'fas fa-heart text-danger mr-1';
+                                e.currentTarget.childNodes[2].nodeValue = ' Favorited'; // Hati-hati dengan DOM manipulasi seperti ini
+                            } else {
+                                i.className = 'far fa-heart mr-1';
+                                e.currentTarget.childNodes[2].nodeValue = ' Favoritkan';
+                            }
+                        });
+                    }
+                },
+
+                // Halaman lain sebagai placeholder
+                bookings: function () { this._renderPageStructure('Booking Saya', '<h1>Booking Saya</h1><p class="text-muted">Fitur ini sedang dalam pengembangan. Di sini akan ditampilkan daftar booking Anda.</p>', 'page-bookings'); },
+                favorites: function () {
+                    const favoriteApartments = AppState.apartments.filter(apt => apt.favorited);
+                    let favoritesHTML = '';
+
+                    if (favoriteApartments.length === 0) {
+                        favoritesHTML = `<div class="card text-center py-6">
+                            <i class="fas fa-heart-broken fa-3x text-muted mb-4"></i>
+                            <h3 class="text-muted">Belum ada apartemen favorit</h3>
+                            <p class="text-subtle">Tambahkan apartemen ke favorit untuk melihatnya di sini.</p>
+                            <a href="#/apartments" class="btn btn-primary mt-4">Cari Apartemen</a>
+                        </div>`;
+                    } else {
+                        favoritesHTML = '<div class="grid grid-cols-1 md-grid-cols-2 lg-grid-cols-3 gap-6 apartment-listing-grid">';
+                        favoriteApartments.forEach(apt => {
+                            const templateNode = DOM.apartmentCardTemplate.content.cloneNode(true);
+                            const cardElement = templateNode.querySelector('.apartment-card');
+                            // ... (isi card sama seperti di page apartments) ...
+                            cardElement.dataset.id = apt.id;
+                            cardElement.querySelector('.card-img-top').src = Utils.escapeHTML(apt.image);
+                            cardElement.querySelector('.card-img-top').alt = `Gambar ${Utils.escapeHTML(apt.name)}`;
+                            cardElement.querySelector('.card-title').textContent = Utils.escapeHTML(apt.name);
+                            cardElement.querySelector('.bedrooms').textContent = Utils.escapeHTML(apt.bedrooms);
+                            cardElement.querySelector('.bathrooms').textContent = Utils.escapeHTML(apt.bathrooms);
+                            cardElement.querySelector('.area').textContent = Utils.escapeHTML(apt.area);
+                            cardElement.querySelector('.short-description').textContent = Utils.escapeHTML(apt.description.substring(0, 100) + (apt.description.length > 100 ? '...' : ''));
+                            cardElement.querySelector('.price-value').textContent = Utils.formatCurrency(apt.price);
+
+                            const favButton = cardElement.querySelector('.add-to-favorites');
+                            favButton.title = "Hapus dari favorit"; // Selalu ini karena sudah di favorit
+                            favButton.innerHTML = '<i class="fas fa-heart-broken text-muted" aria-hidden="true"></i> <span class="sr-only">Hapus dari favorit</span>'; // Ikon beda
+
+                            const detailLink = cardElement.querySelector('.view-details');
+                            detailLink.href = `#/apartments/${apt.id}`;
+
+                            favoritesHTML += cardElement.outerHTML;
+                        });
+                        favoritesHTML += '</div>';
+                    }
+                    const content = `
+                        <h1 class="mb-6">Apartemen Favorit Anda</h1>
+                        ${favoritesHTML}
+                    `;
+                    this._renderPageStructure('Favorit', content, 'page-favorites');
+                    this._attachApartmentPageListeners(); // Listener yang sama bisa dipakai
+                },
+                payments: function () { this._renderPageStructure('Pembayaran', '<h1>Pembayaran</h1><p class="text-muted">Fitur ini sedang dalam pengembangan. Riwayat dan status pembayaran akan ada di sini.</p>', 'page-payments'); },
+                maintenance: function () { this._renderPageStructure('Maintenance', '<h1>Maintenance</h1><p class="text-muted">Fitur ini sedang dalam pengembangan. Ajukan atau lihat status permintaan perbaikan.</p>', 'page-maintenance'); },
+                messages: function () { this._renderPageStructure('Pesan', '<h1>Pesan</h1><p class="text-muted">Fitur ini sedang dalam pengembangan. Kotak masuk dan keluar pesan Anda.</p>', 'page-messages'); },
+                settings: function () { this._renderPageStructure('Pengaturan', '<h1>Pengaturan Akun</h1><p class="text-muted">Fitur ini sedang dalam pengembangan. Ubah preferensi akun Anda di sini.</p>', 'page-settings'); },
+
+
+                // Halaman Notifikasi (dari kode lama, sedikit penyesuaian)
+                notifications: function () {
+                    this._showLoader();
+                    const filteredNotifications = NotificationManager.getFilteredNotifications();
+                    let notificationsHTML = `
+                    <div class="d-flex justify-between align-center mb-4">
+                        <h1 class="mb-1">Notifikasi Anda</h1>
+                    </div>
+                    <div class="card mb-6">
+                        <div class="card-body notification-filters">
+                            <div class="form-group mb-0 mr-3">
+                                <label for="filter-type" class="form-label fs-xs fw-medium">Filter Status:</label>
+                                <select id="filter-type" class="form-control form-control-sm">
+                                    <option value="all" ${AppState.currentNotificationFilter === 'all' ? 'selected' : ''}>Semua</option>
+                                    <option value="unread" ${AppState.currentNotificationFilter === 'unread' ? 'selected' : ''}>Belum Dibaca</option>
+                                    <option value="read" ${AppState.currentNotificationFilter === 'read' ? 'selected' : ''}>Sudah Dibaca</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label for="filter-category" class="form-label fs-xs fw-medium">Filter Kategori:</label>
+                                <select id="filter-category" class="form-control form-control-sm">
+                                    <option value="all" ${AppState.currentNotificationCategory === 'all' ? 'selected' : ''}>Semua Kategori</option>
+                                    <option value="Umum" ${AppState.currentNotificationCategory === 'Umum' ? 'selected' : ''}>Umum</option>
+                                    <option value="Keuangan" ${AppState.currentNotificationCategory === 'Keuangan' ? 'selected' : ''}>Keuangan</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>`;
+
+                    if (filteredNotifications.length === 0) {
+                        notificationsHTML += `<div class="card text-center py-6"><i class="fas fa-bell-slash fa-3x text-muted mb-4"></i><h3 class="text-muted">Tidak ada notifikasi</h3></div>`;
+                    } else {
+                        notificationsHTML += '<div id="notification-list-container" class="card p-0" role="list">'; // Card sebagai wrapper list
+                        filteredNotifications.forEach(notif => {
+                            const templateContent = DOM.notificationItemTemplate.content.cloneNode(true);
+                            const notifElement = templateContent.querySelector('.notification-item');
+                            notifElement.dataset.id = notif.id;
+                            if (notif.unread) notifElement.classList.add('unread');
+                            else {
+                                notifElement.classList.remove('unread');
+                                const markReadBtn = notifElement.querySelector('.mark-as-read');
+                                markReadBtn.innerHTML = '<i class="fas fa-envelope-open"></i>';
+                                markReadBtn.title = "Tandai belum dibaca";
+                                markReadBtn.querySelector('.sr-only').textContent = "Tandai belum dibaca";
+                            }
+                            const iconWrapper = notifElement.querySelector('.icon-wrapper');
+                            iconWrapper.classList.add(`type-${notif.type}`);
+                            iconWrapper.querySelector('i').className = `${Utils.escapeHTML(notif.icon)}`;
+                            notifElement.querySelector('.card-title').textContent = Utils.escapeHTML(notif.title);
+                            notifElement.querySelector('.card-text-message').textContent = Utils.escapeHTML(notif.message);
+                            notifElement.querySelector('.timestamp').textContent = Utils.timeAgo(notif.timestamp);
+                            notifElement.querySelector('.category').textContent = Utils.escapeHTML(notif.category);
+                            notificationsHTML += notifElement.outerHTML;
+                        });
+                        notificationsHTML += '</div>';
+                    }
+                    this._renderPageStructure('Notifikasi', notificationsHTML, 'page-notifications');
+                    this._attachNotificationPageListeners();
+                },
+                _attachNotificationPageListeners: function () { /* ... (sama seperti sebelumnya) ... */
+                    const container = document.getElementById('notification-list-container');
+                    if (container) {
+                        container.addEventListener('click', (event) => {
+                            const targetButton = event.target.closest('button');
+                            if (!targetButton) return;
+                            const item = targetButton.closest('.notification-item');
+                            if (!item) return;
+                            const id = parseInt(item.dataset.id, 10);
+                            if (targetButton.classList.contains('mark-as-read')) NotificationManager.markAsRead(id);
+                            else if (targetButton.classList.contains('delete-notification')) {
+                                if (confirm('Hapus notifikasi ini?')) NotificationManager.deleteNotification(id);
+                            }
+                        });
+                    }
+                    const filterType = document.getElementById('filter-type');
+                    const filterCategory = document.getElementById('filter-category');
+                    if (filterType) filterType.addEventListener('change', (e) => { AppState.currentNotificationFilter = e.target.value; PageRenderer.notifications(); });
+                    if (filterCategory) filterCategory.addEventListener('change', (e) => { AppState.currentNotificationCategory = e.target.value; PageRenderer.notifications(); });
+                },
+
+                notFound: function () { /* ... (sama seperti sebelumnya) ... */
+                    const content = `<div class="text-center py-8"><i class="fas fa-exclamation-triangle fa-5x text-warning mb-4"></i><h1 class="text-danger mb-2">404 - Halaman Tidak Ditemukan</h1><p class="text-muted fs-lg mb-6">Maaf, halaman yang Anda minta tidak dapat ditemukan.</p><a href="#/dashboard" class="btn btn-primary btn-lg">Kembali ke Dasbor</a></div>`;
+                    this._renderPageStructure('Halaman Tidak Ditemukan', content, 'page-notfound');
+                }
+            };
+
+            //=============================================
+            //========= ROUTER APLIKASI (SPA) =============
+            //=============================================
+            const AppRouter = {
+                routes: {
+                    '/dashboard': PageRenderer.dashboard.bind(PageRenderer),
+                    '/profile': PageRenderer.profile.bind(PageRenderer),
+                    '/apartments': PageRenderer.apartments.bind(PageRenderer),
+                    '/apartments/:id': PageRenderer.apartmentDetail.bind(PageRenderer), // Rute detail dengan parameter
+                    '/bookings': PageRenderer.bookings.bind(PageRenderer),
+                    '/favorites': PageRenderer.favorites.bind(PageRenderer),
+                    '/payments': PageRenderer.payments.bind(PageRenderer),
+                    '/maintenance': PageRenderer.maintenance.bind(PageRenderer),
+                    '/messages': PageRenderer.messages.bind(PageRenderer),
+                    '/notifications': PageRenderer.notifications.bind(PageRenderer),
+                    '/settings': PageRenderer.settings.bind(PageRenderer),
+                    // Rute beranda default sekarang ke dashboard
+                    '/': PageRenderer.dashboard.bind(PageRenderer)
+                },
+                init: function () {
+                    window.addEventListener('hashchange', () => this.handleRouteChange());
+                    window.addEventListener('DOMContentLoaded', () => {
+                        this.handleRouteChange();
+                        if (DOM.initialAppLoader) {
+                            DOM.initialAppLoader.style.opacity = '0';
+                            DOM.initialAppLoader.addEventListener('transitionend', () => DOM.initialAppLoader.remove(), { once: true });
+                        }
+                    });
+                },
+                handleRouteChange: function () {
+                    const fullPath = window.location.hash.slice(1) || '/';
+                    let routeHandler = null;
+                    let routeParams = null;
+
+                    // Cek rute dinamis (e.g., /apartments/:id)
+                    for (const routePattern in this.routes) {
+                        if (this.routes.hasOwnProperty(routePattern)) {
+                            const paramNames = [];
+                            const regexPattern = new RegExp('^' + routePattern.replace(/:(\w+)/g, (match, paramName) => {
+                                paramNames.push(paramName);
+                                return '([^/]+)';
+                            }) + '$');
+
+                            const match = fullPath.match(regexPattern);
+                            if (match) {
+                                routeHandler = this.routes[routePattern];
+                                routeParams = paramNames.reduce((acc, name, index) => {
+                                    acc[name] = match[index + 1];
+                                    return acc;
+                                }, {});
+                                AppState.activeRoute = routePattern.split('/')[1] || 'dashboard'; // Ambil base route
+                                break;
+                            }
+                        }
+                    }
+
+                    // Jika tidak ada match rute dinamis, coba rute statis
+                    if (!routeHandler && this.routes[fullPath]) {
+                        routeHandler = this.routes[fullPath];
+                        AppState.activeRoute = fullPath.split('/')[1] || 'dashboard';
+                        if (AppState.activeRoute === '') AppState.activeRoute = 'dashboard';
+                    }
+
+
+                    PageRenderer._showLoader();
+                    setTimeout(() => {
+                        if (routeHandler) {
+                            if (routeParams && Object.keys(routeParams).length > 0) {
+                                // Panggil handler dengan parameter (misal, ID apartemen)
+                                routeHandler(...Object.values(routeParams));
+                            } else {
+                                routeHandler();
+                            }
+                        } else {
+                            PageRenderer.notFound();
+                            AppState.activeRoute = 'notFound';
+                        }
+                        this.updateActiveNavLink();
+                    }, 200);
+                },
+                updateActiveNavLink: function () {
+                    DOM.allSidebarNavLinks.forEach(link => {
+                        link.classList.remove('active');
+                        link.removeAttribute('aria-current');
+                        const linkRoute = link.dataset.route;
+                        // Untuk rute seperti /apartments/:id, kita hanya ingin /apartments yang aktif
+                        const currentBaseRoute = AppState.activeRoute.split('/')[0];
+                        if (linkRoute === currentBaseRoute || (linkRoute === 'dashboard' && (currentBaseRoute === '' || currentBaseRoute === '/'))) {
+                            link.classList.add('active');
+                            link.setAttribute('aria-current', 'page');
+                        }
+                    });
+                }
+            };
+
+            //=============================================
+            //========= INISIALISASI APLIKASI =============
+            //=============================================
+            function initializeApp() {
+                const currentYear = new Date().getFullYear().toString();
+                if (DOM.currentYearSidebarSpan) DOM.currentYearSidebarSpan.textContent = currentYear;
+                if (DOM.currentYearFooterSpan) DOM.currentYearFooterSpan.textContent = currentYear;
+
+                ThemeManager.init();
+                SidebarManager.init();
+                UserProfileDropdownManager.init();
+                NotificationManager.init(); // Termasuk update badge pesan
+                AppRouter.init();
+
+                console.info('Aplikasi Manajemen ApartemenManaj v1.0.0 berhasil dimuat.');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeApp);
+            } else {
+                initializeApp();
+            }
+
+        })();
+    </script>
+</body>
+
+</html>
