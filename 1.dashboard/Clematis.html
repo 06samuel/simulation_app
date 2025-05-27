@@ -1,61 +1,133 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
-    content="Platform penyewaan apartemen dengan pencarian canggih, sistem pembayaran aman, dan pengalaman pengguna yang intuitif." />
-  <title>Platform Penyewaan Apartemen</title>
+    content="Platform penyewaan apartemen canggih dengan pencarian intuitif, sistem pembayaran aman (simulasi), dan pengalaman pengguna yang memanjakan mata." />
+  <meta name="theme-color" content="#007bff">
+  <title>ApartRent | Platform Penyewaan Apartemen Modern</title>
 
-  <!-- External CSS -->
-  <link rel="stylesheet"
-    href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css "
-    integrity="sha256-J9rF6vti76fYvHpwS6vSzpM96cW2k27/xvEVNX5kyp8="
-    crossorigin="anonymous"
-    onerror="console.error('Gagal memuat jQuery UI CSS')" />
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css "
+  <!-- Favicon (Contoh menggunakan emoji sebagai favicon - ganti dengan file .ico jika ada) -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+
+  <!-- Menggunakan Font Awesome untuk ikon (alternatif jika diizinkan, karena permintaan ikon online gratis) -->
+  <!-- Jika ini bertentangan dengan "vanilla native", kita bisa hapus dan gunakan karakter unicode atau CSS-only icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous"
-    onerror="console.error('Gagal memuat Font Awesome CSS')" />
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- Custom Styles -->
+  <!-- Gaya Kustom Aplikasi -->
   <style>
-    /* Reset & Base Styles */
-    * {
+    /* Variabel CSS untuk Tema dan Konsistensi */
+    :root {
+      --primary-color: #007bff;
+      --primary-hover-color: #0056b3;
+      --secondary-color: #6c757d;
+      --secondary-hover-color: #5a6268;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --warning-color: #ffc107;
+      --info-color: #17a2b8;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --text-color: #333;
+      --background-color: #f4f4f4;
+      --card-background-color: #fff;
+      --border-color: #dee2e6;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --header-height: 60px;
+      --nav-height: 50px;
+      --box-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --box-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --border-radius: 8px;
+    }
+
+    /* Reset dan Gaya Dasar */
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      /* Basis untuk unit rem */
+    }
+
     body {
-      font-family: 'Open Sans', sans-serif;
+      font-family: var(--font-family);
       line-height: 1.6;
-      color: #333;
-      background-color: #f4f4f4;
+      color: var(--text-color);
+      background-color: var(--background-color);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    header {
-      background: linear-gradient(90deg, #007bff, #0056b3);
+    /* Utilitas Umum */
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-primary {
+      color: var(--primary-color);
+    }
+
+    .mt-1 {
+      margin-top: 1rem;
+    }
+
+    .mb-1 {
+      margin-bottom: 1rem;
+    }
+
+    .p-1 {
+      padding: 1rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Gaya untuk Header */
+    .app-header {
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-hover-color));
       color: white;
-      padding: 1rem 2rem;
+      padding: 0 2rem;
+      height: var(--header-height);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--box-shadow-md);
       position: sticky;
       top: 0;
       z-index: 1000;
     }
 
-    header h1 {
-      font-size: 1.5rem;
+    .app-header .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
     }
 
-    .user-info {
+    .app-header .logo .fa-building-columns {
+      margin-right: 0.5rem;
+    }
+
+    .user-actions {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -64,112 +136,118 @@
     .user-avatar {
       width: 40px;
       height: 40px;
-      background-color: #fff;
-      color: #007bff;
+      background-color: var(--light-color);
+      color: var(--primary-color);
       font-weight: bold;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1rem;
+      cursor: default;
     }
 
-    nav {
-      background: #fff;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .theme-toggle-btn,
+    .logout-btn {
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 0.9rem;
     }
 
-    nav ul {
-      list-style: none;
+    .theme-toggle-btn:hover,
+    .logout-btn:hover {
+      background-color: white;
+      color: var(--primary-color);
+    }
+
+    /* Gaya untuk Navigasi (SPA) */
+    .app-nav {
+      background: var(--card-background-color);
+      height: var(--nav-height);
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: var(--box-shadow-sm);
+      position: sticky;
+      top: var(--header-height);
+      /* Muncul di bawah header */
+      z-index: 999;
     }
 
-    nav a {
-      color: #007bff;
+    .app-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      /* Agar responsif di layar kecil */
+    }
+
+    .app-nav a {
+      color: var(--primary-color);
       text-decoration: none;
       font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    nav a:hover,
-    nav a.active {
-      background-color: #007bff;
-      color: white;
       padding: 0.5rem 1rem;
-      border-radius: 4px;
-    }
-
-    main {
-      flex: 1;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    section {
-      display: none;
-    }
-
-    section.active {
-      display: block;
-    }
-
-    .search-section {
-      background: #fff;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-    }
-
-    .search-form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .form-group {
+      border-radius: var(--border-radius);
+      transition: background-color 0.3s ease, color 0.3s ease;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .form-group label {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+    .app-nav a:hover,
+    .app-nav a.active {
+      background-color: var(--primary-color);
+      color: white;
     }
 
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+    .app-nav a .fa-solid {
+      font-size: 0.9em;
     }
 
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: #007bff;
-      outline: none;
+    /* Konten Utama */
+    .app-main {
+      flex: 1;
+      padding: 2rem 0;
+      /* Padding vertikal untuk main, horizontal diatur oleh .container */
     }
 
-    .apartments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
+    /* Setiap Halaman/Section dalam SPA */
+    .page-section {
+      display: none;
+      /* Semua section disembunyikan secara default */
+      animation: fadeIn 0.5s ease-in-out;
     }
 
+    .page-section.active {
+      display: block;
+      /* Section aktif akan ditampilkan */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Gaya Kartu (Card) */
     .card {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background: var(--card-background-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow-md);
       overflow: hidden;
       transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      margin-bottom: 1.5rem;
     }
 
     .card:hover {
@@ -177,998 +255,1101 @@
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .card figure {
-      margin: 0;
-      position: relative;
+    .card-header {
+      padding: 1rem 1.5rem;
+      background-color: var(--light-color);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    .card img {
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem;
+      background-color: var(--light-color);
+      border-top: 1px solid var(--border-color);
+      text-align: right;
+    }
+
+    /* Grid System Sederhana */
+    .grid-container {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-cols-autofit {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+
+    /* Formulir */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="date"],
+    .form-group input[type="number"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      background-color: var(--card-background-color);
+      color: var(--text-color);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Tombol */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      white-space: nowrap;
+      /* Mencegah teks tombol wrap */
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-hover-color);
+    }
+
+    .btn-full-width {
+      display: block;
+      width: 100%;
+    }
+
+    .btn .fa-solid {
+      margin-right: 0.5rem;
+    }
+
+    /* Kartu Apartemen */
+    .apartment-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .apartment-card img {
       width: 100%;
       height: 200px;
       object-fit: cover;
       display: block;
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
     }
 
-    .card figcaption {
-      padding: 1rem;
-      font-weight: 600;
-      font-size: 1.2rem;
-      color: #333;
+    .apartment-card .card-body {
+      flex-grow: 1;
+      /* Agar body kartu mengisi ruang tersedia */
     }
 
-    .card blockquote {
-      padding: 0 1rem 1rem;
-      font-style: italic;
-      color: #666;
-      border-left: 4px solid #007bff;
-      margin: 0 0 1rem;
+    .apartment-card h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1.3rem;
+      color: var(--primary-color);
     }
 
-    .card details summary {
-      cursor: pointer;
-      font-weight: 600;
-      color: #007bff;
+    .apartment-card .price {
+      font-size: 1.1rem;
+      font-weight: bold;
       margin-bottom: 0.5rem;
     }
 
-    .property-actions {
-      padding: 1rem;
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn-primary {
-      background: #007bff;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      background: #0056b3;
-    }
-
-    .btn-secondary {
-      background: #6c757d;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-      background: #5a6268;
-    }
-
-    footer {
-      background: #007bff;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-    }
-
-    a:focus,
-    button:focus,
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: 2px solid #007bff;
-      outline-offset: 2px;
-    }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-
-      nav ul {
-        flex-direction: row;
-        align-items: center;
-        cursor: pointer;
-      }
-
-      .search-form {
-        grid-template-columns: 1fr;
-      }
-
-      .apartments-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .error-message {
-      color: red;
-      background: #ffe6e6;
-      padding: 1rem;
-      border-radius: 4px;
-      margin: 1rem 0;
-    }
-
-    .notification {
-      background: #ffe6e6;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+    .apartment-card .location,
+    .apartment-card .type {
       font-size: 0.9rem;
-      font-weight: bold;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
     }
 
-    .tag.available {
-      background: #28a745;
-      color: white;
-    }
-
-    .tag.rented {
-      background: #ffc107;
-      color: #212529;
-    }
-
-    .rating-display {
-      color: #ffc107;
-    }
-
-    .rating-display .star-inactive {
-      color: #e9ecef;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 8px;
-      margin: 2rem 0;
-    }
-
-    .empty-state h4 {
-      margin-top: 1rem;
-    }
-
-    .empty-state p {
-      color: #6c757d;
-    }
-
-    .floating-label {
-      position: relative;
+    .apartment-card .amenities {
+      font-size: 0.9rem;
       margin-bottom: 1rem;
+      color: #555;
     }
 
-    .floating-label input,
-    .floating-label select,
-    .floating-label textarea {
+    .apartment-card .amenities .fa-solid {
+      margin-right: 0.3rem;
+      color: var(--primary-color);
+    }
+
+    /* Placeholder untuk Peta dan Grafik (karena tidak boleh ada library) */
+    .map-placeholder,
+    .chart-placeholder {
       width: 100%;
-      padding: 0.75rem 0.75rem 0.25rem;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-    }
-
-    .floating-label label {
-      position: absolute;
-      top: -0.5rem;
-      left: 0.75rem;
-      background: white;
-      padding: 0 0.5rem;
-      font-size: 0.75rem;
-      color: #6c757d;
-      transition: all 0.2s ease;
-    }
-
-    .floating-label input:focus + label,
-    .floating-label select:focus + label,
-    .floating-label textarea:focus + label,
-    .floating-label input:not(:placeholder-shown) + label,
-    .floating-label select:not([value=""]) + label,
-    .floating-label textarea:not(:empty) + label {
-      top: -0.8rem;
-      left: 0.5rem;
-      font-size: 0.75rem;
-      background: white;
-    }
-
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #f8f9fa;
-    }
-
-    .chart-container {
-      width: 100%;
-      max-width: 600px;
+      height: 300px;
+      background-color: var(--light-color);
+      border: 1px dashed var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--secondary-color);
+      border-radius: var(--border-radius);
       margin: 1rem 0;
     }
 
-    .logout-btn {
-      background: white;
-      color: #007bff;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      cursor: pointer;
+    .chart-placeholder {
+      min-height: 250px;
+      /* Minimal tinggi untuk chart */
     }
 
-    .logout-btn:hover {
-      background: #e9ecef;
+    .chart-placeholder .fa-solid {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Detail Akordion */
+    .accordion details {
+      margin-bottom: 0.5rem;
     }
 
     .accordion summary {
       cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      padding: 0.5rem;
-      background: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 4px;
+      font-weight: 600;
+      padding: 0.75rem;
+      background: var(--light-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      list-style: none;
+      /* Hapus panah default */
+      position: relative;
+      transition: background-color 0.3s;
     }
 
-    .accordion[open] summary {
-      background: #e9ecef;
+    .accordion summary::-webkit-details-marker {
+      display: none;
     }
 
-    .accordion p {
-      margin: 0.5rem 0;
+    /* Hapus panah default di Chrome/Safari */
+    .accordion summary::after {
+      /* Panah kustom */
+      content: '\f078';
+      /* Font Awesome Angle Down */
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s;
     }
 
-    .custom-checkbox {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .custom-checkbox input[type="checkbox"] {
-      accent-color: #007bff;
-    }
-
-    .progress-bar {
-      background-color: #007bff;
-      height: 1rem;
-      border-radius: 4px;
-      width: 0%;
-    }
-
-    .progress-container {
-      background-color: #e9ecef;
-      border-radius: 4px;
-      height: 1rem;
-      margin: 0.5rem 0;
-    }
-
-    .calendar {
-      background-color: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem 0;
-    }
-
-    .calendar table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: center;
-    }
-
-    .calendar th,
-    .calendar td {
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-    }
-
-    .calendar th {
-      background-color: #f8f9fa;
-    }
-
-    .calendar td.unavailable {
-      background-color: #f8d7da;
-    }
-
-    .calendar td.available {
-      background-color: #d4edda;
-    }
-
-    .review {
-      margin: 1rem 0;
-      padding: 1rem;
-      background: #f8f9fa;
-      border-radius: 4px;
-    }
-
-    .report-button {
-      margin-top: 1rem;
-    }
-
-    .loyalty-badge {
-      background: #28a745;
+    .accordion details[open] summary {
+      background: var(--primary-color);
       color: white;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.9rem;
     }
 
-    .alert {
+    .accordion details[open] summary::after {
+      transform: translateY(-50%) rotate(180deg);
+      /* Panah ke atas */
+      color: white;
+    }
+
+    .accordion details p {
       padding: 1rem;
-      border-radius: 4px;
-      margin: 1rem 0;
+      border: 1px solid var(--border-color);
+      border-top: none;
+      border-bottom-left-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
     }
 
-    .alert.alert-success {
-      background-color: #d4edda;
-      color: #155724;
+
+    /* Notifikasi Toast */
+    .toast-notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      color: white;
+      font-weight: 500;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+      box-shadow: var(--box-shadow-lg);
     }
 
-    .alert.alert-danger {
-      background-color: #f8d7da;
-      color: #721c24;
+    .toast-notification.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
-    .alert.alert-warning {
-      background-color: #fff3cd;
-      color: #856404;
+    .toast-notification.success {
+      background-color: var(--success-color);
     }
 
-    .alert.alert-info {
-      background-color: #cce5ff;
-      color: #004085;
+    .toast-notification.error {
+      background-color: var(--danger-color);
     }
 
-    .file-preview {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 1rem;
-      margin: 1rem 0;
+    .toast-notification.info {
+      background-color: var(--info-color);
     }
 
-    .file-item {
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      text-align: center;
-      padding: 0.5rem;
-      background: #fff;
-    }
-
-    .file-item img {
+    /* Modal Konfirmasi */
+    .confirmation-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 4px;
-      margin-bottom: 0.5rem;
-    }
-
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #007bff;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .chartjs-tooltip {
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 0.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .chartjs-tooltip-title {
-      font-weight: bold;
-    }
-
-    .chartjs-tooltip-body {
-      margin-top: 0.25rem;
-    }
-
-    .box-shadow-sm {
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .box-shadow-md {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .box-shadow-lg {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .summary-card {
-      background-color: #fff;
-      border-left: 5px solid #007bff;
-      padding: 1rem;
-      border-radius: 4px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .summary-card:hover {
-      transform: scale(1.02);
-    }
-
-    .summary-card h4 {
-      margin-bottom: 0.5rem;
-    }
-
-    .summary-card p {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .tab {
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      background: #f8f9fa;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background: #007bff;
-      color: #fff;
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
-      background: #007bff;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 50%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 3000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
     }
 
-    .dark-toggle {
-      display: inline-block;
-      cursor: pointer;
-      font-size: 0.9rem;
-      margin-left: 1rem;
+    .confirmation-overlay.show {
+      opacity: 1;
+      visibility: visible;
     }
 
+    .confirmation-dialog {
+      background-color: var(--card-background-color);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow-lg);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .confirmation-overlay.show .confirmation-dialog {
+      transform: scale(1);
+    }
+
+    .confirmation-dialog h3 {
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .confirmation-dialog p {
+      margin-bottom: 1.5rem;
+    }
+
+    .confirmation-dialog .btn-group {
+      display: flex;
+      justify-content: space-around;
+      gap: 1rem;
+    }
+
+    /* Gaya Footer */
+    .app-footer {
+      background: var(--dark-color);
+      color: var(--light-color);
+      text-align: center;
+      padding: 1.5rem 0;
+      margin-top: auto;
+      /* Mendorong footer ke bawah jika konten sedikit */
+    }
+
+    /* Tema Gelap (Dark Mode) */
     body.dark-mode {
-      background-color: #121212;
-      color: #e9ecef;
+      --text-color: #e0e0e0;
+      --background-color: #121212;
+      --card-background-color: #1e1e1e;
+      --border-color: #444;
+      --light-color: #2a2a2a;
+      /* Untuk header kartu, dll. */
     }
 
-    body.dark-mode header,
-    body.dark-mode aside,
-    body.dark-mode .card,
-    body.dark-mode table,
-    body.dark-mode .chart-wrapper {
-      background-color: #1f1f1f !important;
-      color: #e9ecef;
+    body.dark-mode .app-header {
+      background: linear-gradient(90deg, #2c3e50, #34495e);
     }
 
-    body.dark-mode th,
-    body.dark-mode td,
-    body.dark-mode thead {
-      color: #e9ecef;
+    body.dark-mode .app-nav {
+      background-color: #1e1e1e;
     }
 
-    body.dark-mode input,
-    body.dark-mode select,
-    body.dark-mode textarea {
+    body.dark-mode .app-nav a {
+      color: #8ab4f8;
+      /* Warna link yang kontras di mode gelap */
+    }
+
+    body.dark-mode .app-nav a:hover,
+    body.dark-mode .app-nav a.active {
+      background-color: #8ab4f8;
+      color: #1e1e1e;
+    }
+
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group select,
+    body.dark-mode .form-group textarea {
       background-color: #2a2a2a;
-      color: #e9ecef;
-      border: 1px solid #444;
+      color: #e0e0e0;
+      border-color: #555;
     }
 
-    body.dark-mode input:focus,
-    body.dark-mode select:focus,
-    body.dark-mode textarea:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    body.dark-mode .form-group input:focus,
+    body.dark-mode .form-group select:focus,
+    body.dark-mode .form-group textarea:focus {
+      border-color: var(--primary-color);
+      /* Tetap gunakan primary color untuk focus */
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
 
-    body.dark-mode .notification {
-      background-color: #444;
-      color: #fff;
+    body.dark-mode .accordion summary {
+      background-color: #2a2a2a;
+      border-color: #444;
     }
 
-    body.dark-mode .notification .dismiss-notification {
-      background-color: #dc3545;
-      color: #fff;
+    body.dark-mode .accordion details[open] summary {
+      background: var(--primary-color);
+      color: white;
+      /* Teks putih tetap jelas di primary color */
     }
 
-    body.dark-mode footer {
-      background-color: #1f1f1f;
+    body.dark-mode .accordion details p {
+      border-color: #444;
     }
 
-    @media print {
-      body {
-        background: #fff;
-        color: #000;
+    body.dark-mode .app-footer {
+      background-color: #1e1e1e;
+      color: #aaa;
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+      html {
+        font-size: 15px;
       }
 
-      header,
-      aside {
-        display: none;
+      .app-header {
+        padding: 0 1rem;
+        flex-direction: column;
+        height: auto;
+        padding-bottom: 0.5rem;
+        padding-top: 0.5rem;
       }
 
-      main {
+      .app-header .logo {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .user-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .app-nav {
+        height: auto;
+        position: static;
+        /* Navigasi tidak sticky di mobile untuk hemat ruang */
+      }
+
+      .app-nav ul {
+        flex-direction: column;
+        /* Tumpuk link navigasi */
+        align-items: center;
+        padding: 0.5rem 0;
+        width: 100%;
+      }
+
+      .app-nav a {
+        width: 90%;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .grid-cols-2,
+      .grid-cols-3 {
+        grid-template-columns: 1fr;
+        /* Semua grid jadi 1 kolom */
+      }
+
+      .container {
+        width: 95%;
+      }
+
+      .app-main {
+        padding: 1rem 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      html {
+        font-size: 14px;
+      }
+
+      .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .card-body,
+      .card-header,
+      .card-footer {
         padding: 1rem;
       }
 
-      table {
-        page-break-inside: auto;
+      .user-actions {
+        flex-wrap: wrap;
+        /* Izinkan wrap jika perlu */
+        gap: 0.5rem;
+        justify-content: center;
       }
 
-      th,
-      td {
-        background: #fff !important;
-        color: #000;
+      .theme-toggle-btn,
+      .logout-btn {
+        flex-grow: 1;
+        /* Tombol bisa memenuhi ruang */
+        min-width: 120px;
       }
     }
   </style>
 </head>
-<body class="fade-in-page">
-  <!-- Toast Notification -->
-  <div id="toast-notification" class="toast" style="display: none;"></div>
 
-  <!-- Confirmation Dialog -->
-  <div id="confirmation-dialog" class="confirmation-overlay" style="display: none;">
-    <div class="confirmation-dialog">
-      <span class="modal-close" onclick="hideConfirmation()">×</span>
-      <h3>Konfirmasi Tindakan</h3>
-      <p>Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
-      <button class="btn btn-confirm" onclick="confirmAction()">Ya</button>
-      <button class="btn btn-cancel" onclick="hideConfirmation()">Batal</button>
-    </div>
-  </div>
-
-  <!-- Main App Container -->
-  <header>
-    <h1>Platform Penyewaan Apartemen</h1>
-    <div class="user-info">
-      <div class="user-avatar">AD</div>
-      <span>Admin: admin@example.com</span>
-      <button id="logout" class="logout-btn">Keluar</button>
+<body>
+  <!-- Header Aplikasi -->
+  <header class="app-header">
+    <div class="logo"><i class="fa-solid fa-building-columns"></i> ApartRent</div>
+    <div class="user-actions">
+      <div class="user-avatar" title="Admin">AD</div>
+      <span class="user-greeting" title="admin@examplerent.com">Halo, Admin!</span>
+      <button id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark Mode">
+        <i class="fa-solid fa-moon"></i> Mode Gelap
+      </button>
+      <button id="logout-btn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
     </div>
   </header>
 
-  <nav>
-    <ul class="breadcrumb">
-      <li><a data-section="dashboard" class="active">Beranda</a></li>
-      <li><a data-section="search">Pencarian</a></li>
-      <li><a data-section="profile">Profil</a></li>
-      <li><a data-section="support">Dukungan</a></li>
+  <!-- Navigasi SPA -->
+  <nav class="app-nav">
+    <ul>
+      <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><i class="fa-solid fa-chart-line"></i>
+          Beranda</a></li>
+      <li><a href="#search" class="nav-link" data-section="search"><i class="fa-solid fa-magnifying-glass"></i>
+          Pencarian</a></li>
+      <li><a href="#profile" class="nav-link" data-section="profile"><i class="fa-solid fa-user-gear"></i> Profil</a>
+      </li>
+      <li><a href="#support" class="nav-link" data-section="support"><i class="fa-solid fa-headset"></i> Dukungan</a>
+      </li>
     </ul>
   </nav>
 
-  <main>
-    <!-- Dashboard Section -->
-    <section id="dashboard" class="active fade-in">
-      <h2>Dashboard</h2>
-      <div class="summary-cards">
-        <div class="summary-card">
-          <h4>Total Apartemen</h4>
-          <p><span id="total-apartments">10</span></p>
+  <!-- Kontainer Utama untuk Halaman SPA -->
+  <main class="app-main">
+    <div class="container">
+      <!-- Bagian Beranda (Dashboard) -->
+      <section id="dashboard" class="page-section active">
+        <h2><i class="fa-solid fa-chart-pie"></i> Ringkasan Dasbor</h2>
+        <div class="grid-container grid-cols-autofit mt-1">
+          <div class="card">
+            <div class="card-body text-center">
+              <i class="fa-solid fa-building fa-2x text-primary mb-1"></i>
+              <h4>Total Apartemen</h4>
+              <p class="text-primary" style="font-size: 2rem; font-weight: bold;" id="total-apartments-stats">0</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body text-center">
+              <i class="fa-solid fa-users fa-2x text-primary mb-1"></i>
+              <h4>Total Penyewa Aktif</h4>
+              <p class="text-primary" style="font-size: 2rem; font-weight: bold;" id="total-tenants-stats">0</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body text-center">
+              <i class="fa-solid fa-money-bill-wave fa-2x text-primary mb-1"></i>
+              <h4>Pendapatan Bulan Ini</h4>
+              <p class="text-primary" style="font-size: 2rem; font-weight: bold;" id="monthly-revenue-stats">Rp 0</p>
+            </div>
+          </div>
         </div>
-        <div class="summary-card">
-          <h4>Total Penyewa</h4>
-          <p><span id="total-tenants">50</span></p>
+        <div class="card mt-1">
+          <div class="card-header">Grafik Tingkat Hunian (Simulasi)</div>
+          <div class="card-body">
+            <div class="chart-placeholder">
+              <div>
+                <i class="fa-solid fa-chart-bar"></i>
+                <p>Representasi grafik akan ditampilkan di sini.<br>(Implementasi grafik vanilla JS kompleks, ini adalah
+                  placeholder)</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="summary-card">
-          <h4>Pendapatan Bulan Ini</h4>
-          <p>Rp <span id="monthly-revenue">50,000,000</span></p>
-        </div>
-      </div>
-      <div class="chart-wrapper chart-responsive">
-        <h3>Tingkat Hunian</h3>
-        <canvas id="occupancy-chart"></canvas>
-      </div>
-    </section>
+      </section>
 
-    <!-- Search Section -->
-    <section id="search" class="fade-in">
-      <h2>Pencarian Apartemen</h2>
-      <div class="search-section">
-        <form id="search-form" class="search-form">
-          <div class="form-group">
-            <label for="location">Lokasi</label>
-            <input type="text" id="location" placeholder="Masukkan lokasi..." aria-label="Lokasi apartemen">
+      <!-- Bagian Pencarian Apartemen -->
+      <section id="search" class="page-section">
+        <h2><i class="fa-solid fa-search-location"></i> Cari Apartemen Impian Anda</h2>
+        <div class="card mt-1">
+          <div class="card-body">
+            <form id="search-form" class="search-form grid-container grid-cols-2">
+              <div class="form-group">
+                <label for="search-location">Lokasi</label>
+                <input type="text" id="search-location" placeholder="cth: Jakarta Selatan, Bandung Kota"
+                  aria-label="Lokasi apartemen">
+              </div>
+              <div class="form-group">
+                <label for="search-price-range">Rentang Harga (per bulan)</label>
+                <select id="search-price-range" aria-label="Rentang harga">
+                  <option value="">Semua Harga</option>
+                  <option value="0-5000000">Rp 0 - 5.000.000</option>
+                  <option value="5000001-10000000">Rp 5.000.001 - 10.000.000</option>
+                  <option value="10000001-Infinity">> Rp 10.000.000</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="search-type">Tipe Apartemen</label>
+                <select id="search-type" aria-label="Tipe apartemen">
+                  <option value="">Semua Tipe</option>
+                  <option value="Studio">Studio</option>
+                  <option value="1BR">1 Kamar Tidur (1BR)</option>
+                  <option value="2BR">2 Kamar Tidur (2BR)</option>
+                  <option value="3BR+">3+ Kamar Tidur</option>
+                  <option value="Penthouse">Penthouse</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="search-amenities">Fasilitas (pilih satu atau lebih)</label>
+                <select id="search-amenities" multiple
+                  aria-label="Fasilitas apartemen (gunakan Ctrl/Cmd untuk memilih banyak)">
+                  <option value="WiFi">WiFi Cepat</option>
+                  <option value="AC">AC Dingin</option>
+                  <option value="Kolam Renang">Kolam Renang</option>
+                  <option value="Gym">Gym Lengkap</option>
+                  <option value="Parkir">Parkir Aman</option>
+                  <option value="Dapur Lengkap">Dapur Lengkap</option>
+                </select>
+                <small>Gunakan Ctrl/Cmd + Klik untuk memilih banyak fasilitas.</small>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;"> <!-- Tombol mengisi lebar penuh di grid -->
+                <button type="submit" class="btn btn-primary btn-full-width"><i class="fa-solid fa-paper-plane"></i>
+                  Terapkan Filter & Cari</button>
+              </div>
+            </form>
           </div>
-          <div class="form-group">
-            <label for="check-in">Check-In</label>
-            <input type="date" id="check-in" aria-label="Tanggal check-in">
-          </div>
-          <div class="form-group">
-            <label for="check-out">Check-Out</label>
-            <input type="date" id="check-out" aria-label="Tanggal check-out">
-          </div>
-          <div class="form-group">
-            <label for="price-range">Rentang Harga</label>
-            <select id="price-range" aria-label="Rentang harga">
-              <option value="">Semua Harga</option>
-              <option value="low">Rp 0 - 5.000.000</option>
-              <option value="mid">Rp 5.000.000 - 10.000.000</option>
-              <option value="high">> Rp 10.000.000</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="amenities">Fasilitas</label>
-            <select id="amenities" multiple aria-label="Fasilitas apartemen">
-              <option value="wifi">WiFi</option>
-              <option value="ac">AC</option>
-              <option value="pool">Kolam Renang</option>
-              <option value="gym">Gym</option>
-              <option value="parking">Parkir</option>
-              <option value="laundry">Laundry</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="type">Tipe Apartemen</label>
-            <select id="type" aria-label="Tipe apartemen">
-              <option value="">Semua Tipe</option>
-              <option value="studio">Studio</option>
-              <option value="1-bedroom">1 Kamar Tidur</option>
-              <option value="2-bedroom">2 Kamar Tidur</option>
-              <option value="penthouse">Penthouse</option>
-            </select>
-          </div>
-          <button type="submit">Cari</button>
-        </form>
-        <div id="map"></div>
-      </div>
-      <div class="apartments-grid" id="search-results"></div>
-    </section>
-
-    <!-- Profile Section -->
-    <section id="profile" class="fade-in">
-      <h2>Profil Pengguna</h2>
-      <div class="card">
-        <h3>Informasi Akun</h3>
-        <p>Nama: User Example<br>Email: user@example.com</p>
-        <button>Edit Profil</button>
-      </div>
-      <div class="card">
-        <h3>Riwayat Pemesanan</h3>
-        <p>Pemesanan #001 - Status: Selesai</p>
-        <p>Pemesanan #002 - Status: Aktif</p>
-      </div>
-      <div class="card">
-        <h3>Ulasan Saya</h3>
-        <div class="review">
-          <p><strong>Budi</strong> (4.5/5): Sangat nyaman!</p>
         </div>
-      </div>
-    </section>
+        <div class="map-placeholder">
+          <div>
+            <i class="fa-solid fa-map-marked-alt"></i>
+            <p>Peta Interaktif akan muncul di sini.<br>(Implementasi peta vanilla JS sangat kompleks, ini adalah
+              placeholder)</p>
+          </div>
+        </div>
+        <h3 class="mt-1">Hasil Pencarian:</h3>
+        <div id="search-results-grid" class="grid-container grid-cols-autofit mt-1">
+          <!-- Kartu apartemen akan dirender di sini oleh JavaScript -->
+          <p id="no-results-message" class="hidden">Tidak ada apartemen yang cocok dengan kriteria pencarian Anda.</p>
+        </div>
+      </section>
 
-    <!-- Support Section -->
-    <section id="support" class="fade-in">
-      <h2>Dukungan Pelanggan</h2>
-      <div class="card">
-        <h3>FAQ</h3>
-        <details class="accordion">
-          <summary>Apa saja fasilitas yang tersedia?</summary>
-          <p>Fasilitas seperti WiFi, AC, Kolam Renang, Gym, Parkir, Laundry tersedia di berbagai unit.</p>
-        </details>
-        <details class="accordion">
-          <summary>Bagaimana cara memesan apartemen?</summary>
-          <p>Pilih apartemen yang diinginkan, lalu klik tombol "Pesan Sekarang". Ikuti langkah-langkah pembayaran untuk menyelesaikan pemesanan.</p>
-        </details>
-      </div>
-      <div class="card">
-        <h3>Hubungi Kami</h3>
-        <form id="contact-form">
-          <div class="floating-label">
-            <input type="text" id="contact-name" required placeholder=" ">
-            <label for="contact-name">Nama</label>
+      <!-- Bagian Profil Pengguna -->
+      <section id="profile" class="page-section">
+        <h2><i class="fa-solid fa-id-card"></i> Profil Pengguna</h2>
+        <div class="card mt-1">
+          <div class="card-header">Informasi Akun</div>
+          <div class="card-body">
+            <p><strong>Nama:</strong> Admin Ganteng</p>
+            <p><strong>Email:</strong> admin@examplerent.com</p>
+            <p><strong>Status:</strong> <span
+                style="color: var(--success-color); font-weight: bold;">Terverifikasi</span></p>
+            <button class="btn btn-secondary mt-1"><i class="fa-solid fa-user-pen"></i> Edit Profil (Simulasi)</button>
           </div>
-          <div class="floating-label">
-            <input type="email" id="contact-email" required placeholder=" ">
-            <label for="contact-email">Email</label>
+        </div>
+        <div class="card mt-1">
+          <div class="card-header">Riwayat Pemesanan (Contoh)</div>
+          <div class="card-body">
+            <ul>
+              <li>Apartemen Senayan Indah - Status: <strong style="color: var(--success-color);">Selesai</strong> (1 Jan
+                2024 - 31 Des 2024)</li>
+              <li>Studio Minimalis Kemang - Status: <strong style="color: var(--info-color);">Aktif</strong> (1 Mei 2025
+                - 30 Apr 2026)</li>
+            </ul>
           </div>
-          <div class="floating-label">
-            <textarea id="contact-message" rows="4" required placeholder=" "></textarea>
-            <label for="contact-message">Pesan</label>
+        </div>
+      </section>
+
+      <!-- Bagian Dukungan Pelanggan -->
+      <section id="support" class="page-section">
+        <h2><i class="fa-solid fa-life-ring"></i> Bantuan & Dukungan</h2>
+        <div class="card mt-1">
+          <div class="card-header">Pertanyaan Umum (FAQ)</div>
+          <div class="card-body accordion">
+            <details>
+              <summary>Bagaimana cara menyewa apartemen?</summary>
+              <p>Anda dapat mencari apartemen melalui halaman 'Pencarian', pilih unit yang Anda suka, lalu klik tombol
+                'Sewa Sekarang' untuk melanjutkan ke proses pemesanan (simulasi).</p>
+            </details>
+            <details>
+              <summary>Metode pembayaran apa saja yang diterima?</summary>
+              <p>Saat ini kami mendukung simulasi pembayaran. Dalam aplikasi nyata, kami akan menerima transfer bank,
+                kartu kredit, dan e-wallet.</p>
+            </details>
+            <details>
+              <summary>Apakah ada biaya tambahan?</summary>
+              <p>Semua biaya akan tertera jelas sebelum Anda melakukan konfirmasi pemesanan. Biasanya mencakup sewa
+                bulanan dan deposit keamanan.</p>
+            </details>
           </div>
-          <button type="submit" class="btn btn-primary">Kirim</button>
-        </form>
-      </div>
-    </section>
+        </div>
+        <div class="card mt-1">
+          <div class="card-header">Hubungi Kami</div>
+          <div class="card-body">
+            <form id="contact-support-form">
+              <div class="form-group">
+                <label for="contact-name">Nama Anda</label>
+                <input type="text" id="contact-name" required placeholder="Masukkan nama lengkap Anda">
+              </div>
+              <div class="form-group">
+                <label for="contact-email">Email Anda</label>
+                <input type="email" id="contact-email" required placeholder="cth: nama@email.com">
+              </div>
+              <div class="form-group">
+                <label for="contact-subject">Subjek Pesan</label>
+                <input type="text" id="contact-subject" required placeholder="cth: Pertanyaan tentang fasilitas">
+              </div>
+              <div class="form-group">
+                <label for="contact-message">Pesan Anda</label>
+                <textarea id="contact-message" rows="5" required
+                  placeholder="Tuliskan pertanyaan atau masalah Anda di sini..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-envelope"></i> Kirim Pesan</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Platform Penyewaan Apartemen. Hak Cipta Dilindungi.</p>
+  <!-- Footer Aplikasi -->
+  <footer class="app-footer">
+    <p>© <span id="current-year"></span> ApartRent Platform. Hak Cipta Dilindungi Undang-Undang.</p>
+    <p>Dibuat dengan <i class="fa-solid fa-heart" style="color: red;"></i> menggunakan HTML, CSS, dan JavaScript Murni.
+    </p>
   </footer>
 
-  <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js "
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-    crossorigin="anonymous"
-    onerror="document.body.innerHTML='<p class=&quot;error-message&quot;>Gagal memuat jQuery. Silakan periksa koneksi internet.</p>'"></script>
-  <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js "
-    integrity="sha256-+0W1XhmB3o8zwTsXhp5rQGRuhbwcJpcBNVHa5eC2qCU="
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js @4.4.4/dist/chart.umd.min.js"></script>
-  <script src="https://js.stripe.com/v3/ "></script>
-  <script src="https://unpkg.com/leaflet @1.9.4/dist/leaflet.js"
-    onerror="console.error('Leaflet gagal dimuat.')"></script>
+  <!-- Notifikasi Toast (akan dikontrol JS) -->
+  <div id="toast-notification" class="toast-notification">Pesan toast di sini</div>
 
-  <!-- Script Logic -->
+  <!-- Modal Konfirmasi (akan dikontrol JS) -->
+  <div id="confirmation-modal" class="confirmation-overlay">
+    <div class="confirmation-dialog">
+      <h3 id="confirmation-title">Konfirmasi Tindakan</h3>
+      <p id="confirmation-message">Apakah Anda yakin ingin melanjutkan?</p>
+      <div class="btn-group">
+        <button id="confirm-action-btn" class="btn btn-primary">Ya, Lanjutkan</button>
+        <button id="cancel-action-btn" class="btn btn-secondary">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skrip Aplikasi (Vanilla JavaScript) -->
   <script>
-    // Global error handling
-    window.onerror = function(msg, url, lineNo, columnNo, error) {
-      console.error('Script Error:', msg, 'di baris', lineNo, 'kolom', columnNo, error);
-      document.body.insertAdjacentHTML('beforeend', '<p class="error-message">Terjadi kesalahan aplikasi. Silakan refresh halaman.</p>');
-      return false;
+    // Strict mode untuk penulisan kode yang lebih aman
+    'use strict';
+
+    // State Aplikasi Global (Contoh Sederhana)
+    const appState = {
+      currentUser: {
+        name: 'Admin Ganteng',
+        email: 'admin@examplerent.com',
+        avatarInitials: 'AG', // Diganti jadi AD di HTML, sesuaikan jika perlu
+        isLoggedIn: true, // Asumsi sudah login
+      },
+      currentPage: 'dashboard',
+      theme: localStorage.getItem('appTheme') || 'light', // 'light' atau 'dark'
+      apartments: [ // Data dummy apartemen
+        { id: 1, name: 'Apartemen Mewah Sudirman', location: 'Jakarta Pusat', price: 12000000, type: '2BR', amenities: ['WiFi', 'AC', 'Kolam Renang', 'Gym'], image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', description: 'Apartemen mewah di jantung kota dengan fasilitas lengkap dan pemandangan spektakuler.' },
+        { id: 2, name: 'Studio Nyaman Dago Pakar', location: 'Bandung Kota', price: 4500000, type: 'Studio', amenities: ['WiFi', 'AC', 'Dapur Lengkap'], image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', description: 'Studio modern dan nyaman dengan udara sejuk Bandung, cocok untuk profesional muda.' },
+        { id: 3, name: 'Apartemen Keluarga BSD City', location: 'Tangerang Selatan', price: 8000000, type: '3BR+', amenities: ['WiFi', 'AC', 'Kolam Renang', 'Parkir', 'Dapur Lengkap'], image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGFwYXJ0bWVudCUyMGludGVyaW9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60', description: 'Unit luas untuk keluarga dengan lingkungan yang aman dan fasilitas ramah anak.' },
+        { id: 4, name: 'Penthouse Eksklusif Kuningan', location: 'Jakarta Selatan', price: 25000000, type: 'Penthouse', amenities: ['WiFi', 'AC', 'Kolam Renang', 'Gym', 'Parkir', 'Dapur Lengkap'], image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', description: 'Kemewahan tertinggi dengan pemandangan 360 derajat kota Jakarta.' },
+      ],
+      notifications: [], // Untuk potensi notifikasi
+      // Callback untuk konfirmasi modal
+      confirmActionCallback: null,
     };
 
-    if (typeof jQuery === 'undefined') {
-      console.error('jQuery gagal dimuat.');
-      document.body.innerHTML = '<p class="error-message">Error: Tidak dapat memuat pustaka yang diperlukan. Silakan periksa koneksi internet Anda.</p>';
-      throw new Error('jQuery tidak tersedia');
+    // Fungsi Utilitas DOM
+    const qs = (selector, parent = document) => parent.querySelector(selector);
+    const qsa = (selector, parent = document) => parent.querySelectorAll(selector);
+
+    // Fungsi untuk menampilkan Toast Notification
+    function showToast(message, type = 'info', duration = 3000) {
+      const toastElement = qs('#toast-notification');
+      if (!toastElement) return;
+
+      toastElement.textContent = message;
+      toastElement.className = 'toast-notification'; // Reset classes
+      toastElement.classList.add(type, 'show');
+
+      setTimeout(() => {
+        toastElement.classList.remove('show');
+      }, duration);
     }
 
-    $(document).ready(function () {
-      try {
-        // Navigasi antar bagian
-        $('[data-section]').on('click', function (e) {
-          e.preventDefault();
-          const target = $(this).attr('data-section');
-          $('section').removeClass('active fade-in');
-          $('#' + target).addClass('active fade-in');
-          $('[data-section]').removeClass('active');
-          $(this).addClass('active');
-        });
+    // Fungsi untuk Modal Konfirmasi
+    function showConfirmationModal(title, message, callback) {
+      const modal = qs('#confirmation-modal');
+      const modalTitle = qs('#confirmation-title');
+      const modalMessage = qs('#confirmation-message');
 
-        // Data Dummy
-        const apartments = [
-          {
-            id: 1,
-            name: 'Apartemen Mewah',
-            location: 'Jakarta Pusat',
-            price: 8000000,
-            amenities: ['WiFi', 'AC', 'Kolam Renang'],
-            type: '2-bedroom',
-            image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2 ',
-            description: 'Lokasi strategis dengan pemandangan kota yang menakjubkan.',
-            owner: { name: 'John Doe', verified: true },
-            availability: ['2025-05-20', '2025-05-21']
-          },
-          {
-            id: 2,
-            name: 'Apartemen Minimalis',
-            location: 'Jakarta Selatan',
-            price: 5000000,
-            amenities: ['Parkir', 'Gym', 'Laundry'],
-            type: 'studio',
-            image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267 ',
-            description: 'Desain modern dengan suasana tenang dan nyaman.',
-            owner: { name: 'Jane Doe', verified: true },
-            availability: ['2025-05-22', '2025-05-23']
-          }
-        ];
+      if (!modal || !modalTitle || !modalMessage) return;
 
-        const notifications = [
-          { id: 1, message: 'Pembayaran tertunda dari Budi', date: '2025-05-15' },
-          { id: 2, message: 'Permintaan pemesanan baru', date: '2025-05-14' }
-        ];
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      appState.confirmActionCallback = callback;
+      modal.classList.add('show');
+    }
 
-        // Render Notifikasi
-        function renderNotifications() {
-          $('#notification-list').empty();
-          notifications.forEach(n => {
-            $('#notification-list').append(`
-              <div class="notification">
-                <span>${n.message} - ${n.date}</span>
-                <button class="dismiss-notification" data-id="${n.id}" onclick="removeNotification(${n.id})">Hapus</button>
-              </div>
-            `);
-          });
+    function hideConfirmationModal() {
+      const modal = qs('#confirmation-modal');
+      if (modal) modal.classList.remove('show');
+      appState.confirmActionCallback = null;
+    }
+
+    // Inisialisasi Aplikasi
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Aplikasi Penyewaan Apartemen Dimuat (Vanilla JS)');
+
+      // Update tahun di footer
+      qs('#current-year').textContent = new Date().getFullYear();
+
+      // Setup Navigasi SPA
+      setupNavigation();
+
+      // Setup Tema (Gelap/Terang)
+      setupTheme();
+
+      // Setup Tombol Logout
+      setupLogout();
+
+      // Setup form pencarian
+      setupSearchForm();
+
+      // Setup form kontak dukungan
+      setupContactForm();
+
+      // Setup tombol modal konfirmasi
+      qs('#confirm-action-btn').addEventListener('click', () => {
+        if (typeof appState.confirmActionCallback === 'function') {
+          appState.confirmActionCallback();
         }
+        hideConfirmationModal();
+      });
+      qs('#cancel-action-btn').addEventListener('click', hideConfirmationModal);
 
-        window.removeNotification = function(id) {
-          const index = notifications.findIndex(n => n.id === id);
-          if (index !== -1) {
-            notifications.splice(index, 1);
-            renderNotifications();
-            showToast("Notifikasi berhasil dihapus.", "success");
-          }
-        };
-
-        // Tampilkan Toast
-        function showToast(message, type = "info") {
-          const toast = $('#toast-notification');
-          toast.removeClass('hidden success warning danger info');
-          toast.addClass(`toast-${type}`);
-          toast.text(message);
-          toast.addClass('show');
-          setTimeout(() => toast.removeClass('show'), 3000);
-        }
-
-        // Inisialisasi Leaflet Map
-        if (typeof L !== 'undefined') {
-          const map = L.map('map').setView([-6.2088, 106.8456], 13);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
-          L.marker([-6.2088, 106.8456]).addTo(map).bindPopup('Lokasi Apartemen').openPopup();
-        } else {
-          $('#map').remove();
-        }
-
-        // Event Handler Form
-        $('#search-form').on('submit', function (e) {
-          e.preventDefault();
-          const location = $('#location').val().toLowerCase();
-          const checkIn = $('#check-in').val();
-          const checkOut = $('#check-out').val();
-          const priceRange = $('#price-range').val();
-          const amenities = $('#amenities').val() || [];
-          const type = $('#type').val();
-
-          const filtered = apartments.filter(item => {
-            const matchesLocation = !location || item.location.toLowerCase().includes(location);
-            const matchesPrice = !priceRange ||
-              (priceRange === 'low' && item.price <= 5000000) ||
-              (priceRange === 'mid' && item.price > 5000000 && item.price <= 10000000) ||
-              (priceRange === 'high' && item.price > 10000000);
-            const matchesAmenities = amenities.length === 0 || amenities.every(a => item.amenities.includes(a));
-            const matchesType = !type || item.type === type;
-
-            return matchesLocation && matchesPrice && matchesAmenities && matchesType;
-          });
-
-          renderApartments(filtered);
-        });
-
-        // Render Apartment Cards
-        function renderApartments(data) {
-          const grid = $('#search-results').empty();
-          data.forEach(apartment => {
-            grid.append(`
-              <div class="card">
-                <figure>
-                  <img src="${apartment.image}" alt="${apartment.name}">
-                  <figcaption>${apartment.name}</figcaption>
-                </figure>
-                <blockquote>${apartment.description}</blockquote>
-                <details>
-                  <summary>Detail Apartemen</summary>
-                  <p>Harga: Rp ${apartment.price.toLocaleString()}/bulan<br/>
-                     Fasilitas: ${apartment.amenities.join(', ')}<br/>
-                     Tipe: ${apartment.type}<br/>
-                     Pemilik: ${apartment.owner.name} ${apartment.owner.verified ? '(Terverifikasi)' : ''}
-                  </p>
-                </details>
-                <div class="property-actions">
-                  <button class="btn btn-primary" data-id="${apartment.id}">Pesan Sekarang</button>
-                  <button class="btn btn-secondary" data-id="${apartment.id}">Tur Virtual</button>
-                </div>
-              </div>
-            `);
-          });
-        }
-
-        // Stripe Integration
-        if (typeof Stripe !== 'undefined') {
-          const stripe = Stripe('pk_test_51YOUR_STRIPE_PUBLISHABLE_KEY');
-          const elements = stripe.elements();
-          const card = elements.create('card');
-          card.mount('#card-element');
-
-          $(document).on('click', '.btn-primary', function () {
-            const id = $(this).data('id');
-            alert(`Memulai proses pemesanan untuk apartemen #${id}`);
-          });
-
-          $(document).on('click', '.btn-secondary', function () {
-            const id = $(this).data('id');
-            alert(`Memulai tur virtual 360° untuk apartemen #${id}`);
-          });
-        } else {
-          $('#card-element').html('<p class="error-message">Pembayaran tidak tersedia saat ini.</p>');
-        }
-
-        // Logout
-        $('#logout').on('click', function () {
-          alert('Anda telah keluar.');
-        });
-
-        // Initial Load
-        renderApartments(apartments);
-        renderNotifications();
-
-        // Grafik Awal
-        if (typeof Chart !== 'undefined') {
-          new Chart($('#occupancy-chart'), {
-            type: 'line',
-            data: {
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
-              datasets: [{
-                label: 'Tingkat Hunian (%)',
-                data: [60, 65, 70, 68, 72],
-                backgroundColor: '#007bff'
-              }]
-            }
-          });
-        } else {
-          $('.chart-wrapper').append('<p class="error-message">Chart.js tidak tersedia.</p>');
-        }
-
-        // Submit Contact Form
-        $('#contact-form').on('submit', function (e) {
-          e.preventDefault();
-          const name = $('#contact-name').val();
-          const email = $('#contact-email').val();
-          const message = $('#contact-message').val();
-          if (name && email && message) {
-            alert('Pesan terkirim!');
-            $('#contact-form')[0].reset();
-          } else {
-            alert('Harap lengkapi semua field.');
-          }
-        });
-
-        // Show Toast
-        window.showToast = function(message, type = "info") {
-          const toast = $('#toast-notification');
-          toast.removeClass('hidden success warning danger info');
-          toast.addClass(`toast-${type}`);
-          toast.text(message);
-          toast.addClass('show');
-          setTimeout(() => toast.removeClass('show'), 3000);
-        };
-      } catch (err) {
-        console.error('Kesalahan inisialisasi:', err);
-        document.body.insertAdjacentHTML('beforeend', '<p class="error-message">Terjadi kesalahan saat memuat platform. Silakan coba lagi.</p>');
-      }
+      // Render konten awal (berdasarkan hash atau default ke dashboard)
+      handleRouteChange();
+      renderApartments(appState.apartments); // Render semua apartemen pada awalnya
+      updateDashboardStats();
     });
+
+    // Fungsi Navigasi SPA
+    function setupNavigation() {
+      const navLinks = qsa('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+          // event.preventDefault(); // Tidak perlu jika menggunakan hash
+          const sectionId = link.getAttribute('href').substring(1); // Ambil ID dari href="#sectionId"
+          navigateTo(sectionId);
+        });
+      });
+
+      // Listener untuk perubahan hash (navigasi back/forward browser)
+      window.addEventListener('hashchange', handleRouteChange);
+    }
+
+    function handleRouteChange() {
+      const hash = window.location.hash;
+      const sectionId = hash ? hash.substring(1) : 'dashboard'; // Default ke dashboard jika tidak ada hash
+      navigateTo(sectionId);
+    }
+
+    function navigateTo(sectionId) {
+      appState.currentPage = sectionId;
+      qsa('.page-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      const targetSection = qs(`#${sectionId}`);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      } else {
+        // Jika section tidak ditemukan, arahkan ke dashboard
+        qs('#dashboard').classList.add('active');
+        window.location.hash = 'dashboard';
+      }
+
+      qsa('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${sectionId}`) {
+          link.classList.add('active');
+        }
+      });
+      // Scroll ke atas halaman saat navigasi
+      window.scrollTo(0, 0);
+    }
+
+    // Fungsi Tema Gelap/Terang
+    function setupTheme() {
+      const themeToggleBtn = qs('#theme-toggle-btn');
+      if (appState.theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Mode Terang';
+      } else {
+        themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Mode Gelap';
+      }
+
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+          appState.theme = 'dark';
+          themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Mode Terang';
+          showToast('Mode Gelap diaktifkan.', 'info');
+        } else {
+          appState.theme = 'light';
+          themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Mode Gelap';
+          showToast('Mode Terang diaktifkan.', 'info');
+        }
+        localStorage.setItem('appTheme', appState.theme);
+      });
+    }
+
+    // Fungsi Logout
+    function setupLogout() {
+      qs('#logout-btn').addEventListener('click', () => {
+        showConfirmationModal('Konfirmasi Keluar', 'Anda yakin ingin keluar dari aplikasi?', () => {
+          appState.currentUser.isLoggedIn = false;
+          // Simulasi: kembali ke halaman login atau tampilkan pesan
+          showToast('Anda telah berhasil keluar.', 'success');
+          // Di aplikasi nyata, ini akan redirect ke halaman login
+          // Untuk SPA ini, kita bisa kembali ke dashboard atau menonaktifkan beberapa fitur
+          console.log('Pengguna telah keluar.');
+          // Update UI jika diperlukan, misal:
+          // qs('.user-greeting').textContent = 'Halo, Tamu!';
+          // qs('.user-avatar').textContent = 'GU';
+        });
+      });
+    }
+
+    // Fungsi untuk merender kartu apartemen
+    function renderApartments(apartmentsToRender) {
+      const resultsGrid = qs('#search-results-grid');
+      const noResultsMsg = qs('#no-results-message');
+      resultsGrid.innerHTML = ''; // Kosongkan hasil sebelumnya
+
+      if (apartmentsToRender.length === 0) {
+        noResultsMsg.classList.remove('hidden');
+        return;
+      }
+      noResultsMsg.classList.add('hidden');
+
+      apartmentsToRender.forEach(apt => {
+        const card = document.createElement('div');
+        card.className = 'card apartment-card';
+        // Ambil hanya nama fasilitas, bukan objek
+        const amenitiesList = apt.amenities.map(am => `<span class="amenity-tag"><i class="fa-solid fa-check"></i> ${am}</span>`).join(' ');
+
+        card.innerHTML = `
+          <img src="${apt.image}" alt="${apt.name}" loading="lazy">
+          <div class="card-body">
+            <h4>${apt.name}</h4>
+            <p class="location"><i class="fa-solid fa-map-marker-alt"></i> ${apt.location}</p>
+            <p class="price">Rp ${apt.price.toLocaleString('id-ID')}/bulan</p>
+            <p class="type"><i class="fa-solid fa-bed"></i> Tipe: ${apt.type}</p>
+            <div class="amenities"><strong>Fasilitas:</strong> ${amenitiesList || 'Tidak ada informasi'}</div>
+            <p>${apt.description || 'Deskripsi tidak tersedia.'}</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary btn-rent" data-id="${apt.id}"><i class="fa-solid fa-calendar-check"></i> Sewa Sekarang (Simulasi)</button>
+          </div>
+        `;
+        resultsGrid.appendChild(card);
+      });
+
+      // Tambahkan event listener untuk tombol "Sewa Sekarang"
+      qsa('.btn-rent').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const apartmentId = e.target.dataset.id;
+          const selectedApt = appState.apartments.find(a => a.id == apartmentId);
+          showConfirmationModal(
+            'Konfirmasi Penyewaan',
+            `Anda akan menyewa "${selectedApt.name}". Lanjutkan? (Ini hanya simulasi)`,
+            () => {
+              showToast(`Proses sewa untuk "${selectedApt.name}" dimulai! (Simulasi)`, 'success');
+              // Logika sewa lanjutan (misal, redirect ke halaman pembayaran) akan ada di sini
+            }
+          );
+        });
+      });
+    }
+
+    // Fungsi untuk filter dan pencarian apartemen
+    function setupSearchForm() {
+      const form = qs('#search-form');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const locationQuery = qs('#search-location').value.toLowerCase();
+        const priceRange = qs('#search-price-range').value;
+        const typeQuery = qs('#search-type').value;
+        const amenitiesQuery = Array.from(qs('#search-amenities').selectedOptions).map(opt => opt.value);
+
+        const filteredApartments = appState.apartments.filter(apt => {
+          let matches = true;
+
+          // Filter lokasi
+          if (locationQuery && !apt.location.toLowerCase().includes(locationQuery)) {
+            matches = false;
+          }
+
+          // Filter rentang harga
+          if (priceRange) {
+            const [minPrice, maxPriceStr] = priceRange.split('-');
+            const maxPrice = maxPriceStr === 'Infinity' ? Infinity : parseInt(maxPriceStr);
+            if (apt.price < parseInt(minPrice) || apt.price > maxPrice) {
+              matches = false;
+            }
+          }
+
+          // Filter tipe
+          if (typeQuery && apt.type !== typeQuery) {
+            matches = false;
+          }
+
+          // Filter fasilitas
+          if (amenitiesQuery.length > 0) {
+            const aptAmenities = apt.amenities; // ini adalah array string
+            if (!amenitiesQuery.every(queryAmenity => aptAmenities.includes(queryAmenity))) {
+              matches = false;
+            }
+          }
+          return matches;
+        });
+        renderApartments(filteredApartments);
+        showToast(`${filteredApartments.length} apartemen ditemukan.`, 'info');
+      });
+    }
+
+    // Fungsi untuk form kontak dukungan
+    function setupContactForm() {
+      const form = qs('#contact-support-form');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = qs('#contact-name').value;
+        const email = qs('#contact-email').value;
+        const subject = qs('#contact-subject').value;
+        const message = qs('#contact-message').value;
+
+        // Validasi sederhana
+        if (!name || !email || !subject || !message) {
+          showToast('Harap isi semua kolom formulir.', 'error');
+          return;
+        }
+        if (!/\S+@\S+\.\S+/.test(email)) { // Regex email sederhana
+          showToast('Format email tidak valid.', 'error');
+          return;
+        }
+
+        showConfirmationModal(
+          'Konfirmasi Pengiriman Pesan',
+          'Kirim pesan ini ke tim dukungan kami?',
+          () => {
+            // Simulasi pengiriman
+            console.log('Pesan Dikirim:', { name, email, subject, message });
+            showToast('Pesan Anda telah berhasil dikirim! (Simulasi)', 'success');
+            form.reset(); // Kosongkan form setelah berhasil
+          }
+        );
+      });
+    }
+
+    // Fungsi untuk update statistik di dashboard
+    function updateDashboardStats() {
+      qs('#total-apartments-stats').textContent = appState.apartments.length;
+      // Simulasi data penyewa dan pendapatan
+      qs('#total-tenants-stats').textContent = Math.floor(Math.random() * 50) + 20; // Angka acak antara 20-70
+      const revenue = (Math.floor(Math.random() * 100) + 50) * 1000000; // Acak Rp 50jt - 150jt
+      qs('#monthly-revenue-stats').textContent = `Rp ${revenue.toLocaleString('id-ID')}`;
+    }
+
+    // Penanganan Kesalahan Global (Sederhana)
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error("Terjadi kesalahan:", { message, source, lineno, colno, error });
+      showToast(`Terjadi kesalahan sistem: ${message}. Coba muat ulang halaman.`, 'error', 5000);
+      // Di produksi, ini bisa dikirim ke server logging
+      return true; // Mencegah browser menampilkan dialog error default
+    };
+    window.onunhandledrejection = function (event) {
+      console.error("Promise ditolak tak tertangani:", event.reason);
+      showToast(`Operasi gagal: ${event.reason.message || event.reason}.`, 'error', 5000);
+    };
+
   </script>
 </body>
+
 </html>

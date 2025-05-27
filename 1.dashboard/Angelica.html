@@ -1,254 +1,403 @@
-    <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RentEase - Premium Apartment Rentals with Modern Amenities">
-    <title>RentEase - Find Your Perfect Stay</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tX/miZyoHS5obTRR9BMY=" crossorigin="">
-    <style>
+    <meta name="description"
+        content="RentEase - Sewa Apartemen Premium dengan Fasilitas Modern. Temukan hunian sempurna Anda.">
+    <title>RentEase - Temukan Hunian Sempurna Anda</title>
+    <!-- Icon Favicon (Contoh menggunakan Font Awesome sebagai favicon) -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
 
-        /* Reset and Base Styles */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Leaflet CSS untuk Peta -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tX/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <style>
+        /* Reset dan Gaya Dasar */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         :root {
             --primary-color: #4a6bff;
+            /* Biru cerah yang modern */
             --secondary-color: #ff6b6b;
+            /* Merah muda/coral sebagai aksen */
             --accent-color: #20c997;
+            /* Hijau mint untuk sorotan */
             --dark-color: #2c3e50;
+            /* Biru tua keabu-abuan untuk teks utama */
             --light-color: #f8f9fa;
+            /* Putih pudar untuk latar belakang utama */
             --gray-color: #6c757d;
+            /* Abu-abu netral untuk teks sekunder */
             --light-gray: #e9ecef;
+            /* Abu-abu sangat muda untuk border dan latar elemen */
+            --white-color: #ffffff;
             --success-color: #28a745;
             --warning-color: #ffc107;
             --danger-color: #dc3545;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --box-shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --box-shadow-dark: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition-fast: all 0.2s ease-in-out;
+            --transition-normal: all 0.3s ease-in-out;
+            --font-family-sans-serif: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            --font-size-base: 1rem;
+            /* 16px */
+            --line-height-base: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
+            font-family: var(--font-family-sans-serif);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
             color: var(--dark-color);
             background-color: var(--light-color);
             overflow-x: hidden;
+            /* Mencegah scroll horizontal yang tidak diinginkan */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        a { text-decoration: none; color: inherit; }
-        button, input, select, textarea { font-family: inherit; font-size: inherit; }
-        img { max-width: 100%; height: auto; }
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: var(--transition-fast);
+        }
 
-        /* Utility Classes */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .justify-between { justify-content: space-between; }
-        .items-center { align-items: center; }
-        .gap-1 { gap: 0.25rem; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-3 { gap: 1rem; }
-        .gap-4 { gap: 1.5rem; }
-        .gap-6 { gap: 2rem; }
-        .hidden { display: none; }
-        .text-center { text-align: center; }
-        .bg-primary { background-color: var(--primary-color); }
-        .bg-secondary { background-color: var(--secondary-color); }
-        .bg-accent { background-color: var(--accent-color); }
-        .bg-dark { background-color: var(--dark-color); }
-        .bg-light { background-color: var(--light-color); }
-        .bg-light-gray { background-color: var(--light-gray); }
-        .text-primary { color: var(--primary-color); }
-        .text-secondary { color: var(--secondary-color); }
-        .text-accent { color: var(--accent-color); }
-        .text-dark { color: var(--dark-color); }
-        .text-light { color: var(--light-color); }
-        .text-gray { color: var(--gray-color); }
-        .text-warning { color: var(--warning-color); }
-        .rounded { border-radius: var(--border-radius); }
-        .shadow { box-shadow: var(--box-shadow); }
-        .transition { transition: var(--transition); }
-        .w-full { width: 100%; }
+        a:hover {
+            color: #3a5ae8;
+            /* Warna primary lebih gelap saat hover */
+        }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-weight: 500;
-            transition: var(--transition);
-            display: inline-flex;
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        img,
+        picture,
+        video,
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        ul,
+        ol {
+            list-style: none;
+        }
+
+        /* Utilitas */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .justify-content-center {
+            justify-content: center;
+        }
+
+        .align-items-center {
             align-items: center;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .gap-1 {
             gap: 0.5rem;
         }
 
+        /* 8px */
+        .gap-2 {
+            gap: 1rem;
+        }
+
+        /* 16px */
+        .gap-3 {
+            gap: 1.5rem;
+        }
+
+        /* 24px */
+        .gap-4 {
+            gap: 2rem;
+        }
+
+        /* 32px */
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--primary-color);
+        }
+
+        .text-secondary {
+            color: var(--secondary-color);
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+        }
+
+        .text-light {
+            color: var(--white-color);
+        }
+
+        .text-gray {
+            color: var(--gray-color);
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+
+        .bg-light {
+            background-color: var(--light-color);
+        }
+
+        .bg-white {
+            background-color: var(--white-color);
+        }
+
+        .p-1 {
+            padding: 0.5rem;
+        }
+
+        .p-2 {
+            padding: 1rem;
+        }
+
+        .p-3 {
+            padding: 1.5rem;
+        }
+
+        .py-1 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .py-2 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .py-3 {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .px-1 {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .px-2 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .px-3 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .m-1 {
+            margin: 0.5rem;
+        }
+
+        .m-2 {
+            margin: 1rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .rounded-sm {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rounded-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        .rounded-lg {
+            border-radius: var(--border-radius-lg);
+        }
+
+        .rounded-circle {
+            border-radius: 50%;
+        }
+
+        .shadow-light {
+            box-shadow: var(--box-shadow-light);
+        }
+
+        .shadow-medium {
+            box-shadow: var(--box-shadow-medium);
+        }
+
+        .shadow-dark {
+            box-shadow: var(--box-shadow-dark);
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Tombol */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            /* 12px 24px */
+            font-weight: 500;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid transparent;
+            border-radius: var(--border-radius-md);
+            transition: var(--transition-normal);
+        }
+
+        .btn i {
+            line-height: 0;
+        }
+
+        /* Menyelaraskan ikon dengan teks */
+
         .btn-primary {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--white-color);
+            border-color: var(--primary-color);
         }
 
         .btn-primary:hover {
             background-color: #3a5ae8;
+            /* Warna primary lebih gelap */
+            border-color: #3a5ae8;
             transform: translateY(-2px);
+            box-shadow: var(--box-shadow-medium);
         }
 
-        .btn-outline {
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline-primary {
             background-color: transparent;
-            border: 1px solid var(--primary-color);
             color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
-        .btn-outline:hover {
+        .btn-outline-primary:hover {
             background-color: var(--primary-color);
-            color: white;
+            color: var(--white-color);
         }
 
-        .card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-            transition: var(--transition);
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+            border-color: var(--secondary-color);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        .btn-secondary:hover {
+            background-color: #e85a5a;
+            border-color: #e85a5a;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow-medium);
         }
 
-        .badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
+        .btn-icon {
+            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
         }
 
-        .badge-accent {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .section {
-            padding: 4rem 0;
-        }
-
-        .section-title {
-            font-size: 1.75rem;
-            margin-bottom: 2rem;
-            color: var(--dark-color);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--primary-color);
-        }
-
-        /* Header */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            padding: 1rem 0;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .logo span {
-            color: var(--secondary-color);
-        }
-
-        .nav-links {
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            font-weight: 500;
-            color: var(--dark-color);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .nav-actions {
-            gap: 1rem;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Hero */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/random/1600x900/?apartment') no-repeat center/cover;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            color: white;
-            margin-top: 70px;
-        }
-
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-
-        /* Search Form */
-        .search-form {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-top: -3rem;
-            position: relative;
-            z-index: 10;
-        }
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-        }
-
+        /* Form */
         .form-group {
             margin-bottom: 1rem;
         }
@@ -257,87 +406,448 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--dark-color);
         }
 
         .form-control {
+            display: block;
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
+            /* 12px 16px */
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            color: var(--dark-color);
+            background-color: var(--white-color);
+            background-clip: padding-box;
             border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
+            appearance: none;
+            /* Hapus tampilan default browser */
+            border-radius: var(--border-radius-md);
+            transition: var(--transition-normal);
         }
 
         .form-control:focus {
-            outline: none;
+            color: var(--dark-color);
+            background-color: var(--white-color);
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(74, 107, 255, 0.25);
+            /* Fokus shadow */
         }
 
-        /* Properties */
-        .properties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+        .form-control::placeholder {
+            color: var(--gray-color);
+            opacity: 0.7;
         }
 
-        .property-card {
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Kartu */
+        .card {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow-medium);
+            overflow: hidden;
+            transition: var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-dark);
+        }
+
+        .card-header,
+        .card-footer {
+            padding: 1rem 1.5rem;
+            background-color: rgba(0, 0, 0, 0.03);
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .card-footer {
+            border-top: 1px solid var(--light-gray);
+            border-bottom: none;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1 1 auto;
+            /* Agar card-body mengisi ruang */
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            /* 20px */
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            /* Relatif terhadap parent */
+            font-weight: 600;
+            line-height: 1;
+            color: var(--white-color);
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .badge-primary {
+            background-color: var(--primary-color);
+        }
+
+        .badge-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .badge-accent {
+            background-color: var(--accent-color);
+        }
+
+        .badge-success {
+            background-color: var(--success-color);
+        }
+
+        .badge-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .badge-danger {
+            background-color: var(--danger-color);
+        }
+
+        .badge-dark {
+            background-color: var(--dark-color);
+        }
+
+        .badge-light {
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+        }
+
+        /* Seksi */
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            /* 32px */
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            color: var(--dark-color);
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-color);
+            text-align: center;
+            margin-top: -2rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Header */
+        #app-header {
+            background-color: var(--white-color);
+            box-shadow: var(--box-shadow-light);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: var(--transition-normal);
+        }
+
+        #app-header.scrolled {
+            box-shadow: var(--box-shadow-medium);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            height: 70px;
+            /* Tinggi tetap untuk header */
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            /* 28px */
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            /* 32px */
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: var(--dark-color);
+            padding: 0.5rem 0;
             position: relative;
         }
 
-        .property-badge {
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            /* Sembunyikan di desktop */
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+            /* Di atas nav-links saat mobile */
+        }
+
+        /* Main Content Area */
+        #main-content {
+            padding-top: 70px;
+            /* Setara dengan tinggi header */
+            min-height: calc(100vh - 150px);
+            /* 150px adalah perkiraan tinggi footer */
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/random/1920x1080/?modern-apartment-living') no-repeat center center/cover;
+            min-height: calc(80vh - 70px);
+            /* 70px tinggi header */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white-color);
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            /* 44.8px */
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            /* 19.2px */
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-cta .btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Search Form Section */
+        .search-form-section {
+            background-color: var(--light-color);
+            padding: 2rem 0;
+            margin-top: -4rem;
+            /* Overlap dengan hero */
+            position: relative;
+            z-index: 10;
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+
+        .search-form {
+            background-color: var(--white-color);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow-dark);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+            /* Agar tombol sejajar dengan input terakhir */
+        }
+
+        .search-form .form-group {
+            margin-bottom: 0;
+            /* Dihilangkan karena gap sudah mengatur jarak */
+        }
+
+        .search-form .btn {
+            height: calc(1.6em + 1.5rem + 2px);
+            /* Menyamakan tinggi dengan form-control */
+            grid-column: 1 / -1;
+            /* Tombol mengambil lebar penuh di mobile, dan di akhir di desktop */
+        }
+
+        @media (min-width: 992px) {
+            .search-form .btn {
+                grid-column: auto;
+                /* Kembali normal di desktop */
+            }
+        }
+
+
+        /* Property Grid */
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            /* 32px */
+        }
+
+        .property-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            padding-top: 66.66%;
+            /* Aspect ratio 3:2 */
+        }
+
+        .property-card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .property-card:hover .property-card-image {
+            transform: scale(1.05);
+        }
+
+        .property-card-badge {
             position: absolute;
             top: 1rem;
             left: 1rem;
             z-index: 1;
         }
 
-        .property-favorite {
+        .property-card-favorite-btn {
             position: absolute;
             top: 1rem;
             right: 1rem;
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--gray-color);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-normal);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
+            z-index: 1;
         }
 
-        .property-favorite:hover {
+        .property-card-favorite-btn:hover {
+            background-color: var(--white-color);
             transform: scale(1.1);
         }
 
-        .property-favorite.active {
+        .property-card-favorite-btn.active {
             color: var(--secondary-color);
         }
 
-        .property-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-        }
-
-        .property-details {
-            padding: 1. ESR5rem;
+        .property-card .card-body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .property-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            /* 19.2px */
             font-weight: 600;
             margin-bottom: 0.5rem;
-        }
-
-        .property-price {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.4rem;
+            /* Untuk 2 baris */
         }
 
         .property-location {
@@ -345,106 +855,127 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--gray-color);
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             font-size: 0.9rem;
+            /* 14.4px */
+        }
+
+        .property-location i {
+            font-size: 1rem;
+        }
+
+        .property-price {
+            font-size: 1.3rem;
+            /* 20.8px */
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .property-price span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--gray-color);
         }
 
         .property-features {
             display: flex;
-            gap: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
             margin-bottom: 1rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            /* 13.6px */
+            color: var(--gray-color);
         }
 
-        .property-rating {
+        .property-features span {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            gap: 0.3rem;
+        }
+
+        .property-features i {
+            color: var(--primary-color);
+        }
+
+        .property-card .btn {
+            margin-top: auto;
+            /* Mendorong tombol ke bawah card-body */
+        }
+
+        /* Property Detail Page */
+        .property-detail-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .property-detail-main {
+            /* Konten utama detail properti */
+        }
+
+        .property-detail-sidebar {
+            position: sticky;
+            top: 90px;
+            /* Tinggi header + sedikit padding */
+            height: fit-content;
         }
 
         /* Gallery */
-        .gallery {
+        .gallery-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 150px);
+            /* Sesuaikan tinggi row */
             gap: 0.5rem;
             margin-bottom: 2rem;
         }
 
-        .gallery-main {
-            grid-column: span 2;
-            grid-row: span 2;
-        }
-
         .gallery-item {
             position: relative;
-            border-radius: var(--border-radius);
             overflow: hidden;
+            border-radius: var(--border-radius-md);
             cursor: pointer;
-            transition: var(--transition);
         }
 
-        .gallery-item:hover {
-            transform: scale(1.02);
+        .gallery-item:hover .gallery-image {
+            transform: scale(1.05);
         }
 
         .gallery-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            aspect-ratio: 1/1;
+            transition: var(--transition-normal);
         }
 
-        .gallery-main .gallery-image {
-            aspect-ratio: 16/9;
+        .gallery-item-main {
+            grid-column: span 2;
+            grid-row: span 2;
         }
 
-        /* Virtual Tour */
-        .virtual-tour {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            margin-bottom: 2rem;
-            background: url('https://source.unsplash.com/random/800x600/?apartment,interior') center/cover;
-        }
-
-        .virtual-tour-nav {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 1rem;
-        }
-
-        .virtual-tour-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.9);
+        .gallery-item-more {
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: var(--white-color);
+            font-size: 1.5rem;
         }
 
-        .virtual-tour-btn:hover {
-            background-color: white;
-            transform: scale(1.1);
+        .gallery-item-more p {
+            font-size: 1rem;
         }
 
-        /* Map */
+        /* Map Container */
         .map-container {
             width: 100%;
-            height: 300px;
-            border-radius: var(--border-radius);
+            height: 400px;
+            /* Sesuaikan tinggi peta */
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-            position: relative;
             margin-bottom: 2rem;
+            box-shadow: var(--box-shadow-light);
         }
 
         #map {
@@ -452,59 +983,63 @@
             height: 100%;
         }
 
-        /* Calendar */
-        .calendar {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1.5rem;
+        .leaflet-popup-content-wrapper {
+            border-radius: var(--border-radius-sm);
         }
 
-        .calendar th,
-        .calendar td {
-            padding: 0.75rem;
-            text-align: center;
-            border: 1px solid var(--light-gray);
+        .leaflet-popup-content {
+            margin: 10px !important;
         }
 
-        .calendar th {
-            font-weight: 500;
-            color: var(--gray-color);
+        .leaflet-popup-content h5 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
-        .calendar td {
-            cursor: pointer;
-            transition: var(--transition);
+        .leaflet-popup-content p {
+            margin: 0;
+            font-size: 0.9rem;
         }
 
-        .calendar td:hover:not(.disabled) {
-            background-color: var(--light-gray);
-        }
 
-        .calendar td.disabled {
-            color: var(--light-gray);
-            background-color: #f8f9fa;
-            cursor: not-allowed;
-        }
-
-        .calendar td.selected {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Reviews */
-        .review-card {
+        /* Booking Form / Card */
+        .booking-card {
             padding: 1.5rem;
-            background-color: white;
-            border-radius: var(--border-radius);
-            margin-bottom: 1rem;
-            box-shadow: var(--box-shadow);
+        }
+
+        .booking-card .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .booking-price-summary {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .booking-price-summary div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-price-summary .total-price {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* Reviews Section */
+        .reviews-list .review-card {
+            margin-bottom: 1.5rem;
         }
 
         .review-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+            align-items: flex-start;
+            /* Agar rating tidak terlalu tinggi */
+            margin-bottom: 0.75rem;
         }
 
         .review-user {
@@ -514,136 +1049,56 @@
         }
 
         .review-avatar {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .review-name {
-            font-weight: 500;
+        .review-user-info .review-name {
+            font-weight: 600;
+            margin-bottom: 0.1rem;
         }
 
-        .review-date {
-            font-size: 0.875rem;
+        .review-user-info .review-date {
+            font-size: 0.85rem;
             color: var(--gray-color);
         }
 
         .review-rating {
+            font-size: 0.9rem;
+        }
+
+        .review-rating .fa-star {
             color: var(--warning-color);
         }
 
+        .review-rating .fa-star-half-alt {
+            color: var(--warning-color);
+        }
+
+        .review-rating .text-muted {
+            color: var(--light-gray);
+        }
+
+        /* Untuk bintang kosong */
+
         .review-content {
-            margin-bottom: 1rem;
-        }
-
-        /* Chat */
-        .chat-container {
-            display: flex;
-            height: 500px;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
-
-        .chat-sidebar {
-            width: 300px;
-            border-right: 1px solid var(--light-gray);
-            background-color: white;
-        }
-
-        .chat-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-gray);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .chat-body {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-
-        .chat-message {
-            margin-bottom: 1rem;
-            max-width: 80%;
-        }
-
-        .chat-message.sent {
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .chat-bubble {
-            padding: 0.75rem 1rem;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 0.25rem;
-        }
-
-        .chat-bubble.sent {
-            background-color: var(--primary-color);
-            color: white;
-            border-bottom-right-radius: 5px;
-        }
-
-        .chat-bubble.received {
-            background-color: var(--light-gray);
-            border-bottom-left-radius: 5px;
-        }
-
-        .chat-time {
-            font-size: 0.75rem;
+            line-height: 1.7;
             color: var(--gray-color);
         }
 
-        .chat-footer {
-            padding: 1rem;
-            border-top: 1px solid var(--light-gray);
-        }
-
-        .chat-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--light-gray);
-            border-radius: 20px;
-            resize: none;
-        }
-
-        .chat-conversation {
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .chat-conversation:hover {
-            background-color: var(--light-gray);
-        }
-
-        .chat-conversation.active {
-            background-color: rgba(74, 107, 255, 0.1);
-        }
-
-        /* Profile */
+        /* Profile Page */
         .profile-grid {
             display: grid;
             grid-template-columns: 1fr 3fr;
+            /* Sidebar dan konten utama */
             gap: 2rem;
+            align-items: start;
         }
 
-        .profile-sidebar {
-            position: sticky;
-            top: 90px;
-            height: fit-content;
+        .profile-sidebar .card-body {
+            text-align: center;
         }
 
         .profile-avatar {
@@ -651,9 +1106,9 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
-            border: 4px solid white;
-            box-shadow: var(--box-shadow);
+            margin: 0 auto 1rem auto;
+            border: 4px solid var(--white-color);
+            box-shadow: var(--box-shadow-medium);
         }
 
         .profile-name {
@@ -662,55 +1117,283 @@
             margin-bottom: 0.25rem;
         }
 
+        .profile-name .fa-check-circle {
+            color: var(--primary-color);
+            font-size: 0.9em;
+            margin-left: 0.3rem;
+        }
+
         .profile-email {
             color: var(--gray-color);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            word-break: break-all;
         }
 
-        /* Booking */
-        .booking-card {
+        .profile-nav-list {
+            text-align: left;
+        }
+
+        .profile-nav-list .list-group-item {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-bottom: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-weight: 500;
+        }
+
+        .profile-nav-list .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .profile-nav-list .list-group-item:hover,
+        .profile-nav-list .list-group-item.active {
+            background-color: var(--primary-color-light);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+            padding-left: calc(1rem - 3px);
+            /* Kompensasi border */
+        }
+
+        .profile-nav-list .list-group-item i {
+            margin-right: 0.75rem;
+            width: 20px;
+            /* Agar ikon sejajar */
+            text-align: center;
+        }
+
+        .profile-content .card {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Booking Item (digunakan di daftar booking pengguna) */
+        .booking-item-card {
             display: flex;
             gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            align-items: flex-start;
         }
 
-        .booking-imageDER {
-            width: 150px;
-            height: 150px;
+        .booking-item-image {
+            width: 120px;
+            height: 100px;
             object-fit: cover;
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-md);
         }
 
-        .booking-title {
-            font-size: 1.2rem;
+        .booking-item-details {
+            flex: 1;
+        }
+
+        .booking-item-title {
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
 
-        .booking-detail {
+        .booking-item-info {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .booking-item-info i {
+            margin-right: 0.3rem;
+        }
+
+        .booking-item-status {
+            margin-top: 0.5rem;
+        }
+
+        /* Messages Page (Chat) */
+        .messages-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            /* Daftar chat dan jendela chat */
+            gap: 1.5rem;
+            height: calc(100vh - 70px - 4rem);
+            /* 70px header, 4rem padding section */
+            max-height: 700px;
+            /* Batas tinggi maksimal */
+        }
+
+        .chat-list-panel,
+        .chat-window-panel {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow-light);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-list-header,
+        .chat-window-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            font-weight: 600;
+        }
+
+        .chat-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-list-items {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .chat-list-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid var(--light-gray);
         }
+
+        .chat-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .chat-list-item:hover {
+            background-color: var(--light-color);
+        }
+
+        .chat-list-item.active {
+            background-color: #e0e7ff;
+            /* Warna primary sangat muda */
+        }
+
+        .chat-list-item-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-list-item-info {
+            flex: 1;
+        }
+
+        .chat-list-item-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+
+        .chat-list-item-preview {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-list-item-time {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+        }
+
+        .chat-window-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-window-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius-lg);
+            line-height: 1.4;
+        }
+
+        .chat-message-sent {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            align-self: flex-end;
+            border-bottom-right-radius: var(--border-radius-sm);
+        }
+
+        .chat-message-received {
+            background-color: var(--light-gray);
+            color: var(--dark-color);
+            align-self: flex-start;
+            border-bottom-left-radius: var(--border-radius-sm);
+        }
+
+        .chat-message-meta {
+            font-size: 0.75rem;
+            color: var(--gray-color);
+            margin-top: 0.25rem;
+        }
+
+        .chat-message-sent .chat-message-meta {
+            text-align: right;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            /* Pill shape */
+            resize: none;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .chat-send-btn {
+            width: 44px;
+            /* Square button */
+            height: 44px;
+            border-radius: 50%;
+        }
+
 
         /* Modal */
         .modal {
             position: fixed;
             inset: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            /* top, right, bottom, left = 0 */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Overlay gelap */
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: var(--transition);
+            transition: opacity var(--transition-normal), visibility var(--transition-normal);
+            padding: 1rem;
+            /* Padding agar konten modal tidak menempel di tepi layar kecil */
         }
 
         .modal.active {
@@ -718,167 +1401,380 @@
             visibility: visible;
         }
 
-        .modal-content {
-            background-color: white;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 800px;
+        .modal-dialog {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            max-width: 500px;
+            /* Lebar maksimal modal */
             max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--light-gray);
+            /* Tinggi maksimal, memungkinkan scroll jika konten panjang */
             display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
+            flex-direction: column;
+            box-shadow: var(--box-shadow-dark);
+            transform: scale(0.95);
+            transition: transform var(--transition-normal);
         }
 
-        .modal-close:hover {
-            background-color: var(--danger-color);
-            color: white;
+        .modal.active .modal-dialog {
+            transform: scale(1);
         }
 
         .modal-header {
-            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-color);
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--dark-color);
         }
 
         .modal-body {
             padding: 1.5rem;
+            overflow-y: auto;
+            /* Scroll jika konten lebih panjang dari max-height */
+            flex-grow: 1;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Image Viewer Modal (untuk galeri) */
+        .image-viewer-modal .modal-dialog {
+            max-width: 90vw;
+            /* Lebih lebar untuk gambar */
+            max-height: 90vh;
+            background-color: transparent;
+            /* Agar gambar terlihat penuh */
+            box-shadow: none;
+        }
+
+        .image-viewer-modal .modal-header {
+            display: none;
+        }
+
+        /* Sembunyikan header default */
+        .image-viewer-modal .modal-body {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-viewer-modal .modal-close-btn {
+            /* Posisikan tombol close di atas gambar */
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: var(--white-color);
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-viewer-modal .modal-close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .image-viewer-modal img {
+            max-width: 100%;
+            max-height: calc(90vh - 2rem);
+            /* Sesuaikan dengan padding modal */
+            border-radius: var(--border-radius-md);
+            object-fit: contain;
         }
 
         /* Footer */
-        footer {
+        #app-footer {
             background-color: var(--dark-color);
-            color: white;
-            padding: 3rem 0 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 0 1.5rem;
+            font-size: 0.9rem;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
-        .footer-title {
+        .footer-col .footer-title {
             font-size: 1.1rem;
             font-weight: 600;
+            color: var(--white-color);
             margin-bottom: 1rem;
         }
 
         .footer-links li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         .footer-links a {
             color: rgba(255, 255, 255, 0.7);
-            transition: var(--transition);
+            transition: var(--transition-fast);
         }
 
         .footer-links a:hover {
-            color: white;
+            color: var(--white-color);
+            padding-left: 0.3rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-socials a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+        }
+
+        .footer-socials a:hover {
+            color: var(--primary-color);
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1rem;
+            padding-top: 1.5rem;
             text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
         }
 
-        /* Responsive Design */
-        @media (max-width: 992px) {
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Loading Spinner */
+        .spinner-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            /* Paling atas */
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light-gray);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsif */
+        @media (max-width: 991.98px) {
+
+            /* Tablet dan di bawahnya */
+            .nav-links {
+                position: fixed;
+                top: 0;
+                /* Akan diatur oleh JS saat menu terbuka */
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: var(--white-color);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 1.5rem;
+                padding: 2rem;
+                transform: translateX(100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 999;
+                /* Di bawah tombol close mobile menu */
+                overflow-y: auto;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .nav-links a {
+                font-size: 1.2rem;
+                padding: 0.5rem 1rem;
+            }
+
+            .nav-actions {
+                display: none;
+                /* Sembunyikan tombol login/signup di navbar mobile, bisa dipindah ke dalam menu */
+                /* Atau tampilkan jika desain mengizinkan */
+            }
+
+            .nav-actions.mobile-active {
+                /* Jika ingin ditampilkan di menu mobile */
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 2rem;
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .nav-actions.mobile-active .btn {
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .search-form .btn {
+                grid-column: 1 / -1;
+            }
+
+            /* Pastikan tombol full width */
+
+            .property-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .property-detail-sidebar {
+                position: static;
+                margin-top: 2rem;
+            }
+
             .profile-grid {
                 grid-template-columns: 1fr;
             }
 
             .profile-sidebar {
-                position: static;
+                margin-bottom: 2rem;
             }
 
-            .gallery {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .gallery-main {
-                grid-column: span 2;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background-color: white;
-                flex-direction: column;
-                padding: 1rem;
-                transform: translateY(-100%);
-                transition: var(--transition);
-                z-index: 999;
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-            }
-
-            .nav-actions {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .search-grid {
+            .messages-layout {
                 grid-template-columns: 1fr;
-            }
-
-            .chat-container {
-                flex-direction: column;
                 height: auto;
+                /* Biarkan konten menentukan tinggi */
+                max-height: none;
             }
 
-            .chat-sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--light-gray);
+            .chat-list-panel {
                 max-height: 300px;
-                overflow-y: auto;
+                /* Batasi tinggi daftar chat di mobile */
+                margin-bottom: 1.5rem;
             }
 
-            .chat-main {
-                height: 500px;
+            .chat-window-panel {
+                min-height: 400px;
+                /* Pastikan jendela chat cukup tinggi */
             }
         }
 
-        @media (max-width: 576px) {
-            .hero {
-                height: 60vh;
+        @media (max-width: 767.98px) {
+
+            /* Mobile besar */
+            .section {
+                padding: 3rem 0;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+
+            .section-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-section {
+                min-height: calc(70vh - 70px);
             }
 
             .hero-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(auto-fill, 150px);
+            }
+
+            .gallery-item-main {
+                grid-column: span 2;
+                grid-row: span 2;
+                /* Tetap besar */
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                /* Kolom tunggal di mobile */
+                text-align: center;
+            }
+
+            .footer-col .footer-title {
+                margin-top: 1rem;
+            }
+
+            .footer-col:first-child .footer-title {
+                margin-top: 0;
+            }
+
+            .footer-socials {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+
+            /* Mobile kecil */
+            .container {
+                width: 95%;
             }
 
             .section {
@@ -886,717 +1782,1738 @@
             }
 
             .section-title {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
 
-            .booking-card {
+            .booking-item-card {
                 flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
 
-            .booking-image {
+            .booking-item-image {
                 width: 100%;
-                height: 200px;
-            }
-        }
-    
-/* CSS Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* Utility Classes */
-        .btn {
-            display: inline-flex;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-outline {
-            border: 1px solid #2563eb;
-            color: #2563eb;
-        }
-
-        .btn-outline:hover {
-            background: #eff6ff;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
-
-        /* Header Styles */
-        header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            padding: 1rem 0;
-            gap: 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2563eb;
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: #1d4ed8;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav-links a {
-            color: #4b5563;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .nav-links a:hover {
-            color: #2563eb;
-        }
-
-        .nav-actions {
-            margin-left: auto;
-            display: flex;
-            gap: 1rem;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Main Content */
-        main {
-            min-height: calc(100vh - 200px);
-        }
-
-        .hero {
-            background: linear-gradient(to right, #eff6ff, #dbeafe);
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1f2937;
-        }
-
-        .search-form {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            display: grid;
-            gap: 1rem;
-            max-width: 800px;
-            margin: 2rem auto;
-        }
-
-        .search-form input,
-        .search-form select {
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        /* Property Listing */
-        .property-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem 0;
-        }
-
-        .property-card {
-            position: relative;
-        }
-
-        .property-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .property-card .content {
-            padding: 1.5rem;
-        }
-
-        .property-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .property-card .price {
-            color: #2563eb;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .property-card .amenities {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 0.5rem;
-        }
-
-        /* Property Detail */
-        .property-detail {
-            padding: 2rem 0;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        #map {
-            height: 400px;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-        }
-
-        .booking-form {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Profile Page */
-        .profile-page {
-            padding: 2rem 0;
-        }
-
-        .profile-card {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .profile-card .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-        }
-
-        /* Messages Page */
-        .messages-page {
-            padding: 2rem 0;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-        }
-
-        .chat-list {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        .chat-window {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background: #1f2937;
-            color: white;
-            padding: 4rem 0;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: #d1d5db;
-            text-decoration: none;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #374151;
-            padding-top: 2rem;
-            text-align: center;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-actions {
-                display: none;
-            }
-
-            .search-form {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-
-            .messages-page {
-                grid-template-columns: 1fr;
+                max-width: 200px;
+                height: 150px;
             }
         }
     </style>
 </head>
+
 <body>
+    <div id="app-loader" class="spinner-overlay">
+        <div class="spinner"></div>
+    </div>
+
     <!-- Header -->
-    <header>
-        <nav class="navbar container">
-            <a href="#home" class="logo">RentEase <span>Stay</span></a>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="nav-links" id="nav-links">
-                <a href="#home" data-route="home">Home</a>
-                <a href="#search" data-route="search">Search</a>
-                <a href="#profile" data-route="profile">Profile</a>
-                <a href="#messages" data-route="messages">Messages</a>
-            </div>
-            <div class="nav-actions">
-                <a href="#login" class="btn btn-outline">Log In</a>
-                <a href="#signup" class="btn btn-primary">Sign Up</a>
-            </div>
-        </nav>
+    <header id="app-header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#home" class="logo" data-route="home">
+                    <i class="fas fa-building"></i> Rent<span>Ease</span>
+                </a>
+                <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Buka menu navigasi"
+                    aria-expanded="false" aria-controls="nav-links-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-links" id="nav-links-menu" role="navigation">
+                    <a href="#home" data-route="home" class="nav-link">Beranda</a>
+                    <a href="#properties" data-route="properties" class="nav-link">Properti</a>
+                    <a href="#profile" data-route="profile" class="nav-link">Profil</a>
+                    <a href="#messages" data-route="messages" class="nav-link">Pesan</a>
+                    <!-- Tombol login/signup untuk mobile, bisa diletakkan di sini jika diinginkan -->
+                    <div class="nav-actions mobile-active">
+                        <button class="btn btn-outline-primary w-full" data-modal-target="loginModal">Masuk</button>
+                        <button class="btn btn-primary w-full" data-modal-target="signupModal">Daftar</button>
+                    </div>
+                </div>
+                <div class="nav-actions" id="desktop-nav-actions">
+                    <button class="btn btn-outline-primary" data-modal-target="loginModal">
+                        <i class="fas fa-sign-in-alt"></i> Masuk
+                    </button>
+                    <button class="btn btn-primary" data-modal-target="signupModal">
+                        <i class="fas fa-user-plus"></i> Daftar
+                    </button>
+                </div>
+            </nav>
+        </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Konten Utama (SPA akan merender di sini) -->
     <main id="main-content">
-        <!-- Content will be dynamically loaded here -->
+        <!-- Konten halaman dinamis akan dimuat di sini -->
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer id="app-footer">
         <div class="container">
             <div class="footer-grid">
-                <div>
-                    <h3 class="footer-title">RentEase</h3>
-                    <p>Your trusted platform for apartment rentals worldwide.</p>
+                <div class="footer-col">
+                    <h3 class="footer-title"><i class="fas fa-building"></i> RentEase</h3>
+                    <p>Platform terpercaya Anda untuk penyewaan apartemen berkualitas di seluruh dunia. Temukan hunian
+                        impian Anda dengan mudah dan aman.</p>
+                    <div class="footer-socials">
+                        <a href="#" aria-label="Facebook RentEase"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter RentEase"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram RentEase"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn RentEase"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="footer-title">Explore</h3>
+                <div class="footer-col">
+                    <h3 class="footer-title">Jelajahi</h3>
                     <ul class="footer-links">
-                        <li><a href="#search">Search Properties</a></li>
-                        <li><a href="#">Popular Destinations</a></li>
-                        <li><a href="#">Luxury Rentals</a></li>
+                        <li><a href="#properties" data-route="properties">Cari Properti</a></li>
+                        <li><a href="#home" data-route="home" data-subroute="popular-destinations">Destinasi Populer</a>
+                        </li>
+                        <li><a href="#properties" data-route="properties" data-subroute="luxury-rentals">Sewa Mewah</a>
+                        </li>
+                        <li><a href="#home" data-route="home" data-subroute="latest-deals">Penawaran Terbaru</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h3 class="footer-title">Company</h3>
+                <div class="footer-col">
+                    <h3 class="footer-title">Perusahaan</h3>
                     <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="#about" data-route="about">Tentang Kami</a></li>
+                        <li><a href="#careers" data-route="careers">Karir</a></li>
+                        <li><a href="#contact" data-route="contact">Hubungi Kami</a></li>
+                        <li><a href="#terms" data-route="terms">Syarat & Ketentuan</a></li>
+                        <li><a href="#privacy" data-route="privacy">Kebijakan Privasi</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h3 class="footer-title">Support</h3>
+                <div class="footer-col">
+                    <h3 class="footer-title">Dukungan</h3>
                     <ul class="footer-links">
-                        <li><a href="#support">Help Center</a></li>
-                        <li><a href="#">Safety Information</a></li>
-                        <li><a href="#">Insurance Options</a></li>
+                        <li><a href="#help" data-route="help">Pusat Bantuan</a></li>
+                        <li><a href="#faq" data-route="faq">FAQ</a></li>
+                        <li><a href="#safety" data-route="safety">Informasi Keamanan</a></li>
+                        <li><a href="#cancellation" data-route="cancellation">Kebijakan Pembatalan</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2025 RentEase. All rights reserved.</p>
+                <p>&copy; <span id="current-year"></span> RentEase. Semua hak cipta dilindungi.</p>
+                <p>Dibuat dengan <i class="fas fa-heart text-secondary"></i> untuk kemudahan Anda.</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script>
-        // Mock Data
-        const properties = [
-            {
-                id: 1,
-                title: "Modern Downtown Loft",
-                price: 150,
-                location: { lat: 40.7128, lng: -74.0060 },
-                images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267'],
-                amenities: ['WiFi', 'AC', 'Kitchen'],
-                reviews: [
-                    { user: 'John D.', rating: 4.5, comment: 'Great stay!' }
-                ],
-                availability: ['2025-06-01', '2025-06-02']
-            },
-            // Add more properties as needed
-        ];
+    <!-- Modal Login -->
+    <div class="modal" id="loginModal" aria-labelledby="loginModalTitle" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalTitle">Masuk ke Akun Anda</h5>
+                <button type="button" class="modal-close-btn" data-dismiss-modal="loginModal" aria-label="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" class="form-label">Alamat Email</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="cth: email@anda.com"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="form-label">Kata Sandi</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Masukkan kata sandi"
+                            required>
+                    </div>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="loginRemember">
+                            <label class="form-check-label" for="loginRemember">Ingat saya</label>
+                        </div>
+                        <a href="#" class="text-sm">Lupa kata sandi?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-2">Masuk</button>
+                </form>
+                <p class="text-center mt-3 text-sm">Belum punya akun? <a href="#" data-dismiss-modal="loginModal"
+                        data-modal-target="signupModal">Daftar di sini</a></p>
+            </div>
+        </div>
+    </div>
 
-        const user = {
-            id: 1,
-            name: 'Jane Doe',
-            email: 'jane@example.com',
-            verified: true,
-            bookings: [
-                { propertyId: 1, dates: ['2025-06-01', '2025-06-02'], status: 'confirmed' }
-            ]
+    <!-- Modal Signup -->
+    <div class="modal" id="signupModal" aria-labelledby="signupModalTitle" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalTitle">Buat Akun Baru</h5>
+                <button type="button" class="modal-close-btn" data-dismiss-modal="signupModal" aria-label="Tutup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="signupName" placeholder="cth: Budi Santoso"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail" class="form-label">Alamat Email</label>
+                        <input type="email" class="form-control" id="signupEmail" placeholder="cth: email@anda.com"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword" class="form-label">Kata Sandi</label>
+                        <input type="password" class="form-control" id="signupPassword" placeholder="Minimal 8 karakter"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword" class="form-label">Konfirmasi Kata Sandi</label>
+                        <input type="password" class="form-control" id="signupConfirmPassword"
+                            placeholder="Ulangi kata sandi" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="signupTos" required>
+                            <label class="form-check-label" for="signupTos">Saya setuju dengan <a href="#terms"
+                                    data-route="terms">Syarat & Ketentuan</a> RentEase.</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-2">Daftar</button>
+                </form>
+                <p class="text-center mt-3 text-sm">Sudah punya akun? <a href="#" data-dismiss-modal="signupModal"
+                        data-modal-target="loginModal">Masuk di sini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Image Viewer -->
+    <div class="modal image-viewer-modal" id="imageViewerModal" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <button type="button" class="modal-close-btn" data-dismiss-modal="imageViewerModal"
+                aria-label="Tutup pratinjau gambar">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <img src="" alt="Pratinjau Gambar Diperbesar" id="imageViewerModalImage">
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS untuk Peta -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // Utilitas Umum Aplikasi
+        const AppUtils = {
+            showLoader: () => document.getElementById('app-loader')?.classList.remove('hidden'),
+            hideLoader: () => document.getElementById('app-loader')?.classList.add('hidden'),
+
+            // Fungsi untuk membuat elemen DOM dengan aman (mencegah XSS dari konten dinamis)
+            createElement: (tag, attributes = {}, children = []) => {
+                const element = document.createElement(tag);
+                for (const key in attributes) {
+                    if (key === 'textContent') {
+                        element.textContent = attributes[key];
+                    } else if (key === 'innerHTML') {
+                        // Hati-hati dengan innerHTML, hanya untuk konten HTML yang aman dan terkontrol
+                        element.innerHTML = attributes[key];
+                    } else {
+                        element.setAttribute(key, attributes[key]);
+                    }
+                }
+                children.forEach(child => {
+                    if (typeof child === 'string') {
+                        element.appendChild(document.createTextNode(child));
+                    } else {
+                        element.appendChild(child);
+                    }
+                });
+                return element;
+            },
+
+            // Fungsi untuk membersihkan string untuk ditampilkan (mencegah XSS sederhana)
+            sanitizeHTML: (str) => {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            },
+
+            // Format harga
+            formatCurrency: (amount, currency = 'IDR') => {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount);
+            },
+
+            // Format tanggal
+            formatDate: (dateString, options = { year: 'numeric', month: 'long', day: 'numeric' }) => {
+                return new Date(dateString).toLocaleDateString('id-ID', options);
+            },
+
+            // Mengambil rating bintang
+            getStarRating: (rating, maxStars = 5) => {
+                let stars = '';
+                const fullStars = Math.floor(rating);
+                const halfStar = rating % 1 >= 0.5;
+                const emptyStars = maxStars - fullStars - (halfStar ? 1 : 0);
+
+                for (let i = 0; i < fullStars; i++) stars += '<i class="fas fa-star"></i>';
+                if (halfStar) stars += '<i class="fas fa-star-half-alt"></i>';
+                for (let i = 0; i < emptyStars; i++) stars += '<i class="far fa-star text-muted"></i>'; // Bintang kosong
+                return stars;
+            },
+
+            // Simulasi delay API
+            delay: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
         };
 
-        // Router
-        class Router {
-            constructor() {
-                this.routes = {
-                    'home': this.renderHome,
-                    'search': this.renderSearch,
-                    'property': this.renderPropertyDetail,
-                    'profile': this.renderProfile,
-                    'messages': this.renderMessages
+        // State Aplikasi (Data Mock)
+        const AppState = {
+            currentUser: null, // Akan diisi setelah login
+            properties: [
+                {
+                    id: 1,
+                    title: "Apartemen Modern Tengah Kota Jakarta Selatan",
+                    slug: "apartemen-modern-tengah-kota-jakarta-selatan",
+                    pricePerNight: 750000,
+                    location: "Jakarta Selatan, DKI Jakarta",
+                    coordinates: { lat: -6.2615, lng: 106.8106 },
+                    images: [
+                        'https://source.unsplash.com/random/800x600/?apartment,modern,interior',
+                        'https://source.unsplash.com/random/800x600/?apartment,livingroom',
+                        'https://source.unsplash.com/random/800x600/?apartment,bedroom',
+                        'https://source.unsplash.com/random/800x600/?apartment,kitchen',
+                        'https://source.unsplash.com/random/800x600/?apartment,bathroom'
+                    ],
+                    amenities: ['WiFi', 'AC', 'Dapur Lengkap', 'Kolam Renang', 'Gym'],
+                    details: { bedrooms: 2, bathrooms: 1, area: '75 m²', capacity: 4 },
+                    description: "Nikmati kemewahan dan kenyamanan di apartemen modern kami yang terletak strategis di jantung Jakarta Selatan. Dengan akses mudah ke pusat bisnis, perbelanjaan, dan hiburan, apartemen ini menawarkan fasilitas lengkap untuk masa tinggal Anda.",
+                    host: { name: "RentEase Premium", avatar: "https://source.unsplash.com/random/100x100/?host,profile" },
+                    rating: 4.8,
+                    reviews: [
+                        { user: 'Rina A.', avatar: 'https://source.unsplash.com/random/50x50/?woman,profile', rating: 5, comment: 'Tempatnya luar biasa bersih dan nyaman! Lokasi sangat strategis. Host juga sangat responsif.', date: '2024-03-15' },
+                        { user: 'Bambang P.', avatar: 'https://source.unsplash.com/random/50x50/?man,profile', rating: 4.5, comment: 'Fasilitas lengkap, kolam renangnya bagus. Sedikit bising dari jalan raya tapi masih oke.', date: '2024-03-10' }
+                    ],
+                    availability: ['2025-06-01', '2025-06-02', '2025-06-05', '2025-06-10'], // Tanggal yang tersedia
+                    tags: ['populer', 'rekomendasi']
+                },
+                {
+                    id: 2,
+                    title: "Studio Nyaman di Bandung Dekat Kampus",
+                    slug: "studio-nyaman-bandung-dekat-kampus",
+                    pricePerNight: 350000,
+                    location: "Bandung, Jawa Barat",
+                    coordinates: { lat: -6.8937, lng: 107.6045 },
+                    images: [
+                        'https://source.unsplash.com/random/800x600/?apartment,studio,cozy',
+                        'https://source.unsplash.com/random/800x600/?apartment,compact-living',
+                        'https://source.unsplash.com/random/800x600/?apartment,desk-area'
+                    ],
+                    amenities: ['WiFi', 'Meja Kerja', 'Dapur Kecil', 'Keamanan 24 Jam'],
+                    details: { bedrooms: 1, bathrooms: 1, area: '30 m²', capacity: 2 },
+                    description: "Studio apartemen yang ideal untuk pelajar atau profesional muda. Terletak dekat dengan universitas ternama di Bandung dan berbagai kafe menarik. Suasana tenang dan nyaman untuk belajar maupun bekerja.",
+                    host: { name: "Apartemen Cihampelas", avatar: "https://source.unsplash.com/random/100x100/?building-manager" },
+                    rating: 4.5,
+                    reviews: [
+                        { user: 'Dewi S.', avatar: 'https://source.unsplash.com/random/50x50/?student,profile', rating: 4, comment: 'Cukup nyaman untuk harga segitu. Internet kencang.', date: '2024-02-20' }
+                    ],
+                    availability: ['2025-07-01', '2025-07-02', '2025-07-03'],
+                    tags: ['ekonomis']
+                },
+                {
+                    id: 3,
+                    title: "Villa Mewah dengan Pemandangan Laut di Bali",
+                    slug: "villa-mewah-pemandangan-laut-bali",
+                    pricePerNight: 2500000,
+                    location: "Seminyak, Bali",
+                    coordinates: { lat: -8.6913, lng: 115.1669 },
+                    images: [
+                        'https://source.unsplash.com/random/800x600/?luxury,villa,bali,oceanview',
+                        'https://source.unsplash.com/random/800x600/?villa,pool,bali',
+                        'https://source.unsplash.com/random/800x600/?bali,sunset,bedroom'
+                    ],
+                    amenities: ['Private Pool', 'WiFi Cepat', 'Sarapan Gratis', 'Pelayan Pribadi', 'Pemandangan Laut'],
+                    details: { bedrooms: 3, bathrooms: 3, area: '250 m²', capacity: 6 },
+                    description: "Rasakan kemewahan tropis di villa eksklusif kami di Seminyak, Bali. Dengan kolam renang pribadi, pemandangan laut yang menakjubkan, dan layanan bintang lima, liburan Anda akan menjadi tak terlupakan.",
+                    host: { name: "Bali Luxury Stays", avatar: "https://source.unsplash.com/random/100x100/?luxury,host" },
+                    rating: 4.9,
+                    reviews: [
+                        { user: 'Michael B.', avatar: 'https://source.unsplash.com/random/50x50/?tourist,profile', rating: 5, comment: 'Absolutely stunning villa! The view is breathtaking and the service was impeccable. Worth every penny.', date: '2024-04-01' }
+                    ],
+                    availability: ['2025-08-15', '2025-08-20'],
+                    tags: ['mewah', 'bali', 'pemandangan']
+                },
+                {
+                    id: 4,
+                    title: "Apartemen Minimalis di Pusat Surabaya",
+                    slug: "apartemen-minimalis-pusat-surabaya",
+                    pricePerNight: 500000,
+                    location: "Surabaya, Jawa Timur",
+                    coordinates: { lat: -7.2575, lng: 112.7521 },
+                    images: [
+                        'https://source.unsplash.com/random/800x600/?apartment,minimalist,city',
+                        'https://source.unsplash.com/random/800x600/?modern,interior,surabaya',
+                        'https://source.unsplash.com/random/800x600/?city,view,apartment'
+                    ],
+                    amenities: ['WiFi', 'AC', 'Smart TV', 'Parkir Gratis'],
+                    details: { bedrooms: 1, bathrooms: 1, area: '45 m²', capacity: 2 },
+                    description: "Apartemen minimalis yang bersih dan fungsional, terletak di pusat kota Surabaya. Akses mudah ke pusat perbelanjaan Tunjungan Plaza dan area bisnis. Cocok untuk perjalanan bisnis atau liburan singkat.",
+                    host: { name: "Surabaya City Living", avatar: "https://source.unsplash.com/random/100x100/?urban,profile" },
+                    rating: 4.6,
+                    reviews: [
+                        { user: 'Adi W.', avatar: 'https://source.unsplash.com/random/50x50/?businessman,profile', rating: 4.5, comment: 'Lokasi sangat baik, kamar bersih dan modern. Check-in mudah.', date: '2024-03-25' }
+                    ],
+                    availability: ['2025-09-01', '2025-09-05', '2025-09-10'],
+                    tags: ['bisnis', 'surabaya']
+                }
+            ],
+            // Fungsi untuk mendapatkan detail user (simulasi)
+            getUserProfile: async () => {
+                if (!AppState.currentUser) return null; // Jika tidak ada user login
+                await AppUtils.delay(300); // Simulasi network delay
+                return {
+                    id: AppState.currentUser.id,
+                    name: AppState.currentUser.name,
+                    email: AppState.currentUser.email,
+                    avatar: 'https://source.unsplash.com/random/150x150/?person,face', // Avatar random
+                    joinDate: '2023-01-15',
+                    verified: true,
+                    phone: '081234567890',
+                    address: 'Jl. Kebahagiaan No. 123, Jakarta',
+                    preferences: {
+                        notifications: { email: true, sms: false },
+                        theme: 'light'
+                    }
                 };
-                this.mainContent = document.getElementById('main-content');
-                this.init();
+            },
+            // Fungsi untuk mendapatkan booking user (simulasi)
+            getUserBookings: async () => {
+                if (!AppState.currentUser) return [];
+                await AppUtils.delay(500);
+                // Contoh data booking, idealnya ini terhubung dengan ID user
+                return [
+                    {
+                        id: 'BK001',
+                        propertyId: 1,
+                        propertyName: AppState.properties.find(p => p.id === 1).title,
+                        propertyImage: AppState.properties.find(p => p.id === 1).images[0],
+                        dates: '1 Juni 2025 - 3 Juni 2025',
+                        totalPrice: 1500000,
+                        status: 'Dikonfirmasi',
+                        statusBadge: 'success'
+                    },
+                    {
+                        id: 'BK002',
+                        propertyId: 3,
+                        propertyName: AppState.properties.find(p => p.id === 3).title,
+                        propertyImage: AppState.properties.find(p => p.id === 3).images[0],
+                        dates: '15 Agustus 2025 - 20 Agustus 2025',
+                        totalPrice: 12500000,
+                        status: 'Menunggu Pembayaran',
+                        statusBadge: 'warning'
+                    }
+                ];
+            },
+            // Fungsi untuk mendapatkan pesan user (simulasi)
+            getUserMessages: async () => {
+                if (!AppState.currentUser) return [];
+                await AppUtils.delay(400);
+                return [
+                    {
+                        id: 'MSG001',
+                        contactName: AppState.properties.find(p => p.id === 1).host.name,
+                        contactAvatar: AppState.properties.find(p => p.id === 1).host.avatar,
+                        lastMessage: "Halo, apakah apartemennya masih tersedia untuk tanggal tersebut?",
+                        timestamp: "10:30 AM",
+                        unreadCount: 2,
+                        propertyId: 1,
+                        chatHistory: [
+                            { sender: 'user', text: "Halo, apakah apartemennya masih tersedia untuk tanggal tersebut?", time: "10:30 AM" },
+                            { sender: 'host', text: "Selamat pagi! Ya, masih tersedia. Silakan dilanjutkan pemesanannya.", time: "10:35 AM" },
+                            { sender: 'user', text: "Baik, terima kasih atas informasinya!", time: "10:36 AM" },
+                        ]
+                    },
+                    {
+                        id: 'MSG002',
+                        contactName: AppState.properties.find(p => p.id === 2).host.name,
+                        contactAvatar: AppState.properties.find(p => p.id === 2).host.avatar,
+                        lastMessage: "Ok, saya akan segera transfer.",
+                        timestamp: "Kemarin",
+                        unreadCount: 0,
+                        propertyId: 2,
+                        chatHistory: [
+                            { sender: 'host', text: "Pembayaran Anda sudah kami terima. Sampai jumpa!", time: "Kemarin, 02:15 PM" },
+                            { sender: 'user', text: "Ok, saya akan segera transfer.", time: "Kemarin, 02:10 PM" },
+                        ]
+                    }
+                ];
+            },
+            // Simulasi Login
+            login: async (email, password) => {
+                AppUtils.showLoader();
+                await AppUtils.delay(1000); // Simulasi network delay
+                // Validasi sederhana
+                if (email === "user@example.com" && password === "password123") {
+                    AppState.currentUser = { id: 'USR001', name: 'Pengguna Terdaftar', email: email };
+                    AppUtils.hideLoader();
+                    return { success: true, message: "Login berhasil!", user: AppState.currentUser };
+                } else {
+                    AppUtils.hideLoader();
+                    return { success: false, message: "Email atau kata sandi salah." };
+                }
+            },
+            // Simulasi Signup
+            signup: async (name, email, password) => {
+                AppUtils.showLoader();
+                await AppUtils.delay(1500);
+                // Simulasi: email sudah terdaftar
+                if (email === "user@example.com") {
+                    AppUtils.hideLoader();
+                    return { success: false, message: "Email sudah terdaftar. Silakan gunakan email lain." };
+                }
+                AppState.currentUser = { id: 'USR002', name: name, email: email }; // Buat user baru
+                AppUtils.hideLoader();
+                return { success: true, message: "Pendaftaran berhasil! Anda sekarang login.", user: AppState.currentUser };
+            },
+            // Simulasi Logout
+            logout: () => {
+                AppState.currentUser = null;
+                // Mungkin perlu membersihkan data lain atau localStorage jika digunakan
+                Router.navigateTo('home'); // Redirect ke halaman utama setelah logout
+                UI.updateLoginStatus(); // Perbarui tampilan UI
             }
+        };
 
-            init() {
-                window.addEventListener('hashchange', () => this.handleRoute());
-                document.querySelectorAll('[data-route]').forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        window.location.hash = link.getAttribute('data-route');
-                    });
-                });
-                this.handleRoute();
-            }
-
-            handleRoute() {
-                const hash = window.location.hash.slice(1) || 'home';
-                const route = hash.split('/')[0];
-                const param = hash.split('/')[1];
-                const handler = this.routes[route] || this.renderHome;
-                this.mainContent.innerHTML = handler.call(this, param);
-                this.initPage();
-            }
-
-            renderHome() {
+        // Komponen UI (Template HTML String)
+        const UIComponents = {
+            // Kartu Properti
+            propertyCard: (property) => {
                 return `
-                    <section class="hero">
-                        <div class="container">
-                            <h1>Find Your Perfect Apartment</h1>
-                            <p>Discover premium rentals with modern amenities worldwide</p>
+                    <article class="property-card card" data-property-id="${property.id}">
+                        <div class="property-card-image-wrapper">
+                            <img src="${property.images[0]}" alt="Gambar ${AppUtils.sanitizeHTML(property.title)}" class="property-card-image" loading="lazy">
+                            ${property.tags && property.tags.includes('populer') ? '<span class="badge badge-secondary property-card-badge"><i class="fas fa-fire"></i> Populer</span>' : ''}
+                            <button class="property-card-favorite-btn" aria-label="Tambahkan ke favorit" data-property-id="${property.id}">
+                                <i class="far fa-heart"></i>
+                            </button>
                         </div>
-                    </section>
-                    <section class="search-form-section">
-                        <form class="search-form container">
-                            <input type="text" placeholder="Location" aria-label="Location">
-                            <input type="date" placeholder="Check-in" aria-label="Check-in date">
-                            <input type="date" placeholder="Check-out" aria-label="Check-out date">
-                            <select aria-label="Price range">
-                                <option>Price Range</option>
-                                <option>$50-$100</option>
-                                <option>$100-$200</option>
-                            </select>
-                            <select aria-label="Amenities">
-                                <option>Amenities</option>
-                                <option>WiFi</option>
-                                <option>Pool</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
-                    </section>
-                    <section class="property-grid container">
-                        ${properties.map(prop => `
-                            <article class="property-card card">
-                                <figure>
-                                    <img src="${prop.images[0]}" alt="${prop.title}" loading="lazy">
-                                    <figcaption>
-                                        <div class="content">
-                                            <h3>${prop.title}</h3>
-                                            <p class="price">$${prop.price}/night</p>
-                                            <p>${prop.amenities.join(', ')}</p>
-                                            <a href="#property/${prop.id}" class="btn btn-primary">View Details</a>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            </article>
-                        `).join('')}
-                    </section>
-                `;
-            }
-
-            renderSearch() {
-                return `
-                    <section class="search-page container">
-                        <h2>Search Properties</h2>
-                        <form class="search-form">
-                            <input type="text" placeholder="Location" aria-label="Location">
-                            <input type="date" placeholder="Check-in" aria-label="Check-in date">
-                            <input type="date" placeholder="Check-out" aria-label="Check-out date">
-                            <select aria-label="Price range">
-                                <option>Price Range</option>
-                                <option>$50-$100</option>
-                                <option>$100-$200</option>
-                            </select>
-                            <select aria-label="Amenities">
-                                <option>Amenities</option>
-                                <option>WiFi</option>
-                                <option>Pool</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
-                        <div id="map"></div>
-                        <div class="property-grid">
-                            ${properties.map(prop => `
-                                <article class="property-card card">
-                                    <figure>
-                                        <img src="${prop.images[0]}" alt="${prop.title}" loading="lazy">
-                                        <figcaption>
-                                            <div class="content">
-                                                <h3>${prop.title}</h3>
-                                                <p class="price">$${prop.price}/night</p>
-                                                <p>${prop.amenities.join(', ')}</p>
-                                                <a href="#property/${prop.id}" class="btn btn-primary">View Details</a>
-                                            </div>
-                                        </figcaption>
-                                    </figure>
-                                </article>
-                            `).join('')}
-                        </div>
-                    </section>
-                `;
-            }
-
-            renderPropertyDetail(id) {
-                const property = properties.find(p => p.id === parseInt(id));
-                if (!property) return '<h2>Property not found</h2>';
-
-                return `
-                    <section class="property-detail container">
-                        <h2>${property.title}</h2>
-                        <div class="gallery">
-                            ${property.images.map(img => `
-                                <img src="${img}" alt="${property.title}" loading="lazy">
-                            `).join('')}
-                        </div>
-                        <div id="map"></div>
-                        <article class="booking-form card">
-                            <h3>Book Now</h3>
-                            <form>
-                                <input type="date" placeholder="Check-in" aria-label="Check-in date">
-                                <input type="date" placeholder="Check-out" aria-label="Check-out date">
-                                <select aria-label="Payment method">
-                                    <option>Payment Method</option>
-                                    <option>Credit Card</option>
-                                    <option>PayPal</option>
-                                </select>
-                                <p>Total: $${property.price}/night</p>
-                                <button type="submit" class="btn btn-primary">Book Now</button>
-                            </form>
-                        </article>
-                        <section class="reviews">
-                            <h3>Reviews</h3>
-                            ${property.reviews.map(review => `
-                                <article class="review card">
-                                    <p><strong>${review.user}</strong> - ${review.rating}/5</p>
-                                    <blockquote>${review.comment}</blockquote>
-                                </article>
-                            `).join('')}
-                        </section>
-                        <details>
-                            <summary>Report an issue</summary>
-                            <form class="report-form">
-                                <textarea placeholder="Describe the issue" aria-label="Issue description"></textarea>
-                                <button type="submit" class="btn btn-primary">Submit Report</button>
-                            </form>
-                        </details>
-                    </section>
-                `;
-            }
-
-            renderProfile() {
-                return `
-                    <section class="profile-page container">
-                        <article class="profile-card card">
-                            <img src="https://via.placeholder.com/100" alt="User avatar" class="avatar">
-                            <h2>${user.name} ${user.verified ? '<i class="fas fa-check-circle"></i>' : ''}</h2>
-                            <p>${user.email}</p>
-                            <h3>Your Bookings</h3>
-                            ${user.bookings.map(booking => {
-                                const prop = properties.find(p => p.id === booking.propertyId);
-                                return `
-                                    <article class="booking card">
-                                        <h4>${prop.title}</h4>
-                                        <p>Dates: ${booking.dates.join(' to ')}</p>
-                                        <p>Status: ${booking.status}</p>
-                                    </article>
-                                `;
-                            }).join('')}
-                        </article>
-                    </section>
-                `;
-            }
-
-            renderMessages() {
-                return `
-                    <section class="messages-page container">
-                        <aside class="chat-list card">
-                            <h3>Conversations</h3>
-                            <ul>
-                                <li><a href="#">Owner 1</a></li>
-                                <li><a href="#">Owner 2</a></li>
-                            </ul>
-                        </aside>
-                        <article class="chat-window card">
-                            <h3>Chat with Owner</h3>
-                            <div class="chat-messages">
-                                <p><strong>Owner:</strong> Hello! How can I help you?</p>
+                        <div class="card-body">
+                            <h3 class="property-title">${AppUtils.sanitizeHTML(property.title)}</h3>
+                            <p class="property-location"><i class="fas fa-map-marker-alt"></i> ${AppUtils.sanitizeHTML(property.location)}</p>
+                            <p class="property-price">${AppUtils.formatCurrency(property.pricePerNight)} <span>/ malam</span></p>
+                            <div class="property-features">
+                                <span><i class="fas fa-bed"></i> ${property.details.bedrooms} KT</span>
+                                <span><i class="fas fa-bath"></i> ${property.details.bathrooms} KM</span>
+                                <span><i class="fas fa-ruler-combined"></i> ${property.details.area}</span>
                             </div>
-                            <form class="chat-form">
-                                <textarea placeholder="Type a message" aria-label="Message"></textarea>
-                                <button type="submit" class="btn btn-primary">Send</button>
-                            </form>
-                        </article>
+                            <a href="#property/${property.slug || property.id}" class="btn btn-primary w-full" data-route="property" data-id="${property.slug || property.id}">
+                                Lihat Detail <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                `;
+            },
+            // ... komponen lain bisa ditambahkan di sini
+        };
+
+        // Logika Halaman (Render Functions)
+        const Pages = {
+            // Halaman Beranda
+            home: () => {
+                const heroSection = `
+                    <section class="hero-section">
+                        <div class="hero-content container">
+                            <h1 class="hero-title">Temukan Hunian Sempurna Anda Berikutnya</h1>
+                            <p class="hero-subtitle">Jelajahi ribuan apartemen berkualitas dengan fasilitas modern di seluruh penjuru dunia. RentEase hadir untuk kemudahan Anda.</p>
+                            <div class="hero-cta">
+                                <a href="#properties" data-route="properties" class="btn btn-primary"><i class="fas fa-search"></i> Mulai Cari Properti</a>
+                                <a href="#how-it-works" data-route="home" data-subroute="how-it-works" class="btn btn-outline-primary text-light" style="border-color: var(--white-color); margin-left:10px;"><i class="fas fa-info-circle"></i> Cara Kerja</a>
+                            </div>
+                        </div>
                     </section>
                 `;
-            }
 
-            initPage() {
-                // Initialize mobile menu
-                const menuBtn = document.querySelector('.mobile-menu-btn');
-                const navLinks = document.querySelector('.nav-links');
-                menuBtn?.addEventListener('click', () => {
-                    navLinks.classList.toggle('active');
-                });
+                const searchFormSection = `
+                    <section class="search-form-section">
+                        <div class="container">
+                            <form class="search-form" id="homeSearchForm">
+                                <div class="form-group">
+                                    <label for="searchLocation" class="form-label visually-hidden">Lokasi</label>
+                                    <input type="text" class="form-control" id="searchLocation" placeholder="cth: Jakarta, Bali...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchCheckIn" class="form-label visually-hidden">Tanggal Check-in</label>
+                                    <input type="date" class="form-control" id="searchCheckIn" title="Tanggal Check-in">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchCheckOut" class="form-label visually-hidden">Tanggal Check-out</label>
+                                    <input type="date" class="form-control" id="searchCheckOut" title="Tanggal Check-out">
+                                </div>
+                                <div class="form-group">
+                                    <label for="searchGuests" class="form-label visually-hidden">Jumlah Tamu</label>
+                                    <select class="form-control" id="searchGuests" title="Jumlah Tamu">
+                                        <option value="">Tamu</option>
+                                        <option value="1">1 Tamu</option>
+                                        <option value="2">2 Tamu</option>
+                                        <option value="3">3 Tamu</option>
+                                        <option value="4">4+ Tamu</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Cari</button>
+                            </form>
+                        </div>
+                    </section>
+                `;
 
-                // Initialize map
-                const mapElement = document.getElementById('map');
-                if (mapElement) {
-                    const map = L.map(mapElement).setView([40.7128, -74.0060], 13);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(map);
-                    properties.forEach(prop => {
-                        L.marker([prop.location.lat, prop.location.lng])
-                            .addTo(map)
-                            .bindPopup(prop.title);
-                    });
+                const featuredPropertiesSection = `
+                    <section id="featured-properties" class="section">
+                        <div class="container">
+                            <h2 class="section-title">Properti Unggulan</h2>
+                            <p class="section-subtitle">Pilihan terbaik dari kami, dipilih khusus untuk kenyamanan dan kepuasan Anda.</p>
+                            <div class="properties-grid">
+                                ${AppState.properties.slice(0, 3).map(UIComponents.propertyCard).join('')}
+                            </div>
+                             <div class="text-center mt-3">
+                                <a href="#properties" data-route="properties" class="btn btn-outline-primary">Lihat Semua Properti <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </section>
+                `;
+
+                // Contoh section tambahan
+                const howItWorksSection = `
+                    <section id="how-it-works" class="section bg-light">
+                        <div class="container">
+                            <h2 class="section-title">Bagaimana RentEase Bekerja?</h2>
+                            <div class="d-flex flex-wrap justify-content-center gap-3 text-center">
+                                <div class="card p-2" style="flex: 1; min-width: 250px;">
+                                    <div class="card-body">
+                                        <i class="fas fa-search fa-3x text-primary mb-2"></i>
+                                        <h3 class="card-title">1. Cari</h3>
+                                        <p>Temukan apartemen impian Anda berdasarkan lokasi, tanggal, dan preferensi lainnya.</p>
+                                    </div>
+                                </div>
+                                <div class="card p-2" style="flex: 1; min-width: 250px;">
+                                    <div class="card-body">
+                                        <i class="fas fa-calendar-check fa-3x text-primary mb-2"></i>
+                                        <h3 class="card-title">2. Pesan</h3>
+                                        <p>Pilih apartemen yang cocok dan lakukan pemesanan dengan aman melalui platform kami.</p>
+                                    </div>
+                                </div>
+                                <div class="card p-2" style="flex: 1; min-width: 250px;">
+                                    <div class="card-body">
+                                        <i class="fas fa-key fa-3x text-primary mb-2"></i>
+                                        <h3 class="card-title">3. Nikmati</h3>
+                                        <p>Selamat menikmati masa tinggal Anda! Tim kami siap membantu jika Anda memerlukan sesuatu.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+
+                return heroSection + searchFormSection + featuredPropertiesSection + howItWorksSection;
+            },
+
+            // Halaman Daftar Properti
+            properties: (params = {}) => {
+                // params bisa digunakan untuk filter, sort, pagination, dll.
+                // Untuk demo, kita tampilkan semua properti.
+                const propertiesHtml = AppState.properties.map(UIComponents.propertyCard).join('');
+                return `
+                    <section id="all-properties" class="section">
+                        <div class="container">
+                            <h2 class="section-title">Semua Properti</h2>
+                            <p class="section-subtitle">Jelajahi berbagai pilihan apartemen yang tersedia untuk Anda.</p>
+                            
+                            <!-- Filter dan Sortir (Contoh Sederhana) -->
+                            <div class="d-flex flex-wrap gap-2 mb-3 justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <select id="filterLocation" class="form-control" style="width:auto;">
+                                        <option value="">Semua Lokasi</option>
+                                        ${[...new Set(AppState.properties.map(p => p.location.split(',')[0]))].map(loc => `<option value="${loc}">${loc}</option>`).join('')}
+                                    </select>
+                                    <select id="filterPrice" class="form-control" style="width:auto;">
+                                        <option value="">Semua Harga</option>
+                                        <option value="0-500000">Dibawah ${AppUtils.formatCurrency(500000)}</option>
+                                        <option value="500000-1000000">${AppUtils.formatCurrency(500000)} - ${AppUtils.formatCurrency(1000000)}</option>
+                                        <option value="1000000-99999999">Diatas ${AppUtils.formatCurrency(1000000)}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="sortProperties" class="form-control" style="width:auto;">
+                                        <option value="default">Urutkan Berdasarkan</option>
+                                        <option value="price-asc">Harga Terendah</option>
+                                        <option value="price-desc">Harga Tertinggi</option>
+                                        <option value="rating-desc">Rating Tertinggi</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="properties-grid" id="propertiesListing">
+                                ${propertiesHtml.length > 0 ? propertiesHtml : '<p>Tidak ada properti yang ditemukan.</p>'}
+                            </div>
+                            <!-- Pagination bisa ditambahkan di sini -->
+                        </div>
+                    </section>
+                `;
+            },
+
+            // Halaman Detail Properti
+            propertyDetail: (slugOrId) => {
+                const property = AppState.properties.find(p => p.slug === slugOrId || p.id.toString() === slugOrId);
+                if (!property) {
+                    return `
+                        <section class="section">
+                            <div class="container text-center">
+                                <h2 class="section-title">Properti Tidak Ditemukan</h2>
+                                <p>Maaf, properti yang Anda cari tidak dapat ditemukan.</p>
+                                <a href="#properties" data-route="properties" class="btn btn-primary">Kembali ke Daftar Properti</a>
+                            </div>
+                        </section>
+                    `;
                 }
 
-                // Initialize gallery zoom
-                document.querySelectorAll('.gallery img').forEach(img => {
-                    img.addEventListener('click', () => {
-                        const modal = document.createElement('div');
-                        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;';
-                        modal.innerHTML = `<img src="${img.src}" style="max-width: 90%; max-height: 90%;">`;
-                        modal.addEventListener('click', () => modal.remove());
-                        document.body.appendChild(modal);
+                // Gallery
+                const galleryHtml = `
+                    <div class="gallery-grid">
+                        <div class="gallery-item gallery-item-main" data-image-src="${property.images[0]}">
+                            <img src="${property.images[0]}" alt="Gambar utama ${AppUtils.sanitizeHTML(property.title)}" class="gallery-image">
+                        </div>
+                        ${property.images.slice(1, 4).map(imgSrc => `
+                            <div class="gallery-item" data-image-src="${imgSrc}">
+                                <img src="${imgSrc}" alt="Gambar tambahan ${AppUtils.sanitizeHTML(property.title)}" class="gallery-image">
+                            </div>
+                        `).join('')}
+                        ${property.images.length > 4 ? `
+                            <div class="gallery-item gallery-item-more" data-image-src="${property.images[0]}"> <!-- Klik ini bisa buka semua gambar -->
+                                <p>+${property.images.length - 4} foto lainnya</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // Reviews
+                const reviewsHtml = property.reviews.map(review => `
+                    <div class="review-card card shadow-light">
+                        <div class="card-body">
+                            <div class="review-header">
+                                <div class="review-user">
+                                    <img src="${review.avatar}" alt="Avatar ${AppUtils.sanitizeHTML(review.user)}" class="review-avatar">
+                                    <div class="review-user-info">
+                                        <h5 class="review-name">${AppUtils.sanitizeHTML(review.user)}</h5>
+                                        <p class="review-date">${AppUtils.formatDate(review.date)}</p>
+                                    </div>
+                                </div>
+                                <div class="review-rating" aria-label="Rating: ${review.rating} dari 5 bintang">
+                                    ${AppUtils.getStarRating(review.rating)}
+                                </div>
+                            </div>
+                            <p class="review-content">${AppUtils.sanitizeHTML(review.comment)}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <section class="section property-detail-page">
+                        <div class="container">
+                            <div class="mb-3">
+                                <a href="#properties" data-route="properties" class="text-gray"><i class="fas fa-arrow-left"></i> Kembali ke daftar</a>
+                            </div>
+                            <h1 class="property-main-title mb-1" style="font-size: 2rem; font-weight: 700;">${AppUtils.sanitizeHTML(property.title)}</h1>
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="text-primary font-weight-bold"><i class="fas fa-star"></i> ${property.rating} (${property.reviews.length} ulasan)</span>
+                                <span class="text-gray"><i class="fas fa-map-marker-alt"></i> ${AppUtils.sanitizeHTML(property.location)}</span>
+                            </div>
+
+                            ${galleryHtml}
+
+                            <div class="property-detail-grid">
+                                <div class="property-detail-main">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h3 class="card-title">Deskripsi Properti</h3>
+                                            <p>${AppUtils.sanitizeHTML(property.description)}</p>
+                                            <h4 class="mt-3 mb-2" style="font-size:1.1rem; font-weight:600;">Fasilitas Utama:</h4>
+                                            <ul class="d-flex flex-wrap gap-2">
+                                                ${property.amenities.map(amenity => `<li class="badge badge-light"><i class="fas fa-check text-success"></i> ${AppUtils.sanitizeHTML(amenity)}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                             <h3 class="card-title">Lokasi di Peta</h3>
+                                             <div class="map-container" id="propertyMapDetail" data-lat="${property.coordinates.lat}" data-lng="${property.coordinates.lng}" data-title="${AppUtils.sanitizeHTML(property.title)}">
+                                                 <!-- Peta akan dimuat di sini oleh JS -->
+                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3 class="card-title">Ulasan (${property.reviews.length})</h3>
+                                            <div class="reviews-list">
+                                                ${reviewsHtml.length > 0 ? reviewsHtml : '<p>Belum ada ulasan untuk properti ini.</p>'}
+                                            </div>
+                                            <!-- Form tambah ulasan bisa di sini -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <aside class="property-detail-sidebar">
+                                    <div class="card booking-card shadow-dark">
+                                        <div class="card-body">
+                                            <h3 class="card-title text-center">Pesan Sekarang</h3>
+                                            <p class="text-center mb-3" style="font-size: 1.5rem; font-weight:700; color: var(--primary-color);">${AppUtils.formatCurrency(property.pricePerNight)} <span style="font-size:1rem; font-weight:400; color:var(--gray-color)">/ malam</span></p>
+                                            <form id="bookingForm">
+                                                <div class="form-group">
+                                                    <label for="bookingCheckIn" class="form-label">Tanggal Check-in</label>
+                                                    <input type="date" id="bookingCheckIn" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="bookingCheckOut" class="form-label">Tanggal Check-out</label>
+                                                    <input type="date" id="bookingCheckOut" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="bookingGuests" class="form-label">Jumlah Tamu</label>
+                                                    <select id="bookingGuests" class="form-control" required>
+                                                        <option value="1">1 Tamu</option>
+                                                        <option value="2">2 Tamu</option>
+                                                        ${property.details.capacity > 2 ? `<option value="3">3 Tamu</option>` : ''}
+                                                        ${property.details.capacity > 3 ? `<option value="4">4 Tamu</option>` : ''}
+                                                        ${property.details.capacity > 4 ? `<option value="4+">${property.details.capacity > 4 ? `hingga ${property.details.capacity}` : ''} Tamu</option>` : ''}
+                                                    </select>
+                                                </div>
+                                                <div class="booking-price-summary">
+                                                    <div id="priceCalculation">
+                                                        <span>Harga per malam</span>
+                                                        <span>${AppUtils.formatCurrency(property.pricePerNight)}</span>
+                                                    </div>
+                                                    <div id="nightsCount">
+                                                        <span>Jumlah malam</span>
+                                                        <span id="calculatedNights">Pilih tanggal</span>
+                                                    </div>
+                                                    <div class="total-price" id="totalPrice">
+                                                        <span>Total</span>
+                                                        <span id="calculatedTotal">Pilih tanggal</span>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary w-full mt-3">Pesan Sekarang</button>
+                                            </form>
+                                            <p class="text-center mt-2 text-sm text-gray">Anda tidak akan dikenakan biaya sekarang</p>
+                                        </div>
+                                    </div>
+                                </aside>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            },
+
+            // Halaman Profil Pengguna
+            profile: async () => {
+                if (!AppState.currentUser) {
+                    return `
+                        <section class="section">
+                            <div class="container text-center">
+                                <h2 class="section-title">Akses Ditolak</h2>
+                                <p>Anda harus masuk terlebih dahulu untuk melihat halaman profil.</p>
+                                <button class="btn btn-primary" data-modal-target="loginModal">Masuk Sekarang</button>
+                            </div>
+                        </section>
+                    `;
+                }
+
+                AppUtils.showLoader();
+                const userProfile = await AppState.getUserProfile();
+                AppUtils.hideLoader();
+
+                if (!userProfile) return `<p>Gagal memuat profil.</p>`; // Seharusnya tidak terjadi jika currentUser ada
+
+                return `
+                    <section class="section profile-page">
+                        <div class="container">
+                            <h2 class="section-title">Profil Saya</h2>
+                            <div class="profile-grid">
+                                <aside class="profile-sidebar">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <img src="${userProfile.avatar}" alt="Avatar ${AppUtils.sanitizeHTML(userProfile.name)}" class="profile-avatar">
+                                            <h3 class="profile-name">${AppUtils.sanitizeHTML(userProfile.name)} ${userProfile.verified ? '<i class="fas fa-check-circle" title="Akun Terverifikasi"></i>' : ''}</h3>
+                                            <p class="profile-email">${AppUtils.sanitizeHTML(userProfile.email)}</p>
+                                            <button class="btn btn-secondary btn-sm" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                                        </div>
+                                        <ul class="list-group profile-nav-list" id="profileNav">
+                                            <li class="list-group-item active" data-profile-tab="info"><i class="fas fa-user-circle"></i> Informasi Akun</li>
+                                            <li class="list-group-item" data-profile-tab="bookings"><i class="fas fa-calendar-alt"></i> Pemesanan Saya</li>
+                                            <li class="list-group-item" data-profile-tab="settings"><i class="fas fa-cog"></i> Pengaturan</li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                                <main class="profile-content" id="profileContentArea">
+                                    <!-- Konten tab profil akan dimuat di sini -->
+                                </main>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            },
+
+            // Halaman Pesan (Chat)
+            messages: async () => {
+                if (!AppState.currentUser) {
+                    return `
+                        <section class="section">
+                            <div class="container text-center">
+                                <h2 class="section-title">Akses Ditolak</h2>
+                                <p>Anda harus masuk terlebih dahulu untuk melihat pesan Anda.</p>
+                                <button class="btn btn-primary" data-modal-target="loginModal">Masuk Sekarang</button>
+                            </div>
+                        </section>
+                    `;
+                }
+
+                AppUtils.showLoader();
+                const conversations = await AppState.getUserMessages();
+                AppUtils.hideLoader();
+
+                const chatListItemsHtml = conversations.map((conv, index) => `
+                    <div class="chat-list-item ${index === 0 ? 'active' : ''}" data-conversation-id="${conv.id}">
+                        <img src="${conv.contactAvatar}" alt="Avatar ${AppUtils.sanitizeHTML(conv.contactName)}" class="chat-list-item-avatar">
+                        <div class="chat-list-item-info">
+                            <h5 class="chat-list-item-name">${AppUtils.sanitizeHTML(conv.contactName)}</h5>
+                            <p class="chat-list-item-preview">${AppUtils.sanitizeHTML(conv.lastMessage)}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="chat-list-item-time">${conv.timestamp}</span>
+                            ${conv.unreadCount > 0 ? `<span class="badge badge-primary mt-1">${conv.unreadCount}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                // Detail chat pertama (default)
+                const firstConversation = conversations[0];
+                let chatMessagesHtml = '<p class="text-center text-gray">Pilih percakapan untuk memulai.</p>';
+                let chatWindowHeaderHtml = '<h3>Pesan</h3>';
+
+                if (firstConversation) {
+                    chatWindowHeaderHtml = `
+                        <img src="${firstConversation.contactAvatar}" alt="Avatar ${AppUtils.sanitizeHTML(firstConversation.contactName)}" class="chat-window-avatar">
+                        <div>
+                            <h5 class="mb-0">${AppUtils.sanitizeHTML(firstConversation.contactName)}</h5>
+                            <small class="text-success">Online</small> <!-- Status online/offline bisa dinamis -->
+                        </div>
+                    `;
+                    chatMessagesHtml = firstConversation.chatHistory.map(msg => `
+                        <div class="chat-message ${msg.sender === 'user' ? 'chat-message-sent' : 'chat-message-received'}">
+                            ${AppUtils.sanitizeHTML(msg.text)}
+                            <div class="chat-message-meta">${msg.time}</div>
+                        </div>
+                    `).join('');
+                }
+
+                return `
+                    <section class="section messages-page">
+                        <div class="container">
+                             <h2 class="section-title">Pesan Saya</h2>
+                            <div class="messages-layout">
+                                <aside class="chat-list-panel">
+                                    <div class="chat-list-header">
+                                        <span>Semua Percakapan</span>
+                                        <button class="btn btn-icon btn-sm btn-outline-primary" title="Pesan Baru"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                    <div class="chat-list-items" id="chatListContainer">
+                                        ${chatListItemsHtml.length > 0 ? chatListItemsHtml : '<p class="p-3 text-center text-gray">Tidak ada percakapan.</p>'}
+                                    </div>
+                                </aside>
+                                <main class="chat-window-panel">
+                                    <div class="chat-window-header" id="chatWindowHeaderActive">
+                                        ${chatWindowHeaderHtml}
+                                    </div>
+                                    <div class="chat-messages" id="chatMessagesContainer">
+                                        ${chatMessagesHtml}
+                                    </div>
+                                    <div class="chat-input-area">
+                                        <textarea id="chatInputMessage" class="chat-input form-control" placeholder="Ketik pesan Anda..." rows="1"></textarea>
+                                        <button id="chatSendMessageBtn" class="btn btn-primary chat-send-btn" aria-label="Kirim pesan">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </main>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            },
+
+            // Halaman generik untuk link footer yang belum ada kontennya
+            genericPage: (title, content) => {
+                return `
+                    <section class="section">
+                        <div class="container">
+                            <h2 class="section-title">${AppUtils.sanitizeHTML(title)}</h2>
+                            <div class="card">
+                                <div class="card-body">
+                                    ${content ? AppUtils.sanitizeHTML(content) : '<p>Konten untuk halaman ini akan segera hadir. Terima kasih atas kesabaran Anda.</p>'}
+                                    <p class="mt-3"><a href="#home" data-route="home" class="btn btn-primary"><i class="fas fa-home"></i> Kembali ke Beranda</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }
+        };
+
+        // Router Sederhana
+        const Router = {
+            routes: {
+                'home': Pages.home,
+                'properties': Pages.properties,
+                'property': Pages.propertyDetail, // Akan mengambil ID dari hash: #property/id-properti
+                'profile': Pages.profile,
+                'messages': Pages.messages,
+                // Rute untuk halaman statis dari footer
+                'about': () => Pages.genericPage('Tentang Kami', 'RentEase adalah platform penyewaan apartemen terkemuka yang menghubungkan pemilik properti dengan penyewa potensial dari seluruh dunia. Misi kami adalah membuat proses pencarian dan penyewaan hunian menjadi mudah, aman, dan menyenangkan.'),
+                'careers': () => Pages.genericPage('Karir', 'Bergabunglah dengan tim RentEase yang dinamis dan inovatif! Kami selalu mencari talenta berbakat untuk membantu kami tumbuh dan memberikan layanan terbaik. Cek lowongan terbaru kami (segera hadir).'),
+                'contact': () => Pages.genericPage('Hubungi Kami', 'Punya pertanyaan atau butuh bantuan? Tim dukungan RentEase siap membantu Anda. Hubungi kami melalui email support@rentease.example.com atau telepon di +62 21 555 0123.'),
+                'terms': () => Pages.genericPage('Syarat & Ketentuan', 'Harap baca Syarat & Ketentuan kami dengan seksama sebelum menggunakan layanan RentEase... (konten lengkap segera hadir).'),
+                'privacy': () => Pages.genericPage('Kebijakan Privasi', 'Kami menghargai privasi Anda. Kebijakan Privasi ini menjelaskan bagaimana RentEase mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda... (konten lengkap segera hadir).'),
+                'help': () => Pages.genericPage('Pusat Bantuan', 'Temukan jawaban atas pertanyaan umum Anda di Pusat Bantuan kami... (konten lengkap segera hadir).'),
+                'faq': () => Pages.genericPage('FAQ (Pertanyaan Umum)', 'Berikut adalah daftar pertanyaan yang sering diajukan beserta jawabannya... (konten lengkap segera hadir).'),
+                'safety': () => Pages.genericPage('Informasi Keamanan', 'Keamanan Anda adalah prioritas kami. Pelajari lebih lanjut tentang langkah-langkah keamanan yang kami terapkan dan tips untuk bertransaksi dengan aman... (konten lengkap segera hadir).'),
+                'cancellation': () => Pages.genericPage('Kebijakan Pembatalan', 'Setiap properti mungkin memiliki kebijakan pembatalan yang berbeda. Pastikan untuk memeriksa detail kebijakan pada halaman properti sebelum memesan... (konten lengkap segera hadir).')
+            },
+            mainContent: null,
+            currentMapInstance: null, // Untuk menyimpan instance peta Leaflet
+
+            init: () => {
+                Router.mainContent = document.getElementById('main-content');
+                if (!Router.mainContent) {
+                    console.error("Elemen #main-content tidak ditemukan!");
+                    return;
+                }
+
+                window.addEventListener('hashchange', Router.handleRoute);
+                document.addEventListener('click', (e) => {
+                    // Event delegation untuk semua link data-route
+                    const targetLink = e.target.closest('[data-route]');
+                    if (targetLink) {
+                        e.preventDefault();
+                        const route = targetLink.dataset.route;
+                        const id = targetLink.dataset.id;
+                        const subroute = targetLink.dataset.subroute; // Untuk sub-bagian dalam halaman
+
+                        let path = route;
+                        if (id) path += `/${id}`;
+
+                        Router.navigateTo(path);
+
+                        if (subroute) { // Handle scrolling ke sub-bagian
+                            setTimeout(() => { // Tunggu render selesai
+                                const element = document.getElementById(subroute);
+                                if (element) element.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                        }
+
+                        // Tutup mobile menu jika terbuka
+                        const navLinksMenu = document.getElementById('nav-links-menu');
+                        if (navLinksMenu && navLinksMenu.classList.contains('active')) {
+                            UI.toggleMobileMenu();
+                        }
+                    }
+                });
+                Router.handleRoute(); // Muat rute awal
+            },
+
+            navigateTo: (path) => {
+                window.location.hash = path;
+            },
+
+            handleRoute: async () => {
+                AppUtils.showLoader();
+                const hash = window.location.hash.slice(1) || 'home';
+                const [route, param] = hash.split('/');
+
+                const handler = Router.routes[route] || (() => Pages.genericPage('404 - Halaman Tidak Ditemukan', 'Maaf, halaman yang Anda cari tidak ada.'));
+
+                try {
+                    // Handler bisa berupa fungsi biasa atau async function
+                    const pageContent = await handler(param);
+                    Router.mainContent.innerHTML = pageContent;
+                } catch (error) {
+                    console.error("Error rendering page:", error);
+                    Router.mainContent.innerHTML = Pages.genericPage('Terjadi Kesalahan', 'Maaf, terjadi kesalahan saat memuat halaman ini.');
+                }
+
+                UI.updateActiveNavLink(route);
+                SpecificPageScripts.initForCurrentPage(route, param); // Inisialisasi skrip khusus halaman
+                window.scrollTo(0, 0); // Scroll ke atas halaman
+                AppUtils.hideLoader();
+            },
+
+            // Inisialisasi Peta Leaflet
+            initMap: (mapId, lat, lng, title, zoom = 15, addMarker = true) => {
+                if (Router.currentMapInstance) {
+                    Router.currentMapInstance.remove(); // Hapus instance peta sebelumnya jika ada
+                    Router.currentMapInstance = null;
+                }
+                const mapElement = document.getElementById(mapId);
+                if (mapElement && L) { // Pastikan Leaflet (L) sudah dimuat
+                    const propertyLat = parseFloat(mapElement.dataset.lat || lat);
+                    const propertyLng = parseFloat(mapElement.dataset.lng || lng);
+                    const propertyTitle = mapElement.dataset.title || title;
+
+                    if (isNaN(propertyLat) || isNaN(propertyLng)) {
+                        console.error("Koordinat peta tidak valid:", mapElement.dataset.lat, mapElement.dataset.lng);
+                        mapElement.innerHTML = '<p class="text-center text-danger p-3">Gagal memuat peta: Koordinat tidak valid.</p>';
+                        return;
+                    }
+
+                    Router.currentMapInstance = L.map(mapId).setView([propertyLat, propertyLng], zoom);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: 19,
+                    }).addTo(Router.currentMapInstance);
+
+                    if (addMarker) {
+                        L.marker([propertyLat, propertyLng]).addTo(Router.currentMapInstance)
+                            .bindPopup(`<h5>${AppUtils.sanitizeHTML(propertyTitle)}</h5><p>Lokasi properti</p>`)
+                            .openPopup();
+                    }
+                } else if (!mapElement) {
+                    // console.warn(`Elemen peta #${mapId} tidak ditemukan.`);
+                } else if (!L) {
+                    console.error("Leaflet.js belum dimuat.");
+                }
+            }
+        };
+
+        // Logika UI Global (menu, modal, dll)
+        const UI = {
+            init: () => {
+                UI.setupMobileMenu();
+                UI.setupModals();
+                UI.setupScrollEffects();
+                UI.updateCurrentYear();
+                UI.updateLoginStatus(); // Inisialisasi status login saat load
+
+                // Initial loader hide (jika tidak ada proses async di awal)
+                // AppUtils.hideLoader(); // Dipindah ke Router.handleRoute setelah konten dimuat
+                document.getElementById('app-loader')?.classList.add('hidden'); // Sembunyikan loader awal setelah JS siap
+
+                // Event listener untuk tombol logout di profil
+                document.body.addEventListener('click', e => {
+                    if (e.target.id === 'logoutButton' || e.target.closest('#logoutButton')) {
+                        AppState.logout();
+                    }
+                });
+            },
+
+            updateLoginStatus: () => {
+                const desktopNavActions = document.getElementById('desktop-nav-actions');
+                const mobileNavActions = document.querySelector('#nav-links-menu .nav-actions.mobile-active');
+                const profileLink = document.querySelector('.nav-link[data-route="profile"]');
+                const messagesLink = document.querySelector('.nav-link[data-route="messages"]');
+
+                if (AppState.currentUser) {
+                    // User logged in
+                    if (desktopNavActions) desktopNavActions.classList.add('hidden');
+                    if (mobileNavActions) mobileNavActions.classList.add('hidden'); // Sembunyikan tombol login/daftar di menu mobile
+                    if (profileLink) profileLink.textContent = AppState.currentUser.name.split(' ')[0]; // Tampilkan nama pendek
+                } else {
+                    // User logged out
+                    if (desktopNavActions) desktopNavActions.classList.remove('hidden');
+                    if (mobileNavActions) mobileNavActions.classList.remove('hidden');
+                    if (profileLink) profileLink.textContent = 'Profil';
+                }
+            },
+
+            setupMobileMenu: () => {
+                const menuToggleBtn = document.getElementById('mobile-menu-toggle');
+                const navLinksMenu = document.getElementById('nav-links-menu');
+                const icon = menuToggleBtn.querySelector('i');
+
+                if (menuToggleBtn && navLinksMenu) {
+                    menuToggleBtn.addEventListener('click', () => {
+                        UI.toggleMobileMenu(menuToggleBtn, navLinksMenu, icon);
                     });
+                }
+            },
+
+            toggleMobileMenu: (button, menu, iconElement) => {
+                const menuToggleBtn = button || document.getElementById('mobile-menu-toggle');
+                const navLinksMenu = menu || document.getElementById('nav-links-menu');
+                const icon = iconElement || menuToggleBtn.querySelector('i');
+
+                navLinksMenu.classList.toggle('active');
+                const isActive = navLinksMenu.classList.contains('active');
+                menuToggleBtn.setAttribute('aria-expanded', isActive.toString());
+
+                if (isActive) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                    // Prevent body scroll when menu is open
+                    document.body.style.overflow = 'hidden';
+                    // Adjust top based on header height
+                    const headerHeight = document.getElementById('app-header').offsetHeight;
+                    navLinksMenu.style.top = `${headerHeight}px`;
+                    navLinksMenu.style.height = `calc(100vh - ${headerHeight}px)`;
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    document.body.style.overflow = ''; // Restore body scroll
+                }
+            },
+
+            updateActiveNavLink: (currentRoute) => {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.route === currentRoute) {
+                        link.classList.add('active');
+                    }
+                });
+            },
+
+            setupModals: () => {
+                // Buka modal
+                document.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('[data-modal-target]');
+                    if (targetButton) {
+                        const modalId = targetButton.dataset.modalTarget;
+                        UI.openModal(modalId);
+                    }
                 });
 
-                // Initialize forms
+                // Tutup modal
+                document.addEventListener('click', (e) => {
+                    const targetButton = e.target.closest('[data-dismiss-modal]');
+                    if (targetButton) {
+                        const modalId = targetButton.dataset.dismissModal;
+                        UI.closeModal(modalId);
+                    }
+                });
+
+                // Tutup modal dengan klik di luar konten atau tombol Escape
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) { // Klik pada overlay
+                            UI.closeModal(modal.id);
+                        }
+                    });
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === "Escape") {
+                        document.querySelectorAll('.modal.active').forEach(modal => {
+                            UI.closeModal(modal.id);
+                        });
+                    }
+                });
+            },
+
+            openModal: (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('active');
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden'; // Cegah scroll body
+                }
+            },
+
+            closeModal: (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('active');
+                    modal.setAttribute('aria-hidden', 'true');
+                    // Cek apakah ada modal lain yang masih aktif sebelum restore scroll
+                    const anyModalActive = document.querySelector('.modal.active');
+                    if (!anyModalActive) {
+                        document.body.style.overflow = '';
+                    }
+                }
+            },
+
+            setupScrollEffects: () => {
+                const header = document.getElementById('app-header');
+                if (header) {
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                    });
+                }
+            },
+
+            updateCurrentYear: () => {
+                const yearSpan = document.getElementById('current-year');
+                if (yearSpan) {
+                    yearSpan.textContent = new Date().getFullYear();
+                }
+            },
+
+            // Fungsi untuk menampilkan notifikasi/alert sederhana
+            showAlert: (message, type = 'success', duration = 3000) => {
+                const alertBox = AppUtils.createElement('div', {
+                    className: `app-alert app-alert-${type}`, // CSS: .app-alert, .app-alert-success, .app-alert-danger
+                    textContent: message,
+                    style: `
+                        position: fixed;
+                        top: 80px; /* Di bawah header */
+                        left: 50%;
+                        transform: translateX(-50%);
+                        padding: 1rem 1.5rem;
+                        background-color: ${type === 'success' ? 'var(--success-color)' : 'var(--danger-color)'};
+                        color: var(--white-color);
+                        border-radius: var(--border-radius-md);
+                        box-shadow: var(--box-shadow-medium);
+                        z-index: 9999;
+                        transition: opacity 0.3s ease;
+                    `
+                });
+                document.body.appendChild(alertBox);
+                setTimeout(() => {
+                    alertBox.style.opacity = '0';
+                    setTimeout(() => alertBox.remove(), 300);
+                }, duration);
+            }
+        };
+
+        // Skrip Spesifik Halaman (event listener, inisialisasi peta, dll.)
+        const SpecificPageScripts = {
+            initForCurrentPage: (route, param) => {
+                // Hapus event listener lama untuk mencegah duplikasi jika ada
+                SpecificPageScripts.cleanup();
+
+                // Event listener umum yang mungkin ada di banyak halaman
+                SpecificPageScripts.initFavoriteButtons();
+                SpecificPageScripts.initImageGalleryModals();
+                SpecificPageScripts.initGenericForms();
+
+                if (route === 'home') {
+                    SpecificPageScripts.initHomePage();
+                } else if (route === 'properties') {
+                    SpecificPageScripts.initPropertiesPage();
+                } else if (route === 'property' && param) {
+                    SpecificPageScripts.initPropertyDetailPage(param);
+                } else if (route === 'profile') {
+                    SpecificPageScripts.initProfilePage();
+                } else if (route === 'messages') {
+                    SpecificPageScripts.initMessagesPage();
+                }
+                // Tambahkan handler untuk rute lain jika perlu
+            },
+
+            // Membersihkan event listener atau state halaman sebelumnya
+            cleanup: () => {
+                if (Router.currentMapInstance) {
+                    Router.currentMapInstance.remove();
+                    Router.currentMapInstance = null;
+                }
+                // Hapus event listener spesifik halaman jika ada yang ditambahkan secara dinamis
+                // Contoh: document.getElementById('someButtonOnPreviousPage')?.removeEventListener('click', someHandler);
+            },
+
+            initGenericForms: () => {
                 document.querySelectorAll('form').forEach(form => {
                     form.addEventListener('submit', (e) => {
                         e.preventDefault();
-                        alert('Form submitted! (Mock action)');
+                        const formId = form.id;
+
+                        if (formId === 'loginForm') {
+                            const email = document.getElementById('loginEmail').value;
+                            const password = document.getElementById('loginPassword').value;
+                            AppState.login(email, password).then(response => {
+                                UI.showAlert(response.message, response.success ? 'success' : 'danger');
+                                if (response.success) {
+                                    UI.closeModal('loginModal');
+                                    UI.updateLoginStatus();
+                                    Router.navigateTo('profile'); // Arahkan ke profil setelah login
+                                }
+                            });
+                        } else if (formId === 'signupForm') {
+                            const name = document.getElementById('signupName').value;
+                            const email = document.getElementById('signupEmail').value;
+                            const password = document.getElementById('signupPassword').value;
+                            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                            const tos = document.getElementById('signupTos').checked;
+
+                            if (password !== confirmPassword) {
+                                UI.showAlert("Kata sandi dan konfirmasi kata sandi tidak cocok.", "danger");
+                                return;
+                            }
+                            if (!tos) {
+                                UI.showAlert("Anda harus menyetujui Syarat & Ketentuan.", "danger");
+                                return;
+                            }
+                            AppState.signup(name, email, password).then(response => {
+                                UI.showAlert(response.message, response.success ? 'success' : 'danger');
+                                if (response.success) {
+                                    UI.closeModal('signupModal');
+                                    UI.updateLoginStatus();
+                                    Router.navigateTo('profile'); // Arahkan ke profil setelah signup
+                                }
+                            });
+                        } else if (formId === 'homeSearchForm' || form.closest('.search-form')) {
+                            UI.showAlert('Pencarian disimulasikan! Fitur ini akan mengarahkan ke halaman hasil pencarian.', 'success');
+                            Router.navigateTo('properties'); // Arahkan ke halaman properti umum
+                        } else if (formId === 'bookingForm') {
+                            if (!AppState.currentUser) {
+                                UI.showAlert('Anda harus login untuk melakukan pemesanan.', 'danger');
+                                UI.openModal('loginModal');
+                                return;
+                            }
+                            UI.showAlert('Pemesanan Anda telah disimulasikan! Terima kasih.', 'success');
+                            form.reset(); // Reset form booking
+                            document.getElementById('calculatedNights').textContent = 'Pilih tanggal';
+                            document.getElementById('calculatedTotal').textContent = 'Pilih tanggal';
+                        } else {
+                            UI.showAlert(`Form #${formId || 'tanpa ID'} berhasil disubmit (simulasi).`, 'success');
+                            form.reset();
+                        }
                     });
                 });
-            }
-        }
+            },
 
-        // Initialize app
+            initHomePage: () => {
+                // Skrip khusus untuk halaman beranda
+                const homeSearchForm = document.getElementById('homeSearchForm');
+                if (homeSearchForm) {
+                    // Logika spesifik untuk form pencarian di beranda jika ada
+                }
+            },
+
+            initPropertiesPage: () => {
+                // Filter dan sort
+                const filterLocation = document.getElementById('filterLocation');
+                const filterPrice = document.getElementById('filterPrice');
+                const sortProperties = document.getElementById('sortProperties');
+                const propertiesListing = document.getElementById('propertiesListing');
+
+                function applyFiltersAndSort() {
+                    let filtered = [...AppState.properties];
+                    const locationVal = filterLocation.value;
+                    const priceVal = filterPrice.value;
+                    const sortVal = sortProperties.value;
+
+                    if (locationVal) {
+                        filtered = filtered.filter(p => p.location.startsWith(locationVal));
+                    }
+                    if (priceVal) {
+                        const [min, max] = priceVal.split('-').map(Number);
+                        filtered = filtered.filter(p => p.pricePerNight >= min && p.pricePerNight <= max);
+                    }
+
+                    if (sortVal === 'price-asc') filtered.sort((a, b) => a.pricePerNight - b.pricePerNight);
+                    if (sortVal === 'price-desc') filtered.sort((a, b) => b.pricePerNight - a.pricePerNight);
+                    if (sortVal === 'rating-desc') filtered.sort((a, b) => b.rating - a.rating);
+
+                    propertiesListing.innerHTML = filtered.length > 0 ? filtered.map(UIComponents.propertyCard).join('') : '<p class="text-center col-span-full">Tidak ada properti yang cocok dengan filter Anda.</p>';
+                    SpecificPageScripts.initFavoriteButtons(); // Re-init favorite buttons
+                }
+
+                filterLocation?.addEventListener('change', applyFiltersAndSort);
+                filterPrice?.addEventListener('change', applyFiltersAndSort);
+                sortProperties?.addEventListener('change', applyFiltersAndSort);
+            },
+
+            initPropertyDetailPage: (slugOrId) => {
+                const property = AppState.properties.find(p => p.slug === slugOrId || p.id.toString() === slugOrId);
+                if (!property) return;
+
+                Router.initMap('propertyMapDetail', property.coordinates.lat, property.coordinates.lng, property.title);
+
+                // Logika kalkulasi harga booking
+                const checkInDateEl = document.getElementById('bookingCheckIn');
+                const checkOutDateEl = document.getElementById('bookingCheckOut');
+                const calculatedNightsEl = document.getElementById('calculatedNights');
+                const calculatedTotalEl = document.getElementById('calculatedTotal');
+
+                function calculateBookingPrice() {
+                    const checkInDate = new Date(checkInDateEl.value);
+                    const checkOutDate = new Date(checkOutDateEl.value);
+
+                    if (checkInDateEl.value && checkOutDateEl.value && checkOutDate > checkInDate) {
+                        const timeDiff = checkOutDate.getTime() - checkInDate.getTime();
+                        const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        calculatedNightsEl.textContent = `${nights} malam`;
+                        calculatedTotalEl.textContent = AppUtils.formatCurrency(nights * property.pricePerNight);
+                    } else {
+                        calculatedNightsEl.textContent = 'Pilih tanggal';
+                        calculatedTotalEl.textContent = 'Pilih tanggal';
+                    }
+                }
+                checkInDateEl?.addEventListener('change', calculateBookingPrice);
+                checkOutDateEl?.addEventListener('change', calculateBookingPrice);
+
+                // Set tanggal minimum untuk check-in dan check-out
+                const today = new Date().toISOString().split('T')[0];
+                if (checkInDateEl) checkInDateEl.min = today;
+                if (checkOutDateEl) checkOutDateEl.min = today;
+
+                checkInDateEl?.addEventListener('change', () => {
+                    if (checkOutDateEl && checkInDateEl.value) {
+                        checkOutDateEl.min = checkInDateEl.value;
+                        // Jika checkout lebih dulu dari checkin baru, reset checkout
+                        if (new Date(checkOutDateEl.value) <= new Date(checkInDateEl.value)) {
+                            checkOutDateEl.value = '';
+                        }
+                    }
+                    calculateBookingPrice();
+                });
+            },
+
+            initFavoriteButtons: () => {
+                // Menggunakan event delegation pada container yang lebih tinggi jika kartu dirender dinamis
+                const propertiesContainer = document.getElementById('main-content');
+                propertiesContainer.addEventListener('click', function (event) {
+                    const favoriteBtn = event.target.closest('.property-card-favorite-btn');
+                    if (favoriteBtn) {
+                        const propertyId = favoriteBtn.dataset.propertyId;
+                        favoriteBtn.classList.toggle('active');
+                        const icon = favoriteBtn.querySelector('i');
+                        if (favoriteBtn.classList.contains('active')) {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            icon.classList.add('text-secondary'); // Warna saat aktif
+                            UI.showAlert(`Properti #${propertyId} ditambahkan ke favorit! (Simulasi)`, 'success', 1500);
+                            // Di aplikasi nyata: simpan ke localStorage atau kirim ke server
+                        } else {
+                            icon.classList.remove('fas');
+                            icon.classList.remove('text-secondary');
+                            icon.classList.add('far');
+                            UI.showAlert(`Properti #${propertyId} dihapus dari favorit! (Simulasi)`, 'success', 1500);
+                        }
+                    }
+                });
+            },
+
+            initImageGalleryModals: () => {
+                const imageViewerModal = document.getElementById('imageViewerModal');
+                const modalImage = document.getElementById('imageViewerModalImage');
+                if (!imageViewerModal || !modalImage) return;
+
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const imgSrc = item.dataset.imageSrc;
+                        if (imgSrc) {
+                            modalImage.src = imgSrc;
+                            modalImage.alt = `Pratinjau gambar ${item.querySelector('img')?.alt || 'properti'}`;
+                            UI.openModal('imageViewerModal');
+                        }
+                    });
+                });
+            },
+
+            initProfilePage: async () => {
+                if (!AppState.currentUser) return; // Pastikan user sudah login
+
+                const profileNav = document.getElementById('profileNav');
+                const profileContentArea = document.getElementById('profileContentArea');
+
+                const loadProfileTabContent = async (tabName) => {
+                    AppUtils.showLoader();
+                    let contentHtml = '';
+                    if (tabName === 'info') {
+                        const profile = await AppState.getUserProfile();
+                        contentHtml = `
+                            <div class="card">
+                                <div class="card-header"><h4 class="card-title mb-0">Informasi Akun</h4></div>
+                                <div class="card-body">
+                                    <form id="profileInfoForm">
+                                        <div class="form-group">
+                                            <label for="profileFullName" class="form-label">Nama Lengkap</label>
+                                            <input type="text" id="profileFullName" class="form-control" value="${AppUtils.sanitizeHTML(profile.name)}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profileUserEmail" class="form-label">Email</label>
+                                            <input type="email" id="profileUserEmail" class="form-control" value="${AppUtils.sanitizeHTML(profile.email)}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profileUserPhone" class="form-label">Nomor Telepon</label>
+                                            <input type="tel" id="profileUserPhone" class="form-control" value="${AppUtils.sanitizeHTML(profile.phone || '')}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profileUserAddress" class="form-label">Alamat</label>
+                                            <textarea id="profileUserAddress" class="form-control">${AppUtils.sanitizeHTML(profile.address || '')}</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-header"><h4 class="card-title mb-0">Ubah Kata Sandi</h4></div>
+                                <div class="card-body">
+                                     <form id="changePasswordForm">
+                                        <div class="form-group">
+                                            <label for="currentPassword" class="form-label">Kata Sandi Saat Ini</label>
+                                            <input type="password" id="currentPassword" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newPassword" class="form-label">Kata Sandi Baru</label>
+                                            <input type="password" id="newPassword" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirmNewPassword" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                                            <input type="password" id="confirmNewPassword" class="form-control" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Ubah Kata Sandi</button>
+                                    </form>
+                                </div>
+                            </div>
+                        `;
+                    } else if (tabName === 'bookings') {
+                        const bookings = await AppState.getUserBookings();
+                        const bookingsHtml = bookings.map(booking => `
+                            <div class="card booking-item-card mb-3">
+                                <img src="${booking.propertyImage}" alt="Gambar ${AppUtils.sanitizeHTML(booking.propertyName)}" class="booking-item-image">
+                                <div class="booking-item-details">
+                                    <h5 class="booking-item-title">${AppUtils.sanitizeHTML(booking.propertyName)}</h5>
+                                    <p class="booking-item-info"><i class="fas fa-calendar-alt"></i> ${AppUtils.sanitizeHTML(booking.dates)}</p>
+                                    <p class="booking-item-info"><i class="fas fa-money-bill-wave"></i> ${AppUtils.formatCurrency(booking.totalPrice)}</p>
+                                    <div class="booking-item-status">
+                                        <span class="badge badge-${booking.statusBadge || 'light'}">${AppUtils.sanitizeHTML(booking.status)}</span>
+                                    </div>
+                                     <div class="mt-2">
+                                        <a href="#property/${AppState.properties.find(p => p.id === booking.propertyId).slug || booking.propertyId}" data-route="property" data-id="${AppState.properties.find(p => p.id === booking.propertyId).slug || booking.propertyId}" class="btn btn-sm btn-outline-primary">Lihat Properti</a>
+                                        ${booking.status === 'Dikonfirmasi' ? '<button class="btn btn-sm btn-danger ml-2">Batalkan</button>' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        contentHtml = `
+                            <div class="card">
+                                <div class="card-header"><h4 class="card-title mb-0">Pemesanan Saya</h4></div>
+                                <div class="card-body">
+                                    ${bookings.length > 0 ? bookingsHtml : '<p>Anda belum memiliki pemesanan.</p>'}
+                                </div>
+                            </div>`;
+                    } else if (tabName === 'settings') {
+                        const profile = await AppState.getUserProfile(); // Ambil lagi untuk preferensi
+                        contentHtml = `
+                            <div class="card">
+                                <div class="card-header"><h4 class="card-title mb-0">Pengaturan Notifikasi</h4></div>
+                                <div class="card-body">
+                                    <form id="notificationSettingsForm">
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="emailNotifications" ${profile.preferences.notifications.email ? 'checked' : ''}>
+                                            <label class="form-check-label" for="emailNotifications">Notifikasi Email (Penawaran, Update Pemesanan)</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="smsNotifications" ${profile.preferences.notifications.sms ? 'checked' : ''}>
+                                            <label class="form-check-label" for="smsNotifications">Notifikasi SMS (Pengingat Penting)</label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-2">Simpan Pengaturan Notifikasi</button>
+                                    </form>
+                                </div>
+                            </div>`;
+                    }
+                    profileContentArea.innerHTML = contentHtml;
+                    SpecificPageScripts.initGenericForms(); // Re-init forms inside tabs
+                    AppUtils.hideLoader();
+                };
+
+                profileNav?.addEventListener('click', e => {
+                    const targetTab = e.target.closest('.list-group-item');
+                    if (targetTab && targetTab.dataset.profileTab) {
+                        profileNav.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
+                        targetTab.classList.add('active');
+                        loadProfileTabContent(targetTab.dataset.profileTab);
+                    }
+                });
+
+                // Muat tab default (info)
+                loadProfileTabContent('info');
+            },
+
+            initMessagesPage: async () => {
+                if (!AppState.currentUser) return;
+
+                const chatListContainer = document.getElementById('chatListContainer');
+                const chatMessagesContainer = document.getElementById('chatMessagesContainer');
+                const chatWindowHeaderActive = document.getElementById('chatWindowHeaderActive');
+                const chatInputMessage = document.getElementById('chatInputMessage');
+                const chatSendMessageBtn = document.getElementById('chatSendMessageBtn');
+                let currentConversationId = null;
+
+                const loadChatMessages = async (conversationId) => {
+                    const conversations = await AppState.getUserMessages(); // Ambil data terbaru
+                    const conversation = conversations.find(c => c.id === conversationId);
+                    if (!conversation) return;
+
+                    currentConversationId = conversationId; // Set ID percakapan aktif
+
+                    // Update header
+                    chatWindowHeaderActive.innerHTML = `
+                        <img src="${conversation.contactAvatar}" alt="Avatar ${AppUtils.sanitizeHTML(conversation.contactName)}" class="chat-window-avatar">
+                        <div>
+                            <h5 class="mb-0">${AppUtils.sanitizeHTML(conversation.contactName)}</h5>
+                            <small class="text-success">Online</small>
+                        </div>
+                    `;
+                    // Update messages
+                    chatMessagesContainer.innerHTML = conversation.chatHistory.map(msg => `
+                        <div class="chat-message ${msg.sender === 'user' ? 'chat-message-sent' : 'chat-message-received'}">
+                            ${AppUtils.sanitizeHTML(msg.text)}
+                            <div class="chat-message-meta">${msg.time}</div>
+                        </div>
+                    `).join('');
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll ke bawah
+
+                    // Update active state di daftar chat
+                    chatListContainer.querySelectorAll('.chat-list-item').forEach(item => {
+                        item.classList.toggle('active', item.dataset.conversationId === conversationId);
+                    });
+                };
+
+                chatListContainer?.addEventListener('click', e => {
+                    const targetItem = e.target.closest('.chat-list-item');
+                    if (targetItem && targetItem.dataset.conversationId) {
+                        loadChatMessages(targetItem.dataset.conversationId);
+                    }
+                });
+
+                chatSendMessageBtn?.addEventListener('click', async () => {
+                    const messageText = chatInputMessage.value.trim();
+                    if (!messageText || !currentConversationId) return;
+
+                    // Tambah pesan ke UI (simulasi)
+                    const newMessageHtml = `
+                        <div class="chat-message chat-message-sent">
+                            ${AppUtils.sanitizeHTML(messageText)}
+                            <div class="chat-message-meta">Sekarang</div>
+                        </div>
+                    `;
+                    chatMessagesContainer.insertAdjacentHTML('beforeend', newMessageHtml);
+                    chatInputMessage.value = '';
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+                    // Di aplikasi nyata: kirim pesan ke server dan update state
+                    // Untuk simulasi, tambahkan ke mock data jika perlu (tapi ini akan hilang saat reload)
+                    const conversations = await AppState.getUserMessages();
+                    const conversation = conversations.find(c => c.id === currentConversationId);
+                    if (conversation) {
+                        conversation.chatHistory.push({ sender: 'user', text: messageText, time: 'Sekarang' });
+                        conversation.lastMessage = messageText; // Update last message preview
+                        // Perlu cara untuk re-render chat list item juga.
+                    }
+                    UI.showAlert('Pesan terkirim (simulasi)!', 'success', 1500);
+                });
+
+                chatInputMessage?.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        chatSendMessageBtn.click();
+                    }
+                });
+
+                // Muat chat pertama jika ada
+                const firstConvItem = chatListContainer?.querySelector('.chat-list-item');
+                if (firstConvItem && firstConvItem.dataset.conversationId) {
+                    loadChatMessages(firstConvItem.dataset.conversationId);
+                }
+            }
+        };
+
+        // Inisialisasi Aplikasi
         document.addEventListener('DOMContentLoaded', () => {
-            new Router();
+            UI.init();
+            Router.init();
         });
+
     </script>
 </body>
+
 </html>

@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="RentApart - Solusi manajemen properti apartemen modern. Temukan, kelola, dan sewakan unit dengan mudah.">
+  <meta name="keywords" content="sewa apartemen, manajemen properti, aplikasi properti, RentApart">
+  <meta name="author" content="RentApart Team">
+  <title>RentApart | Hunian Modern & Manajemen Properti</title>
+
+  <!-- Favicon (Gunakan generator favicon untuk membuat berbagai ukuran) -->
+  <link rel="icon" href="https://img.icons8.com/fluency/48/000000/building.png" type="image/png">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/000000/building.png">
+
+
+  <!-- Ikon Font Awesome (Gratis) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Core CSS Aplikasi -->
+  <style>
+    /* Reset CSS Dasar & Global Styles */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Skema Warna Dasar (Light Mode) */
+      --primary-color: #3B82F6;
+      /* Biru yang lebih modern */
+      --primary-color-hover: #2563EB;
+      --secondary-color: #6B7280;
+      /* Abu-abu netral */
+      --success-color: #10B981;
+      --warning-color: #F59E0B;
+      --danger-color: #EF4444;
+      --info-color: #3B82F6;
+      /* Sama dengan primary atau bisa beda */
+
+      --background-color: #F9FAFB;
+      /* Latar belakang utama aplikasi (light) */
+      --surface-color: #FFFFFF;
+      /* Warna permukaan card, modal, dll (light) */
+      --text-color: #1F2937;
+      /* Warna teks utama (light) */
+      --text-muted-color: #6B7280;
+      /* Warna teks sekunder/muted (light) */
+      --border-color: #E5E7EB;
+      /* Warna border (light) */
+
+      --font-primary: 'Poppins', sans-serif;
+      --font-secondary: 'Inter', sans-serif;
+
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --card-border-radius: 0.75rem;
+      /* 12px */
+      --input-border-radius: 0.5rem;
+      /* 8px */
+      --btn-border-radius: 0.5rem;
+      /* 8px */
+
+      --sidebar-width: 260px;
+      --header-height: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #60A5FA;
+      /* Biru lebih terang untuk dark mode */
+      --primary-color-hover: #3B82F6;
+      --secondary-color: #9CA3AF;
+      --success-color: #34D399;
+      --warning-color: #FBBF24;
+      --danger-color: #F87171;
+      --info-color: #60A5FA;
+
+      --background-color: #111827;
+      /* Latar belakang utama aplikasi (dark) */
+      --surface-color: #1F2937;
+      /* Warna permukaan card, modal, dll (dark) */
+      --text-color: #F3F4F6;
+      /* Warna teks utama (dark) */
+      --text-muted-color: #9CA3AF;
+      /* Warna teks sekunder/muted (dark) */
+      --border-color: #374151;
+      /* Warna border (dark) */
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-secondary);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      font-size: 16px;
+      display: flex;
+      /* Menggunakan flex untuk layout utama */
+      min-height: 100vh;
+      overflow-x: hidden;
+      /* Mencegah scroll horizontal */
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+
+    /* Struktur Utama Aplikasi */
+    .app-shell {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--surface-color);
+      border-right: 1px solid var(--border-color);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+      position: fixed;
+      /* Fixed sidebar */
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1000;
+    }
+
+    .sidebar .brand {
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem 1.5rem 0.5rem;
+      /* Disesuaikan padding */
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar .brand .logo-icon {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-right: 0.75rem;
+    }
+
+    .sidebar .brand h1 {
+      font-family: var(--font-primary);
+      font-size: 1.5rem;
+      /* 24px */
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .sidebar-nav {
+      flex-grow: 1;
+      overflow-y: auto;
+      /* Jika menu banyak */
+    }
+
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      margin-bottom: 0.5rem;
+      color: var(--text-muted-color);
+      border-radius: var(--btn-border-radius);
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+
+    .sidebar-nav .nav-link:hover {
+      background-color: var(--primary-color-hover);
+      color: #FFFFFF;
+    }
+
+    .sidebar-nav .nav-link.active {
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .sidebar-nav .nav-link i {
+      width: 1.5rem;
+      /* 24px, untuk konsistensi ikon */
+      margin-right: 0.875rem;
+      /* 14px */
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      /* Mendorong footer ke bawah */
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* Konten Utama */
+    .main-wrapper {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin-left: var(--sidebar-width);
+      /* Memberi ruang untuk sidebar fixed */
+      transition: margin-left var(--transition-speed) ease;
+    }
+
+    .app-header {
+      height: var(--header-height);
+      background-color: var(--surface-color);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      /* Header sticky */
+      top: 0;
+      z-index: 900;
+      /* Di bawah sidebar */
+      transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+
+    .header-left .sidebar-toggle {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-right: 1rem;
+      /* Jarak dengan judul halaman */
+    }
+
+    /* Sembunyikan di desktop */
+    @media (min-width: 769px) {
+      .header-left .sidebar-toggle {
+        display: none;
+      }
+    }
+
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      font-size: 1.1rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--btn-border-radius);
+      cursor: pointer;
+      margin-left: 1rem;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--primary-color-hover);
+      color: #FFFFFF;
+      border-color: var(--primary-color-hover);
+    }
+
+    #main-content {
+      padding: 2rem;
+      /* 32px */
+      flex-grow: 1;
+      overflow-y: auto;
+      /* Untuk konten yang panjang */
+    }
+
+    /* Utilitas Umum */
+    .text-muted {
+      color: var(--text-muted-color);
+    }
+
+    .mb-1 {
+      margin-bottom: 0.25rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+
+    .mt-1 {
+      margin-top: 0.25rem;
+    }
+
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .mt-4 {
+      margin-top: 1.5rem;
+    }
+
+    .mr-1 {
+      margin-right: 0.25rem;
+    }
+
+    .mr-2 {
+      margin-right: 0.5rem;
+    }
+
+    .ml-auto {
+      margin-left: auto;
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .align-items-center {
+      align-items: center;
+    }
+
+    .justify-content-between {
+      justify-content: space-between;
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    /* Grid System Sederhana (Mirip Bootstrap cols) */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -0.75rem;
+      /* Gutter Ausgleich */
+      margin-left: -0.75rem;
+      /* Gutter Ausgleich */
+    }
+
+    .col {
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+      padding-right: 0.75rem;
+      /* Gutter */
+      padding-left: 0.75rem;
+      /* Gutter */
+      margin-bottom: 1.5rem;
+      /* Jarak antar baris item di kolom */
+    }
+
+    /* Contoh: .col-4 berarti 4 dari 12 kolom (33.33%) */
+    .col-1 {
+      flex: 0 0 8.333333%;
+      max-width: 8.333333%;
+    }
+
+    .col-2 {
+      flex: 0 0 16.666667%;
+      max-width: 16.666667%;
+    }
+
+    .col-3 {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+
+    .col-4 {
+      flex: 0 0 33.333333%;
+      max-width: 33.333333%;
+    }
+
+    .col-5 {
+      flex: 0 0 41.666667%;
+      max-width: 41.666667%;
+    }
+
+    .col-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+
+    .col-7 {
+      flex: 0 0 58.333333%;
+      max-width: 58.333333%;
+    }
+
+    .col-8 {
+      flex: 0 0 66.666667%;
+      max-width: 66.666667%;
+    }
+
+    .col-9 {
+      flex: 0 0 75%;
+      max-width: 75%;
+    }
+
+    .col-10 {
+      flex: 0 0 83.333333%;
+      max-width: 83.333333%;
+    }
+
+    .col-11 {
+      flex: 0 0 91.666667%;
+      max-width: 91.666667%;
+    }
+
+    .col-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+
+    /* Card Styling */
+    .card {
+      background-color: var(--surface-color);
+      border-radius: var(--card-border-radius);
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-color);
+      transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+      overflow: hidden;
+      /* Untuk gambar di dalam card */
+    }
+
+    .card-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-family: var(--font-primary);
+      font-size: 1.125rem;
+      /* 18px */
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--background-color);
+      /* Sedikit beda dari body card */
+    }
+
+    /* Stat Card (Khas Dasbor) */
+    .stat-card .icon-wrapper {
+      width: 3.5rem;
+      /* 56px */
+      height: 3.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: #FFFFFF;
+      font-size: 1.5rem;
+      /* Ukuran ikon */
+    }
+
+    .stat-card h3 {
+      font-family: var(--font-primary);
+      font-size: 2rem;
+      /* 32px */
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card p {
+      font-size: 0.875rem;
+      /* 14px */
+      color: var(--text-muted-color);
+      margin-bottom: 0;
+    }
+
+    /* Property Card */
+    .property-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .property-card .content {
+      padding: 1rem 1.5rem;
+    }
+
+    .property-card .title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .property-card .location,
+    .property-card .price {
+      font-size: 0.9rem;
+      color: var(--text-muted-color);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .property-card .location i,
+    .property-card .price i {
+      margin-right: 0.5rem;
+      width: 1em;
+    }
+
+    .property-card .details {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      color: var(--secondary-color);
+    }
+
+    .property-card .details span i {
+      margin-right: 0.3rem;
+      color: var(--primary-color);
+    }
+
+
+    /* Tombol */
+    .btn {
+      display: inline-flex;
+      /* Agar ikon dan teks sejajar */
+      align-items: center;
+      justify-content: center;
+      padding: 0.625rem 1.25rem;
+      /* 10px 20px */
+      font-size: 0.9375rem;
+      /* 15px */
+      font-weight: 500;
+      border-radius: var(--btn-border-radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+      white-space: nowrap;
+      /* Mencegah teks tombol wrap */
+    }
+
+    .btn i {
+      margin-right: 0.5rem;
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+      border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-color-hover);
+      border-color: var(--primary-color-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: #FFFFFF;
+      border-color: var(--secondary-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #525a65;
+      border-color: #525a65;
+    }
+
+    .btn-outline-primary {
+      background-color: transparent;
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      color: #FFFFFF;
+    }
+
+    .btn-outline-danger {
+      background-color: transparent;
+      color: var(--danger-color);
+      border-color: var(--danger-color);
+    }
+
+    .btn-outline-danger:hover {
+      background-color: var(--danger-color);
+      color: #FFFFFF;
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      color: #FFFFFF;
+      border-color: var(--success-color);
+    }
+
+    .btn-success:hover {
+      opacity: 0.85;
+    }
+
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-icon {
+      padding: 0.5rem;
+      /* Untuk tombol hanya ikon */
+    }
+
+    .btn-icon i {
+      margin-right: 0;
+    }
+
+
+    /* Formulir */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      /* 14px */
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      /* 12px 16px */
+      font-size: 0.9375rem;
+      /* 15px */
+      line-height: 1.5;
+      color: var(--text-color);
+      background-color: var(--surface-color);
+      background-clip: padding-box;
+      border: 1px solid var(--border-color);
+      border-radius: var(--input-border-radius);
+      transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+      /* Mirip focus Bootstrap */
+    }
+
+    select.form-control {
+      appearance: none;
+      /* Hapus tampilan default browser */
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 16px 12px;
+      padding-right: 2.5rem;
+      /* Ruang untuk panah custom */
+    }
+
+    [data-theme="dark"] select.form-control {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ced4da' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    }
+
+    /* Tabel */
+    .table-wrapper {
+      overflow-x: auto;
+      /* Agar tabel bisa di-scroll horizontal di mobile */
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--card-border-radius);
+      box-shadow: var(--card-shadow);
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+      border-collapse: collapse;
+      /* Hapus spasi antar border sel */
+    }
+
+    .table th,
+    .table td {
+      padding: 0.875rem 1.25rem;
+      /* 14px 20px */
+      vertical-align: top;
+      border-top: 1px solid var(--border-color);
+      text-align: left;
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid var(--border-color);
+      font-weight: 600;
+      background-color: var(--background-color);
+      /* Sedikit beda dari surface */
+    }
+
+    .table tbody tr:hover {
+      background-color: var(--background-color);
+      /* Efek hover pada baris */
+    }
+
+    .table td .badge {
+      margin-top: 0.25rem;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 0.35em 0.65em;
+      font-size: 75%;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 0.375rem;
+      /* 6px */
+    }
+
+    .badge-success {
+      color: #fff;
+      background-color: var(--success-color);
+    }
+
+    .badge-warning {
+      color: var(--text-color);
+      background-color: var(--warning-color);
+    }
+
+    .badge-danger {
+      color: #fff;
+      background-color: var(--danger-color);
+    }
+
+    .badge-info {
+      color: #fff;
+      background-color: var(--info-color);
+    }
+
+    .badge-secondary {
+      color: #fff;
+      background-color: var(--secondary-color);
+    }
+
+    /* Placeholder untuk Chart */
+    .chart-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      background-color: var(--background-color);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--input-border-radius);
+      color: var(--text-muted-color);
+      text-align: center;
+    }
+
+    .chart-placeholder i {
+      font-size: 2rem;
+      margin-right: 0.5rem;
+    }
+
+
+    /* Header Halaman */
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+      font-family: var(--font-primary);
+      font-size: 1.75rem;
+      /* 28px */
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-header p {
+      font-size: 1rem;
+      color: var(--text-muted-color);
+    }
+
+    /* Responsif */
+    @media (max-width: 1200px) {
+      .col-lg-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+
+      .col-lg-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+
+      .col-lg-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .col-lg-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+      }
+
+      .col-lg-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 992px) {
+
+      /* Untuk tablet, kolom menjadi lebih besar */
+      .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+
+      .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      /* Mobile: Sidebar disembunyikan, konten utama full width */
+      .sidebar {
+        transform: translateX(-100%);
+        /* Sembunyikan sidebar ke kiri */
+        position: fixed;
+        z-index: 1100;
+        /* Di atas header saat terbuka */
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-wrapper {
+        margin-left: 0;
+        /* Konten utama mengambil seluruh lebar */
+      }
+
+      .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+
+      .col-sm-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .page-header h2 {
+        font-size: 1.5rem;
+      }
+
+      #main-content {
+        padding: 1.5rem;
+      }
+
+      .app-header {
+        padding: 0 1.5rem;
+      }
+
+      /* Form search di mobile mungkin perlu stacking */
+      #property-search-form .col {
+        margin-bottom: 1rem;
+        /* Beri jarak antar input */
+      }
+
+      #property-search-form .form-group {
+        margin-bottom: 0;
+        /* Hapus margin bawah default di form group */
+      }
+
+      #property-search-form .col:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    /* Overlay untuk sidebar mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1050;
+      /* Di bawah sidebar, di atas konten */
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <i class="fas fa-building logo-icon"></i>
+        <h1>RentApart</h1>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#/dashboard" class="nav-link" data-page="dashboard">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dasbor</span>
+        </a>
+        <a href="#/properties" class="nav-link" data-page="properties">
+          <i class="fas fa-city"></i>
+          <span>Properti</span>
+        </a>
+        <a href="#/tenants" class="nav-link" data-page="tenants">
+          <i class="fas fa-users"></i>
+          <span>Penyewa</span>
+        </a>
+        <a href="#/bookings" class="nav-link" data-page="bookings">
+          <i class="fas fa-calendar-check"></i>
+          <span>Pemesanan</span>
+        </a>
+        <a href="#/analytics" class="nav-link" data-page="analytics">
+          <i class="fas fa-chart-line"></i>
+          <span>Analitik</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="#/settings" class="nav-link" data-page="settings">
+          <i class="fas fa-cog"></i>
+          <span>Pengaturan</span>
+        </a>
+        <a href="#" class="nav-link" id="logout-btn-placeholder">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Keluar</span>
+        </a>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+
+    <!-- Main Wrapper (Header + Content) -->
+    <div class="main-wrapper">
+      <!-- Header Aplikasi -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+            <i class="fas fa-bars"></i>
+          </button>
+          <!-- Judul halaman dinamis bisa ditambahkan di sini oleh JS jika diperlukan -->
+        </div>
+        <div class="header-right">
+          <!-- Bisa ditambahkan notifikasi, profil pengguna, dll. -->
+          <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+            <i class="fas fa-moon"></i> <!-- Default ikon untuk light mode -->
+          </button>
+        </div>
+      </header>
+
+      <!-- Konten Utama (Akan diisi oleh JavaScript) -->
+      <main id="main-content">
+        <!-- Konten dinamis akan dimuat di sini -->
+      </main>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Aplikasi -->
+  <script>
+    // script.js
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- STATE APLIKASI (Hirarki Layer Data) ---
+      const appState = {
+        currentPage: 'dashboard', // Halaman default
+        theme: localStorage.getItem('theme') || 'light', // Ambil tema dari localStorage atau default ke terang
+        // Data dummy, idealnya ini diambil dari API
+        data: {
+          stats: {
+            totalProperties: 28,
+            occupiedUnits: 19,
+            monthlyRevenue: 52300,
+            activeTenants: 38,
+          },
+          properties: [
+            { id: 1, name: 'Apartemen Modern Pusat Kota', location: 'Jakarta Pusat', price: 1500, type: '2 Kamar Tidur', image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YXBhcnRtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60', beds: 2, baths: 2, area: 85, status: 'Tersedia' },
+            { id: 2, name: 'Studio Nyaman Dekat Kampus', location: 'Bandung', price: 800, type: 'Studio', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFwYXJ0bWVudHxlbnwwfHwwfHx8MA&auto=format&fit=crop&w=500&q=60', beds: 1, baths: 1, area: 40, status: 'Tersewa' },
+            { id: 3, name: 'Penthouse Mewah Pemandangan Laut', location: 'Surabaya', price: 3200, type: '3 Kamar Tidur', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ラグジュアリー%20アパートメントfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60', beds: 3, baths: 3, area: 150, status: 'Tersedia' },
+            { id: 4, name: 'Apartemen Keluarga Strategis', location: 'Jakarta Selatan', price: 2200, type: '3 Kamar Tidur', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', beds: 3, baths: 2, area: 110, status: 'Perbaikan' },
+            { id: 5, name: 'Unit Ekonomis Pinggir Kota', location: 'Bekasi', price: 650, type: '1 Kamar Tidur', image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGFwYXJ0bWVudCUyMGludGVyaW9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60', beds: 1, baths: 1, area: 35, status: 'Tersedia' },
+          ],
+          tenants: [
+            { id: 1, name: 'Budi Santoso', unit: 'A-101', property: 'Apartemen Modern Pusat Kota', status: 'Aktif', rent: 1500, moveIn: '2023-01-15', leaseEnd: '2024-01-14', phone: '081234567890', email: 'budi.s@example.com' },
+            { id: 2, name: 'Citra Lestari', unit: 'B-205', property: 'Studio Nyaman Dekat Kampus', status: 'Menunggu Pembayaran', rent: 800, moveIn: '2023-08-01', leaseEnd: '2024-07-31', phone: '087654321098', email: 'citra.l@example.com' },
+            { id: 3, name: 'Rahmat Hidayat', unit: 'C-304', property: 'Penthouse Mewah Pemandangan Laut', status: 'Aktif', rent: 3200, moveIn: '2023-03-10', leaseEnd: '2024-03-09', phone: '081112223333', email: 'rahmat.h@example.com' },
+            { id: 4, name: 'Dewi Anggraini', unit: 'A-102', property: 'Apartemen Modern Pusat Kota', status: 'Nonaktif', rent: 1500, moveIn: '2022-05-20', leaseEnd: '2023-05-19', phone: '085556667777', email: 'dewi.a@example.com' },
+          ],
+          bookings: [
+            { id: 1, tenantName: 'Ahmad Yani', propertyName: 'Studio Nyaman Dekat Kampus', checkIn: '2023-09-01', checkOut: '2023-09-07', status: 'Dikonfirmasi', guests: 1, totalCost: 180 },
+            { id: 2, tenantName: 'Siti Aminah', propertyName: 'Apartemen Keluarga Strategis', checkIn: '2023-09-15', checkOut: '2023-10-15', status: 'Tertunda', guests: 3, totalCost: 2200 },
+            { id: 3, tenantName: 'Joko Susilo', propertyName: 'Penthouse Mewah Pemandangan Laut', checkIn: '2023-10-01', checkOut: '2023-10-05', status: 'Dibatalkan', guests: 2, totalCost: 1280 },
+          ]
+        },
+        ui: { // State khusus UI
+          isSidebarOpen: window.innerWidth > 768, // Sidebar terbuka di desktop, tertutup di mobile by default
+        }
+      };
+
+      // --- ELEMEN DOM UTAMA ---
+      const mainContent = document.getElementById('main-content');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const navLinks = document.querySelectorAll('.sidebar-nav .nav-link, .sidebar-footer .nav-link');
+
+      // --- FUNGSI RENDER KONTEN HALAMAN (Router View) ---
+      function renderPage(page) {
+        appState.currentPage = page;
+        mainContent.innerHTML = ''; // Kosongkan konten sebelum render
+
+        // Header halaman umum
+        const pageHeader = document.createElement('header');
+        pageHeader.className = 'page-header';
+        const pageTitle = document.createElement('h2');
+        const pageSubtitle = document.createElement('p');
+        pageSubtitle.className = 'text-muted';
+
+        // Scroll ke atas halaman setiap kali pindah halaman
+        window.scrollTo(0, 0);
+
+        switch (page) {
+          case 'dashboard':
+            pageTitle.textContent = 'Dasbor Utama';
+            pageSubtitle.textContent = 'Selamat datang kembali! Ini ringkasan properti Anda.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createDashboardContent());
+            break;
+          case 'properties':
+            pageTitle.textContent = 'Daftar Properti';
+            pageSubtitle.textContent = 'Kelola dan lihat semua properti yang tersedia.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createPropertiesContent());
+            break;
+          case 'tenants':
+            pageTitle.textContent = 'Manajemen Penyewa';
+            pageSubtitle.textContent = 'Lihat dan kelola data penyewa properti Anda.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createTenantsContent());
+            break;
+          case 'bookings':
+            pageTitle.textContent = 'Pemesanan & Reservasi';
+            pageSubtitle.textContent = 'Lacak semua pemesanan dan ketersediaan unit.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createBookingsContent());
+            break;
+          case 'analytics':
+            pageTitle.textContent = 'Analitik & Laporan';
+            pageSubtitle.textContent = 'Pantau performa properti dan tren pasar.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createAnalyticsContent());
+            break;
+          case 'settings':
+            pageTitle.textContent = 'Pengaturan Akun';
+            pageSubtitle.textContent = 'Atur preferensi akun dan aplikasi Anda.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.appendChild(createSettingsContent());
+            break;
+          default:
+            pageTitle.textContent = 'Halaman Tidak Ditemukan (404)';
+            pageSubtitle.textContent = 'Maaf, halaman yang Anda cari tidak ada atau sedang dalam pengembangan.';
+            pageHeader.append(pageTitle, pageSubtitle);
+            mainContent.appendChild(pageHeader);
+            mainContent.innerHTML += `<p>Silakan kembali ke <a href="#/dashboard" class="btn btn-sm btn-primary">Dasbor</a>.</p>`;
+        }
+        updateActiveNavLink();
+        // Tutup sidebar di mobile setelah navigasi
+        if (window.innerWidth <= 768 && appState.ui.isSidebarOpen) {
+          toggleSidebar();
+        }
+      }
+
+      // --- FUNGSI PEMBUAT KONTEN SPESIFIK HALAMAN ---
+
+      function createDashboardContent() {
+        const { stats, tenants, properties } = appState.data;
+        const section = document.createElement('section');
+        section.innerHTML = `
+      <div class="row mb-4">
+        ${createStatCard('Total Properti', stats.totalProperties, 'fa-city', 'var(--primary-color)')}
+        ${createStatCard('Unit Terisi', stats.occupiedUnits, 'fa-building-user', 'var(--success-color)')}
+        ${createStatCard('Pendapatan Bulanan (Est.)', '$' + stats.monthlyRevenue.toLocaleString('en-US'), 'fa-sack-dollar', 'var(--warning-color)')}
+        ${createStatCard('Penyewa Aktif', stats.activeTenants, 'fa-users-line', 'var(--danger-color)')}
+      </div>
+
+      <div class="row">
+        <div class="col col-lg-8 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Tren Okupansi Properti</h3></div>
+            <div class="card-body">
+              <div class="chart-placeholder">
+                <i class="fas fa-chart-area"></i>
+                <span>Simulasi Grafik Tren Okupansi (Data Belum Tersedia)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-lg-4 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Ringkasan Pendapatan</h3></div>
+            <div class="card-body">
+              <div class="chart-placeholder">
+                <i class="fas fa-chart-pie"></i>
+                <span>Simulasi Grafik Pendapatan (Data Belum Tersedia)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Penyewa Terbaru</h3>
+                    <a href="#/tenants" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                </div>
+                <div class="card-body" id="recent-tenants-dashboard">
+                    <!-- Tabel penyewa terbaru akan dimuat di sini -->
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Properti Baru Ditambahkan</h3>
+                    <a href="#/properties" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                </div>
+                <div class="card-body">
+                    <div class="row" id="recent-properties-dashboard">
+                        <!-- Kartu properti terbaru akan dimuat di sini -->
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    `;
+        // Muat data penyewa terbaru ke dasbor
+        const recentTenantsContainer = section.querySelector('#recent-tenants-dashboard');
+        if (recentTenantsContainer) {
+          // Ambil 3 penyewa teratas berdasarkan tanggal masuk (simulasi karena tidak ada tanggal pembuatan)
+          const sortedTenants = [...tenants].sort((a, b) => new Date(b.moveIn) - new Date(a.moveIn));
+          recentTenantsContainer.appendChild(createTenantsTable(sortedTenants.slice(0, 3)));
+        }
+
+        // Muat data properti terbaru ke dasbor
+        const recentPropertiesContainer = section.querySelector('#recent-properties-dashboard');
+        if (recentPropertiesContainer) {
+          // Ambil 3 properti teratas berdasarkan ID (simulasi properti terbaru)
+          const sortedProperties = [...properties].sort((a, b) => b.id - a.id);
+          sortedProperties.slice(0, 3).forEach(prop => {
+            const propCol = document.createElement('div');
+            propCol.className = 'col col-lg-4 col-md-6 col-sm-12'; // Responsif
+            propCol.innerHTML = createPropertyCard(prop);
+            recentPropertiesContainer.appendChild(propCol);
+          });
+          if (sortedProperties.length === 0) {
+            recentPropertiesContainer.innerHTML = '<p class="text-center text-muted col-12">Belum ada properti.</p>';
+          }
+        }
+        return section;
+      }
+
+      function createStatCard(title, value, iconClass, iconBgColor) {
+        return `
+      <div class="col col-lg-3 col-md-6 col-sm-12">
+        <div class="card stat-card">
+          <div class="card-body">
+            <div class="icon-wrapper" style="background-color: ${iconBgColor};">
+              <i class="fas ${iconClass}"></i>
+            </div>
+            <h3>${value}</h3>
+            <p>${title}</p>
+          </div>
+        </div>
+      </div>
+    `;
+      }
+
+      function createPropertyCard(prop) {
+        return `
+        <div class="card property-card h-100"> <!-- h-100 untuk tinggi card yang sama jika dalam satu baris -->
+          <img src="${prop.image}" alt="Gambar ${prop.name}" loading="lazy">
+          <div class="content">
+            <h4 class="title">${prop.name}</h4>
+            <p class="location"><i class="fas fa-map-marker-alt"></i> ${prop.location}</p>
+            <p class="price"><i class="fas fa-dollar-sign"></i> ${prop.price.toLocaleString('en-US')}/bulan</p>
+            <div class="details">
+              <span><i class="fas fa-bed"></i> ${prop.beds} KT</span>
+              <span><i class="fas fa-bath"></i> ${prop.baths} KM</span>
+              <span><i class="fas fa-ruler-combined"></i> ${prop.area} m²</span>
+            </div>
+            <div class="mt-3 d-flex justify-content-between align-items-center">
+                <button class="btn btn-sm btn-primary" onclick="alert('Detail properti ID: ${prop.id}')"><i class="fas fa-eye"></i> Lihat</button>
+                <span class="badge ${prop.status === 'Tersedia' ? 'badge-success' : (prop.status === 'Tersewa' ? 'badge-danger' : 'badge-warning')}">${prop.status}</span>
+            </div>
+          </div>
+        </div>
+    `;
+      }
+
+      function createPropertiesContent() {
+        const { properties } = appState.data;
+        const section = document.createElement('section');
+
+        const searchFormSection = `
+      <div class="card mb-4">
+        <div class="card-header"><h3 class="card-title">Filter & Cari Properti</h3></div>
+        <div class="card-body">
+          <form id="property-search-form" class="row align-items-end">
+            <div class="col col-lg-3 col-md-6 col-sm-12 form-group">
+              <label for="search-location" class="form-label">Lokasi</label>
+              <input type="text" id="search-location" class="form-control" placeholder="Cth: Jakarta Pusat">
+            </div>
+            <div class="col col-lg-3 col-md-6 col-sm-12 form-group">
+              <label for="search-type" class="form-label">Tipe Properti</label>
+              <select id="search-type" class="form-control">
+                <option value="">Semua Tipe</option>
+                <option value="Studio">Studio</option>
+                <option value="1 Kamar Tidur">1 Kamar Tidur</option>
+                <option value="2 Kamar Tidur">2 Kamar Tidur</option>
+                <option value="3+ Kamar Tidur">3+ Kamar Tidur</option>
+              </select>
+            </div>
+            <div class="col col-lg-3 col-md-6 col-sm-12 form-group">
+              <label for="search-price" class="form-label">Rentang Harga ($)</label>
+              <select id="search-price" class="form-control">
+                <option value="">Semua Harga</option>
+                <option value="0-1000">0 - 1000</option>
+                <option value="1001-2000">1001 - 2000</option>
+                <option value="2001-max">2001+</option>
+              </select>
+            </div>
+            <div class="col col-lg-3 col-md-6 col-sm-12 form-group">
+              <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Cari</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    `;
+
+        let propertyCardsHTML = properties.map(prop => `
+      <div class="col col-lg-4 col-md-6 col-sm-12">
+        ${createPropertyCard(prop)}
+      </div>
+    `).join('');
+
+        if (properties.length === 0) {
+          propertyCardsHTML = '<p class="text-center text-muted col-12">Tidak ada properti yang cocok dengan kriteria.</p>';
+        }
+
+        section.innerHTML = searchFormSection + `<div class="row" id="property-list-container">${propertyCardsHTML}</div>`;
+
+        const searchForm = section.querySelector('#property-search-form');
+        if (searchForm) {
+          searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const location = section.querySelector('#search-location').value.toLowerCase();
+            const type = section.querySelector('#search-type').value;
+            const priceRange = section.querySelector('#search-price').value;
+
+            let filteredProperties = appState.data.properties;
+
+            if (location) {
+              filteredProperties = filteredProperties.filter(p => p.location.toLowerCase().includes(location));
+            }
+            if (type) {
+              filteredProperties = filteredProperties.filter(p => p.type === type);
+            }
+            if (priceRange) {
+              const [min, max] = priceRange.split('-');
+              filteredProperties = filteredProperties.filter(p => {
+                if (max === 'max') return p.price >= parseInt(min);
+                return p.price >= parseInt(min) && p.price <= parseInt(max);
+              });
+            }
+
+            const container = section.querySelector('#property-list-container');
+            container.innerHTML = filteredProperties.map(prop => `
+                <div class="col col-lg-4 col-md-6 col-sm-12">
+                    ${createPropertyCard(prop)}
+                </div>
+            `).join('') || '<p class="text-center text-muted col-12">Tidak ada properti yang cocok dengan kriteria.</p>';
+          });
+        }
+        return section;
+      }
+
+      function createTenantsTable(tenantData) {
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Nama Penyewa</th>
+          <th>Unit / Properti</th>
+          <th>Status</th>
+          <th>Sewa/Bln</th>
+          <th>Tgl Masuk</th>
+          <th>Akhir Sewa</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tenantData.map(tenant => `
+          <tr>
+            <td>
+                <strong>${tenant.name}</strong>
+                <small class="text-muted d-block">${tenant.email}</small>
+            </td>
+            <td>${tenant.unit} <small class="text-muted d-block">${tenant.property}</small></td>
+            <td><span class="badge ${tenant.status === 'Aktif' ? 'badge-success' : (tenant.status === 'Menunggu Pembayaran' ? 'badge-warning' : (tenant.status === 'Nonaktif' ? 'badge-secondary' : 'badge-danger'))}">${tenant.status}</span></td>
+            <td>$${tenant.rent.toLocaleString('en-US')}</td>
+            <td>${formatDate(tenant.moveIn)}</td>
+            <td>${formatDate(tenant.leaseEnd)}</td>
+            <td>
+              <button class="btn btn-sm btn-icon btn-outline-primary" title="Edit Penyewa" onclick="alert('Edit penyewa ID: ${tenant.id}')"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-icon btn-outline-danger" title="Hapus Penyewa" onclick="confirm('Yakin ingin menghapus ${tenant.name}?') && alert('Hapus penyewa ID: ${tenant.id}')"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+        tableWrapper.appendChild(table);
+
+        if (tenantData.length === 0) {
+          tableWrapper.innerHTML = '<p class="text-center text-muted p-4">Tidak ada data penyewa.</p>';
+        }
+        return tableWrapper;
+      }
+
+      function createTenantsContent() {
+        const section = document.createElement('section');
+        // Tombol Tambah Penyewa
+        const addTenantButton = `<div class="mb-3 text-right"> <!-- text-right tidak ada, pakai flex -->
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" onclick="alert('Buka form tambah penyewa')"><i class="fas fa-plus"></i> Tambah Penyewa Baru</button>
+        </div>
+    </div>`;
+        section.innerHTML = addTenantButton;
+        section.appendChild(createTenantsTable(appState.data.tenants));
+        return section;
+      }
+
+      function createBookingsTable(bookingData) {
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Nama Tamu</th>
+          <th>Properti</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Total Biaya</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${bookingData.map(booking => `
+          <tr>
+            <td>${booking.tenantName}</td>
+            <td>${booking.propertyName}</td>
+            <td>${formatDate(booking.checkIn)}</td>
+            <td>${formatDate(booking.checkOut)}</td>
+            <td>$${booking.totalCost.toLocaleString('en-US')}</td>
+            <td><span class="badge ${booking.status === 'Dikonfirmasi' ? 'badge-success' :
+            (booking.status === 'Tertunda' ? 'badge-warning' :
+              (booking.status === 'Dibatalkan' ? 'badge-danger' : 'badge-secondary'))
+          }">${booking.status}</span></td>
+            <td>
+              <button class="btn btn-sm btn-icon btn-outline-primary" title="Lihat Detail" onclick="alert('Detail booking ID: ${booking.id}')"><i class="fas fa-eye"></i></button>
+              ${booking.status === 'Tertunda' ? `<button class="btn btn-sm btn-icon btn-success" title="Konfirmasi Booking" onclick="alert('Konfirmasi booking ID: ${booking.id}')"><i class="fas fa-check"></i></button>` : ''}
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+        tableWrapper.appendChild(table);
+        if (bookingData.length === 0) {
+          tableWrapper.innerHTML = '<p class="text-center text-muted p-4">Tidak ada data pemesanan.</p>';
+        }
+        return tableWrapper;
+      }
+
+      function createBookingsContent() {
+        const section = document.createElement('section');
+        // Tombol Tambah Booking
+        const addBookingButton = `<div class="mb-3 text-right">
+        <div class="d-flex justify-content-end">
+             <button class="btn btn-primary" onclick="alert('Buka form tambah booking')"><i class="fas fa-plus"></i> Buat Pemesanan Baru</button>
+        </div>
+    </div>`;
+        section.innerHTML = addBookingButton;
+        section.appendChild(createBookingsTable(appState.data.bookings));
+        return section;
+      }
+
+      function createAnalyticsContent() {
+        const section = document.createElement('section');
+        section.innerHTML = `
+      <div class="row">
+        <div class="col col-lg-6 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Laporan Pendapatan Tahunan</h3></div>
+            <div class="card-body">
+              <div class="chart-placeholder">
+                <i class="fas fa-chart-bar"></i>
+                <span>Simulasi Grafik Laporan Pendapatan Tahunan (Data Belum Tersedia)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-lg-6 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Tingkat Keterisian Properti</h3></div>
+            <div class="card-body">
+              <div class="chart-placeholder">
+                <i class="fas fa-chart-line"></i>
+                <span>Simulasi Grafik Tingkat Keterisian Properti (Data Belum Tersedia)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col col-12">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">Sumber Lalu Lintas Pemesanan</h3></div>
+                <div class="card-body">
+                    <div class="chart-placeholder">
+                        <i class="fas fa-compass"></i>
+                        <span>Simulasi Grafik Sumber Pemesanan (Data Belum Tersedia)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    `;
+        return section;
+      }
+
+      function createSettingsContent() {
+        const section = document.createElement('section');
+        section.innerHTML = `
+      <div class="row">
+        <div class="col col-lg-6 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Preferensi Tampilan</h3></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Tema Aplikasi</label>
+                <div class="d-flex align-items-center justify-content-between">
+                  <p class="mb-0">Mode Saat Ini: <strong id="current-theme-mode-text">${appState.theme === 'light' ? 'Terang' : 'Gelap'}</strong></p>
+                  <button id="manual-theme-toggle" class="btn btn-secondary">
+                    Ganti ke Mode ${appState.theme === 'light' ? 'Gelap' : 'Terang'}
+                  </button>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                  <label for="language-select" class="form-label">Bahasa Antarmuka</label>
+                  <select id="language-select" class="form-control">
+                      <option value="id" selected>Bahasa Indonesia</option>
+                      <option value="en" disabled>English (US) - Segera Hadir</option>
+                  </select>
+                  <small class="text-muted d-block mt-1">Pengaturan bahasa saat ini hanya kosmetik.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col col-lg-6 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Profil Akun</h3></div>
+            <div class="card-body">
+              <form id="profile-form">
+                <div class="form-group">
+                  <label for="profile-name" class="form-label">Nama Lengkap</label>
+                  <input type="text" id="profile-name" class="form-control" value="Pengguna Demo RentApart" required>
+                </div>
+                <div class="form-group">
+                  <label for="profile-email" class="form-label">Alamat Email</label>
+                  <input type="email" id="profile-email" class="form-control" value="demo@rentapart.com" required>
+                </div>
+                 <div class="form-group">
+                  <label for="profile-phone" class="form-label">Nomor Telepon</label>
+                  <input type="tel" id="profile-phone" class="form-control" value="08123456789">
+                </div>
+                <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Simpan Perubahan</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col col-12">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">Keamanan Akun</h3></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="current-password" class="form-label">Kata Sandi Saat Ini</label>
+                        <input type="password" id="current-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password" class="form-label">Kata Sandi Baru</label>
+                        <input type="password" id="new-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Konfirmasi Kata Sandi Baru</label>
+                        <input type="password" id="confirm-password" class="form-control">
+                    </div>
+                    <button class="btn btn-warning" onclick="alert('Fitur ubah kata sandi belum diimplementasikan.')"><i class="fas fa-key"></i> Ubah Kata Sandi</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    `;
+
+        const manualThemeBtn = section.querySelector('#manual-theme-toggle');
+        if (manualThemeBtn) {
+          manualThemeBtn.addEventListener('click', toggleTheme);
+        }
+        const profileForm = section.querySelector('#profile-form');
+        if (profileForm) {
+          profileForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Validasi sederhana
+            const name = section.querySelector('#profile-name').value;
+            const email = section.querySelector('#profile-email').value;
+            if (name.trim() === '' || email.trim() === '') {
+              alert('Nama dan Email tidak boleh kosong!');
+              return;
+            }
+            alert('Profil berhasil diperbarui (simulasi). Perubahan tidak disimpan secara permanen dalam demo ini.');
+          });
+        }
+        return section;
+      }
+
+
+      // --- FUNGSI UTILITAS ---
+      function formatDate(dateString) {
+        if (!dateString) return '-';
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleDateString('id-ID', options);
+        } catch (e) {
+          return dateString; // Kembalikan string asli jika tidak valid
+        }
+      }
+
+      function updateActiveNavLink() {
+        navLinks.forEach(link => {
+          // Cek apakah href link (setelah #) sama dengan halaman saat ini
+          const linkPage = link.getAttribute('href') ? link.getAttribute('href').substring(2) : null; // Ambil 'dashboard' dari '#/dashboard'
+          if (linkPage === appState.currentPage) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        appState.theme = theme;
+        localStorage.setItem('theme', theme);
+
+        const themeIcon = themeToggleBtn.querySelector('i');
+        if (theme === 'dark') {
+          themeIcon.className = 'fas fa-sun'; // Ikon matahari untuk mode gelap
+        } else {
+          themeIcon.className = 'fas fa-moon'; // Ikon bulan untuk mode terang
+        }
+
+        // Update tombol tema manual di halaman setting jika sedang ditampilkan
+        const manualThemeToggle = document.getElementById('manual-theme-toggle');
+        const currentThemeModeText = document.getElementById('current-theme-mode-text');
+        if (manualThemeToggle && currentThemeModeText) {
+          manualThemeToggle.textContent = `Ganti ke Mode ${theme === 'light' ? 'Gelap' : 'Terang'}`;
+          currentThemeModeText.textContent = theme === 'light' ? 'Terang' : 'Gelap';
+        }
+      }
+
+      function toggleTheme() {
+        const newTheme = appState.theme === 'light' ? 'dark' : 'light';
+        applyTheme(newTheme);
+      }
+
+      function toggleSidebar() {
+        appState.ui.isSidebarOpen = !appState.ui.isSidebarOpen;
+        if (appState.ui.isSidebarOpen) {
+          sidebar.classList.add('open');
+          sidebarToggleBtn.querySelector('i').className = 'fas fa-times'; // Ikon close
+          if (window.innerWidth <= 768) { // Hanya aktifkan overlay di mobile
+            sidebarOverlay.classList.add('active');
+          }
+        } else {
+          sidebar.classList.remove('open');
+          sidebarToggleBtn.querySelector('i').className = 'fas fa-bars'; // Ikon menu
+          if (window.innerWidth <= 768) {
+            sidebarOverlay.classList.remove('active');
+          }
+        }
+      }
+
+
+      // --- ROUTER SEDERHANA Berbasis Hash ---
+      function handleRouteChange() {
+        const path = window.location.hash.substring(1) || '/dashboard'; // Hapus '#' dan default ke dashboard
+        // Ambil bagian pertama setelah '/' (contoh: '/dashboard' -> 'dashboard')
+        // Atau jika hanya '/' (misal dari #/), default ke 'dashboard'
+        const page = path === '/' ? 'dashboard' : (path.split('/')[1] || 'dashboard');
+        renderPage(page);
+      }
+
+      // --- EVENT LISTENERS ---
+      window.addEventListener('hashchange', handleRouteChange);
+
+      sidebarToggleBtn.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', toggleSidebar); // Tutup sidebar jika overlay diklik
+
+      themeToggleBtn.addEventListener('click', toggleTheme);
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href && href.startsWith('#/')) {
+            // Biarkan event hashchange yang menangani navigasi SPA
+            // Jika sidebar terbuka di mobile, tutup setelah klik link
+            if (window.innerWidth <= 768 && appState.ui.isSidebarOpen) {
+              // setTimeout kecil agar navigasi sempat terjadi sebelum sidebar ditutup visualnya
+              setTimeout(toggleSidebar, 50);
+            }
+          } else if (this.id === 'logout-btn-placeholder') {
+            e.preventDefault();
+            if (confirm('Apakah Anda yakin ingin keluar dari aplikasi?')) {
+              alert('Anda telah berhasil keluar (simulasi).');
+              // Logika logout sebenarnya: hapus token, redirect ke halaman login, dll.
+              window.location.hash = '#/dashboard'; // Kembali ke dashboard sebagai contoh
+            }
+          }
+          // Untuk link lain yang tidak terkait SPA, biarkan default behavior
+        });
+      });
+
+      // --- INISIALISASI APLIKASI ---
+      applyTheme(appState.theme); // Terapkan tema saat load
+      handleRouteChange(); // Render halaman awal berdasarkan URL atau default
+
+      // Atur kondisi awal sidebar toggle icon berdasarkan state
+      if (appState.ui.isSidebarOpen) {
+        sidebarToggleBtn.querySelector('i').className = 'fas fa-times';
+        if (window.innerWidth > 768) { // Jika desktop dan sidebar open by default
+          sidebar.classList.add('open'); // Pastikan class open ada
+        }
+      } else {
+        sidebarToggleBtn.querySelector('i').className = 'fas fa-bars';
+        sidebar.classList.remove('open'); // Pastikan class open tidak ada jika closed by default
+      }
+
+      // Tambahkan event listener untuk resize untuk mengatur ulang state sidebar
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          // Jika layar membesar ke desktop
+          if (!appState.ui.isSidebarOpen) { // Jika sidebar tadinya tertutup di mobile
+            // Optional: bisa pilih untuk otomatis buka sidebar di desktop
+            // atau biarkan state terakhir pengguna
+          }
+          sidebar.classList.add('open'); // Di desktop, class 'open' menentukan tampilan, bukan state JS saja
+          sidebarOverlay.classList.remove('active'); // Overlay tidak diperlukan di desktop
+          appState.ui.isSidebarOpen = true; // Update state internal
+        } else {
+          // Jika layar mengecil ke mobile
+          // Kembalikan ke state terakhir atau tutup default
+          if (appState.ui.isSidebarOpen) {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('active');
+          } else {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+          }
+        }
+        // Update ikon toggle
+        sidebarToggleBtn.querySelector('i').className = appState.ui.isSidebarOpen && window.innerWidth <= 768 ? 'fas fa-times' : 'fas fa-bars';
+        if (window.innerWidth > 768) { // Di desktop, toggle selalu bar jika sidebar fixed
+          sidebarToggleBtn.style.display = 'none'; // Sembunyikan toggle di desktop
+        } else {
+          sidebarToggleBtn.style.display = 'block'; // Tampilkan toggle di mobile
+        }
+      });
+      // Panggil sekali saat load untuk set display toggle
+      if (window.innerWidth > 768) {
+        sidebarToggleBtn.style.display = 'none';
+      } else {
+        sidebarToggleBtn.style.display = 'block';
+      }
+
+
+    });
+  </script>
+</body>
+
+</html>
