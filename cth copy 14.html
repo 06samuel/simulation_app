@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Properti SPA Modern</title>
+    <!-- Favicon (menggunakan emoji rumah untuk tema properti) -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <!-- Font Awesome (Icon Gratis) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* --- VARIABEL GLOBAL CSS & RESET DASAR --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-color-darker: #0056b3;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+
+            --background-color: #f4f6f9;
+            /* Latar belakang lebih lembut */
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --header-bg: #ffffff;
+            --sidebar-bg: #343a40;
+            /* Sidebar gelap */
+            --sidebar-text-color: #c2c7d0;
+            --sidebar-link-hover-bg: #495057;
+            --sidebar-link-active-bg: var(--primary-color);
+            --sidebar-link-active-color: #ffffff;
+            --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 0.375rem;
+            --sidebar-width: 250px;
+            --sidebar-width-collapsed: 60px;
+            --header-height: 60px;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #0d6efd;
+            --primary-color-darker: #0a58ca;
+            --secondary-color: #adb5bd;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            /* Tetap sama atau sedikit disesuaikan */
+            --warning-color: #ffca2c;
+            --info-color: #0dcaf0;
+
+            --background-color: #1e1e1e;
+            /* Latar belakang utama gelap */
+            --text-color: #f8f9fa;
+            --card-bg: #2c3034;
+            /* Kartu lebih gelap */
+            --border-color: #495057;
+            --header-bg: #343a40;
+            /* Header gelap, serasi dengan sidebar */
+            --sidebar-bg: #212529;
+            /* Sidebar lebih gelap */
+            --sidebar-text-color: #ced4da;
+            --sidebar-link-hover-bg: #3e444a;
+            --sidebar-link-active-bg: var(--primary-color);
+            --sidebar-link-active-color: #ffffff;
+            --box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.05);
+            --box-shadow-sm: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.075);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            /* Kontainer utama di tengah */
+            min-height: 100vh;
+        }
+
+        /* --- STRUKTUR GRID UTAMA APLIKASI --- */
+        .app-container {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "sidebar content"
+                "sidebar footer";
+            /* Footer sejajar dengan content */
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--header-height) 1fr auto;
+            width: 100%;
+            max-width: 1600px;
+            /* Lebar maksimum aplikasi */
+            min-height: 100vh;
+            transition: grid-template-columns 0.3s ease;
+            /* Untuk animasi sidebar collapse */
+        }
+
+        .app-container.sidebar-collapsed {
+            grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+        }
+
+        /* --- HEADER --- */
+        .app-header {
+            grid-area: header;
+            background-color: var(--header-bg);
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            /* Di atas sidebar */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-toggle-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-toggle-button:hover {
+            color: var(--primary-color);
+        }
+
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            /* Sedikit lebih kecil agar pas */
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .app-header .logo i {
+            font-size: 1.5rem;
+        }
+
+        .app-header .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* --- SIDEBAR NAVIGASI --- */
+        .app-sidebar {
+            grid-area: sidebar;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text-color);
+            padding-top: 1rem;
+            overflow-y: auto;
+            transition: background-color 0.3s ease, width 0.3s ease;
+            z-index: 1010;
+            /* Di bawah header sticky */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-profile {
+            padding: 1rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+            border: 3px solid var(--primary-color);
+        }
+
+        .sidebar-profile h4 {
+            color: var(--sidebar-text-color);
+            /* Sesuaikan dengan warna teks sidebar */
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-container.sidebar-collapsed .sidebar-profile h4 {
+            display: none;
+        }
+
+        .app-container.sidebar-collapsed .sidebar-profile img {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 0;
+            border-width: 1px;
+        }
+
+        .app-container.sidebar-collapsed .sidebar-profile {
+            padding: 0.5rem;
+        }
+
+        .app-nav {
+            flex-grow: 1;
+        }
+
+        .app-nav ul {
+            list-style: none;
+        }
+
+        .app-nav .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1.5rem;
+            text-decoration: none;
+            color: var(--sidebar-text-color);
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap;
+            /* Mencegah teks wrap saat sidebar mengecil */
+        }
+
+        .app-nav .nav-link i {
+            width: 20px;
+            /* Untuk alignment ikon */
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .app-nav .nav-link:hover,
+        .app-nav .nav-link:focus {
+            background-color: var(--sidebar-link-hover-bg);
+            color: #ffffff;
+        }
+
+        .app-nav .nav-link.active {
+            background-color: var(--sidebar-link-active-bg);
+            color: var(--sidebar-link-active-color);
+            font-weight: 500;
+        }
+
+        .app-container.sidebar-collapsed .app-nav .nav-link .nav-text {
+            display: none;
+            /* Sembunyikan teks saat sidebar diciutkan */
+        }
+
+        .app-container.sidebar-collapsed .app-nav .nav-link {
+            justify-content: center;
+            /* Ikon di tengah saat diciutkan */
+            padding: 0.9rem 0.5rem;
+            /* Padding lebih kecil */
+        }
+
+        .app-container.sidebar-collapsed .app-nav .nav-link i {
+            margin-right: 0;
+            font-size: 1.3rem;
+            /* Ikon sedikit lebih besar */
+        }
+
+        /* --- KONTEN UTAMA --- */
+        .app-content {
+            grid-area: content;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: var(--background-color);
+            /* Untuk memastikan kontras */
+            transition: background-color 0.3s ease;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            /* Sedikit lebih kecil dari sebelumnya */
+            font-weight: 600;
+            color: var(--text-color);
+            /* Mengikuti tema */
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title i {
+            color: var(--primary-color);
+        }
+
+        /* --- CARD --- */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--box-shadow-sm);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            margin-bottom: 0;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid var(--border-color);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            /* Jika card-header digunakan, padding utama di body */
+        }
+
+        .card h3 {
+            /* Untuk h3 langsung di dalam .card (tanpa .card-header) */
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .card p {
+            margin-bottom: 0.5rem;
+        }
+
+        .card ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Grid untuk card statistik di dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary-color);
+            /* Aksen warna */
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .stat-card .stat-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .stat-card .stat-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+
+        .stat-card .stat-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        /* Variasi warna aksen untuk stat-card */
+        .stat-card.info {
+            border-left-color: var(--info-color);
+        }
+
+        .stat-card.info .stat-icon i {
+            color: var(--info-color);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .stat-card.success .stat-icon i {
+            color: var(--success-color);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .stat-card.warning .stat-icon i {
+            color: var(--warning-color);
+        }
+
+        .stat-card.danger {
+            border-left-color: var(--danger-color);
+        }
+
+        .stat-card.danger .stat-icon i {
+            color: var(--danger-color);
+        }
+
+
+        /* Card untuk listing apartemen */
+        .apartments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .apartment-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-sm);
+            overflow: hidden;
+            /* Untuk gambar agar mengikuti border-radius */
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .apartment-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .apartment-card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            /* Agar konten mengisi ruang jika card tingginya beda2 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card-content h4 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .apartment-card-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .apartment-card-details i {
+            margin-right: 0.3rem;
+        }
+
+        .apartment-card-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .apartment-card-actions {
+            margin-top: auto;
+            /* Dorong tombol ke bawah */
+        }
+
+
+        /* --- TABEL --- */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table.styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            box-shadow: var(--box-shadow-sm);
+            background-color: var(--card-bg);
+            /* Agar tabel punya bg sendiri */
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            /* Untuk border-radius pada tabel */
+        }
+
+        table.styled-table thead tr {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        table.styled-table th,
+        table.styled-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        table.styled-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, background-color 0.2s ease;
+        }
+
+        /* Hilangkan border antar cell jika tidak diperlukan, cukup border row */
+        table.styled-table th,
+        table.styled-table td {
+            border-left: none;
+            border-right: none;
+        }
+
+        table.styled-table th:first-child,
+        table.styled-table td:first-child {
+            border-left: none;
+        }
+
+        table.styled-table th:last-child,
+        table.styled-table td:last-child {
+            border-right: none;
+        }
+
+        table.styled-table tbody tr:nth-of-type(even) {
+            background-color: var(--background-color);
+            /* Warna zebra yang lebih lembut */
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="dark"] table.styled-table tbody tr:nth-of-type(even) {
+            background-color: #3a3f44;
+            /* Warna zebra lebih gelap untuk dark mode */
+        }
+
+        table.styled-table tbody tr:hover {
+            background-color: var(--sidebar-link-hover-bg);
+            /* Warna hover yang konsisten */
+            color: var(--sidebar-text-color);
+        }
+
+        [data-theme="dark"] table.styled-table tbody tr:hover {
+            color: #ffffff;
+        }
+
+        .list__link {
+            /* Nama class ini sudah ada, disesuaikan */
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            /* Agar ikon dan teks sejajar */
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .list__link:hover {
+            text-decoration: underline;
+            color: var(--primary-color-darker);
+        }
+
+        .list__link.button-danger {
+            /* Khusus untuk tombol hapus */
+            color: var(--danger-color);
+        }
+
+        .list__link.button-danger:hover {
+            color: #a71d2a;
+        }
+
+
+        /* --- TOMBOL --- */
+        .button {
+            display: inline-flex;
+            /* Untuk alignment ikon dan teks */
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.25rem;
+            /* Sedikit disesuaikan */
+            font-size: 0.9rem;
+            /* Sedikit lebih kecil */
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        .button-primary:hover,
+        .button-primary:focus {
+            background-color: var(--primary-color-darker);
+            border-color: var(--primary-color-darker);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .5);
+        }
+
+        .button-secondary {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+            border-color: var(--secondary-color);
+        }
+
+        .button-secondary:hover,
+        .button-secondary:focus {
+            background-color: #545b62;
+            border-color: #4e555b;
+        }
+
+        .button-danger {
+            background-color: var(--danger-color);
+            color: #ffffff;
+            border-color: var(--danger-color);
+        }
+
+        .button-danger:hover,
+        .button-danger:focus {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .button-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: transparent;
+        }
+
+        .button-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .button-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        /* Tombol Tema */
+        .theme-toggle-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.25rem;
+            /* Sesuaikan dengan ikon header lainnya */
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .theme-toggle-button:hover {
+            background-color: var(--sidebar-link-hover-bg);
+            /* Gunakan variabel yang ada */
+            color: #ffffff;
+            /* Atau var(--primary-color) */
+        }
+
+        /* --- FOOTER --- */
+        .app-footer {
+            grid-area: footer;
+            background-color: var(--header-bg);
+            /* Seragam dengan header */
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        /* --- UTILITAS --- */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem !important;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem !important;
+        }
+
+        .p-1 {
+            padding: 0.5rem !important;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .align-items-center {
+            align-items: center;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .placeholder-content {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--secondary-color);
+        }
+
+        /* --- RESPONSIVITAS --- */
+        @media (max-width: 992px) {
+
+            /* Tablet dan di bawahnya */
+            .app-container {
+                grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+                /* Sidebar collapsed by default */
+            }
+
+            .app-container:not(.sidebar-expanded-mobile) .sidebar-profile h4,
+            .app-container:not(.sidebar-expanded-mobile) .app-nav .nav-link .nav-text {
+                display: none;
+            }
+
+            .app-container:not(.sidebar-expanded-mobile) .app-nav .nav-link {
+                justify-content: center;
+                padding: 0.9rem 0.5rem;
+            }
+
+            .app-container:not(.sidebar-expanded-mobile) .app-nav .nav-link i {
+                margin-right: 0;
+                font-size: 1.3rem;
+            }
+
+            /* Untuk mobile, sidebar bisa overlay saat expanded */
+            .app-sidebar.mobile-overlay {
+                position: fixed;
+                left: 0;
+                top: 0;
+                /* Atau var(--header-height) jika header tidak mau ditutupi */
+                height: 100vh;
+                z-index: 1030;
+                /* Di atas segalanya */
+                transform: translateX(calc(-1 * var(--sidebar-width)));
+                box-shadow: var(--box-shadow);
+            }
+
+            .app-container.sidebar-expanded-mobile .app-sidebar.mobile-overlay {
+                transform: translateX(0);
+                width: var(--sidebar-width) !important;
+                /* Paksa lebar normal */
+            }
+
+            .app-container.sidebar-expanded-mobile .app-sidebar.mobile-overlay .sidebar-profile h4,
+            .app-container.sidebar-expanded-mobile .app-sidebar.mobile-overlay .app-nav .nav-link .nav-text {
+                display: inline;
+                /* Tampilkan kembali teks */
+            }
+
+            .app-container.sidebar-expanded-mobile .app-sidebar.mobile-overlay .app-nav .nav-link {
+                justify-content: flex-start;
+                /* Teks kembali ke kiri */
+                padding: 0.9rem 1.5rem;
+            }
+
+            .app-container.sidebar-expanded-mobile .app-sidebar.mobile-overlay .app-nav .nav-link i {
+                font-size: 1.1rem;
+                /* Kembalikan ukuran ikon */
+            }
+
+            .sidebar-overlay-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1025;
+                /* Di bawah sidebar overlay, di atas konten */
+                display: none;
+                /* Default tersembunyi */
+            }
+
+            .app-container.sidebar-expanded-mobile .sidebar-overlay-backdrop {
+                display: block;
+            }
+
+            .app-header .logo h1 {
+                display: none;
+            }
+
+            /* Sembunyikan teks logo besar */
+        }
+
+        @media (max-width: 768px) {
+
+            /* Mobile */
+            .app-header {
+                padding: 0 1rem;
+            }
+
+            .app-content {
+                padding: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* 1 kolom untuk mobile */
+            .apartments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 0.9rem;
+            }
+
+            .button {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            table.styled-table th,
+            table.styled-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container" class="app-container">
+        <!-- Backdrop untuk sidebar overlay di mobile -->
+        <div id="sidebar-overlay-backdrop" class="sidebar-overlay-backdrop"></div>
+
+        <header class="app-header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle-button" aria-label="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#/" class="logo" data-route="/">
+                    <i class="fas fa-city"></i> <!-- Ikon baru yang lebih relevan -->
+                    <h1>PropertiKu</h1>
+                </a>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle Tema Gelap/Terang">
+                    <i class="fas fa-moon"></i> <!-- Ikon akan diupdate oleh JS -->
+                </button>
+                <!-- Bisa ditambahkan notifikasi atau user dropdown di sini -->
+            </div>
+        </header>
+
+        <aside id="app-sidebar" class="app-sidebar">
+            <div class="sidebar-profile">
+                <img src="https://i.pravatar.cc/150?u=pengelolaproperti" alt="Foto Profil Pengguna">
+                <h4>Pengelola Properti</h4>
+            </div>
+            <nav class="app-nav">
+                <ul>
+                    <li><a href="#/" class="nav-link" data-route="/"><i class="fas fa-tachometer-alt"></i> <span
+                                class="nav-text">Dashboard</span></a></li>
+                    <li><a href="#/profil" class="nav-link" data-route="/profil"><i class="fas fa-user-circle"></i>
+                            <span class="nav-text">Profil Saya</span></a></li>
+                    <li><a href="#/apartemen" class="nav-link" data-route="/apartemen"><i class="fas fa-building"></i>
+                            <span class="nav-text">Apartemen</span></a></li>
+                    <li><a href="#/booking" class="nav-link" data-route="/booking"><i class="fas fa-calendar-check"></i>
+                            <span class="nav-text">Booking</span></a></li>
+                    <li><a href="#/favorit" class="nav-link" data-route="/favorit"><i class="fas fa-heart"></i> <span
+                                class="nav-text">Favorit</span></a></li>
+                    <li><a href="#/pembayaran" class="nav-link" data-route="/pembayaran"><i
+                                class="fas fa-credit-card"></i> <span class="nav-text">Pembayaran</span></a></li>
+                    <li><a href="#/maintenance" class="nav-link" data-route="/maintenance"><i class="fas fa-tools"></i>
+                            <span class="nav-text">Maintenance</span></a></li>
+                    <li><a href="#/pesan" class="nav-link" data-route="/pesan"><i class="fas fa-envelope"></i> <span
+                                class="nav-text">Pesan</span></a></li>
+                    <hr style="border-color: var(--border-color); margin: 1rem 1.5rem;">
+                    <li><a href="#/pengguna" class="nav-link" data-route="/pengguna"><i class="fas fa-users-cog"></i>
+                            <span class="nav-text">Manajemen Pengguna</span></a></li>
+                    <li><a href="#/pengaturan" class="nav-link" data-route="/pengaturan"><i class="fas fa-cogs"></i>
+                            <span class="nav-text">Pengaturan Aplikasi</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="app-content" class="app-content">
+            <!-- Konten dinamis akan dimuat di sini -->
+        </main>
+
+        <footer class="app-footer">
+            <p>© <span id="current-year"></span> Aplikasi Properti SPA Modern. Dibuat dengan Vanilla JS.</p>
+        </footer>
+    </div>
+
+    <script>
+        "use strict";
+
+        /**
+         * @file script.js
+         * @description Logika utama untuk Aplikasi Properti SPA Modern.
+         *              Mencakup routing, rendering konten, manajemen state dasar,
+         *              sidebar toggle, tema, dan interaksi pengguna.
+         */
+
+        // --- UTILITIES ---
+        const qs = (selector, scope = document) => scope.querySelector(selector);
+        const qsa = (selector, scope = document) => scope.querySelectorAll(selector);
+
+        // --- STATE MANAGEMENT (Sederhana) ---
+        const appState = {
+            currentPage: '/',
+            theme: localStorage.getItem('theme') || 'light',
+            isSidebarCollapsed: localStorage.getItem('sidebarCollapsed') === 'true',
+            isSidebarMobileOverlayActive: false,
+            users: [
+                { id: 1, name: 'Alice Wonderland', email: 'alice@example.com', role: 'Admin', joined: '2023-01-15' },
+                { id: 2, name: 'Bob The Builder', email: 'bob@example.com', role: 'Editor', joined: '2023-02-20' },
+                { id: 3, name: 'Charlie Chaplin', email: 'charlie@example.com', role: 'Pengguna', joined: '2023-03-10' },
+                { id: 4, name: 'Diana Prince', email: 'diana@example.com', role: 'Pengguna', joined: '2023-04-05' }
+            ],
+            apartments: [
+                { id: 1, name: 'Apartemen Mewah Pusat Kota', image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', bedrooms: 2, bathrooms: 2, area: 120, price: 15000000, location: 'Jakarta Pusat' },
+                { id: 2, name: 'Studio Nyaman Dekat Kampus', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60', bedrooms: 1, bathrooms: 1, area: 45, price: 5000000, location: 'Bandung' },
+                { id: 3, name: 'Apartemen Keluarga View Laut', image: 'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFwYXJ0bWVudCUyMGludGVyaW9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60', bedrooms: 3, bathrooms: 2, area: 150, price: 25000000, location: 'Surabaya Timur' },
+                { id: 4, name: 'Penthouse Eksklusif', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ラグジュアリーマンション内装&type=japanese&transform=true', bedrooms: 4, bathrooms: 4, area: 300, price: 75000000, location: 'Jakarta Selatan' }
+            ],
+            recentActivities: [
+                { icon: 'fa-user-plus', text: 'Penyewa baru, Budi Santoso, telah ditambahkan.', time: '10 menit lalu', type: 'success' },
+                { icon: 'fa-money-bill-wave', text: 'Pembayaran sewa dari Siti Aminah diterima.', time: '1 jam lalu', type: 'info' },
+                { icon: 'fa-tools', text: 'Permintaan maintenance (AC Rusak - Unit A21) baru masuk.', time: '3 jam lalu', type: 'warning' },
+                { icon: 'fa-file-signature', text: 'Kontrak Rina Wati akan berakhir minggu depan.', time: 'Kemarin', type: 'danger' },
+            ],
+            upcomingDeadlines: [
+                { date: '2024-08-01', text: 'Pengumpulan sewa Apartemen Blok C', type: 'primary' },
+                { date: '2024-08-05', text: 'Perpanjangan kontrak Unit B12 (Keluarga Wijaya)', type: 'info' },
+                { date: '2024-08-10', text: 'Jadwal pemeliharaan lift gedung', type: 'warning' },
+            ]
+        };
+
+        // --- SIDEBAR MANAGER ---
+        class SidebarManager {
+            constructor(toggleButtonSelector, sidebarSelector, containerSelector, backdropSelector) {
+                this.toggleButton = qs(toggleButtonSelector);
+                this.sidebarElement = qs(sidebarSelector);
+                this.appContainer = qs(containerSelector);
+                this.backdropElement = qs(backdropSelector);
+                this.isMobileView = () => window.innerWidth <= 992;
+
+                this._applyInitialState();
+                this._bindEvents();
+            }
+
+            _applyInitialState() {
+                if (this.isMobileView()) {
+                    // Di mobile, sidebar selalu "collapsed" secara layout grid, tapi bisa "expanded" sebagai overlay
+                    this.appContainer.classList.add('sidebar-collapsed');
+                    this.sidebarElement.classList.add('mobile-overlay');
+                    if (appState.isSidebarMobileOverlayActive) {
+                        this.appContainer.classList.add('sidebar-expanded-mobile');
+                    }
+                } else {
+                    // Di desktop
+                    this.sidebarElement.classList.remove('mobile-overlay');
+                    if (appState.isSidebarCollapsed) {
+                        this.appContainer.classList.add('sidebar-collapsed');
+                    } else {
+                        this.appContainer.classList.remove('sidebar-collapsed');
+                    }
+                }
+                this.toggleButton.innerHTML = appState.isSidebarCollapsed && !this.isMobileView() ? '<i class="fas fa-angle-double-right"></i>' : '<i class="fas fa-bars"></i>';
+            }
+
+            toggleSidebar() {
+                if (this.isMobileView()) {
+                    appState.isSidebarMobileOverlayActive = !appState.isSidebarMobileOverlayActive;
+                    this.appContainer.classList.toggle('sidebar-expanded-mobile', appState.isSidebarMobileOverlayActive);
+                } else {
+                    appState.isSidebarCollapsed = !appState.isSidebarCollapsed;
+                    this.appContainer.classList.toggle('sidebar-collapsed', appState.isSidebarCollapsed);
+                    localStorage.setItem('sidebarCollapsed', appState.isSidebarCollapsed);
+                }
+                this._updateToggleButtonIcon();
+            }
+
+            closeMobileSidebar() {
+                if (this.isMobileView() && appState.isSidebarMobileOverlayActive) {
+                    appState.isSidebarMobileOverlayActive = false;
+                    this.appContainer.classList.remove('sidebar-expanded-mobile');
+                    this._updateToggleButtonIcon();
+                }
+            }
+
+            _updateToggleButtonIcon() {
+                if (this.isMobileView()) {
+                    this.toggleButton.innerHTML = '<i class="fas fa-bars"></i>'; // Selalu bars di mobile
+                } else {
+                    this.toggleButton.innerHTML = appState.isSidebarCollapsed ? '<i class="fas fa-angle-double-right"></i>' : '<i class="fas fa-bars"></i>';
+                }
+            }
+
+            _bindEvents() {
+                this.toggleButton.addEventListener('click', () => this.toggleSidebar());
+                this.backdropElement.addEventListener('click', () => this.closeMobileSidebar());
+
+                // Re-apply state on resize (misal dari desktop ke mobile)
+                window.addEventListener('resize', () => this._applyInitialState());
+            }
+        }
+
+        // --- THEME MANAGER ---
+        class ThemeManager {
+            constructor(toggleButtonSelector) {
+                this.toggleButton = qs(toggleButtonSelector);
+                this.currentTheme = appState.theme;
+                this._applyTheme();
+                this._bindEvents();
+            }
+
+            _applyTheme() {
+                document.documentElement.setAttribute('data-theme', this.currentTheme);
+                localStorage.setItem('theme', this.currentTheme);
+                if (this.toggleButton) {
+                    this.toggleButton.innerHTML = this.currentTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                }
+            }
+
+            toggleTheme() {
+                this.currentTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                appState.theme = this.currentTheme;
+                this._applyTheme();
+            }
+
+            _bindEvents() {
+                if (this.toggleButton) {
+                    this.toggleButton.addEventListener('click', () => this.toggleTheme());
+                }
+            }
+        }
+
+        // --- CONTENT RENDERERS ---
+        // Setiap fungsi render mengembalikan string HTML untuk halaman tertentu.
+
+        function renderDashboard() {
+            const statsCards = `
+                <div class="stats-grid">
+                    <div class="stat-card success">
+                        <div class="stat-info">
+                            <h4>125</h4>
+                            <p>Booking Aktif</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-info">
+                            <h4>15</h4>
+                            <p>Pembayaran Tertunda</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-info">
+                            <h4>8</h4>
+                            <p>Permintaan Maintenance</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-tools"></i></div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-info">
+                            <h4>350</h4>
+                            <p>Total Properti Terdaftar</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    </div>
+                </div>
+            `;
+
+            const quickActions = `
+                <div class="card mb-4">
+                    <div class="card-header"><h3>Aksi Cepat</h3></div>
+                    <div class="card-body" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="button button-primary"><i class="fas fa-plus-circle"></i> Tambah Properti Baru</button>
+                        <button class="button button-secondary"><i class="fas fa-user-plus"></i> Tambah Penyewa</button>
+                        <button class="button button-info"><i class="fas fa-flag"></i> Buat Laporan</button>
+                    </div>
+                </div>
+            `;
+
+            const recentActivitiesHtml = appState.recentActivities.map(activity => `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas ${activity.icon} text-${activity.type}" style="margin-right: 0.5rem;"></i>
+                        ${activity.text}
+                    </div>
+                    <small class="text-muted">${activity.time}</small>
+                </li>
+            `).join('');
+
+            const upcomingDeadlinesHtml = appState.upcomingDeadlines.map(deadline => `
+                 <li class="list-group-item">
+                    <span class="badge bg-${deadline.type}" style="margin-right: 0.5rem; background-color: var(--${deadline.type}-color); color: white;">${new Date(deadline.date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })}</span>
+                    ${deadline.text}
+                </li>
+            `).join('');
+
+            return `
+                <h2 class="page-title"><i class="fas fa-tachometer-alt"></i> Dashboard Properti</h2>
+                ${statsCards}
+                ${quickActions}
+                <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header"><h3>Aktivitas Terkini</h3></div>
+                            <ul class="list-group list-group-flush" style="list-style: none; padding:0;">${recentActivitiesHtml}</ul>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header"><h3>Tanggal Jatuh Tempo Penting</h3></div>
+                            <ul class="list-group list-group-flush" style="list-style: none; padding:0;">${upcomingDeadlinesHtml}</ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProfil() {
+            return `
+                <h2 class="page-title"><i class="fas fa-user-circle"></i> Profil Saya</h2>
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="https://i.pravatar.cc/150?u=pengelolaproperti" alt="Foto Profil Besar" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 1rem; border: 5px solid var(--primary-color);">
+                        <h3>Pengelola Properti Utama</h3>
+                        <p class="text-muted">admin@propertiku.com</p>
+                        <p>Bergabung sejak: 1 Januari 2020</p>
+                        <button class="button button-primary mt-1"><i class="fas fa-edit"></i> Edit Profil</button>
+                        <button class="button button-secondary mt-1"><i class="fas fa-key"></i> Ubah Password</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3>Detail Informasi</h3></div>
+                    <div class="card-body">
+                        <p><strong>Nama Lengkap:</strong> John Doe (Contoh)</p>
+                        <p><strong>Nomor Telepon:</strong> 0812-3456-7890</p>
+                        <p><strong>Alamat:</strong> Jl. Properti Indah No. 1, Jakarta</p>
+                        <p><strong>Peran:</strong> Administrator Sistem</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApartemen() {
+            const apartmentCardsHtml = appState.apartments.map(apt => `
+                <div class="apartment-card">
+                    <img src="${apt.image}" alt="${apt.name}">
+                    <div class="apartment-card-content">
+                        <h4>${apt.name}</h4>
+                        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;"><i class="fas fa-map-marker-alt"></i> ${apt.location}</p>
+                        <div class="apartment-card-details">
+                            <span><i class="fas fa-bed"></i> ${apt.bedrooms} KT</span>
+                            <span><i class="fas fa-bath"></i> ${apt.bathrooms} KM</span>
+                            <span><i class="fas fa-ruler-combined"></i> ${apt.area} m²</span>
+                        </div>
+                        <p class="apartment-card-price">Rp ${apt.price.toLocaleString('id-ID')} / bulan</p>
+                        <div class="apartment-card-actions">
+                            <button class="button button-primary button-sm"><i class="fas fa-info-circle"></i> Detail</button>
+                            <button class="button button-outline-primary button-sm"><i class="fas fa-heart"></i> Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <h2 class="page-title"><i class="fas fa-building"></i> Daftar Apartemen</h2>
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <input type="text" placeholder="Cari apartemen..." style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); width: 300px;">
+                        <button class="button button-primary"><i class="fas fa-plus"></i> Tambah Apartemen Baru</button>
+                    </div>
+                </div>
+                <div class="apartments-grid">
+                    ${apartmentCardsHtml || '<p>Belum ada data apartemen.</p>'}
+                </div>
+            `;
+        }
+
+        function renderPlaceholderPage(title, iconClass) {
+            return `
+                <h2 class="page-title"><i class="fas ${iconClass}"></i> ${title}</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="placeholder-content">
+                            <p>Halaman ${title} sedang dalam pengembangan. <br> Konten akan segera tersedia.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPengguna() {
+            let userRows = appState.users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge bg-${user.role === 'Admin' ? 'danger' : user.role === 'Editor' ? 'warning' : 'secondary'}" style="background-color: var(--${user.role === 'Admin' ? 'danger' : user.role === 'Editor' ? 'warning' : 'secondary'}-color); color: white; padding: 0.3em 0.6em; border-radius: 0.25rem;">${user.role}</span></td>
+                    <td>${new Date(user.joined).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                    <td class="text-center">
+                        <a href="#" class="list__link action-link" data-action="edit" data-user-id="${user.id}" title="Edit Pengguna ${user.name}"><i class="fas fa-edit"></i> Edit</a> |
+                        <a href="#" class="list__link button-danger action-link" data-action="hapus" data-user-id="${user.id}" data-user-name="${user.name}" title="Hapus Pengguna ${user.name}"><i class="fas fa-trash-alt"></i> Hapus</a>
+                    </td>
+                </tr>
+            `).join('');
+
+            return `
+                <h2 class="page-title"><i class="fas fa-users-cog"></i> Manajemen Pengguna</h2>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                         <h3>Daftar Pengguna Terdaftar</h3>
+                         <button class="button button-primary button-sm"><i class="fas fa-user-plus"></i> Tambah Pengguna</button>
+                    </div>
+                    <div class="card-body">
+                        <p>Berikut adalah daftar pengguna sistem. Tautan "Hapus" dan "Edit" di bawah ini akan memicu simulasi aksi.</p>
+                        <div class="table-container">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Peran</th>
+                                        <th>Bergabung</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${userRows || '<tr><td colspan="6" class="text-center">Tidak ada data pengguna.</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="mt-1"><strong>Catatan Penting (Demo):</strong> Aksi sensitif seperti "Hapus" idealnya memerlukan konfirmasi dan proteksi CSRF yang kuat di aplikasi nyata.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPengaturan() {
+            return `
+                <h2 class="page-title"><i class="fas fa-cogs"></i> Pengaturan Aplikasi</h2>
+                <div class="card">
+                    <h3>Preferensi Tampilan</h3>
+                    <p>Pengaturan tema (Terang/Gelap) dapat diubah menggunakan tombol ikon bulan/matahari di pojok kanan atas header.</p>
+                    <p>Tema saat ini: <strong id="current-theme-text">${appState.theme.charAt(0).toUpperCase() + appState.theme.slice(1)}</strong></p>
+                </div>
+                <div class="card">
+                    <h3>Notifikasi</h3>
+                    <label for="enable-notifications" class="mb-1" style="display: block; cursor:pointer;">
+                        <input type="checkbox" id="enable-notifications" name="enable-notifications" checked> Aktifkan Notifikasi Desktop
+                    </label>
+                    <button class="button button-primary mt-1"><i class="fas fa-save"></i> Simpan Pengaturan</button>
+                </div>
+                <div class="card">
+                    <h3>Preferensi Akun</h3>
+                    <p>Bahasa: Indonesia (ID)</p>
+                    <p>Zona Waktu: (GMT+07:00) Jakarta</p>
+                    <button class="button button-secondary mt-1"><i class="fas fa-language"></i> Ubah Bahasa & Zona Waktu</button>
+                </div>
+            `;
+        }
+
+        function renderNotFound() {
+            return `
+                <h2 class="page-title"><i class="fas fa-exclamation-triangle"></i> Halaman Tidak Ditemukan (404)</h2>
+                <div class="card text-center">
+                    <img src="https://via.placeholder.com/300x200/FF0000/FFFFFF?text=404+Error" alt="Error 404" style="max-width: 300px; margin: 0 auto 1rem auto; border-radius: var(--border-radius);">
+                    <p>Maaf, halaman yang Anda minta tidak dapat ditemukan di server kami.</p>
+                    <p>Mungkin halaman tersebut telah dipindahkan, dihapus, atau Anda salah mengetik alamat.</p>
+                    <p><a href="#/" class="button button-primary mt-1" data-route="/"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a></p>
+                </div>
+            `;
+        }
+
+        // --- ROUTER (NavigationManager) ---
+        class NavigationManager {
+            constructor(contentElementSelector, navLinkSelector, sidebarManagerInstance) {
+                this.contentElement = qs(contentElementSelector);
+                this.navLinks = qsa(navLinkSelector); // Ambil semua nav-link dari sidebar
+                this.sidebarManager = sidebarManagerInstance; // Untuk menutup sidebar mobile setelah navigasi
+                this.routes = {
+                    '/': renderDashboard,
+                    '/profil': renderProfil,
+                    '/apartemen': renderApartemen,
+                    '/booking': () => renderPlaceholderPage('Booking & Reservasi', 'fa-calendar-check'),
+                    '/favorit': () => renderPlaceholderPage('Properti Favorit', 'fa-heart'),
+                    '/pembayaran': () => renderPlaceholderPage('Riwayat Pembayaran', 'fa-credit-card'),
+                    '/maintenance': () => renderPlaceholderPage('Permintaan Maintenance', 'fa-tools'),
+                    '/pesan': () => renderPlaceholderPage('Pusat Pesan', 'fa-envelope'),
+                    '/pengguna': renderPengguna,
+                    '/pengaturan': renderPengaturan
+                };
+
+                if (!this.contentElement) {
+                    console.error("Elemen konten utama tidak ditemukan!");
+                    return;
+                }
+                this._bindNavigationEvents();
+                window.addEventListener('hashchange', () => this._handleRouteChange());
+                this._handleRouteChange(); // Muat konten awal
+            }
+
+            _handleRouteChange() {
+                const path = window.location.hash.slice(1) || '/';
+                appState.currentPage = path;
+
+                const renderFunction = this.routes[path] || renderNotFound;
+                this.contentElement.innerHTML = renderFunction();
+
+                this._updateActiveNavLink(path);
+                this._setupPageSpecificEventListeners(path);
+
+                // Update judul halaman
+                const activeLink = qs(`.app-nav .nav-link[data-route="${path}"] .nav-text`);
+                const pageTitleText = activeLink ? activeLink.textContent : (path === '/' ? 'Dashboard' : 'Tidak Ditemukan');
+                document.title = `PropertiKu | ${pageTitleText}`;
+
+                window.scrollTo(0, 0);
+
+                // Tutup sidebar overlay jika di mobile setelah navigasi
+                if (this.sidebarManager && this.sidebarManager.isMobileView()) {
+                    this.sidebarManager.closeMobileSidebar();
+                }
+
+                // Update text tema di halaman pengaturan jika halaman itu yang aktif
+                if (path === '/pengaturan') {
+                    const themeTextEl = qs('#current-theme-text');
+                    if (themeTextEl) themeTextEl.textContent = appState.theme.charAt(0).toUpperCase() + appState.theme.slice(1);
+                }
+            }
+
+            _updateActiveNavLink(currentPath) {
+                this.navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const linkPath = link.dataset.route;
+                    if (linkPath === currentPath) {
+                        link.classList.add('active');
+                    }
+                });
+                // Juga untuk logo di header jika path adalah '/'
+                const logoLink = qs('.app-header .logo');
+                if (logoLink) {
+                    logoLink.classList.toggle('active', currentPath === '/'); // 'active' bisa ditambahkan style jika perlu
+                }
+            }
+
+            _bindNavigationEvents() {
+                // Untuk link di navigasi sidebar
+                this.navLinks.forEach(link => {
+                    link.addEventListener('click', (event) => {
+                        const route = link.dataset.route;
+                        if (window.location.hash.slice(1) !== route) {
+                            window.location.hash = route;
+                        } else {
+                            this._handleRouteChange(); // Force re-render jika rute sama (opsional)
+                        }
+                    });
+                });
+
+                // Untuk logo di header (jika diklik, navigasi ke '/')
+                const logoLink = qs('.app-header .logo');
+                if (logoLink) {
+                    logoLink.addEventListener('click', (event) => {
+                        event.preventDefault(); // Mencegah default anchor behavior
+                        const route = logoLink.dataset.route;
+                        if (window.location.hash.slice(1) !== route) {
+                            window.location.hash = route;
+                        } else {
+                            this._handleRouteChange();
+                        }
+                    });
+                }
+
+                // Event delegation untuk link navigasi dinamis di dalam konten (misal tombol "Kembali ke Dashboard" di 404)
+                this.contentElement.addEventListener('click', (event) => {
+                    const targetLink = event.target.closest('a[data-route]');
+                    if (targetLink && targetLink.hasAttribute('data-route')) {
+                        event.preventDefault();
+                        const route = targetLink.dataset.route;
+                        if (window.location.hash.slice(1) !== route) {
+                            window.location.hash = route;
+                        } else {
+                            this._handleRouteChange();
+                        }
+                    }
+                });
+            }
+
+            _setupPageSpecificEventListeners(currentPath) {
+                if (currentPath === '/pengguna') {
+                    this._setupUserActionListeners();
+                }
+            }
+
+            _setupUserActionListeners() {
+                // Event delegation untuk aksi pengguna
+                this.contentElement.addEventListener('click', this._handleUserActionClick.bind(this));
+            }
+
+            _handleUserActionClick(event) {
+                const targetLink = event.target.closest('a.action-link');
+                if (targetLink) {
+                    event.preventDefault();
+                    const action = targetLink.dataset.action;
+                    const userId = targetLink.dataset.userId;
+                    const userName = targetLink.dataset.userName; // Untuk pesan hapus
+                    let actionText = '';
+
+                    if (action === 'edit') {
+                        actionText = `mengedit pengguna dengan ID ${userId}`;
+                        alert(`AKSI (DEMO): Anda mencoba ${actionText}. Fitur edit belum diimplementasikan.`);
+                        console.log(`[DEMO] Aksi: ${actionText}`);
+                    } else if (action === 'hapus') {
+                        actionText = `menghapus pengguna "${userName}" (ID: ${userId})`;
+                        if (confirm(`PERINGATAN (DEMO): Apakah Anda yakin ingin ${actionText}? Aksi ini tidak dapat diurungkan.`)) {
+                            // Simulasi penghapusan (di aplikasi nyata, ini akan jadi request ke server)
+                            appState.users = appState.users.filter(user => user.id !== parseInt(userId));
+                            this._handleRouteChange(); // Re-render halaman pengguna
+                            alert(`PENGGUNA (DEMO): Pengguna "${userName}" telah berhasil dihapus.`);
+                            console.warn(`[DEMO] Pengguna dihapus: ${actionText}.`);
+                        } else {
+                            console.log(`[DEMO] Penghapusan pengguna "${userName}" dibatalkan.`);
+                        }
+                    }
+                }
+            }
+        }
+
+        // --- INISIALISASI APLIKASI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentYearElement = qs('#current-year');
+            if (currentYearElement) {
+                currentYearElement.textContent = new Date().getFullYear();
+            }
+
+            const themeManager = new ThemeManager('#theme-toggle');
+            const sidebarManager = new SidebarManager('#sidebar-toggle', '#app-sidebar', '#app-container', '#sidebar-overlay-backdrop');
+            new NavigationManager('#app-content', '.app-nav .nav-link', sidebarManager); // Pass sidebarManager
+
+            console.log("Aplikasi Properti SPA Modern berhasil dimuat dan diinisialisasi.");
+        });
+
+    </script>
+</body>
+
+</html>
