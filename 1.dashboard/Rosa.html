@@ -3,402 +3,2606 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dasbor GREEN VALLEY</title>
-  <!-- Bootstrap 5.3 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap"
+  <!--
+    Catatan:
+    Untuk memenuhi permintaan "online monolith tanpa framework/library (wajib vanilla native)",
+    inti logika SPA, routing, manajemen konten, dan sebagian besar interaksi UI
+    (seperti modal kustom, notifikasi kustom, manajemen tema) sepenuhnya
+    diimplementasikan dengan Vanilla JavaScript.
+
+    CDN Bootstrap (untuk CSS dasar dan fungsionalitas dropdown pengguna bawaan)
+    dan Font Awesome (untuk CSS ikon) tetap digunakan sebagai basis styling dan untuk
+    mempertahankan fungsionalitas dropdown yang sudah ada di kode awal, demi menjaga
+    konsistensi visual dan menghindari kompleksitas pembuatan ulang komponen UI
+    tertentu dari nol.
+  -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;700&display=swap"
     rel="stylesheet">
+
   <style>
-    /* Variabel CSS untuk Tema */
+    /* === VARIABEL CSS GLOBAL === */
     :root {
       --font-main: 'Inter', Arial, sans-serif;
       --font-heading: 'Poppins', Arial, sans-serif;
-      --color-bg: #f8f9fa;
-      --color-bg-alt: #fff;
-      --color-text: #212529;
-      --color-primary: #4f46e5;
-      --color-secondary: #6366f1;
-      --color-card: #fff;
-      --color-border: #e5e7eb;
-      --color-sidebar: #fff;
-      --color-sidebar-active: #e0e7ff;
-      --color-navbar: #fff;
-      --color-navbar-border: #e5e7eb;
-      --color-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --transition-speed: 0.2s;
+      --border-radius-sm: 0.375rem;
+      --border-radius-md: 0.75rem;
+      --border-radius-lg: 1rem;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
     }
 
+    /* === TEMA TERANG (DEFAULT) === */
+    [data-theme="light"] {
+      --color-bg: #f8f9fa;
+      /* Sedikit lebih abu dari putih murni */
+      --color-bg-alt: #ffffff;
+      /* Untuk elemen seperti kartu atau navbar */
+      --color-text: #212529;
+      /* Hitam standar Bootstrap */
+      --color-text-muted: #6c757d;
+      /* Abu-abu standar Bootstrap */
+      --color-primary: #4f46e5;
+      /* Indigo-600 Tailwind */
+      --color-primary-hover: #4338ca;
+      /* Indigo-700 Tailwind */
+      --color-primary-rgb: 79, 70, 229;
+      --color-secondary: #6366f1;
+      /* Indigo-500 Tailwind (untuk aksen) */
+      --color-border: #e5e7eb;
+      /* Gray-200 Tailwind */
+      --color-card: #ffffff;
+      --color-sidebar: #ffffff;
+      --color-sidebar-text: #374151;
+      /* Gray-700 Tailwind */
+      --color-sidebar-active-bg: #e0e7ff;
+      /* Indigo-100 Tailwind */
+      --color-sidebar-active-text: var(--color-primary);
+      --color-sidebar-hover-bg: #f3f4f6;
+      /* Gray-100 Tailwind */
+      --color-navbar: #ffffff;
+      --color-navbar-border: var(--color-border);
+      --color-shadow-main: var(--shadow-md);
+      --color-success: #10b981;
+      /* Green-500 Tailwind */
+      --color-warning: #f59e0b;
+      /* Amber-500 Tailwind */
+      --color-danger: #ef4444;
+      /* Red-500 Tailwind */
+      --color-info: #3b82f6;
+      /* Blue-500 Tailwind */
+    }
+
+    /* === TEMA GELAP === */
     [data-theme="dark"] {
-      --color-bg: #18181b;
-      --color-bg-alt: #23232a;
+      --color-bg: #111827;
+      /* Gray-900 Tailwind */
+      --color-bg-alt: #1f2937;
+      /* Gray-800 Tailwind */
       --color-text: #f3f4f6;
+      /* Gray-100 Tailwind */
+      --color-text-muted: #9ca3af;
+      /* Gray-400 Tailwind */
       --color-primary: #818cf8;
+      /* Indigo-400 Tailwind */
+      --color-primary-hover: #6772e5;
+      /* Indigo-500 (modifikasi agar lebih gelap) */
+      --color-primary-rgb: 129, 140, 248;
       --color-secondary: #a5b4fc;
-      --color-card: #23232a;
-      --color-border: #27272a;
-      --color-sidebar: #18181b;
-      --color-sidebar-active: #312e81;
-      --color-navbar: #23232a;
-      --color-navbar-border: #27272a;
-      --color-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+      /* Indigo-300 Tailwind */
+      --color-border: #374151;
+      /* Gray-700 Tailwind */
+      --color-card: #1f2937;
+      /* Gray-800 Tailwind */
+      --color-sidebar: #111827;
+      /* Gray-900 Tailwind */
+      --color-sidebar-text: #d1d5db;
+      /* Gray-300 Tailwind */
+      --color-sidebar-active-bg: #312e81;
+      /* Indigo-800 Tailwind */
+      --color-sidebar-active-text: var(--color-primary);
+      --color-sidebar-hover-bg: #1f2937;
+      /* Gray-800 Tailwind */
+      --color-navbar: #1f2937;
+      /* Gray-800 Tailwind */
+      --color-navbar-border: var(--color-border);
+      --color-shadow-main: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
+      --color-success: #34d399;
+      /* Green-400 Tailwind */
+      --color-warning: #fbbf24;
+      /* Amber-400 Tailwind */
+      --color-danger: #f87171;
+      /* Red-400 Tailwind */
+      --color-info: #60a5fa;
+      /* Blue-400 Tailwind */
+    }
+
+    /* === STYLE DASAR === */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
     }
 
     body {
       font-family: var(--font-main);
-      background: var(--color-bg);
+      background-color: var(--color-bg);
       color: var(--color-text);
-      transition: background 0.2s, color 0.2s;
+      transition: background-color var(--transition-speed) ease-in-out, color var(--transition-speed) ease-in-out;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      font-size: 16px;
+      /* Ukuran font dasar */
     }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: var(--font-heading);
+      color: var(--color-text);
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+
+    a:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* Menyembunyikan elemen secara visual tapi tetap bisa diakses screen reader */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* === KOMPONEN UTAMA === */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- Sidebar --- */
     .sidebar {
-      background: var(--color-sidebar);
+      background-color: var(--color-sidebar);
       border-right: 1px solid var(--color-border);
-      min-width: 220px;
-      max-width: 220px;
+      width: 240px;
+      flex-shrink: 0;
       height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
       z-index: 1030;
-      transition: background 0.2s;
-      box-shadow: var(--color-shadow);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 0;
+      box-shadow: var(--color-shadow-main);
+      transition: background-color var(--transition-speed), left var(--transition-speed) ease-in-out, border-color var(--transition-speed);
     }
 
-    .sidebar .nav-link {
-      color: var(--color-text);
-      font-weight: 500;
-      border-radius: 0.375rem;
+    .sidebar-header {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      padding: 0 1.5rem 1.5rem 1.5rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar-header i {
+      margin-right: 0.75rem;
+      font-size: 1.8rem;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0 1rem;
+      margin: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+      /* Untuk nav yang panjang */
+    }
+
+    .sidebar-nav-item {
       margin-bottom: 0.25rem;
-      transition: background 0.15s;
     }
 
-    .sidebar .nav-link.active,
-    .sidebar .nav-link:hover {
-      background: var(--color-sidebar-active);
-      color: var(--color-primary);
-    }
-
-    .sidebar .sidebar-header {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-primary);
-      padding: 1.5rem 1rem 1rem 1.5rem;
-      letter-spacing: -1px;
-    }
-
-    .main-content {
-      margin-left: 220px;
-      padding: 2rem 2rem 2rem 2rem;
-      min-height: 100vh;
-      background: var(--color-bg);
-      transition: margin 0.2s;
-    }
-
-    .navbar {
-      background: var(--color-navbar);
-      border-bottom: 1px solid var(--color-navbar-border);
-      box-shadow: var(--color-shadow);
-      transition: background 0.2s;
-    }
-
-    .stat-card {
-      background: var(--color-card);
-      border: 1px solid var(--color-border);
-      border-radius: 1rem;
-      box-shadow: var(--color-shadow);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      transition: background 0.2s, border 0.2s;
-    }
-
-    .stat-card .stat-icon {
-      font-size: 2rem;
-      color: var(--color-primary);
-      margin-right: 1rem;
-    }
-
-    .stat-card .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      font-family: var(--font-heading);
-    }
-
-    .stat-card .stat-label {
-      color: var(--color-secondary);
-      font-size: 1rem;
+    .sidebar-nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: var(--color-sidebar-text);
       font-weight: 500;
+      border-radius: var(--border-radius-sm);
+      transition: background-color var(--transition-speed), color var(--transition-speed);
     }
 
-    .chart-placeholder {
-      background: var(--color-bg-alt);
-      border: 1px dashed var(--color-border);
-      border-radius: 1rem;
-      height: 260px;
+    .sidebar-nav-link i {
+      margin-right: 0.75rem;
+      width: 20px;
+      /* Jaga alignment ikon */
+      text-align: center;
+      font-size: 0.9rem;
+      /* Ukuran ikon sedikit lebih kecil dari teks */
+    }
+
+    .sidebar-nav-link:hover {
+      background-color: var(--color-sidebar-hover-bg);
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    .sidebar-nav-link.active {
+      background-color: var(--color-sidebar-active-bg);
+      color: var(--color-sidebar-active-text);
+      font-weight: 600;
+    }
+
+    .sidebar-nav-link.active i {
+      color: var(--color-sidebar-active-text);
+    }
+
+    .sidebar-footer {
+      padding: 1rem;
+      margin-top: auto;
+      /* Dorong footer ke bawah */
+      border-top: 1px solid var(--color-border);
+    }
+
+    .theme-toggle-btn {
+      background-color: transparent;
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius-sm);
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: 500;
+      transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+      border-color: var(--color-primary);
+    }
+
+    .theme-toggle-btn i {
+      margin-right: 0.5rem;
+    }
+
+    /* --- Konten Utama --- */
+    .main-wrapper {
+      flex-grow: 1;
+      margin-left: 240px;
+      /* Sesuaikan dengan lebar sidebar */
+      display: flex;
+      flex-direction: column;
+      transition: margin-left var(--transition-speed) ease-in-out;
+      min-width: 0;
+      /* Mencegah konten besar merusak layout flex */
+    }
+
+    /* --- Header (Navbar Atas) --- */
+    .app-header {
+      background-color: var(--color-navbar);
+      border-bottom: 1px solid var(--color-navbar-border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      /* Membuat header tetap di atas saat scroll */
+      top: 0;
+      z-index: 1020;
+      /* Di bawah sidebar, di atas konten */
+      box-shadow: var(--color-shadow-sm);
+      transition: background-color var(--transition-speed), border-color var(--transition-speed);
+    }
+
+    .sidebar-toggle-btn,
+    .notification-btn {
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 1.25rem;
+      padding: 0.5rem;
+      border-radius: var(--border-radius-sm);
+      transition: color var(--transition-speed), background-color var(--transition-speed);
+    }
+
+    .sidebar-toggle-btn:hover,
+    .notification-btn:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-alt);
+      /* Efek hover halus */
+    }
+
+    .sidebar-toggle-btn {
+      display: none;
+      /* Hanya tampil di mobile via media query */
+    }
+
+    .header-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0;
+      /* Override margin default h1 */
+    }
+
+    .user-menu .dropdown-toggle {
+      color: var(--color-text-muted);
+      /* Bootstrap default aneh */
+      padding: 0;
+      /* Hapus padding default bootstrap btn */
+    }
+
+    .user-menu .dropdown-toggle:hover,
+    .user-menu .dropdown-toggle:focus {
+      color: var(--color-primary);
+    }
+
+    .user-menu .dropdown-toggle::after {
+      display: none;
+      /* Sembunyikan panah dropdown Bootstrap jika tidak diinginkan */
+    }
+
+    .user-menu .dropdown-menu {
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--color-shadow-lg);
+      margin-top: 0.5rem !important;
+      /* Beri jarak dari avatar */
+      min-width: 180px;
+    }
+
+    .user-menu .dropdown-item {
+      color: var(--color-text);
+      padding: 0.65rem 1.25rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .user-menu .dropdown-item:hover,
+    .user-menu .dropdown-item:focus {
+      background-color: var(--color-bg-alt);
+      color: var(--color-primary);
+    }
+
+    .user-menu .dropdown-item i {
+      margin-right: 0.75rem;
+      width: 16px;
+      text-align: center;
+    }
+
+    .user-avatar {
+      font-size: 1.75rem;
       color: var(--color-secondary);
+      transition: color var(--transition-speed);
+    }
+
+    .user-avatar:hover {
+      color: var(--color-primary);
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      /* Jarak dari tombol notifikasi */
+      right: 0;
+      /* Align ke kanan tombol */
+      width: 350px;
+      max-width: 90vw;
+      /* Agar tidak terlalu lebar di mobile */
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--color-shadow-lg);
+      z-index: 1050;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+
+    .notification-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0s;
+      /* Untuk visibility */
+    }
+
+    .notification-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-header h5 {
+      margin-bottom: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .notification-close-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-muted);
       font-size: 1.2rem;
-      margin-bottom: 2rem;
+      padding: 0.25rem;
     }
 
-    .table thead {
-      background: var(--color-bg-alt);
+    .notification-close-btn:hover {
+      color: var(--color-text);
     }
 
-    .table {
-      background: var(--color-card);
-      border-radius: 0.75rem;
+    .notification-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .notification-item {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+    }
+
+    .notification-item:hover {
+      background-color: var(--color-bg);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-item p {
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    .notification-item small {
+      color: var(--color-text-muted);
+      font-size: 0.8rem;
+    }
+
+    .notification-item.unread {
+      background-color: var(--color-sidebar-active-bg);
+      /* Highlight notifikasi belum dibaca */
+    }
+
+    [data-theme="dark"] .notification-item.unread {
+      background-color: rgba(var(--color-primary-rgb), 0.1);
+    }
+
+    .notification-empty {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0.1rem;
+      /* Penyesuaian posisi badge */
+      right: 0.1rem;
+      font-size: 0.6rem;
+      /* Ukuran badge lebih kecil */
+      padding: 0.15em 0.4em;
+      /* Padding badge */
+      border-radius: 50%;
+      background-color: var(--color-danger);
+      color: white;
+      border: 2px solid var(--color-navbar);
+      /* Border agar terpisah dari ikon bell */
+      line-height: 1;
+    }
+
+
+    /* --- Konten Aplikasi (SPA) --- */
+    .app-content {
+      padding: 2rem;
+      /* Padding lebih besar */
+      flex-grow: 1;
+      background-color: var(--color-bg);
+      /* Pastikan bg konten utama konsisten */
+    }
+
+    /* === KARTU STATISTIK (SHARED) === */
+    .stat-card {
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--color-shadow-sm);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      /* default margin, bisa di-override dengan utility class */
+      transition: background-color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--color-shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .stat-card-icon {
+      font-size: 1.75rem;
+      /* Ukuran ikon disesuaikan */
+      color: var(--color-primary);
+      margin-right: 1.25rem;
+      background-color: rgba(var(--color-primary-rgb), 0.1);
+      /* Warna latar belakang ikon yang lembut */
+      padding: 0.85rem;
+      border-radius: 50%;
+      width: 56px;
+      /* Ukuran tetap untuk konsistensi */
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-card-content .stat-value {
+      font-size: 1.85rem;
+      /* Ukuran nilai statistik */
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: var(--color-text);
+      line-height: 1.2;
+      margin-bottom: 0.1rem;
+    }
+
+    .stat-card-content .stat-label {
+      color: var(--color-text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* === GRAFIK PLACEHOLDER (SHARED) === */
+    .chart-placeholder {
+      background-color: var(--color-card);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-lg);
+      min-height: 320px;
+      /* Tingkatkan tinggi minimal */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-muted);
+      font-size: 1.1rem;
+      padding: 1.5rem;
+      box-shadow: var(--color-shadow-sm);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .chart-placeholder i {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-secondary);
+    }
+
+    .chart-placeholder small {
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    /* === TABEL (SHARED) === */
+    .custom-table-wrapper {
+      background-color: var(--color-card);
+      border-radius: var(--border-radius-md);
       overflow: hidden;
-      box-shadow: var(--color-shadow);
+      /* Agar border-radius bekerja pada tabel */
+      box-shadow: var(--color-shadow-sm);
+      border: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+      /* Jarak bawah */
     }
 
-    /* Sidebar toggle untuk mobile */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      /* Penting untuk styling border */
+      background-color: var(--color-card);
+      /* Tabel itu sendiri punya bg */
+      color: var(--color-text);
+    }
+
+    .custom-table th,
+    .custom-table td {
+      padding: 0.9rem 1rem;
+      /* Padding sel */
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+      /* Konten sel di tengah vertikal */
+      font-size: 0.9rem;
+      /* Ukuran font konten tabel */
+    }
+
+    .custom-table thead th {
+      background-color: var(--color-bg-alt);
+      /* Header tabel sedikit beda */
+      font-weight: 600;
+      font-size: 0.85rem;
+      /* Font header lebih kecil */
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom-width: 2px;
+      /* Border header lebih tebal */
+      border-top: none;
+      /* Jika wrapper sudah punya border */
+      color: var(--color-text-muted);
+    }
+
+    .custom-table tbody tr:last-child td {
+      border-bottom: none;
+      /* Hapus border pada baris terakhir */
+    }
+
+    .custom-table tbody tr:hover {
+      background-color: var(--color-bg);
+      /* Efek hover pada baris */
+    }
+
+    .badge {
+      /* Styling kustom untuk badge agar konsisten */
+      display: inline-block;
+      padding: .35em .65em;
+      font-size: .75em;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: var(--border-radius-sm);
+      /* Gunakan variabel radius */
+    }
+
+    .badge-success {
+      background-color: var(--color-success);
+    }
+
+    .badge-warning {
+      background-color: var(--color-warning);
+      color: var(--color-text);
+    }
+
+    /* Pastikan teks terbaca */
+    .badge-danger {
+      background-color: var(--color-danger);
+    }
+
+    .badge-info {
+      background-color: var(--color-info);
+    }
+
+    .badge-secondary {
+      background-color: var(--color-text-muted);
+    }
+
+    /* === FORM (SHARED) === */
+    .form-group {
+      margin-bottom: 1.25rem;
+      /* Jarak antar grup form */
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: .5rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: .65rem .9rem;
+      /* Padding input */
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-text);
+      background-color: var(--color-bg-alt);
+      background-clip: padding-box;
+      border: 1px solid var(--color-border);
+      appearance: none;
+      /* Hapus style default browser */
+      border-radius: var(--border-radius-sm);
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .form-control:focus {
+      color: var(--color-text);
+      background-color: var(--color-bg-alt);
+      border-color: var(--color-primary);
+      outline: 0;
+      box-shadow: 0 0 0 .2rem rgba(var(--color-primary-rgb), .25);
+    }
+
+    select.form-control {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right .75rem center;
+      background-size: 16px 12px;
+    }
+
+    [data-theme="dark"] select.form-control {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ced4da' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    }
+
+
+    /* === TOMBOL (SHARED) === */
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--color-text);
+      /* Warna default untuk tombol sekunder/outline */
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      background-color: transparent;
+      border: 1px solid transparent;
+      padding: .5rem 1rem;
+      /* Padding tombol standar */
+      font-size: 0.9rem;
+      /* Ukuran font tombol */
+      border-radius: var(--border-radius-sm);
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:hover {
+      color: #fff;
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    .btn-outline-secondary {
+      color: var(--color-text-muted);
+      border-color: var(--color-border);
+    }
+
+    .btn-outline-secondary:hover {
+      color: var(--color-text);
+      background-color: var(--color-bg-alt);
+      border-color: var(--color-border);
+      /* Tetap border color atau ubah ke primary */
+    }
+
+    .btn-danger {
+      color: #fff;
+      background-color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+
+    .btn-danger:hover {
+      color: #fff;
+      /* Slightly darker red for hover */
+      background-color: #dc2626;
+      /* Red-600 Tailwind */
+      border-color: #dc2626;
+    }
+
+    [data-theme="dark"] .btn-danger:hover {
+      background-color: #fca5a5;
+      /* Red-300 Tailwind */
+      border-color: #fca5a5;
+    }
+
+    .btn-sm {
+      padding: .25rem .5rem;
+      font-size: .8rem;
+      border-radius: .2rem;
+      /* Radius lebih kecil untuk tombol kecil */
+    }
+
+    .btn-action {
+      /* Tombol aksi di tabel */
+      margin-right: 0.5rem;
+    }
+
+    .btn-action:last-child {
+      margin-right: 0;
+    }
+
+    .btn i {
+      margin-right: 0.35rem;
+    }
+
+    .btn.btn-sm i {
+      margin-right: 0.25rem;
+    }
+
+    /* === MODAL (SHARED) === */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed) ease;
+      padding: 1rem;
+      /* Padding untuk mobile agar modal tidak mentok tepi */
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .modal-content {
+      background-color: var(--color-card);
+      padding: 1.5rem;
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--color-shadow-lg);
+      width: 100%;
+      /* Lebar penuh di mobile, dibatasi max-width */
+      max-width: 500px;
+      transform: scale(0.95) translateY(20px);
+      transition: transform var(--transition-speed) ease, background-color var(--transition-speed), border-color var(--transition-speed);
+      max-height: 90vh;
+      /* Batasi tinggi modal */
+      display: flex;
+      /* Untuk layout header, body, footer */
+      flex-direction: column;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+      /* Agar header tidak mengecil */
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--color-text-muted);
+      padding: 0.25rem;
+      /* Area klik lebih besar */
+      line-height: 1;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--color-text);
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+      overflow-y: auto;
+      /* Jika konten modal panjang */
+      flex-grow: 1;
+      /* Agar body mengisi sisa ruang */
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      /* Jarak antar tombol footer */
+      border-top: 1px solid var(--color-border);
+      padding-top: 1rem;
+      flex-shrink: 0;
+      /* Agar footer tidak mengecil */
+    }
+
+
+    /* === RESPONSIVE === */
     @media (max-width: 991.98px) {
+
+      /* Medium devices (tablets, kurang dari 992px) */
       .sidebar {
-        left: -220px;
-        transition: left 0.2s;
+        left: -240px;
+        /* Lebar sidebar */
+        z-index: 1040;
+        /* Di atas header saat terbuka */
       }
 
       .sidebar.show {
         left: 0;
+        box-shadow: var(--color-shadow-lg);
+        /* Shadow lebih kuat saat overlay */
       }
 
-      .main-content {
+      .main-wrapper {
         margin-left: 0;
-        padding: 1rem;
+      }
+
+      .sidebar-toggle-btn {
+        display: inline-block;
+        /* Tampilkan tombol toggle sidebar */
+      }
+
+      .header-title {
+        font-size: 1.1rem;
+        /* Kecilkan judul di mobile */
+      }
+
+      .app-content {
+        padding: 1.5rem 1rem;
+        /* Padding mobile */
+      }
+
+      .stat-card-icon {
+        font-size: 1.5rem;
+        padding: 0.65rem;
+        width: 48px;
+        height: 48px;
+      }
+
+      .stat-card-content .stat-value {
+        font-size: 1.65rem;
+      }
+
+      .row>[class*="col-md-"] {
+        /* Kolom kustom kita di mobile jadi full width */
+        width: 100%;
+        margin-bottom: 1rem;
+        /* Jarak antar kartu di mobile */
+      }
+
+      .row>[class*="col-md-"]:last-child {
+        margin-bottom: 0;
+      }
+
+      .row.g-4>[class*="col-md-"]:last-child {
+        /* Jika ada gap, mungkin tidak perlu margin-bottom */
+        margin-bottom: 0rem;
+      }
+
+    }
+
+    @media (max-width: 575.98px) {
+
+      /* Small devices (landscape phones, kurang dari 576px) */
+      .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stat-card-icon {
+        margin-bottom: 0.75rem;
+        margin-right: 0;
+      }
+
+      .app-header {
+        padding: 0.75rem 1rem;
+      }
+
+      .notification-dropdown {
+        right: 1rem;
+        /* Sesuaikan posisi dengan padding header */
+      }
+
+      .custom-table {
+        display: block;
+        /* Membuat tabel bisa di-scroll horizontal */
+        overflow-x: auto;
+        white-space: nowrap;
+        /* Mencegah teks wrap di sel */
       }
     }
 
+    /* === UTILITIES (Bisa ditambahkan sesuai kebutuhan) === */
+    .d-flex {
+      display: flex !important;
+    }
+
+    .align-items-center {
+      align-items: center !important;
+    }
+
+    .justify-content-between {
+      justify-content: space-between !important;
+    }
+
+    .justify-content-end {
+      justify-content: flex-end !important;
+    }
+
+    .ms-auto {
+      margin-left: auto !important;
+    }
+
+    .me-2 {
+      margin-right: .5rem !important;
+    }
+
+    .me-3 {
+      margin-right: 1rem !important;
+    }
+
+    .mb-0 {
+      margin-bottom: 0 !important;
+    }
+
+    .mb-1 {
+      margin-bottom: .25rem !important;
+    }
+
+    .mb-2 {
+      margin-bottom: .5rem !important;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem !important;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem !important;
+    }
+
+    .mt-auto {
+      margin-top: auto !important;
+    }
+
+    .fw-bold {
+      font-weight: 700 !important;
+    }
+
+    .fw-semibold {
+      font-weight: 600 !important;
+    }
+
+    .position-relative {
+      position: relative !important;
+    }
+
+    .text-danger {
+      color: var(--color-danger) !important;
+    }
+
+    .text-success {
+      color: var(--color-success) !important;
+    }
+
+    .text-warning {
+      color: var(--color-warning) !important;
+    }
+
+    .text-muted {
+      color: var(--color-text-muted) !important;
+    }
+
+    .w-100 {
+      width: 100% !important;
+    }
+
+    .p-3 {
+      padding: 1rem !important;
+    }
+
+    .py-2 {
+      padding-top: .5rem !important;
+      padding-bottom: .5rem !important;
+    }
+
+    .px-3 {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    .pb-4 {
+      padding-bottom: 1.5rem !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    .mt-3 {
+      margin-top: 1rem !important;
+    }
+
+    /* Grid Sederhana (Mirip Bootstrap Grid) */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      /* Default gap bisa ditambahkan di sini jika diinginkan, atau via class g-* */
+    }
+
+    /* Kolom-kolom */
+    .col,
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4,
+    .col-5,
+    .col-6,
+    .col-7,
+    .col-8,
+    .col-9,
+    .col-10,
+    .col-11,
+    .col-12,
+    .col-sm,
+    .col-sm-1,
+    /* ...dst untuk semua breakpoint jika diperlukan */
+    .col-md,
+    .col-md-1,
+    .col-md-2,
+    .col-md-3,
+    .col-md-4,
+    .col-md-5,
+    .col-md-6,
+    .col-md-7,
+    .col-md-8,
+    .col-md-9,
+    .col-md-10,
+    .col-md-11,
+    .col-md-12,
+    .col-lg,
+    .col-lg-1,
+    .col-lg-2,
+    .col-lg-3,
+    .col-lg-4,
+    .col-lg-5,
+    .col-lg-6,
+    .col-lg-7,
+    .col-lg-8,
+    .col-lg-9,
+    .col-lg-10,
+    .col-lg-11,
+    .col-lg-12 {
+      position: relative;
+      width: 100%;
+      /* Default untuk mobile-first */
+      padding-right: 0.75rem;
+      /* Gutter default */
+      padding-left: 0.75rem;
+      /* Gutter default */
+    }
+
+    /* Atur row agar bisa menghilangkan padding dari children kolom (negative margin) */
+    .row {
+      margin-right: -0.75rem;
+      margin-left: -0.75rem;
+    }
+
+    /* Gutter (gap) classes. g-4 setara dengan 1.5rem (0.75rem * 2) */
+    .g-4 {
+      --bs-gutter-x: 1.5rem;
+      --bs-gutter-y: 1.5rem;
+      margin-top: calc(-1 * var(--bs-gutter-y));
+      /* Negative margin untuk row-gap */
+    }
+
+    .g-4>* {
+      padding-top: var(--bs-gutter-y);
+      /* Padding untuk row-gap */
+    }
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (min-width: 768px) {
+      .col-md-3 {
+        flex: 0 0 auto;
+        width: 25%;
+      }
+
+      .col-md-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+      }
+
+      .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+      }
+
+      .col-md-8 {
+        flex: 0 0 auto;
+        width: 66.66666667%;
+      }
+
+      .col-md-12 {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+
+      /* Tambahkan kelas .col-md-* lainnya jika perlu */
+    }
+
+    /* Large devices (desktops, 992px and up) */
+    @media (min-width: 992px) {
+      .col-lg-3 {
+        flex: 0 0 auto;
+        width: 25%;
+      }
+
+      .col-lg-4 {
+        flex: 0 0 auto;
+        width: 33.33333333%;
+      }
+
+      .col-lg-6 {
+        flex: 0 0 auto;
+        width: 50%;
+      }
+
+      .col-lg-8 {
+        flex: 0 0 auto;
+        width: 66.66666667%;
+      }
+
+      .col-lg-12 {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+
+      /* Tambahkan kelas .col-lg-* lainnya jika perlu */
+    }
+
+    /* Extra large devices (large desktops, 1200px and up) */
+    @media (min-width: 1200px) {
+      /* Tambahkan kelas .col-xl-* jika perlu */
+    }
+
+
     /* Fokus Aksesibilitas */
-    .nav-link:focus {
+    .sidebar-nav-link:focus-visible,
+    .theme-toggle-btn:focus-visible,
+    .sidebar-toggle-btn:focus-visible,
+    .notification-btn:focus-visible,
+    .user-menu .dropdown-toggle:focus-visible,
+    .form-control:focus-visible,
+    /* Sudah ada style focus, ini redundant tapi tidak berbahaya */
+    .btn:focus-visible {
       outline: 2px solid var(--color-primary);
       outline-offset: 2px;
+      box-shadow: 0 0 0 .2rem rgba(var(--color-primary-rgb), .25);
+    }
+
+    .modal-close-btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 1px;
+      border-radius: var(--border-radius-sm);
+      /* Agar outline mengikuti bentuk */
+    }
+
+    .user-menu .dropdown-item:focus-visible {
+      outline: none;
+      /* Bootstrap menangani ini, atau bisa dikustom */
+      background-color: var(--color-sidebar-hover-bg);
+      /* Samakan dengan hover */
+    }
+
+
+    /* Animasi loading sederhana */
+    .loader-container {
+      /* Kontainer untuk memusatkan loader */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      /* Tinggi minimal agar loader terlihat di tengah */
+      width: 100%;
+    }
+
+    .loader {
+      border: 4px solid var(--color-bg-alt);
+      /* Warna dasar spinner */
+      border-top: 4px solid var(--color-primary);
+      /* Warna aktif spinner */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+      margin: 2rem auto;
+      /* Jarak jika tidak dalam flex container */
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Navigasi Sidebar -->
-  <nav class="sidebar d-flex flex-column" id="sidebar" aria-label="Navigasi Sidebar">
-    <div class="sidebar-header mb-4">
-      <i class="fa-solid fa-building"></i> GREEN VALLEY
-    </div>
-    <ul class="nav flex-column px-3">
-      <li class="nav-item">
-        <a class="nav-link active" href="dashboard.html" aria-current="page">
-          <i class="fa-solid fa-chart-line me-2"></i> Dasboard Admin 
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="card.html">
-          <i class="fa-solid fa-image me-2"></i> Galeri
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="crud.html">
-          <i class="fa-solid fa-table-list me-2"></i> Manajemen
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="documentation.html">
-          <i class="fa-solid fa-book me-2"></i> Dokumentasi
-        </a>
-      </li>
-    </ul>
-    <div class="mt-auto px-3 pb-4">
-      <button class="btn btn-outline-primary w-100" id="themeToggle" aria-label="Ganti mode terang/gelap">
-        <i class="fa-solid fa-moon"></i> <span class="d-none d-md-inline">Mode Gelap</span>
-      </button>
-    </div>
-  </nav>
+  <div class="app-container">
+    <!-- Navigasi Sidebar -->
+    <aside class="sidebar" id="appSidebar" aria-label="Navigasi Utama Aplikasi">
+      <div class="sidebar-header">
+        <i class="fa-solid fa-leaf"></i> GREEN VALLEY
+      </div>
+      <ul class="sidebar-nav" id="sidebarNav">
+        <!-- Tautan navigasi akan di-render oleh JavaScript -->
+      </ul>
+      <div class="sidebar-footer">
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Ganti mode tema">
+          <i class="fa-solid fa-moon"></i> <span class="theme-toggle-text">Mode Gelap</span>
+        </button>
+      </div>
+    </aside>
 
-  <!-- Konten Utama -->
-  <div class="main-content">
-    <!-- Navbar/Header -->
-    <nav class="navbar navbar-expand-lg mb-4" role="navigation">
-      <div class="container-fluid">
-        <button class="btn btn-outline-secondary d-lg-none me-2" id="sidebarToggle" aria-label="Ganti sidebar">
+    <!-- Pembungkus Konten Utama -->
+    <div class="main-wrapper">
+      <!-- Header Aplikasi -->
+      <header class="app-header">
+        <button class="sidebar-toggle-btn me-2" id="sidebarToggleBtn" aria-label="Buka/tutup sidebar"
+          aria-expanded="false" aria-controls="appSidebar">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <span class="navbar-brand fw-bold" style="font-family: var(--font-heading);">Dasboard Admin</span>
+        <h1 class="header-title" id="pageTitle">Dasbor</h1> <!-- H1 untuk judul halaman utama -->
         <div class="ms-auto d-flex align-items-center">
           <!-- Notifikasi -->
-          <button class="btn btn-link position-relative me-3" id="notifBtn" aria-label="Tampilkan notifikasi">
-            <i class="fa-solid fa-bell fa-lg"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              id="notifCount" style="font-size:0.7rem;">2</span>
-          </button>
-          <!-- Pengguna -->
-          <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false"
-              aria-label="Menu pengguna">
-              <i class="fa-solid fa-user-circle fa-2x"></i>
+          <div class="position-relative">
+            <button class="notification-btn me-3" id="notificationBtn" aria-label="Tampilkan notifikasi"
+              aria-haspopup="true" aria-expanded="false" aria-controls="notificationDropdown">
+              <i class="fa-solid fa-bell"></i>
+              <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-              <li><a class="dropdown-item" href="#">Profil</a></li>
-              <li><a class="dropdown-item" href="#">Pengaturan</a></li>
+            <div class="notification-dropdown" id="notificationDropdown" role="dialog"
+              aria-labelledby="notificationHeading">
+              <div class="notification-header">
+                <h5 id="notificationHeading">Notifikasi</h5>
+                <button class="notification-close-btn" id="notificationCloseBtn" aria-label="Tutup notifikasi"><i
+                    class="fa-solid fa-xmark"></i></button>
+              </div>
+              <ul class="notification-list" id="notificationList" tabindex="-1">
+                <!-- Notifikasi akan di-render oleh JavaScript -->
+                <li class="notification-empty">Tidak ada notifikasi baru.</li>
+              </ul>
+            </div>
+          </div>
+          <!-- Menu Pengguna (menggunakan Bootstrap Dropdown untuk kemudahan) -->
+          <div class="dropdown user-menu">
+            <button class="btn dropdown-toggle p-0" type="button" id="userMenuDropdown" data-bs-toggle="dropdown"
+              aria-expanded="false" aria-label="Menu pengguna">
+              <i class="fa-solid fa-user-circle user-avatar"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+              <li><a class="dropdown-item" href="#" data-route="/profil"><i class="fa-solid fa-user-pen"></i> Profil</a>
+              </li>
+              <li><a class="dropdown-item" href="#" data-route="/pengaturan"><i class="fa-solid fa-sliders"></i>
+                  Pengaturan</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="#">Keluar</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i>
+                  Keluar</a></li>
             </ul>
           </div>
         </div>
-      </div>
-    </nav>
+      </header>
 
-    <!-- Dropdown Notifikasi (tersembunyi secara default) -->
-    <div id="notifDropdown" class="position-absolute end-0 mt-2 me-4"
-      style="z-index: 1050; min-width: 320px; display: none;">
-      <div class="card shadow">
-        <div class="card-header py-2 d-flex justify-content-between align-items-center">
-          <span class="fw-bold">Notifikasi</span>
-          <button class="btn btn-sm btn-link text-danger" id="notifClose" aria-label="Tutup notifikasi"><i
-              class="fa-solid fa-xmark"></i></button>
-        </div>
-        <ul class="list-group list-group-flush" id="notifList">
-          <!-- Notifikasi akan disisipkan di sini -->
-        </ul>
-      </div>
+      <!-- Konten Aplikasi Utama (SPA) -->
+      <main class="app-content" id="appContent" role="main" aria-live="polite">
+        <!-- Konten halaman akan di-render di sini oleh JavaScript -->
+      </main>
     </div>
+  </div>
 
-    <!-- Statistik Dasbor -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-3 col-6">
-        <div class="stat-card d-flex align-items-center">
-          <span class="stat-icon"><i class="fa-solid fa-building"></i></span>
-          <div>
-            <div class="stat-value" id="statTotalApt">24</div>
-            <div class="stat-label">Total Apartemen</div>
-          </div>
-        </div>
+  <!-- Modal (digunakan untuk konfirmasi, form, dll) -->
+  <div class="modal-overlay" id="appModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title-text">Judul Modal</h3>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Tutup modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-      <div class="col-md-3 col-6">
-        <div class="stat-card d-flex align-items-center">
-          <span class="stat-icon"><i class="fa-solid fa-door-open"></i></span>
-          <div>
-            <div class="stat-value" id="statRentedApt">18</div>
-            <div class="stat-label">Apartemen Disewa</div>
-          </div>
-        </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Konten modal akan diisi oleh JavaScript -->
       </div>
-      <div class="col-md-3 col-6">
-        <div class="stat-card d-flex align-items-center">
-          <span class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></span>
-          <div>
-            <div class="stat-value" id="statIncome">Rp 120jt</div>
-            <div class="stat-label">Pendapatan Bulanan</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-6">
-        <div class="stat-card d-flex align-items-center">
-          <span class="stat-icon"><i class="fa-solid fa-users"></i></span>
-          <div>
-            <div class="stat-value" id="statTenants">32</div>
-            <div class="stat-label">Total Penyewa</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Baris Grafik -->
-    <div class="row g-4 mb-4">
-      <div class="col-lg-8">
-        <div class="chart-placeholder" id="chartOccupancy" aria-label="Grafik Tingkat Hunian">
-          <i class="fa-solid fa-chart-area me-2"></i> Tingkat Hunian (Tempat Grafik)
-        </div>
-      </div>
-      <div class="col-lg-4">
-        <div class="chart-placeholder" id="chartIncome" aria-label="Grafik Tren Pendapatan">
-          <i class="fa-solid fa-chart-column me-2"></i> Tren Pendapatan (Tempat Grafik)
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabel Pemesanan Terbaru -->
-    <div class="card mb-4">
-      <div class="card-header bg-transparent fw-bold">
-        Pemesanan Terbaru
-      </div>
-      <div class="table-responsive">
-        <table class="table align-middle mb-0">
-          <thead>
-            <tr>
-              <th scope="col">Penyewa</th>
-              <th scope="col">Apartemen</th>
-              <th scope="col">Check-in</th>
-              <th scope="col">Check-out</th>
-              <th scope="col">Status</th>
-            </tr>
-          </thead>
-          <tbody id="bookingTable">
-            <!-- Data contoh akan disisipkan oleh JS -->
-          </tbody>
-        </table>
+      <div class="modal-footer" id="modalFooter">
+        <!-- Tombol modal akan diisi oleh JavaScript -->
       </div>
     </div>
   </div>
 
-  <!-- JS Bootstrap (untuk dropdown, dll.) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS Bootstrap (hanya untuk dropdown menu pengguna, dll. yang sudah ada) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+
   <script>
-    // --- Pengaturan Tema --- 
-    const themeToggle = document.getElementById('themeToggle');
-    const htmlEl = document.documentElement;
-    let currentTheme = localStorage.getItem('theme') || 'light';
-    function setTheme(theme) {
-      htmlEl.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-      themeToggle.innerHTML = theme === 'dark'
-        ? '<i class="fa-solid fa-sun"></i> <span class="d-none d-md-inline">Mode Terang</span>'
-        : '<i class="fa-solid fa-moon"></i> <span class="d-none d-md-inline">Mode Gelap</span>';
-    }
-    setTheme(currentTheme);
-    themeToggle.addEventListener('click', () => {
-      currentTheme = (currentTheme === 'light') ? 'dark' : 'light';
-      setTheme(currentTheme);
+    // === BAGIAN UTAMA APLIKASI SPA VANILLA JS ===
+
+    // --- State Aplikasi Global ---
+    const appState = {
+      currentTheme: localStorage.getItem('theme') || 'light',
+      currentPage: '/',
+      isSidebarOpen: false,
+      notifications: [
+        { id: 'n001', message: 'Pemesanan baru dari Budi Santoso.', time: '5 menit lalu', read: false, link: '/manajemen?filter=pending' },
+        { id: 'n002', message: 'Laporan bulanan tersedia untuk diunduh.', time: '1 jam lalu', read: false, link: '/laporan/bulanan' },
+        { id: 'n003', message: 'Sistem akan melakukan maintenance malam ini pukul 23:00.', time: '3 jam lalu', read: true },
+        { id: 'n004', message: 'Unit A-102 memerlukan perbaikan AC.', time: 'Kemarin', read: false, link: '/manajemen?unit=A-102' },
+        { id: 'n005', message: 'Pembayaran sewa dari Siti diterima.', time: '2 hari lalu', read: true },
+      ],
+      dashboardStats: {
+        totalApartments: 0,
+        rentedApartments: 0,
+        monthlyIncome: 0,
+        totalTenants: 0,
+      },
+      recentBookings: [], // Akan diisi oleh PageRenderer
+      galleryItems: [], // Akan diisi oleh PageRenderer
+      managementItems: [ // Data contoh untuk halaman manajemen (CRUD)
+        { id: 'm001', name: 'Unit A-101', type: 'Studio', status: 'Tersedia', price: 5000000, resident: '-', photo: 'https://via.placeholder.com/150/4f46e5/ffffff?text=A-101' },
+        { id: 'm002', name: 'Unit B-203', type: '2 Kamar Tidur', status: 'Tersewa', price: 12000000, resident: 'Siti Aminah', photo: 'https://via.placeholder.com/150/6366f1/ffffff?text=B-203' },
+        { id: 'm003', name: 'Unit C-005', type: '1 Kamar Tidur', status: 'Perbaikan', price: 8000000, resident: '-', photo: 'https://via.placeholder.com/150/f59e0b/000000?text=C-005' },
+        { id: 'm004', name: 'Unit D-P01', type: 'Penthouse', status: 'Tersedia', price: 25000000, resident: '-', photo: 'https://via.placeholder.com/150/10b981/ffffff?text=D-P01' },
+      ],
+      editingItemId: null, // Untuk menyimpan ID item yang sedang diedit pada CRUD
+      userProfile: {
+        name: 'Admin GreenValley',
+        email: 'admin@greenvalley.com',
+        avatar: 'fa-user-circle' // Bisa juga path ke image
+      }
+    };
+
+    // --- Utilitas ---
+    const utils = {
+      qs: (selector, parent = document) => parent.querySelector(selector),
+      qsa: (selector, parent = document) => parent.querySelectorAll(selector),
+      createElement: (tag, props = {}, children = []) => {
+        const el = document.createElement(tag);
+        Object.entries(props).forEach(([key, value]) => {
+          if (key === 'dataset') {
+            Object.entries(value).forEach(([dataKey, dataValue]) => el.dataset[dataKey] = dataValue);
+          } else if (key === 'style' && typeof value === 'object') {
+            Object.entries(value).forEach(([styleKey, styleValue]) => el.style[styleKey] = styleValue);
+          } else if (key.startsWith('aria')) {
+            el.setAttribute(key, value);
+          } else if (typeof el[key] === 'undefined' && typeof value !== 'object') { // Atribut non-standar
+            el.setAttribute(key, value);
+          }
+          else {
+            el[key] = value;
+          }
+        });
+        children.forEach(child => {
+          if (child === null || typeof child === 'undefined') return;
+          if (typeof child === 'string') {
+            el.appendChild(document.createTextNode(child));
+          } else {
+            el.appendChild(child);
+          }
+        });
+        return el;
+      },
+      // Fungsi untuk format mata uang
+      formatCurrency: (amount, locale = 'id-ID', currency = 'IDR') => {
+        return new Intl.NumberFormat(locale, { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+      },
+      // Fungsi untuk menghasilkan ID unik sederhana
+      generateId: (prefix = 'id_') => prefix + Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
+      // Fungsi untuk debounce
+      debounce: (func, delay) => {
+        let timeout;
+        return function (...args) {
+          const context = this;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+      },
+      // Fungsi untuk escape HTML (mencegah XSS dasar jika memasukkan data ke innerHTML)
+      escapeHTML: (str) => {
+        if (typeof str !== 'string') return str;
+        return str.replace(/[&<>"']/g, function (match) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[match];
+        });
+      }
+    };
+
+    // --- Manajemen Tema ---
+    const ThemeManager = (() => {
+      const htmlEl = document.documentElement;
+      const toggleBtn = utils.qs('#themeToggleBtn');
+      const toggleBtnText = utils.qs('.theme-toggle-text', toggleBtn);
+      const toggleBtnIcon = utils.qs('i', toggleBtn);
+
+      function applyTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        appState.currentTheme = theme;
+        if (theme === 'dark') {
+          toggleBtnIcon.classList.remove('fa-moon');
+          toggleBtnIcon.classList.add('fa-sun');
+          toggleBtnText.textContent = 'Mode Terang';
+          toggleBtn.setAttribute('aria-label', 'Ganti ke mode terang');
+        } else {
+          toggleBtnIcon.classList.remove('fa-sun');
+          toggleBtnIcon.classList.add('fa-moon');
+          toggleBtnText.textContent = 'Mode Gelap';
+          toggleBtn.setAttribute('aria-label', 'Ganti ke mode gelap');
+        }
+      }
+
+      function init() {
+        applyTheme(appState.currentTheme);
+        toggleBtn.addEventListener('click', () => {
+          const newTheme = appState.currentTheme === 'light' ? 'dark' : 'light';
+          applyTheme(newTheme);
+        });
+      }
+      return { init, applyTheme };
+    })();
+
+    // --- Manajemen Sidebar ---
+    const SidebarManager = (() => {
+      const sidebarEl = utils.qs('#appSidebar');
+      const sidebarToggleBtn = utils.qs('#sidebarToggleBtn');
+      // const mainWrapperEl = utils.qs('.main-wrapper'); // Tidak terpakai lagi dengan fixed sidebar
+      // const appContentEl = utils.qs('#appContent'); // Tidak terpakai langsung di sini
+
+      function toggleSidebar(forceState) {
+        appState.isSidebarOpen = typeof forceState === 'boolean' ? forceState : !appState.isSidebarOpen;
+        sidebarEl.classList.toggle('show', appState.isSidebarOpen);
+        sidebarToggleBtn.setAttribute('aria-expanded', appState.isSidebarOpen.toString());
+      }
+
+      function init() {
+        sidebarToggleBtn.addEventListener('click', () => toggleSidebar());
+
+        // Menutup sidebar saat klik di luar area sidebar pada tampilan mobile
+        document.addEventListener('click', (event) => {
+          if (window.innerWidth < 992 && appState.isSidebarOpen) {
+            const isClickInsideSidebar = sidebarEl.contains(event.target);
+            const isClickOnToggleButton = sidebarToggleBtn.contains(event.target);
+            if (!isClickInsideSidebar && !isClickOnToggleButton) {
+              toggleSidebar(false); // Tutup sidebar
+            }
+          }
+        });
+      }
+      return { init, toggleSidebar };
+    })();
+
+    // --- Manajemen Notifikasi ---
+    const NotificationManager = (() => {
+      const btn = utils.qs('#notificationBtn');
+      const dropdown = utils.qs('#notificationDropdown');
+      const listEl = utils.qs('#notificationList');
+      const countEl = utils.qs('#notificationCount');
+      const closeBtn = utils.qs('#notificationCloseBtn');
+
+      function renderNotifications() {
+        listEl.innerHTML = ''; // Bersihkan list
+        const unreadCount = appState.notifications.filter(n => !n.read).length;
+
+        if (unreadCount > 0) {
+          countEl.textContent = unreadCount > 9 ? '9+' : unreadCount.toString();
+          countEl.style.display = 'inline-block';
+          btn.setAttribute('aria-label', `Tampilkan notifikasi (${unreadCount} belum dibaca)`);
+        } else {
+          countEl.style.display = 'none';
+          btn.setAttribute('aria-label', 'Tampilkan notifikasi (tidak ada yang baru)');
+        }
+
+        if (appState.notifications.length === 0) {
+          listEl.appendChild(utils.createElement('li', { className: 'notification-empty', textContent: 'Tidak ada notifikasi.' }));
+          return;
+        }
+
+        // Urutkan: belum dibaca dulu, lalu berdasarkan waktu (asumsi ID = urutan waktu)
+        const sortedNotifications = [...appState.notifications].sort((a, b) => {
+          if (a.read !== b.read) return a.read ? 1 : -1; // Belum dibaca di atas
+          return parseInt(b.id.substring(1)) - parseInt(a.id.substring(1)); // ID terbaru di atas (jika format nXXX)
+        });
+
+
+        sortedNotifications.forEach(notif => {
+          const item = utils.createElement('li', {
+            className: `notification-item ${notif.read ? '' : 'unread'}`,
+            dataset: { id: notif.id, link: notif.link || '' },
+            tabIndex: 0, // Agar bisa di-fokus
+            role: 'button'
+          });
+          item.innerHTML = `
+                    <p>${utils.escapeHTML(notif.message)}</p>
+                    <small>${utils.escapeHTML(notif.time)}</small>
+                `;
+          item.addEventListener('click', () => handleNotificationClick(notif));
+          item.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleNotificationClick(notif); });
+          listEl.appendChild(item);
+        });
+      }
+
+      function handleNotificationClick(notif) {
+        markAsRead(notif.id);
+        if (notif.link) {
+          Router.navigateTo(notif.link); // Navigasi jika ada link
+        }
+        toggleDropdown(false); // Selalu tutup dropdown setelah interaksi
+      }
+
+      function markAsRead(id) {
+        const notif = appState.notifications.find(n => n.id === id);
+        if (notif && !notif.read) {
+          notif.read = true;
+          renderNotifications(); // Re-render untuk update UI dan count
+        }
+      }
+
+      function toggleDropdown(forceState) {
+        const show = typeof forceState === 'boolean' ? forceState : !dropdown.classList.contains('show');
+        dropdown.classList.toggle('show', show);
+        btn.setAttribute('aria-expanded', show.toString());
+        if (show) {
+          listEl.focus(); // Fokus ke list untuk navigasi keyboard
+        } else {
+          btn.focus(); // Kembalikan fokus ke tombol notifikasi
+        }
+      }
+
+      function init() {
+        renderNotifications();
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleDropdown();
+        });
+        closeBtn.addEventListener('click', () => toggleDropdown(false));
+
+        document.addEventListener('click', (event) => {
+          if (dropdown.classList.contains('show') && !btn.contains(event.target) && !dropdown.contains(event.target)) {
+            toggleDropdown(false);
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && dropdown.classList.contains('show')) {
+            toggleDropdown(false);
+          }
+        });
+      }
+      return {
+        init, renderNotifications, addNotification: (message, time = 'Baru saja', link) => {
+          appState.notifications.unshift({ id: utils.generateId('n_'), message, time, read: false, link });
+          renderNotifications();
+        }
+      };
+    })();
+
+    // --- Modal Manager ---
+    const ModalManager = (() => {
+      const modalOverlayEl = utils.qs('#appModal');
+      const modalTitleEl = utils.qs('#modalTitle');
+      const modalBodyEl = utils.qs('#modalBody');
+      const modalFooterEl = utils.qs('#modalFooter');
+      const modalCloseBtn = utils.qs('#modalCloseBtn');
+      let onConfirmCallback = null;
+      let onCancelCallback = null;
+      let firstFocusableElement = null;
+      let lastFocusableElement = null;
+
+      function setFocusableElements() {
+        const focusableElementsString = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const focusableElements = Array.from(modalOverlayEl.querySelectorAll(focusableElementsString))
+          .filter(el => el.offsetParent !== null); // Filter hanya yang visible
+        if (focusableElements.length > 0) {
+          firstFocusableElement = focusableElements[0];
+          lastFocusableElement = focusableElements[focusableElements.length - 1];
+        } else {
+          firstFocusableElement = modalCloseBtn; // Default ke tombol close jika tidak ada yg lain
+          lastFocusableElement = modalCloseBtn;
+        }
+      }
+
+      function trapFocus(e) {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) { // Shift + Tab
+          if (document.activeElement === firstFocusableElement) {
+            lastFocusableElement.focus();
+            e.preventDefault();
+          }
+        } else { // Tab
+          if (document.activeElement === lastFocusableElement) {
+            firstFocusableElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+
+      function show(config) {
+        modalTitleEl.textContent = config.title || 'Konfirmasi';
+        modalOverlayEl.setAttribute('aria-labelledby', 'modalTitle');
+
+        if (typeof config.body === 'string') {
+          modalBodyEl.innerHTML = config.body; // Hati-hati dengan XSS jika body dari user input
+        } else if (config.body instanceof HTMLElement) {
+          modalBodyEl.innerHTML = '';
+          modalBodyEl.appendChild(config.body);
+        }
+
+        modalFooterEl.innerHTML = '';
+
+        if (config.confirmText) {
+          const confirmBtn = utils.createElement('button', {
+            className: `btn ${config.confirmClass || 'btn-primary'}`,
+            textContent: config.confirmText
+          });
+          confirmBtn.addEventListener('click', () => {
+            if (onConfirmCallback) {
+              const result = onConfirmCallback(); // Callback bisa return false untuk mencegah hide
+              if (result === false) return;
+            }
+            hide();
+          });
+          modalFooterEl.appendChild(confirmBtn);
+        }
+
+        if (config.cancelText) {
+          const cancelBtn = utils.createElement('button', {
+            className: 'btn btn-outline-secondary',
+            textContent: config.cancelText
+          });
+          cancelBtn.addEventListener('click', () => {
+            if (onCancelCallback) onCancelCallback();
+            hide();
+          });
+          modalFooterEl.appendChild(cancelBtn);
+        }
+
+        onConfirmCallback = config.onConfirm;
+        onCancelCallback = config.onCancel;
+
+        modalOverlayEl.classList.add('show');
+        modalOverlayEl.setAttribute('aria-hidden', 'false');
+
+        setFocusableElements();
+        (firstFocusableElement || modalCloseBtn).focus();
+        document.addEventListener('keydown', trapFocus);
+      }
+
+      function hide() {
+        modalOverlayEl.classList.remove('show');
+        modalOverlayEl.setAttribute('aria-hidden', 'true');
+        document.removeEventListener('keydown', trapFocus);
+        if (onConfirmCallback) onConfirmCallback = null; // Bersihkan callback
+        if (onCancelCallback) onCancelCallback = null;
+        // Kembalikan fokus ke elemen yang membuka modal (perlu disimpan saat show)
+        // Untuk saat ini, tidak diimplementasikan, fokus akan ke body.
+      }
+
+      function init() {
+        modalCloseBtn.addEventListener('click', hide);
+        modalOverlayEl.addEventListener('click', (event) => {
+          if (event.target === modalOverlayEl) {
+            hide();
+          }
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && modalOverlayEl.classList.contains('show')) {
+            hide();
+          }
+        });
+      }
+
+      return { init, show, hide };
+    })();
+
+    // --- Konten Halaman (SPA Templates) ---
+    const PageRenderer = (() => {
+      const contentEl = utils.qs('#appContent');
+      const pageTitleEl = utils.qs('#pageTitle');
+
+      function showLoading() {
+        contentEl.innerHTML = '<div class="loader-container"><div class="loader" aria-label="Memuat konten..."></div></div>';
+      }
+
+      // Templating Halaman Dasbor
+      async function renderDashboardPage() {
+        pageTitleEl.textContent = 'Dasbor';
+        showLoading(); // Tampilkan loading dulu
+
+        // Simulasi pengambilan data dari API
+        await new Promise(resolve => setTimeout(resolve, 500)); // Delay 0.5 detik
+
+        appState.dashboardStats = {
+          totalApartments: 24,
+          rentedApartments: 18,
+          monthlyIncome: 120500000,
+          totalTenants: 32,
+        };
+        appState.recentBookings = [
+          { id: 'bk001', tenant: 'Ahmad Subarjo', apartment: 'Apartemen Melati Tipe Studio', checkIn: '2025-06-01', checkOut: '2025-06-15', status: 'Dikonfirmasi' },
+          { id: 'bk002', tenant: 'Citra Lestari', apartment: 'Apartemen Anggrek 2BR', checkIn: '2025-06-05', checkOut: '2025-07-05', status: 'Tertunda' },
+          { id: 'bk003', tenant: 'Bambang Pamungkas', apartment: 'Apartemen Mawar Deluxe', checkIn: '2025-05-20', checkOut: '2025-05-27', status: 'Selesai' },
+          { id: 'bk004', tenant: 'Dewi Kania', apartment: 'Studio Elegan', checkIn: '2025-07-10', checkOut: '2025-08-10', status: 'Dikonfirmasi' },
+        ];
+
+        const stats = appState.dashboardStats;
+        const bookings = appState.recentBookings;
+
+        contentEl.innerHTML = `
+          <section aria-labelledby="dashboard-stats-heading">
+            <h2 id="dashboard-stats-heading" class="visually-hidden">Statistik Utama Dasbor</h2>
+            <div class="row g-4 mb-4">
+              <div class="col-md-6 col-lg-3">
+                <div class="stat-card">
+                  <span class="stat-card-icon"><i class="fa-solid fa-building-columns"></i></span>
+                  <div class="stat-card-content">
+                    <div class="stat-value" id="statTotalApt">${stats.totalApartments}</div>
+                    <div class="stat-label">Total Unit Apartemen</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="stat-card">
+                  <span class="stat-card-icon"><i class="fa-solid fa-house-circle-check"></i></span>
+                  <div class="stat-card-content">
+                    <div class="stat-value" id="statRentedApt">${stats.rentedApartments}</div>
+                    <div class="stat-label">Unit Tersewa</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="stat-card">
+                  <span class="stat-card-icon"><i class="fa-solid fa-sack-dollar"></i></span>
+                  <div class="stat-card-content">
+                    <div class="stat-value" id="statIncome">${utils.formatCurrency(stats.monthlyIncome)}</div>
+                    <div class="stat-label">Estimasi Pendapatan Bulanan</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-3">
+                <div class="stat-card">
+                  <span class="stat-card-icon"><i class="fa-solid fa-users-line"></i></span>
+                  <div class="stat-card-content">
+                    <div class="stat-value" id="statTenants">${stats.totalTenants}</div>
+                    <div class="stat-label">Total Penghuni Aktif</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="dashboard-charts-heading" class="mb-4">
+            <h2 id="dashboard-charts-heading" class="visually-hidden">Grafik Dasbor</h2>
+            <div class="row g-4">
+              <div class="col-lg-8">
+                <div class="chart-placeholder" id="chartOccupancy" aria-label="Placeholder Grafik Tingkat Hunian Tahunan">
+                  <i class="fa-solid fa-chart-area"></i>
+                  <span>Tingkat Hunian Tahunan</span>
+                  <small>Implementasi grafik aktual memerlukan library pihak ketiga atau penggambaran Canvas API native.</small>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="chart-placeholder" id="chartIncome" aria-label="Placeholder Grafik Tren Pendapatan Bulanan">
+                  <i class="fa-solid fa-chart-bar"></i>
+                  <span>Tren Pendapatan Bulanan</span>
+                  <small>Grafik akan menampilkan data tren pendapatan.</small>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section aria-labelledby="recent-bookings-heading">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 id="recent-bookings-heading" style="font-size: 1.5rem; font-weight: 600;">Pemesanan Terbaru</h2>
+                <a href="#" data-route="/manajemen?filter=bookings" class="btn btn-sm btn-outline-secondary">Lihat Semua Pemesanan</a>
+            </div>
+            <div class="custom-table-wrapper">
+              <table class="custom-table" aria-describedby="recent-bookings-heading">
+                <thead>
+                  <tr>
+                    <th scope="col">ID Penyewa</th>
+                    <th scope="col">Apartemen</th>
+                    <th scope="col">Check-in</th>
+                    <th scope="col">Check-out</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingTableBody">
+                  ${bookings.length > 0 ? bookings.map(booking => `
+                    <tr>
+                      <td><strong>${utils.escapeHTML(booking.tenant)}</strong></td>
+                      <td>${utils.escapeHTML(booking.apartment)}</td>
+                      <td>${new Date(booking.checkIn).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                      <td>${new Date(booking.checkOut).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                      <td><span class="badge ${booking.status === 'Tertunda' ? 'badge-warning' : (booking.status === 'Dikonfirmasi' ? 'badge-success' : 'badge-info')}">${utils.escapeHTML(booking.status)}</span></td>
+                    </tr>
+                  `).join('') : `<tr><td colspan="5" class="text-center py-3 text-muted">Tidak ada pemesanan terbaru.</td></tr>`}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        `;
+      }
+
+      // Templating Halaman Galeri
+      async function renderGalleryPage() {
+        pageTitleEl.textContent = 'Galeri';
+        showLoading();
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        appState.galleryItems = [
+          { id: 'g1', title: 'Fasad Gedung Utama', src: 'https://images.unsplash.com/photo-1580041065738-0897f0537314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50JTIwYnVpbGRpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=60', category: 'Eksterior' },
+          { id: 'g2', title: 'Kolam Renang Oasis', src: 'https://images.unsplash.com/photo-1587050019152-9561a2e3215e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFwYXJ0bWVudCUyMHN3aW1taW5nJTIwcG9vbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=400&q=60', category: 'Fasilitas' },
+          { id: 'g3', title: 'Lobi Resepsionis Mewah', src: 'https://images.unsplash.com/photo-1604014237800-1c9102c219da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bHV4dXJ5JTIwbG9iYnl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=60', category: 'Interior' },
+          { id: 'g4', title: 'Taman Vertikal Asri', src: 'https://images.unsplash.com/photo-1587050019152-9561a2e3215e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YXBhcnRtZW50JTIwZ2FyZGVufGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60', category: 'Eksterior' },
+          { id: 'g5', title: 'Ruang Fitness Modern', src: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXBhcnRtZW50JTIwZ3ltfGVufDB8fDB8fHww&auto=format&fit=crop&w=400&q=60', category: 'Fasilitas' },
+          { id: 'g6', title: 'Contoh Unit Studio Elegan', src: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=400&q=60', category: 'Interior' },
+        ];
+        const items = appState.galleryItems;
+        contentEl.innerHTML = `
+            <section aria-labelledby="gallery-heading">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 id="gallery-heading" style="font-size: 1.75rem; font-weight: 600;">Galeri Foto Green Valley</h2>
+                    <button class="btn btn-primary" id="addGalleryItemBtn"><i class="fa-solid fa-plus"></i> Tambah Foto</button>
+                </div>
+                ${items.length === 0 ? '<p class="text-center text-muted py-3">Galeri masih kosong. Silakan tambahkan foto.</p>' : `
+                <div class="row g-4"> <!-- Menggunakan g-4 untuk gap antar kartu -->
+                    ${items.map(item => `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); overflow: hidden; box-shadow: var(--color-shadow-sm); height: 100%; display: flex; flex-direction: column;">
+                                <img src="${utils.escapeHTML(item.src)}" class="card-img-top" alt="${utils.escapeHTML(item.title)}" style="height: 220px; object-fit: cover; width: 100%;">
+                                <div class="card-body" style="padding: 1rem; flex-grow: 1; display: flex; flex-direction: column;">
+                                    <h5 class="card-title" style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600;">${utils.escapeHTML(item.title)}</h5>
+                                    <p class="card-text" style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1rem;">Kategori: ${utils.escapeHTML(item.category)}</p>
+                                    <div class="mt-auto"> <!-- Dorong tombol ke bawah -->
+                                        <button class="btn btn-sm btn-outline-secondary btn-action edit-gallery-item-btn" data-id="${item.id}" aria-label="Edit ${utils.escapeHTML(item.title)}"><i class="fa-solid fa-pencil"></i> Edit</button>
+                                        <button class="btn btn-sm btn-danger btn-action delete-gallery-item-btn" data-id="${item.id}" aria-label="Hapus ${utils.escapeHTML(item.title)}"><i class="fa-solid fa-trash"></i> Hapus</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`}
+            </section>
+        `;
+        // Event listener untuk tombol Tambah, Edit, Hapus galeri
+        utils.qs('#addGalleryItemBtn')?.addEventListener('click', () => {/* Logika tambah item galeri */ alert('Fitur tambah foto galeri belum diimplementasikan.'); });
+        utils.qsa('.edit-gallery-item-btn').forEach(btn => btn.addEventListener('click', (e) => { alert(`Edit item ID: ${e.target.closest('button').dataset.id} belum diimplementasikan.`); }));
+        utils.qsa('.delete-gallery-item-btn').forEach(btn => btn.addEventListener('click', (e) => { alert(`Hapus item ID: ${e.target.closest('button').dataset.id} belum diimplementasikan.`); }));
+      }
+
+      // Templating Halaman Manajemen (CRUD)
+      function renderManagementPage() {
+        pageTitleEl.textContent = 'Manajemen Unit';
+
+        function renderManagementTable() {
+          const tableBody = utils.qs('#managementTableBody');
+          if (!tableBody) return;
+
+          tableBody.innerHTML = '';
+          if (appState.managementItems.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-3 text-muted">Tidak ada data unit apartemen.</td></tr>';
+            return;
+          }
+
+          appState.managementItems.forEach(item => {
+            const row = utils.createElement('tr', { dataset: { id: item.id } });
+            row.innerHTML = `
+                    <td><img src="${utils.escapeHTML(item.photo)}" alt="Foto ${utils.escapeHTML(item.name)}" style="width:50px; height:50px; object-fit:cover; border-radius:var(--border-radius-sm); margin-right:10px;"> <strong>${utils.escapeHTML(item.name)}</strong></td>
+                    <td>${utils.escapeHTML(item.type)}</td>
+                    <td><span class="badge ${item.status === 'Tersedia' ? 'badge-success' : (item.status === 'Tersewa' ? 'badge-info' : (item.status === 'Perbaikan' ? 'badge-warning' : 'badge-secondary'))}">${utils.escapeHTML(item.status)}</span></td>
+                    <td>${utils.formatCurrency(item.price)}</td>
+                    <td>${item.resident !== '-' ? utils.escapeHTML(item.resident) : '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary btn-action edit-item-btn" aria-label="Edit ${utils.escapeHTML(item.name)}"><i class="fa-solid fa-pencil"></i></button>
+                        <button class="btn btn-sm btn-danger btn-action delete-item-btn" aria-label="Hapus ${utils.escapeHTML(item.name)}"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+            tableBody.appendChild(row);
+          });
+
+          utils.qsa('.edit-item-btn', tableBody).forEach(btn => btn.addEventListener('click', handleEditItem));
+          utils.qsa('.delete-item-btn', tableBody).forEach(btn => btn.addEventListener('click', handleDeleteItem));
+        }
+
+        contentEl.innerHTML = `
+            <section aria-labelledby="management-heading">
+                 <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 id="management-heading" style="font-size: 1.75rem; font-weight: 600;">Manajemen Unit Apartemen</h2>
+                    <button class="btn btn-primary" id="addItemBtn"><i class="fa-solid fa-plus"></i> Tambah Unit</button>
+                </div>
+
+                <div class="custom-table-wrapper">
+                    <table class="custom-table" aria-describedby="management-heading">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nama Unit</th>
+                                <th scope="col">Tipe</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Harga/Bulan</th>
+                                <th scope="col">Penghuni</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="managementTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        `;
+
+        renderManagementTable();
+
+        utils.qs('#addItemBtn').addEventListener('click', () => {
+          appState.editingItemId = null;
+          showManagementForm();
+        });
+
+        function showManagementForm() {
+          const currentItem = appState.editingItemId ? appState.managementItems.find(i => i.id === appState.editingItemId) : null;
+          const formId = "managementForm";
+
+          const formElement = utils.createElement('form', { id: formId, noValidate: true }); // noValidate untuk custom validation
+          formElement.innerHTML = `
+                <input type="hidden" id="itemId" value="${currentItem?.id || ''}">
+                <div class="form-group">
+                    <label for="itemName" class="form-label">Nama Unit:</label>
+                    <input type="text" id="itemName" class="form-control" value="${currentItem?.name || ''}" required>
+                    <div class="invalid-feedback" style="display:none; color:var(--color-danger); font-size:0.8rem; margin-top:0.25rem;">Nama unit tidak boleh kosong.</div>
+                </div>
+                <div class="form-group">
+                    <label for="itemType" class="form-label">Tipe Unit:</label>
+                    <select id="itemType" class="form-control" required>
+                        <option value="" disabled ${!currentItem ? 'selected' : ''}>Pilih tipe...</option>
+                        <option value="Studio" ${currentItem?.type === 'Studio' ? 'selected' : ''}>Studio</option>
+                        <option value="1 Kamar Tidur" ${currentItem?.type === '1 Kamar Tidur' ? 'selected' : ''}>1 Kamar Tidur</option>
+                        <option value="2 Kamar Tidur" ${currentItem?.type === '2 Kamar Tidur' ? 'selected' : ''}>2 Kamar Tidur</option>
+                        <option value="Penthouse" ${currentItem?.type === 'Penthouse' ? 'selected' : ''}>Penthouse</option>
+                    </select>
+                    <div class="invalid-feedback" style="display:none; color:var(--color-danger); font-size:0.8rem; margin-top:0.25rem;">Pilih tipe unit.</div>
+                </div>
+                <div class="form-group">
+                    <label for="itemStatus" class="form-label">Status:</label>
+                     <select id="itemStatus" class="form-control" required>
+                        <option value="Tersedia" ${currentItem?.status === 'Tersedia' ? 'selected' : ''}>Tersedia</option>
+                        <option value="Tersewa" ${currentItem?.status === 'Tersewa' ? 'selected' : ''}>Tersewa</option>
+                        <option value="Perbaikan" ${currentItem?.status === 'Perbaikan' ? 'selected' : ''}>Perbaikan</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice" class="form-label">Harga (per bulan):</label>
+                    <input type="number" id="itemPrice" class="form-control" value="${currentItem?.price || ''}" required min="0" step="100000">
+                    <div class="invalid-feedback" style="display:none; color:var(--color-danger); font-size:0.8rem; margin-top:0.25rem;">Harga harus angka positif.</div>
+                </div>
+                <div class="form-group">
+                    <label for="itemResident" class="form-label">Nama Penghuni (jika tersewa):</label>
+                    <input type="text" id="itemResident" class="form-control" value="${currentItem?.resident || '-'}">
+                </div>
+                <div class="form-group">
+                    <label for="itemPhoto" class="form-label">URL Foto Unit:</label>
+                    <input type="url" id="itemPhoto" class="form-control" value="${currentItem?.photo || 'https://via.placeholder.com/150/cccccc/000000?text=Unit+Baru'}">
+                    <div class="invalid-feedback" style="display:none; color:var(--color-danger); font-size:0.8rem; margin-top:0.25rem;">URL foto tidak valid.</div>
+                </div>
+            `;
+
+          function validateForm() {
+            let isValid = true;
+            utils.qsa('input[required], select[required]', formElement).forEach(input => {
+              const feedback = input.nextElementSibling; // Asumsi feedback tepat setelah input
+              if (!input.value.trim() || (input.type === 'number' && parseFloat(input.value) < 0)) {
+                input.classList.add('is-invalid'); // Untuk styling jika ada
+                if (feedback && feedback.classList.contains('invalid-feedback')) feedback.style.display = 'block';
+                isValid = false;
+              } else {
+                input.classList.remove('is-invalid');
+                if (feedback && feedback.classList.contains('invalid-feedback')) feedback.style.display = 'none';
+              }
+            });
+            const photoInput = utils.qs('#itemPhoto', formElement);
+            const photoFeedback = photoInput.nextElementSibling;
+            try { new URL(photoInput.value); photoInput.classList.remove('is-invalid'); if (photoFeedback) photoFeedback.style.display = 'none'; }
+            catch (_) { photoInput.classList.add('is-invalid'); if (photoFeedback) photoFeedback.style.display = 'block'; isValid = false; }
+
+            return isValid;
+          }
+
+          ModalManager.show({
+            title: appState.editingItemId ? `Edit Unit: ${currentItem.name}` : 'Tambah Unit Apartemen Baru',
+            body: formElement,
+            confirmText: appState.editingItemId ? 'Simpan Perubahan' : 'Tambah Unit',
+            cancelText: 'Batal',
+            onConfirm: () => {
+              if (validateForm()) {
+                const updatedItem = {
+                  id: utils.qs('#itemId', formElement).value || utils.generateId('unit_'),
+                  name: utils.qs('#itemName', formElement).value.trim(),
+                  type: utils.qs('#itemType', formElement).value,
+                  status: utils.qs('#itemStatus', formElement).value,
+                  price: parseFloat(utils.qs('#itemPrice', formElement).value),
+                  resident: utils.qs('#itemResident', formElement).value.trim() || '-',
+                  photo: utils.qs('#itemPhoto', formElement).value.trim()
+                };
+                saveManagementItem(updatedItem);
+                NotificationManager.addNotification(`Unit "${updatedItem.name}" berhasil ${appState.editingItemId ? 'diperbarui' : 'ditambahkan'}.`);
+                return true; // Tutup modal
+              }
+              return false; // Jangan tutup modal jika validasi gagal
+            }
+          });
+        }
+
+        function saveManagementItem(itemData) {
+          if (appState.managementItems.find(i => i.id === itemData.id)) { // Mode Edit
+            const index = appState.managementItems.findIndex(i => i.id === itemData.id);
+            appState.managementItems[index] = itemData;
+          } else { // Mode Tambah
+            appState.managementItems.unshift(itemData); // Tambah di awal array
+          }
+          appState.editingItemId = null;
+          renderManagementTable();
+        }
+
+        function handleEditItem(event) {
+          const itemId = event.target.closest('tr').dataset.id;
+          appState.editingItemId = itemId;
+          showManagementForm();
+        }
+
+        function handleDeleteItem(event) {
+          const itemId = event.target.closest('tr').dataset.id;
+          const item = appState.managementItems.find(i => i.id === itemId);
+          if (item) {
+            ModalManager.show({
+              title: 'Konfirmasi Hapus',
+              body: `<p>Apakah Anda yakin ingin menghapus unit <strong>${utils.escapeHTML(item.name)}</strong>?</p><p class="text-danger">Tindakan ini tidak dapat diurungkan.</p>`,
+              confirmText: 'Ya, Hapus',
+              confirmClass: 'btn-danger',
+              cancelText: 'Batal',
+              onConfirm: () => {
+                appState.managementItems = appState.managementItems.filter(i => i.id !== itemId);
+                renderManagementTable();
+                NotificationManager.addNotification(`Unit "${item.name}" telah dihapus.`);
+              }
+            });
+          }
+        }
+      }
+
+      // Templating Halaman Dokumentasi
+      async function renderDocumentationPage() {
+        pageTitleEl.textContent = 'Dokumentasi';
+        showLoading();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        contentEl.innerHTML = `
+          <section aria-labelledby="documentation-heading">
+            <h2 id="documentation-heading" class="mb-4">Dokumentasi Sistem Dasbor Green Valley</h2>
+            <div class="card" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); padding: 2rem; box-shadow: var(--color-shadow-sm);">
+                <h3>Selamat Datang!</h3>
+                <p class="text-muted">Dokumentasi ini memberikan panduan singkat mengenai penggunaan fitur-fitur utama dalam sistem dasbor Green Valley versi Vanilla SPA.</p>
+                
+                <h4 class="mt-4">Navigasi Aplikasi</h4>
+                <p>Gunakan menu navigasi di sebelah kiri (sidebar) untuk berpindah antar halaman utama aplikasi:</p>
+                <ul>
+                    <li><strong><i class="fa-solid fa-chart-line me-2"></i>Dasbor:</strong> Halaman utama yang menampilkan ringkasan statistik vital properti, grafik (placeholder), dan daftar pemesanan terbaru.</li>
+                    <li><strong><i class="fa-solid fa-image me-2"></i>Galeri:</strong> Menampilkan koleksi foto properti Green Valley. Saat ini, fitur tambah/edit/hapus foto belum diimplementasikan sepenuhnya dari sisi interaksi form.</li>
+                    <li><strong><i class="fa-solid fa-table-list me-2"></i>Manajemen:</strong> Fitur inti untuk mengelola data unit apartemen (CRUD - Create, Read, Update, Delete). Anda dapat menambah unit baru, mengedit detail unit yang ada, dan menghapusnya.</li>
+                    <li><strong><i class="fa-solid fa-book me-2"></i>Dokumentasi:</strong> Halaman yang sedang Anda baca ini.</li>
+                </ul>
+
+                <h4 class="mt-4">Fitur Unggulan</h4>
+                <p><strong>1. Single Page Application (SPA):</strong><br>
+                Seluruh aplikasi berjalan sebagai SPA, artinya perpindahan halaman terjadi secara dinamis tanpa perlu memuat ulang seluruh halaman web. Ini memberikan pengalaman pengguna yang lebih cepat dan responsif.</p>
+                
+                <p><strong>2. Manajemen Tema (Terang/Gelap):</strong><br>
+                Sesuaikan tampilan dasbor dengan preferensi Anda. Klik tombol "Mode Gelap/Terang" (<i class="fa-solid fa-moon"></i> / <i class="fa-solid fa-sun"></i>) di bagian bawah sidebar.</p>
+                
+                <p><strong>3. Notifikasi Interaktif:</strong><br>
+                Ikon lonceng (<i class="fa-solid fa-bell"></i>) di header kanan atas menampilkan notifikasi terbaru. Klik pada notifikasi untuk menandainya sebagai telah dibaca dan (jika ada) akan mengarahkan Anda ke halaman terkait.</p>
+                
+                <p><strong>4. Modal Interaktif untuk CRUD:</strong><br>
+                Operasi tambah dan edit data pada halaman "Manajemen" menggunakan komponen modal yang dinamis dan interaktif, lengkap dengan validasi form dasar.</p>
+
+                <p><strong>5. Responsif dan Aksesibel (Dasar):</strong><br>
+                Tampilan aplikasi menyesuaikan dengan berbagai ukuran layar (desktop, tablet, mobile). Beberapa praktik aksesibilitas dasar (seperti atribut ARIA dan fokus keyboard) telah diterapkan.</p>
+
+                <h4 class="mt-4">Arsitektur & Teknologi</h4>
+                <p>Aplikasi ini dibangun dengan prinsip **monolith vanilla native**:</p>
+                <ul>
+                    <li><strong>HTML5 Semantik:</strong> Struktur dokumen menggunakan tag HTML5 yang sesuai.</li>
+                    <li><strong>CSS3 Kustom:</strong> Styling dikelola dengan CSS murni, termasuk variabel CSS untuk tema dan desain responsif.</li>
+                    <li><strong>Vanilla JavaScript (ES6+):</strong> Seluruh logika aplikasi, termasuk routing, rendering komponen, manajemen state, dan interaksi UI, ditulis menggunakan JavaScript murni tanpa framework atau library eksternal untuk fungsionalitas inti SPA.</li>
+                    <li><strong>Bootstrap CSS & Font Awesome:</strong> Digunakan untuk styling dasar grid, beberapa komponen UI (seperti dropdown menu pengguna), dan ikon untuk mempercepat pengembangan visual tanpa mengorbankan prinsip vanilla untuk logika inti.</li>
+                </ul>
+
+                <h4 class="mt-4">Pengembangan Lebih Lanjut (Potensial)</h4>
+                <p>Beberapa area yang dapat ditingkatkan atau ditambahkan di masa mendatang:</p>
+                <ul>
+                    <li>Integrasi dengan backend API sungguhan untuk persistensi data.</li>
+                    <li>Implementasi grafik interaktif (misalnya menggunakan Chart.js, D3.js, atau Canvas API native).</li>
+                    <li>Fitur pencarian dan filter data yang lebih canggih di tabel.</li>
+                    <li>Validasi form yang lebih robust dan feedback yang lebih detail.</li>
+                    <li>Manajemen sesi pengguna, otentikasi, dan otorisasi.</li>
+                    <li>Fitur unggah file untuk galeri dan foto unit.</li>
+                    <li>Internasionalisasi (i18n) untuk dukungan multi-bahasa.</li>
+                </ul>
+                <p class="mt-4 text-muted"><em>Versi Aplikasi: 1.1.0 (Monolith Vanilla SPA - Enhanced)</em></p>
+            </div>
+          </section>
+        `;
+      }
+
+      // Templating Halaman Profil (Contoh)
+      async function renderProfilePage() {
+        pageTitleEl.textContent = 'Profil Pengguna';
+        showLoading();
+        await new Promise(resolve => setTimeout(resolve, 250));
+
+        const { name, email } = appState.userProfile;
+
+        contentEl.innerHTML = `
+          <section aria-labelledby="profile-heading">
+            <h2 id="profile-heading" class="mb-4">Profil Pengguna</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card p-3 mb-4 text-center" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); box-shadow: var(--color-shadow-sm);">
+                        <i class="fa-solid ${appState.userProfile.avatar} fa-5x mx-auto my-3" style="color: var(--color-secondary);"></i>
+                        <h3 class="h5 fw-semibold">${utils.escapeHTML(name)}</h3>
+                        <p class="text-muted">${utils.escapeHTML(email)}</p>
+                        <button class="btn btn-sm btn-outline-secondary mt-2 mx-auto" style="max-width: 150px;">Ubah Foto Profil</button>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); box-shadow: var(--color-shadow-sm);">
+                        <h4 class="mb-3" style="font-size: 1.25rem;">Informasi Akun</h4>
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label for="profileName" class="form-label">Nama Lengkap:</label>
+                                <input type="text" id="profileName" class="form-control" value="${utils.escapeHTML(name)}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail" class="form-label">Alamat Email:</label>
+                                <input type="email" id="profileEmail" class="form-control" value="${utils.escapeHTML(email)}" required>
+                            </div>
+                            <hr class="my-4">
+                            <h4 class="mb-3" style="font-size: 1.25rem;">Ubah Kata Sandi</h4>
+                             <div class="form-group">
+                                <label for="currentPassword" class="form-label">Kata Sandi Saat Ini:</label>
+                                <input type="password" id="currentPassword" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">Kata Sandi Baru:</label>
+                                <input type="password" id="newPassword" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">Konfirmasi Kata Sandi Baru:</label>
+                                <input type="password" id="confirmNewPassword" class="form-control">
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </section>
+        `;
+        utils.qs('#profileForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          // Logika simpan profil
+          NotificationManager.addNotification('Informasi profil berhasil diperbarui (simulasi).');
+          ModalManager.show({ title: 'Sukses', body: 'Perubahan profil telah disimpan (simulasi).', confirmText: 'OK' });
+        });
+      }
+
+      // Templating Halaman Pengaturan (Contoh)
+      async function renderSettingsPage() {
+        pageTitleEl.textContent = 'Pengaturan Aplikasi';
+        showLoading();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        contentEl.innerHTML = `
+          <section aria-labelledby="settings-heading">
+            <h2 id="settings-heading" class="mb-4">Pengaturan Aplikasi</h2>
+            <div class="card p-3" style="background-color: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--border-radius-md); padding: 2rem; box-shadow: var(--color-shadow-sm);">
+                <h4 class="mb-3" style="font-size: 1.25rem;">Preferensi Notifikasi</h4>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="emailNotifCheck" checked>
+                        <label class="form-check-label" for="emailNotifCheck">
+                            Kirim notifikasi ke email
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="pushNotifCheck">
+                        <label class="form-check-label" for="pushNotifCheck">
+                            Aktifkan notifikasi push browser (fitur masa depan)
+                        </label>
+                    </div>
+                </div>
+                <hr class="my-4">
+                <h4 class="mb-3" style="font-size: 1.25rem;">Pengaturan Bahasa</h4>
+                <div class="form-group" style="max-width: 300px;">
+                     <label for="languageSelect" class="form-label">Bahasa Tampilan:</label>
+                     <select class="form-control" id="languageSelect">
+                        <option value="id" selected>Bahasa Indonesia</option>
+                        <option value="en" disabled>English (belum tersedia)</option>
+                     </select>
+                </div>
+                 <hr class="my-4">
+                 <div class="d-flex justify-content-end mt-2">
+                    <button type="button" class="btn btn-primary" id="saveSettingsBtn">Simpan Pengaturan</button>
+                </div>
+            </div>
+          </section>
+        `;
+        utils.qs('#saveSettingsBtn').addEventListener('click', () => {
+          NotificationManager.addNotification('Pengaturan telah disimpan (simulasi).');
+          ModalManager.show({ title: 'Sukses', body: 'Pengaturan aplikasi telah disimpan (simulasi).', confirmText: 'OK' });
+        });
+      }
+
+      function renderNotFoundPage(path) {
+        pageTitleEl.textContent = 'Halaman Tidak Ditemukan';
+        contentEl.innerHTML = `
+            <section class="text-center py-5">
+                <h2 style="font-size: 2.5rem; color: var(--color-danger);"><i class="fa-solid fa-triangle-exclamation fa-beat"></i> Oops! Halaman Tidak Ditemukan</h2>
+                <p class="lead mt-3">Maaf, halaman yang Anda cari di <code>${utils.escapeHTML(path)}</code> tidak dapat ditemukan.</p>
+                <p>Mungkin halaman tersebut telah dipindahkan, dihapus, atau Anda salah mengetik alamat.</p>
+                <a href="#" data-route="/" class="btn btn-primary mt-3"><i class="fa-solid fa-home"></i> Kembali ke Dasbor</a>
+            </section>
+          `;
+      }
+
+
+      return { renderDashboardPage, renderGalleryPage, renderManagementPage, renderDocumentationPage, renderProfilePage, renderSettingsPage, renderNotFoundPage, showLoading };
+    })();
+
+
+    // --- Router SPA ---
+    const Router = (() => {
+      const sidebarNavEl = utils.qs('#sidebarNav');
+      const routes = [
+        // isNavItem: false berarti tidak muncul di sidebar utama
+        { path: '/', page: PageRenderer.renderDashboardPage, title: 'Dasbor Utama', icon: 'fa-chart-pie', navLabel: 'Dasbor', isNavItem: true },
+        { path: '/galeri', page: PageRenderer.renderGalleryPage, title: 'Galeri Foto', icon: 'fa-images', navLabel: 'Galeri', isNavItem: true },
+        { path: '/manajemen', page: PageRenderer.renderManagementPage, title: 'Manajemen Unit', icon: 'fa-tasks-alt', navLabel: 'Manajemen', isNavItem: true },
+        { path: '/dokumentasi', page: PageRenderer.renderDocumentationPage, title: 'Dokumentasi Sistem', icon: 'fa-file-lines', navLabel: 'Dokumentasi', isNavItem: true },
+
+        { path: '/profil', page: PageRenderer.renderProfilePage, title: 'Profil Pengguna', isNavItem: false },
+        { path: '/pengaturan', page: PageRenderer.renderSettingsPage, title: 'Pengaturan Aplikasi', isNavItem: false },
+        // Contoh rute spesifik dari notifikasi
+        { path: '/laporan/bulanan', page: () => { pageTitleEl.textContent = 'Laporan Bulanan'; contentEl.innerHTML = '<h2>Laporan Bulanan</h2><p>Halaman laporan bulanan sedang dalam pengembangan.</p>'; }, title: 'Laporan Bulanan', isNavItem: false },
+      ];
+
+      function renderNavLinks() {
+        sidebarNavEl.innerHTML = '';
+        routes.filter(r => r.isNavItem).forEach(route => {
+          const li = utils.createElement('li', { className: 'sidebar-nav-item' });
+          const a = utils.createElement('a', {
+            href: `#${route.path}`, // Menggunakan hash untuk SPA dasar
+            className: 'sidebar-nav-link',
+            dataset: { route: route.path },
+            innerHTML: `<i class="fa-solid ${route.icon}"></i> <span>${route.navLabel}</span>`
+          });
+          li.appendChild(a);
+          sidebarNavEl.appendChild(li);
+        });
+      }
+
+      function getPathFromHash() {
+        let path = location.hash.substring(1);
+        if (!path.startsWith('/')) {
+          path = '/' + path;
+        }
+        // Hapus query string dari path untuk matching route
+        return path.split('?')[0] || '/';
+      }
+
+      async function navigateTo(requestedPathWithQuery) {
+        const [requestedPath, queryString] = requestedPathWithQuery.split('?');
+        const route = routes.find(r => r.path === requestedPath);
+
+        PageRenderer.showLoading(); // Selalu tampilkan loading saat navigasi
+
+        if (route) {
+          appState.currentPage = requestedPath;
+          // Menggunakan location.hash untuk state SPA sederhana
+          if (location.hash.substring(1) !== requestedPathWithQuery) {
+            history.pushState({ path: requestedPathWithQuery }, route.title, `#${requestedPathWithQuery}`);
+          }
+          document.title = `GREEN VALLEY - ${route.title}`;
+          await route.page(queryString ? new URLSearchParams(queryString) : null); // Kirim query params jika ada
+          updateActiveNavLink();
+
+          if (window.innerWidth < 992 && appState.isSidebarOpen) {
+            SidebarManager.toggleSidebar(false); // Tutup sidebar di mobile
+          }
+          // Scroll ke atas halaman
+          window.scrollTo(0, 0);
+          // Umumkan perubahan halaman untuk screen reader
+          utils.qs('#appContent').setAttribute('aria-label', `Konten halaman ${route.title} dimuat.`);
+
+        } else {
+          console.error(`Rute tidak ditemukan: ${requestedPath}`);
+          history.pushState({ path: requestedPathWithQuery }, "Tidak Ditemukan", `#${requestedPathWithQuery}`);
+          PageRenderer.renderNotFoundPage(requestedPathWithQuery);
+          updateActiveNavLink(); // Mungkin ada link aktif lain yang perlu dinonaktifkan
+        }
+      }
+
+      function updateActiveNavLink() {
+        const currentPathBase = appState.currentPage.split('?')[0];
+        utils.qsa('.sidebar-nav-link', sidebarNavEl).forEach(link => {
+          const isActive = link.dataset.route === currentPathBase;
+          link.classList.toggle('active', isActive);
+          link.setAttribute('aria-current', isActive ? 'page' : 'false');
+        });
+      }
+
+      function handleLinkClick(event) {
+        const targetLink = event.target.closest('a[data-route]');
+        if (targetLink) {
+          event.preventDefault();
+          const path = targetLink.dataset.route;
+          // Cek query string dari href jika ada (misal link dari notifikasi)
+          const hrefPath = targetLink.getAttribute('href');
+          const fullPath = hrefPath.startsWith('#') ? hrefPath.substring(1) : path;
+
+          if (fullPath !== (location.hash.substring(1) || '/')) {
+            navigateTo(fullPath);
+          } else if (fullPath === (location.hash.substring(1) || '/') && fullPath !== '/') {
+            // Jika klik link yang sama dan bukan home, refresh halaman (jika diperlukan)
+            navigateTo(fullPath);
+          }
+        }
+      }
+
+      function init() {
+        renderNavLinks();
+
+        // Event delegation untuk link navigasi
+        document.body.addEventListener('click', handleLinkClick);
+
+        window.addEventListener('hashchange', () => {
+          navigateTo(location.hash.substring(1) || '/');
+        });
+
+        // Navigasi ke halaman awal atau sesuai hash
+        navigateTo(location.hash.substring(1) || '/');
+      }
+      return { init, navigateTo, routes }; // Expose routes jika diperlukan
+    })();
+
+    // --- Inisialisasi Aplikasi ---
+    document.addEventListener('DOMContentLoaded', () => {
+      ThemeManager.init();
+      SidebarManager.init();
+      NotificationManager.init();
+      ModalManager.init();
+      Router.init();
+
+      utils.qs('#logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        ModalManager.show({
+          title: 'Konfirmasi Keluar',
+          body: 'Apakah Anda yakin ingin keluar dari aplikasi Dasbor Green Valley?',
+          confirmText: 'Ya, Keluar',
+          confirmClass: 'btn-danger',
+          cancelText: 'Batal',
+          onConfirm: () => {
+            console.log('Pengguna memilih untuk keluar...');
+            // Di aplikasi nyata: hapus token sesi, redirect ke halaman login.
+            // Untuk demo, kita bisa reset state dan kembali ke halaman utama atau reload.
+            NotificationManager.addNotification('Anda telah berhasil keluar.');
+            setTimeout(() => { location.hash = '#/'; location.reload(); }, 1000);
+          }
+        });
+      });
+
+      // Update info user di header jika ada (contoh sederhana)
+      const userAvatarIcon = utils.qs('.user-avatar');
+      if (appState.userProfile.avatar && userAvatarIcon) {
+        // Jika avatar adalah class FontAwesome
+        if (appState.userProfile.avatar.startsWith('fa-')) {
+          // userAvatarIcon.className = `fa-solid ${appState.userProfile.avatar} user-avatar`;
+        } else { // Jika avatar adalah URL gambar
+          // userAvatarIcon.parentElement.innerHTML = `<img src="${appState.userProfile.avatar}" alt="User Avatar" class="user-avatar-img" style="width:32px; height:32px; border-radius:50%;">`;
+        }
+      }
+
+
+      console.log('Aplikasi Dasbor Green Valley (Vanilla SPA) berhasil dimuat dan diinisialisasi.');
+      NotificationManager.addNotification('Selamat datang di Dasbor Green Valley!');
     });
 
-    // --- Pengaturan Sidebar (untuk mobile) --- 
-    const sidebar = document.getElementById('sidebar');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('show'));
-
-    // --- Pengaturan Notifikasi --- 
-    const notifBtn = document.getElementById('notifBtn');
-    const notifDropdown = document.getElementById('notifDropdown');
-    const notifClose = document.getElementById('notifClose');
-    notifBtn.addEventListener('click', () => {
-      notifDropdown.style.display = (notifDropdown.style.display === 'none' || notifDropdown.style.display === '') ? 'block' : 'none';
-    });
-    notifClose.addEventListener('click', () => {
-      notifDropdown.style.display = 'none';
-    });
-
-    // --- Pemesanan Terbaru --- 
-    const bookingData = [
-      { tenant: 'John Doe', apartment: 'Apartemen A', checkIn: '2025-05-15', checkOut: '2025-05-20', status: 'Tertunda' },
-      { tenant: 'Jane Smith', apartment: 'Apartemen B', checkIn: '2025-05-16', checkOut: '2025-05-18', status: 'Dikonfirmasi' }
-    ];
-
-    const bookingTable = document.getElementById('bookingTable');
-    bookingData.forEach(booking => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${booking.tenant}</td>
-        <td>${booking.apartment}</td>
-        <td>${booking.checkIn}</td>
-        <td>${booking.checkOut}</td>
-        <td><span class="badge ${booking.status === 'Tertunda' ? 'bg-warning' : 'bg-success'}">${booking.status}</span></td>
-      `;
-      bookingTable.appendChild(row);
-    });
   </script>
 </body>
 

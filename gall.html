@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Foto Modern & Elegan</title>
+    <meta name="description"
+        content="Galeri foto modern, responsif, dan dinamis dengan paginasi, dibangun dengan HTML, CSS3, dan Vanilla JavaScript.">
+
+    <style>
+        /* === CSS RESET & DASAR === */
+        :root {
+            --primary-color: #00A9FF;
+            /* Biru terang sebagai aksen */
+            --secondary-color: #89CFF3;
+            /* Biru muda */
+            --background-color: #1a1a1a;
+            /* Latar belakang gelap */
+            --card-background-color: #2c2c2c;
+            /* Latar belakang kartu */
+            --text-color: #e0e0e0;
+            /* Teks terang */
+            --text-muted-color: #a0a0a0;
+            /* Teks abu-abu */
+            --border-color: #444444;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            /* Basis ukuran font untuk REM */
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        /* === STRUKTUR UTAMA & SEMANTIK === */
+        .site-header {
+            background-color: var(--card-background-color);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .site-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .site-header p {
+            color: var(--text-muted-color);
+            font-size: 1rem;
+        }
+
+        .site-main {
+            flex-grow: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .site-footer {
+            background-color: var(--card-background-color);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-muted-color);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* === GALERI FOTO === */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Responsif grid */
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-item {
+            background-color: var(--card-background-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            /* Indikasi bisa diklik */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 169, 255, 0.3);
+            /* Bayangan aksen saat hover */
+        }
+
+        .gallery-item__image-container {
+            width: 100%;
+            height: 220px;
+            /* Tinggi tetap untuk konsistensi */
+            overflow: hidden;
+            background-color: #333;
+            /* Placeholder jika gambar lama dimuat */
+        }
+
+        .gallery-item__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Pastikan gambar mengisi area tanpa distorsi */
+            display: block;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .gallery-item:hover .gallery-item__image {
+            transform: scale(1.1);
+        }
+
+        .gallery-item__caption {
+            padding: 1rem;
+            flex-grow: 1;
+            /* Agar caption mengisi sisa ruang jika ada */
+        }
+
+        .gallery-item__title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gallery-item__description {
+            font-size: 0.85rem;
+            color: var(--text-muted-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* Batasi deskripsi hingga 2 baris */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.5em;
+            /* Cukup ruang untuk 2 baris */
+        }
+
+        /* === PAGINASI === */
+        .pagination-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            /* Agar responsif di layar kecil */
+            gap: 0.5rem;
+            margin-top: 2rem;
+            padding: 1rem 0;
+        }
+
+        .pagination-nav__button {
+            background-color: var(--card-background-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
+            font-size: 0.9rem;
+            min-width: 40px;
+            /* Lebar minimum tombol */
+            text-align: center;
+        }
+
+        .pagination-nav__button:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .pagination-nav__button--active {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .pagination-nav__button:disabled {
+            background-color: #222;
+            color: #555;
+            cursor: not-allowed;
+            border-color: #333;
+        }
+
+        /* === MODAL LIGHTBOX (Untuk tampilan gambar lebih besar) === */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            /* Latar belakang transparan gelap */
+            display: none;
+            /* Awalnya tersembunyi */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Di atas konten lain */
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease-in-out;
+            padding: 1rem;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox__content {
+            position: relative;
+            background-color: var(--card-background-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px var(--shadow-color);
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            animation: lightbox-appear 0.3s ease-out;
+        }
+
+        @keyframes lightbox-appear {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .lightbox__image {
+            max-width: 100%;
+            max-height: 70vh;
+            /* Batasi tinggi gambar agar caption muat */
+            object-fit: contain;
+            /* Jaga rasio aspek gambar */
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+
+        .lightbox__caption {
+            text-align: center;
+        }
+
+        .lightbox__title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .lightbox__description {
+            font-size: 1rem;
+            color: var(--text-muted-color);
+        }
+
+        .lightbox__close {
+            position: absolute;
+            top: -15px;
+            /* Posisikan sedikit di luar kotak */
+            right: -15px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .lightbox__close:hover {
+            background-color: var(--secondary-color);
+            transform: rotate(90deg);
+        }
+
+        /* === UTILITIES & ANIMASI TAMBAHAN === */
+        .loading-indicator {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--text-muted-color);
+        }
+
+        /* Media Queries untuk penyesuaian lebih lanjut jika diperlukan */
+        @media (max-width: 768px) {
+            .site-header h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .lightbox__title {
+                font-size: 1.2rem;
+            }
+
+            .lightbox__description {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+                /* Kecilkan font dasar untuk layar sangat kecil */
+            }
+
+            .site-main {
+                padding: 1rem;
+                width: 95%;
+            }
+
+            .gallery-grid {
+                gap: 1rem;
+            }
+
+            .gallery-item__image-container {
+                height: 180px;
+            }
+
+            .pagination-nav__button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header" role="banner">
+        <h1>Galeri Foto Memukau</h1>
+        <p>Jelajahi koleksi foto-foto pilihan dengan desain yang memanjakan mata.</p>
+    </header>
+
+    <main class="site-main" role="main">
+        <section id="gallery-section" aria-labelledby="gallery-heading">
+            <h2 id="gallery-heading" class="visually-hidden">Koleksi Foto</h2>
+            <!-- visually-hidden class bisa digunakan untuk menyembunyikan teks dari tampilan visual tapi tetap bisa dibaca screen reader -->
+            <div id="gallery-container" class="gallery-grid" aria-live="polite">
+                <!-- Gambar akan dimuat di sini oleh JavaScript -->
+                <p class="loading-indicator">Memuat gambar...</p>
+            </div>
+        </section>
+
+        <nav id="pagination-container" class="pagination-nav" aria-label="Navigasi Halaman Galeri">
+            <!-- Tombol pagination akan dimuat di sini oleh JavaScript -->
+        </nav>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <p>© <span id="current-year"></span> Nama Proyek Anda. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title"
+        aria-describedby="lightbox-description">
+        <div class="lightbox__content">
+            <button id="lightbox-close-button" class="lightbox__close" aria-label="Tutup tampilan gambar">×</button>
+            <img id="lightbox-image" src="" alt="Tampilan Gambar Besar" class="lightbox__image">
+            <div id="lightbox-caption" class="lightbox__caption">
+                <h3 id="lightbox-title" class="lightbox__title"></h3>
+                <p id="lightbox-description" class="lightbox__description"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === STATE APLIKASI & KONFIGURASI ===
+        const AppState = {
+            currentPage: 1,
+            itemsPerPage: 9, // Jumlah gambar per halaman
+            allImages: [],     // Akan diisi dengan data gambar
+            totalPages: 0,
+            isLoading: true,
+        };
+
+        // === DATA GAMBAR (Contoh) ===
+        // Ganti dengan path atau URL gambar Anda sendiri.
+        // Untuk contoh, saya akan buat data dummy yang banyak agar paginasi terlihat.
+        const imageData = [];
+        for (let i = 1; i <= 50; i++) {
+            imageData.push({
+                id: `img${i}`,
+                // Gunakan Picsum Photos untuk contoh gambar yang berbeda setiap kali
+                src: `https://picsum.photos/seed/${i + 100}/400/300`,
+                alt: `Gambar Pemandangan Alam ${i}`,
+                title: `Keindahan Alam #${i}`,
+                description: `Deskripsi singkat untuk pemandangan alam yang menakjubkan ke-${i}. Foto ini menampilkan panorama yang indah dan menenangkan jiwa.`
+            });
+        }
+        AppState.allImages = imageData;
+
+        // === ELEMEN DOM ===
+        const DOM = {
+            galleryContainer: document.getElementById('gallery-container'),
+            paginationContainer: document.getElementById('pagination-container'),
+            currentYearSpan: document.getElementById('current-year'),
+            lightboxModal: document.getElementById('lightbox-modal'),
+            lightboxImage: document.getElementById('lightbox-image'),
+            lightboxTitle: document.getElementById('lightbox-title'),
+            lightboxDescription: document.getElementById('lightbox-description'),
+            lightboxCloseButton: document.getElementById('lightbox-close-button'),
+        };
+
+        // === FUNGSI UTAMA ===
+
+        /**
+         * Memuat dan menampilkan gambar untuk halaman saat ini.
+         * @param {number} page - Nomor halaman yang ingin ditampilkan.
+         */
+        function displayGalleryPage(page) {
+            AppState.currentPage = page;
+            AppState.isLoading = true;
+            updateLoadingIndicator();
+
+            // Simulasi delay loading (bisa dihapus jika data sudah siap)
+            setTimeout(() => {
+                DOM.galleryContainer.innerHTML = ''; // Kosongkan kontainer sebelum memuat item baru
+
+                const startIndex = (page - 1) * AppState.itemsPerPage;
+                const endIndex = startIndex + AppState.itemsPerPage;
+                const paginatedItems = AppState.allImages.slice(startIndex, endIndex);
+
+                if (paginatedItems.length === 0 && AppState.allImages.length > 0) {
+                    // Kasus jika halaman yang diminta di luar jangkauan tapi ada gambar
+                    DOM.galleryContainer.innerHTML = '<p class="loading-indicator">Halaman tidak ditemukan.</p>';
+                    AppState.isLoading = false;
+                    updateLoadingIndicator();
+                    return;
+                }
+
+                if (paginatedItems.length === 0 && AppState.allImages.length === 0) {
+                    DOM.galleryContainer.innerHTML = '<p class="loading-indicator">Tidak ada gambar untuk ditampilkan.</p>';
+                    AppState.isLoading = false;
+                    updateLoadingIndicator();
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment(); // Optimasi DOM manipulation
+
+                paginatedItems.forEach(image => {
+                    const galleryItem = document.createElement('figure');
+                    galleryItem.className = 'gallery-item';
+                    galleryItem.setAttribute('tabindex', '0'); // Aksesibilitas: bisa di-fokus
+                    galleryItem.setAttribute('role', 'button');
+                    galleryItem.setAttribute('aria-label', `Lihat ${image.title} lebih besar`);
+                    galleryItem.dataset.imageId = image.id; // Untuk identifikasi saat diklik
+
+                    const imageContainer = document.createElement('div');
+                    imageContainer.className = 'gallery-item__image-container';
+
+                    const imgElement = document.createElement('img');
+                    imgElement.className = 'gallery-item__image';
+                    imgElement.src = image.src;
+                    imgElement.alt = image.alt;
+                    imgElement.loading = 'lazy'; // Lazy loading untuk gambar
+
+                    const caption = document.createElement('figcaption');
+                    caption.className = 'gallery-item__caption';
+
+                    const title = document.createElement('h3');
+                    title.className = 'gallery-item__title';
+                    title.textContent = image.title;
+
+                    const description = document.createElement('p');
+                    description.className = 'gallery-item__description';
+                    description.textContent = image.description;
+
+                    imageContainer.appendChild(imgElement);
+                    caption.appendChild(title);
+                    caption.appendChild(description);
+                    galleryItem.appendChild(imageContainer);
+                    galleryItem.appendChild(caption);
+
+                    fragment.appendChild(galleryItem);
+                });
+
+                DOM.galleryContainer.appendChild(fragment);
+                AppState.isLoading = false;
+                updateLoadingIndicator();
+                addGalleryItemEventListeners(); // Tambahkan event listener ke item baru
+            }, 300); // Delay simulasi
+        }
+
+        /**
+         * Mengatur dan menampilkan kontrol paginasi.
+         */
+        function setupPagination() {
+            DOM.paginationContainer.innerHTML = ''; // Kosongkan kontainer
+            AppState.totalPages = Math.ceil(AppState.allImages.length / AppState.itemsPerPage);
+
+            if (AppState.totalPages <= 1) return; // Tidak perlu paginasi jika hanya 1 halaman atau kurang
+
+            const fragment = document.createDocumentFragment();
+
+            // Tombol "Sebelumnya"
+            const prevButton = createPaginationButton('Sebelumnya', AppState.currentPage - 1);
+            prevButton.disabled = AppState.currentPage === 1;
+            prevButton.setAttribute('aria-label', 'Halaman Sebelumnya');
+            fragment.appendChild(prevButton);
+
+            // Tombol Nomor Halaman
+            // Logika untuk menampilkan rentang nomor halaman (misal: 1 ... 5 6 7 ... 10)
+            const MAX_VISIBLE_PAGES = 5; // Jumlah maksimal tombol halaman yang terlihat (selain prev/next/ellipsis)
+            let startPage, endPage;
+
+            if (AppState.totalPages <= MAX_VISIBLE_PAGES) {
+                startPage = 1;
+                endPage = AppState.totalPages;
+            } else {
+                const maxPagesBeforeCurrent = Math.floor(MAX_VISIBLE_PAGES / 2);
+                const maxPagesAfterCurrent = Math.ceil(MAX_VISIBLE_PAGES / 2) - 1;
+
+                if (AppState.currentPage <= maxPagesBeforeCurrent) {
+                    startPage = 1;
+                    endPage = MAX_VISIBLE_PAGES;
+                } else if (AppState.currentPage + maxPagesAfterCurrent >= AppState.totalPages) {
+                    startPage = AppState.totalPages - MAX_VISIBLE_PAGES + 1;
+                    endPage = AppState.totalPages;
+                } else {
+                    startPage = AppState.currentPage - maxPagesBeforeCurrent;
+                    endPage = AppState.currentPage + maxPagesAfterCurrent;
+                }
+            }
+
+            // Ellipsis awal jika perlu
+            if (startPage > 1) {
+                fragment.appendChild(createPaginationButton('1', 1));
+                if (startPage > 2) {
+                    const ellipsisStart = document.createElement('span');
+                    ellipsisStart.textContent = '...';
+                    ellipsisStart.className = 'pagination-nav__ellipsis';
+                    fragment.appendChild(ellipsisStart);
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = createPaginationButton(i.toString(), i);
+                if (i === AppState.currentPage) {
+                    pageButton.classList.add('pagination-nav__button--active');
+                    pageButton.setAttribute('aria-current', 'page');
+                }
+                fragment.appendChild(pageButton);
+            }
+
+            // Ellipsis akhir jika perlu
+            if (endPage < AppState.totalPages) {
+                if (endPage < AppState.totalPages - 1) {
+                    const ellipsisEnd = document.createElement('span');
+                    ellipsisEnd.textContent = '...';
+                    ellipsisEnd.className = 'pagination-nav__ellipsis';
+                    fragment.appendChild(ellipsisEnd);
+                }
+                fragment.appendChild(createPaginationButton(AppState.totalPages.toString(), AppState.totalPages));
+            }
+
+
+            // Tombol "Berikutnya"
+            const nextButton = createPaginationButton('Berikutnya', AppState.currentPage + 1);
+            nextButton.disabled = AppState.currentPage === AppState.totalPages;
+            nextButton.setAttribute('aria-label', 'Halaman Berikutnya');
+            fragment.appendChild(nextButton);
+
+            DOM.paginationContainer.appendChild(fragment);
+        }
+
+        /**
+         * Membuat sebuah tombol paginasi.
+         * @param {string} text - Teks pada tombol.
+         * @param {number} pageNumber - Nomor halaman tujuan tombol.
+         * @returns {HTMLButtonElement} - Elemen tombol yang sudah jadi.
+         */
+        function createPaginationButton(text, pageNumber) {
+            const button = document.createElement('button');
+            button.className = 'pagination-nav__button';
+            button.textContent = text;
+            button.type = 'button';
+            button.addEventListener('click', () => {
+                if (pageNumber >= 1 && pageNumber <= AppState.totalPages) {
+                    displayGalleryPage(pageNumber);
+                    setupPagination(); // Perbarui tampilan paginasi
+                    // Scroll ke atas galeri setelah pindah halaman
+                    document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            return button;
+        }
+
+        /**
+         * Menampilkan atau menyembunyikan indikator loading.
+         */
+        function updateLoadingIndicator() {
+            const existingIndicator = DOM.galleryContainer.querySelector('.loading-indicator');
+            if (AppState.isLoading) {
+                if (!existingIndicator) {
+                    const p = document.createElement('p');
+                    p.className = 'loading-indicator';
+                    p.textContent = 'Memuat gambar...';
+                    DOM.galleryContainer.innerHTML = ''; // Kosongkan dulu
+                    DOM.galleryContainer.appendChild(p);
+                }
+            } else {
+                if (existingIndicator) {
+                    // Hapus hanya jika tidak ada item galeri. Jika ada, displayGalleryPage sudah mengurusnya.
+                    if (DOM.galleryContainer.querySelectorAll('.gallery-item').length === 0 && DOM.galleryContainer.textContent.includes('Memuat gambar...')) {
+                        DOM.galleryContainer.removeChild(existingIndicator);
+                    } else if (existingIndicator && DOM.galleryContainer.querySelectorAll('.gallery-item').length > 0) {
+                        existingIndicator.remove(); // Hapus jika sudah ada item
+                    }
+                }
+            }
+        }
+
+        /**
+         * Menambahkan event listener ke setiap item galeri untuk membuka lightbox.
+         */
+        function addGalleryItemEventListeners() {
+            const galleryItems = DOM.galleryContainer.querySelectorAll('.gallery-item');
+            galleryItems.forEach(item => {
+                item.addEventListener('click', handleGalleryItemClick);
+                item.addEventListener('keydown', (event) => { // Aksesibilitas keyboard
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault(); // Mencegah scroll jika spasi ditekan
+                        handleGalleryItemClick.call(item, event); // Panggil dengan konteks yang benar
+                    }
+                });
+            });
+        }
+
+        /**
+         * Handler untuk klik pada item galeri.
+         * @param {Event} event - Objek event.
+         */
+        function handleGalleryItemClick(event) {
+            const imageId = this.dataset.imageId; // 'this' merujuk ke galleryItem yang diklik
+            constimageData = AppState.allImages.find(img => img.id === imageId);
+            if (imageData) {
+                openLightbox(imageData);
+            }
+        }
+
+        // === FUNGSI LIGHTBOX ===
+        /**
+         * Membuka lightbox dengan detail gambar yang dipilih.
+         * @param {object} image - Objek data gambar.
+         */
+        function openLightbox(image) {
+            DOM.lightboxImage.src = image.src; // Gunakan src original untuk kualitas terbaik
+            DOM.lightboxImage.alt = image.alt;
+            DOM.lightboxTitle.textContent = image.title;
+            DOM.lightboxDescription.textContent = image.description;
+            DOM.lightboxModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Mencegah scroll background
+            DOM.lightboxCloseButton.focus(); // Fokus ke tombol tutup untuk aksesibilitas
+
+            // Tambah event listener untuk menutup lightbox via Escape key
+            document.addEventListener('keydown', handleLightboxKeydown);
+        }
+
+        /**
+         * Menutup lightbox.
+         */
+        function closeLightbox() {
+            DOM.lightboxModal.classList.remove('active');
+            document.body.style.overflow = ''; // Kembalikan scroll background
+            // Hapus event listener Escape key agar tidak menumpuk
+            document.removeEventListener('keydown', handleLightboxKeydown);
+        }
+
+        /**
+         * Handler untuk event keydown pada lightbox (misalnya tombol Escape).
+         * @param {KeyboardEvent} event 
+         */
+        function handleLightboxKeydown(event) {
+            if (event.key === 'Escape') {
+                closeLightbox();
+            }
+        }
+
+
+        // === INISIALISASI APLIKASI ===
+        function initializeApp() {
+            // Set tahun copyright
+            DOM.currentYearSpan.textContent = new Date().getFullYear();
+
+            // Tampilkan halaman pertama galeri
+            if (AppState.allImages.length > 0) {
+                displayGalleryPage(AppState.currentPage);
+                setupPagination();
+            } else {
+                DOM.galleryContainer.innerHTML = '<p class="loading-indicator">Tidak ada gambar untuk ditampilkan.</p>';
+                AppState.isLoading = false;
+                updateLoadingIndicator();
+            }
+
+            // Event listener untuk menutup lightbox
+            DOM.lightboxCloseButton.addEventListener('click', closeLightbox);
+            DOM.lightboxModal.addEventListener('click', (event) => {
+                // Tutup jika klik di luar area konten lightbox
+                if (event.target === DOM.lightboxModal) {
+                    closeLightbox();
+                }
+            });
+        }
+
+        // Jalankan aplikasi setelah DOM sepenuhnya dimuat
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+    </script>
+</body>
+
+</html>

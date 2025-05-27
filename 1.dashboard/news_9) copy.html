@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Rentelindo adalah sistem manajemen penyewaan properti modern dan intuitif. Kelola unit, penyewa, pembayaran, dan lainnya dengan mudah.">
+  <meta name="keywords"
+    content="manajemen properti, sewa properti, rentelindo, aplikasi properti, sistem informasi properti">
+  <meta name="author" content="Rentelindo Dev Team">
+  <title>Rentelindo | Sistem Manajemen Penyewaan Properti</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+
+  <style>
+    /* ============================================= */
+    /* RESET CSS SEDERHANA & DASAR */
+    /* ============================================= */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      /* Basis untuk unit rem */
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: var(--color-background);
+      color: var(--color-text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      /* Untuk layout utama */
+      min-height: 100vh;
+    }
+
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    ul,
+    ol {
+      list-style: none;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--color-text-headings);
+    }
+
+    h1 {
+      font-size: 2.25rem;
+    }
+
+    h2 {
+      font-size: 1.875rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    /* ============================================= */
+    /* VARIABEL WARNA (TEMA) */
+    /* ============================================= */
+    :root {
+      --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-family-mono: 'Courier New', Courier, monospace;
+
+      --breakpoint-sm: 576px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 992px;
+      --breakpoint-xl: 1200px;
+
+      /* Jarak (Spacing) */
+      --space-xs: 0.25rem;
+      /* 4px */
+      --space-sm: 0.5rem;
+      /* 8px */
+      --space-md: 1rem;
+      /* 16px */
+      --space-lg: 1.5rem;
+      /* 24px */
+      --space-xl: 2rem;
+      /* 32px */
+      --space-xxl: 3rem;
+      /* 48px */
+
+      /* Radius Sudut */
+      --border-radius-sm: 0.25rem;
+      --border-radius-md: 0.5rem;
+      --border-radius-lg: 0.75rem;
+
+      /* Shadow */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+      /* Transisi */
+      --transition-short: 0.2s ease-in-out;
+      --transition-medium: 0.3s ease-in-out;
+    }
+
+    [data-theme="light"] {
+      --color-primary: #007bff;
+      --color-primary-hover: #0056b3;
+      --color-secondary: #6c757d;
+      --color-success: #28a745;
+      --color-danger: #dc3545;
+      --color-warning: #ffc107;
+      --color-info: #17a2b8;
+
+      --color-background: #f8f9fa;
+      --color-surface: #ffffff;
+      --color-border: #dee2e6;
+
+      --color-text-primary: #212529;
+      --color-text-secondary: #6c757d;
+      --color-text-headings: #343a40;
+      --color-text-on-primary: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #0d6efd;
+      /* Biru yang sedikit lebih terang */
+      --color-primary-hover: #0b5ed7;
+      --color-secondary: #adb5bd;
+      --color-success: #198754;
+      --color-danger: #dc3545;
+      --color-warning: #ffca2c;
+      --color-info: #0dcaf0;
+
+      --color-background: #1a1a2e;
+      /* Biru tua gelap */
+      --color-surface: #242f40;
+      /* Sedikit lebih terang dari background */
+      --color-border: #495057;
+
+      --color-text-primary: #e0e0e0;
+      --color-text-secondary: #adb5bd;
+      --color-text-headings: #ffffff;
+      --color-text-on-primary: #ffffff;
+    }
+
+    /* ============================================= */
+    /* UTILITAS CSS */
+    /* ============================================= */
+    .hidden {
+      display: none !important;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: var(--space-md);
+      padding-right: var(--space-md);
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .gap-sm {
+      gap: var(--space-sm);
+    }
+
+    .gap-md {
+      gap: var(--space-md);
+    }
+
+    .gap-lg {
+      gap: var(--space-lg);
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mb-md {
+      margin-bottom: var(--space-md);
+    }
+
+    .mt-md {
+      margin-top: var(--space-md);
+    }
+
+    .p-md {
+      padding: var(--space-md);
+    }
+
+    .sr-only {
+      /* Untuk aksesibilitas, menyembunyikan elemen secara visual tapi tetap terbaca screen reader */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* ============================================= */
+    /* KOMPONEN UI */
+    /* ============================================= */
+
+    /* Tombol (Button) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: var(--border-radius-md);
+      transition: var(--transition-short);
+      background-color: var(--color-primary);
+      color: var(--color-text-on-primary);
+      border: 1px solid var(--color-primary);
+      gap: var(--space-sm);
+    }
+
+    .btn:hover {
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .btn .icon {
+      font-size: 1.1em;
+    }
+
+    .btn--outline {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary);
+    }
+
+    .btn--outline:hover {
+      background-color: var(--color-primary);
+      color: var(--color-text-on-primary);
+    }
+
+    .btn--secondary {
+      background-color: var(--color-secondary);
+      border-color: var(--color-secondary);
+      color: var(--color-text-on-primary);
+    }
+
+    .btn--secondary:hover {
+      background-color: var(--color-text-secondary);
+      /* Sedikit lebih gelap */
+      border-color: var(--color-text-secondary);
+    }
+
+    .btn--danger {
+      background-color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+
+    .btn--danger:hover {
+      opacity: 0.9;
+    }
+
+    .btn--sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .btn--full-width {
+      width: 100%;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--space-sm);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      transition: border-color var(--transition-short), box-shadow var(--transition-short);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 0.2rem rgba(var(--color-primary), 0.25);
+      outline: none;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .form-checkbox {
+      width: 1.25em;
+      height: 1.25em;
+      accent-color: var(--color-primary);
+    }
+
+    /* Tabel (Table) */
+    .table-wrapper {
+      overflow-x: auto;
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      margin-top: var(--space-lg);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .table th {
+      background-color: var(--color-surface);
+      /* Lebih baik dari background body */
+      color: var(--color-text-headings);
+      font-weight: 600;
+    }
+
+    .table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tr:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+      /* Subtle hover */
+    }
+
+    [data-theme="dark"] .table tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      /* Subtle hover for dark */
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 0.3em 0.6em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: var(--border-radius-sm);
+      color: var(--color-text-on-primary);
+    }
+
+    .badge--success {
+      background-color: var(--color-success);
+    }
+
+    .badge--danger {
+      background-color: var(--color-danger);
+    }
+
+    .badge--warning {
+      background-color: var(--color-warning);
+      color: #000;
+    }
+
+    .badge--info {
+      background-color: var(--color-info);
+    }
+
+    .badge--primary {
+      background-color: var(--color-primary);
+    }
+
+    /* Kartu (Card) */
+    .card {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: var(--space-lg);
+      transition: box-shadow var(--transition-medium);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      padding-bottom: var(--space-md);
+      margin-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .card-title {
+      margin-bottom: 0;
+      font-size: 1.25rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-md);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal {
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 600px;
+      /* Default max-width */
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      animation: modal-fade-in 0.3s ease-out;
+    }
+
+    .modal-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .modal-close-btn {
+      font-size: 1.5rem;
+      color: var(--color-text-secondary);
+      padding: var(--space-xs);
+    }
+
+    .modal-close-btn:hover {
+      color: var(--color-text-primary);
+    }
+
+    .modal-body {
+      padding: var(--space-lg);
+      flex-grow: 1;
+    }
+
+    .modal-footer {
+      padding: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-md);
+    }
+
+    @keyframes modal-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--color-primary);
+      color: var(--color-text-on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-xxl) var(--space-md);
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-lg);
+      border: 1px dashed var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 3rem;
+      margin-bottom: var(--space-md);
+      opacity: 0.7;
+    }
+
+    .empty-state .empty-title {
+      font-size: 1.5rem;
+      color: var(--color-text-headings);
+      margin-bottom: var(--space-sm);
+    }
+
+    .empty-state .empty-description {
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Charts Sederhana (Vanilla) */
+    .chart-container {
+      padding: var(--space-lg);
+      background-color: var(--color-surface);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-sm);
+      min-height: 300px;
+      /* Tinggi minimal untuk chart */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      /* Batang chart dari bawah */
+    }
+
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      /* Batang chart dari bawah */
+      gap: var(--space-sm);
+      height: 250px;
+      /* Sesuaikan tinggi chart */
+      border-bottom: 2px solid var(--color-border);
+      padding-bottom: var(--space-sm);
+    }
+
+    .bar-chart__bar {
+      flex-grow: 1;
+      background-color: var(--color-primary);
+      border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+      text-align: center;
+      color: var(--color-text-on-primary);
+      font-size: 0.8rem;
+      padding-top: var(--space-xs);
+      transition: height 0.5s ease-out;
+      position: relative;
+    }
+
+    .bar-chart__bar-label {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+    }
+
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+      font-size: 0.85rem;
+    }
+
+    .chart-legend__item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .chart-legend__color-box {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    /* Grid untuk dashboard */
+    .grid-dashboard {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    @media (min-width: 768px) {
+      .grid-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-dashboard .card--full-width {
+        grid-column: 1 / -1;
+        /* Span full width */
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .grid-dashboard {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .grid-dashboard .card--span-2 {
+        grid-column: span 2;
+      }
+    }
+
+
+    /* ============================================= */
+    /* STRUKTUR LAYOUT UTAMA */
+    /* ============================================= */
+    .app-layout {
+      display: flex;
+      width: 100%;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 260px;
+      background-color: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      padding: var(--space-lg) var(--space-md);
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s ease, padding 0.3s ease;
+      height: 100vh;
+      /* Penuh tinggi viewport */
+      position: sticky;
+      /* Tetap saat scroll */
+      top: 0;
+      overflow-y: auto;
+      /* Scroll jika konten panjang */
+    }
+
+    #sidebar.sidebar--collapsed {
+      width: 80px;
+      padding-left: var(--space-sm);
+      padding-right: var(--space-sm);
+    }
+
+    #sidebar.sidebar--collapsed .sidebar-logo-text,
+    #sidebar.sidebar--collapsed .nav-text,
+    #sidebar.sidebar--collapsed .user-profile-name,
+    #sidebar.sidebar--collapsed .user-profile-email,
+    #sidebar.sidebar--collapsed .theme-text {
+      display: none;
+    }
+
+    #sidebar.sidebar--collapsed .nav-link,
+    #sidebar.sidebar--collapsed .user-profile,
+    #sidebar.sidebar--collapsed .theme-toggle {
+      justify-content: center;
+    }
+
+    #sidebar.sidebar--collapsed .sidebar-header {
+      justify-content: center;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding-bottom: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .sidebar-logo-icon {
+      font-size: 1.8rem;
+    }
+
+    .sidebar-logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--color-primary);
+    }
+
+    .sidebar-nav {
+      flex-grow: 1;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-sm);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-sm);
+      transition: background-color var(--transition-short), color var(--transition-short);
+    }
+
+    .nav-link:hover {
+      background-color: var(--color-background);
+      /* Warna hover sedikit beda */
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+
+    .nav-link.active {
+      background-color: var(--color-primary);
+      color: var(--color-text-on-primary);
+      font-weight: 500;
+    }
+
+    .nav-link .icon {
+      font-size: 1.3rem;
+      width: 24px;
+      /* Jaga alignment ikon */
+      text-align: center;
+    }
+
+    .nav-text {
+      transition: opacity 0.3s ease;
+    }
+
+
+    .sidebar-footer {
+      margin-top: auto;
+      /* Dorong ke bawah */
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm);
+      border-radius: var(--border-radius-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .user-profile-details {
+      line-height: 1.2;
+    }
+
+    .user-profile-name {
+      font-weight: 600;
+      color: var(--color-text-primary);
+      font-size: 0.9rem;
+    }
+
+    .user-profile-email {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-sm);
+      border-radius: var(--border-radius-md);
+      color: var(--color-text-secondary);
+      background-color: var(--color-background);
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .theme-toggle:hover {
+      color: var(--color-text-primary);
+      background-color: var(--color-border);
+    }
+
+    .theme-toggle .icon {
+      font-size: 1.3rem;
+      width: 24px;
+      text-align: center;
+    }
+
+
+    /* Main Content Area */
+    #app-content {
+      flex-grow: 1;
+      padding: var(--space-xl);
+      overflow-y: auto;
+      /* Scroll untuk konten utama */
+      height: 100vh;
+    }
+
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .main-header-title {
+      font-size: 1.75rem;
+      color: var(--color-text-headings);
+      margin: 0;
+    }
+
+    .main-header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .notification-bell {
+      position: relative;
+      font-size: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -8px;
+      background-color: var(--color-danger);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 2px solid var(--color-surface);
+      /* Kontras dengan background */
+    }
+
+    .sidebar-toggle-btn {
+      font-size: 1.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Section specific styling */
+    /* Dashboard Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .stat-card {
+      padding: var(--space-lg);
+      text-align: center;
+    }
+
+    .stat-card__icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-sm);
+      color: var(--color-primary);
+    }
+
+    .stat-card__value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--color-text-headings);
+      margin-bottom: var(--space-xs);
+    }
+
+    .stat-card__label {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Activity Item */
+    .activity-item {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      font-size: 1.5rem;
+      color: var(--color-primary);
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-background);
+      border-radius: 50%;
+    }
+
+    .activity-content {
+      flex-grow: 1;
+    }
+
+    .activity-text {
+      font-size: 0.9rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        /* Sidebar mobile overlay */
+        left: -280px;
+        /* Sembunyikan di luar layar */
+        z-index: 1001;
+        /* Di atas modal overlay */
+        transition: left 0.3s ease;
+        height: 100%;
+        box-shadow: var(--shadow-lg);
+      }
+
+      #sidebar.sidebar--open {
+        left: 0;
+      }
+
+      #sidebar.sidebar--collapsed {
+        /* Pada mobile, collapsed tetap full */
+        width: 260px;
+        padding: var(--space-lg) var(--space-md);
+      }
+
+      #sidebar.sidebar--collapsed .sidebar-logo-text,
+      #sidebar.sidebar--collapsed .nav-text,
+      #sidebar.sidebar--collapsed .user-profile-name,
+      #sidebar.sidebar--collapsed .user-profile-email,
+      #sidebar.sidebar--collapsed .theme-text {
+        display: inline-block;
+        /* Tampilkan kembali teks saat tidak collapsed di mobile */
+      }
+
+      #sidebar.sidebar--collapsed .nav-link,
+      #sidebar.sidebar--collapsed .user-profile,
+      #sidebar.sidebar--collapsed .theme-toggle {
+        justify-content: flex-start;
+        /* Kembalikan alignment */
+      }
+
+      #sidebar.sidebar--collapsed .sidebar-header {
+        justify-content: flex-start;
+      }
+
+      .sidebar-toggle-btn-desktop {
+        display: none;
+      }
+
+      /* Sembunyikan toggle desktop di mobile */
+      .mobile-overlay {
+        /* Overlay saat sidebar mobile terbuka */
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+      }
+
+      .main-header-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .sidebar-toggle-btn-mobile {
+        display: none;
+      }
+
+      /* Sembunyikan toggle mobile di desktop */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigasi -->
+    <aside id="sidebar">
+      <header class="sidebar-header">
+        <span class="sidebar-logo-icon" aria-hidden="true">🏠</span>
+        <span class="sidebar-logo-text">Rentelindo</span>
+      </header>
+
+      <nav class="sidebar-nav" aria-label="Navigasi Utama">
+        <ul>
+          <li><a href="#dashboard" class="nav-link active" data-section="dashboard"><span class="icon"
+                aria-hidden="true">📊</span> <span class="nav-text">Dashboard</span></a></li>
+          <li><a href="#unit" class="nav-link" data-section="unit"><span class="icon" aria-hidden="true">🏢</span> <span
+                class="nav-text">Unit Properti</span></a></li>
+          <li><a href="#penyewa" class="nav-link" data-section="penyewa"><span class="icon" aria-hidden="true">👥</span>
+              <span class="nav-text">Penyewa</span></a></li>
+          <li><a href="#kontrak" class="nav-link" data-section="kontrak"><span class="icon" aria-hidden="true">📜</span>
+              <span class="nav-text">Kontrak</span></a></li>
+          <li><a href="#pembayaran" class="nav-link" data-section="pembayaran"><span class="icon"
+                aria-hidden="true">💰</span> <span class="nav-text">Pembayaran</span></a></li>
+          <li><a href="#pemeliharaan" class="nav-link" data-section="pemeliharaan"><span class="icon"
+                aria-hidden="true">🔧</span> <span class="nav-text">Pemeliharaan</span></a></li>
+          <li><a href="#laporan" class="nav-link" data-section="laporan"><span class="icon" aria-hidden="true">📈</span>
+              <span class="nav-text">Laporan</span></a></li>
+          <li><a href="#pengaturan" class="nav-link" data-section="pengaturan"><span class="icon"
+                aria-hidden="true">⚙️</span> <span class="nav-text">Pengaturan</span></a></li>
+        </ul>
+      </nav>
+
+      <footer class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="user-avatar">A</div>
+          <div class="user-profile-details">
+            <div class="user-profile-name" id="user-name">Admin Rentelindo</div>
+            <div class="user-profile-email" id="user-email">admin@rentelindo.com</div>
+          </div>
+        </div>
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Ganti Tema">
+          <span class="icon" aria-hidden="true">🌙</span> <span class="theme-text">Mode Gelap</span>
+        </button>
+      </footer>
+    </aside>
+
+    <!-- Konten Utama Aplikasi -->
+    <main id="app-content" tabindex="-1">
+      <header class="main-header">
+        <div class="flex items-center gap-md">
+          <button class="sidebar-toggle-btn sidebar-toggle-btn-mobile" id="mobile-sidebar-toggle"
+            aria-label="Buka menu navigasi" aria-expanded="false">☰</button>
+          <button class="sidebar-toggle-btn sidebar-toggle-btn-desktop" id="desktop-sidebar-toggle"
+            aria-label="Ciutkan menu navigasi" aria-expanded="true">☰</button>
+          <h1 id="main-content-title" class="main-header-title">Dashboard</h1>
+        </div>
+        <div class="main-header-actions">
+          <button class="notification-bell" aria-label="Notifikasi">
+            🔔
+            <span class="notification-badge" style="display: none;">0</span>
+          </button>
+          <!-- Tambahkan aksi lain jika perlu, misal tombol logout -->
+        </div>
+      </header>
+
+      <!-- Area untuk menampilkan section yang aktif -->
+      <div id="main-content-area">
+        <!-- Section Dashboard -->
+        <section id="dashboard" class="section">
+          <div class="stats-grid">
+            <div class="card stat-card">
+              <div class="stat-card__icon" aria-hidden="true">🏢</div>
+              <div class="stat-card__value" id="total-units">0</div>
+              <div class="stat-card__label">Total Unit</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card__icon" aria-hidden="true">✔️</div>
+              <div class="stat-card__value" id="rented-units">0</div>
+              <div class="stat-card__label">Unit Terisi</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card__icon" aria-hidden="true">🚪</div>
+              <div class="stat-card__value" id="vacant-units">0</div>
+              <div class="stat-card__label">Unit Kosong</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card__icon" aria-hidden="true">👥</div>
+              <div class="stat-card__value" id="total-tenants">0</div>
+              <div class="stat-card__label">Total Penyewa</div>
+            </div>
+          </div>
+
+          <div class="grid-dashboard">
+            <div class="card card--span-2">
+              <div class="card-header">
+                <h3 class="card-title">Status Unit Properti (Simulasi)</h3>
+              </div>
+              <div class="chart-container">
+                <div id="unit-chart-simple" class="bar-chart">
+                  <!-- Bar akan di-generate oleh JavaScript -->
+                </div>
+                <div class="chart-legend">
+                  <span class="chart-legend__item"><span class="chart-legend__color-box"
+                      style="background-color: var(--color-success);"></span>Terisi</span>
+                  <span class="chart-legend__item"><span class="chart-legend__color-box"
+                      style="background-color: var(--color-warning);"></span>Kosong</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Aktivitas Terbaru</h3>
+              </div>
+              <div id="recent-activity">
+                <!-- Aktivitas akan di-generate oleh JavaScript -->
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Pendapatan Bulanan (Simulasi)</h3>
+              </div>
+              <div class="chart-container">
+                <div id="income-chart-simple" class="bar-chart">
+                  <!-- Bar akan di-generate oleh JavaScript -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-md card--full-width">
+            <div class="card-header">
+              <h3 class="card-title">Pembayaran Terbaru</h3>
+            </div>
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID Kontrak</th>
+                    <th>Penyewa</th>
+                    <th>Jumlah</th>
+                    <th>Tanggal</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-payments">
+                  <!-- Pembayaran terbaru akan di-generate JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Unit Properti -->
+        <section id="unit" class="section hidden">
+          <div class="flex justify-between items-center mb-md">
+            <h2>Daftar Unit Properti</h2>
+            <button class="btn" data-action="open-modal" data-modal-type="add-unit">
+              <span class="icon">➕</span> Tambah Unit
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID Unit</th>
+                  <th>Tipe</th>
+                  <th>Lokasi</th>
+                  <th>Harga Sewa</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="units-list">
+                <!-- Data unit akan di-generate JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section Penyewa -->
+        <section id="penyewa" class="section hidden">
+          <div class="flex justify-between items-center mb-md">
+            <h2>Daftar Penyewa</h2>
+            <button class="btn" data-action="open-modal" data-modal-type="add-tenant">
+              <span class="icon">➕</span> Tambah Penyewa
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID Penyewa</th>
+                  <th>Nama</th>
+                  <th>Unit Disewa</th>
+                  <th>ID Kontrak</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tenants-list">
+                <!-- Data penyewa akan di-generate JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section Kontrak -->
+        <section id="kontrak" class="section hidden">
+          <div class="flex justify-between items-center mb-md">
+            <h2>Daftar Kontrak</h2>
+            <button class="btn" data-action="open-modal" data-modal-type="add-contract">
+              <span class="icon">➕</span> Tambah Kontrak
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID Kontrak</th>
+                  <th>Penyewa</th>
+                  <th>ID Unit</th>
+                  <th>Mulai</th>
+                  <th>Selesai</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="contracts-list">
+                <!-- Data kontrak akan di-generate JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section Pembayaran -->
+        <section id="pembayaran" class="section hidden">
+          <div class="flex justify-between items-center mb-md">
+            <h2>Daftar Pembayaran</h2>
+            <button class="btn" data-action="open-modal" data-modal-type="add-payment">
+              <span class="icon">➕</span> Tambah Pembayaran
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID Pembayaran</th>
+                  <th>Penyewa</th>
+                  <th>ID Unit</th>
+                  <th>Jumlah</th>
+                  <th>Tanggal</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="payments-list">
+                <!-- Data pembayaran akan di-generate JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section Pemeliharaan -->
+        <section id="pemeliharaan" class="section hidden">
+          <div class="flex justify-between items-center mb-md">
+            <h2>Jadwal Pemeliharaan</h2>
+            <button class="btn" data-action="open-modal" data-modal-type="add-maintenance">
+              <span class="icon">➕</span> Tambah Jadwal
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID Jadwal</th>
+                  <th>ID Unit</th>
+                  <th>Deskripsi</th>
+                  <th>Tanggal</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="maintenance-list">
+                <!-- Data pemeliharaan akan di-generate JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section Laporan -->
+        <section id="laporan" class="section hidden">
+          <h2>Laporan Keuangan & Okupansi</h2>
+          <div class="card mt-md">
+            <div class="card-header">
+              <h3 class="card-title">Laporan Pendapatan Bulanan (Simulasi)</h3>
+            </div>
+            <div class="chart-container">
+              <div id="report-income-chart-simple" class="bar-chart">
+                <!-- Bar akan di-generate oleh JavaScript -->
+              </div>
+            </div>
+          </div>
+          <div class="card mt-md">
+            <div class="card-header">
+              <h3 class="card-title">Ringkasan Laporan Lainnya</h3>
+            </div>
+            <p>Fitur laporan lebih detail dapat dikembangkan di sini, misalnya: laporan okupansi per periode, laporan
+              pengeluaran, dll.</p>
+            <!-- Tambahkan tabel atau visualisasi data lainnya di sini -->
+          </div>
+        </section>
+
+        <!-- Section Pengaturan -->
+        <section id="pengaturan" class="section hidden">
+          <h2>Pengaturan Aplikasi</h2>
+          <div class="card mt-md">
+            <form id="settings-form">
+              <div class="form-group">
+                <label for="settings-company-name" class="form-label">Nama Perusahaan/Properti</label>
+                <input type="text" id="settings-company-name" class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="settings-currency" class="form-label">Mata Uang</label>
+                <select id="settings-currency" class="form-select">
+                  <option value="IDR">IDR (Rupiah Indonesia)</option>
+                  <option value="USD">USD (Dolar Amerika)</option>
+                  <option value="EUR">EUR (Euro)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <div class="form-checkbox-group">
+                  <input type="checkbox" id="settings-notifications" class="form-checkbox">
+                  <label for="settings-notifications" class="form-label" style="margin-bottom:0;">Aktifkan Notifikasi
+                    Email (Contoh)</label>
+                </div>
+              </div>
+              <button type="submit" class="btn"><span class="icon">💾</span> Simpan Pengaturan</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Universal -->
+  <div id="modal-overlay" class="modal-overlay hidden" aria-hidden="true">
+    <div id="modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+      <header class="modal-header">
+        <h2 id="modal-title" class="modal-title">Judul Modal</h2>
+        <button id="modal-close-btn" class="modal-close-btn" aria-label="Tutup modal">
+          &times;
+        </button>
+      </header>
+      <section id="modal-body" class="modal-body">
+        <!-- Konten modal akan diisi oleh JavaScript -->
+      </section>
+      <footer class="modal-footer">
+        <button id="modal-cancel-btn" class="btn btn--outline">Batal</button>
+        <button id="modal-save-btn" class="btn">Simpan</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Mobile Overlay (untuk menutup sidebar mobile saat diklik) -->
+  <div id="mobile-app-overlay" class="mobile-overlay hidden"></div>
+
+
+  <script>
+    // =============================================
+    // KONSTANTA DAN KONFIGURASI GLOBAL
+    // =============================================
+    const API_BASE_URL = 'https://api.rentelindo.com/v1'; // Contoh, tidak digunakan aktif
+    const LOCAL_STORAGE_KEY = 'rentelindo_app_data_v2'; // Versi baru untuk menghindari konflik
+    const DEFAULT_SETTINGS = {
+      companyName: 'Rentelindo Properti',
+      currency: 'IDR',
+      notifications: true,
+      language: 'id',
+      theme: 'light', // Default theme
+    };
+
+    // =============================================
+    // UTILITAS UMUM
+    // =============================================
+    const Utils = {
+      formatDate: (dateString, options = {}) => {
+        if (!dateString) return 'N/A';
+        try {
+          const date = new Date(dateString);
+          const defaultOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+          return date.toLocaleDateString('id-ID', { ...defaultOptions, ...options });
+        } catch (e) {
+          console.warn("Error formatting date:", dateString, e);
+          return dateString; // Kembalikan string asli jika error
+        }
+      },
+      formatCurrency: (amount, currency = 'IDR') => {
+        if (typeof amount !== 'number') amount = parseFloat(amount) || 0;
+        return new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency,
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0 // Umumnya Rupiah tidak pakai sen
+        }).format(amount);
+      },
+      generateId: (prefix = '') => {
+        return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`.toUpperCase();
+      },
+      validateEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase()),
+      validatePhone: (phone) => /^(\+62|08)[0-9]{8,12}$/.test(phone), // Phone Indonesia (08xx atau +628xx)
+      debounce: (func, wait) => {
+        let timeout;
+        return function (...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      },
+      capitalize: (str) => {
+        if (typeof str !== 'string' || !str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+      },
+      // Sanitasi HTML sederhana untuk mencegah XSS dasar dari data yang mungkin ditampilkan
+      sanitizeHTML: (str) => {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+      },
+      // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+      getTodayDateString: () => new Date().toISOString().split('T')[0],
+    };
+
+    // =============================================
+    // MANAJEMEN STATE APLIKASI (Single Source of Truth)
+    // =============================================
+    const AppState = {
+      state: {
+        user: {
+          id: 'USER-ADMIN',
+          name: 'Admin Rentelindo',
+          email: 'admin@rentelindo.com',
+          role: 'admin',
+          avatar: 'A'
+        },
+        settings: { ...DEFAULT_SETTINGS },
+        units: [],
+        tenants: [],
+        payments: [],
+        contracts: [],
+        maintenance: [],
+        activities: [],
+        notifications: [],
+        ui: {
+          loading: false,
+          sidebarCollapsed: false,
+          isMobileSidebarOpen: false,
+          currentSection: 'dashboard', // Section default saat load
+          modal: {
+            isOpen: false,
+            type: null, // e.g., 'add-unit', 'edit-tenant'
+            data: null   // Data untuk edit
+          },
+        }
+      },
+
+      // Inisialisasi aplikasi
+      init() {
+        this.loadFromLocalStorage();
+        if (this.state.units.length === 0 && this.state.tenants.length === 0) { // Hanya generate jika benar-benar kosong
+          this.generateMockData();
+        }
+        this.updateUIBasedOnState(); // Update UI keseluruhan
+        this.setupEventListeners(); // Setup event listener global
+        this.handleRouting(); // Tangani routing awal berdasarkan hash
+      },
+
+      loadFromLocalStorage() {
+        const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedData) {
+          try {
+            const parsedData = JSON.parse(savedData);
+            // Gabungkan state yang disimpan dengan state default, hati-hati agar tidak menimpa struktur ui penting
+            this.state = {
+              ...this.state, // Mulai dengan struktur default
+              ...parsedData, // Timpa dengan data tersimpan
+              settings: { ...DEFAULT_SETTINGS, ...(parsedData.settings || {}) },
+              ui: { // Gabungkan UI secara hati-hati
+                ...this.state.ui,
+                ...(parsedData.ui || {}),
+                modal: { isOpen: false, type: null, data: null }, // Selalu reset modal saat load
+                loading: false, // Selalu reset loading
+                isMobileSidebarOpen: false, // Selalu reset mobile sidebar
+              }
+            };
+            // Pastikan semua array utama ada, jika tidak ada di localStorage
+            ['units', 'tenants', 'payments', 'contracts', 'maintenance', 'activities', 'notifications'].forEach(key => {
+              if (!Array.isArray(this.state[key])) {
+                this.state[key] = [];
+              }
+            });
+
+          } catch (e) {
+            console.error('Gagal memuat data dari localStorage:', e);
+            // Jika gagal parse, mungkin reset ke default atau beri notifikasi
+            localStorage.removeItem(LOCAL_STORAGE_KEY); // Hapus data korup
+          }
+        }
+      },
+
+      saveToLocalStorage() {
+        try {
+          // Hindari menyimpan instance Chart.js atau elemen DOM
+          const stateToSave = { ...this.state };
+          if (stateToSave.ui.chartInstances) { // Hapus jika ada sisa Chart.js
+            delete stateToSave.ui.chartInstances;
+          }
+          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(stateToSave));
+        } catch (e) {
+          console.error('Gagal menyimpan data ke localStorage:', e);
+          // Mungkin karena storage penuh
+        }
+      },
+
+      // Update state dan simpan ke localStorage
+      setState(newStatePartial) {
+        // Deep merge untuk state.ui agar tidak hilang substruktur
+        if (newStatePartial.ui && this.state.ui) {
+          newStatePartial.ui = { ...this.state.ui, ...newStatePartial.ui };
+        }
+        // Deep merge untuk state.settings
+        if (newStatePartial.settings && this.state.settings) {
+          newStatePartial.settings = { ...this.state.settings, ...newStatePartial.settings };
+        }
+
+        this.state = { ...this.state, ...newStatePartial };
+        this.saveToLocalStorage();
+        this.updateUIBasedOnState(); // Panggil update UI setelah state berubah
+      },
+
+      generateMockData() {
+        const today = new Date();
+        const oneMonthAgo = new Date(new Date().setMonth(today.getMonth() - 1));
+        const oneMonthLater = new Date(new Date().setMonth(today.getMonth() + 1));
+        const sixMonthsAgo = new Date(new Date().setMonth(today.getMonth() - 6));
+
+        this.state.units = [
+          { id: Utils.generateId('UNIT-'), type: 'Apartemen', location: 'Jakarta Pusat', price: 3500000, size: '45m²', bedrooms: 1, status: 'terisi', features: ['AC', 'WiFi', 'Dapur'], availableDate: null },
+          { id: Utils.generateId('UNIT-'), type: 'Rumah', location: 'Bandung Selatan', price: 7500000, size: '120m²', bedrooms: 3, status: 'terisi', features: ['Carport', 'Taman', '3 Kamar'], availableDate: null },
+          { id: Utils.generateId('UNIT-'), type: 'Kos Eksklusif', location: 'Surabaya Timur', price: 1500000, size: '25m²', bedrooms: 1, status: 'kosong', features: ['Lemari', 'Kamar Mandi Dalam'], availableDate: Utils.getTodayDateString() },
+          { id: Utils.generateId('UNIT-'), type: 'Kantor', location: 'Denpasar Kota', price: 12000000, size: '200m²', status: 'kosong', features: ['Meeting Room', 'AC Central'], availableDate: Utils.getTodayDateString() }
+        ];
+
+        this.state.tenants = [
+          { id: Utils.generateId('TENANT-'), name: 'Budi Santoso', email: 'budi.s@example.com', phone: '081234567890', unitId: this.state.units[0].id, contractId: 'CONTRACT-001', status: 'aktif', joinDate: sixMonthsAgo.toISOString().split('T')[0], idCardPhoto: null, notes: 'Penyewa yang baik.' },
+          { id: Utils.generateId('TENANT-'), name: 'Ani Wijaya', email: 'ani.w@example.com', phone: '082345678901', unitId: this.state.units[1].id, contractId: 'CONTRACT-002', status: 'aktif', joinDate: oneMonthAgo.toISOString().split('T')[0], idCardPhoto: null, notes: '' }
+        ];
+
+        // Update contractId di tenant
+        this.state.tenants[0].contractId = Utils.generateId('KTR-');
+        this.state.tenants[1].contractId = Utils.generateId('KTR-');
+
+
+        this.state.contracts = [
+          { id: this.state.tenants[0].contractId, tenantId: this.state.tenants[0].id, unitId: this.state.units[0].id, startDate: sixMonthsAgo.toISOString().split('T')[0], endDate: new Date(new Date(sixMonthsAgo).setMonth(sixMonthsAgo.getMonth() + 12)).toISOString().split('T')[0], monthlyRent: 3500000, deposit: 3500000, status: 'aktif', paymentTerm: 'bulanan', notes: 'Kontrak standar 1 tahun.' },
+          { id: this.state.tenants[1].contractId, tenantId: this.state.tenants[1].id, unitId: this.state.units[1].id, startDate: oneMonthAgo.toISOString().split('T')[0], endDate: oneMonthLater.toISOString().split('T')[0], monthlyRent: 7500000, deposit: 7500000, status: 'aktif', paymentTerm: 'bulanan', notes: 'Kontrak jangka pendek.' }
+        ];
+
+        this.state.units[0].status = 'terisi'; // Pastikan unit terisi jika ada kontrak aktif
+        this.state.units[1].status = 'terisi';
+
+        this.state.payments = [
+          { id: Utils.generateId('PAY-'), contractId: this.state.contracts[0].id, amount: 3500000, paymentDate: oneMonthAgo.toISOString().split('T')[0], method: 'Transfer Bank', status: 'lunas', notes: 'Pembayaran bulan lalu', paymentForMonth: oneMonthAgo.toLocaleString('id-ID', { month: 'long', year: 'numeric' }) },
+          { id: Utils.generateId('PAY-'), contractId: this.state.contracts[1].id, amount: 7500000, paymentDate: oneMonthAgo.toISOString().split('T')[0], method: 'Transfer Bank', status: 'lunas', notes: 'Pembayaran bulan ini', paymentForMonth: oneMonthAgo.toLocaleString('id-ID', { month: 'long', year: 'numeric' }) }
+        ];
+
+        this.state.maintenance = [
+          { id: Utils.generateId('MAINT-'), unitId: this.state.units[0].id, type: 'perbaikan', description: 'Perbaikan AC bocor', requestDate: new Date(new Date().setDate(today.getDate() - 10)).toISOString().split('T')[0], scheduledDate: new Date(new Date().setDate(today.getDate() - 8)).toISOString().split('T')[0], completionDate: new Date(new Date().setDate(today.getDate() - 7)).toISOString().split('T')[0], cost: 500000, status: 'selesai', technician: 'PT AC Dingin Selalu', notes: 'Sudah diganti freon.' },
+          { id: Utils.generateId('MAINT-'), unitId: this.state.units[1].id, type: 'pembersihan', description: 'Pembersihan saluran air taman', requestDate: new Date(new Date().setDate(today.getDate() - 5)).toISOString().split('T')[0], scheduledDate: new Date(new Date().setDate(today.getDate() - 2)).toISOString().split('T')[0], completionDate: null, cost: 300000, status: 'direncanakan', technician: 'Bapak Ujang Clean', notes: 'Akan dikerjakan lusa.' }
+        ];
+
+        this.state.activities = [
+          { id: Utils.generateId('ACT-'), type: 'payment', title: 'Pembayaran diterima', description: `Pembayaran sewa ${Utils.formatCurrency(3500000)} dari Budi Santoso untuk ${this.state.units[0].id}`, timestamp: oneMonthAgo.toISOString(), read: true },
+          { id: Utils.generateId('ACT-'), type: 'maintenance', title: 'Pemeliharaan selesai', description: `Perbaikan AC di ${this.state.units[0].id} telah selesai`, timestamp: new Date(new Date().setDate(today.getDate() - 7)).toISOString(), read: true },
+          { id: Utils.generateId('ACT-'), type: 'contract', title: 'Kontrak baru', description: `Kontrak baru dibuat untuk Ani Wijaya di ${this.state.units[1].id}`, timestamp: oneMonthAgo.toISOString(), read: true }
+        ];
+
+        this.state.notifications = [
+          { id: Utils.generateId('NOTIF-'), type: 'payment', title: 'Pembayaran Jatuh Tempo', description: `Pembayaran sewa ${this.state.units[0].id} jatuh tempo pada ${Utils.formatDate(new Date(new Date(this.state.contracts[0].startDate).setMonth(new Date(this.state.contracts[0].startDate).getMonth() + 1)))}`, timestamp: new Date().toISOString(), read: false, relatedId: this.state.contracts[0].id },
+          { id: Utils.generateId('NOTIF-'), type: 'contract', title: 'Kontrak Akan Berakhir', description: `Kontrak ${this.state.units[1].id} akan berakhir dalam ${Math.ceil((new Date(this.state.contracts[1].endDate) - new Date()) / (1000 * 60 * 60 * 24))} hari`, timestamp: new Date().toISOString(), read: false, relatedId: this.state.contracts[1].id }
+        ];
+        this.saveToLocalStorage();
+      },
+
+      // Fungsi untuk mengupdate seluruh UI berdasarkan state saat ini
+      updateUIBasedOnState() {
+        // Update tema
+        document.documentElement.setAttribute('data-theme', this.state.settings.theme || 'light');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        if (themeToggleBtn) {
+          const icon = themeToggleBtn.querySelector('.icon');
+          const text = themeToggleBtn.querySelector('.theme-text');
+          if (this.state.settings.theme === 'dark') {
+            if (icon) icon.textContent = '☀️';
+            if (text) text.textContent = 'Mode Terang';
+          } else {
+            if (icon) icon.textContent = '🌙';
+            if (text) text.textContent = 'Mode Gelap';
+          }
+        }
+
+        // Update sidebar (desktop)
+        const sidebar = document.getElementById('sidebar');
+        const desktopToggle = document.getElementById('desktop-sidebar-toggle');
+        if (sidebar && desktopToggle) {
+          if (this.state.ui.sidebarCollapsed) {
+            sidebar.classList.add('sidebar--collapsed');
+            desktopToggle.setAttribute('aria-expanded', 'false');
+            desktopToggle.setAttribute('aria-label', 'Bentangkan menu navigasi');
+          } else {
+            sidebar.classList.remove('sidebar--collapsed');
+            desktopToggle.setAttribute('aria-expanded', 'true');
+            desktopToggle.setAttribute('aria-label', 'Ciutkan menu navigasi');
+          }
+        }
+
+        // Update sidebar (mobile)
+        const mobileToggle = document.getElementById('mobile-sidebar-toggle');
+        const mobileOverlay = document.getElementById('mobile-app-overlay');
+        if (sidebar && mobileToggle && mobileOverlay) {
+          if (this.state.ui.isMobileSidebarOpen) {
+            sidebar.classList.add('sidebar--open');
+            mobileToggle.setAttribute('aria-expanded', 'true');
+            mobileOverlay.classList.remove('hidden');
+          } else {
+            sidebar.classList.remove('sidebar--open');
+            mobileToggle.setAttribute('aria-expanded', 'false');
+            mobileOverlay.classList.add('hidden');
+          }
+        }
+
+
+        // Update user info di sidebar
+        const userNameEl = document.getElementById('user-name');
+        const userEmailEl = document.getElementById('user-email');
+        const userAvatarEl = document.getElementById('user-avatar');
+        if (userNameEl) userNameEl.textContent = this.state.user.name;
+        if (userEmailEl) userEmailEl.textContent = this.state.user.email;
+        if (userAvatarEl) userAvatarEl.textContent = this.state.user.avatar || this.state.user.name.charAt(0).toUpperCase();
+
+        // Update notifikasi badge
+        this.updateNotificationBadge();
+
+        // Render section yang aktif
+        // Pengecekan ini dipindah ke showSection agar tidak re-render jika section sama
+        // this.renderSectionContent(this.state.ui.currentSection);
+      },
+
+      updateNotificationBadge() {
+        const unreadCount = this.state.notifications.filter(n => !n.read).length;
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+          if (unreadCount > 0) {
+            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+      },
+
+      // Logika untuk menangani routing SPA
+      handleRouting() {
+        let sectionId = window.location.hash.substring(1) || 'dashboard';
+        // Validasi sectionId, jika tidak valid, arahkan ke dashboard
+        const validSections = ['dashboard', 'unit', 'penyewa', 'kontrak', 'pembayaran', 'pemeliharaan', 'laporan', 'pengaturan'];
+        if (!validSections.includes(sectionId)) {
+          sectionId = 'dashboard';
+          window.location.hash = sectionId; // Perbarui URL jika invalid
+        }
+        this.showSection(sectionId);
+      },
+
+      // Tampilkan section tertentu dan update UI terkait
+      showSection(sectionId) {
+        if (this.state.ui.currentSection === sectionId && document.getElementById(sectionId) && !document.getElementById(sectionId).classList.contains('hidden')) {
+          // Jika section sudah aktif dan terlihat, tidak perlu render ulang kecuali ada flag forceRender
+        }
+
+        // Sembunyikan semua section
+        document.querySelectorAll('.section').forEach(section => section.classList.add('hidden'));
+
+        // Tampilkan section yang dipilih
+        const currentSectionElement = document.getElementById(sectionId);
+        if (currentSectionElement) {
+          currentSectionElement.classList.remove('hidden');
+        } else {
+          console.error(`Section dengan ID '${sectionId}' tidak ditemukan.`);
+          this.showSection('dashboard'); // Fallback ke dashboard
+          return;
+        }
+
+        // Update judul header utama
+        const sectionTitles = {
+          dashboard: 'Dashboard', unit: 'Unit Properti', penyewa: 'Manajemen Penyewa',
+          kontrak: 'Manajemen Kontrak', pembayaran: 'Riwayat Pembayaran',
+          pemeliharaan: 'Jadwal Pemeliharaan', laporan: 'Laporan Aplikasi', pengaturan: 'Pengaturan Akun'
+        };
+        document.getElementById('main-content-title').textContent = sectionTitles[sectionId] || Utils.capitalize(sectionId);
+
+        // Update link navigasi aktif
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.classList.toggle('active', link.dataset.section === sectionId);
+        });
+
+        // Update state dan simpan
+        // this.state.ui.currentSection = sectionId; // Dipindah ke setState untuk konsistensi
+        // this.saveToLocalStorage();
+        this.setState({ ui: { ...this.state.ui, currentSection: sectionId } });
+
+
+        // Render konten spesifik untuk section tersebut
+        this.renderSectionContent(sectionId);
+
+        // Tutup sidebar mobile jika terbuka setelah navigasi
+        if (this.state.ui.isMobileSidebarOpen) {
+          this.toggleMobileSidebar();
+        }
+
+        // Fokus ke area konten utama untuk aksesibilitas
+        document.getElementById('app-content').focus();
+      },
+
+      // Fungsi untuk me-render konten spesifik dari sebuah section
+      renderSectionContent(sectionId) {
+        // console.log(`Rendering content for section: ${sectionId}`);
+        switch (sectionId) {
+          case 'dashboard': this.renderDashboard(); break;
+          case 'unit': this.renderUnits(); break;
+          case 'penyewa': this.renderTenants(); break;
+          case 'kontrak': this.renderContracts(); break;
+          case 'pembayaran': this.renderPayments(); break;
+          case 'pemeliharaan': this.renderMaintenance(); break;
+          case 'laporan': this.renderReports(); break;
+          case 'pengaturan': this.renderSettings(); break;
+          default: console.warn(`Tidak ada fungsi render untuk section: ${sectionId}`);
+        }
+      },
+
+      // =============================================
+      // FUNGSI RENDER UNTUK SETIAP SECTION
+      // =============================================
+      renderDashboard() {
+        document.getElementById('total-units').textContent = this.state.units.length;
+        document.getElementById('rented-units').textContent = this.state.units.filter(u => u.status === 'terisi').length;
+        document.getElementById('vacant-units').textContent = this.state.units.filter(u => u.status === 'kosong').length;
+        document.getElementById('total-tenants').textContent = this.state.tenants.length;
+
+        this.renderSimpleUnitChart();
+        this.renderSimpleIncomeChart(); // Chart pendapatan simulasi
+        this.renderRecentActivity();
+        this.renderRecentPayments();
+      },
+
+      renderSimpleUnitChart() {
+        const chartContainer = document.getElementById('unit-chart-simple');
+        if (!chartContainer) return;
+
+        const terisi = this.state.units.filter(u => u.status === 'terisi').length;
+        const kosong = this.state.units.filter(u => u.status === 'kosong').length;
+        const total = terisi + kosong;
+        if (total === 0) {
+          chartContainer.innerHTML = '<p class="text-center p-md">Data unit belum tersedia.</p>';
+          return;
+        }
+
+        const terisiHeight = total > 0 ? (terisi / total) * 100 : 0;
+        const kosongHeight = total > 0 ? (kosong / total) * 100 : 0;
+
+        chartContainer.innerHTML = `
+                    <div class="bar-chart__bar" style="height: ${terisiHeight}%; background-color: var(--color-success);" title="Terisi: ${terisi}">
+                        ${terisi > 0 ? terisi : ''}
+                        <span class="bar-chart__bar-label">Terisi</span>
+                    </div>
+                    <div class="bar-chart__bar" style="height: ${kosongHeight}%; background-color: var(--color-warning);" title="Kosong: ${kosong}">
+                        ${kosong > 0 ? kosong : ''}
+                        <span class="bar-chart__bar-label">Kosong</span>
+                    </div>
+                `;
+      },
+
+      renderSimpleIncomeChart() {
+        const chartContainer = document.getElementById('income-chart-simple');
+        if (!chartContainer) return;
+
+        // Data simulasi pendapatan 6 bulan terakhir
+        const months = Array.from({ length: 6 }, (_, i) => {
+          const d = new Date();
+          d.setMonth(d.getMonth() - i);
+          return d.toLocaleString('id-ID', { month: 'short' });
+        }).reverse();
+
+        const incomeData = months.map(() => Math.floor(Math.random() * (20000000 - 5000000 + 1)) + 5000000); // Random 5jt - 20jt
+        const maxIncome = Math.max(...incomeData, 1); // Hindari pembagian dengan nol
+
+        chartContainer.innerHTML = incomeData.map((income, index) => `
+                    <div class="bar-chart__bar" 
+                         style="height: ${(income / maxIncome) * 100}%; background-color: var(--color-info);" 
+                         title="${months[index]}: ${Utils.formatCurrency(income, this.state.settings.currency)}">
+                        <span class="bar-chart__bar-label">${months[index]}</span>
+                    </div>
+                `).join('');
+      },
+
+      renderRecentActivity() {
+        const container = document.getElementById('recent-activity');
+        if (!container) return;
+
+        if (this.state.activities.length === 0) {
+          container.innerHTML = `<div class="empty-state" style="padding: var(--space-md) 0;">
+                        <div class="empty-icon" style="font-size:1.5rem;">📭</div>
+                        <p class="empty-description" style="font-size:0.9rem;">Tidak ada aktivitas terbaru.</p>
+                    </div>`;
+          return;
+        }
+        const sortedActivities = [...this.state.activities]
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .slice(0, 5);
+
+        container.innerHTML = sortedActivities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            ${activity.type === 'payment' ? '💰' : activity.type === 'maintenance' ? '🔧' : activity.type === 'contract' ? '📜' : '🔔'}
+                        </div>
+                        <div class="activity-content">
+                            <p class="activity-text"><strong>${Utils.sanitizeHTML(activity.title)}:</strong> ${Utils.sanitizeHTML(activity.description)}</p>
+                            <p class="activity-time">${Utils.formatDate(activity.timestamp, { weekday: undefined, hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>
+                    </div>
+                `).join('');
+      },
+
+      renderRecentPayments() {
+        const tbody = document.getElementById('recent-payments');
+        if (!tbody) return;
+
+        if (this.state.payments.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">Tidak ada data pembayaran.</div></td></tr>`;
+          return;
+        }
+        const sortedPayments = [...this.state.payments]
+          .sort((a, b) => new Date(b.paymentDate) - new Date(a.paymentDate))
+          .slice(0, 5);
+
+        tbody.innerHTML = sortedPayments.map(payment => {
+          const contract = this.state.contracts.find(c => c.id === payment.contractId);
+          const tenant = contract ? this.state.tenants.find(t => t.id === contract.tenantId) : null;
+          return `
+                        <tr>
+                            <td>${Utils.sanitizeHTML(contract?.id) || 'N/A'}</td>
+                            <td>${Utils.sanitizeHTML(tenant?.name) || 'Tidak Diketahui'}</td>
+                            <td>${Utils.formatCurrency(payment.amount, this.state.settings.currency)}</td>
+                            <td>${Utils.formatDate(payment.paymentDate)}</td>
+                            <td><span class="badge badge--${payment.status === 'lunas' ? 'success' : 'warning'}">${Utils.capitalize(payment.status)}</span></td>
+                        </tr>
+                    `;
+        }).join('');
+      },
+
+      renderUnits() {
+        const tbody = document.getElementById('units-list');
+        if (!tbody) return;
+        if (this.state.units.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-icon">🏢</div>
+                            <h3 class="empty-title">Belum Ada Unit</h3>
+                            <p class="empty-description">Silakan tambahkan data unit properti Anda.</p>
+                            <button class="btn" data-action="open-modal" data-modal-type="add-unit"><span class="icon">➕</span> Tambah Unit</button>
+                        </div>
+                    </td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.state.units.map(unit => `
+                    <tr>
+                        <td>${Utils.sanitizeHTML(unit.id)}</td>
+                        <td>${Utils.capitalize(Utils.sanitizeHTML(unit.type))}</td>
+                        <td>${Utils.sanitizeHTML(unit.location)}</td>
+                        <td>${Utils.formatCurrency(unit.price, this.state.settings.currency)}</td>
+                        <td><span class="badge badge--${unit.status === 'terisi' ? 'success' : 'warning'}">${Utils.capitalize(unit.status)}</span></td>
+                        <td>
+                            <button class="btn btn--outline btn--sm" data-action="edit-item" data-item-type="unit" data-id="${unit.id}" title="Edit Unit"><span class="icon">✏️</span> <span class="sr-only">Edit</span></button>
+                            <button class="btn btn--outline btn--sm btn--danger" data-action="delete-item" data-item-type="unit" data-id="${unit.id}" title="Hapus Unit"><span class="icon">🗑️</span> <span class="sr-only">Hapus</span></button>
+                        </td>
+                    </tr>
+                `).join('');
+      },
+
+      renderTenants() {
+        const tbody = document.getElementById('tenants-list');
+        if (!tbody) return;
+        if (this.state.tenants.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-icon">👥</div>
+                            <h3 class="empty-title">Belum Ada Penyewa</h3>
+                            <p class="empty-description">Silakan tambahkan data penyewa Anda.</p>
+                            <button class="btn" data-action="open-modal" data-modal-type="add-tenant"><span class="icon">➕</span> Tambah Penyewa</button>
+                        </div>
+                    </td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.state.tenants.map(tenant => {
+          const unit = this.state.units.find(u => u.id === tenant.unitId);
+          return `
+                        <tr>
+                            <td>${Utils.sanitizeHTML(tenant.id)}</td>
+                            <td>
+                                <div class="flex items-center gap-sm">
+                                    <div class="avatar">${Utils.sanitizeHTML(tenant.name.charAt(0).toUpperCase())}</div>
+                                    ${Utils.sanitizeHTML(tenant.name)}
+                                </div>
+                            </td>
+                            <td>${unit ? `${Utils.capitalize(Utils.sanitizeHTML(unit.type))} (${Utils.sanitizeHTML(unit.id)})` : 'Belum ada unit'}</td>
+                            <td>${Utils.sanitizeHTML(tenant.contractId) || 'N/A'}</td>
+                            <td><span class="badge badge--${tenant.status === 'aktif' ? 'success' : 'danger'}">${Utils.capitalize(tenant.status)}</span></td>
+                            <td>
+                                <button class="btn btn--outline btn--sm" data-action="edit-item" data-item-type="tenant" data-id="${tenant.id}" title="Edit Penyewa"><span class="icon">✏️</span> <span class="sr-only">Edit</span></button>
+                                <button class="btn btn--outline btn--sm btn--danger" data-action="delete-item" data-item-type="tenant" data-id="${tenant.id}" title="Hapus Penyewa"><span class="icon">🗑️</span> <span class="sr-only">Hapus</span></button>
+                            </td>
+                        </tr>
+                    `;
+        }).join('');
+      },
+
+      renderContracts() {
+        const tbody = document.getElementById('contracts-list');
+        if (!tbody) return;
+        if (this.state.contracts.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-icon">📜</div>
+                            <h3 class="empty-title">Belum Ada Kontrak</h3>
+                            <p class="empty-description">Silakan buat kontrak baru untuk penyewa.</p>
+                            <button class="btn" data-action="open-modal" data-modal-type="add-contract"><span class="icon">➕</span> Tambah Kontrak</button>
+                        </div>
+                    </td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.state.contracts.map(contract => {
+          const tenant = this.state.tenants.find(t => t.id === contract.tenantId);
+          const unit = this.state.units.find(u => u.id === contract.unitId);
+          return `
+                        <tr>
+                            <td>${Utils.sanitizeHTML(contract.id)}</td>
+                            <td>${Utils.sanitizeHTML(tenant?.name) || 'Tidak Diketahui'}</td>
+                            <td>${Utils.sanitizeHTML(unit?.id) || 'N/A'}</td>
+                            <td>${Utils.formatDate(contract.startDate)}</td>
+                            <td>${Utils.formatDate(contract.endDate)}</td>
+                            <td><span class="badge badge--${contract.status === 'aktif' ? 'success' : contract.status === 'berakhir' ? 'danger' : 'warning'}">${Utils.capitalize(contract.status)}</span></td>
+                            <td>
+                                <button class="btn btn--outline btn--sm" data-action="edit-item" data-item-type="contract" data-id="${contract.id}" title="Edit Kontrak"><span class="icon">✏️</span> <span class="sr-only">Edit</span></button>
+                                <button class="btn btn--outline btn--sm btn--danger" data-action="delete-item" data-item-type="contract" data-id="${contract.id}" title="Hapus Kontrak"><span class="icon">🗑️</span> <span class="sr-only">Hapus</span></button>
+                            </td>
+                        </tr>
+                    `;
+        }).join('');
+      },
+
+      renderPayments() {
+        const tbody = document.getElementById('payments-list');
+        if (!tbody) return;
+        if (this.state.payments.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-icon">💰</div>
+                            <h3 class="empty-title">Belum Ada Pembayaran</h3>
+                            <p class="empty-description">Catat pembayaran sewa yang diterima.</p>
+                            <button class="btn" data-action="open-modal" data-modal-type="add-payment"><span class="icon">➕</span> Tambah Pembayaran</button>
+                        </div>
+                    </td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.state.payments.map(payment => {
+          const contract = this.state.contracts.find(c => c.id === payment.contractId);
+          const tenant = contract ? this.state.tenants.find(t => t.id === contract.tenantId) : null;
+          const unit = contract ? this.state.units.find(u => u.id === contract.unitId) : null;
+          return `
+                        <tr>
+                            <td>${Utils.sanitizeHTML(payment.id)}</td>
+                            <td>${Utils.sanitizeHTML(tenant?.name) || 'Tidak Diketahui'}</td>
+                            <td>${Utils.sanitizeHTML(unit?.id) || 'N/A'}</td>
+                            <td>${Utils.formatCurrency(payment.amount, this.state.settings.currency)}</td>
+                            <td>${Utils.formatDate(payment.paymentDate)}</td>
+                            <td><span class="badge badge--${payment.status === 'lunas' ? 'success' : 'warning'}">${Utils.capitalize(payment.status)}</span></td>
+                            <td>
+                                <button class="btn btn--outline btn--sm" data-action="edit-item" data-item-type="payment" data-id="${payment.id}" title="Edit Pembayaran"><span class="icon">✏️</span> <span class="sr-only">Edit</span></button>
+                                <button class="btn btn--outline btn--sm btn--danger" data-action="delete-item" data-item-type="payment" data-id="${payment.id}" title="Hapus Pembayaran"><span class="icon">🗑️</span> <span class="sr-only">Hapus</span></button>
+                            </td>
+                        </tr>
+                    `;
+        }).join('');
+      },
+
+      renderMaintenance() {
+        const tbody = document.getElementById('maintenance-list');
+        if (!tbody) return;
+        if (this.state.maintenance.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔧</div>
+                            <h3 class="empty-title">Belum Ada Jadwal Pemeliharaan</h3>
+                            <p class="empty-description">Tambahkan jadwal perbaikan atau pemeliharaan unit.</p>
+                            <button class="btn" data-action="open-modal" data-modal-type="add-maintenance"><span class="icon">➕</span> Tambah Jadwal</button>
+                        </div>
+                    </td></tr>`;
+          return;
+        }
+        tbody.innerHTML = this.state.maintenance.map(item => {
+          const unit = this.state.units.find(u => u.id === item.unitId);
+          let statusClass = 'warning';
+          if (item.status === 'selesai') statusClass = 'success';
+          if (item.status === 'dibatalkan') statusClass = 'danger';
+          return `
+                        <tr>
+                            <td>${Utils.sanitizeHTML(item.id)}</td>
+                            <td>${Utils.sanitizeHTML(unit?.id) || 'N/A'}</td>
+                            <td>${Utils.sanitizeHTML(item.description)}</td>
+                            <td>${Utils.formatDate(item.scheduledDate || item.requestDate)}</td>
+                            <td><span class="badge badge--${statusClass}">${Utils.capitalize(item.status)}</span></td>
+                            <td>
+                                <button class="btn btn--outline btn--sm" data-action="edit-item" data-item-type="maintenance" data-id="${item.id}" title="Edit Pemeliharaan"><span class="icon">✏️</span> <span class="sr-only">Edit</span></button>
+                                <button class="btn btn--outline btn--sm btn--danger" data-action="delete-item" data-item-type="maintenance" data-id="${item.id}" title="Hapus Pemeliharaan"><span class="icon">🗑️</span> <span class="sr-only">Hapus</span></button>
+                            </td>
+                        </tr>
+                    `;
+        }).join('');
+      },
+
+      renderReports() {
+        const chartContainer = document.getElementById('report-income-chart-simple');
+        if (!chartContainer) return;
+
+        // Data simulasi pendapatan 12 bulan terakhir untuk laporan
+        const months = Array.from({ length: 12 }, (_, i) => {
+          const d = new Date();
+          d.setMonth(d.getMonth() - i);
+          return d.toLocaleString('id-ID', { month: 'short', year: 'numeric' }); // Tambah tahun
+        }).reverse();
+
+        const incomeData = months.map(() => Math.floor(Math.random() * (30000000 - 5000000 + 1)) + 5000000); // Random 5jt - 30jt
+        const maxIncome = Math.max(...incomeData, 1);
+
+        chartContainer.innerHTML = incomeData.map((income, index) => `
+                    <div class="bar-chart__bar" 
+                         style="height: ${(income / maxIncome) * 100}%; background-color: var(--color-primary);" 
+                         title="${months[index]}: ${Utils.formatCurrency(income, this.state.settings.currency)}">
+                        <span class="bar-chart__bar-label">${months[index].split(' ')[0]}</span> <!-- Hanya bulan singkat -->
+                    </div>
+                `).join('');
+      },
+
+      renderSettings() {
+        const companyNameInput = document.getElementById('settings-company-name');
+        const currencySelect = document.getElementById('settings-currency');
+        const notificationsCheckbox = document.getElementById('settings-notifications');
+
+        if (companyNameInput) companyNameInput.value = this.state.settings.companyName;
+        if (currencySelect) currencySelect.value = this.state.settings.currency;
+        if (notificationsCheckbox) notificationsCheckbox.checked = this.state.settings.notifications;
+      },
+
+      // =============================================
+      // MANAJEMEN MODAL (POPUP FORM)
+      // =============================================
+      openModal(modalType, itemId = null) {
+        const modalElement = document.getElementById('modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalTitleEl = document.getElementById('modal-title');
+        const modalBodyEl = document.getElementById('modal-body');
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+
+        let itemData = null;
+        let title = '';
+        let formHTML = '';
+
+        if (itemId) { // Mode edit
+          const itemTypeMap = {
+            'unit': this.state.units, 'tenant': this.state.tenants, 'contract': this.state.contracts,
+            'payment': this.state.payments, 'maintenance': this.state.maintenance
+          };
+          const collection = itemTypeMap[modalType.replace('edit-', '').replace('add-', '')];
+          if (collection) {
+            itemData = collection.find(item => item.id === itemId);
+          }
+        }
+
+        const baseModalType = modalType.startsWith('add-') ? modalType.substring(4) : modalType.substring(5);
+
+        switch (baseModalType) {
+          case 'unit':
+            title = itemData ? 'Edit Unit Properti' : 'Tambah Unit Baru';
+            formHTML = this.getUnitForm(itemData);
+            break;
+          case 'tenant':
+            title = itemData ? 'Edit Data Penyewa' : 'Tambah Penyewa Baru';
+            formHTML = this.getTenantForm(itemData);
+            break;
+          case 'contract':
+            title = itemData ? 'Edit Kontrak' : 'Tambah Kontrak Baru';
+            formHTML = this.getContractForm(itemData);
+            break;
+          case 'payment':
+            title = itemData ? 'Edit Pembayaran' : 'Tambah Pembayaran Baru';
+            formHTML = this.getPaymentForm(itemData);
+            break;
+          case 'maintenance':
+            title = itemData ? 'Edit Jadwal Pemeliharaan' : 'Tambah Jadwal Pemeliharaan';
+            formHTML = this.getMaintenanceForm(itemData);
+            break;
+          default:
+            console.error('Tipe modal tidak dikenal:', modalType);
+            return;
+        }
+
+        modalTitleEl.textContent = title;
+        modalBodyEl.innerHTML = formHTML;
+        modalSaveBtn.textContent = itemData ? 'Simpan Perubahan' : 'Tambah';
+        modalSaveBtn.dataset.modalType = modalType; // Simpan tipe modal untuk handler save
+        if (itemData) modalSaveBtn.dataset.itemId = itemData.id; // Simpan ID item untuk edit
+
+        this.setState({ ui: { ...this.state.ui, modal: { isOpen: true, type: modalType, data: itemData } } });
+
+        modalOverlay.classList.remove('hidden');
+        modalOverlay.setAttribute('aria-hidden', 'false');
+        modalElement.setAttribute('aria-modal', 'true');
+
+
+        // Fokus ke elemen input pertama di modal
+        const firstInput = modalBodyEl.querySelector('input, select, textarea');
+        if (firstInput) firstInput.focus();
+      },
+
+      closeModal() {
+        const modalOverlay = document.getElementById('modal-overlay');
+        modalOverlay.classList.add('hidden');
+        modalOverlay.setAttribute('aria-hidden', 'true');
+        document.getElementById('modal').setAttribute('aria-modal', 'false');
+        this.setState({ ui: { ...this.state.ui, modal: { isOpen: false, type: null, data: null } } });
+        // Hapus dataset dari tombol save
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+        delete modalSaveBtn.dataset.modalType;
+        delete modalSaveBtn.dataset.itemId;
+      },
+
+      // =============================================
+      // GENERATOR FORM HTML UNTUK MODAL
+      // =============================================
+      getUnitForm(unitData = null) {
+        return `
+                    <form id="unit-form">
+                        <input type="hidden" id="unit-id" value="${unitData?.id || ''}">
+                        <div class="form-group">
+                            <label for="unit-type" class="form-label">Tipe Unit</label>
+                            <select id="unit-type" class="form-select" required>
+                                <option value="apartemen" ${unitData?.type === 'apartemen' ? 'selected' : ''}>Apartemen</option>
+                                <option value="rumah" ${unitData?.type === 'rumah' ? 'selected' : ''}>Rumah</option>
+                                <option value="kos" ${unitData?.type === 'kos' ? 'selected' : ''}>Kos</option>
+                                <option value="kantor" ${unitData?.type === 'kantor' ? 'selected' : ''}>Kantor</option>
+                                <option value="ruko" ${unitData?.type === 'ruko' ? 'selected' : ''}>Ruko</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-location" class="form-label">Lokasi/Alamat</label>
+                            <input type="text" id="unit-location" class="form-input" value="${Utils.sanitizeHTML(unitData?.location || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-price" class="form-label">Harga Sewa (per bulan)</label>
+                            <input type="number" id="unit-price" class="form-input" value="${unitData?.price || ''}" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-size" class="form-label">Ukuran (mis: 45m²)</label>
+                            <input type="text" id="unit-size" class="form-input" value="${Utils.sanitizeHTML(unitData?.size || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-bedrooms" class="form-label">Jumlah Kamar Tidur</label>
+                            <input type="number" id="unit-bedrooms" class="form-input" value="${unitData?.bedrooms || ''}" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-status" class="form-label">Status Unit</label>
+                            <select id="unit-status" class="form-select" required>
+                                <option value="kosong" ${unitData?.status === 'kosong' ? 'selected' : ''}>Kosong</option>
+                                <option value="terisi" ${unitData?.status === 'terisi' ? 'selected' : ''}>Terisi</option>
+                                <option value="maintenance" ${unitData?.status === 'maintenance' ? 'selected' : ''}>Dalam Pemeliharaan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="unit-features" class="form-label">Fitur (pisahkan dengan koma, mis: AC, WiFi)</label>
+                            <input type="text" id="unit-features" class="form-input" value="${Utils.sanitizeHTML(unitData?.features?.join(', ') || '')}">
+                        </div>
+                         <div class="form-group">
+                            <label for="unit-available-date" class="form-label">Tanggal Tersedia</label>
+                            <input type="date" id="unit-available-date" class="form-input" value="${unitData?.availableDate || Utils.getTodayDateString()}">
+                        </div>
+                    </form>
+                `;
+      },
+
+      getTenantForm(tenantData = null) {
+        const unitsOptions = this.state.units
+          .filter(unit => unit.status === 'kosong' || (tenantData && unit.id === tenantData.unitId)) // Hanya unit kosong atau unit yg sedang ditempati tenant ini
+          .map(unit => `<option value="${unit.id}" ${tenantData?.unitId === unit.id ? 'selected' : ''}>${Utils.sanitizeHTML(unit.type)} (${Utils.sanitizeHTML(unit.id)}) - ${Utils.sanitizeHTML(unit.location)}</option>`)
+          .join('');
+
+        return `
+                    <form id="tenant-form">
+                        <input type="hidden" id="tenant-id" value="${tenantData?.id || ''}">
+                        <div class="form-group">
+                            <label for="tenant-name" class="form-label">Nama Lengkap</label>
+                            <input type="text" id="tenant-name" class="form-input" value="${Utils.sanitizeHTML(tenantData?.name || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-email" class="form-label">Email</label>
+                            <input type="email" id="tenant-email" class="form-input" value="${Utils.sanitizeHTML(tenantData?.email || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-phone" class="form-label">Nomor Telepon</label>
+                            <input type="tel" id="tenant-phone" class="form-input" value="${Utils.sanitizeHTML(tenantData?.phone || '')}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-unitId" class="form-label">Unit yang Disewa (Opsional)</label>
+                            <select id="tenant-unitId" class="form-select">
+                                <option value="">-- Pilih Unit --</option>
+                                ${unitsOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-join-date" class="form-label">Tanggal Bergabung</label>
+                            <input type="date" id="tenant-join-date" class="form-input" value="${tenantData?.joinDate || Utils.getTodayDateString()}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-status" class="form-label">Status Penyewa</label>
+                            <select id="tenant-status" class="form-select" required>
+                                <option value="aktif" ${tenantData?.status === 'aktif' ? 'selected' : ''}>Aktif</option>
+                                <option value="tidak aktif" ${tenantData?.status === 'tidak aktif' ? 'selected' : ''}>Tidak Aktif</option>
+                                <option value="calon" ${tenantData?.status === 'calon' ? 'selected' : ''}>Calon Penyewa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tenant-notes" class="form-label">Catatan Tambahan</label>
+                            <textarea id="tenant-notes" class="form-textarea">${Utils.sanitizeHTML(tenantData?.notes || '')}</textarea>
+                        </div>
+                    </form>
+                `;
+      },
+
+      getContractForm(contractData = null) {
+        const tenantsOptions = this.state.tenants
+          .map(tenant => `<option value="${tenant.id}" ${contractData?.tenantId === tenant.id ? 'selected' : ''}>${Utils.sanitizeHTML(tenant.name)} (${Utils.sanitizeHTML(tenant.id)})</option>`)
+          .join('');
+
+        const unitsOptions = this.state.units
+          // Hanya unit kosong atau unit yg terkait dgn kontrak ini
+          .filter(unit => unit.status === 'kosong' || (contractData && unit.id === contractData.unitId))
+          .map(unit => `<option value="${unit.id}" ${contractData?.unitId === unit.id ? 'selected' : ''}>${Utils.sanitizeHTML(unit.type)} (${Utils.sanitizeHTML(unit.id)})</option>`)
+          .join('');
+
+        return `
+                    <form id="contract-form">
+                        <input type="hidden" id="contract-id" value="${contractData?.id || ''}">
+                        <div class="form-group">
+                            <label for="contract-tenantId" class="form-label">Penyewa</label>
+                            <select id="contract-tenantId" class="form-select" required>
+                                <option value="">-- Pilih Penyewa --</option>
+                                ${tenantsOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-unitId" class="form-label">Unit Properti</label>
+                            <select id="contract-unitId" class="form-select" required>
+                                <option value="">-- Pilih Unit --</option>
+                                ${unitsOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-startDate" class="form-label">Tanggal Mulai Kontrak</label>
+                            <input type="date" id="contract-startDate" class="form-input" value="${contractData?.startDate || Utils.getTodayDateString()}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-endDate" class="form-label">Tanggal Selesai Kontrak</label>
+                            <input type="date" id="contract-endDate" class="form-input" value="${contractData?.endDate || ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-monthlyRent" class="form-label">Biaya Sewa Bulanan</label>
+                            <input type="number" id="contract-monthlyRent" class="form-input" value="${contractData?.monthlyRent || ''}" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-deposit" class="form-label">Uang Jaminan (Deposit)</label>
+                            <input type="number" id="contract-deposit" class="form-input" value="${contractData?.deposit || ''}" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-paymentTerm" class="form-label">Termin Pembayaran</label>
+                            <select id="contract-paymentTerm" class="form-select" required>
+                                <option value="bulanan" ${contractData?.paymentTerm === 'bulanan' ? 'selected' : ''}>Bulanan</option>
+                                <option value="3bulanan" ${contractData?.paymentTerm === '3bulanan' ? 'selected' : ''}>Per 3 Bulan</option>
+                                <option value="6bulanan" ${contractData?.paymentTerm === '6bulanan' ? 'selected' : ''}>Per 6 Bulan</option>
+                                <option value="tahunan" ${contractData?.paymentTerm === 'tahunan' ? 'selected' : ''}>Tahunan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-status" class="form-label">Status Kontrak</label>
+                            <select id="contract-status" class="form-select" required>
+                                <option value="aktif" ${contractData?.status === 'aktif' ? 'selected' : ''}>Aktif</option>
+                                <option value="berakhir" ${contractData?.status === 'berakhir' ? 'selected' : ''}>Berakhir</option>
+                                <option value="dibatalkan" ${contractData?.status === 'dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contract-notes" class="form-label">Catatan Kontrak</label>
+                            <textarea id="contract-notes" class="form-textarea">${Utils.sanitizeHTML(contractData?.notes || '')}</textarea>
+                        </div>
+                    </form>
+                `;
+      },
+
+      getPaymentForm(paymentData = null) {
+        const contractsOptions = this.state.contracts
+          .filter(c => c.status === 'aktif' || (paymentData && c.id === paymentData.contractId)) // Hanya kontrak aktif atau yg terkait dgn pembayaran ini
+          .map(contract => {
+            const tenant = this.state.tenants.find(t => t.id === contract.tenantId);
+            return `<option value="${contract.id}" ${paymentData?.contractId === contract.id ? 'selected' : ''}>
+                            ${Utils.sanitizeHTML(contract.id)} (Penyewa: ${Utils.sanitizeHTML(tenant?.name || 'N/A')}, Unit: ${Utils.sanitizeHTML(contract.unitId)})
+                        </option>`;
+          })
+          .join('');
+
+        const currentMonthYear = new Date().toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+
+        return `
+                    <form id="payment-form">
+                        <input type="hidden" id="payment-id" value="${paymentData?.id || ''}">
+                        <div class="form-group">
+                            <label for="payment-contractId" class="form-label">Kontrak Terkait</label>
+                            <select id="payment-contractId" class="form-select" required>
+                                <option value="">-- Pilih Kontrak --</option>
+                                ${contractsOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-amount" class="form-label">Jumlah Pembayaran</label>
+                            <input type="number" id="payment-amount" class="form-input" value="${paymentData?.amount || ''}" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-date" class="form-label">Tanggal Pembayaran</label>
+                            <input type="date" id="payment-date" class="form-input" value="${paymentData?.paymentDate || Utils.getTodayDateString()}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-for-month" class="form-label">Pembayaran Untuk Bulan/Periode</label>
+                            <input type="text" id="payment-for-month" class="form-input" value="${Utils.sanitizeHTML(paymentData?.paymentForMonth || currentMonthYear)}" placeholder="Contoh: Juli 2024">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-method" class="form-label">Metode Pembayaran</label>
+                            <select id="payment-method" class="form-select" required>
+                                <option value="Transfer Bank" ${paymentData?.method === 'Transfer Bank' ? 'selected' : ''}>Transfer Bank</option>
+                                <option value="Tunai" ${paymentData?.method === 'Tunai' ? 'selected' : ''}>Tunai</option>
+                                <option value="Kartu Kredit" ${paymentData?.method === 'Kartu Kredit' ? 'selected' : ''}>Kartu Kredit</option>
+                                <option value="E-Wallet" ${paymentData?.method === 'E-Wallet' ? 'selected' : ''}>E-Wallet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-status" class="form-label">Status Pembayaran</label>
+                            <select id="payment-status" class="form-select" required>
+                                <option value="lunas" ${paymentData?.status === 'lunas' ? 'selected' : ''}>Lunas</option>
+                                <option value="pending" ${paymentData?.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="gagal" ${paymentData?.status === 'gagal' ? 'selected' : ''}>Gagal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-notes" class="form-label">Catatan Pembayaran</label>
+                            <textarea id="payment-notes" class="form-textarea">${Utils.sanitizeHTML(paymentData?.notes || '')}</textarea>
+                        </div>
+                    </form>
+                `;
+      },
+
+      getMaintenanceForm(maintenanceData = null) {
+        const unitsOptions = this.state.units
+          .map(unit => `<option value="${unit.id}" ${maintenanceData?.unitId === unit.id ? 'selected' : ''}>${Utils.sanitizeHTML(unit.type)} (${Utils.sanitizeHTML(unit.id)})</option>`)
+          .join('');
+
+        return `
+                    <form id="maintenance-form">
+                        <input type="hidden" id="maintenance-id" value="${maintenanceData?.id || ''}">
+                        <div class="form-group">
+                            <label for="maintenance-unitId" class="form-label">Unit Properti</label>
+                            <select id="maintenance-unitId" class="form-select" required>
+                                <option value="">-- Pilih Unit --</option>
+                                ${unitsOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-type" class="form-label">Jenis Pemeliharaan</label>
+                            <select id="maintenance-type" class="form-select" required>
+                                <option value="perbaikan" ${maintenanceData?.type === 'perbaikan' ? 'selected' : ''}>Perbaikan</option>
+                                <option value="pembersihan" ${maintenanceData?.type === 'pembersihan' ? 'selected' : ''}>Pembersihan</option>
+                                <option value="inspeksi" ${maintenanceData?.type === 'inspeksi' ? 'selected' : ''}>Inspeksi</option>
+                                <option value="lainnya" ${maintenanceData?.type === 'lainnya' ? 'selected' : ''}>Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-description" class="form-label">Deskripsi Pekerjaan</label>
+                            <textarea id="maintenance-description" class="form-textarea" required>${Utils.sanitizeHTML(maintenanceData?.description || '')}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-requestDate" class="form-label">Tanggal Permintaan</label>
+                            <input type="date" id="maintenance-requestDate" class="form-input" value="${maintenanceData?.requestDate || Utils.getTodayDateString()}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-scheduledDate" class="form-label">Tanggal Dijadwalkan</label>
+                            <input type="date" id="maintenance-scheduledDate" class="form-input" value="${maintenanceData?.scheduledDate || ''}">
+                        </div>
+                         <div class="form-group">
+                            <label for="maintenance-completionDate" class="form-label">Tanggal Selesai (Jika Sudah)</label>
+                            <input type="date" id="maintenance-completionDate" class="form-input" value="${maintenanceData?.completionDate || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-cost" class="form-label">Biaya (Estimasi/Aktual)</label>
+                            <input type="number" id="maintenance-cost" class="form-input" value="${maintenanceData?.cost || ''}" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-status" class="form-label">Status Pemeliharaan</label>
+                            <select id="maintenance-status" class="form-select" required>
+                                <option value="direncanakan" ${maintenanceData?.status === 'direncanakan' ? 'selected' : ''}>Direncanakan</option>
+                                <option value="proses" ${maintenanceData?.status === 'proses' ? 'selected' : ''}>Dalam Proses</option>
+                                <option value="selesai" ${maintenanceData?.status === 'selesai' ? 'selected' : ''}>Selesai</option>
+                                <option value="ditunda" ${maintenanceData?.status === 'ditunda' ? 'selected' : ''}>Ditunda</option>
+                                <option value="dibatalkan" ${maintenanceData?.status === 'dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-technician" class="form-label">Teknisi/Vendor</label>
+                            <input type="text" id="maintenance-technician" class="form-input" value="${Utils.sanitizeHTML(maintenanceData?.technician || '')}">
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-notes" class="form-label">Catatan Tambahan</label>
+                            <textarea id="maintenance-notes" class="form-textarea">${Utils.sanitizeHTML(maintenanceData?.notes || '')}</textarea>
+                        </div>
+                    </form>
+                `;
+      },
+
+      // =============================================
+      // HANDLER UNTUK SIMPAN DATA DARI MODAL
+      // =============================================
+      handleModalSave() {
+        const modalType = document.getElementById('modal-save-btn').dataset.modalType;
+        const itemId = document.getElementById('modal-save-btn').dataset.itemId; // Untuk edit
+        const formId = modalType.replace('add-', '').replace('edit-', '') + '-form'; // e.g. unit-form
+        const formElement = document.getElementById(formId);
+
+        if (!formElement || !formElement.checkValidity()) {
+          // Tampilkan pesan error validasi browser default atau custom
+          formElement.reportValidity();
+          this.showToast('Harap isi semua kolom yang wajib diisi.', 'error');
+          return;
+        }
+
+        let data = {};
+        let successMessage = '';
+
+        // Kumpulkan data dari form
+        // Ini bisa dibuat lebih generik, tapi untuk sekarang spesifik per form
+        switch (formId) {
+          case 'unit-form':
+            data = {
+              id: itemId || Utils.generateId('UNIT-'),
+              type: document.getElementById('unit-type').value,
+              location: document.getElementById('unit-location').value,
+              price: parseFloat(document.getElementById('unit-price').value),
+              size: document.getElementById('unit-size').value,
+              bedrooms: parseInt(document.getElementById('unit-bedrooms').value) || 0,
+              status: document.getElementById('unit-status').value,
+              features: document.getElementById('unit-features').value.split(',').map(f => f.trim()).filter(f => f),
+              availableDate: document.getElementById('unit-available-date').value
+            };
+            if (itemId) { // Edit
+              this.state.units = this.state.units.map(u => u.id === itemId ? data : u);
+              successMessage = 'Data unit berhasil diperbarui.';
+            } else { // Add
+              this.state.units.push(data);
+              successMessage = 'Unit baru berhasil ditambahkan.';
+            }
+            this.addActivityLog('unit', successMessage, `Unit ID: ${data.id}`);
+            break;
+
+          case 'tenant-form':
+            data = {
+              id: itemId || Utils.generateId('TENANT-'),
+              name: document.getElementById('tenant-name').value,
+              email: document.getElementById('tenant-email').value,
+              phone: document.getElementById('tenant-phone').value,
+              unitId: document.getElementById('tenant-unitId').value || null, // Bisa null jika belum ada unit
+              joinDate: document.getElementById('tenant-join-date').value,
+              status: document.getElementById('tenant-status').value,
+              notes: document.getElementById('tenant-notes').value,
+              // contractId akan di-link saat membuat kontrak
+            };
+            if (!Utils.validateEmail(data.email)) {
+              this.showToast('Format email tidak valid.', 'error'); return;
+            }
+            if (!Utils.validatePhone(data.phone)) {
+              this.showToast('Format nomor telepon tidak valid (gunakan 08xx atau +628xx).', 'error'); return;
+            }
+            if (itemId) {
+              this.state.tenants = this.state.tenants.map(t => t.id === itemId ? data : t);
+              successMessage = 'Data penyewa berhasil diperbarui.';
+            } else {
+              this.state.tenants.push(data);
+              successMessage = 'Penyewa baru berhasil ditambahkan.';
+            }
+            this.addActivityLog('tenant', successMessage, `Penyewa: ${data.name}`);
+            break;
+
+          case 'contract-form':
+            data = {
+              id: itemId || Utils.generateId('KTR-'),
+              tenantId: document.getElementById('contract-tenantId').value,
+              unitId: document.getElementById('contract-unitId').value,
+              startDate: document.getElementById('contract-startDate').value,
+              endDate: document.getElementById('contract-endDate').value,
+              monthlyRent: parseFloat(document.getElementById('contract-monthlyRent').value),
+              deposit: parseFloat(document.getElementById('contract-deposit').value) || 0,
+              paymentTerm: document.getElementById('contract-paymentTerm').value,
+              status: document.getElementById('contract-status').value,
+              notes: document.getElementById('contract-notes').value
+            };
+            if (new Date(data.endDate) <= new Date(data.startDate)) {
+              this.showToast('Tanggal selesai kontrak harus setelah tanggal mulai.', 'error'); return;
+            }
+            if (itemId) { // Edit
+              // Jika unit diubah, update status unit lama dan baru
+              const oldContract = this.state.contracts.find(c => c.id === itemId);
+              if (oldContract && oldContract.unitId !== data.unitId) {
+                this.updateUnitStatus(oldContract.unitId, 'kosong');
+                this.updateUnitStatus(data.unitId, data.status === 'aktif' ? 'terisi' : 'kosong');
+              } else {
+                this.updateUnitStatus(data.unitId, data.status === 'aktif' ? 'terisi' : 'kosong');
+              }
+              this.state.contracts = this.state.contracts.map(c => c.id === itemId ? data : c);
+              successMessage = 'Data kontrak berhasil diperbarui.';
+            } else { // Add
+              this.state.contracts.push(data);
+              // Update status unit menjadi 'terisi' jika kontrak aktif
+              if (data.status === 'aktif') {
+                this.updateUnitStatus(data.unitId, 'terisi');
+              }
+              // Link contractId ke tenant
+              const tenant = this.state.tenants.find(t => t.id === data.tenantId);
+              if (tenant) tenant.contractId = data.id;
+
+              successMessage = 'Kontrak baru berhasil ditambahkan.';
+            }
+            this.addActivityLog('contract', successMessage, `Kontrak ID: ${data.id} untuk unit ${data.unitId}`);
+            break;
+
+          case 'payment-form':
+            data = {
+              id: itemId || Utils.generateId('PAY-'),
+              contractId: document.getElementById('payment-contractId').value,
+              amount: parseFloat(document.getElementById('payment-amount').value),
+              paymentDate: document.getElementById('payment-date').value,
+              paymentForMonth: document.getElementById('payment-for-month').value,
+              method: document.getElementById('payment-method').value,
+              status: document.getElementById('payment-status').value,
+              notes: document.getElementById('payment-notes').value
+            };
+            if (itemId) {
+              this.state.payments = this.state.payments.map(p => p.id === itemId ? data : p);
+              successMessage = 'Data pembayaran berhasil diperbarui.';
+            } else {
+              this.state.payments.push(data);
+              successMessage = 'Pembayaran baru berhasil ditambahkan.';
+            }
+            const contractForPayment = this.state.contracts.find(c => c.id === data.contractId);
+            const tenantForPayment = contractForPayment ? this.state.tenants.find(t => t.id === contractForPayment.tenantId) : null;
+            this.addActivityLog('payment', successMessage, `Pembayaran ${Utils.formatCurrency(data.amount)} dari ${tenantForPayment?.name || 'N/A'}`);
+            break;
+
+          case 'maintenance-form':
+            data = {
+              id: itemId || Utils.generateId('MAINT-'),
+              unitId: document.getElementById('maintenance-unitId').value,
+              type: document.getElementById('maintenance-type').value,
+              description: document.getElementById('maintenance-description').value,
+              requestDate: document.getElementById('maintenance-requestDate').value,
+              scheduledDate: document.getElementById('maintenance-scheduledDate').value || null,
+              completionDate: document.getElementById('maintenance-completionDate').value || null,
+              cost: parseFloat(document.getElementById('maintenance-cost').value) || 0,
+              status: document.getElementById('maintenance-status').value,
+              technician: document.getElementById('maintenance-technician').value,
+              notes: document.getElementById('maintenance-notes').value
+            };
+            if (data.completionDate && new Date(data.completionDate) < new Date(data.requestDate)) {
+              this.showToast('Tanggal selesai tidak boleh sebelum tanggal permintaan.', 'error'); return;
+            }
+            if (data.scheduledDate && new Date(data.scheduledDate) < new Date(data.requestDate)) {
+              this.showToast('Tanggal dijadwalkan tidak boleh sebelum tanggal permintaan.', 'error'); return;
+            }
+            if (itemId) {
+              this.state.maintenance = this.state.maintenance.map(m => m.id === itemId ? data : m);
+              successMessage = 'Data pemeliharaan berhasil diperbarui.';
+            } else {
+              this.state.maintenance.push(data);
+              successMessage = 'Jadwal pemeliharaan baru berhasil ditambahkan.';
+            }
+            this.addActivityLog('maintenance', successMessage, `Pemeliharaan untuk unit ${data.unitId}: ${data.description}`);
+            break;
+
+          default:
+            console.error('Tipe form tidak dikenal untuk disimpan:', formId);
+            this.showToast('Terjadi kesalahan internal.', 'error');
+            return;
+        }
+
+        this.setState({ ...this.state }); // Trigger re-render dan save
+        this.closeModal();
+        this.renderSectionContent(this.state.ui.currentSection); // Re-render section aktif
+        this.showToast(successMessage, 'success');
+      },
+
+      // Helper untuk update status unit
+      updateUnitStatus(unitId, newStatus) {
+        const unit = this.state.units.find(u => u.id === unitId);
+        if (unit) {
+          unit.status = newStatus;
+          // Jika status menjadi 'kosong', set availableDate ke hari ini
+          if (newStatus === 'kosong' && unit.availableDate === null) {
+            unit.availableDate = Utils.getTodayDateString();
+          } else if (newStatus !== 'kosong') {
+            unit.availableDate = null; // Jika terisi atau maintenance, tidak ada tanggal tersedia
+          }
+        }
+      },
+
+      // =============================================
+      // HANDLER UNTUK HAPUS ITEM
+      // =============================================
+      handleDeleteItem(itemType, itemId) {
+        const itemNameMap = {
+          'unit': 'Unit', 'tenant': 'Penyewa', 'contract': 'Kontrak',
+          'payment': 'Pembayaran', 'maintenance': 'Jadwal Pemeliharaan'
+        };
+        const itemName = itemNameMap[itemType] || 'Item';
+
+        // Konfirmasi sebelum menghapus
+        if (!confirm(`Apakah Anda yakin ingin menghapus ${itemName} dengan ID: ${itemId}? Tindakan ini tidak dapat dibatalkan.`)) {
+          return;
+        }
+
+        let itemDescriptionForLog = itemId; // Default log description
+
+        switch (itemType) {
+          case 'unit':
+            // Cek apakah unit terkait dengan kontrak aktif
+            if (this.state.contracts.some(c => c.unitId === itemId && c.status === 'aktif')) {
+              this.showToast('Unit tidak dapat dihapus karena masih terkait dengan kontrak aktif.', 'error');
+              return;
+            }
+            const unitToDelete = this.state.units.find(u => u.id === itemId);
+            if (unitToDelete) itemDescriptionForLog = `Unit ${unitToDelete.type} (${unitToDelete.id})`;
+            this.state.units = this.state.units.filter(u => u.id !== itemId);
+            // Hapus juga maintenance yang terkait
+            this.state.maintenance = this.state.maintenance.filter(m => m.unitId !== itemId);
+            break;
+          case 'tenant':
+            // Cek apakah penyewa terkait dengan kontrak aktif
+            if (this.state.contracts.some(c => c.tenantId === itemId && c.status === 'aktif')) {
+              this.showToast('Penyewa tidak dapat dihapus karena masih memiliki kontrak aktif.', 'error');
+              return;
+            }
+            const tenantToDelete = this.state.tenants.find(t => t.id === itemId);
+            if (tenantToDelete) itemDescriptionForLog = `Penyewa ${tenantToDelete.name} (${tenantToDelete.id})`;
+            this.state.tenants = this.state.tenants.filter(t => t.id !== itemId);
+            // Hapus kontrak yang terkait (jika ada yang tidak aktif) atau set tenantId jadi null
+            this.state.contracts.forEach(c => {
+              if (c.tenantId === itemId) {
+                // Sebaiknya kontrak juga dihapus atau diarsipkan, tergantung kebijakan
+                // Untuk demo ini, kita bisa set statusnya jadi tidak valid atau hapus jika tidak aktif
+                if (c.status !== 'aktif') {
+                  this.state.contracts = this.state.contracts.filter(contract => contract.id !== c.id);
+                } else {
+                  // Atau, tandai kontraknya butuh perhatian
+                  c.notes = (c.notes || '') + ` [Penyewa ID ${itemId} telah dihapus]`;
+                }
+              }
+            });
+            break;
+          case 'contract':
+            const contractToDelete = this.state.contracts.find(c => c.id === itemId);
+            if (contractToDelete) {
+              itemDescriptionForLog = `Kontrak ID ${contractToDelete.id} untuk unit ${contractToDelete.unitId}`;
+              // Jika kontrak aktif, ubah status unit menjadi 'kosong'
+              if (contractToDelete.status === 'aktif') {
+                this.updateUnitStatus(contractToDelete.unitId, 'kosong');
+              }
+              // Hapus juga pembayaran yang terkait
+              this.state.payments = this.state.payments.filter(p => p.contractId !== itemId);
+            }
+            this.state.contracts = this.state.contracts.filter(c => c.id !== itemId);
+            break;
+          case 'payment':
+            const paymentToDelete = this.state.payments.find(p => p.id === itemId);
+            if (paymentToDelete) itemDescriptionForLog = `Pembayaran ID ${paymentToDelete.id}`;
+            this.state.payments = this.state.payments.filter(p => p.id !== itemId);
+            break;
+          case 'maintenance':
+            const maintenanceToDelete = this.state.maintenance.find(m => m.id === itemId);
+            if (maintenanceToDelete) itemDescriptionForLog = `Pemeliharaan ID ${maintenanceToDelete.id} untuk unit ${maintenanceToDelete.unitId}`;
+            this.state.maintenance = this.state.maintenance.filter(m => m.id !== itemId);
+            break;
+          default:
+            console.error('Tipe item tidak dikenal untuk dihapus:', itemType);
+            this.showToast('Terjadi kesalahan internal saat menghapus.', 'error');
+            return;
+        }
+
+        this.setState({ ...this.state });
+        this.renderSectionContent(this.state.ui.currentSection); // Re-render section aktif
+        this.showToast(`${itemName} berhasil dihapus.`, 'success');
+        this.addActivityLog(itemType, `${itemName} dihapus`, itemDescriptionForLog);
+      },
+
+      // =============================================
+      // FUNGSI PEMBANTU LAINNYA
+      // =============================================
+      addActivityLog(type, title, description) {
+        const newActivity = {
+          id: Utils.generateId('ACT-'),
+          type: type, // 'payment', 'maintenance', 'contract', 'unit', 'tenant'
+          title: title,
+          description: description,
+          timestamp: new Date().toISOString(),
+          read: false // Aktivitas baru belum dibaca
+        };
+        this.state.activities.unshift(newActivity); // Tambah di awal array
+        if (this.state.activities.length > 50) { // Batasi jumlah log aktivitas
+          this.state.activities.pop();
+        }
+        // Tidak perlu setState di sini jika dipanggil dari fungsi yg sudah setState
+      },
+
+      showToast(message, type = 'info', duration = 3000) {
+        // Buat elemen toast jika belum ada
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+          toastContainer = document.createElement('div');
+          toastContainer.id = 'toast-container';
+          toastContainer.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    `;
+          document.body.appendChild(toastContainer);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.textContent = message;
+        toast.style.cssText = `
+                    padding: 12px 20px;
+                    border-radius: var(--border-radius-md);
+                    color: #fff;
+                    font-size: 0.9rem;
+                    box-shadow: var(--shadow-lg);
+                    opacity: 0;
+                    transform: translateY(20px);
+                    transition: opacity 0.3s ease, transform 0.3s ease;
+                `;
+
+        // Warna berdasarkan tipe
+        const colors = {
+          info: 'var(--color-info)',
+          success: 'var(--color-success)',
+          warning: 'var(--color-warning)',
+          error: 'var(--color-danger)',
+        };
+        toast.style.backgroundColor = colors[type] || colors.info;
+        if (type === 'warning') toast.style.color = '#000';
+
+
+        toastContainer.appendChild(toast);
+
+        // Animasi muncul
+        setTimeout(() => {
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateY(0)';
+        }, 10); // Sedikit delay untuk trigger transisi
+
+        // Hapus toast setelah durasi
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            toast.remove();
+            if (toastContainer.children.length === 0) {
+              // toastContainer.remove(); // Opsional: hapus container jika kosong
+            }
+          }, 300);
+        }, duration);
+      },
+
+      handleSettingsSave(event) {
+        event.preventDefault();
+        const newSettings = {
+          companyName: document.getElementById('settings-company-name').value,
+          currency: document.getElementById('settings-currency').value,
+          notifications: document.getElementById('settings-notifications').checked,
+          theme: this.state.settings.theme, // Ambil tema dari state, jangan dari form
+          language: this.state.settings.language, // Ambil bahasa dari state
+        };
+        this.setState({ settings: newSettings });
+        this.showToast('Pengaturan berhasil disimpan.', 'success');
+        // Perbarui nama perusahaan di logo jika berubah
+        const logoText = document.querySelector('.sidebar-logo-text');
+        if (logoText && this.state.settings.companyName.length <= 15) { // Batasi panjang
+          logoText.textContent = this.state.settings.companyName;
+        } else if (logoText) {
+          logoText.textContent = "Rentelindo"; // Default jika terlalu panjang
+        }
+      },
+
+      // =============================================
+      // EVENT LISTENERS SETUP
+      // =============================================
+      setupEventListeners() {
+        // Navigasi Link Sidebar
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = e.currentTarget.dataset.section;
+            window.location.hash = sectionId; // Ini akan memicu onhashchange
+          });
+        });
+
+        // Hash change untuk routing SPA
+        window.addEventListener('hashchange', () => this.handleRouting());
+
+        // Toggle Tema
+        document.getElementById('theme-toggle-btn').addEventListener('click', () => {
+          const newTheme = this.state.settings.theme === 'light' ? 'dark' : 'light';
+          this.setState({ settings: { ...this.state.settings, theme: newTheme } });
+        });
+
+        // Toggle Sidebar Desktop
+        document.getElementById('desktop-sidebar-toggle').addEventListener('click', () => {
+          this.setState({ ui: { ...this.state.ui, sidebarCollapsed: !this.state.ui.sidebarCollapsed } });
+        });
+
+        // Toggle Sidebar Mobile
+        document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
+          this.toggleMobileSidebar();
+        });
+        document.getElementById('mobile-app-overlay').addEventListener('click', () => {
+          if (this.state.ui.isMobileSidebarOpen) {
+            this.toggleMobileSidebar();
+          }
+        });
+
+
+        // Modal: Tombol Close
+        document.getElementById('modal-close-btn').addEventListener('click', () => this.closeModal());
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => this.closeModal());
+        // Modal: Overlay click untuk close
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+          if (e.target.id === 'modal-overlay') { // Hanya jika klik di overlay, bukan di konten modal
+            this.closeModal();
+          }
+        });
+        // Modal: Tombol Simpan
+        document.getElementById('modal-save-btn').addEventListener('click', () => this.handleModalSave());
+
+        // Event delegation untuk tombol aksi di tabel (Edit, Delete) dan tombol "Tambah" di empty state
+        document.getElementById('app-content').addEventListener('click', (e) => {
+          const targetButton = e.target.closest('button[data-action]');
+          if (targetButton) {
+            const action = targetButton.dataset.action;
+            if (action === 'open-modal') {
+              const modalType = targetButton.dataset.modalType;
+              this.openModal(modalType);
+            } else if (action === 'edit-item') {
+              const itemType = targetButton.dataset.itemType;
+              const itemId = targetButton.dataset.id;
+              this.openModal(`edit-${itemType}`, itemId);
+            } else if (action === 'delete-item') {
+              const itemType = targetButton.dataset.itemType;
+              const itemId = targetButton.dataset.id;
+              this.handleDeleteItem(itemType, itemId);
+            }
+          }
+        });
+
+        // Form Pengaturan
+        const settingsForm = document.getElementById('settings-form');
+        if (settingsForm) settingsForm.addEventListener('submit', (e) => this.handleSettingsSave(e));
+
+        // Keyboard accessibility untuk modal (Escape key)
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.state.ui.modal.isOpen) {
+            this.closeModal();
+          }
+        });
+      },
+
+      toggleMobileSidebar() {
+        this.setState({ ui: { ...this.state.ui, isMobileSidebarOpen: !this.state.ui.isMobileSidebarOpen } });
+      }
+
+    }; // Akhir dari AppState Object
+
+    // =============================================
+    // INISIALISASI APLIKASI KETIKA DOM SIAP
+    // =============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      AppState.init();
+    });
+
+  </script>
+</body>
+
+</html>

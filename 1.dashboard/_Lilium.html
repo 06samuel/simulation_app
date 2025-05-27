@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Manajemen Rental Apartemen</title>
+
+  <!-- Preload Google Fonts untuk kinerja -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Ikon Bootstrap (CDN sebagai fallback, idealnya di-host sendiri atau di-bundle) -->
+  <link rel="preload" as="style"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  </noscript>
+
+  <style>
+    /* ======== AWAL DARI STYLE SHEET UTAMA ======== */
+
+    /*
+     * SISTEM DESAIN DASAR
+     * Variabel CSS untuk konsistensi tema, tipografi, spasi, bayangan, dll.
+     * Mengikuti prinsip desain modular dan mudah dikelola.
+     */
+    :root {
+      /* Palet Warna Semantik HSL - Lebih mudah memanipulasi lightness/saturation */
+      --color-primary-h: 221;
+      --color-primary-s: 83%;
+      --color-primary-l: 56%;
+      --color-primary: hsl(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l));
+      /* Biru Tua */
+      --color-primary-light: hsl(var(--color-primary-h), var(--color-primary-s), 66%);
+      --color-primary-dark: hsl(var(--color-primary-h), var(--color-primary-s), 46%);
+      --color-primary-hover: hsl(var(--color-primary-h), var(--color-primary-s), 50%);
+
+      --color-accent-h: 28;
+      --color-accent-s: 90%;
+      --color-accent-l: 62%;
+      --color-accent: hsl(var(--color-accent-h), var(--color-accent-s), var(--color-accent-l));
+      /* Oranye */
+
+      --color-success-h: 145;
+      --color-success-s: 63%;
+      --color-success-l: 42%;
+      --color-success: hsl(var(--color-success-h), var(--color-success-s), var(--color-success-l));
+      /* Hijau */
+
+      --color-danger-h: 0;
+      --color-danger-s: 79%;
+      --color-danger-l: 51%;
+      --color-danger: hsl(var(--color-danger-h), var(--color-danger-s), var(--color-danger-l));
+      /* Merah */
+
+      --color-warning-h: 45;
+      --color-warning-s: 100%;
+      --color-warning-l: 51%;
+      --color-warning: hsl(var(--color-warning-h), var(--color-warning-s), var(--color-warning-l));
+      /* Kuning */
+
+      --color-info-h: 198;
+      --color-info-s: 93%;
+      --color-info-l: 48%;
+      --color-info: hsl(var(--color-info-h), var(--color-info-s), var(--color-info-l));
+      /* Biru Muda */
+
+      --color-text-main: hsl(215, 25%, 20%);
+      /* Abu-abu Tua Kebiruan */
+      --color-text-muted: hsl(215, 15%, 45%);
+      --color-text-inverse: hsl(0, 0%, 100%);
+      --color-text-disabled: hsl(215, 10%, 65%);
+
+      --color-surface: hsl(0, 0%, 100%);
+      /* Putih */
+      --color-background: hsl(220, 30%, 96%);
+      /* Abu-abu Sangat Muda */
+      --color-border: hsl(220, 20%, 88%);
+      --color-border-focus: var(--color-primary-light);
+
+      /* Tipografi - Skala Modular (misal, Major Third 1.250) */
+      --font-family-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      --font-size-base: 1rem;
+      /* 16px default */
+      --font-size-xs: 0.75rem;
+      /* 12px */
+      --font-size-sm: 0.875rem;
+      /* 14px */
+      --font-size-md: 1.125rem;
+      /* 18px */
+      --font-size-lg: 1.25rem;
+      /* 20px */
+      --font-size-xl: 1.5rem;
+      /* 24px */
+      --font-size-xxl: 2rem;
+      /* 32px */
+      --line-height-base: 1.6;
+
+      /* Skala Spasi - Konsisten */
+      --space-unit: 1rem;
+      --space-xxs: calc(var(--space-unit) * 0.25);
+      /* 4px */
+      --space-xs: calc(var(--space-unit) * 0.5);
+      /* 8px */
+      --space-sm: calc(var(--space-unit) * 0.75);
+      /* 12px */
+      --space-md: var(--space-unit);
+      /* 16px */
+      --space-lg: calc(var(--space-unit) * 1.5);
+      /* 24px */
+      --space-xl: calc(var(--space-unit) * 2);
+      /* 32px */
+      --space-xxl: calc(var(--space-unit) * 3);
+      /* 48px */
+
+      /* Radius Sudut */
+      --radius-xs: 0.25rem;
+      /* 4px */
+      --radius-sm: 0.375rem;
+      /* 6px */
+      --radius-md: 0.5rem;
+      /* 8px */
+      --radius-lg: 0.75rem;
+      /* 12px */
+      --radius-full: 9999px;
+
+      /* Bayangan (Shadows) - Subtle dan Modern */
+      --shadow-color: 220 60% 15%;
+      /* HSL base for shadows */
+      --shadow-xs: 0 1px 2px 0 hsl(var(--shadow-color) / 0.03);
+      --shadow-sm: 0 2px 4px -1px hsl(var(--shadow-color) / 0.05), 0 1px 2px -1px hsl(var(--shadow-color) / 0.04);
+      --shadow-md: 0 4px 8px -2px hsl(var(--shadow-color) / 0.08), 0 2px 4px -2px hsl(var(--shadow-color) / 0.05);
+      --shadow-lg: 0 10px 20px -5px hsl(var(--shadow-color) / 0.1), 0 4px 8px -4px hsl(var(--shadow-color) / 0.06);
+      --shadow-xl: 0 20px 40px -10px hsl(var(--shadow-color) / 0.15), 0 8px 16px -8px hsl(var(--shadow-color) / 0.08);
+
+      /* Transisi */
+      --transition-duration: 0.2s;
+      --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: all var(--transition-duration) var(--transition-timing-function);
+
+      /* Breakpoints Responsif */
+      --breakpoint-sm: 576px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 992px;
+      --breakpoint-xl: 1200px;
+      --breakpoint-xxl: 1400px;
+
+      /* Z-index Layering */
+      --z-index-dropdown: 1000;
+      --z-index-sticky: 1020;
+      --z-index-modal-backdrop: 1040;
+      --z-index-modal: 1050;
+      --z-index-popover: 1060;
+      --z-index-tooltip: 1070;
+      --z-index-toast: 1090;
+    }
+
+    /* ======== AKHIR DARI SISTEM DESAIN DASAR ======== */
+
+
+    /* ======== AWAL DARI RESET DAN NORMALISASI DASAR ======== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      /* Hilangkan highlight biru saat disentuh di mobile */
+    }
+
+    html {
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+      -webkit-text-size-adjust: 100%;
+      /* Cegah zoom teks otomatis di iOS */
+      scroll-behavior: smooth;
+      /* Gulir halus */
+    }
+
+    body {
+      font-family: var(--font-family-main);
+      background-color: var(--color-background);
+      color: var(--color-text-main);
+      min-height: 100vh;
+      display: flex;
+      /* Untuk footer menempel di bawah jika konten pendek */
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      /* Warisi font dari body */
+      border: none;
+      /* Reset border default */
+      outline: none;
+      /* Reset outline default */
+    }
+
+    button {
+      cursor: pointer;
+      background: none;
+      color: inherit;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color var(--transition-duration) ease-in-out;
+    }
+
+    a:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 700;
+      /* Lebih tebal secara default */
+      line-height: 1.2;
+      color: var(--color-text-main);
+      /* Lebih gelap dari teks biasa */
+    }
+
+    h1 {
+      font-size: var(--font-size-xxl);
+      margin-bottom: var(--space-lg);
+    }
+
+    h2 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--space-md);
+    }
+
+    h3 {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--space-sm);
+    }
+
+    h4 {
+      font-size: var(--font-size-md);
+      margin-bottom: var(--space-xs);
+    }
+
+    p {
+      margin-bottom: var(--space-md);
+    }
+
+    ul,
+    ol {
+      list-style-position: inside;
+      padding-left: var(--space-md);
+    }
+
+    /* Perbaikan list style */
+
+    /* Aksesibilitas: Preferensi reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* Aksesibilitas: Focus visible yang lebih jelas */
+    :focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.3);
+      border-radius: var(--radius-xs);
+      /* cocokkan dengan radius elemen */
+    }
+
+    /* ======== AKHIR DARI RESET DAN NORMALISASI DASAR ======== */
+
+
+    /* ======== AWAL DARI KELAS UTILITAS ======== */
+    .container {
+      width: 100%;
+      max-width: var(--breakpoint-xl);
+      /* Maksimum lebar konten */
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: var(--space-md);
+      padding-right: var(--space-md);
+    }
+
+    .visually-hidden {
+      /* Sembunyikan secara visual, tapi tetap ada untuk screen reader */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .d-flex {
+      display: flex !important;
+    }
+
+    .flex-column {
+      flex-direction: column !important;
+    }
+
+    .flex-row {
+      flex-direction: row !important;
+    }
+
+    .justify-content-start {
+      justify-content: flex-start !important;
+    }
+
+    .justify-content-end {
+      justify-content: flex-end !important;
+    }
+
+    .justify-content-center {
+      justify-content: center !important;
+    }
+
+    .justify-content-between {
+      justify-content: space-between !important;
+    }
+
+    .align-items-start {
+      align-items: flex-start !important;
+    }
+
+    .align-items-end {
+      align-items: flex-end !important;
+    }
+
+    .align-items-center {
+      align-items: center !important;
+    }
+
+    .gap-xs {
+      gap: var(--space-xs);
+    }
+
+    .gap-sm {
+      gap: var(--space-sm);
+    }
+
+    .gap-md {
+      gap: var(--space-md);
+    }
+
+    .gap-lg {
+      gap: var(--space-lg);
+    }
+
+    .w-100 {
+      width: 100% !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    .mb-0 {
+      margin-bottom: 0 !important;
+    }
+
+    .mb-xs {
+      margin-bottom: var(--space-xs) !important;
+    }
+
+    .mb-sm {
+      margin-bottom: var(--space-sm) !important;
+    }
+
+    .mb-md {
+      margin-bottom: var(--space-md) !important;
+    }
+
+    .mb-lg {
+      margin-bottom: var(--space-lg) !important;
+    }
+
+    .mt-0 {
+      margin-top: 0 !important;
+    }
+
+    .mt-xs {
+      margin-top: var(--space-xs) !important;
+    }
+
+    .mt-sm {
+      margin-top: var(--space-sm) !important;
+    }
+
+    .mt-md {
+      margin-top: var(--space-md) !important;
+    }
+
+    .mt-lg {
+      margin-top: var(--space-lg) !important;
+    }
+
+    /* Dan seterusnya untuk padding, text color, background color jika dibutuhkan */
+    .text-muted {
+      color: var(--color-text-muted) !important;
+    }
+
+    .text-success {
+      color: var(--color-success) !important;
+    }
+
+    .text-danger {
+      color: var(--color-danger) !important;
+    }
+
+    .text-warning {
+      color: var(--color-warning) !important;
+    }
+
+    /* ======== AKHIR DARI KELAS UTILITAS ======== */
+
+
+    /* ======== AWAL DARI KOMPONEN SPESIFIK APLIKASI ======== */
+
+    /* --- Header / Navbar --- */
+    .app-header {
+      background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary));
+      color: var(--color-text-inverse);
+      padding: var(--space-sm) 0;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      /* Navbar tetap di atas saat scroll */
+      top: 0;
+      z-index: var(--z-index-sticky);
+    }
+
+    .app-header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--color-text-inverse);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .navbar-brand .bi {
+      font-size: var(--font-size-xl);
+    }
+
+    .navbar-nav {
+      display: flex;
+      gap: var(--space-xs);
+    }
+
+    .nav-link {
+      color: var(--color-text-inverse);
+      opacity: 0.85;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      transition: var(--transition-base);
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      opacity: 1;
+      background-color: hsla(0, 0%, 100%, 0.1);
+      text-decoration: none;
+    }
+
+    .nav-link .bi {
+      margin-right: var(--space-xs);
+      vertical-align: text-bottom;
+      /* Icon sejajar dengan teks */
+    }
+
+    .navbar-toggler {
+      /* Tombol untuk menu mobile */
+      display: none;
+      /* Sembunyikan di desktop */
+      padding: var(--space-xs);
+      font-size: var(--font-size-lg);
+      border-radius: var(--radius-sm);
+    }
+
+    .navbar-toggler:hover {
+      background-color: hsla(0, 0%, 100%, 0.1);
+    }
+
+
+    /* --- Main Content Area --- */
+    .app-main {
+      flex-grow: 1;
+      /* Agar main content mengisi sisa ruang */
+      padding-top: var(--space-lg);
+      padding-bottom: var(--space-lg);
+    }
+
+
+    /* --- Kartu (Card) --- */
+    .card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: var(--space-lg);
+      overflow: hidden;
+      /* Untuk border-radius pada elemen anak */
+      transition: box-shadow var(--transition-duration) ease-in-out;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--font-size-md);
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: var(--space-lg);
+    }
+
+    .card-footer {
+      padding: var(--space-md) var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      background-color: hsl(0, 0%, 98%);
+      /* Sedikit beda dari surface */
+    }
+
+    /* --- Statistik Dashboard --- */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .stats-card {
+      background-color: var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      text-align: center;
+      box-shadow: var(--shadow-xs);
+      transition: var(--transition-base);
+      cursor: default;
+      /* Default cursor, kecuali jika interaktif */
+    }
+
+    .stats-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stats-icon {
+      font-size: var(--font-size-xxl);
+      margin-bottom: var(--space-sm);
+      color: var(--color-primary);
+      /* Default icon color */
+    }
+
+    .stats-card .text-warning .stats-icon {
+      color: var(--color-warning);
+    }
+
+    .stats-card .text-success .stats-icon {
+      color: var(--color-success);
+    }
+
+    .stats-card .text-danger .stats-icon {
+      color: var(--color-danger);
+    }
+
+    .stats-card h3 {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin: 0 0 var(--space-xs) 0;
+      color: var(--color-text-main);
+    }
+
+    .stats-card p {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      margin-bottom: 0;
+    }
+
+
+    /* --- Form Elemen --- */
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      color: var(--color-text-main);
+      margin-bottom: var(--space-xs);
+      font-size: var(--font-size-sm);
+    }
+
+    .form-control,
+    .form-select {
+      display: block;
+      width: 100%;
+      padding: var(--space-sm) var(--space-md);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
+      color: var(--color-text-main);
+      background-color: var(--color-surface);
+      background-clip: padding-box;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      transition: border-color var(--transition-duration) ease-in-out, box-shadow var(--transition-duration) ease-in-out;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--color-border-focus);
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.25);
+    }
+
+    .form-control::placeholder {
+      color: var(--color-text-disabled);
+      opacity: 1;
+    }
+
+    textarea.form-control {
+      min-height: calc(var(--line-height-base) * 3em + var(--space-sm) * 2 + 2px);
+      /* Minimal 3 baris */
+      resize: vertical;
+      /* Hanya bisa di-resize vertikal */
+    }
+
+    /* --- Tombol (Button) --- */
+    .btn {
+      display: inline-flex;
+      /* Agar icon dan teks sejajar */
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-lg);
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      line-height: var(--line-height-base);
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      transition: var(--transition-base);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn:hover {
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0px);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn .bi {
+      /* Icon di dalam tombol */
+      margin-right: var(--space-xs);
+      font-size: 1.1em;
+      /* Sedikit lebih besar dari teks tombol */
+    }
+
+    .btn.btn-sm {
+      padding: var(--space-xs) var(--space-sm);
+      font-size: var(--font-size-sm);
+    }
+
+    .btn.btn-lg {
+      padding: var(--space-md) var(--space-xl);
+      font-size: var(--font-size-lg);
+    }
+
+    .btn-primary {
+      color: var(--color-text-inverse);
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+      color: var(--color-text-inverse);
+    }
+
+    .btn-secondary {
+      color: var(--color-text-main);
+      background-color: hsl(220, 15%, 90%);
+      border-color: hsl(220, 15%, 85%);
+    }
+
+    .btn-secondary:hover {
+      background-color: hsl(220, 15%, 85%);
+      border-color: hsl(220, 15%, 80%);
+      color: var(--color-text-main);
+    }
+
+    .btn-success {
+      color: var(--color-text-inverse);
+      background-color: var(--color-success);
+      border-color: var(--color-success);
+    }
+
+    .btn-success:hover {
+      background-color: hsl(var(--color-success-h), var(--color-success-s), calc(var(--color-success-l) - 5%));
+      border-color: hsl(var(--color-success-h), var(--color-success-s), calc(var(--color-success-l) - 5%));
+      color: var(--color-text-inverse);
+    }
+
+    .btn-danger {
+      color: var(--color-text-inverse);
+      background-color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+
+    .btn-danger:hover {
+      background-color: hsl(var(--color-danger-h), var(--color-danger-s), calc(var(--color-danger-l) - 5%));
+      border-color: hsl(var(--color-danger-h), var(--color-danger-s), calc(var(--color-danger-l) - 5%));
+      color: var(--color-text-inverse);
+    }
+
+    .btn-warning {
+      color: var(--color-text-main);
+      background-color: var(--color-warning);
+      border-color: var(--color-warning);
+    }
+
+    /* Teks gelap untuk kontras */
+    .btn-warning:hover {
+      background-color: hsl(var(--color-warning-h), var(--color-warning-s), calc(var(--color-warning-l) - 5%));
+      border-color: hsl(var(--color-warning-h), var(--color-warning-s), calc(var(--color-warning-l) - 5%));
+      color: var(--color-text-main);
+    }
+
+    .btn-info {
+      color: var(--color-text-inverse);
+      background-color: var(--color-info);
+      border-color: var(--color-info);
+    }
+
+    .btn-info:hover {
+      background-color: hsl(var(--color-info-h), var(--color-info-s), calc(var(--color-info-l) - 5%));
+      border-color: hsl(var(--color-info-h), var(--color-info-s), calc(var(--color-info-l) - 5%));
+      color: var(--color-text-inverse);
+    }
+
+    .btn-group .btn {
+      /* Grup tombol, hilangkan radius di sisi yang bersentuhan */
+      border-radius: 0;
+    }
+
+    .btn-group .btn:first-child {
+      border-top-left-radius: var(--radius-sm);
+      border-bottom-left-radius: var(--radius-sm);
+    }
+
+    .btn-group .btn:last-child {
+      border-top-right-radius: var(--radius-sm);
+      border-bottom-right-radius: var(--radius-sm);
+    }
+
+    .btn-group .btn:not(:last-child) {
+      margin-right: -1px;
+    }
+
+    /* Agar border tumpang tindih */
+
+
+    /* --- Tabel --- */
+    .table-responsive {
+      overflow-x: auto;
+      /* Scroll horizontal jika tabel terlalu lebar */
+      -webkit-overflow-scrolling: touch;
+      /* Scroll halus di iOS */
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 0;
+      /* Dihandle oleh .card-body atau .table-responsive */
+      border-collapse: collapse;
+      /* Border antar sel yang lebih rapi */
+      background-color: var(--color-surface);
+    }
+
+    .table th,
+    .table td {
+      padding: var(--space-sm) var(--space-md);
+      vertical-align: middle;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .table thead th {
+      font-weight: 600;
+      background-color: hsl(220, 30%, 97%);
+      /* Header tabel sedikit beda */
+      color: var(--color-text-main);
+      border-bottom-width: 2px;
+      /* Border header lebih tebal */
+    }
+
+    .table tbody tr:last-child td {
+      /* Hilangkan border bawah di baris terakhir */
+      border-bottom: none;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: hsla(var(--color-primary-h), var(--color-primary-s), 95%, 0.5);
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    .table .action-buttons .btn {
+      /* Tombol aksi di tabel */
+      padding: var(--space-xs);
+      font-size: var(--font-size-sm);
+      /* Icon lebih kecil */
+    }
+
+    .table .action-buttons .btn .bi {
+      margin-right: 0;
+      /* Hanya icon, tidak perlu margin */
+    }
+
+    .table .action-buttons {
+      display: flex;
+      gap: var(--space-xs);
+      flex-wrap: nowrap;
+      /* Agar tidak turun baris */
+    }
+
+    /* --- Status Badge --- */
+    .status-badge {
+      display: inline-block;
+      padding: var(--space-xxs) var(--space-sm);
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: var(--radius-full);
+      /* Bentuk pil */
+      text-transform: capitalize;
+    }
+
+    .status-badge.status-pending {
+      background-color: var(--color-warning);
+      color: var(--color-text-main);
+    }
+
+    .status-badge.status-approved {
+      background-color: var(--color-success);
+      color: var(--color-text-inverse);
+    }
+
+    .status-badge.status-rejected {
+      background-color: var(--color-danger);
+      color: var(--color-text-inverse);
+    }
+
+    .status-badge.status-default {
+      background-color: var(--color-text-muted);
+      color: var(--color-text-inverse);
+    }
+
+
+    /* --- Modal (Jendela Pop-up) --- */
+    .modal {
+      display: none;
+      /* Sembunyikan secara default */
+      position: fixed;
+      z-index: var(--z-index-modal);
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      /* Scroll jika konten modal panjang */
+      background-color: hsla(0, 0%, 0%, 0.5);
+      /* Backdrop gelap transparan */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-duration) ease-in-out, visibility 0s var(--transition-duration) linear;
+    }
+
+    .modal.is-open {
+      display: flex;
+      /* Menggunakan flex untuk centering */
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .modal-dialog {
+      background-color: var(--color-surface);
+      margin: auto;
+      /* Tengah horizontal dan vertikal (dibantu flex di .modal) */
+      padding: 0;
+      /* Padding dihandle oleh header, body, footer modal */
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 90%;
+      max-width: 600px;
+      /* Lebar modal default */
+      transform: scale(0.95) translateY(-20px);
+      transition: transform var(--transition-duration) var(--transition-timing-function);
+      overflow: hidden;
+      /* Untuk border-radius anak */
+    }
+
+    .modal.is-open .modal-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-dialog-lg {
+      max-width: 800px;
+    }
+
+    .modal-dialog-sm {
+      max-width: 400px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .modal-title {
+      font-size: var(--font-size-md);
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    .btn-close {
+      /* Tombol close di modal */
+      font-size: var(--font-size-lg);
+      padding: var(--space-xs);
+      opacity: 0.7;
+      border-radius: var(--radius-full);
+    }
+
+    .btn-close:hover {
+      opacity: 1;
+      background-color: hsl(0, 0%, 90%);
+    }
+
+    .modal-body {
+      padding: var(--space-lg);
+      overflow-y: auto;
+      /* Jika konten body modal panjang */
+      max-height: 60vh;
+      /* Batasi tinggi body modal */
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      background-color: hsl(0, 0%, 98%);
+    }
+
+    .request-details-view {
+      /* Khusus untuk detail di modal lihat */
+      background-color: var(--color-background);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .request-details-view p {
+      margin-bottom: var(--space-xs);
+      font-size: var(--font-size-sm);
+    }
+
+    .request-details-view strong {
+      font-weight: 600;
+    }
+
+
+    /* --- Toast Notification --- */
+    .toast-container {
+      position: fixed;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      z-index: var(--z-index-toast);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      max-width: 350px;
+      /* Lebar maksimum toast */
+    }
+
+    .toast {
+      background-color: var(--color-text-main);
+      color: var(--color-text-inverse);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity var(--transition-duration) ease-in-out, transform var(--transition-duration) ease-in-out;
+      min-width: 250px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .toast-body {
+      flex-grow: 1;
+      font-size: var(--font-size-sm);
+    }
+
+    .toast .btn-close {
+      /* Tombol close di toast */
+      margin-left: var(--space-md);
+      color: var(--color-text-inverse);
+      opacity: 0.8;
+    }
+
+    .toast .btn-close:hover {
+      opacity: 1;
+      background: none;
+    }
+
+    .toast.bg-success {
+      background-color: var(--color-success);
+    }
+
+    .toast.bg-danger {
+      background-color: var(--color-danger);
+    }
+
+    .toast.bg-warning {
+      background-color: var(--color-warning);
+      color: var(--color-text-main);
+    }
+
+    .toast.bg-info {
+      background-color: var(--color-info);
+    }
+
+    /* ======== AKHIR DARI KOMPONEN SPESIFIK APLIKASI ======== */
+
+
+    /* ======== AWAL DARI GRID RESPONSIVE SEDERHANA (JIKA DIPERLUKAN, alternatif dari flex/grid di atas) ======== */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: calc(var(--space-md) / -2);
+      margin-right: calc(var(--space-md) / -2);
+    }
+
+    .col,
+    [class^="col-"] {
+      position: relative;
+      width: 100%;
+      padding-left: calc(var(--space-md) / 2);
+      padding-right: calc(var(--space-md) / 2);
+    }
+
+    /* Contoh: .col-md-6 -> 50% width di breakpoint md ke atas */
+    @media (min-width: var(--breakpoint-md)) {
+      .col-md-2 {
+        flex: 0 0 16.666667%;
+        max-width: 16.666667%;
+      }
+
+      .col-md-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+
+      .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
+
+      .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .col-md-auto {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+      }
+    }
+
+    /* Tambahkan breakpoint lain jika perlu (sm, lg, xl) */
+    /* ======== AKHIR DARI GRID RESPONSIVE SEDERHANA ======== */
+
+
+    /* ======== AWAL DARI PENYESUAIAN RESPONSIVE GLOBAL ======== */
+    @media (max-width: calc(var(--breakpoint-lg) - 1px)) {
+      /* Penyesuaian untuk layar lebih kecil dari LG */
+    }
+
+    @media (max-width: calc(var(--breakpoint-md) - 1px)) {
+
+      /* Penyesuaian untuk tablet dan di bawahnya */
+      .navbar-nav {
+        /* Menu navigasi menjadi vertikal dan tersembunyi */
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: var(--color-primary);
+        /* Warna sama dengan navbar */
+        position: absolute;
+        top: 100%;
+        /* Tepat di bawah header */
+        left: 0;
+        box-shadow: var(--shadow-sm);
+        padding: var(--space-sm) 0;
+      }
+
+      .navbar-nav.is-open {
+        display: flex;
+      }
+
+      .navbar-nav .nav-link {
+        padding: var(--space-sm) var(--space-md);
+        width: 100%;
+        border-radius: 0;
+      }
+
+      .navbar-toggler {
+        display: block;
+        /* Tampilkan tombol menu mobile */
+      }
+
+      .dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .modal-dialog {
+        width: 95%;
+        margin-top: var(--space-lg);
+        margin-bottom: var(--space-lg);
+      }
+
+      .modal-body {
+        max-height: 70vh;
+      }
+    }
+
+    @media (max-width: calc(var(--breakpoint-sm) - 1px)) {
+
+      /* Penyesuaian untuk mobile */
+      :root {
+        /* Ukuran font dasar sedikit lebih kecil di mobile */
+        --font-size-base: 0.9375rem;
+        /* 15px */
+      }
+
+      .container {
+        padding-left: var(--space-sm);
+        padding-right: var(--space-sm);
+      }
+
+      .dashboard-stats {
+        grid-template-columns: 1fr;
+        /* Satu kolom di mobile */
+      }
+
+      .stats-card {
+        padding: var(--space-md);
+      }
+
+      .stats-icon {
+        font-size: var(--font-size-xl);
+      }
+
+      .stats-card h3 {
+        font-size: var(--font-size-lg);
+      }
+
+      .card-body,
+      .card-header,
+      .card-footer {
+        padding: var(--space-md);
+      }
+
+      .table th,
+      .table td {
+        padding: var(--space-sm);
+        font-size: var(--font-size-sm);
+        white-space: nowrap;
+        /* Mencegah teks wrap di tabel, biarkan scroll horizontal */
+      }
+
+      .action-buttons {
+        /* Tombol aksi mungkin butuh penyesuaian lagi */
+        flex-wrap: wrap;
+        /* Biarkan tombol turun jika tidak muat */
+      }
+
+      .modal-footer {
+        flex-direction: column;
+        /* Tombol modal bertumpuk */
+        align-items: stretch;
+        /* Tombol jadi full width */
+      }
+
+      .toast-container {
+        top: var(--space-sm);
+        right: var(--space-sm);
+        left: var(--space-sm);
+        max-width: none;
+        width: auto;
+      }
+    }
+
+    /* ======== AKHIR DARI PENYESUAIAN RESPONSIVE GLOBAL ======== */
+  </style>
+</head>
+
+<body>
+  <!-- Header Aplikasi -->
+  <header class="app-header" role="banner">
+    <div class="container">
+      <a class="navbar-brand" href="#" aria-current="page">
+        <i class="bi bi-buildings-fill"></i> RentApart
+      </a>
+      <button class="navbar-toggler" type="button" id="navbarToggler" aria-label="Toggle navigation"
+        aria-expanded="false" aria-controls="navbarNav">
+        <i class="bi bi-list"></i>
+      </button>
+      <nav class="navbar-nav" id="navbarNav" aria-label="Navigasi Utama">
+        <a class="nav-link active" href="#" data-route="dashboard" tabindex="0"><i class="bi bi-grid-1x2-fill"></i>
+          Dashboard</a>
+        <a class="nav-link" href="#" data-action="openAddRequestModal" tabindex="0">
+          <i class="bi bi-plus-circle-fill"></i> Permohonan Baru
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Konten Utama Aplikasi -->
+  <main class="app-main" id="main-content" tabindex="-1" role="main">
+    <div class="container">
+      <!-- Statistik Dashboard -->
+      <section class="dashboard-stats mb-lg" aria-labelledby="stats-heading">
+        <h2 id="stats-heading" class="visually-hidden">Statistik Permohonan</h2>
+        <div class="stats-card">
+          <i class="bi bi-journal-text stats-icon"></i>
+          <h3 id="totalRequests">0</h3>
+          <p>Total Permohonan</p>
+        </div>
+        <div class="stats-card text-warning">
+          <i class="bi bi-hourglass-split stats-icon"></i>
+          <h3 id="pendingRequests">0</h3>
+          <p>Menunggu</p>
+        </div>
+        <div class="stats-card text-success">
+          <i class="bi bi-check-circle-fill stats-icon"></i>
+          <h3 id="approvedRequests">0</h3>
+          <p>Disetujui</p>
+        </div>
+        <div class="stats-card text-danger">
+          <i class="bi bi-x-circle-fill stats-icon"></i>
+          <h3 id="rejectedRequests">0</h3>
+          <p>Ditolak</p>
+        </div>
+      </section>
+
+      <!-- Filter dan Pencarian -->
+      <section class="card mb-lg" aria-labelledby="filter-heading">
+        <div class="card-header">
+          <h2 id="filter-heading" class="h4 mb-0">Filter Permohonan</h2>
+        </div>
+        <div class="card-body">
+          <form id="filterForm" class="row" role="search">
+            <div class="form-group col-md-3">
+              <label for="searchInput" class="visually-hidden">Cari Permohonan</label>
+              <input type="search" class="form-control" id="searchInput" placeholder="Cari ID atau Penyewa..." />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="filterType" class="form-label">Tipe</label>
+              <select class="form-select" id="filterType">
+                <option value="">Semua Tipe</option>
+                <option value="sewa">Sewa</option>
+                <option value="perpanjangan">Perpanjangan</option>
+                <option value="keluar">Keluar Unit</option>
+                <option value="perbaikan">Permintaan Perbaikan</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="filterBranch" class="form-label">Apartemen</label>
+              <select class="form-select" id="filterBranch">
+                <option value="">Semua Apartemen</option>
+                <option value="apt1">Apartemen Utama</option>
+                <option value="apt2">Apartemen Kota</option>
+                <option value="apt3">Apartemen Pinggir Kota</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="filterStatus" class="form-label">Status</label>
+              <select class="form-select" id="filterStatus">
+                <option value="">Semua Status</option>
+                <option value="pending">Menunggu</option>
+                <option value="approved">Disetujui</option>
+                <option value="rejected">Ditolak</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3 d-flex align-items-end">
+              <button class="btn btn-primary w-100" id="refreshData" type="button">
+                <i class="bi bi-arrow-clockwise"></i> Muat Ulang
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Tabel Permohonan -->
+      <section class="card" aria-labelledby="requests-table-heading">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h2 id="requests-table-heading" class="h4 mb-0">Daftar Permohonan</h2>
+          <button class="btn btn-primary btn-sm" data-action="openAddRequestModal">
+            <i class="bi bi-plus-lg"></i> Tambah Permohonan
+          </button>
+        </div>
+        <div class="card-body p-0"> <!-- Padding 0 agar table responsive menyentuh tepi card -->
+          <div class="table-responsive">
+            <table class="table table-hover" aria-live="polite">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Penyewa</th>
+                  <th scope="col">Tipe</th>
+                  <th scope="col">Apartemen</th>
+                  <th scope="col">Diajukan</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody">
+                <!-- Baris tabel akan diisi oleh JavaScript -->
+                <tr>
+                  <td colspan="7" class="text-center p-lg">
+                    <div class="empty-state">
+                      <i class="bi bi-inbox" style="font-size: 3rem; color: var(--color-text-disabled);"></i>
+                      <p class="mt-sm mb-0 text-muted">Tidak ada permohonan untuk ditampilkan.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer Aplikasi (Contoh Sederhana) -->
+  <footer class="app-footer mt-auto py-3 bg-light border-top">
+    <div class="container text-center">
+      <small class="text-muted">© <span id="currentYear"></span> Sistem Manajemen Rental Apartemen. Hak Cipta
+        Dilindungi.</small>
+    </div>
+  </footer>
+
+  <!-- Kontainer untuk Toast Notification -->
+  <div class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Modal: Tambah/Edit Permohonan -->
+  <div class="modal" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true"
+    role="dialog">
+    <div class="modal-dialog modal-dialog-lg">
+      <div class="modal-content">
+        <form id="requestForm" novalidate>
+          <input type="hidden" id="requestId" name="id"> <!-- Untuk mode edit -->
+          <div class="modal-header">
+            <h3 class="modal-title" id="requestModalLabel">Formulir Permohonan</h3>
+            <button type="button" class="btn-close" data-action="closeModal" aria-label="Tutup">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Detail Permohonan (hanya tampil di mode lihat/edit) -->
+            <div id="viewRequestDetailsContainer" class="request-details-view" style="display: none;">
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Penyewa:</strong> <span id="viewEmployeeName"></span></p>
+                  <p><strong>Apartemen:</strong> <span id="viewApartmentName"></span></p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Tanggal Diajukan:</strong> <span id="viewSubmissionDate"></span></p>
+                  <p><strong>Status Saat Ini:</strong> <span id="viewCurrentStatus"></span></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="form-label" for="requestType">Tipe Permohonan</label>
+                <select class="form-select" id="requestType" name="type" required>
+                  <option value="" disabled selected>Pilih Tipe...</option>
+                  <option value="sewa">Sewa</option>
+                  <option value="perpanjangan">Perpanjangan</option>
+                  <option value="keluar">Keluar Unit</option>
+                  <option value="perbaikan">Permintaan Perbaikan</option>
+                </select>
+                <div class="invalid-feedback">Tipe permohonan wajib diisi.</div>
+              </div>
+              <div class="form-group col-md-6">
+                <label class="form-label" for="apartmentBranch">Apartemen</label>
+                <select class="form-select" id="apartmentBranch" name="apartmentBranch" required>
+                  <option value="" disabled selected>Pilih Apartemen...</option>
+                  <option value="apt1">Apartemen Utama</option>
+                  <option value="apt2">Apartemen Kota</option>
+                  <option value="apt3">Apartemen Pinggir Kota</option>
+                </select>
+                <div class="invalid-feedback">Apartemen wajib dipilih.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="requestDetails">Detail Permohonan</label>
+              <textarea class="form-control" id="requestDetails" name="details" rows="3" required
+                placeholder="Jelaskan detail permohonan Anda..."></textarea>
+              <div class="invalid-feedback">Detail permohonan wajib diisi.</div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="form-label" for="startDate">Tanggal Mulai</label>
+                <input type="date" class="form-control" id="startDate" name="startDate" required />
+                <div class="invalid-feedback">Tanggal mulai wajib diisi.</div>
+              </div>
+              <div class="form-group col-md-6">
+                <label class="form-label" for="endDate">Tanggal Selesai</label>
+                <input type="date" class="form-control" id="endDate" name="endDate" required />
+                <div class="invalid-feedback">Tanggal selesai wajib diisi dan tidak boleh sebelum tanggal mulai.</div>
+              </div>
+            </div>
+            <div class="form-group col-md-6" id="employeeNameGroup"> <!-- Ditambah untuk nama penyewa -->
+              <label class="form-label" for="employeeName">Nama Penyewa</label>
+              <input type="text" class="form-control" id="employeeName" name="employeeName" required
+                placeholder="Masukkan nama lengkap penyewa">
+              <div class="invalid-feedback">Nama penyewa wajib diisi.</div>
+            </div>
+          </div>
+          <div class="modal-footer" id="modalActions">
+            <!-- Tombol akan di-render oleh JavaScript tergantung mode -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template untuk baris tabel permohonan (digunakan oleh JS) -->
+  <template id="requestRowTemplate">
+    <tr>
+      <td data-label="ID"></td>
+      <td data-label="Penyewa"></td>
+      <td data-label="Tipe"></td>
+      <td data-label="Apartemen"></td>
+      <td data-label="Diajukan"></td>
+      <td data-label="Status"><span class="status-badge"></span></td>
+      <td data-label="Aksi" class="text-center">
+        <div class="action-buttons btn-group">
+          <button class="btn btn-sm btn-info" title="Lihat Detail" data-action="view">
+            <i class="bi bi-eye-fill"></i> <span class="visually-hidden">Lihat</span>
+          </button>
+          <button class="btn btn-sm btn-warning" title="Ubah Permohonan" data-action="edit">
+            <i class="bi bi-pencil-fill"></i> <span class="visually-hidden">Ubah</span>
+          </button>
+          <button class="btn btn-sm btn-danger" title="Hapus Permohonan" data-action="delete">
+            <i class="bi bi-trash-fill"></i> <span class="visually-hidden">Hapus</span>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </template>
+
+  <script>
+    // Enkapsulasi semua kode JavaScript dalam IIFE untuk menghindari polusi global scope
+    (function () {
+      "use strict"; // Aktifkan strict mode untuk kualitas kode yang lebih baik
+
+      // STATE APLIKASI (Single Source of Truth)
+      // Menyimpan semua data dan kondisi UI aplikasi
+      const appState = {
+        requests: [], // Daftar semua permohonan
+        currentModalMode: null, // 'add', 'edit', 'view'
+        currentEditingId: null, // ID permohonan yang sedang diedit/dilihat
+        filters: {
+          search: "",
+          type: "",
+          branch: "",
+          status: "",
+        },
+        ui: { // Referensi ke elemen UI penting
+          navbarToggler: document.getElementById('navbarToggler'),
+          navbarNav: document.getElementById('navbarNav'),
+          // Statistik
+          totalRequestsElem: document.getElementById('totalRequests'),
+          pendingRequestsElem: document.getElementById('pendingRequests'),
+          approvedRequestsElem: document.getElementById('approvedRequests'),
+          rejectedRequestsElem: document.getElementById('rejectedRequests'),
+          // Filter
+          searchInputElem: document.getElementById('searchInput'),
+          filterTypeElem: document.getElementById('filterType'),
+          filterBranchElem: document.getElementById('filterBranch'),
+          filterStatusElem: document.getElementById('filterStatus'),
+          refreshDataBtn: document.getElementById('refreshData'),
+          // Tabel
+          requestsTableBody: document.getElementById('requestsTableBody'),
+          requestRowTemplate: document.getElementById('requestRowTemplate'),
+          // Modal
+          requestModal: document.getElementById('requestModal'),
+          requestModalLabel: document.getElementById('requestModalLabel'),
+          requestForm: document.getElementById('requestForm'),
+          requestIdInput: document.getElementById('requestId'), // Hidden input for ID
+          modalActionsContainer: document.getElementById('modalActions'),
+          // View details in modal
+          viewRequestDetailsContainer: document.getElementById('viewRequestDetailsContainer'),
+          viewEmployeeNameElem: document.getElementById('viewEmployeeName'),
+          viewApartmentNameElem: document.getElementById('viewApartmentName'),
+          viewSubmissionDateElem: document.getElementById('viewSubmissionDate'),
+          viewCurrentStatusElem: document.getElementById('viewCurrentStatus'),
+          // Toast
+          toastContainer: document.querySelector('.toast-container'),
+          // Footer
+          currentYearElem: document.getElementById('currentYear'),
+        }
+      };
+
+      // UTILITIES / HELPERS
+      // Fungsi-fungsi bantuan yang sering digunakan
+      const utils = {
+        // Debounce: Menunda eksekusi fungsi hingga user berhenti mengetik/berinteraksi
+        debounce: (func, delay = 300) => {
+          let timeoutId;
+          return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+          };
+        },
+        // Generate ID unik sederhana
+        generateId: () => `REQ-${Date.now().toString().slice(-6)}${Math.random().toString(36).substr(2, 4)}`,
+        // Format tanggal ke YYYY-MM-DD
+        formatDateForInput: (dateString) => {
+          if (!dateString) return '';
+          const date = new Date(dateString);
+          return date.toISOString().split('T')[0];
+        },
+        // Format tanggal untuk tampilan (DD MMMM YYYY)
+        formatDateForDisplay: (dateString) => {
+          if (!dateString) return 'N/A';
+          const date = new Date(dateString);
+          return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+        },
+        // Mendapatkan label dari value (misal untuk select option)
+        getApartmentLabel: (value) => {
+          const options = { apt1: 'Apartemen Utama', apt2: 'Apartemen Kota', apt3: 'Apartemen Pinggir Kota' };
+          return options[value] || value;
+        },
+        getRequestTypeLabel: (value) => {
+          const options = { sewa: 'Sewa', perpanjangan: 'Perpanjangan', keluar: 'Keluar Unit', perbaikan: 'Permintaan Perbaikan' };
+          return options[value] || value;
+        },
+        // Sanitasi input string sederhana untuk mencegah XSS dasar
+        sanitizeHTML: (str) => {
+          const temp = document.createElement('div');
+          temp.textContent = str;
+          return temp.innerHTML;
+        }
+      };
+
+      // LOGIKA PERSISTENSI DATA (LocalStorage)
+      const dataService = {
+        loadRequests: () => {
+          try {
+            const storedRequests = localStorage.getItem('apartmentRequests');
+            return storedRequests ? JSON.parse(storedRequests) : [];
+          } catch (error) {
+            console.error("Gagal memuat data dari localStorage:", error);
+            showToast("Gagal memuat data. Data mungkin korup.", "danger");
+            return [];
+          }
+        },
+        saveRequests: () => {
+          try {
+            localStorage.setItem('apartmentRequests', JSON.stringify(appState.requests));
+          } catch (error) {
+            console.error("Gagal menyimpan data ke localStorage:", error);
+            showToast("Gagal menyimpan data. Penyimpanan mungkin penuh.", "danger");
+          }
+        }
+      };
+
+      // RENDER FUNCTIONS
+      // Fungsi-fungsi yang bertanggung jawab untuk menampilkan data ke UI
+      const render = {
+        dashboardStats: () => {
+          const stats = { total: 0, pending: 0, approved: 0, rejected: 0 };
+          appState.requests.forEach(req => {
+            stats.total++;
+            if (req.status === 'pending') stats.pending++;
+            else if (req.status === 'approved') stats.approved++;
+            else if (req.status === 'rejected') stats.rejected++;
+          });
+
+          appState.ui.totalRequestsElem.textContent = stats.total;
+          appState.ui.pendingRequestsElem.textContent = stats.pending;
+          appState.ui.approvedRequestsElem.textContent = stats.approved;
+          appState.ui.rejectedRequestsElem.textContent = stats.rejected;
+        },
+
+        requestsTable: () => {
+          const { requestsTableBody, requestRowTemplate } = appState.ui;
+          requestsTableBody.innerHTML = ''; // Kosongkan tabel
+
+          const filteredRequests = appState.requests.filter(req => {
+            const searchLower = appState.filters.search.toLowerCase();
+            const matchesSearch = !appState.filters.search ||
+              req.id.toLowerCase().includes(searchLower) ||
+              req.employeeName.toLowerCase().includes(searchLower);
+            const matchesType = !appState.filters.type || req.type === appState.filters.type;
+            const matchesBranch = !appState.filters.branch || req.apartmentBranch === appState.filters.branch;
+            const matchesStatus = !appState.filters.status || req.status === appState.filters.status;
+            return matchesSearch && matchesType && matchesBranch && matchesStatus;
+          });
+
+          if (filteredRequests.length === 0) {
+            requestsTableBody.innerHTML = `
+              <tr>
+                <td colspan="7" class="text-center p-lg">
+                  <div class="empty-state">
+                      <i class="bi bi-inbox" style="font-size: 3rem; color: var(--color-text-disabled);"></i>
+                      <p class="mt-sm mb-0 text-muted">Tidak ada permohonan yang cocok dengan filter Anda.</p>
+                  </div>
+                </td>
+              </tr>`;
+            return;
+          }
+
+          filteredRequests.forEach(request => {
+            const rowClone = requestRowTemplate.content.cloneNode(true);
+            const cells = rowClone.querySelectorAll('td');
+            const statusBadge = rowClone.querySelector('.status-badge');
+            const actionButtons = rowClone.querySelectorAll('button[data-action]');
+
+            cells[0].textContent = request.id;
+            cells[1].textContent = utils.sanitizeHTML(request.employeeName);
+            cells[2].textContent = utils.getRequestTypeLabel(request.type);
+            cells[3].textContent = utils.getApartmentLabel(request.apartmentBranch);
+            cells[4].textContent = utils.formatDateForDisplay(request.submittedDate);
+
+            statusBadge.textContent = utils.getRequestTypeLabel(request.status); // atau request.status jika ingin "pending", "approved"
+            statusBadge.className = `status-badge status-${request.status}`; // misal: status-badge status-pending
+
+            actionButtons.forEach(button => {
+              button.dataset.id = request.id; // Set ID ke tombol untuk identifikasi
+            });
+
+            requestsTableBody.appendChild(rowClone);
+          });
+        },
+
+        all: () => { // Panggil semua fungsi render yang relevan
+          render.dashboardStats();
+          render.requestsTable();
+        }
+      };
+
+      // MODAL MANAGEMENT
+      // Fungsi untuk mengelola tampilan dan perilaku modal
+      const modalService = {
+        open: (mode, requestId = null) => {
+          appState.currentModalMode = mode;
+          appState.currentEditingId = requestId;
+          const { requestModal, requestModalLabel, requestForm, modalActionsContainer, viewRequestDetailsContainer, requestIdInput, employeeNameGroup } = appState.ui;
+
+          requestForm.reset(); // Selalu reset form saat buka modal
+          requestForm.classList.remove('was-validated'); // Hapus status validasi sebelumnya
+          Array.from(requestForm.elements).forEach(el => el.removeAttribute('disabled')); // Enable semua field
+          viewRequestDetailsContainer.style.display = 'none'; // Sembunyikan detail view
+          employeeNameGroup.style.display = 'block'; // Tampilkan input nama penyewa defaultnya
+
+
+          let title = '';
+          modalActionsContainer.innerHTML = ''; // Kosongkan tombol aksi
+
+          if (mode === 'add') {
+            title = 'Tambah Permohonan Baru';
+            requestIdInput.value = ''; // Pastikan ID kosong
+            modalActionsContainer.innerHTML = `
+              <button type="button" class="btn btn-secondary" data-action="closeModal">Batal</button>
+              <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i> Ajukan Permohonan</button>
+            `;
+          } else { // Mode 'edit' atau 'view'
+            const request = appState.requests.find(r => r.id === requestId);
+            if (!request) {
+              showToast("Permohonan tidak ditemukan.", "danger");
+              return;
+            }
+
+            // Isi form dengan data request
+            requestIdInput.value = request.id;
+            requestForm.elements.employeeName.value = request.employeeName;
+            requestForm.elements.type.value = request.type;
+            requestForm.elements.apartmentBranch.value = request.apartmentBranch;
+            requestForm.elements.details.value = request.details;
+            requestForm.elements.startDate.value = utils.formatDateForInput(request.startDate);
+            requestForm.elements.endDate.value = utils.formatDateForInput(request.endDate);
+
+            // Tampilkan info detail
+            viewRequestDetailsContainer.style.display = 'block';
+            appState.ui.viewEmployeeNameElem.textContent = utils.sanitizeHTML(request.employeeName);
+            appState.ui.viewApartmentNameElem.textContent = utils.getApartmentLabel(request.apartmentBranch);
+            appState.ui.viewSubmissionDateElem.textContent = utils.formatDateForDisplay(request.submittedDate);
+            const statusBadge = `<span class="status-badge status-${request.status}">${utils.getRequestTypeLabel(request.status)}</span>`;
+            appState.ui.viewCurrentStatusElem.innerHTML = statusBadge;
+
+            if (mode === 'edit') {
+              title = `Ubah Permohonan #${request.id}`;
+              modalActionsContainer.innerHTML = `
+                <button type="button" class="btn btn-secondary" data-action="closeModal">Batal</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save-fill"></i> Simpan Perubahan</button>
+              `;
+            } else { // mode === 'view'
+              title = `Detail Permohonan #${request.id}`;
+              Array.from(requestForm.elements).forEach(el => el.setAttribute('disabled', true)); // Disable semua field
+              employeeNameGroup.style.display = 'none'; // Sembunyikan input nama penyewa di mode view
+              modalActionsContainer.innerHTML = `
+                <button type="button" class="btn btn-secondary" data-action="closeModal">Tutup</button>
+                ${request.status === 'pending' ? `
+                  <button type="button" class="btn btn-success" data-action="updateStatus" data-status="approved" data-id="${request.id}"><i class="bi bi-check-circle"></i> Setujui</button>
+                  <button type="button" class="btn btn-danger" data-action="updateStatus" data-status="rejected" data-id="${request.id}"><i class="bi bi-x-circle"></i> Tolak</button>
+                ` : ''}
+              `;
+            }
+          }
+
+          requestModalLabel.textContent = title;
+          requestModal.classList.add('is-open');
+          requestModal.setAttribute('aria-hidden', 'false');
+          // Fokus ke elemen pertama yang bisa diisi di modal
+          const firstFocusableElement = requestForm.querySelector('input:not([type="hidden"]), select, textarea, button');
+          if (firstFocusableElement) firstFocusableElement.focus();
+        },
+
+        close: () => {
+          const { requestModal } = appState.ui;
+          requestModal.classList.remove('is-open');
+          requestModal.setAttribute('aria-hidden', 'true');
+          appState.currentModalMode = null;
+          appState.currentEditingId = null;
+        }
+      };
+
+      // FORM VALIDATION
+      const validationService = {
+        validateForm: (form) => {
+          let isValid = true;
+          form.classList.add('was-validated'); // Tambah kelas untuk styling Bootstrap (jika menggunakan) atau custom
+
+          // Validasi field yang 'required'
+          Array.from(form.elements).forEach(element => {
+            if (element.required && !element.value.trim() && element.offsetParent !== null) { // Cek visible juga
+              isValid = false;
+              element.classList.add('is-invalid');
+              element.classList.remove('is-valid');
+            } else if (element.offsetParent !== null) {
+              element.classList.remove('is-invalid');
+              // Jika ada logic validasi lain, bisa ditambahkan di sini
+              // e.g. element.classList.add('is-valid');
+            }
+          });
+
+          // Validasi tanggal
+          const startDate = form.elements.startDate.value;
+          const endDate = form.elements.endDate.value;
+          if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            isValid = false;
+            form.elements.endDate.classList.add('is-invalid');
+            form.elements.endDate.classList.remove('is-valid');
+            const feedback = form.elements.endDate.nextElementSibling; // asumsikan .invalid-feedback adalah sibling berikutnya
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+              feedback.textContent = "Tanggal selesai tidak boleh sebelum tanggal mulai.";
+            }
+            showToast("Tanggal selesai tidak boleh sebelum tanggal mulai.", "danger");
+          } else if (startDate && endDate) {
+            const feedback = form.elements.endDate.nextElementSibling;
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+              feedback.textContent = "Tanggal selesai wajib diisi."; // default message
+            }
+          }
+
+          return isValid;
+        }
+      };
+
+      // TOAST NOTIFICATION SERVICE
+      // Membuat dan menampilkan notifikasi toast
+      function showToast(message, type = 'success', duration = 3000) {
+        const toastId = `toast-${Date.now()}`;
+        const toast = document.createElement('div');
+        toast.className = `toast bg-${type}`;
+        toast.id = toastId;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+
+        let iconClass = '';
+        if (type === 'success') iconClass = 'bi-check-circle-fill';
+        else if (type === 'danger') iconClass = 'bi-exclamation-triangle-fill';
+        else if (type === 'warning') iconClass = 'bi-exclamation-triangle-fill';
+        else if (type === 'info') iconClass = 'bi-info-circle-fill';
+
+        toast.innerHTML = `
+          <div class="toast-body d-flex align-items-center">
+            ${iconClass ? `<i class="bi ${iconClass} me-2"></i>` : ''}
+            ${utils.sanitizeHTML(message)}
+          </div>
+          <button type="button" class="btn-close" data-action="dismissToast" aria-label="Tutup">
+            <i class="bi bi-x"></i>
+          </button>
+        `;
+        appState.ui.toastContainer.appendChild(toast);
+
+        // Trigger reflow untuk animasi
+        toast.offsetHeight; // eslint-disable-line no-unused-expressions
+
+        toast.classList.add('show');
+
+        const closeButton = toast.querySelector('[data-action="dismissToast"]');
+        closeButton.addEventListener('click', () => dismissToast(toastId));
+
+        setTimeout(() => dismissToast(toastId), duration);
+      }
+      function dismissToast(toastId) {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+          toast.classList.remove('show');
+          // Hapus elemen dari DOM setelah animasi selesai
+          toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+        }
+      }
+
+      // EVENT HANDLERS
+      // Fungsi-fungsi yang menangani interaksi pengguna
+      const eventHandlers = {
+        handleFormSubmit: (event) => {
+          event.preventDefault();
+          const form = event.target;
+          if (!validationService.validateForm(form)) {
+            showToast("Harap perbaiki kesalahan pada formulir.", "warning");
+            return;
+          }
+
+          const formData = new FormData(form);
+          const requestData = Object.fromEntries(formData.entries());
+
+          // Sanitasi input sebelum diproses
+          requestData.employeeName = utils.sanitizeHTML(requestData.employeeName);
+          requestData.details = utils.sanitizeHTML(requestData.details);
+
+          if (appState.currentModalMode === 'add') {
+            const newRequest = {
+              ...requestData,
+              id: utils.generateId(),
+              status: 'pending',
+              submittedDate: new Date().toISOString(),
+            };
+            appState.requests.unshift(newRequest); // Tambah ke awal array
+            showToast("Permohonan berhasil diajukan.", "success");
+          } else if (appState.currentModalMode === 'edit') {
+            const index = appState.requests.findIndex(r => r.id === appState.currentEditingId);
+            if (index !== -1) {
+              appState.requests[index] = {
+                ...appState.requests[index], // Pertahankan status dan submittedDate asli
+                ...requestData, // Timpa dengan data form baru
+                id: appState.currentEditingId // Pastikan ID tidak berubah
+              };
+              showToast("Permohonan berhasil diperbarui.", "success");
+            }
+          }
+          dataService.saveRequests();
+          render.all();
+          modalService.close();
+        },
+
+        handleFilterChange: () => {
+          appState.filters.search = appState.ui.searchInputElem.value.trim();
+          appState.filters.type = appState.ui.filterTypeElem.value;
+          appState.filters.branch = appState.ui.filterBranchElem.value;
+          appState.filters.status = appState.ui.filterStatusElem.value;
+          render.requestsTable(); // Hanya render ulang tabel, bukan semua
+        },
+
+        handleTableActions: (event) => {
+          const targetButton = event.target.closest('button[data-action]');
+          if (!targetButton) return;
+
+          const action = targetButton.dataset.action;
+          const requestId = targetButton.dataset.id;
+
+          if (action === 'view') {
+            modalService.open('view', requestId);
+          } else if (action === 'edit') {
+            modalService.open('edit', requestId);
+          } else if (action === 'delete') {
+            if (confirm(`Apakah Anda yakin ingin menghapus permohonan ID: ${requestId}?`)) {
+              appState.requests = appState.requests.filter(r => r.id !== requestId);
+              dataService.saveRequests();
+              render.all();
+              showToast(`Permohonan ${requestId} berhasil dihapus.`, "success");
+            }
+          }
+        },
+
+        handleModalActions: (event) => {
+          const targetButton = event.target.closest('button[data-action]');
+          if (!targetButton) return;
+
+          const action = targetButton.dataset.action;
+          const requestId = targetButton.dataset.id;
+          const status = targetButton.dataset.status;
+
+          if (action === 'closeModal') {
+            modalService.close();
+          } else if (action === 'updateStatus') {
+            const index = appState.requests.findIndex(r => r.id === requestId);
+            if (index !== -1) {
+              appState.requests[index].status = status;
+              dataService.saveRequests();
+              render.all();
+              modalService.close();
+              const statusLabel = status === 'approved' ? 'disetujui' : 'ditolak';
+              showToast(`Permohonan ${requestId} telah ${statusLabel}.`, status === 'approved' ? 'success' : 'info');
+            }
+          }
+        },
+
+        handleNavbarToggle: () => {
+          appState.ui.navbarNav.classList.toggle('is-open');
+          const isExpanded = appState.ui.navbarNav.classList.contains('is-open');
+          appState.ui.navbarToggler.setAttribute('aria-expanded', isExpanded.toString());
+          appState.ui.navbarToggler.querySelector('i').className = isExpanded ? 'bi bi-x-lg' : 'bi bi-list';
+        }
+      };
+
+      // APPLICATION INITIALIZATION
+      // Fungsi utama yang dijalankan saat aplikasi dimuat
+      function initializeApp() {
+        // Muat data awal
+        appState.requests = dataService.loadRequests();
+
+        // Setup Event Listeners
+        appState.ui.requestForm.addEventListener('submit', eventHandlers.handleFormSubmit);
+
+        // Menggunakan event delegation untuk tombol di modal footer dan aksi tabel
+        appState.ui.modalActionsContainer.addEventListener('click', eventHandlers.handleModalActions);
+        appState.ui.requestsTableBody.addEventListener('click', eventHandlers.handleTableActions);
+
+        // Listener untuk tombol "Permohonan Baru" dan "Tambah Permohonan" di card header
+        document.querySelectorAll('[data-action="openAddRequestModal"]').forEach(btn => {
+          btn.addEventListener('click', () => modalService.open('add'));
+        });
+
+        // Listener untuk tombol close di modal (selain yang di footer)
+        appState.ui.requestModal.querySelector('.btn-close').addEventListener('click', modalService.close);
+
+        // Listener untuk filter
+        const debouncedFilterHandler = utils.debounce(eventHandlers.handleFilterChange, 350);
+        appState.ui.searchInputElem.addEventListener('input', debouncedFilterHandler);
+        appState.ui.filterTypeElem.addEventListener('change', eventHandlers.handleFilterChange);
+        appState.ui.filterBranchElem.addEventListener('change', eventHandlers.handleFilterChange);
+        appState.ui.filterStatusElem.addEventListener('change', eventHandlers.handleFilterChange);
+
+        appState.ui.refreshDataBtn.addEventListener('click', () => {
+          appState.requests = dataService.loadRequests(); // Muat ulang dari localStorage
+          render.all();
+          showToast("Data berhasil dimuat ulang dari penyimpanan.", "info");
+        });
+
+        // Navbar toggler untuk mobile
+        appState.ui.navbarToggler.addEventListener('click', eventHandlers.handleNavbarToggle);
+
+        // Tutup modal jika klik di luar area modal-dialog (backdrop)
+        appState.ui.requestModal.addEventListener('click', (event) => {
+          if (event.target === appState.ui.requestModal) { // Klik pada .modal (backdrop), bukan .modal-dialog
+            modalService.close();
+          }
+        });
+
+        // Tutup modal dengan tombol Escape
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && appState.ui.requestModal.classList.contains('is-open')) {
+            modalService.close();
+          }
+        });
+
+        // Set tahun di footer
+        if (appState.ui.currentYearElem) {
+          appState.ui.currentYearElem.textContent = new Date().getFullYear();
+        }
+
+        // Render UI awal
+        render.all();
+        showToast("Selamat datang di Sistem Rental Apartemen!", "info", 4000);
+      }
+
+      // Jalankan aplikasi setelah DOM sepenuhnya dimuat
+      document.addEventListener('DOMContentLoaded', initializeApp);
+
+    })(); // Akhir dari IIFE
+  </script>
+</body>
+
+</html>
