@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartemen Kita - Offline</title>
+    <style>/* style.css - Gaya untuk Aplikasi Apartemen Kita */
+
+/* 0. Variabel Global & Reset Dasar */
+:root {
+    --primary-color: #0f3460; /* Biru Tua - Navy */
+    --secondary-color: #1a1a2e; /* Biru Sangat Tua - Hampir Hitam */
+    --accent-color: #e94560; /* Merah Muda Terang - Aksen */
+    --text-color: #e0e0e0; /* Putih Abu-abu - Untuk teks di background gelap */
+    --text-color-dark: #333333; /* Hitam Abu-abu - Untuk teks di background terang */
+    --bg-color-light: #ffffff; /* Putih */
+    --bg-color-medium: #f0f2f5; /* Abu-abu Sangat Muda */
+    --bg-color-dark: var(--secondary-color); /* Background utama gelap */
+    --border-color: #40405f; /* Batas untuk elemen di bg gelap */
+    --card-bg-color: #1f1f38; /* Warna kartu di bg gelap */
+
+    --font-family-main: 'Inter', sans-serif;
+    --font-size-base: 16px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --box-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --box-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --box-shadow-dark: 0 6px 18px rgba(0, 0, 0, 0.2);
+
+    --header-height: 70px;
+    --sidebar-width: 250px;
+    --transition-speed: 0.3s;
+}
+
+/* Import Font Inter dari Google Fonts (juga di-cache oleh SW) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Reset & Pengaturan Dasar */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family-main);
+    background-color: var(--bg-color-dark);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex; /* Untuk layout utama dengan sidebar */
+    min-height: 100vh;
+    overflow-x: hidden; /* Mencegah scroll horizontal yang tidak diinginkan */
+}
+
+a {
+    text-decoration: none;
+    color: var(--accent-color);
+    transition: color var(--transition-speed) ease;
+}
+
+a:hover, a:focus {
+    color: #ff7890; /* Aksen lebih terang saat hover */
+    outline: 2px solid transparent; /* Hapus outline default, tambahkan custom jika perlu untuk aksesibilitas */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul {
+    list-style: none;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    padding: 0.75em 1.5em;
+    border-radius: var(--border-radius-md);
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+button.primary {
+    background-color: var(--accent-color);
+    color: var(--bg-color-light);
+    font-weight: 600;
+    box-shadow: var(--box-shadow-light);
+}
+
+button.primary:hover, button.primary:focus {
+    background-color: #ff7890;
+    transform: translateY(-2px);
+}
+
+button.secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    font-weight: 500;
+}
+
+button.secondary:hover, button.secondary:focus {
+    background-color: rgba(233, 69, 96, 0.1); /* Warna aksen transparan */
+    color: #ff7890;
+}
+
+input, textarea, select {
+    font-family: inherit;
+    padding: 0.75em;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--card-bg-color);
+    color: var(--text-color);
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(233, 69, 96, 0.3);
+}
+
+/* 1. Struktur Layout Utama (Sidebar & Konten) */
+.app-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-color);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width var(--transition-speed) ease;
+    position: fixed; /* Membuat sidebar tetap */
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar .logo {
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    color: var(--bg-color-light);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.sidebar .logo .bi { /* Bootstrap Icon */
+    font-size: 2.2rem;
+    margin-right: 0.75rem;
+    color: var(--accent-color);
+}
+
+.main-nav ul {
+    width: 100%;
+}
+
+.main-nav .nav-item a {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.main-nav .nav-item a .bi {
+    margin-right: 1rem;
+    font-size: 1.3rem;
+    min-width: 20px; /* Untuk alignment ikon */
+}
+
+.main-nav .nav-item a:hover,
+.main-nav .nav-item a.active {
+    background-color: var(--accent-color);
+    color: var(--bg-color-light);
+    box-shadow: var(--box-shadow-medium);
+}
+
+.main-nav .nav-item a.active .bi {
+    color: var(--bg-color-light); /* Pastikan ikon juga berubah warna */
+}
+
+.sidebar-footer {
+    margin-top: auto; /* Mendorong ke bawah */
+    font-size: 0.8rem;
+    color: rgba(224, 224, 224, 0.6);
+    text-align: center;
+    padding-top: 1rem;
+}
+
+/* Konten Utama */
+.main-content-wrapper {
+    flex-grow: 1;
+    margin-left: var(--sidebar-width); /* Memberi ruang untuk sidebar fixed */
+    padding: 0; /* Header akan menangani padding atas */
+    display: flex;
+    flex-direction: column;
+    transition: margin-left var(--transition-speed) ease;
+}
+
+.app-header {
+    height: var(--header-height);
+    background-color: var(--card-bg-color); /* Sedikit berbeda dari sidebar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky; /* Membuat header tetap di atas saat scroll */
+    top: 0;
+    z-index: 900;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-profile .bi-person-circle {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.user-profile span {
+    font-weight: 500;
+}
+
+/* Tombol toggle sidebar (untuk mobile) */
+.sidebar-toggle {
+    display: none; /* Sembunyikan di desktop */
+    font-size: 1.8rem;
+    color: var(--text-color);
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    margin-right: 1rem; /* Jarak dengan title jika ada */
+}
+
+.page-content {
+    flex-grow: 1;
+    padding: 2rem; /* Padding untuk konten halaman */
+    overflow-y: auto; /* Memungkinkan scroll jika konten panjang */
+}
+
+/* 2. Komponen & Utilitas Styling */
+.card {
+    background-color: var(--card-bg-color);
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow-dark);
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.grid-container {
+    display: grid;
+    gap: 1.5rem;
+    /* Contoh: grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); */
+}
+
+.flex-container {
+    display: flex;
+    gap: 1rem;
+    /* Contoh: justify-content: space-between; align-items: center; */
+}
+
+.text-center { text-align: center; }
+.text-accent { color: var(--accent-color); }
+.font-bold { font-weight: bold; }
+.mt-1 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 1rem; }
+.p-1 { padding: 1rem; }
+
+/* Animasi Sederhana */
+.fade-in {
+    animation: fadeInAnimation ease var(--transition-speed);
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. Styling untuk Halaman Spesifik (Contoh) */
+/* Ini akan diisi oleh JavaScript saat memuat konten halaman */
+.dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.info-box {
+    background-color: var(--primary-color); /* Sama dengan sidebar untuk konsistensi */
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-color);
+    box-shadow: var(--box-shadow-medium);
+}
+
+.info-box .bi {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    padding: 0.5rem;
+    background-color: rgba(233, 69, 96, 0.15);
+    border-radius: 50%;
+}
+
+.info-box-content h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+.info-box-content p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Tabel */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.data-table th, .data-table td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.data-table td .bi {
+    margin-right: 0.5rem;
+    cursor: pointer;
+    transition: color var(--transition-speed);
+}
+.data-table td .bi-pencil-square { color: #4CAF50; /* Hijau untuk edit */ }
+.data-table td .bi-trash { color: #F44336; /* Merah untuk hapus */ }
+.data-table td .bi:hover { filter: brightness(1.2); }
+
+
+/* 4. Responsivitas */
+@media (max-width: 992px) {
+    :root {
+        --sidebar-width: 220px;
+    }
+    .sidebar .logo {
+        font-size: 1.5rem;
+    }
+    .sidebar .logo .bi {
+        font-size: 2rem;
+    }
+    .main-nav .nav-item a {
+        padding: 0.8rem 1rem;
+    }
+     .main-nav .nav-item a .bi {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 0; /* Sembunyikan sidebar secara default */
+        transform: translateX(-100%); /* Efek geser keluar */
+        padding-top: calc(var(--header-height) + 1rem); /* Mulai konten nav di bawah header */
+    }
+
+    .sidebar.open {
+        width: var(--sidebar-width); /* Kembalikan ke 250px atau sesuai kebutuhan */
+        transform: translateX(0);
+        box-shadow: var(--box-shadow-dark);
+    }
+    
+    .main-content-wrapper {
+        margin-left: 0; /* Konten utama mengambil lebar penuh */
+    }
+
+    .app-header {
+        padding: 0 1rem; /* Kurangi padding header */
+    }
+    .header-title {
+        font-size: 1.3rem;
+    }
+    .sidebar-toggle {
+        display: block; /* Tampilkan tombol toggle */
+    }
+
+    .page-content {
+        padding: 1.5rem;
+    }
+
+    .card {
+        padding: 1.2rem 1.5rem;
+    }
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* Satu kolom di mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --font-size-base: 15px;
+        --sidebar-width: 200px; /* Sidebar lebih kecil lagi di mobile sangat kecil */
+    }
+    .app-header {
+        height: 60px;
+    }
+    .sidebar.open {
+        padding-top: calc(60px + 1rem);
+    }
+
+    .user-profile span {
+        display: none; /* Sembunyikan nama pengguna, hanya ikon */
+    }
+    .header-title {
+        font-size: 1.1rem;
+    }
+    .page-content {
+        padding: 1rem;
+    }
+    button {
+        padding: 0.6em 1.2em;
+        font-size: 0.9rem;
+    }
+}
+
+/* Styling untuk Scrollbar (Fancy) - Opsional */
+/* Untuk browser berbasis WebKit (Chrome, Safari, Edge baru) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+    border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--secondary-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Untuk Firefox */
+/* Firefox mendukung scrollbar-color dan scrollbar-width */
+* {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: var(--primary-color) var(--secondary-color); /* thumb and track */
+}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0f3460;
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 1.5em;
+        }
+
+        .icon {
+            font-size: 4em;
+            /* Ukuran ikon bisa disesuaikan */
+            color: #ff6b6b;
+            /* Warna ikon untuk offline */
+            margin-bottom: 20px;
+        }
+
+        /* Anda bisa menggunakan class dari Bootstrap Icons jika sudah di-cache dan tersedia */
+        /* Contoh: <i class="bi bi-wifi-off icon"></i> */
+        /* Untuk saat ini, kita pakai teks saja karena styling font icon bisa rumit di halaman offline murni */
+    </style>
+    <!-- Menambahkan link ke Bootstrap Icons CDN jika Anda ingin ikon tampil di halaman offline -->
+    <!-- Pastikan ini juga di-cache oleh Service Worker jika ingin berfungsi offline -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Ganti dengan ikon yang sesuai jika tersedia -->
+        <div class="icon">
+            <i class="bi bi-wifi-off"></i>
+        </div>
+        <h1>Oops! Anda Sedang Offline</h1>
+        <p>Sepertinya koneksi internet Anda terputus. Silakan periksa koneksi Anda dan coba lagi.</p>
+        <p>Beberapa halaman mungkin masih bisa diakses jika sudah pernah Anda kunjungi.</p>
+    </div>
+<script>
+    // sw.js - Service Worker untuk Aplikasi Apartemen Kita
+
+    const CACHE_NAME_PREFIX = 'apartemenkita-cache-';
+    const CACHE_VERSION = 'v1.1.0'; // Ganti versi ini setiap ada perubahan besar pada aset yang di-cache
+    const CACHE_NAME = `${CACHE_NAME_PREFIX}${CACHE_VERSION}`;
+
+    const OFFLINE_URL = 'offline.html'; // Halaman fallback ketika offline
+
+    // Daftar aset inti yang akan di-cache saat instalasi (App Shell)
+    const CORE_ASSETS_TO_CACHE = [
+        '/', // Penting untuk SPA, biasanya merujuk ke index.html
+        '/index.html',
+        '/style.css',
+        '/app.js',
+        '/manifest.json',
+        OFFLINE_URL, // Halaman offline
+        // Path ke ikon-ikon PWA (sesuaikan dengan struktur folder Anda)
+        '/assets/icons/icon-72x72.png',
+        '/assets/icons/icon-96x96.png',
+        '/assets/icons/icon-128x128.png',
+        '/assets/icons/icon-144x144.png',
+        '/assets/icons/icon-152x152.png',
+        '/assets/icons/icon-192x192.png',
+        '/assets/icons/icon-384x384.png',
+        '/assets/icons/icon-512x512.png',
+        // Font dan Ikon dari CDN (pastikan mereka mengizinkan CORS)
+        'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
+        'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2?2820209024356991590', // Ini adalah contoh, path woff2 bisa berbeda
+        'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+        'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfMZhrib2Bg-4.woff2' // Contoh resource font (path bisa bervariasi)
+        // Jangan cache API eksternal yang dinamis di sini. Gunakan strategi lain untuk API.
+    ];
+
+    // Fungsi utilitas untuk logging yang lebih baik
+    const log = (message, ...args) => console.log(`[SW ${CACHE_VERSION}] ${message}`, ...args);
+    const errorLog = (message, ...args) => console.error(`[SW ${CACHE_VERSION}] ${message}`, ...args);
+
+    // Instalasi Service Worker: Cache aset inti
+    self.addEventListener('install', event => {
+        log('Event: install');
+        event.waitUntil(
+            caches.open(CACHE_NAME)
+                .then(cache => {
+                    log('Caching inti aplikasi (App Shell)');
+                    // Menggunakan Request object untuk kontrol lebih, terutama untuk resource cross-origin
+                    const cachePromises = CORE_ASSETS_TO_CACHE.map(urlToCache => {
+                        const request = new Request(urlToCache, { mode: 'cors' }); // 'cors' untuk resource yang kita kontrol atau CDN yang mendukung
+                        // Untuk CDN yang mungkin tidak mengirim header CORS yang tepat untuk font/css, 'no-cors' bisa jadi solusi,
+                        // tapi kita tidak bisa tahu apakah caching berhasil atau tidak. Lebih baik pastikan CDN support CORS.
+                        // Bootstrap Icons dan Google Fonts umumnya mendukung CORS.
+                        return fetch(request).then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Gagal mengambil ${urlToCache}: ${response.status} ${response.statusText}`);
+                            }
+                            return cache.put(request, response);
+                        }).catch(err => {
+                            errorLog(`Tidak dapat meng-cache ${urlToCache} selama instalasi:`, err);
+                            // Jangan gagalkan seluruh instalasi jika satu resource minor gagal,
+                            // kecuali itu resource yang sangat krusial.
+                        });
+                    });
+                    return Promise.all(cachePromises);
+                })
+                .then(() => {
+                    log('Semua aset inti berhasil di-cache. Service Worker siap diaktifkan.');
+                    // Memaksa SW yang menunggu untuk menjadi aktif
+                    return self.skipWaiting();
+                })
+                .catch(error => {
+                    errorLog('Gagal caching aset inti saat instalasi:', error);
+                    // Jika caching gagal, SW tidak akan terinstal. Ini penting untuk memastikan App Shell selalu ada.
+                })
+        );
+    });
+
+    // Aktivasi Service Worker: Hapus cache lama
+    self.addEventListener('activate', event => {
+        log('Event: activate');
+        event.waitUntil(
+            caches.keys().then(cacheNames => {
+                return Promise.all(
+                    cacheNames.map(cacheName => {
+                        // Hapus cache lama yang tidak sesuai dengan CACHE_NAME saat ini
+                        // dan yang memiliki prefix yang sama (untuk menghindari menghapus cache aplikasi lain)
+                        if (cacheName.startsWith(CACHE_NAME_PREFIX) && cacheName !== CACHE_NAME) {
+                            log('Menghapus cache lama:', cacheName);
+                            return caches.delete(cacheName);
+                        }
+                        return null; // Mengembalikan null untuk promise yang tidak melakukan apa-apa
+                    })
+                );
+            }).then(() => {
+                log('Cache lama berhasil dihapus.');
+                // Mengambil kontrol atas klien (tab terbuka) yang tidak dikontrol oleh SW ini segera
+                // Ini memastikan bahwa SW baru akan menangani fetch event dari klien yang ada.
+                return self.clients.claim();
+            }).catch(error => {
+                errorLog('Gagal menghapus cache lama saat aktivasi:', error);
+            })
+        );
+    });
+
+    // Fetch Event: Menyajikan aset dari cache atau network (Strategi Cache-First, lalu Network)
+    self.addEventListener('fetch', event => {
+        const { request } = event;
+        log(`Event: fetch, URL: ${request.url}, Mode: ${request.mode}`);
+
+        // Hanya tangani request GET. Metode lain (POST, PUT, DELETE) harus ditangani oleh network.
+        if (request.method !== 'GET') {
+            log('Mengabaikan request non-GET:', request.method, request.url);
+            return; // Biarkan browser menangani request non-GET secara default
+        }
+
+        // Strategi untuk request navigasi (HTML)
+        if (request.mode === 'navigate') {
+            event.respondWith(
+                caches.open(CACHE_NAME).then(cache => {
+                    // Coba ambil dari network terlebih dahulu untuk navigasi (agar konten selalu terbaru)
+                    return fetch(request)
+                        .then(networkResponse => {
+                            log('Navigasi: Diambil dari network:', request.url);
+                            // Jika berhasil, clone dan simpan ke cache untuk akses offline berikutnya
+                            if (networkResponse.ok) {
+                                cache.put(request, networkResponse.clone());
+                            }
+                            return networkResponse;
+                        })
+                        .catch(() => {
+                            // Jika network gagal (offline), coba ambil dari cache
+                            log('Navigasi: Network gagal, mencoba cache untuk:', request.url);
+                            return cache.match(request)
+                                .then(cachedResponse => {
+                                    if (cachedResponse) {
+                                        log('Navigasi: Ditemukan di cache:', request.url);
+                                        return cachedResponse;
+                                    }
+                                    // Jika tidak ada di cache dan network gagal, tampilkan halaman offline
+                                    log('Navigasi: Tidak ditemukan di cache, menampilkan halaman offline.');
+                                    return cache.match(OFFLINE_URL);
+                                });
+                        });
+                })
+            );
+            return;
+        }
+
+        // Strategi untuk aset lain (CSS, JS, Gambar, Font) - Cache First, then Network
+        event.respondWith(
+            caches.open(CACHE_NAME).then(cache => {
+                return cache.match(request)
+                    .then(cachedResponse => {
+                        // Jika aset ditemukan di cache, kembalikan dari cache
+                        if (cachedResponse) {
+                            log('Aset: Ditemukan di cache:', request.url);
+                            return cachedResponse;
+                        }
+
+                        // Jika tidak ada di cache, coba ambil dari network
+                        log('Aset: Tidak ditemukan di cache, mengambil dari network:', request.url);
+                        return fetch(request.clone()) // Clone request karena stream hanya bisa dibaca sekali
+                            .then(networkResponse => {
+                                // Jika gagal fetch dari network (offline atau error), jangan cache error response
+                                // Opaque responses (type 'opaque') adalah untuk resource no-cors, kita tidak bisa cek statusnya,
+                                // jadi kita cache saja. Jika itu error, akan jadi error yang di-cache.
+                                if (!networkResponse || networkResponse.status !== 200 && networkResponse.type !== 'opaque') {
+                                    log('Aset: Gagal mengambil dari network atau status tidak OK:', request.url, networkResponse ? networkResponse.status : 'Tidak ada respons');
+                                    // Untuk aset yang gagal, kita bisa return respons error atau fallback jika ada.
+                                    // Jika ini adalah gambar, kita bisa return gambar placeholder.
+                                    // Untuk saat ini, kita return saja respons network apa adanya.
+                                    return networkResponse;
+                                }
+
+                                log('Aset: Berhasil diambil dari network, caching:', request.url);
+                                // Jika berhasil, clone lagi untuk cache, lalu simpan ke cache dan kembalikan
+                                cache.put(request, networkResponse.clone());
+                                return networkResponse;
+                            })
+                            .catch(error => {
+                                errorLog('Aset: Fetch gagal total untuk:', request.url, error);
+                                // Jika ini adalah request untuk gambar dan gagal, Anda bisa mengembalikan gambar placeholder dari cache.
+                                // if (request.destination === 'image') {
+                                //     return cache.match('/assets/icons/placeholder.png');
+                                // }
+                                // Untuk request lain, jika benar-benar offline dan tidak ada di cache, akan gagal.
+                                // Halaman offline utama ditangani oleh logika navigasi di atas.
+                                // Kita bisa juga mengembalikan halaman offline untuk aset jika itu kritikal.
+                                // return cache.match(OFFLINE_URL); // Opsional, bisa jadi terlalu agresif
+                                throw error; // Biarkan errornya muncul agar bisa ditangani lebih lanjut jika perlu
+                            });
+                    });
+            })
+        );
+    });
+
+    // Listener untuk pesan dari klien (jika diperlukan komunikasi SW <-> Klien)
+    self.addEventListener('message', event => {
+        log('Event: message, Data:', event.data);
+        if (event.data && event.data.type === 'SKIP_WAITING') {
+            log('Menerima pesan SKIP_WAITING, menjalankan self.skipWaiting().');
+            self.skipWaiting();
+        }
+        // Tambahkan penanganan pesan lain di sini
+    });</script>
+</body>
+</html>

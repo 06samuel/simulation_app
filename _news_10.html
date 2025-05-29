@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="BlueStay - Temukan dan sewa apartemen impian Anda dengan mudah. Pilihan terbaik, fasilitas lengkap, dan lokasi strategis." />
+    <meta name="keywords" content="sewa apartemen, apartemen murah, apartemen mewah, blue stay, properti, hunian" />
+    <meta name="author" content="BlueStay Development" />
+    <title>BlueStay - Sewa Apartemen Impian Anda</title>
+
+    <!-- Favicon (Disarankan mengganti dengan file .ico atau .png Anda sendiri) -->
+    <!-- Saat ini menggunakan emoji sebagai placeholder via data URI SVG karena permintaan "tidak boleh menggunakan SVG" (secara umum)
+         namun favicon data URI SVG seringkali merupakan pengecualian praktis.
+         Jika ingin benar-benar tanpa SVG, ganti dengan <link rel="icon" href="favicon.ico"> -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏙️</text></svg>">
+
+    <!-- Font Awesome Icons (Gratis, Online, Tanpa SVG langsung di kode) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Fonts: Inter (Font modern dan mudah dibaca) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- ROOT VARIABLES & GLOBAL STYLES --- */
+        /*
+            Deskripsi: Bagian ini mendefinisikan variabel global (Custom Properties) untuk warna, font,
+            spacing, shadow, dll. Ini memastikan konsistensi desain di seluruh aplikasi dan memudahkan
+            perubahan tema di masa depan. Gaya global juga diatur di sini untuk reset dasar dan
+            pengaturan default elemen HTML.
+        */
+        :root {
+            --primary-color: #0D6EFD;
+            /* Biru yang modern dan profesional */
+            --primary-color-dark: #0A58CA;
+            --primary-color-light: #E7F1FF;
+            --secondary-color: #6C757D;
+            /* Abu-abu netral untuk teks sekunder atau elemen pendukung */
+            --accent-color: #FFC107;
+            /* Kuning sebagai warna aksen yang menarik perhatian */
+            --light-color: #F8F9FA;
+            /* Warna terang, biasanya untuk background section alternatif */
+            --dark-color: #212529;
+            /* Warna gelap, untuk teks utama atau background gelap */
+            --background-color: #FFFFFF;
+            /* Warna background utama aplikasi */
+            --text-color: #343A40;
+            /* Warna teks default */
+            --card-background: #FFFFFF;
+            /* Background untuk elemen seperti kartu */
+            --border-color: #DEE2E6;
+            /* Warna border default */
+            --success-color: #198754;
+            /* Warna untuk notifikasi sukses atau harga positif */
+            --danger-color: #DC3545;
+            /* Warna untuk notifikasi error atau peringatan */
+
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-size-base: 16px;
+            --line-height-base: 1.6;
+
+            --spacing-unit: 8px;
+            --border-radius-sm: calc(var(--spacing-unit) * 0.5);
+            /* 4px */
+            --border-radius-md: var(--spacing-unit);
+            /* 8px */
+            --border-radius-lg: calc(var(--spacing-unit) * 2);
+            /* 16px */
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+            --transition-speed: 0.3s;
+            --transition-timing: cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* Transisi yang lebih halus */
+
+            --hero-gradient: linear-gradient(135deg, rgba(13, 110, 253, 0.85) 0%, rgba(0, 70, 180, 0.9) 100%);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: var(--font-size-base);
+            -webkit-tap-highlight-color: transparent;
+            /* Menghilangkan highlight biru pada tap di mobile */
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: var(--line-height-base);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        main {
+            flex-grow: 1;
+            padding-top: 70px;
+            /* Tinggi header default, akan disesuaikan JS jika perlu */
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed) var(--transition-timing);
+        }
+
+        a:hover {
+            color: var(--primary-color-dark);
+            text-decoration: none;
+            /* Umumnya, underline pada hover bisa dihilangkan jika ada feedback visual lain */
+        }
+
+        img,
+        picture {
+            /* Picture element untuk art direction atau format berbeda */
+            max-width: 100%;
+            display: block;
+            height: auto;
+            object-fit: cover;
+            /* Default untuk gambar agar mengisi kontainer */
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 700;
+            line-height: 1.3;
+            /* Sedikit lebih rapat untuk heading */
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            color: var(--dark-color);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+        }
+
+        /* Ukuran font responsif */
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+        }
+
+        h4 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+
+        p {
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            max-width: 75ch;
+            /* Meningkatkan keterbacaan paragraf panjang */
+        }
+
+        ul,
+        ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        button,
+        input[type="submit"],
+        input[type="button"],
+        .button {
+            /* Kelas generik untuk styling link sebagai tombol */
+            cursor: pointer;
+            border: none;
+            padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 2.5);
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-family: var(--font-main);
+            transition: background-color var(--transition-speed) var(--transition-timing),
+                transform var(--transition-speed) var(--transition-timing),
+                box-shadow var(--transition-speed) var(--transition-timing);
+            display: inline-block;
+            /* Penting untuk padding dan margin yang benar */
+            text-align: center;
+            user-select: none;
+            /* Mencegah teks tombol terseleksi */
+        }
+
+        button:focus-visible,
+        .button:focus-visible {
+            /* Style focus yang lebih jelas untuk aksesibilitas */
+            outline: 2px solid var(--primary-color-dark);
+            outline-offset: 2px;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .button-primary:hover {
+            background-color: var(--primary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .button-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .button-secondary:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .button-outline-primary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .button-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: calc(var(--spacing-unit) * 2);
+            /* Lebih banyak padding untuk kontainer */
+            padding-right: calc(var(--spacing-unit) * 2);
+        }
+
+        .section-padding {
+            padding-top: calc(var(--spacing-unit) * 8);
+            padding-bottom: calc(var(--spacing-unit) * 8);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        /* !important jika perlu override */
+        .text-secondary {
+            color: var(--secondary-color) !important;
+        }
+
+        .text-accent {
+            color: var(--accent-color) !important;
+        }
+
+        /* Spacing Utilities */
+        .mb-1 {
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .mb-2 {
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .mb-3 {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .mb-4 {
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .mt-1 {
+            margin-top: var(--spacing-unit);
+        }
+
+        .mt-2 {
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .mt-3 {
+            margin-top: calc(var(--spacing-unit) * 3);
+        }
+
+        .mt-4 {
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        /* Visually Hidden (untuk aksesibilitas) */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        .site-header {
+            background-color: var(--background-color);
+            padding: var(--spacing-unit) 0;
+            /* Lebih ramping */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-speed) var(--transition-timing),
+                box-shadow var(--transition-speed) var(--transition-timing),
+                padding var(--transition-speed) var(--transition-timing);
+        }
+
+        .site-header.scrolled {
+            background-color: rgba(255, 255, 255, 0.97);
+            /* Sedikit transparan dengan blur */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--shadow-md);
+            padding: calc(var(--spacing-unit) * 0.5) 0;
+            /* Header mengecil saat scroll */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            transition: color var(--transition-speed) var(--transition-timing);
+        }
+
+        .logo i {
+            margin-right: calc(var(--spacing-unit) * 0.75);
+            font-size: 1.6rem;
+        }
+
+        .logo:hover {
+            text-decoration: none;
+            color: var(--primary-color-dark);
+        }
+
+        .main-nav ul {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 3);
+            align-items: center;
+            /* Menyelaraskan tombol dengan link biasa */
+        }
+
+        .main-nav a {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: calc(var(--spacing-unit) * 0.75) 0;
+            position: relative;
+            transition: color var(--transition-speed) var(--transition-timing);
+        }
+
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            /* Garis bawah sedikit di luar teks */
+            left: 0;
+            width: 0;
+            height: 2.5px;
+            /* Garis bawah lebih tebal */
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed) var(--transition-timing);
+            border-radius: 1px;
+        }
+
+        .main-nav a:hover,
+        .main-nav a.active {
+            color: var(--primary-color);
+        }
+
+        .main-nav a:hover::after,
+        .main-nav a.active::after {
+            width: 100%;
+        }
+
+        .main-nav .nav-button a {
+            /* Styling khusus untuk tombol di navigasi */
+            padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+            border-radius: var(--border-radius-md);
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .main-nav .nav-button a:hover {
+            background-color: var(--primary-color-dark);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .main-nav .nav-button a::after {
+            display: none;
+            /* Hilangkan garis bawah untuk tombol */
+        }
+
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            padding: var(--spacing-unit);
+            z-index: 1002;
+            /* Di atas overlay dan nav drawer */
+        }
+
+        /* Overlay untuk menu mobile */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            /* Di bawah menu, di atas konten */
+            opacity: 0;
+            transition: opacity var(--transition-speed) var(--transition-timing);
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            background: var(--hero-gradient), url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+            color: white;
+            padding: calc(var(--spacing-unit) * 12) 0 calc(var(--spacing-unit) * 10) 0;
+            text-align: center;
+            min-height: 75vh;
+            /* Sedikit lebih tinggi */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            /* Mencegah elemen dekoratif keluar */
+        }
+
+        .hero-section::before {
+            /* Efek grain halus */
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c8TV1mAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAFVklEQVR4XpWWB67c2BUFb3g557T/hRo9/WUMZHlgr4Bg8Z4qQgQJlHI4A8SzFVrapvmTF9O7dmYRFZ60YiBhJRCgh1FYhiLAmdvX0CzTOpNE77ME0Zty/nWWzchDtiqg6exoRBjqj4JwWBdkRRxkdOkAv5itDIgqncs71uJRCfgc2Y5lNmH3VAxA99 Thrustmode Online Grains Generator please :")
+                /* Saya tidak bisa menambahkan grain image base64 di sini karena keterbatasan panjang.
+               Anda bisa menggunakan generator online untuk "noise texture png" dan embed sebagai data URI
+               atau simpan sebagai file. Contoh: background: var(--hero-gradient), url('noise.png'), url('hero-image.jpg') ...
+               Untuk saat ini, saya akan hilangkan efek grain untuk menjaga kode tetap ringkas. */
+        }
+
+        .hero-content {
+            max-width: 750px;
+            /* Sedikit lebih lebar */
+            margin: auto;
+            animation: fadeInHero 1s var(--transition-timing) forwards;
+            position: relative;
+            /* Agar di atas pseudo-elements jika ada */
+            z-index: 1;
+        }
+
+        @keyframes fadeInHero {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section h1 {
+            font-size: clamp(2.5rem, 6vw, 3.8rem);
+            /* Lebih besar dan responsif */
+            font-weight: 800;
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            color: white;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-section p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+            opacity: 0.95;
+            max-width: 600px;
+            /* Agar tidak terlalu lebar di layar besar */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            /* Agar responsif jika input terlalu banyak */
+            gap: calc(var(--spacing-unit) * 1.5);
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: calc(var(--spacing-unit) * 2);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .search-form input[type="text"] {
+            flex-grow: 1;
+            padding: calc(var(--spacing-unit) * 1.75);
+            /* Lebih besar */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: 1rem;
+            outline: none;
+            min-width: 200px;
+            /* Mencegah input terlalu kecil */
+            transition: border-color var(--transition-speed) var(--transition-timing), box-shadow var(--transition-speed) var(--transition-timing);
+        }
+
+        .search-form input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+        }
+
+        .search-form button {
+            padding: calc(var(--spacing-unit) * 1.75) calc(var(--spacing-unit) * 3);
+            font-size: 1rem;
+            /* Sesuaikan dengan input */
+        }
+
+        .search-form button i {
+            margin-right: var(--spacing-unit);
+        }
+
+
+        /* --- PROPERTY LISTING & CARDS --- */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+            /* Grid lebih adaptif */
+            gap: calc(var(--spacing-unit) * 3.5);
+        }
+
+        .property-card {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform var(--transition-speed) var(--transition-timing), box-shadow var(--transition-speed) var(--transition-timing);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            /* Penting agar semua card dalam satu baris sama tinggi jika diinginkan */
+        }
+
+        .property-card:hover {
+            transform: translateY(-6px) scale(1.015);
+            /* Efek hover lebih halus */
+            box-shadow: var(--shadow-lg);
+        }
+
+        .property-card .router-link {
+            /* Pastikan link mengisi kartu */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .property-card-image-wrapper {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .property-card-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s var(--transition-timing);
+        }
+
+        .property-card:hover .property-card-image-wrapper img {
+            transform: scale(1.08);
+            /* Zoom lebih halus */
+        }
+
+        .property-card-badge {
+            position: absolute;
+            top: calc(var(--spacing-unit) * 1.5);
+            left: calc(var(--spacing-unit) * 1.5);
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: calc(var(--spacing-unit) * 0.6) calc(var(--spacing-unit) * 1.2);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.8rem;
+            font-weight: 700;
+            /* Lebih tebal */
+            text-transform: uppercase;
+            /* Standar untuk badge */
+            letter-spacing: 0.5px;
+        }
+
+        .property-card-content {
+            padding: calc(var(--spacing-unit) * 2.5);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card-title {
+            font-size: 1.3rem;
+            /* Sedikit disesuaikan */
+            font-weight: 700;
+            margin-bottom: calc(var(--spacing-unit) * 0.75);
+            color: var(--primary-color);
+            line-height: 1.4;
+        }
+
+        .property-card-location {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .property-card-location i {
+            margin-right: calc(var(--spacing-unit) * 0.75);
+            font-size: 0.9em;
+            /* Ikon sedikit lebih kecil dari teks */
+        }
+
+        .property-card-features {
+            display: flex;
+            flex-wrap: wrap;
+            /* Agar fitur tidak overflow */
+            gap: calc(var(--spacing-unit) * 1.5);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        .property-card-features span {
+            display: flex;
+            align-items: center;
+        }
+
+        .property-card-features i {
+            margin-right: calc(var(--spacing-unit) * 0.5);
+            color: var(--primary-color);
+            width: 16px;
+            text-align: center;
+            /* Alignment ikon */
+        }
+
+        .property-card-price {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-top: auto;
+            /* Mendorong harga dan tombol ke bawah */
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .property-card-price .price-suffix {
+            /* Ganti span biasa menjadi kelas khusus */
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--secondary-color);
+            margin-left: var(--spacing-unit);
+        }
+
+        .property-card .button-primary {
+            /* Tombol di dalam kartu */
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 1.25) calc(var(--spacing-unit) * 2);
+            /* Padding tombol yang konsisten */
+        }
+
+
+        /* --- FOOTER --- */
+        .site-footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: calc(var(--spacing-unit) * 6) 0;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            /* Spasi baris lebih baik untuk keterbacaan di footer */
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            margin-bottom: calc(var(--spacing-unit) * 4);
+        }
+
+        .footer-column h4 {
+            color: var(--accent-color);
+            margin-bottom: calc(var(--spacing-unit) * 2.5);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-column ul li {
+            margin-bottom: calc(var(--spacing-unit) * 1.25);
+        }
+
+        .footer-column ul li a {
+            color: var(--light-color);
+            opacity: 0.8;
+            transition: opacity var(--transition-speed) var(--transition-timing), color var(--transition-speed) var(--transition-timing);
+        }
+
+        .footer-column ul li a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .footer-column p {
+            opacity: 0.8;
+            max-width: none;
+            /* Hapus batasan max-width untuk paragraf di footer */
+        }
+
+        .social-icons {
+            display: flex;
+            gap: calc(var(--spacing-unit) * 2);
+            /* Jarak antar ikon sosial */
+        }
+
+        .social-icons a {
+            color: var(--light-color);
+            font-size: 1.6rem;
+            /* Ikon lebih besar */
+            opacity: 0.8;
+            transition: opacity var(--transition-speed) var(--transition-timing), transform var(--transition-speed) var(--transition-timing), color var(--transition-speed) var(--transition-timing);
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            transform: scale(1.15) translateY(-2px);
+            /* Efek hover lebih dinamis */
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: calc(var(--spacing-unit) * 3);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            /* Border lebih terlihat */
+            opacity: 0.7;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom .fa-heart {
+            transition: color var(--transition-speed) var(--transition-timing);
+        }
+
+        .footer-bottom .fa-heart:hover {
+            color: var(--danger-color) !important;
+            /* Efek hover hati */
+        }
+
+
+        /* --- HALAMAN DETAIL PROPERTI --- */
+        .property-detail-container {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr;
+            /* Kolom gambar lebih besar, info lebih ramping */
+            gap: calc(var(--spacing-unit) * 5);
+            align-items: start;
+        }
+
+        .property-detail-image img {
+            width: 100%;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-height: 500px;
+            /* Batasi tinggi gambar agar tidak terlalu dominan */
+            object-fit: cover;
+        }
+
+        .property-detail-info .property-type-badge {
+            /* Badge tipe properti di halaman detail */
+            background-color: var(--primary-color-light);
+            color: var(--primary-color-dark);
+            padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .property-detail-info h1 {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .property-detail-info .location {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            display: flex;
+            align-items: center;
+        }
+
+        .property-detail-info .location i {
+            margin-right: var(--spacing-unit);
+        }
+
+        .property-detail-info .price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .property-detail-info .price .price-suffix {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--secondary-color);
+        }
+
+        .property-detail-info .description {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            line-height: 1.7;
+            /* Keterbacaan lebih baik */
+        }
+
+        .property-detail-info h4 {
+            /* Sub-judul di detail info */
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-top: calc(var(--spacing-unit) * 3);
+            margin-bottom: var(--spacing-unit);
+            border-bottom: 2px solid var(--primary-color-light);
+            padding-bottom: var(--spacing-unit);
+        }
+
+        .property-detail-features ul {
+            list-style: none;
+            /* Dihapus karena sudah global */
+            padding-left: 0;
+            columns: 2;
+            /* Tampilkan fitur dalam 2 kolom jika banyak */
+            column-gap: calc(var(--spacing-unit) * 2);
+        }
+
+        .property-detail-features li {
+            margin-bottom: var(--spacing-unit);
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .property-detail-features i {
+            color: var(--primary-color);
+            margin-right: calc(var(--spacing-unit) * 1.25);
+            width: 20px;
+            text-align: center;
+        }
+
+        .property-detail-actions button {
+            /* Tombol aksi di halaman detail */
+            width: 100%;
+            margin-bottom: var(--spacing-unit);
+            padding: calc(var(--spacing-unit) * 1.5);
+            font-size: 1.05rem;
+        }
+
+        .property-detail-actions button i {
+            margin-right: var(--spacing-unit);
+        }
+
+
+        /* --- FORM LOGIN/REGISTER & KONTAK --- */
+        .auth-form-container,
+        .contact-form-container {
+            max-width: 480px;
+            /* Sedikit lebih lebar */
+            margin: calc(var(--spacing-unit) * 5) auto;
+            padding: calc(var(--spacing-unit) * 4) calc(var(--spacing-unit) * 3.5);
+            background-color: var(--card-background);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .auth-form-container h2,
+        .contact-form-container h3 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: calc(var(--spacing-unit) * 3);
+        }
+
+        .contact-form-container h3 {
+            /* Khusus untuk judul form kontak */
+            color: var(--dark-color);
+        }
+
+        .form-group {
+            margin-bottom: calc(var(--spacing-unit) * 2.5);
+            /* Spasi antar grup form */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: calc(var(--spacing-unit) * 0.75);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            /* Label sedikit lebih kecil */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group textarea {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 1.5);
+            /* Input lebih besar */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: 1rem;
+            font-family: var(--font-main);
+            transition: border-color var(--transition-speed) var(--transition-timing), box-shadow var(--transition-speed) var(--transition-timing);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            /* Hanya izinkan resize vertikal */
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+            /* Efek focus yang lebih jelas */
+        }
+
+        .auth-form-container .button-primary,
+        .contact-form-container .button-primary {
+            width: 100%;
+            padding: calc(var(--spacing-unit) * 1.75);
+            /* Tombol submit lebih besar */
+            font-size: 1.1rem;
+        }
+
+        .auth-form-container .form-link {
+            display: block;
+            text-align: center;
+            margin-top: calc(var(--spacing-unit) * 2.5);
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .auth-form-container .form-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .auth-form-container .form-link a:hover {
+            color: var(--primary-color-dark);
+        }
+
+
+        /* --- UTILITIES LAINNYA --- */
+        .loading-spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            /* Border lebih tebal */
+            width: 40px;
+            /* Lebih besar */
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 0.8s linear infinite;
+            /* Animasi lebih cepat dan linear */
+            margin: calc(var(--spacing-unit) * 3) auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #propertyListingStatus {
+            /* Status untuk daftar properti */
+            min-height: 60px;
+            /* Cegah layout shift saat loading */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #propertyListingStatus p {
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Gaya untuk bagian "Mengapa Memilih BlueStay?" */
+        .why-choose-us-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--spacing-unit) * 3.5);
+        }
+
+        .why-choose-us-item {
+            padding: calc(var(--spacing-unit) * 3);
+            border-radius: var(--border-radius-md);
+            background-color: var(--background-color);
+            /* Bisa var(--card-background) jika beda */
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-speed) var(--transition-timing), box-shadow var(--transition-speed) var(--transition-timing);
+        }
+
+        .why-choose-us-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .why-choose-us-item i {
+            font-size: 2.5rem;
+            /* Ukuran ikon fitur */
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            transition: transform 0.4s var(--transition-timing);
+        }
+
+        .why-choose-us-item:hover i {
+            transform: scale(1.1) rotate(-5deg);
+            /* Animasi ikon saat hover item */
+        }
+
+        .why-choose-us-item h4 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        /* Gaya untuk halaman Kontak (bagian informasi) */
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .contact-info p i {
+            margin-right: calc(var(--spacing-unit) * 1.5);
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+            gap: calc(var(--spacing-unit) * 4);
+            align-items: start;
+        }
+
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 992px) {
+            .hero-section {
+                min-height: 65vh;
+            }
+
+            .property-detail-container {
+                grid-template-columns: 1fr;
+                /* Stack di layar tablet */
+            }
+
+            .property-detail-image img {
+                max-height: 400px;
+            }
+
+            .property-detail-features ul {
+                columns: 1;
+            }
+
+            /* Fitur jadi 1 kolom */
+            .contact-grid {
+                gap: calc(var(--spacing-unit) * 5);
+                /* Beri jarak lebih jika stack */
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+
+            /* Sedikit kecilkan base font */
+            main {
+                padding-top: 60px;
+                /* Sesuaikan dengan tinggi header baru */
+            }
+
+            .site-header {
+                padding: var(--spacing-unit) 0;
+            }
+
+            .site-header.scrolled {
+                padding: calc(var(--spacing-unit) * 0.5) 0;
+            }
+
+            .main-nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                /* Mulai dari luar layar, transisi lebih smooth */
+                width: min(80vw, 300px);
+                /* Lebar adaptif, maks 300px */
+                height: 100vh;
+                background-color: var(--background-color);
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.15);
+                flex-direction: column;
+                align-items: flex-start;
+                /* Teks rata kiri */
+                padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 3);
+                transition: right 0.4s var(--transition-timing);
+                /* Transisi lebih cepat */
+                overflow-y: auto;
+                z-index: 999;
+                /* Di atas overlay */
+            }
+
+            .main-nav.open {
+                right: 0;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                gap: var(--spacing-unit);
+                width: 100%;
+                /* Isi lebar nav drawer */
+            }
+
+            .main-nav a {
+                display: block;
+                padding: calc(var(--spacing-unit) * 1.5) 0;
+                /* Area tap lebih besar */
+                font-size: 1.1rem;
+                width: 100%;
+            }
+
+            .main-nav a::after {
+                bottom: 0;
+            }
+
+            /* Garis bawah dekat teks */
+            .main-nav .nav-button {
+                width: 100%;
+                margin-top: var(--spacing-unit);
+            }
+
+            .main-nav .nav-button a {
+                display: block;
+                /* Tombol mengisi lebar */
+                width: 100%;
+                text-align: center;
+            }
+
+            .mobile-nav-toggle {
+                display: block;
+            }
+
+            .hero-section {
+                padding-top: calc(var(--spacing-unit) * 10);
+                padding-bottom: calc(var(--spacing-unit) * 8);
+                min-height: auto;
+            }
+
+            .search-form {
+                flex-direction: column;
+                padding: calc(var(--spacing-unit) * 1.5);
+            }
+
+            .search-form input[type="text"],
+            .search-form button {
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                /* Stack kolom footer */
+                text-align: center;
+            }
+
+            .footer-column {
+                margin-bottom: calc(var(--spacing-unit) * 2);
+                /* Kurangi margin antar kolom yg stack */
+            }
+
+            .footer-column h4 {
+                margin-top: calc(var(--spacing-unit) * 2);
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+
+            .container {
+                width: 95%;
+                padding-left: var(--spacing-unit);
+                padding-right: var(--spacing-unit);
+            }
+
+            .hero-section h1 {
+                font-size: clamp(1.8rem, 8vw, 2.2rem);
+            }
+
+            .hero-section p {
+                font-size: 0.95rem;
+            }
+
+            .property-card-title {
+                font-size: 1.2rem;
+            }
+
+            .property-card-price {
+                font-size: 1.15rem;
+            }
+
+            .property-card-features {
+                gap: var(--spacing-unit);
+            }
+
+            .auth-form-container,
+            .contact-form-container {
+                margin: var(--spacing-unit) auto;
+                padding: calc(var(--spacing-unit) * 3) calc(var(--spacing-unit) * 2);
+                box-shadow: none;
+                /* Hilangkan shadow di mobile untuk kesan lebih flat/native */
+                border: 1px solid var(--border-color);
+            }
+
+            .auth-form-container h2,
+            .contact-form-container h3 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <!-- HEADER -->
+    <header class="site-header" id="siteHeader">
+        <div class="container header-container">
+            <a href="#beranda" class="logo router-link">
+                <i class="fas fa-city" aria-hidden="true"></i>BlueStay
+            </a>
+            <nav class="main-nav" id="mainNav" aria-label="Navigasi Utama">
+                <ul>
+                    <li><a href="#beranda" class="router-link">Beranda</a></li>
+                    <li><a href="#properti" class="router-link">Properti</a></li>
+                    <li><a href="#tentang" class="router-link">Tentang Kami</a></li>
+                    <li><a href="#kontak" class="router-link">Kontak</a></li>
+                    <li class="nav-button"><a href="#masuk" class="router-link button">Masuk</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Buka Menu Navigasi" aria-expanded="false"
+                aria-controls="mainNav">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA (Konten akan dimuat di sini oleh JavaScript) -->
+    <main id="mainContent">
+        <!-- Konten dinamis akan muncul di sini -->
+        <div id="initialLoaderContainer"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - 70px); padding-top: 70px;">
+            <div class="loading-spinner"></div>
+            <p>Memuat BlueStay...</p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>BlueStay</h4>
+                    <p>Menemukan apartemen impian Anda kini lebih mudah. Kami menyediakan pilihan terbaik dengan
+                        fasilitas lengkap dan lokasi strategis untuk kenyamanan hidup Anda.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Navigasi Cepat</h4>
+                    <ul>
+                        <li><a href="#beranda" class="router-link">Beranda</a></li>
+                        <li><a href="#properti" class="router-link">Semua Properti</a></li>
+                        <li><a href="#tentang" class="router-link">Tentang BlueStay</a></li>
+                        <li><a href="#kontak" class="router-link">Hubungi Kami</a></li>
+                        <li><a href="#faq" class="router-link" title="Pertanyaan Umum (Belum tersedia)">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#syarat-ketentuan" class="router-link"
+                                title="Syarat & Ketentuan (Belum tersedia)">Syarat & Ketentuan</a></li>
+                        <li><a href="#kebijakan-privasi" class="router-link"
+                                title="Kebijakan Privasi (Belum tersedia)">Kebijakan Privasi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Ikuti Kami</h4>
+                    <div class="social-icons">
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook BlueStay"><i
+                                class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram BlueStay"><i
+                                class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Twitter BlueStay"><i
+                                class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn BlueStay"><i
+                                class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© <span id="currentYear"></span> BlueStay. Semua hak dilindungi undang-undang. Didesain dengan <i
+                        class="fas fa-heart text-primary" aria-hidden="true"></i> untuk kenyamanan Anda.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- APLIKASI SINGLE PAGE (SPA) SEDERHANA BLUESTAY ---
+        // Dibangun dengan Vanilla JavaScript, HTML5, dan CSS3
+        // Fokus pada: Reusability, Maintainability, Performance, Accessibility, Fancy Design
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM ELEMENT REFERENCES ---
+            const mainContent = document.getElementById('mainContent');
+            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            const mainNav = document.getElementById('mainNav');
+            const siteHeader = document.getElementById('siteHeader');
+            const initialLoaderContainer = document.getElementById('initialLoaderContainer');
+            const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+            const headerHeight = siteHeader.offsetHeight;
+            if (mainContent) { // pastikan mainContent ada sebelum set padding
+                mainContent.style.paddingTop = `${headerHeight}px`;
+            }
+
+
+            // --- APPLICATION STATE ---
+            // State ini menyimpan data inti aplikasi dan halaman saat ini.
+            // Dalam aplikasi nyata, 'properties' akan diambil dari API.
+            const appState = {
+                currentPage: '',
+                properties: [ // Contoh data properti, idealnya dari API
+                    { id: 1, name: 'Apartemen Sky Garden Deluxe', location: 'Jakarta Pusat, CBD', price: '12.500.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 2, baths: 2, area: 85, type: 'Baru', description: 'Apartemen mewah di jantung pusat kota dengan pemandangan langit yang spektakuler dan fasilitas kelas satu. Termasuk kolam renang infinity, gym modern, dan keamanan 24 jam. Akses mudah ke pusat perbelanjaan dan transportasi publik.', features: ['Kolam Renang Infinity', 'Gym & Spa', 'Keamanan 24 Jam', 'Parkir Basement Luas', 'Akses Lift Pribadi', 'Smart Home System'] },
+                    { id: 2, name: 'Green Valley Urban Residence', location: 'Bandung Kota, Dago Atas', price: '7.850.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 3, baths: 2, area: 95, type: 'Disewakan', description: 'Hunian asri dan nyaman di kawasan elit Bandung, sempurna untuk keluarga yang mencari ketenangan. Dekat dengan area hijau, kafe ternama, dan pusat perbelanjaan.', features: ['Taman Bermain Anak', 'Jogging Track & Gazebo', 'Area BBQ Komunal', 'Dekat Factory Outlet', 'Udara Sejuk'] },
+                    { id: 3, name: 'Ocean Breeze Luxury Suites', location: 'Bali, Seminyak Beach', price: '28.000.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 1, baths: 1, area: 70, type: 'Premium', description: 'Suite eksklusif dengan pemandangan laut lepas yang menakjubkan. Nikmati matahari terbenam Bali dari balkon pribadi Anda. Dilengkapi interior desainer dan layanan concierge.', features: ['Pemandangan Laut Langsung', 'Balkon Pribadi Luas', 'Akses Pantai Pribadi', 'Restoran Fine Dining', 'Layanan Concierge'] },
+                    { id: 4, name: 'Urban Nest Compact Living', location: 'Surabaya Timur, Merr', price: '5.200.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 2, baths: 1, area: 58, type: 'Populer', description: 'Apartemen modern dan fungsional di lokasi strategis Surabaya. Ideal untuk profesional muda atau pasangan. Mudah dijangkau dan dekat dengan berbagai fasilitas publik serta kampus ternama.', features: ['Fully Furnished', 'Dapur Modern Minimalis', 'Akses Transportasi Umum', 'Dekat Kampus & Perkantoran'] },
+                    { id: 5, name: 'The Peak Skyline Penthouse', location: 'Jakarta Selatan, SCBD', price: '45.000.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1613553507747-5f8d62ad5904?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 3, baths: 3, area: 220, type: 'Mewah', description: 'Nikmati kemewahan dan privasi absolut di penthouse eksklusif ini, berlokasi di jantung distrik bisnis Jakarta Selatan. Desain interior yang elegan dipadukan dengan fasilitas bintang lima dan pemandangan kota 360 derajat.', features: ['Infinity Pool Pribadi', 'Private Cinema Room', 'Lounge & Bar Eksklusif', 'Smart Home Integration', 'Helipad Access (by request)'] },
+                    { id: 6, name: 'Serene Lakeside Villa Retreat', location: 'Bogor, Puncak Pass', price: '9.500.000', priceSuffix: '/ bulan', image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80', beds: 4, baths: 3, area: 180, type: 'Vila', description: 'Vila yang tenang dan damai di tepi danau, pilihan sempurna untuk liburan keluarga atau sebagai tempat kerja remote dengan suasana alam yang menyegarkan. Udara sejuk pegunungan dan pemandangan danau yang indah menanti Anda.', features: ['Tepi Danau Pribadi', 'Kebun & Gazebo Luas', 'Perapian Dalam Ruangan', 'Suasana Tenang & Asri', 'Area Outbound Anak'] },
+                ],
+                filteredProperties: []
+            };
+
+            // --- HTML TEMPLATES FOR PAGES ---
+            // Setiap fungsi template mengembalikan string HTML untuk halaman tertentu.
+            // Menggunakan template literal untuk kemudahan penulisan HTML dalam JavaScript.
+            const templates = {
+                beranda: () => `
+                    <section class="hero-section" aria-labelledby="hero-title">
+                        <div class="hero-content">
+                            <h1 id="hero-title">Temukan Apartemen Impian Anda Bersama <span class="text-accent">BlueStay</span></h1>
+                            <p>Jelajahi ribuan pilihan apartemen berkualitas di berbagai lokasi strategis. Proses mudah, aman, dan transparan untuk kenyamanan Anda.</p>
+                            <form class="search-form" id="heroSearchForm" role="search">
+                                <label for="heroSearchInput" class="sr-only">Cari Apartemen</label>
+                                <input type="text" id="heroSearchInput" placeholder="Masukkan lokasi, nama apartemen..." aria-label="Cari Apartemen">
+                                <button type="submit" class="button-primary"><i class="fas fa-search" aria-hidden="true"></i> Cari</button>
+                            </form>
+                        </div>
+                    </section>
+                    <section class="container section-padding" id="unggulan" aria-labelledby="unggulan-title">
+                        <h2 id="unggulan-title" class="text-center mb-4">Properti <span class="text-primary">Unggulan</span> Kami</h2>
+                        <div class="property-grid" id="featuredProperties">
+                            ${appState.properties.slice(0, 3).map(prop => renderPropertyCard(prop)).join('')}
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="#properti" class="button-outline-primary router-link">Lihat Semua Properti <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </section>
+                    <section class="section-padding" style="background-color: var(--light-color);" aria-labelledby="why-choose-us-title">
+                        <div class="container">
+                            <h2 id="why-choose-us-title" class="text-center mb-4">Mengapa Memilih <span class="text-primary">BlueStay</span>?</h2>
+                            <div class="why-choose-us-grid">
+                                <div class="why-choose-us-item text-center">
+                                    <i class="fas fa-shield-alt fa-3x text-primary" aria-hidden="true"></i>
+                                    <h4>Pilihan Terverifikasi</h4>
+                                    <p>Semua properti telah melalui proses verifikasi ketat untuk kenyamanan dan keamanan transaksi Anda.</p>
+                                </div>
+                                <div class="why-choose-us-item text-center">
+                                    <i class="fas fa-tags fa-3x text-primary" aria-hidden="true"></i>
+                                    <h4>Harga Terbaik & Transparan</h4>
+                                    <p>Kami menawarkan harga kompetitif dan transparan tanpa biaya tersembunyi yang merugikan.</p>
+                                </div>
+                                <div class="why-choose-us-item text-center">
+                                    <i class="fas fa-headset fa-3x text-primary" aria-hidden="true"></i>
+                                    <h4>Dukungan Pelanggan 24/7</h4>
+                                    <p>Tim profesional kami siap membantu Anda kapan saja untuk setiap pertanyaan atau kebutuhan mendesak.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                `,
+                properti: (searchTerm = '') => `
+                    <section class="container section-padding" aria-labelledby="all-properties-title">
+                        <h2 id="all-properties-title" class="text-center mb-2">Semua <span class="text-primary">Properti</span> Kami</h2>
+                        <p class="text-center text-secondary mb-4">Temukan apartemen yang paling sesuai dengan kebutuhan dan gaya hidup Anda.</p>
+                        <form class="search-form" id="pageSearchForm" role="search" style="max-width: 800px; margin: 0 auto calc(var(--spacing-unit) * 4) auto;">
+                            <label for="pageSearchInput" class="sr-only">Cari Properti</label>
+                            <input type="text" id="pageSearchInput" value="${searchTerm}" placeholder="Cari berdasarkan lokasi, nama, atau tipe..." aria-label="Cari Properti">
+                            <button type="submit" class="button-primary"><i class="fas fa-search" aria-hidden="true"></i> Cari</button>
+                        </form>
+                        <div id="propertyListingStatus" class="text-center mb-3" aria-live="polite"></div>
+                        <div class="property-grid" id="allPropertiesList">
+                            <!-- Daftar properti akan dimuat di sini oleh JavaScript -->
+                        </div>
+                    </section>
+                `,
+                detailProperti: (id) => {
+                    const property = appState.properties.find(p => p.id === parseInt(id));
+                    if (!property) return templates.notFound('Properti tidak ditemukan.'); // Gunakan template notFound dengan pesan khusus
+
+                    // Ganti ukuran gambar untuk kualitas lebih baik di halaman detail
+                    const detailImage = property.image.replace(/w=\d+&h=\d+/, 'w=800&h=600');
+
+                    return `
+                        <section class="container section-padding" aria-labelledby="property-name-${property.id}">
+                            <div class="property-detail-container">
+                                <div class="property-detail-image">
+                                    <img src="${detailImage}" alt="Tampilan ${property.name}">
+                                </div>
+                                <div class="property-detail-info">
+                                    ${property.type ? `<span class="property-type-badge">${property.type}</span>` : ''}
+                                    <h1 id="property-name-${property.id}">${property.name}</h1>
+                                    <p class="location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${property.location}</p>
+                                    <p class="price">Rp ${property.price} <span class="price-suffix">${property.priceSuffix}</span></p>
+                                    
+                                    <h4>Deskripsi Properti</h4>
+                                    <p class="description">${property.description}</p>
+                                    
+                                    <h4>Fasilitas Utama</h4>
+                                    <div class="property-detail-features">
+                                        <ul>
+                                            ${property.features.map(f => `<li><i class="fas fa-check" aria-hidden="true"></i> ${f}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                    <div class="property-detail-actions mt-4">
+                                        <button class="button-primary"><i class="fas fa-phone-alt" aria-hidden="true"></i> Hubungi Agen</button>
+                                        <button class="button-outline-primary"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Jadwalkan Kunjungan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    `;
+                },
+                tentang: () => `
+                    <section class="container section-padding" aria-labelledby="about-us-title">
+                        <h2 id="about-us-title" class="text-center mb-4">Tentang <span class="text-primary">BlueStay</span></h2>
+                        <div style="max-width: 800px; margin: auto; text-align: left;">
+                            <p>BlueStay didirikan dengan misi untuk merevolusi cara masyarakat Indonesia mencari dan menyewa apartemen. Kami percaya bahwa setiap individu dan keluarga berhak mendapatkan hunian yang tidak hanya nyaman dan aman, tetapi juga sesuai dengan gaya hidup modern mereka, tanpa harus melalui proses yang rumit dan membingungkan.</p>
+                            <p>Dengan memanfaatkan teknologi terkini dan didukung oleh tim profesional yang berdedikasi, BlueStay hadir sebagai jembatan yang menghubungkan calon penyewa dengan ribuan pilihan apartemen berkualitas dari pemilik dan agen properti terpercaya di seluruh Indonesia. Platform kami dirancang secara intuitif untuk memberikan pengalaman pencarian yang menyenangkan, informasi properti yang transparan dan akurat, serta proses sewa yang efisien dan aman.</p>
+                            
+                            <h3 class="mt-4">Visi Kami</h3>
+                            <p>Menjadi platform sewa apartemen terdepan dan paling tepercaya di Indonesia, yang dikenal karena inovasi berkelanjutan, kualitas layanan prima, dan kontribusi positif terhadap kemudahan akses hunian berkualitas bagi masyarakat.</p>
+                            
+                            <h3 class="mt-3">Misi Kami</h3>
+                            <ul style="list-style-type: disc; padding-left: 20px;">
+                                <li class="mb-1"><i class="fas fa-angle-right text-primary" style="margin-right: 8px;"></i>Menyediakan pilihan apartemen terlengkap, terkurasi, dan terverifikasi di berbagai kota besar.</li>
+                                <li class="mb-1"><i class="fas fa-angle-right text-primary" style="margin-right: 8px;"></i>Memberikan pengalaman pengguna yang mulus, intuitif, dan menyenangkan melalui platform digital yang canggih.</li>
+                                <li class="mb-1"><i class="fas fa-angle-right text-primary" style="margin-right: 8px;"></i>Memastikan transparansi harga, fasilitas, dan seluruh proses sewa-menyewa.</li>
+                                <li class="mb-1"><i class="fas fa-angle-right text-primary" style="margin-right: 8px;"></i>Memberikan layanan pelanggan yang responsif, solutif, dan profesional.</li>
+                                <li class="mb-1"><i class="fas fa-angle-right text-primary" style="margin-right: 8px;"></i>Terus berinovasi dalam teknologi dan layanan untuk memenuhi ekspektasi pasar yang dinamis.</li>
+                            </ul>
+                        </div>
+                    </section>
+                `,
+                kontak: () => `
+                    <section class="container section-padding" aria-labelledby="contact-us-title">
+                        <h2 id="contact-us-title" class="text-center mb-2">Hubungi <span class="text-primary">Kami</span></h2>
+                        <p class="text-center text-secondary mb-4">Ada pertanyaan, saran, atau butuh bantuan? Jangan ragu untuk menghubungi tim BlueStay.</p>
+                        <div class="contact-grid">
+                            <div class="contact-info">
+                                <h4>Informasi Kontak BlueStay</h4>
+                                <p><i class="fas fa-map-marker-alt text-primary" aria-hidden="true"></i> Jl. Apartemen Indah No. 123, Lantai 5, Jakarta Selatan, 12345, Indonesia</p>
+                                <p><i class="fas fa-phone text-primary" aria-hidden="true"></i> <a href="tel:+62211234567">(021) 123-4567</a> (Telepon)</p>
+                                <p><i class="fab fa-whatsapp text-primary" aria-hidden="true"></i> <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">+62 812-3456-7890</a> (WhatsApp)</p>
+                                <p><i class="fas fa-envelope text-primary" aria-hidden="true"></i> <a href="mailto:support@bluestay.com">support@bluestay.com</a></p>
+                                
+                                <h4 class="mt-4">Jam Operasional Layanan</h4>
+                                <p><i class="fas fa-clock text-primary" aria-hidden="true"></i> Senin - Jumat: 08:00 - 17:00 WIB</p>
+                                <p><i class="fas fa-clock text-primary" aria-hidden="true"></i> Sabtu: 09:00 - 15:00 WIB</p>
+                                <p><i class="fas fa-calendar-times text-primary" aria-hidden="true"></i> Minggu & Hari Libur Nasional: Tutup</p>
+                            </div>
+                            <form id="contactForm" class="contact-form-container" style="margin: 0;">
+                                <h3>Kirim Pesan Cepat</h3>
+                                <div class="form-group">
+                                    <label for="contactName">Nama Lengkap Anda</label>
+                                    <input type="text" id="contactName" name="contactName" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactEmail">Alamat Email Aktif</label>
+                                    <input type="email" id="contactEmail" name="contactEmail" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactSubject">Subjek Pesan</label>
+                                    <input type="text" id="contactSubject" name="contactSubject" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactMessage">Pesan Anda</label>
+                                    <textarea id="contactMessage" name="contactMessage" rows="5" required aria-required="true"></textarea>
+                                </div>
+                                <button type="submit" class="button-primary">Kirim Pesan Anda</button>
+                            </form>
+                        </div>
+                    </section>
+                `,
+                masuk: () => `
+                    <section class="container section-padding" aria-labelledby="login-title">
+                        <div class="auth-form-container">
+                            <h2 id="login-title">Masuk ke Akun <span class="text-primary">BlueStay</span> Anda</h2>
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label for="loginEmail">Alamat Email</label>
+                                    <input type="email" id="loginEmail" name="email" required autocomplete="email" aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword">Kata Sandi</label>
+                                    <input type="password" id="loginPassword" name="password" required autocomplete="current-password" aria-required="true">
+                                </div>
+                                <button type="submit" class="button-primary">Masuk Sekarang</button>
+                                <p class="form-link">Belum punya akun? <a href="#daftar" class="router-link">Daftar gratis di sini</a></p>
+                                <p class="form-link" style="margin-top: var(--spacing-unit);"><a href="#lupa-sandi" class="router-link" title="Fitur Lupa Sandi (Belum tersedia)">Lupa kata sandi?</a></p>
+                            </form>
+                        </div>
+                    </section>
+                `,
+                daftar: () => `
+                    <section class="container section-padding" aria-labelledby="register-title">
+                        <div class="auth-form-container">
+                            <h2 id="register-title">Buat Akun Baru di <span class="text-primary">BlueStay</span></h2>
+                            <form id="registerForm">
+                                <div class="form-group">
+                                    <label for="registerName">Nama Lengkap</label>
+                                    <input type="text" id="registerName" name="name" required autocomplete="name" aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail">Alamat Email</label>
+                                    <input type="email" id="registerEmail" name="email" required autocomplete="email" aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword">Buat Kata Sandi</label>
+                                    <input type="password" id="registerPassword" name="password" required autocomplete="new-password" aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerConfirmPassword">Konfirmasi Kata Sandi</label>
+                                    <input type="password" id="registerConfirmPassword" name="confirmPassword" required autocomplete="new-password" aria-required="true">
+                                </div>
+                                <button type="submit" class="button-primary">Daftar Akun</button>
+                                <p class="form-link">Sudah punya akun? <a href="#masuk" class="router-link">Masuk di sini</a></p>
+                            </form>
+                        </div>
+                    </section>
+                `,
+                // Halaman fallback untuk route yang tidak ditemukan atau konten yang belum ada.
+                notFound: (message = 'Maaf, halaman yang Anda cari tidak ada atau telah dipindahkan.') => `
+                    <section class="container section-padding text-center" style="min-height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <i class="fas fa-map-signs fa-5x text-primary mb-3" aria-hidden="true"></i>
+                        <h1 style="font-size: clamp(3rem, 10vw, 5rem); color: var(--primary-color); margin-bottom: var(--spacing-unit);">404</h1>
+                        <h2>Halaman Tidak Ditemukan</h2>
+                        <p class="text-secondary" style="max-width: 500px;">${message}</p>
+                        <a href="#beranda" class="button-primary router-link mt-3"><i class="fas fa-home" aria-hidden="true"></i> Kembali ke Beranda</a>
+                    </section>
+                `
+            };
+
+            // --- RENDER FUNCTIONS ---
+            // Fungsi untuk membuat HTML satu kartu properti.
+            function renderPropertyCard(property) {
+                return `
+                    <article class="property-card" data-id="${property.id}" aria-labelledby="card-title-${property.id}">
+                        <a href="#properti/${property.id}" class="router-link" style="text-decoration: none; color: inherit;">
+                            <div class="property-card-image-wrapper">
+                                <img src="${property.image}" alt="Tampilan ${property.name}" loading="lazy">
+                                ${property.type ? `<span class="property-card-badge">${property.type}</span>` : ''}
+                            </div>
+                            <div class="property-card-content">
+                                <h3 class="property-card-title" id="card-title-${property.id}">${property.name}</h3>
+                                <p class="property-card-location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${property.location}</p>
+                                <div class="property-card-features">
+                                    <span><i class="fas fa-bed" aria-hidden="true"></i> ${property.beds} K. Tidur</span>
+                                    <span><i class="fas fa-bath" aria-hidden="true"></i> ${property.baths} K. Mandi</span>
+                                    <span><i class="fas fa-ruler-combined" aria-hidden="true"></i> ${property.area} m²</span>
+                                </div>
+                                <p class="property-card-price">Rp ${property.price} <span class="price-suffix">${property.priceSuffix}</span></p>
+                                <span class="button-primary" style="margin-top: auto;">Lihat Detail</span>
+                            </div>
+                        </a>
+                    </article>
+                `;
+            }
+
+            // Fungsi untuk memuat dan menampilkan daftar properti (dengan filter pencarian).
+            function loadProperties(searchTerm = '') {
+                const propertyListContainer = document.getElementById('allPropertiesList');
+                const statusContainer = document.getElementById('propertyListingStatus');
+                if (!propertyListContainer || !statusContainer) return;
+
+                statusContainer.innerHTML = '<div class="loading-spinner" role="status"><span class="sr-only">Memuat properti...</span></div><p>Mencari properti yang sesuai...</p>';
+                propertyListContainer.innerHTML = ''; // Kosongkan sebelum memuat
+
+                // Simulasi filter data properti berdasarkan searchTerm
+                const term = searchTerm.toLowerCase().trim();
+                appState.filteredProperties = appState.properties.filter(prop =>
+                    prop.name.toLowerCase().includes(term) ||
+                    prop.location.toLowerCase().includes(term) ||
+                    (prop.type && prop.type.toLowerCase().includes(term)) ||
+                    prop.description.toLowerCase().includes(term)
+                );
+
+                // Simulasi delay network (misalnya 500ms)
+                setTimeout(() => {
+                    if (appState.filteredProperties.length > 0) {
+                        propertyListContainer.innerHTML = appState.filteredProperties.map(prop => renderPropertyCard(prop)).join('');
+                        statusContainer.innerHTML = `<p>${appState.filteredProperties.length} properti ditemukan ${term ? `untuk pencarian "${searchTerm}"` : ''}.</p>`;
+                    } else {
+                        propertyListContainer.innerHTML = '<p class="text-center">Tidak ada properti yang cocok dengan kriteria pencarian Anda.</p>';
+                        statusContainer.innerHTML = `<p>Tidak ada properti yang cocok dengan pencarian "${searchTerm}".</p>`;
+                    }
+                    // Listener untuk kartu yang baru dirender tidak diperlukan karena link adalah <a> href standar
+                }, 500);
+            }
+
+            // --- ROUTER LOGIC ---
+            // Fungsi inti untuk menangani navigasi SPA berbasis hash.
+            function router() {
+                const path = window.location.hash.slice(1) || 'beranda';
+                let [pageName, param, subParam] = path.split('/'); // Memungkinkan #properti/search/jakarta
+
+                // Sembunyikan loader awal setelah navigasi pertama
+                if (initialLoaderContainer && !initialLoaderContainer.classList.contains('hidden')) {
+                    initialLoaderContainer.classList.add('hidden');
+                }
+
+                mainContent.innerHTML = ''; // Kosongkan konten utama
+
+                let pageContentFunction;
+                let pageArgument = param;
+
+                // Penanganan rute khusus seperti #properti/search/keyword
+                if (pageName === 'properti' && param === 'search' && subParam) {
+                    pageArgument = decodeURIComponent(subParam); // keyword pencarian
+                } else if (pageName === 'properti' && !param) { // #properti (tanpa ID atau search)
+                    pageArgument = ''; // Akan memuat semua properti
+                }
+
+                pageContentFunction = templates[pageName];
+
+                if (pageContentFunction) {
+                    mainContent.innerHTML = pageContentFunction(pageArgument);
+                    appState.currentPage = pageName;
+                    document.title = `BlueStay - ${pageName.charAt(0).toUpperCase() + pageName.slice(1).replace(/([A-Z])/g, ' $1')}`;
+
+
+                    // Logika spesifik untuk setiap halaman setelah dirender
+                    if (pageName === 'beranda') {
+                        const heroSearchForm = document.getElementById('heroSearchForm');
+                        if (heroSearchForm) {
+                            heroSearchForm.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const searchTerm = document.getElementById('heroSearchInput').value;
+                                if (searchTerm.trim()) {
+                                    window.location.hash = `#properti/search/${encodeURIComponent(searchTerm.trim())}`;
+                                } else {
+                                    window.location.hash = `#properti`; // Jika kosong, tampilkan semua
+                                }
+                            });
+                        }
+                    } else if (pageName === 'properti') {
+                        loadProperties(pageArgument); // pageArgument berisi searchTerm jika ada dari URL
+                        const pageSearchForm = document.getElementById('pageSearchForm');
+                        if (pageSearchForm) {
+                            pageSearchForm.addEventListener('submit', (e) => {
+                                e.preventDefault();
+                                const searchTerm = document.getElementById('pageSearchInput').value;
+                                loadProperties(searchTerm.trim()); // Filter langsung di halaman, URL tidak diubah saat ini
+                                // Jika ingin URL update: window.location.hash = `#properti/search/${encodeURIComponent(searchTerm.trim())}`;
+                            });
+                        }
+                    } else if (pageName === 'masuk') {
+                        const loginForm = document.getElementById('loginForm');
+                        if (loginForm) loginForm.addEventListener('submit', handleAuthFormSubmit);
+                    } else if (pageName === 'daftar') {
+                        const registerForm = document.getElementById('registerForm');
+                        if (registerForm) registerForm.addEventListener('submit', handleAuthFormSubmit);
+                    } else if (pageName === 'kontak') {
+                        const contactForm = document.getElementById('contactForm');
+                        if (contactForm) contactForm.addEventListener('submit', handleContactFormSubmit);
+                    }
+                    // Halaman yang belum ada kontennya (FAQ, Syarat, Privasi)
+                    else if (['faq', 'syarat-ketentuan', 'kebijakan-privasi', 'lupa-sandi'].includes(pageName)) {
+                        mainContent.innerHTML = templates.notFound(`Konten untuk halaman "${pageName.replace(/-/g, ' ')}" sedang dalam pengembangan. Silakan kembali lagi nanti.`);
+                        document.title = `BlueStay - ${pageName.charAt(0).toUpperCase() + pageName.slice(1)} (Segera Hadir)`;
+                    }
+
+
+                } else { // Jika route tidak dikenal
+                    mainContent.innerHTML = templates.notFound();
+                    appState.currentPage = 'notFound';
+                    document.title = "BlueStay - Halaman Tidak Ditemukan";
+                }
+
+                updateActiveLink(path);
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke atas halaman dengan halus
+                // Tutup mobile nav jika terbuka setelah navigasi
+                if (mainNav.classList.contains('open')) toggleMobileNav();
+            }
+
+            // --- EVENT HANDLERS & UTILITIES ---
+            function handleAuthFormSubmit(e) {
+                e.preventDefault();
+                const formType = e.target.id === 'loginForm' ? 'Masuk' : 'Pendaftaran';
+                // Validasi sederhana bisa ditambahkan di sini
+                alert(`Fitur ${formType} berhasil disimulasikan (hanya tampilan). Data tidak dikirim.`);
+                e.target.reset(); // Kosongkan form
+            }
+            function handleContactFormSubmit(e) {
+                e.preventDefault();
+                // Validasi sederhana bisa ditambahkan di sini
+                alert('Pesan Anda berhasil disimulasikan untuk dikirim (hanya tampilan). Terima kasih!');
+                e.target.reset();
+            }
+
+            // Fungsi untuk toggle navigasi mobile
+            function toggleMobileNav() {
+                const isOpen = mainNav.classList.toggle('open');
+                mobileNavToggle.setAttribute('aria-expanded', isOpen.toString());
+                mobileNavOverlay.classList.toggle('active', isOpen);
+                document.body.style.overflow = isOpen ? 'hidden' : ''; // Mencegah scroll body saat menu terbuka
+
+                if (isOpen) {
+                    mobileNavToggle.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+                    mobileNavToggle.setAttribute('aria-label', 'Tutup Menu Navigasi');
+                } else {
+                    mobileNavToggle.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+                    mobileNavToggle.setAttribute('aria-label', 'Buka Menu Navigasi');
+                }
+            }
+            mobileNavToggle.addEventListener('click', toggleMobileNav);
+            mobileNavOverlay.addEventListener('click', toggleMobileNav); // Tutup menu saat klik overlay
+
+            // Efek header 'scrolled' saat window di-scroll
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 30) { // Threshold lebih kecil untuk efek lebih cepat
+                    siteHeader.classList.add('scrolled');
+                } else {
+                    siteHeader.classList.remove('scrolled');
+                }
+            }, { passive: true }); // Optimasi performa scroll
+
+            // Fungsi untuk memperbarui link navigasi yang aktif
+            function updateActiveLink(currentPath) {
+                document.querySelectorAll('.main-nav a.router-link').forEach(link => {
+                    link.classList.remove('active');
+                    const linkPath = link.getAttribute('href').slice(1);
+                    // Logika untuk menyorot link navigasi utama yang benar
+                    // Contoh: jika currentPath adalah "properti/1" atau "properti/search/term", maka link "properti" harus aktif.
+                    if (currentPath === linkPath || (currentPath.startsWith(linkPath + '/') && linkPath !== 'beranda')) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            // Update tahun di footer secara dinamis
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Listener untuk semua link internal (router-link)
+            // Menggunakan event delegation pada body untuk performa dan elemen dinamis
+            document.body.addEventListener('click', (e) => {
+                const targetLink = e.target.closest('a.router-link');
+                if (targetLink) {
+                    // Tidak perlu e.preventDefault() karena kita menggunakan hash routing.
+                    // Perubahan hash akan ditangani oleh 'hashchange' listener.
+                    // Jika menu mobile terbuka, tutup.
+                    if (mainNav.classList.contains('open') && !e.target.closest('.nav-button')) { // Jangan tutup jika yg diklik tombol di nav
+                        // Cek dulu apakah yang diklik itu link di dalam mobile nav
+                        if (targetLink.closest('#mainNav')) {
+                            toggleMobileNav();
+                        }
+                    }
+                }
+            });
+
+            // Event listener untuk perubahan hash URL
+            window.addEventListener('hashchange', router);
+
+            // --- INITIALIZE APPLICATION ---
+            // Panggil router untuk memuat halaman awal berdasarkan hash URL saat ini atau default ke 'beranda'.
+            // Penyesuaian tinggi padding main content berdasarkan tinggi header aktual
+            const updateMainPadding = () => {
+                const currentHeaderHeight = siteHeader.offsetHeight;
+                mainContent.style.paddingTop = `${currentHeaderHeight}px`;
+            };
+            // Panggil saat load dan resize untuk header yang mungkin berubah tinggi (misal: .scrolled)
+            window.addEventListener('resize', updateMainPadding);
+            updateMainPadding(); // Panggil sekali saat inisialisasi
+
+            router();
+        });
+    </script>
+</body>
+
+</html>

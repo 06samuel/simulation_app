@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Green Valley - Temukan properti impian Anda: apartemen, rumah, dan kos dengan mudah. Platform properti terpercaya.">
+    <meta name="keywords" content="properti, green valley, apartemen, rumah, kos, jual, sewa, cari properti">
+    <meta name="author" content="Green Valley Development">
+
+    <!-- Judul Aplikasi -->
+    <title>Green Valley - Properti Impian Anda</title>
+
+    <!-- Favicon (contoh, ganti dengan favicon Anda) -->
+    <link rel="icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/building-columns.svg"
+        type="image/svg+xml">
+
+
+    <!-- Font Awesome Icons (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Google Fonts - Inter (Sudah baik) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* 1. Reset CSS Sederhana & Konfigurasi Dasar */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Palet Warna Utama */
+            --primary-color: #2E7D32;
+            /* Hijau yang lebih teduh dan modern */
+            --primary-color-dark: #1B5E20;
+            --primary-color-light: #A5D6A7;
+            --secondary-color: #546E7A;
+            /* Abu-abu kebiruan untuk teks sekunder */
+            --accent-color: #FFB300;
+            /* Kuning amber sebagai aksen */
+            --accent-color-dark: #FF8F00;
+
+            /* Warna Netral */
+            --light-bg: #F5F7FA;
+            /* Latar belakang utama yang sangat terang */
+            --white-color: #FFFFFF;
+            --dark-text: #263238;
+            /* Teks utama yang gelap */
+            --medium-text: #455A64;
+            --light-text: #FFFFFF;
+            --border-color: #CFD8DC;
+            /* Warna border yang lembut */
+            --disabled-color: #B0BEC5;
+
+            /* Bayangan (Shadows) */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);
+
+            /* Radius Sudut (Border Radius) */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 16px;
+            --border-radius-full: 9999px;
+
+            /* Tipografi */
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-size-base: 16px;
+            --line-height-base: 1.6;
+
+            /* Transisi */
+            --transition-speed-fast: 0.15s;
+            --transition-speed-normal: 0.3s;
+            --transition-timing-function: ease-in-out;
+
+            /* Z-index (untuk layering) */
+            --z-index-dropdown: 1000;
+            --z-index-modal: 1050;
+            --z-index-navbar-fixed: 1030;
+        }
+
+        html {
+            font-size: var(--font-size-base);
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            line-height: var(--line-height-base);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1;
+            padding-top: 80px;
+            /* Sesuaikan dengan tinggi header */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed-fast) var(--transition-timing-function);
+        }
+
+        a:hover {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+        }
+
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        /* 2. Utilitas Global */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .section-padding {
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+
+        @media (min-width: 768px) {
+            .section-padding {
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-primary {
+            color: var(--primary-color);
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .mb-5 {
+            margin-bottom: 3rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .d-block {
+            display: block !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .align-items-center {
+            align-items: center !important;
+        }
+
+        .justify-content-center {
+            justify-content: center !important;
+        }
+
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+
+        /* Tombol Kustom */
+        .btn {
+            display: inline-block;
+            font-weight: 600;
+            line-height: var(--line-height-base);
+            color: var(--dark-text);
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.65rem 1.25rem;
+            font-size: 0.95rem;
+            border-radius: var(--border-radius-md);
+            transition: color var(--transition-speed-normal) var(--transition-timing-function),
+                background-color var(--transition-speed-normal) var(--transition-timing-function),
+                border-color var(--transition-speed-normal) var(--transition-timing-function),
+                box-shadow var(--transition-speed-normal) var(--transition-timing-function);
+        }
+
+        .btn-primary {
+            color: var(--light-text);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            color: var(--light-text);
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.5);
+        }
+
+        .btn-accent {
+            color: var(--dark-text);
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn-accent:hover {
+            color: var(--dark-text);
+            background-color: var(--accent-color-dark);
+            border-color: var(--accent-color-dark);
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-lg {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-link {
+            font-weight: 400;
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 0;
+        }
+
+        .btn-link:hover {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+        }
+
+
+        /* Grid System Sederhana (Flexbox-based) */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col,
+        .col-1,
+        .col-2,
+        .col-3,
+        .col-4,
+        .col-5,
+        .col-6,
+        .col-7,
+        .col-8,
+        .col-9,
+        .col-10,
+        .col-11,
+        .col-12,
+        .col-md-1,
+        .col-md-2,
+        .col-md-3,
+        .col-md-4,
+        .col-md-5,
+        .col-md-6,
+        .col-md-7,
+        .col-md-8,
+        .col-md-9,
+        .col-md-10,
+        .col-md-11,
+        .col-md-12,
+        .col-lg-1,
+        .col-lg-2,
+        .col-lg-3,
+        .col-lg-4,
+        .col-lg-5,
+        .col-lg-6,
+        .col-lg-7,
+        .col-lg-8,
+        .col-lg-9,
+        .col-lg-10,
+        .col-lg-11,
+        .col-lg-12 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .col {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+        }
+
+        .col-auto {
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 100%;
+        }
+
+        /* Ukuran kolom untuk semua perangkat (xs) */
+        .col-1 {
+            flex: 0 0 8.333333%;
+            max-width: 8.333333%;
+        }
+
+        .col-2 {
+            flex: 0 0 16.666667%;
+            max-width: 16.666667%;
+        }
+
+        .col-3 {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        .col-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+
+        .col-5 {
+            flex: 0 0 41.666667%;
+            max-width: 41.666667%;
+        }
+
+        .col-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        /* ... tambahkan sisanya jika perlu */
+
+        /* Ukuran kolom untuk md (tablet) dan lebih besar */
+        @media (min-width: 768px) {
+            .col-md-1 {
+                flex: 0 0 8.333333%;
+                max-width: 8.333333%;
+            }
+
+            .col-md-2 {
+                flex: 0 0 16.666667%;
+                max-width: 16.666667%;
+            }
+
+            .col-md-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+
+            .col-md-4 {
+                flex: 0 0 33.333333%;
+                max-width: 33.333333%;
+            }
+
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .col-md-8 {
+                flex: 0 0 66.666667%;
+                max-width: 66.666667%;
+            }
+
+            .col-md-9 {
+                flex: 0 0 75%;
+                max-width: 75%;
+            }
+
+            .col-md-10 {
+                flex: 0 0 83.333333%;
+                max-width: 83.333333%;
+            }
+
+            .col-md-12 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Ukuran kolom untuk lg (desktop) dan lebih besar */
+        @media (min-width: 992px) {
+            .col-lg-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+
+            .col-lg-4 {
+                flex: 0 0 33.333333%;
+                max-width: 33.333333%;
+            }
+
+            .col-lg-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .col-lg-8 {
+                flex: 0 0 66.666667%;
+                max-width: 66.666667%;
+            }
+
+            /* ... tambahkan sisanya jika perlu */
+        }
+
+
+        /* 3. Header & Navigasi */
+        .app-header {
+            background-color: var(--white-color);
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: var(--z-index-navbar-fixed);
+            padding: 0.75rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            /* Tinggi konsisten */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .navbar-brand:hover {
+            color: var(--primary-color-dark);
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item {
+            margin-left: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--medium-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            /* Padding atas-bawah untuk area klik lebih besar */
+            position: relative;
+            transition: color var(--transition-speed-fast) var(--transition-timing-function);
+        }
+
+        .nav-link::after {
+            /* Indikator aktif modern */
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed-normal) var(--transition-timing-function);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link.dropdown-toggle {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link.dropdown-toggle::after {
+            /* Custom caret */
+            content: "\f078";
+            /* Font Awesome down arrow */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            display: inline-block;
+            margin-left: 0.35em;
+            vertical-align: 0.1em;
+            border: none;
+            transition: transform var(--transition-speed-normal) var(--transition-timing-function);
+        }
+
+        .nav-item.dropdown.open>.nav-link.dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            display: none;
+            /* Sembunyikan secara default */
+            position: absolute;
+            top: 100%;
+            right: 0;
+            /* Atau left:0 tergantung desain */
+            background-color: var(--white-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            list-style: none;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+            /* Sedikit jarak dari toggle */
+            min-width: 180px;
+            /* Lebar minimal dropdown */
+            z-index: var(--z-index-dropdown);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity var(--transition-speed-normal) var(--transition-timing-function),
+                transform var(--transition-speed-normal) var(--transition-timing-function);
+        }
+
+        .nav-item.dropdown.open>.dropdown-menu {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            clear: both;
+            font-weight: 400;
+            color: var(--dark-text);
+            text-align: inherit;
+            white-space: nowrap;
+            background-color: transparent;
+            border: 0;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item.active {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover::after,
+        /* Hapus indikator garis bawah untuk item dropdown */
+        .dropdown-item.active::after {
+            width: 0;
+        }
+
+
+        .navbar-toggler {
+            display: none;
+            /* Sembunyikan di desktop */
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .navbar-toggler:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.15rem rgba(var(--primary-color-rgb), 0.3);
+            /* Custom focus */
+        }
+
+        /* Navigasi Mobile */
+        @media (max-width: 991.98px) {
+
+            /* Breakpoint Bootstrap lg */
+            .navbar-nav {
+                display: none;
+                /* Sembunyikan nav utama */
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                /* Di bawah header */
+                left: 0;
+                background-color: var(--white-color);
+                box-shadow: var(--shadow-sm);
+                padding: 1rem 0;
+                border-top: 1px solid var(--border-color);
+            }
+
+            .navbar-nav.open {
+                display: flex;
+                /* Tampilkan saat 'open' */
+            }
+
+            .nav-item {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1.5rem;
+                /* Padding lebih besar untuk mobile */
+                display: block;
+                width: 100%;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .nav-link::after {
+                display: none;
+            }
+
+            /* Hilangkan underline di mobile */
+            .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+
+            .dropdown-menu {
+                position: static;
+                /* Bukan absolute lagi */
+                float: none;
+                width: auto;
+                margin-top: 0;
+                background-color: transparent;
+                border: 0;
+                box-shadow: none;
+                padding-left: 1rem;
+                /* Indentasi untuk sub-item */
+            }
+
+            .dropdown-item {
+                padding-left: 2rem;
+            }
+
+            .navbar-toggler {
+                display: block;
+                /* Tampilkan tombol burger */
+            }
+        }
+
+
+        /* 4. Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1582407947304-fd86f028f716?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1992&q=80') no-repeat center center;
+            background-size: cover;
+            color: var(--light-text);
+            padding: 100px 0;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            /* Lebih tebal untuk dampak */
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section p {
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero-section p {
+                font-size: 1.25rem;
+            }
+
+            .hero-section {
+                padding: 150px 0;
+            }
+        }
+
+        /* 5. Formulir Pencarian */
+        .search-form-wrapper {
+            background-color: var(--white-color);
+            padding: 2.5rem;
+            /* Padding lebih besar */
+            border-radius: var(--border-radius-lg);
+            /* Sudut lebih tumpul */
+            box-shadow: var(--shadow-lg);
+            margin-top: -80px;
+            /* Overlap dengan hero */
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-form label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+            /* Agar margin bottom bekerja */
+            color: var(--medium-text);
+        }
+
+        .form-control,
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--dark-text);
+            background-color: var(--white-color);
+            background-clip: padding-box;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            transition: border-color var(--transition-speed-fast) var(--transition-timing-function),
+                box-shadow var(--transition-speed-fast) var(--transition-timing-function);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+            /* Warna primary dengan opacity */
+        }
+
+        .search-form .row>div {
+            /* Untuk spacing antar kolom form */
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .search-form .row>div {
+                margin-bottom: 0;
+            }
+
+            .search-form .btn {
+                height: 100%;
+                /* Samakan tinggi tombol dengan input */
+            }
+        }
+
+        #advancedFiltersContainer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* 6. Kartu Kategori & Properti */
+        .card-grid {
+            /* Menggunakan CSS Grid untuk layout kartu */
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            /* Jarak antar kartu */
+        }
+
+        .category-card,
+        .property-card {
+            background-color: var(--white-color);
+            border-radius: var(--border-radius-lg);
+            /* Sudut lebih tumpul */
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform var(--transition-speed-normal) var(--transition-timing-function),
+                box-shadow var(--transition-speed-normal) var(--transition-timing-function);
+            text-decoration: none;
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-card:hover,
+        .property-card:hover {
+            transform: translateY(-8px);
+            /* Efek angkat lebih kentara */
+            box-shadow: var(--shadow-lg);
+            text-decoration: none;
+            color: var(--dark-text);
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 220px;
+            /* Tinggi gambar konsisten */
+            object-fit: cover;
+            /* Pastikan gambar mengisi area tanpa distorsi */
+            transition: transform var(--transition-speed-normal) var(--transition-timing-function);
+        }
+
+        .category-card:hover .card-img-top,
+        .property-card:hover .card-img-top {
+            transform: scale(1.05);
+            /* Zoom halus pada gambar saat hover */
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            /* Agar card body mengisi sisa ruang */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--dark-text);
+        }
+
+        .category-card .card-title {
+            color: var(--primary-color);
+        }
+
+        .category-card:hover .card-title {
+            color: var(--primary-color-dark);
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: var(--medium-text);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .property-card .property-type {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            font-weight: 600;
+            /* Lebih tebal */
+            letter-spacing: 0.5px;
+            /* Sedikit spasi antar huruf */
+            margin-bottom: 0.25rem;
+        }
+
+        .property-card .property-location,
+        .property-card .property-price,
+        .property-card .property-features {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: var(--medium-text);
+        }
+
+        .property-card .property-location i {
+            margin-right: 0.3rem;
+            color: var(--secondary-color);
+        }
+
+        .property-card .property-price {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: auto;
+            /* Dorong harga ke bawah jika ada ruang */
+            margin-bottom: 1rem;
+        }
+
+        .property-card .btn {
+            margin-top: auto;
+            /* Tombol selalu di bawah */
+            width: 100%;
+        }
+
+        /* 7. Footer */
+        .app-footer {
+            background-color: var(--dark-text);
+            color: var(--light-bg);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: auto;
+            /* Mendorong footer ke bawah */
+        }
+
+        .app-footer p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .app-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .app-footer a:hover {
+            color: var(--accent-color-dark);
+            text-decoration: underline;
+        }
+
+        .footer-social-icons {
+            margin-top: 1rem;
+        }
+
+        .footer-social-icons a {
+            color: var(--light-bg);
+            font-size: 1.5rem;
+            margin: 0 0.75rem;
+            transition: color var(--transition-speed-fast) var(--transition-timing-function);
+        }
+
+        .footer-social-icons a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 8. SPA Page Transition */
+        .page-section {
+            display: none;
+            animation: fadeInPage 0.5s var(--transition-timing-function) forwards;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 9. Aksesibilitas Tambahan */
+        /* Fokus terlihat jelas untuk elemen interaktif */
+        a:focus,
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid var(--primary-color-light);
+            outline-offset: 2px;
+        }
+
+        /* Kecuali untuk yang sudah dihandle custom */
+        .btn-primary:focus,
+        .form-control:focus,
+        .form-select:focus,
+        .navbar-toggler:focus {
+            outline: none;
+            /* Karena sudah ada box-shadow focus */
+        }
+
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            /* Sembunyikan di luar layar */
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            z-index: var(--z-index-modal);
+            /* Di atas segalanya */
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 10px;
+            /* Tampilkan saat fokus */
+        }
+
+        /* Styling untuk placeholder yang lebih baik */
+        ::placeholder {
+            /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: var(--disabled-color);
+            opacity: 1;
+            /* Firefox */
+        }
+
+        :-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: var(--disabled-color);
+        }
+
+        ::-ms-input-placeholder {
+            /* Microsoft Edge */
+            color: var(--disabled-color);
+        }
+
+        /* Loading indicator (opsional, bisa dibuat lebih fancy) */
+        .loading-indicator {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--medium-text);
+        }
+
+        .loading-indicator i {
+            margin-right: 0.5rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Lompat ke Konten Utama</a>
+
+    <!-- Header & Navigasi -->
+    <header class="app-header" role="banner">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="Navigasi Utama">
+                <a class="navbar-brand" href="#beranda" data-page="beranda" aria-label="Green Valley Beranda">
+                    <i class="fas fa-building-columns" aria-hidden="true"></i> Green Valley
+                </a>
+                <button class="navbar-toggler" type="button" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigasi">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <ul class="navbar-nav" id="navbarNav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#beranda" data-page="beranda">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pencarian" data-page="pencarian">Cari Properti</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="kategoriDropdown" role="button"
+                            aria-haspopup="true" aria-expanded="false">
+                            Kategori
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="kategoriDropdown">
+                            <li><a class="dropdown-item nav-link-kategori" href="#kategori/apartemen"
+                                    data-page="kategori" data-category="apartemen">Apartemen</a></li>
+                            <li><a class="dropdown-item nav-link-kategori" href="#kategori/rumah" data-page="kategori"
+                                    data-category="rumah">Rumah</a></li>
+                            <li><a class="dropdown-item nav-link-kategori" href="#kategori/kos" data-page="kategori"
+                                    data-category="kos">Kos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang" data-page="tentang">Tentang Kami</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Konten Utama (SPA views) -->
+    <main id="main-content" role="main">
+
+        <!-- Halaman Beranda -->
+        <section id="beranda" class="page-section active">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="container">
+                    <h1>Temukan Properti Impian Anda di Green Valley</h1>
+                    <p>Pilihan terlengkap untuk apartemen, rumah, dan kos berkualitas dengan harga bersaing dan proses
+                        yang mudah.</p>
+                    <a href="#pencarian" class="btn btn-primary btn-lg spa-link" data-page="pencarian">
+                        <i class="fas fa-search me-2" aria-hidden="true"></i>Mulai Cari Sekarang
+                    </a>
+                </div>
+            </div>
+
+            <!-- Kategori Properti -->
+            <div class="container section-padding">
+                <h2 class="text-center mb-5" style="font-weight: 700; font-size: 2rem;">Kategori Properti Populer</h2>
+                <div class="card-grid">
+                    <a href="#kategori/apartemen" class="category-card spa-link" data-page="kategori"
+                        data-category="apartemen" aria-label="Lihat kategori apartemen">
+                        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                            class="card-img-top" alt="Interior apartemen modern yang cerah">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-building me-2" aria-hidden="true"></i>Apartemen</h3>
+                            <p class="card-text">Hunian vertikal modern dengan fasilitas lengkap di lokasi strategis
+                                perkotaan.</p>
+                        </div>
+                    </a>
+                    <a href="#kategori/rumah" class="category-card spa-link" data-page="kategori" data-category="rumah"
+                        aria-label="Lihat kategori rumah">
+                        <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                            class="card-img-top" alt="Rumah tapak modern dengan taman hijau">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-home me-2" aria-hidden="true"></i>Rumah</h3>
+                            <p class="card-text">Kenyamanan rumah tapak idaman untuk keluarga Anda, dari minimalis
+                                hingga mewah.</p>
+                        </div>
+                    </a>
+                    <a href="#kategori/kos" class="category-card spa-link" data-page="kategori" data-category="kos"
+                        aria-label="Lihat kategori kos">
+                        <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"
+                            class="card-img-top" alt="Kamar kos yang rapi dan nyaman">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-door-open me-2" aria-hidden="true"></i>Kos</h3>
+                            <p class="card-text">Pilihan tempat tinggal praktis dan terjangkau untuk mahasiswa dan
+                                pekerja muda.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Pencarian Properti -->
+        <section id="pencarian" class="page-section">
+            <div class="container section-padding">
+                <h2 class="text-center mb-5" style="font-weight: 700; font-size: 2rem;">Cari Properti Sesuai Keinginan
+                    Anda</h2>
+                <div class="search-form-wrapper col-md-10 col-lg-8" style="margin-left:auto; margin-right:auto;">
+                    <form id="searchPropertyForm" class="search-form" aria-label="Formulir Pencarian Properti">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="search-lokasi" class="form-label">Lokasi</label>
+                                <input type="text" class="form-control" id="search-lokasi" name="lokasi"
+                                    placeholder="Contoh: Jakarta Selatan">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="search-tipeProperti" class="form-label">Tipe Properti</label>
+                                <select class="form-select" id="search-tipeProperti" name="tipeProperti"
+                                    aria-label="Pilih tipe properti">
+                                    <option selected value="">Semua Tipe</option>
+                                    <option value="apartemen">Apartemen</option>
+                                    <option value="rumah">Rumah</option>
+                                    <option value="kos">Kos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="search-budget" class="form-label">Budget Maks. (Rp)</label>
+                                <input type="number" class="form-control" id="search-budget" name="budget"
+                                    placeholder="Contoh: 500000000" min="0">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-1" aria-hidden="true"></i>Cari
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="advancedFiltersContainer" class="mt-3" style="display:none;">
+                            <h5 class="mb-3" style="font-weight:600;">Filter Lanjutan</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="search-jumlahKamar" class="form-label">Jumlah Kamar Tidur</label>
+                                    <select class="form-select" id="search-jumlahKamar" name="jumlahKamar"
+                                        aria-label="Pilih jumlah kamar tidur">
+                                        <option selected value="">Semua</option>
+                                        <option value="1">1 Kamar</option>
+                                        <option value="2">2 Kamar</option>
+                                        <option value="3">3 Kamar</option>
+                                        <option value="4">4+ Kamar</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="search-fasilitas" class="form-label">Fasilitas Utama</label>
+                                    <select class="form-select" id="search-fasilitas" name="fasilitas"
+                                        aria-label="Pilih fasilitas utama">
+                                        <option selected value="">Pilih Fasilitas</option>
+                                        <option value="kolam-renang">Kolam Renang</option>
+                                        <option value="parkir">Parkir</option>
+                                        <option value="gym">Gymnasium</option>
+                                        <option value="keamanan-24jam">Keamanan 24 Jam</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="search-sortBy" class="form-label">Urutkan Berdasarkan</label>
+                                    <select class="form-select" id="search-sortBy" name="sortBy"
+                                        aria-label="Urutkan hasil pencarian">
+                                        <option value="relevansi" selected>Relevansi</option>
+                                        <option value="harga-asc">Harga Termurah</option>
+                                        <option value="harga-desc">Harga Termahal</option>
+                                        <option value="terbaru">Terbaru</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="toggleAdvancedFilters" class="btn btn-link mt-3">
+                            <i class="fas fa-filter me-1" aria-hidden="true"></i>Filter Lanjutan
+                        </button>
+                    </form>
+                </div>
+
+                <div id="searchResults" class="card-grid mt-5">
+                    <p class="text-center text-muted col-12" id="searchPlaceholder">Silakan isi formulir di atas dan
+                        klik 'Cari' untuk menampilkan properti.</p>
+                </div>
+                <div id="searchLoadingIndicator" class="loading-indicator" style="display: none;">
+                    <i class="fas fa-spinner" aria-hidden="true"></i> Sedang memuat properti...
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Detail Kategori -->
+        <section id="kategori" class="page-section">
+            <div class="container section-padding">
+                <h2 class="text-center mb-1" id="categoryTitle" style="font-weight: 700; font-size: 2rem;">Properti
+                    Kategori</h2>
+                <p class="text-center text-muted mb-5" id="categorySubtitle"
+                    style="max-width: 600px; margin-left: auto; margin-right: auto;">Menampilkan properti pilihan untuk
+                    Anda dalam kategori ini.</p>
+                <div id="categoryResults" class="card-grid">
+                    <!-- Hasil properti berdasarkan kategori akan ditampilkan di sini -->
+                </div>
+                <div id="categoryLoadingIndicator" class="loading-indicator" style="display: none;">
+                    <i class="fas fa-spinner" aria-hidden="true"></i> Sedang memuat kategori...
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Tentang Kami -->
+        <section id="tentang" class="page-section">
+            <div class="container section-padding">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <h2 class="mb-4" style="font-weight: 700; font-size: 2rem;">Tentang Green Valley</h2>
+                        <p class="mb-3" style="font-size: 1.1rem; color: var(--medium-text);">Green Valley berkomitmen
+                            untuk membantu Anda menemukan properti impian dengan mudah, cepat, dan transparan. Kami
+                            adalah platform properti terdepan yang menghubungkan pencari properti dengan ribuan listing
+                            apartemen, rumah, dan kos berkualitas di seluruh Indonesia.</p>
+                        <p class="mb-3" style="font-size: 1.1rem; color: var(--medium-text);">Dengan teknologi terkini
+                            dan tim yang berdedikasi, kami berusaha memberikan pengalaman pencarian properti yang
+                            intuitif, informatif, dan efisien. Fokus kami adalah kepuasan Anda dalam setiap langkah
+                            perjalanan properti Anda.</p>
+                        <p class="mb-4" style="font-size: 1.1rem; color: var(--medium-text);">Visi kami adalah menjadi
+                            mitra terpercaya Anda dalam mewujudkan hunian ideal.</p>
+                        <a href="#pencarian" class="btn btn-primary spa-link" data-page="pencarian">
+                            <i class="fas fa-search me-2" aria-hidden="true"></i>Cari Properti Sekarang
+                        </a>
+                        <a href="#kontak" class="btn btn-accent ms-2 spa-link" data-page="kontak">
+                            <i class="fas fa-envelope me-2" aria-hidden="true"></i>Hubungi Kami
+                        </a>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=773&q=80"
+                            alt="Tim Green Valley sedang berdiskusi tentang rencana properti" class="img-fluid rounded"
+                            style="border-radius: var(--border-radius-lg); box-shadow: var(--shadow-lg);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Kebijakan Privasi (Contoh) -->
+        <section id="privasi" class="page-section">
+            <div class="container section-padding">
+                <h2 class="text-center mb-4" style="font-weight: 700; font-size: 2rem;">Kebijakan Privasi</h2>
+                <p>Di Green Valley, kami menghargai privasi Anda. Dokumen Kebijakan Privasi ini menjelaskan tipe
+                    informasi pribadi yang diterima dan dikumpulkan oleh Green Valley dan bagaimana informasi tersebut
+                    digunakan.</p>
+                <h3 class="mt-4 mb-2" style="font-weight: 600;">File Log</h3>
+                <p>Seperti banyak situs Web lain, Green Valley menggunakan file log. Informasi dalam file log meliputi
+                    alamat protokol internet (IP), jenis browser, Penyedia Layanan Internet (ISP), stempel
+                    tanggal/waktu, halaman rujukan/keluar, dan jumlah klik untuk menganalisis tren, mengelola situs,
+                    melacak pergerakan pengguna di sekitar situs, dan mengumpulkan informasi demografis. Alamat IP, dan
+                    informasi lain semacam itu tidak terkait dengan informasi apa pun yang dapat diidentifikasi secara
+                    pribadi.</p>
+                <h3 class="mt-4 mb-2" style="font-weight: 600;">Cookies dan Web Beacons</h3>
+                <p>Green Valley menggunakan cookies untuk menyimpan informasi tentang preferensi pengunjung, merekam
+                    informasi spesifik pengguna pada halaman mana yang diakses atau dikunjungi pengguna, menyesuaikan
+                    konten halaman Web berdasarkan jenis browser pengunjung atau informasi lain yang dikirim pengunjung
+                    melalui browser mereka.</p>
+                <p class="mt-3">Jika Anda memerlukan informasi lebih lanjut atau memiliki pertanyaan tentang kebijakan
+                    privasi kami, jangan ragu untuk menghubungi kami melalui email di privacy@greenvalley.com.</p>
+            </div>
+        </section>
+
+        <!-- Halaman Syarat & Ketentuan (Contoh) -->
+        <section id="syarat" class="page-section">
+            <div class="container section-padding">
+                <h2 class="text-center mb-4" style="font-weight: 700; font-size: 2rem;">Syarat & Ketentuan</h2>
+                <p>Selamat datang di Green Valley! Syarat dan ketentuan ini menguraikan aturan dan regulasi untuk
+                    penggunaan Situs Web Green Valley, yang terletak di greenvalley.com.</p>
+                <p>Dengan mengakses situs web ini, kami menganggap Anda menerima syarat dan ketentuan ini. Jangan
+                    lanjutkan menggunakan Green Valley jika Anda tidak setuju untuk mengambil semua syarat dan ketentuan
+                    yang tercantum di halaman ini.</p>
+                <h3 class="mt-4 mb-2" style="font-weight: 600;">Lisensi</h3>
+                <p>Kecuali dinyatakan lain, Green Valley dan/atau pemberi lisensinya memiliki hak kekayaan intelektual
+                    untuk semua materi di Green Valley. Semua hak kekayaan intelektual dilindungi undang-undang. Anda
+                    dapat mengakses ini dari Green Valley untuk penggunaan pribadi Anda dengan tunduk pada batasan yang
+                    ditetapkan dalam syarat dan ketentuan ini.</p>
+                <p class="mt-3">Anda tidak boleh:</p>
+                <ul>
+                    <li>Menerbitkan ulang materi dari Green Valley</li>
+                    <li>Menjual, menyewakan, atau mensublisensikan materi dari Green Valley</li>
+                    <li>Mereproduksi, menggandakan, atau menyalin materi dari Green Valley</li>
+                    <li>Mendistribusikan ulang konten dari Green Valley</li>
+                </ul>
+                <p class="mt-3">Perjanjian ini akan dimulai pada tanggal sekarang.</p>
+            </div>
+        </section>
+        <!-- Halaman Kontak (Contoh) -->
+        <section id="kontak" class="page-section">
+            <div class="container section-padding">
+                <h2 class="text-center mb-5" style="font-weight: 700; font-size: 2rem;">Hubungi Kami</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <h3 style="font-weight: 600;">Green Valley Head Office</h3>
+                        <p><i class="fas fa-map-marker-alt me-2 text-primary" aria-hidden="true"></i> Jl. Properti Raya
+                            No. 123, Jakarta Pusat, Indonesia</p>
+                        <p><i class="fas fa-phone me-2 text-primary" aria-hidden="true"></i> (021) 123-4567</p>
+                        <p><i class="fas fa-envelope me-2 text-primary" aria-hidden="true"></i> info@greenvalley.com</p>
+                        <h4 class="mt-4 mb-2" style="font-weight: 600;">Jam Operasional:</h4>
+                        <p>Senin - Jumat: 08:00 - 17:00 WIB</p>
+                        <p>Sabtu: 09:00 - 14:00 WIB</p>
+                        <p>Minggu & Hari Libur Nasional: Tutup</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 style="font-weight: 600;" class="mb-3">Kirim Pesan</h3>
+                        <form id="contactForm" aria-label="Formulir Kontak">
+                            <div class="mb-3">
+                                <label for="contact-name" class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" id="contact-name" name="name" required
+                                    placeholder="Masukkan nama Anda">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact-email" class="form-label">Alamat Email</label>
+                                <input type="email" class="form-control" id="contact-email" name="email" required
+                                    placeholder="Masukkan email Anda">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact-subject" class="form-label">Subjek</label>
+                                <input type="text" class="form-control" id="contact-subject" name="subject" required
+                                    placeholder="Subjek pesan Anda">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contact-message" class="form-label">Pesan</label>
+                                <textarea class="form-control" id="contact-message" name="message" rows="5" required
+                                    placeholder="Tuliskan pesan Anda di sini..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"
+                                    aria-hidden="true"></i>Kirim Pesan</button>
+                        </form>
+                        <div id="contactFormMessage" class="mt-3" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer" role="contentinfo">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Green Valley Property Group. Semua Hak Dilindungi.</p>
+            <p>
+                <a href="#privasi" class="spa-link" data-page="privasi">Kebijakan Privasi</a> |
+                <a href="#syarat" class="spa-link" data-page="syarat">Syarat & Ketentuan</a> |
+                <a href="#kontak" class="spa-link" data-page="kontak">Hubungi Kami</a>
+            </p>
+            <div class="footer-social-icons">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                    aria-label="Green Valley di Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                    aria-label="Green Valley di Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                    aria-label="Green Valley di Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                    aria-label="Green Valley di LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Template untuk Kartu Properti (Single File Component Emulation) -->
+    <template id="propertyCardTemplate">
+        <div class="col"> <!-- Kolom untuk grid, akan diatur oleh .card-grid -->
+            <article class="property-card" aria-labelledby="propertyName-{id}">
+                <img src="" alt="Gambar Properti" class="property-image card-img-top">
+                <div class="card-body">
+                    <p class="property-type"></p>
+                    <h3 class="property-name card-title" id="propertyName-{id}"></h3>
+                    <p class="property-location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <span></span>
+                    </p>
+                    <p class="property-features"></p>
+                    <p class="property-price"></p>
+                    <a href="#" class="btn btn-accent property-detail-link" aria-describedby="propertyName-{id}">
+                        <i class="fas fa-eye me-1" aria-hidden="true"></i>Lihat Detail
+                    </a>
+                </div>
+            </article>
+        </div>
+    </template>
+
+    <script>
+        // "Strict mode" untuk penulisan kode JavaScript yang lebih aman
+        "use strict";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Konfigurasi Aplikasi
+            const APP_CONFIG = {
+                defaultPage: 'beranda',
+                apiDelay: 500 // ms, simulasi pemuatan data
+            };
+
+            // State Aplikasi (Sederhana)
+            const appState = {
+                currentPage: APP_CONFIG.defaultPage,
+                currentCategory: null,
+                isLoading: false,
+            };
+
+            // Selektor DOM Utama
+            const DOM = {
+                pageSections: document.querySelectorAll('.page-section'),
+                navLinks: document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .dropdown-item, .spa-link, .navbar-brand'),
+                navbarToggler: document.querySelector('.navbar-toggler'),
+                navbarNav: document.getElementById('navbarNav'),
+                propertyCardTemplate: document.getElementById('propertyCardTemplate'),
+                searchResultsContainer: document.getElementById('searchResults'),
+                searchPlaceholder: document.getElementById('searchPlaceholder'),
+                searchLoadingIndicator: document.getElementById('searchLoadingIndicator'),
+                categoryResultsContainer: document.getElementById('categoryResults'),
+                categoryLoadingIndicator: document.getElementById('categoryLoadingIndicator'),
+                searchForm: document.getElementById('searchPropertyForm'),
+                categoryTitleEl: document.getElementById('categoryTitle'),
+                categorySubtitleEl: document.getElementById('categorySubtitle'),
+                currentYearEl: document.getElementById('currentYear'),
+                toggleAdvancedFiltersBtn: document.getElementById('toggleAdvancedFilters'),
+                advancedFiltersContainer: document.getElementById('advancedFiltersContainer'),
+                contactForm: document.getElementById('contactForm'),
+                contactFormMessage: document.getElementById('contactFormMessage'),
+                dropdownToggles: document.querySelectorAll('.nav-link.dropdown-toggle')
+            };
+
+            // Data Properti Mockup (Simulasi API/Database)
+            // Ditambahkan fasilitas sebagai array dan properti kamar yang lebih detail
+            const allProperties = [
+                { id: 1, name: "Apartemen Elegan Sudirman Tower", type: "apartemen", location: "Jakarta Pusat", price: 2750000000, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8fHwxNjkxNTAzNzU1fDA&q=80&w=800", features: "Luas 120m², Semi Furnished, Balkon Kota", bedrooms: 3, bathrooms: 2, facilities: ['kolam-renang', 'gym', 'parkir', 'keamanan-24jam'], addedDate: '2023-07-15' },
+                { id: 2, name: "Rumah Keluarga Harmoni Pondok Indah", type: "rumah", location: "Jakarta Selatan", price: 5200000000, image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8NHx8bW9kZXJuJTIwaG91c2V8ZW58MHx8fHwxNjkxNTAzODIwfDA&q=80&w=800", features: "Luas 300m², Taman Belakang Luas, Garasi 2 Mobil", bedrooms: 4, bathrooms: 3, facilities: ['parkir', 'taman', 'keamanan-24jam'], addedDate: '2023-08-01' },
+                { id: 3, name: "Kos Mahasiswa Ceria Depok UI", type: "kos", location: "Depok", price: 1650000, image: "https://images.unsplash.com/photo-1600585152915-d208bec867a1?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8bW9kZXJuJTIwaG91c2V8ZW58MHx8fHwxNjkxNTAzODIwfDA&q=80&w=800", features: "AC, WiFi Cepat, Kamar Mandi Dalam, Dapur Bersama", bedrooms: 1, bathrooms: 1, facilities: ['wifi', 'dapur-bersama'], addedDate: '2023-06-20' },
+                { id: 4, name: "Apartemen Studio Praktis Kuningan City", type: "apartemen", location: "Jakarta Selatan", price: 850000000, image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8NXx8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8fHwxNjkxNTAzNzU1fDA&q=80&w=800", features: "Luas 35m², Full Furnished, Pemandangan Bagus", bedrooms: 1, bathrooms: 1, facilities: ['gym', 'kolam-renang-bersama', 'parkir'], addedDate: '2023-08-10' },
+                { id: 5, name: "Rumah Minimalis Nyaman Bekasi Timur", type: "rumah", location: "Bekasi", price: 780000000, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTF8fG1vZGVybiUyMGhvdXNlfGVufDB8fHx8MTY5MTUwMzgyMHww&q=80&w=800", features: "Luas 70m², Baru Renovasi, Dekat Stasiun", bedrooms: 2, bathrooms: 1, facilities: ['parkir', 'taman-kecil'], addedDate: '2023-05-05' },
+                { id: 6, name: "Kos Putri Eksklusif Cikutra Bandung", type: "kos", location: "Bandung", price: 1100000, image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTR8fG1vZGVybiUyMGhvdXNlfGVufDB8fHx8MTY5MTUwMzgyMHww&q=80&w=800", features: "WiFi, Keamanan, Area Belajar Bersama", bedrooms: 1, bathrooms: 1, facilities: ['wifi', 'keamanan-24jam'], addedDate: '2023-07-25' },
+                { id: 7, name: "Apartemen City View Premium Surabaya Barat", type: "apartemen", location: "Surabaya", price: 1250000000, image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTV8fG1vZGVybiUyMGhvdXNlfGVufDB8fHx8MTY5MTUwMzgyMHww&q=80&w=800", features: "Luas 60m², 2 Kamar Tidur, View Laut", bedrooms: 2, bathrooms: 1, facilities: ['kolam-renang', 'gym', 'sky-lounge'], addedDate: '2023-08-05' },
+                { id: 8, name: "Rumah Cluster Modern BSD City", type: "rumah", location: "Tangerang Selatan", price: 1800000000, image: "https://images.unsplash.com/photo-1598228723793-52759bba239c?ixlib=rb-4.0.3&crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8MTd8fG1vZGVybiUyMGhvdXNlfGVufDB8fHx8MTY5MTUwMzgyMHww&q=80&w=800", features: "Luas 150m², Desain Skandinavia, Club House", bedrooms: 3, bathrooms: 2, facilities: ['parkir', 'taman', 'club-house', 'keamanan-24jam'], addedDate: '2023-07-01' },
+                { id: 9, name: "Kos Eksekutif Gatot Subroto", type: "kos", location: "Jakarta Selatan", price: 2500000, image: "https://images.unsplash.com/photo-1613553497126-45f3d85uh87e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60", features: "Full Furnished, AC, TV Kabel, Cleaning Service", bedrooms: 1, bathrooms: 1, facilities: ['wifi', 'ac', 'tv-kabel', 'cleaning-service'], addedDate: '2023-08-12' },
+                { id: 10, name: "Apartemen Tepi Pantai Ancol", type: "apartemen", location: "Jakarta Utara", price: 3500000000, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60", features: "Luas 180m², Pemandangan Laut Lepas, Akses Pantai Pribadi", bedrooms: 3, bathrooms: 3, facilities: ['kolam-renang', 'gym', 'akses-pantai', 'keamanan-24jam'], addedDate: '2023-06-10' }
+            ];
+
+            // === Fungsi Utilitas ===
+            const Utils = {
+                // Format angka menjadi format mata uang Rupiah
+                formatCurrency: (amount, type = 'long') => {
+                    const options = { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 };
+                    let formatted = new Intl.NumberFormat('id-ID', options).format(amount);
+                    if (type === 'short' && amount >= 1000000000) {
+                        formatted = (amount / 1000000000).toFixed(1).replace('.', ',') + ' M';
+                    } else if (type === 'short' && amount >= 1000000) {
+                        formatted = (amount / 1000000).toFixed(0) + ' jt';
+                    }
+                    return formatted;
+                },
+                // Kapitalisasi huruf pertama string
+                capitalizeFirstLetter: (string) => string.charAt(0).toUpperCase() + string.slice(1),
+                // Menampilkan/menyembunyikan loading indicator
+                toggleLoading: (indicatorElement, isLoading) => {
+                    if (indicatorElement) {
+                        indicatorElement.style.display = isLoading ? 'block' : 'none';
+                    }
+                    appState.isLoading = isLoading;
+                },
+                // Simulasi penundaan (untuk efek loading)
+                delay: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+                // Membersihkan semua kelas 'active' dari daftar elemen
+                removeActiveClasses: (elements) => {
+                    elements.forEach(el => el.classList.remove('active'));
+                },
+                // Mengatur fokus ke elemen pertama yang bisa difokus dalam sebuah kontainer
+                focusFirstElement: (container) => {
+                    if (!container) return;
+                    const focusableElements = container.querySelectorAll(
+                        'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
+                    );
+                    if (focusableElements.length > 0) {
+                        focusableElements[0].focus();
+                    }
+                }
+            };
+
+            // === Fungsi Render Komponen ===
+            const Render = {
+                // Render satu kartu properti
+                propertyCard: (property) => {
+                    if (!DOM.propertyCardTemplate) {
+                        console.error("Template kartu properti tidak ditemukan!");
+                        return document.createDocumentFragment(); // Kembalikan fragment kosong
+                    }
+                    const cardClone = DOM.propertyCardTemplate.content.cloneNode(true);
+                    const cardElement = cardClone.querySelector('.property-card');
+
+                    // Amankan ID dengan prefix untuk menghindari duplikasi
+                    const uniqueId = `prop-${property.id}`;
+                    cardElement.setAttribute('aria-labelledby', `propertyName-${uniqueId}`);
+
+                    const selectors = {
+                        image: '.property-image',
+                        type: '.property-type',
+                        name: '.property-name',
+                        location: '.property-location span', // Targetkan span di dalam p
+                        price: '.property-price',
+                        features: '.property-features',
+                        detailLink: '.property-detail-link'
+                    };
+
+                    const imageEl = cardClone.querySelector(selectors.image);
+                    if (imageEl) {
+                        imageEl.src = property.image;
+                        imageEl.alt = `Foto ${property.name}, ${property.location}`;
+                    }
+
+                    const nameEl = cardClone.querySelector(selectors.name);
+                    if (nameEl) {
+                        nameEl.textContent = property.name;
+                        nameEl.id = `propertyName-${uniqueId}`;
+                    }
+
+                    const typeEl = cardClone.querySelector(selectors.type);
+                    if (typeEl) typeEl.textContent = Utils.capitalizeFirstLetter(property.type);
+
+                    const locationEl = cardClone.querySelector(selectors.location);
+                    if (locationEl) locationEl.textContent = property.location;
+
+                    const priceEl = cardClone.querySelector(selectors.price);
+                    if (priceEl) {
+                        let priceText = Utils.formatCurrency(property.price);
+                        if (property.type === 'kos') {
+                            priceText += ' / bulan';
+                        }
+                        priceEl.textContent = priceText;
+                    }
+
+                    const featuresEl = cardClone.querySelector(selectors.features);
+                    if (featuresEl) featuresEl.textContent = `${property.bedrooms} KT, ${property.bathrooms} KM, ${property.features}`;
+
+                    const detailLinkEl = cardClone.querySelector(selectors.detailLink);
+                    if (detailLinkEl) {
+                        detailLinkEl.href = `#properti/${property.id}`; // Untuk SPA detail (jika dikembangkan)
+                        detailLinkEl.setAttribute('aria-describedby', `propertyName-${uniqueId}`);
+                        // Tambahkan event listener untuk simulasi detail
+                        detailLinkEl.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            alert(`Menampilkan detail untuk: ${property.name}\n(Fitur detail properti belum diimplementasikan sepenuhnya)`);
+                            // Idealnya, ini akan menavigasi ke halaman detail property
+                            // window.location.hash = `properti/${property.id}`;
+                        });
+                    }
+                    return cardClone;
+                },
+
+                // Render daftar properti
+                propertyList: (properties, container, placeholderElement) => {
+                    container.innerHTML = ''; // Kosongkan kontainer
+                    if (placeholderElement) placeholderElement.style.display = 'none';
+
+                    if (properties.length === 0) {
+                        container.innerHTML = `<p class="text-center text-muted col-12" style="grid-column: 1 / -1;">Tidak ada properti yang cocok dengan kriteria pencarian Anda.</p>`;
+                        return;
+                    }
+                    const fragment = document.createDocumentFragment();
+                    properties.forEach(prop => {
+                        fragment.appendChild(Render.propertyCard(prop));
+                    });
+                    container.appendChild(fragment);
+                }
+            };
+
+            // === Logika Aplikasi Inti (SPA) ===
+            const AppLogic = {
+                // Navigasi ke halaman tertentu
+                navigateToPage: async (pageId, category = null, params = null) => {
+                    appState.currentPage = pageId;
+                    appState.currentCategory = category;
+
+                    // Sembunyikan semua section, lalu tampilkan yang aktif
+                    DOM.pageSections.forEach(section => section.classList.remove('active'));
+                    const targetPage = document.getElementById(pageId);
+
+                    if (targetPage) {
+                        targetPage.classList.add('active');
+                        document.title = `Green Valley - ${Utils.capitalizeFirstLetter(pageId)}`;
+
+                        // Update active link di navbar
+                        Utils.removeActiveClasses(DOM.navLinks);
+                        DOM.navLinks.forEach(link => {
+                            if (link.dataset.page === pageId) {
+                                if (link.classList.contains('dropdown-item')) { // Jika item dropdown
+                                    if (link.dataset.category === category) {
+                                        link.classList.add('active');
+                                        // Juga aktifkan parent dropdown toggle
+                                        const dropdownToggle = link.closest('.nav-item.dropdown')?.querySelector('.nav-link.dropdown-toggle');
+                                        if (dropdownToggle) dropdownToggle.classList.add('active');
+                                    }
+                                } else if (!link.closest('.dropdown-menu')) { // Bukan item dropdown
+                                    link.classList.add('active');
+                                }
+                            }
+                        });
+                        // Hapus 'active' dari dropdown toggle jika tidak ada itemnya yang aktif
+                        DOM.dropdownToggles.forEach(toggle => {
+                            const parentDropdown = toggle.closest('.nav-item.dropdown');
+                            if (parentDropdown) {
+                                const isActiveItem = parentDropdown.querySelector('.dropdown-item.active');
+                                if (!isActiveItem) {
+                                    toggle.classList.remove('active');
+                                }
+                            }
+                        });
+
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Gulir ke atas halaman
+
+                        // Logika spesifik per halaman
+                        await AppLogic.handlePageSpecificLogic(pageId, category, params);
+                        Utils.focusFirstElement(targetPage); // Atur fokus ke elemen pertama
+
+                    } else {
+                        console.warn(`Halaman dengan ID "${pageId}" tidak ditemukan. Mengarahkan ke beranda.`);
+                        AppLogic.navigateToPage(APP_CONFIG.defaultPage); // Fallback ke beranda
+                    }
+                },
+
+                // Logika yang dijalankan khusus untuk halaman tertentu
+                handlePageSpecificLogic: async (pageId, category, params) => {
+                    switch (pageId) {
+                        case 'beranda':
+                            // Mungkin ada fungsi inisialisasi khusus untuk beranda
+                            // Misalnya, fetch featured properties (jika ada)
+                            break;
+                        case 'kategori':
+                            if (category && DOM.categoryTitleEl && DOM.categorySubtitleEl) {
+                                Utils.toggleLoading(DOM.categoryLoadingIndicator, true);
+                                DOM.categoryResultsContainer.innerHTML = ''; // Kosongkan hasil sebelumnya
+
+                                const categoryName = Utils.capitalizeFirstLetter(category);
+                                DOM.categoryTitleEl.textContent = `Properti Kategori: ${categoryName}`;
+                                DOM.categorySubtitleEl.textContent = `Menjelajahi pilihan ${category.toLowerCase()} terbaik untuk Anda.`;
+                                document.title = `Green Valley - Kategori ${categoryName}`;
+
+                                await Utils.delay(APP_CONFIG.apiDelay); // Simulasi
+                                const filteredProperties = allProperties.filter(prop => prop.type === category);
+                                Render.propertyList(filteredProperties, DOM.categoryResultsContainer);
+                                Utils.toggleLoading(DOM.categoryLoadingIndicator, false);
+                            }
+                            break;
+                        case 'pencarian':
+                            if (DOM.searchPlaceholder) DOM.searchPlaceholder.style.display = 'block';
+                            DOM.searchResultsContainer.innerHTML = '';
+                            // Jika ada parameter pencarian dari URL, jalankan pencarian
+                            if (params) {
+                                // Isi form dengan params & trigger submit (implementasi lanjutan)
+                                console.log("Parameter pencarian:", params);
+                                // AppLogic.performSearch(params);
+                            }
+                            break;
+                        case 'kontak':
+                            if (DOM.contactFormMessage) DOM.contactFormMessage.style.display = 'none'; // Reset pesan form
+                            if (DOM.contactForm) DOM.contactForm.reset(); // Reset form
+                            break;
+                        // case 'privasi', 'syarat': (tidak ada logic khusus saat ini)
+                        // default: (tidak ada logic khusus saat ini)
+                    }
+                },
+
+                // Logika untuk menangani perubahan hash URL
+                handleHashChange: () => {
+                    const hash = window.location.hash.substring(1) || APP_CONFIG.defaultPage;
+                    const parts = hash.split('/');
+                    const pageId = parts[0];
+                    const category = parts.length > 1 ? parts[1] : null;
+                    // Untuk parameter pencarian, bisa jadi: pencarian/lokasi=jakarta&tipe=apartemen
+                    const searchParamsString = parts.length > 2 ? parts.slice(2).join('/') : null;
+                    let searchParams = null;
+                    if (pageId === 'pencarian' && searchParamsString) {
+                        searchParams = Object.fromEntries(new URLSearchParams(searchParamsString));
+                    }
+
+                    AppLogic.navigateToPage(pageId, category, searchParams);
+                },
+
+                // Logika untuk melakukan pencarian properti
+                performSearch: async (filters) => {
+                    Utils.toggleLoading(DOM.searchLoadingIndicator, true);
+                    if (DOM.searchPlaceholder) DOM.searchPlaceholder.style.display = 'none';
+                    DOM.searchResultsContainer.innerHTML = ''; // Kosongkan hasil
+
+                    await Utils.delay(APP_CONFIG.apiDelay); // Simulasi network delay
+
+                    let results = allProperties.filter(prop => {
+                        let match = true;
+                        // Filter Lokasi (pencocokan parsial, case-insensitive)
+                        if (filters.lokasi && !prop.location.toLowerCase().includes(filters.lokasi.toLowerCase())) match = false;
+                        // Filter Tipe Properti
+                        if (filters.tipeProperti && prop.type !== filters.tipeProperti) match = false;
+                        // Filter Budget Maksimal
+                        if (filters.budget && prop.price > parseInt(filters.budget)) match = false;
+
+                        // Filter Lanjutan
+                        if (filters.jumlahKamar) {
+                            const kamarReq = parseInt(filters.jumlahKamar);
+                            if (filters.jumlahKamar === "4" && prop.bedrooms < 4) match = false; // Untuk 4+
+                            else if (filters.jumlahKamar !== "4" && prop.bedrooms !== kamarReq) match = false;
+                        }
+                        if (filters.fasilitas && (!prop.facilities || !prop.facilities.includes(filters.fasilitas))) match = false;
+
+                        return match;
+                    });
+
+                    // Pengurutan (Sorting)
+                    if (filters.sortBy) {
+                        switch (filters.sortBy) {
+                            case 'harga-asc':
+                                results.sort((a, b) => a.price - b.price);
+                                break;
+                            case 'harga-desc':
+                                results.sort((a, b) => b.price - a.price);
+                                break;
+                            case 'terbaru':
+                                results.sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate));
+                                break;
+                            // case 'relevansi': (default, tidak perlu sort khusus atau implementasi skor relevansi)
+                        }
+                    }
+
+                    Render.propertyList(results, DOM.searchResultsContainer);
+                    Utils.toggleLoading(DOM.searchLoadingIndicator, false);
+                },
+
+                // Menangani submit form kontak
+                handleContactFormSubmit: async (event) => {
+                    event.preventDefault();
+                    if (!DOM.contactForm || !DOM.contactFormMessage) return;
+
+                    const formData = new FormData(DOM.contactForm);
+                    const name = formData.get('name');
+                    const email = formData.get('email');
+                    const message = formData.get('message');
+
+                    // Simulasi pengiriman
+                    Utils.toggleLoading(null, true); // Indikator loading global jika ada
+                    DOM.contactFormMessage.style.display = 'block';
+                    DOM.contactFormMessage.className = 'alert alert-info'; // Ganti dengan kelas CSS Anda
+                    DOM.contactFormMessage.textContent = 'Mengirim pesan...';
+
+                    await Utils.delay(1500); // Simulasi pengiriman
+
+                    // Contoh respons (ganti dengan logika backend sesungguhnya)
+                    const isSuccess = Math.random() > 0.2; // 80% sukses
+                    if (isSuccess) {
+                        DOM.contactFormMessage.className = 'alert alert-success';
+                        DOM.contactFormMessage.innerHTML = `<i class="fas fa-check-circle me-2"></i>Pesan Anda telah berhasil dikirim! Kami akan segera menghubungi Anda.`;
+                        DOM.contactForm.reset();
+                    } else {
+                        DOM.contactFormMessage.className = 'alert alert-danger';
+                        DOM.contactFormMessage.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>Maaf, terjadi kesalahan saat mengirim pesan. Silakan coba lagi.`;
+                    }
+                    Utils.toggleLoading(null, false);
+                }
+            };
+
+            // === Inisialisasi Event Listener ===
+            const InitEventListeners = {
+                // Navigasi SPA (link internal)
+                setupSpaNavigation: () => {
+                    DOM.navLinks.forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            const pageId = link.dataset.page;
+                            if (pageId) { // Hanya proses jika ada data-page (link SPA)
+                                e.preventDefault();
+                                const category = link.dataset.category || null;
+                                let newHash = pageId;
+                                if (category) {
+                                    newHash += `/${category}`;
+                                }
+                                window.location.hash = newHash;
+                                // Tutup menu mobile jika terbuka
+                                if (DOM.navbarNav.classList.contains('open')) {
+                                    DOM.navbarNav.classList.remove('open');
+                                    DOM.navbarToggler.setAttribute('aria-expanded', 'false');
+                                }
+                                // Tutup dropdown jika terbuka
+                                const openDropdown = document.querySelector('.nav-item.dropdown.open');
+                                if (openDropdown) {
+                                    openDropdown.classList.remove('open');
+                                    openDropdown.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+                                }
+                            }
+                            // Jika tidak ada data-page, biarkan link bekerja normal (misal link eksternal)
+                        });
+                    });
+                    window.addEventListener('hashchange', AppLogic.handleHashChange);
+                },
+
+                // Toggle menu navigasi mobile
+                setupNavbarToggle: () => {
+                    if (DOM.navbarToggler && DOM.navbarNav) {
+                        DOM.navbarToggler.addEventListener('click', () => {
+                            const isOpen = DOM.navbarNav.classList.toggle('open');
+                            DOM.navbarToggler.setAttribute('aria-expanded', isOpen.toString());
+                        });
+                    }
+                },
+
+                // Toggle dropdown menu
+                setupDropdowns: () => {
+                    DOM.dropdownToggles.forEach(toggle => {
+                        const parentDropdown = toggle.closest('.nav-item.dropdown');
+                        if (!parentDropdown) return;
+
+                        toggle.addEventListener('click', (event) => {
+                            event.preventDefault();
+                            // Tutup dropdown lain yang mungkin terbuka
+                            document.querySelectorAll('.nav-item.dropdown.open').forEach(otherDropdown => {
+                                if (otherDropdown !== parentDropdown) {
+                                    otherDropdown.classList.remove('open');
+                                    otherDropdown.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+                                }
+                            });
+                            // Toggle dropdown saat ini
+                            const isOpen = parentDropdown.classList.toggle('open');
+                            toggle.setAttribute('aria-expanded', isOpen.toString());
+                        });
+                    });
+                    // Menutup dropdown jika diklik di luar area dropdown
+                    document.addEventListener('click', (event) => {
+                        if (!event.target.closest('.nav-item.dropdown')) {
+                            document.querySelectorAll('.nav-item.dropdown.open').forEach(dropdown => {
+                                dropdown.classList.remove('open');
+                                dropdown.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false');
+                            });
+                        }
+                    });
+                },
+
+                // Formulir pencarian
+                setupSearchForm: () => {
+                    if (DOM.searchForm) {
+                        DOM.searchForm.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            const formData = new FormData(DOM.searchForm);
+                            const filters = {
+                                lokasi: formData.get('lokasi') || '',
+                                tipeProperti: formData.get('tipeProperti') || '',
+                                budget: formData.get('budget') || '',
+                                jumlahKamar: DOM.advancedFiltersContainer.style.display !== 'none' ? formData.get('jumlahKamar') : '',
+                                fasilitas: DOM.advancedFiltersContainer.style.display !== 'none' ? formData.get('fasilitas') : '',
+                                sortBy: DOM.advancedFiltersContainer.style.display !== 'none' ? formData.get('sortBy') : 'relevansi'
+                            };
+                            AppLogic.performSearch(filters);
+                        });
+                    }
+                },
+
+                // Toggle filter lanjutan
+                setupAdvancedFiltersToggle: () => {
+                    if (DOM.toggleAdvancedFiltersBtn && DOM.advancedFiltersContainer) {
+                        DOM.toggleAdvancedFiltersBtn.addEventListener('click', () => {
+                            const isHidden = DOM.advancedFiltersContainer.style.display === 'none' || DOM.advancedFiltersContainer.style.display === '';
+                            DOM.advancedFiltersContainer.style.display = isHidden ? 'block' : 'none';
+                            DOM.toggleAdvancedFiltersBtn.innerHTML = isHidden ?
+                                '<i class="fas fa-filter me-1" aria-hidden="true"></i>Sembunyikan Filter Lanjutan' :
+                                '<i class="fas fa-filter me-1" aria-hidden="true"></i>Filter Lanjutan';
+                            DOM.toggleAdvancedFiltersBtn.setAttribute('aria-expanded', isHidden.toString());
+                        });
+                    }
+                },
+
+                // Formulir Kontak
+                setupContactForm: () => {
+                    if (DOM.contactForm) {
+                        DOM.contactForm.addEventListener('submit', AppLogic.handleContactFormSubmit);
+                    }
+                }
+            };
+
+            // === Fungsi Inisialisasi Utama Aplikasi ===
+            const initializeApp = () => {
+                if (DOM.currentYearEl) DOM.currentYearEl.textContent = new Date().getFullYear();
+
+                InitEventListeners.setupSpaNavigation();
+                InitEventListeners.setupNavbarToggle();
+                InitEventListeners.setupDropdowns();
+                InitEventListeners.setupSearchForm();
+                InitEventListeners.setupAdvancedFiltersToggle();
+                InitEventListeners.setupContactForm();
+
+                AppLogic.handleHashChange(); // Panggil untuk load awal berdasarkan URL hash
+            };
+
+            // Jalankan aplikasi
+            initializeApp();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Properti SPA Modern</title>
+    <!-- Favicon (Menggunakan karakter Font Awesome sebagai contoh, bisa diganti dengan .ico/.png) -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <!-- Font Awesome (Icon Gratis) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Reset Dasar & Variabel Global */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+
+            --body-bg: #f4f6f9;
+            --sidebar-bg: #343a40;
+            --sidebar-text-color: #c2c7d0;
+            --sidebar-link-hover-bg: #495057;
+            --sidebar-link-active-bg: var(--primary-color);
+            --sidebar-link-active-color: #ffffff;
+            --sidebar-brand-color: #ffffff;
+            --sidebar-user-name-color: #ffffff;
+
+            --header-bg: #ffffff;
+            --content-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: var(--dark-color);
+            --muted-text-color: #6c757d;
+            --border-color: #dee2e6;
+            --input-border-color: #ced4da;
+            --input-focus-border-color: #86b7fe;
+            --input-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+
+            --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+            --font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+            --border-radius: 0.375rem;
+            --border-radius-sm: 0.25rem;
+            --border-radius-lg: 0.5rem;
+            --border-radius-pill: 50rem;
+
+            --sidebar-width-expanded: 250px;
+            --sidebar-width-collapsed: 70px;
+            --header-height: 60px;
+            --footer-height: 50px;
+
+            --transition-speed: 0.3s;
+            --transition-timing: ease;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #0d6efd;
+            --secondary-color: #adb5bd;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+            --light-color: #343a40;
+            /* In dark theme, 'light' surfaces become dark */
+            --dark-color: #f8f9fa;
+            /* In dark theme, 'dark' text becomes light */
+
+            --body-bg: #1a1d21;
+            --sidebar-bg: #212529;
+            --sidebar-text-color: #ced4da;
+            --sidebar-link-hover-bg: #343a40;
+            --sidebar-link-active-bg: var(--primary-color);
+            --sidebar-link-active-color: #ffffff;
+            --sidebar-brand-color: #ffffff;
+            --sidebar-user-name-color: #ffffff;
+
+            --header-bg: #2c3034;
+            --content-bg: #2c3034;
+            /* Usually same as body or header in dark themes */
+            --card-bg: #343a40;
+            --text-color: var(--dark-color);
+            /* Which is #f8f9fa in dark theme */
+            --muted-text-color: #adb5bd;
+            --border-color: #495057;
+            --input-border-color: #495057;
+            --input-focus-border-color: #86b7fe;
+            /* Keep focus color consistent */
+            --input-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            /* Keep focus shadow consistent */
+
+            --box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.05);
+            --box-shadow-sm: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.03);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family-sans-serif);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed) var(--transition-timing), color var(--transition-speed) var(--transition-timing);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Mencegah scroll horizontal yang tidak diinginkan */
+        }
+
+        /* Struktur Grid Utama Aplikasi */
+        .app-container {
+            display: grid;
+            width: 100vw;
+            height: 100vh;
+            grid-template-columns: var(--sidebar-width-expanded) 1fr;
+            grid-template-rows: var(--header-height) 1fr var(--footer-height);
+            grid-template-areas:
+                "sidebar header"
+                "sidebar content"
+                "sidebar footer";
+            transition: grid-template-columns var(--transition-speed) var(--transition-timing);
+        }
+
+        /* Sidebar Styles */
+        .app-sidebar {
+            grid-area: sidebar;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed) var(--transition-timing),
+                color var(--transition-speed) var(--transition-timing),
+                width var(--transition-speed) var(--transition-timing);
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--sidebar-bg);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 1.5rem;
+            /* Disesuaikan agar pas dengan tinggi header */
+            font-size: 1.5rem;
+            color: var(--sidebar-brand-color);
+            text-decoration: none;
+            height: var(--header-height);
+            border-bottom: 1px solid color-mix(in srgb, var(--sidebar-text-color) 20%, transparent);
+            flex-shrink: 0;
+            /* Mencegah brand mengecil */
+            overflow: hidden;
+            /* Untuk menyembunyikan teks saat collapsed */
+        }
+
+        .sidebar-brand .brand-icon {
+            font-size: 1.8rem;
+            min-width: 24px;
+            /* Lebar minimum ikon saat collapsed */
+            text-align: center;
+        }
+
+        .sidebar-brand .brand-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity var(--transition-speed) var(--transition-timing) calc(var(--transition-speed) / 2);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid color-mix(in srgb, var(--sidebar-text-color) 20%, transparent);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .user-profile-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--sidebar-text-color);
+            min-width: 40px;
+            /* Agar tidak mengecil saat sidebar collapsed */
+        }
+
+        .user-profile-info {
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity var(--transition-speed) var(--transition-timing) calc(var(--transition-speed) / 2);
+        }
+
+        .user-profile-name {
+            font-weight: 600;
+            color: var(--sidebar-user-name-color);
+            display: block;
+            /* Agar bisa diatur margin/padding jika perlu */
+        }
+
+        .user-profile-role {
+            font-size: 0.8rem;
+            color: var(--sidebar-text-color);
+        }
+
+        .app-sidebar nav {
+            flex-grow: 1;
+            padding: 1rem 0;
+        }
+
+        .app-sidebar nav ul {
+            list-style: none;
+        }
+
+        .app-sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            text-decoration: none;
+            color: var(--sidebar-text-color);
+            transition: background-color 0.2s var(--transition-timing), color 0.2s var(--transition-timing);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .app-sidebar .nav-link .nav-icon {
+            width: 24px;
+            /* Lebar tetap untuk ikon */
+            margin-right: 0.85rem;
+            font-size: 1.1rem;
+            text-align: center;
+            flex-shrink: 0;
+            /* Mencegah ikon mengecil */
+        }
+
+        .app-sidebar .nav-link .nav-text {
+            opacity: 1;
+            transition: opacity var(--transition-speed) var(--transition-timing) calc(var(--transition-speed) / 2);
+        }
+
+        .app-sidebar .nav-link:hover,
+        .app-sidebar .nav-link:focus {
+            background-color: var(--sidebar-link-hover-bg);
+            color: var(--sidebar-brand-color);
+            /* Biasanya warna brand atau putih */
+            outline: none;
+        }
+
+        .app-sidebar .nav-link.active {
+            background-color: var(--sidebar-link-active-bg);
+            color: var(--sidebar-link-active-color);
+            font-weight: 500;
+        }
+
+        /* Header Utama */
+        .app-header {
+            grid-area: header;
+            background-color: var(--header-bg);
+            padding: 0 1.5rem;
+            /* Disesuaikan */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--box-shadow-sm);
+            height: var(--header-height);
+            transition: background-color var(--transition-speed) var(--transition-timing), border-color var(--transition-speed) var(--transition-timing);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            /* Di bawah mobile sidebar overlay */
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.25rem;
+            /* Disesuaikan */
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius-pill);
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-speed) var(--transition-timing), background-color var(--transition-speed) var(--transition-timing);
+        }
+
+        .icon-button:hover,
+        .icon-button:focus {
+            background-color: color-mix(in srgb, var(--border-color) 50%, transparent);
+            outline: none;
+        }
+
+        .menu-toggle-desktop {
+            display: none;
+        }
+
+        /* Default hidden, shown on desktop */
+
+        /* Konten Utama */
+        .app-content {
+            grid-area: content;
+            padding: 1.5rem;
+            /* Disesuaikan */
+            overflow-y: auto;
+            background-color: var(--body-bg);
+            /* Samakan dengan body atau spesifik */
+            transition: background-color var(--transition-speed) var(--transition-timing);
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Card (Kartu Informasi) */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            /* Lebih besar untuk "fancy" */
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--box-shadow-sm);
+            transition: background-color var(--transition-speed) var(--transition-timing),
+                border-color var(--transition-speed) var(--transition-timing),
+                box-shadow 0.2s var(--transition-timing);
+        }
+
+        .card:hover {
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-header {
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Grid untuk Statistik Dashboard & Listing Apartemen */
+        .stats-grid,
+        .apartment-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .apartment-grid {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            /* Lebih banyak spasi */
+            padding: 1.5rem;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 2.5rem;
+            padding: 1.25rem;
+            /* Lebih besar */
+            border-radius: var(--border-radius-lg);
+            /* Cocokkan dengan card */
+            color: #fff;
+            width: 70px;
+            /* Pastikan konsisten */
+            height: 70px;
+            /* Pastikan konsisten */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .stat-card .stat-icon.primary {
+            background-color: var(--primary-color);
+        }
+
+        .stat-card .stat-icon.warning {
+            background-color: var(--warning-color);
+        }
+
+        .stat-card .stat-icon.danger {
+            background-color: var(--danger-color);
+        }
+
+        .stat-card .stat-icon.info {
+            background-color: var(--info-color);
+        }
+
+        .stat-card .stat-info h4 {
+            font-size: 1.75rem;
+            /* Lebih besar */
+            margin: 0 0 0.25rem 0;
+            color: var(--text-color);
+        }
+
+        .stat-card .stat-info p {
+            margin: 0;
+            color: var(--muted-text-color);
+        }
+
+        /* Kartu Apartemen */
+        .apartment-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card-image-wrapper {
+            overflow: hidden;
+            /* Untuk efek zoom pada gambar */
+            height: 200px;
+            /* Tinggi tetap */
+        }
+
+        .apartment-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+            transition: transform 0.4s var(--transition-timing);
+        }
+
+        .apartment-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .apartment-card .card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            /* Agar konten mengisi sisa ruang */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .apartment-card h4 {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--primary-color);
+        }
+
+        .apartment-card .details {
+            display: flex;
+            flex-wrap: wrap;
+            /* Jika terlalu banyak detail */
+            gap: 0.75rem;
+            /* Spasi antar detail */
+            font-size: 0.9rem;
+            color: var(--muted-text-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .apartment-card .details span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .apartment-card .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .apartment-card .actions {
+            margin-top: auto;
+            /* Dorong tombol ke bawah */
+        }
+
+        /* Tombol */
+        .button {
+            display: inline-block;
+            padding: 0.65rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s var(--transition-timing),
+                border-color 0.2s var(--transition-timing),
+                color 0.2s var(--transition-timing),
+                box-shadow 0.2s var(--transition-timing);
+        }
+
+        .button:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 30%, transparent);
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        .button-primary:hover,
+        .button-primary:focus {
+            background-color: color-mix(in srgb, var(--primary-color) 85%, black);
+            border-color: color-mix(in srgb, var(--primary-color) 85%, black);
+        }
+
+        .button-primary:focus {
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 50%, transparent);
+        }
+
+        /* Formulir */
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            /* Atau var(--content-bg) */
+            background-clip: padding-box;
+            border: 1px solid var(--input-border-color);
+            appearance: none;
+            /* Hapus tampilan default browser */
+            border-radius: var(--border-radius);
+            transition: border-color var(--transition-speed) var(--transition-timing),
+                box-shadow var(--transition-speed) var(--transition-timing);
+        }
+
+        .form-control:focus {
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            border-color: var(--input-focus-border-color);
+            outline: 0;
+            box-shadow: var(--input-focus-box-shadow);
+        }
+
+        .form-control::placeholder {
+            color: var(--muted-text-color);
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        .app-footer {
+            grid-area: footer;
+            background-color: var(--header-bg);
+            color: var(--muted-text-color);
+            text-align: center;
+            padding: 0 1.5rem;
+            border-top: 1px solid var(--border-color);
+            transition: background-color var(--transition-speed) var(--transition-timing),
+                color var(--transition-speed) var(--transition-timing),
+                border-color var(--transition-speed) var(--transition-timing);
+            font-size: 0.9rem;
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Utilitas */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem !important;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem !important;
+        }
+
+        .mt-2 {
+            margin-top: 1rem !important;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .justify-between {
+            justify-content: space-between !important;
+        }
+
+        .justify-center {
+            justify-content: center !important;
+        }
+
+        .align-center {
+            align-items: center !important;
+        }
+
+        .w-100 {
+            width: 100% !important;
+        }
+
+        /* Placeholder untuk halaman kosong */
+        .placeholder-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 50vh;
+            color: var(--muted-text-color);
+        }
+
+        .placeholder-content .placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .placeholder-content p {
+            font-size: 1.2rem;
+        }
+
+        /* Mobile Sidebar Overlay */
+        .mobile-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            /* Di bawah sidebar, di atas konten */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) var(--transition-timing), visibility var(--transition-speed) var(--transition-timing);
+        }
+
+        .mobile-sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Desktop Sidebar Collapsed State */
+        .app-container.sidebar-collapsed {
+            grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+        }
+
+        .app-container.sidebar-collapsed .app-sidebar .brand-text,
+        .app-container.sidebar-collapsed .app-sidebar .user-profile-info,
+        .app-container.sidebar-collapsed .app-sidebar .nav-link .nav-text {
+            opacity: 0;
+            width: 0;
+            /* Bantu sembunyikan */
+            transition: opacity var(--transition-speed) var(--transition-timing) 0s, width var(--transition-speed) var(--transition-timing) 0s;
+            /* Cepat hilang */
+        }
+
+        .app-container.sidebar-collapsed .app-sidebar .sidebar-brand,
+        .app-container.sidebar-collapsed .app-sidebar .user-profile {
+            padding-left: 0;
+            padding-right: 0;
+            justify-content: center;
+        }
+
+        .app-container.sidebar-collapsed .app-sidebar .nav-link {
+            justify-content: center;
+        }
+
+        .app-container.sidebar-collapsed .app-sidebar .nav-link .nav-icon {
+            margin-right: 0;
+        }
+
+
+        /* Responsif */
+        /* Tablet dan Mobile ( < 992px ) */
+        @media (max-width: 991.98px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                /* Hanya kolom konten utama */
+                grid-template-areas:
+                    "header"
+                    "content"
+                    "footer";
+            }
+
+            .app-sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                width: var(--sidebar-width-expanded);
+                z-index: 1000;
+                transform: translateX(-100%);
+                transition: transform var(--transition-speed) var(--transition-timing);
+            }
+
+            .app-sidebar.open {
+                transform: translateX(0);
+                box-shadow: var(--box-shadow);
+            }
+
+            .menu-toggle-desktop {
+                display: none;
+            }
+
+            .menu-toggle-mobile {
+                display: inline-flex;
+            }
+
+            /* Tampilkan tombol mobile */
+
+            .app-header {
+                padding: 0 1rem;
+            }
+
+            .app-content {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            }
+
+            .apartment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* 1 kolom di mobile */
+
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .stat-card .stat-icon {
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Hanya Desktop ( >= 992px ) */
+        @media (min-width: 992px) {
+            .menu-toggle-desktop {
+                display: inline-flex;
+            }
+
+            /* Tampilkan tombol desktop */
+            .menu-toggle-mobile {
+                display: none;
+            }
+
+            /* Sembunyikan tombol mobile */
+        }
+
+        /* Ukuran Layar Sangat Kecil ( < 576px ) */
+        @media (max-width: 575.98px) {
+            :root {
+                --sidebar-width-expanded: 230px;
+                /* Sedikit lebih kecil untuk mobile */
+            }
+
+            .app-header .header-actions {
+                gap: 0.5rem;
+            }
+
+            .icon-button {
+                font-size: 1.1rem;
+                width: 36px;
+                height: 36px;
+            }
+
+            .page-title {
+                font-size: 1.4rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container" class="app-container">
+        <!-- Kolom Sidebar Navigasi -->
+        <aside class="app-sidebar" id="app-sidebar">
+            <a href="#/" class="sidebar-brand" data-route="/">
+                <i class="fas fa-building-user brand-icon"></i>
+                <span class="brand-text">PropertiKu</span>
+            </a>
+
+            <div class="user-profile">
+                <img src="https://i.pravatar.cc/80?u=pengguna" alt="Foto Profil Pengguna" id="user-profile-img"
+                    class="user-profile-image">
+                <div class="user-profile-info">
+                    <span id="user-profile-name" class="user-profile-name">Pengguna Andal</span>
+                    <span id="user-profile-role" class="user-profile-role">Administrator</span>
+                </div>
+            </div>
+
+            <nav>
+                <ul>
+                    <li><a href="#/" class="nav-link" data-route="/"><i class="fas fa-tachometer-alt nav-icon"></i><span
+                                class="nav-text">Dashboard</span></a></li>
+                    <li><a href="#/profil" class="nav-link" data-route="/profil"><i
+                                class="fas fa-user-circle nav-icon"></i><span class="nav-text">Profil</span></a></li>
+                    <li><a href="#/apartemen" class="nav-link" data-route="/apartemen"><i
+                                class="fas fa-city nav-icon"></i><span class="nav-text">Apartemen</span></a></li>
+                    <li><a href="#/booking" class="nav-link" data-route="/booking"><i
+                                class="fas fa-calendar-check nav-icon"></i><span class="nav-text">Booking</span></a>
+                    </li>
+                    <li><a href="#/favorit" class="nav-link" data-route="/favorit"><i
+                                class="fas fa-heart nav-icon"></i><span class="nav-text">Favorit</span></a></li>
+                    <li><a href="#/pembayaran" class="nav-link" data-route="/pembayaran"><i
+                                class="fas fa-credit-card nav-icon"></i><span class="nav-text">Pembayaran</span></a>
+                    </li>
+                    <li><a href="#/maintenance" class="nav-link" data-route="/maintenance"><i
+                                class="fas fa-tools nav-icon"></i><span class="nav-text">Maintenance</span></a></li>
+                    <li><a href="#/pesan" class="nav-link" data-route="/pesan"><i
+                                class="fas fa-envelope nav-icon"></i><span class="nav-text">Pesan</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Header Utama -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menu-toggle-desktop" class="icon-button menu-toggle-desktop"
+                    aria-label="Alihkan Sidebar Desktop">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button id="menu-toggle-mobile" class="icon-button menu-toggle-mobile"
+                    aria-label="Alihkan Sidebar Mobile">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="icon-button" aria-label="Alihkan Tema Gelap/Terang">
+                    <i class="fas fa-moon"></i> <!-- Ikon akan diubah oleh JS -->
+                </button>
+                <!-- Tambahan Aksi Header jika diperlukan -->
+                <div class="user-dropdown" style="position: relative;">
+                    <button class="icon-button" aria-label="Menu Pengguna" id="user-menu-toggle">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <!-- Dropdown menu (contoh, bisa dibuat lebih kompleks) -->
+                    <div id="user-menu-dropdown"
+                        style="display: none; position: absolute; right: 0; top: 100%; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); box-shadow: var(--box-shadow-sm); padding: 0.5rem 0; z-index: 100; min-width: 150px;">
+                        <a href="#/profil" data-route="/profil"
+                            style="display: block; padding: 0.5rem 1rem; text-decoration: none; color: var(--text-color);">Profil
+                            Saya</a>
+                        <a href="#/pengaturan" data-route="/pengaturan"
+                            style="display: block; padding: 0.5rem 1rem; text-decoration: none; color: var(--text-color);">Pengaturan</a>
+                        <hr style="margin: 0.5rem 0; border-color: var(--border-color);">
+                        <a href="#" id="logout-button"
+                            style="display: block; padding: 0.5rem 1rem; text-decoration: none; color: var(--danger-color);">Keluar</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Konten Utama Aplikasi -->
+        <main id="app-content" class="app-content">
+            <!-- Konten dinamis akan dimuat di sini oleh JavaScript -->
+        </main>
+
+        <!-- Footer Aplikasi -->
+        <footer class="app-footer">
+            <p>© <span id="current-year"></span> Aplikasi PropertiKu. Dibuat dengan <i class="fas fa-heart"
+                    style="color: var(--danger-color);"></i> Vanilla JS.</p>
+        </footer>
+    </div>
+    <div class="mobile-sidebar-overlay" id="mobile-sidebar-overlay"></div>
+
+    <script>
+        // IIFE (Immediately Invoked Function Expression) untuk menjaga scope variabel
+        (function () {
+            "use strict"; // Mengaktifkan mode ketat JavaScript
+
+            // STATE APLIKASI
+            const appState = {
+                currentRoute: '/',
+                theme: localStorage.getItem('appTheme') || 'light',
+                isSidebarDesktopCollapsed: localStorage.getItem('sidebarDesktopCollapsed') === 'true',
+                isSidebarMobileOpen: false,
+                user: { // Contoh data pengguna
+                    name: 'Pengguna Andal',
+                    role: 'Administrator',
+                    avatar: 'https://i.pravatar.cc/80?u=pengguna',
+                    email: 'pengguna.andal@example.com',
+                    joinDate: '15 Maret 2023'
+                }
+            };
+
+            // SELEKTOR ELEMEN DOM UTAMA
+            const DOM = {
+                appContainer: document.getElementById('app-container'),
+                sidebar: document.getElementById('app-sidebar'),
+                contentArea: document.getElementById('app-content'),
+                navLinks: document.querySelectorAll('.app-sidebar .nav-link'),
+                themeToggleButton: document.getElementById('theme-toggle'),
+                currentYearSpan: document.getElementById('current-year'),
+                menuToggleDesktopButton: document.getElementById('menu-toggle-desktop'),
+                menuToggleMobileButton: document.getElementById('menu-toggle-mobile'),
+                mobileSidebarOverlay: document.getElementById('mobile-sidebar-overlay'),
+                userProfileImg: document.getElementById('user-profile-img'),
+                userProfileName: document.getElementById('user-profile-name'),
+                userProfileRole: document.getElementById('user-profile-role'),
+                userMenuToggle: document.getElementById('user-menu-toggle'),
+                userMenuDropdown: document.getElementById('user-menu-dropdown')
+            };
+
+            // DATA DUMMY (Untuk simulasi API call)
+            const DUMMY_DATA = {
+                apartments: [
+                    { id: 1, name: 'Apartemen Sky Garden Sentosa', image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50JTIwZXh0ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=80', bedrooms: 2, bathrooms: 1, area: 75, price: 5000000, location: 'Jakarta Pusat', available: true },
+                    { id: 2, name: 'Green Valley Residence Indah', image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBhcnRtZW50JTIwbHV4dXJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=80', bedrooms: 3, bathrooms: 2, area: 120, price: 8500000, location: 'Surabaya Timur', available: true },
+                    { id: 3, name: 'Urban Living Suites Modern', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXBhcnRtZW50JTIwY2l0eXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=80', bedrooms: 1, bathrooms: 1, area: 50, price: 3500000, location: 'Bandung Kota', available: false },
+                    { id: 4, name: 'Ocean View Condos Paradise', image: 'https://images.unsplash.com/photo-1616047006789-b7af5afb8c20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXBhcnRtZW50JTIwc2VhfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=80', bedrooms: 2, bathrooms: 2, area: 90, price: 7000000, location: 'Denpasar Selatan', available: true },
+                    { id: 5, name: 'The Peak Luxury Apartment', image: 'https://images.unsplash.com/photo-1580041069243-BEIC50ed23cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFwYXJ0bWVudCUyMGJhbGNvbnl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=80', bedrooms: 4, bathrooms: 3, area: 180, price: 12000000, location: 'Jakarta Selatan', available: true }
+                ],
+                stats: {
+                    activeBookings: 12,
+                    pendingPayments: 5,
+                    maintenanceRequests: 3,
+                    savedProperties: 28
+                }
+            };
+
+            // --- FUNGSI RENDER KONTEN HALAMAN ---
+            const pageRenderers = {
+                '/': function () {
+                    const stats = DUMMY_DATA.stats;
+                    const recentApartments = DUMMY_DATA.apartments.filter(apt => apt.available).slice(0, 2);
+                    return `
+                        <h2 class="page-title">Dashboard Analitik</h2>
+                        <div class="stats-grid">
+                            ${createStatCardHTML('Booking Aktif', stats.activeBookings, 'fas fa-calendar-check', 'primary')}
+                            ${createStatCardHTML('Pembayaran Tertunda', stats.pendingPayments, 'fas fa-file-invoice-dollar', 'warning')}
+                            ${createStatCardHTML('Permintaan Maintenance', stats.maintenanceRequests, 'fas fa-tools', 'danger')}
+                            ${createStatCardHTML('Properti Disimpan', stats.savedProperties, 'fas fa-heart', 'info')}
+                        </div>
+                        <h3 class="page-title mt-3">Apartemen Unggulan Terbaru</h3>
+                        <div class="apartment-grid">
+                            ${recentApartments.map(createApartmentCardHTML).join('')}
+                        </div>
+                    `;
+                },
+                '/profil': function () {
+                    const user = appState.user;
+                    return `
+                        <h2 class="page-title">Profil Pengguna</h2>
+                        <div class="card">
+                            <div class="card-header"><h3>Informasi Akun Saya</h3></div>
+                            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <img src="${user.avatar}" alt="Foto ${user.name}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                                <div>
+                                    <p><strong>Nama Lengkap:</strong> ${user.name}</p>
+                                    <p><strong>Email Terdaftar:</strong> ${user.email}</p>
+                                    <p><strong>Jabatan/Peran:</strong> ${user.role}</p>
+                                    <p><strong>Bergabung Sejak:</strong> ${user.joinDate}</p>
+                                </div>
+                            </div>
+                            <button class="button button-primary mt-1"><i class="fas fa-edit"></i> Edit Profil</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><h3>Pengaturan Keamanan Akun</h3></div>
+                            <p>Amankan akun Anda dengan mengganti password secara berkala dan mengaktifkan autentikasi dua faktor.</p>
+                            <button class="button button-primary mt-1"><i class="fas fa-key"></i> Ubah Password</button>
+                        </div>
+                    `;
+                },
+                '/apartemen': function () {
+                    return `
+                        <h2 class="page-title">Daftar Properti Apartemen</h2>
+                        <div class="card mb-3">
+                           <input type="search" id="apartment-search-input" placeholder="Cari apartemen berdasarkan nama, lokasi, atau fasilitas..." class="form-control" accesskey="s">
+                        </div>
+                        <div class="apartment-grid" id="apartment-listing-grid">
+                            ${DUMMY_DATA.apartments.map(createApartmentCardHTML).join('')}
+                        </div>
+                    `;
+                },
+                '/booking': function () { return createPlaceholderPageHTML('Manajemen Booking', 'fas fa-calendar-check', 'Kelola semua jadwal booking dan riwayat pemesanan Anda di sini.'); },
+                '/favorit': function () { return createPlaceholderPageHTML('Properti Favorit', 'fas fa-heart', 'Lihat dan kelola daftar properti yang telah Anda simpan sebagai favorit.'); },
+                '/pembayaran': function () { return createPlaceholderPageHTML('Riwayat Pembayaran', 'fas fa-credit-card', 'Lacak semua transaksi dan status pembayaran Anda.'); },
+                '/maintenance': function () { return createPlaceholderPageHTML('Layanan Maintenance', 'fas fa-tools', 'Ajukan permintaan perbaikan atau laporkan masalah terkait properti Anda.'); },
+                '/pesan': function () { return createPlaceholderPageHTML('Kotak Masuk Pesan', 'fas fa-envelope', 'Komunikasi langsung dengan pemilik properti atau admin melalui sistem pesan terintegrasi.'); },
+                '/pengaturan': function () { return createPlaceholderPageHTML('Pengaturan Aplikasi', 'fas fa-cog', 'Sesuaikan preferensi aplikasi, notifikasi, dan lainnya.'); },
+                '404': function () {
+                    return `
+                        <div class="placeholder-content" style="min-height: 70vh;">
+                            <i class="fas fa-exclamation-triangle placeholder-icon" style="font-size: 5rem; color: var(--danger-color);"></i>
+                            <h2 class="page-title" style="color: var(--danger-color);">404 - Halaman Hilang</h2>
+                            <p>Maaf, halaman yang Anda cari tidak dapat ditemukan atau telah dipindahkan.</p>
+                            <a href="#/" class="button button-primary mt-2" data-route="/"><i class="fas fa-home"></i> Kembali ke Dashboard</a>
+                        </div>
+                    `;
+                }
+            };
+
+            // --- FUNGSI UTILITAS PEMBUATAN HTML ---
+            function createStatCardHTML(title, value, iconClass, colorClass) {
+                return `
+                    <div class="card stat-card">
+                        <div class="stat-icon ${colorClass}"><i class="${iconClass}"></i></div>
+                        <div class="stat-info">
+                            <h4>${value}</h4>
+                            <p>${title}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function createApartmentCardHTML(apartment) {
+                const availabilityText = apartment.available ? 'Tersedia' : 'Sudah Tersewa';
+                const availabilityClass = apartment.available ? 'success' : 'danger';
+                return `
+                    <div class="card apartment-card" data-id="${apartment.id}">
+                        <div class="apartment-card-image-wrapper">
+                            <img src="${apartment.image}" alt="Foto Eksterior ${apartment.name}">
+                        </div>
+                        <div class="card-content">
+                            <h4>${apartment.name}</h4>
+                            <div class="details">
+                                <span><i class="fas fa-bed"></i> ${apartment.bedrooms} KT</span>
+                                <span><i class="fas fa-bath"></i> ${apartment.bathrooms} KM</span>
+                                <span><i class="fas fa-ruler-combined"></i> ${apartment.area} m²</span>
+                            </div>
+                            <p class="price">Rp ${apartment.price.toLocaleString('id-ID')} / bulan</p>
+                            <p class="mb-2"><small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${apartment.location}</small></p>
+                            <div class="actions d-flex justify-between align-center">
+                                <span style="font-weight:500; color: var(--${availabilityClass}-color); font-size: 0.9em;">
+                                    <i class="fas ${apartment.available ? 'fa-check-circle' : 'fa-times-circle'}"></i> ${availabilityText}
+                                </span>
+                                <button class="button button-primary" onclick="handleApartmentDetailClick(${apartment.id}, '${apartment.name.replace(/'/g, "\\'")}')">
+                                   <i class="fas fa-info-circle"></i> Detail
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            // Jadikan fungsi ini global agar bisa dipanggil dari HTML string
+            window.handleApartmentDetailClick = function (id, name) {
+                alert(`Menampilkan detail untuk apartemen ID: ${id}, Nama: ${name}.\nFitur ini akan menampilkan modal atau halaman detail.`);
+            }
+
+
+            function createPlaceholderPageHTML(title, iconClass, description) {
+                return `
+                    <h2 class="page-title">${title}</h2>
+                    <div class="card">
+                        <div class="placeholder-content">
+                            <i class="${iconClass} placeholder-icon"></i>
+                            <p class="mb-2">${description}</p>
+                            <p>Fitur ini sedang dalam tahap pengembangan dan akan segera tersedia untuk Anda. Terima kasih atas kesabaran Anda!</p>
+                             <a href="#/" class="button button-primary mt-2" data-route="/"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // --- LOGIKA INTI APLIKASI ---
+
+            // Router Sederhana
+            function router() {
+                const path = window.location.hash.slice(1) || '/';
+                appState.currentRoute = path;
+
+                const pageRenderer = pageRenderers[path] || pageRenderers['404'];
+                DOM.contentArea.innerHTML = pageRenderer();
+                DOM.contentArea.scrollTop = 0; // Scroll ke atas setiap pindah halaman
+                updateActiveNavLink();
+
+                // Event listener spesifik halaman jika diperlukan
+                if (path === '/apartemen') {
+                    const searchInput = document.getElementById('apartment-search-input');
+                    if (searchInput) {
+                        searchInput.addEventListener('input', handleApartmentSearch);
+                    }
+                }
+                // Tutup dropdown menu pengguna jika terbuka
+                if (DOM.userMenuDropdown.style.display === 'block') {
+                    DOM.userMenuDropdown.style.display = 'none';
+                }
+            }
+
+            function handleApartmentSearch(event) {
+                const searchTerm = event.target.value.toLowerCase().trim();
+                const apartmentGrid = document.getElementById('apartment-listing-grid');
+                const allApartments = DUMMY_DATA.apartments;
+
+                const filteredApartments = allApartments.filter(apt =>
+                    apt.name.toLowerCase().includes(searchTerm) ||
+                    apt.location.toLowerCase().includes(searchTerm)
+                );
+
+                if (filteredApartments.length > 0) {
+                    apartmentGrid.innerHTML = filteredApartments.map(createApartmentCardHTML).join('');
+                } else {
+                    apartmentGrid.innerHTML = `<p class="text-center" style="grid-column: 1 / -1;">Tidak ada apartemen yang cocok dengan kriteria pencarian Anda "${searchTerm}".</p>`;
+                }
+            }
+
+            function updateActiveNavLink() {
+                DOM.navLinks.forEach(link => {
+                    if (link.dataset.route === appState.currentRoute) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                // Update active link di user dropdown juga
+                const userDropdownLinks = DOM.userMenuDropdown.querySelectorAll('a[data-route]');
+                userDropdownLinks.forEach(link => {
+                    if (link.dataset.route === appState.currentRoute) {
+                        link.style.fontWeight = 'bold';
+                        link.style.backgroundColor = 'var(--primary-color)';
+                        link.style.color = 'var(--sidebar-link-active-color)';
+                    } else {
+                        link.style.fontWeight = 'normal';
+                        link.style.backgroundColor = 'transparent';
+                        link.style.color = 'var(--text-color)';
+                    }
+                });
+            }
+
+            // Pengaturan Tema (Terang/Gelap)
+            function applyTheme() {
+                document.documentElement.setAttribute('data-theme', appState.theme);
+                localStorage.setItem('appTheme', appState.theme);
+                const themeIcon = DOM.themeToggleButton.querySelector('i');
+                if (appState.theme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            }
+
+            function toggleTheme() {
+                appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+                applyTheme();
+            }
+
+            // Pengaturan Sidebar (Desktop Collapse & Mobile Open/Close)
+            function applySidebarState() {
+                // Desktop: Collapse/Expand
+                if (window.innerWidth >= 992) {
+                    if (appState.isSidebarDesktopCollapsed) {
+                        DOM.appContainer.classList.add('sidebar-collapsed');
+                    } else {
+                        DOM.appContainer.classList.remove('sidebar-collapsed');
+                    }
+                    // Pastikan mobile state tidak aktif di desktop
+                    DOM.sidebar.classList.remove('open');
+                    DOM.mobileSidebarOverlay.classList.remove('active');
+                    appState.isSidebarMobileOpen = false;
+                }
+                // Mobile: Open/Close (Overlay)
+                else {
+                    if (appState.isSidebarMobileOpen) {
+                        DOM.sidebar.classList.add('open');
+                        DOM.mobileSidebarOverlay.classList.add('active');
+                    } else {
+                        DOM.sidebar.classList.remove('open');
+                        DOM.mobileSidebarOverlay.classList.remove('active');
+                    }
+                    // Pastikan desktop state tidak aktif di mobile
+                    DOM.appContainer.classList.remove('sidebar-collapsed');
+                }
+                localStorage.setItem('sidebarDesktopCollapsed', appState.isSidebarDesktopCollapsed);
+            }
+
+            function toggleSidebarDesktop() {
+                appState.isSidebarDesktopCollapsed = !appState.isSidebarDesktopCollapsed;
+                applySidebarState();
+            }
+
+            function toggleSidebarMobile() {
+                appState.isSidebarMobileOpen = !appState.isSidebarMobileOpen;
+                applySidebarState();
+            }
+
+            function updateUserDataInUI() {
+                DOM.userProfileImg.src = appState.user.avatar;
+                DOM.userProfileImg.alt = `Foto Profil ${appState.user.name}`;
+                DOM.userProfileName.textContent = appState.user.name;
+                DOM.userProfileRole.textContent = appState.user.role;
+            }
+
+            // INISIALISASI APLIKASI
+            function initializeApp() {
+                if (DOM.currentYearSpan) {
+                    DOM.currentYearSpan.textContent = new Date().getFullYear();
+                }
+
+                updateUserDataInUI();
+                applyTheme();
+                applySidebarState(); // Terapkan state sidebar awal berdasarkan ukuran layar
+
+                // Setup Router & Event Listeners
+                window.addEventListener('hashchange', router);
+                router(); // Muat halaman awal
+
+                DOM.themeToggleButton.addEventListener('click', toggleTheme);
+                DOM.menuToggleDesktopButton.addEventListener('click', toggleSidebarDesktop);
+                DOM.menuToggleMobileButton.addEventListener('click', toggleSidebarMobile);
+                DOM.mobileSidebarOverlay.addEventListener('click', toggleSidebarMobile); // Klik overlay tutup sidebar
+
+                // Tutup sidebar mobile jika link navigasi diklik
+                DOM.navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.innerWidth < 992 && appState.isSidebarMobileOpen) {
+                            toggleSidebarMobile();
+                        }
+                    });
+                });
+
+                // Toggle user menu dropdown
+                DOM.userMenuToggle.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Mencegah event bubbling ke document
+                    const isHidden = DOM.userMenuDropdown.style.display === 'none' || DOM.userMenuDropdown.style.display === '';
+                    DOM.userMenuDropdown.style.display = isHidden ? 'block' : 'none';
+                });
+
+                // Tutup user menu dropdown jika klik di luar
+                document.addEventListener('click', (event) => {
+                    if (!DOM.userMenuToggle.contains(event.target) && !DOM.userMenuDropdown.contains(event.target)) {
+                        DOM.userMenuDropdown.style.display = 'none';
+                    }
+                });
+
+                // Handle logout (contoh)
+                const logoutButton = document.getElementById('logout-button');
+                if (logoutButton) {
+                    logoutButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        alert('Anda telah berhasil keluar dari aplikasi PropertiKu.');
+                        // Logika logout sebenarnya (misal: hapus token, redirect ke login page)
+                        window.location.hash = '#/'; // Kembali ke dashboard sebagai contoh
+                        DOM.userMenuDropdown.style.display = 'none';
+                    });
+                }
+
+                // Responsif: Sesuaikan state sidebar saat ukuran window berubah
+                window.addEventListener('resize', () => {
+                    // Penting untuk memanggil applySidebarState agar logika desktop/mobile yang benar diterapkan
+                    applySidebarState();
+                });
+
+                console.log("Aplikasi Properti SPA Modern berhasil diinisialisasi.");
+            }
+
+            // Jalankan aplikasi setelah DOM sepenuhnya dimuat dan diparsing
+            document.addEventListener('DOMContentLoaded', initializeApp);
+
+        })(); // Akhir dari IIFE
+    </script>
+</body>
+
+</html>
