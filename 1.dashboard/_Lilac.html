@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SewaApt - Platform Sewa Apartemen Modern</title>
+  <title>Green Valley - Platform Sewa Apartemen Modern</title>
   <style>
     /* Reset dan Gaya Dasar Global */
     *,
@@ -1059,7 +1059,7 @@
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <a href="#beranda" class="app-title-link">
-      <h1 class="app-title">SewaApt</h1>
+      <h1 class="app-title">Green Valley</h1>
     </a>
 
     <nav>
@@ -1172,16 +1172,16 @@
 
   <script>
     // Namespace Aplikasi untuk menghindari polusi global
-    const SewaAptApp = (() => {
+    const Green ValleyApp = (() => {
       // STATE APLIKASI (Layer State)
       const state = {
         apartments: [], // Data asli dari "API"
         filteredApartments: [], // Data yang ditampilkan setelah filter/pencarian
-        favorites: JSON.parse(localStorage.getItem('sewaAptFavorites')) || [], // Favorit disimpan di localStorage
+        favorites: JSON.parse(localStorage.getItem('Green ValleyFavorites')) || [], // Favorit disimpan di localStorage
         currentPage: 1,
         itemsPerPage: 6, // Jumlah apartemen per halaman
         currentRoute: 'beranda', // Rute default
-        currentApartmentDetail: null, // Untuk modal
+        curGreen ValleymentDetail: null, // Untuk modal
         isLoading: false,
         filters: {
           location: '',
@@ -1349,10 +1349,10 @@
             if (aptInFiltered) aptInFiltered.isFavorite = false;
             Utils.createToast('Favorit', `${aptInAll ? aptInAll.name : 'Apartemen'} dihapus dari favorit.`, 'info');
           }
-          localStorage.setItem('sewaAptFavorites', JSON.stringify(state.favorites));
+          localStorage.setItem('Green ValleyFavorites', JSON.stringify(state.favorites));
 
           // Update UI jika modal terbuka atau halaman favorit aktif
-          if (DOMElements.detailModal.classList.contains('active') && state.currentApartmentDetail?.id === apartmentId) {
+          if (DOMElements.detailModal.classList.contains('active') && state.curGreen ValleymentDetail?.id === apartmentId) {
             View.updateModalFavoriteButton(aptInAll.isFavorite);
           }
           // Re-render halaman favorit jika sedang aktif
@@ -1684,12 +1684,12 @@
           // Update judul dokumen
           const activeNavItem = DOMElements.navMenu.querySelector(`.nav-item[data-route="${state.currentRoute}"] span`);
           const pageTitle = activeNavItem ? activeNavItem.textContent : 'Beranda';
-          document.title = `${pageTitle} - SewaApt`;
+          document.title = `${pageTitle} - Green Valley`;
         },
         openDetailModal: (apartmentId) => {
           const apartment = AppLogic.getApartmentById(apartmentId);
           if (!apartment) return;
-          state.currentApartmentDetail = apartment;
+          state.curGreen ValleymentDetail = apartment;
 
           DOMElements.modalTitle.textContent = apartment.name;
           DOMElements.modalBody.innerHTML = `
@@ -1730,7 +1730,7 @@
         },
         closeDetailModal: () => {
           DOMElements.detailModal.classList.remove('active');
-          state.currentApartmentDetail = null;
+          state.curGreen ValleymentDetail = null;
           document.body.style.overflow = ''; // Kembalikan scroll body
         },
         updateModalFavoriteButton: (isFavorite) => {
@@ -1809,103 +1809,103 @@
           });
 
           DOMElements.modalFavoriteBtn.addEventListener('click', () => {
-            if (state.currentApartmentDetail) {
-              AppLogic.toggleFavorite(state.currentApartmentDetail.id);
-            }
-          });
-          DOMElements.modalBookBtn.addEventListener('click', () => {
-            if (state.currentApartmentDetail) {
-              AppLogic.bookApartment(state.currentApartmentDetail.id);
-            }
-          });
-
-          // Navigasi Sidebar
-          DOMElements.navMenu.addEventListener('click', (e) => {
-            const navItem = e.target.closest('.nav-item');
-            if (navItem && navItem.dataset.route) {
-              e.preventDefault(); // Mencegah perilaku default link jika ada tag <a>
-              Router.navigateTo(navItem.dataset.route);
-            }
-          });
-          // Link logo app
-          document.querySelector('.app-title-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            Router.navigateTo('beranda');
-          });
-        },
-        setupBerandaPageListeners: () => {
-          // Listener ini harus dipasang ulang setiap kali halaman Beranda dirender
-          // karena elemen-elemennya dibuat ulang.
-          const searchBtn = DOMElements.appRoot.querySelector('#searchBtn');
-          const locationInput = DOMElements.appRoot.querySelector('#locationInput');
-          const priceInput = DOMElements.appRoot.querySelector('#priceInput');
-          const typeInput = DOMElements.appRoot.querySelector('#typeInput');
-          const filterTabs = DOMElements.appRoot.querySelectorAll('#filterTabs .tab');
-
-          const debouncedSearch = Utils.debounce(() => {
-            state.filters.location = locationInput.value.trim();
-            state.filters.maxPrice = priceInput.value.trim();
-            state.filters.type = typeInput.value.trim();
-            AppLogic.applyFiltersAndSearch();
-            View.renderCurrentPageContent(); // Render ulang list dan pagination
-            Utils.createToast('Pencarian', 'Filter diterapkan.', 'info', 1500);
-          }, 500); // Debounce 500ms
-
-          if (searchBtn) searchBtn.addEventListener('click', debouncedSearch);
-          if (locationInput) locationInput.addEventListener('input', debouncedSearch);
-          if (priceInput) priceInput.addEventListener('input', debouncedSearch);
-          if (typeInput) typeInput.addEventListener('input', debouncedSearch);
-
-          if (filterTabs) {
-            filterTabs.forEach(tab => {
-              tab.addEventListener('click', () => {
-                filterTabs.forEach(t => {
-                  t.classList.remove('active');
-                  t.setAttribute('aria-selected', 'false');
-                });
-                tab.classList.add('active');
-                tab.setAttribute('aria-selected', 'true');
-                state.filters.category = tab.dataset.filter;
-                AppLogic.applyFiltersAndSearch();
-                View.renderCurrentPageContent();
-              });
-            });
+            if (state.curGreen ValleymentDetail) {
+            AppLogic.toggleFavorite(state.curGreen ValleymentDetail.id);
           }
-        },
-        toggleSidebar: () => {
-          const isActive = DOMElements.sidebar.classList.toggle('active');
-          DOMElements.hamburgerMenu.setAttribute('aria-expanded', isActive);
-          DOMElements.hamburgerIconOpen.classList.toggle('hidden', isActive);
-          DOMElements.hamburgerIconClose.classList.toggle('hidden', !isActive);
-          if (isActive) {
-            DOMElements.sidebar.focus(); // Fokus ke sidebar untuk navigasi keyboard
-          } else {
-            DOMElements.hamburgerMenu.focus();
-          }
-        }
-      };
-
-      // INISIALISASI APLIKASI
-      const init = () => {
-        Utils.showLoading();
-        AppLogic.fetchApartments().then(() => {
-          Router.handleRouteChange(); // Tangani rute awal setelah data siap
-          EventListeners.setupGlobalListeners();
-          Utils.hideLoading();
-          Utils.createToast('Selamat Datang!', 'SewaApt siap digunakan.', 'success');
-        }).catch(error => {
-          console.error("Gagal memuat data apartemen:", error);
-          Utils.hideLoading();
-          Utils.createToast('Kesalahan', 'Gagal memuat data. Coba lagi nanti.', 'error');
-          DOMElements.appRoot.innerHTML = `<div class="empty-state"><h4 class="empty-state-title">Oops! Terjadi Kesalahan</h4><p class="empty-state-message">Tidak dapat memuat data apartemen. Silakan coba muat ulang halaman.</p></div>`;
         });
+      DOMElements.modalBookBtn.addEventListener('click', () => {
+        if (state.curGreen ValleymentDetail) {
+        AppLogic.bookApartment(state.curGreen ValleymentDetail.id);
+      }
+    });
+
+    // Navigasi Sidebar
+    DOMElements.navMenu.addEventListener('click', (e) => {
+      const navItem = e.target.closest('.nav-item');
+      if (navItem && navItem.dataset.route) {
+        e.preventDefault(); // Mencegah perilaku default link jika ada tag <a>
+        Router.navigateTo(navItem.dataset.route);
+      }
+    });
+    // Link logo app
+    document.querySelector('.app-title-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      Router.navigateTo('beranda');
+    });
+        },
+    setupBerandaPageListeners: () => {
+      // Listener ini harus dipasang ulang setiap kali halaman Beranda dirender
+      // karena elemen-elemennya dibuat ulang.
+      const searchBtn = DOMElements.appRoot.querySelector('#searchBtn');
+      const locationInput = DOMElements.appRoot.querySelector('#locationInput');
+      const priceInput = DOMElements.appRoot.querySelector('#priceInput');
+      const typeInput = DOMElements.appRoot.querySelector('#typeInput');
+      const filterTabs = DOMElements.appRoot.querySelectorAll('#filterTabs .tab');
+
+      const debouncedSearch = Utils.debounce(() => {
+        state.filters.location = locationInput.value.trim();
+        state.filters.maxPrice = priceInput.value.trim();
+        state.filters.type = typeInput.value.trim();
+        AppLogic.applyFiltersAndSearch();
+        View.renderCurrentPageContent(); // Render ulang list dan pagination
+        Utils.createToast('Pencarian', 'Filter diterapkan.', 'info', 1500);
+      }, 500); // Debounce 500ms
+
+      if (searchBtn) searchBtn.addEventListener('click', debouncedSearch);
+      if (locationInput) locationInput.addEventListener('input', debouncedSearch);
+      if (priceInput) priceInput.addEventListener('input', debouncedSearch);
+      if (typeInput) typeInput.addEventListener('input', debouncedSearch);
+
+      if (filterTabs) {
+        filterTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            filterTabs.forEach(t => {
+              t.classList.remove('active');
+              t.setAttribute('aria-selected', 'false');
+            });
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            state.filters.category = tab.dataset.filter;
+            AppLogic.applyFiltersAndSearch();
+            View.renderCurrentPageContent();
+          });
+        });
+      }
+    },
+      toggleSidebar: () => {
+        const isActive = DOMElements.sidebar.classList.toggle('active');
+        DOMElements.hamburgerMenu.setAttribute('aria-expanded', isActive);
+        DOMElements.hamburgerIconOpen.classList.toggle('hidden', isActive);
+        DOMElements.hamburgerIconClose.classList.toggle('hidden', !isActive);
+        if (isActive) {
+          DOMElements.sidebar.focus(); // Fokus ke sidebar untuk navigasi keyboard
+        } else {
+          DOMElements.hamburgerMenu.focus();
+        }
+      }
       };
 
-      return { init }; // Expose hanya fungsi init ke global scope
-    })();
+    // INISIALISASI APLIKASI
+    const init = () => {
+      Utils.showLoading();
+      AppLogic.fetchApartments().then(() => {
+        Router.handleRouteChange(); // Tangani rute awal setelah data siap
+        EventListeners.setupGlobalListeners();
+        Utils.hideLoading();
+        Utils.createToast('Selamat Datang!', 'Green Valley siap digunakan.', 'success');
+      }).catch(error => {
+        console.error("Gagal memuat data apartemen:", error);
+        Utils.hideLoading();
+        Utils.createToast('Kesalahan', 'Gagal memuat data. Coba lagi nanti.', 'error');
+        DOMElements.appRoot.innerHTML = `<div class="empty-state"><h4 class="empty-state-title">Oops! Terjadi Kesalahan</h4><p class="empty-state-message">Tidak dapat memuat data apartemen. Silakan coba muat ulang halaman.</p></div>`;
+      });
+    };
+
+    return { init }; // Expose hanya fungsi init ke global scope
+    }) ();
 
     // Jalankan aplikasi setelah DOM sepenuhnya dimuat
-    document.addEventListener('DOMContentLoaded', SewaAptApp.init);
+    document.addEventListener('DOMContentLoaded', Green ValleyApp.init);
   </script>
 </body>
 

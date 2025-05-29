@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "aperturefind";
+    private $db_name = "Green Valley";
     private $username = "root";
     private $password = "";
     public $conn;

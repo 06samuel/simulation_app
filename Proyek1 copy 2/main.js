@@ -1,4 +1,4 @@
-class ApertureFind {
+class Green Valley {
     constructor() {
         this.featuredApartments = document.querySelector('#featuredApartments');
         this.recommendedApartments = document.querySelector('#recommendedApartments');
@@ -169,25 +169,25 @@ class ApertureFind {
                 this.handleSearch(e.target.value, input.dataset.searchType)
             }, 300));
         });
-        
+
         document.querySelectorAll('[data-filter]').forEach(filter => {
             filter.addEventListener('change', () => this.handleFilter());
         });
-        
-        if(this.navToggle) {
+
+        if (this.navToggle) {
             this.navToggle.addEventListener('click', () => this.toggleNav());
         }
-        
+
         document.querySelectorAll('[data-contact-form]').forEach(form => {
             form.addEventListener('submit', e => this.handleContactForm(e));
         });
-        
+
         document.addEventListener('click', e => {
             if (e.target.closest('.favorite-btn')) {
                 this.toggleFavorite(e.target.dataset.id);
             }
         });
-        
+
         if (this.galleryThumbnails) {
             this.galleryThumbnails.addEventListener('click', e => {
                 const thumbnail = e.target.closest('img');
@@ -275,7 +275,7 @@ class ApertureFind {
         if (this.galleryPreview && this.galleryThumbnails) {
             const currentId = new URLSearchParams(window.location.search).get('id');
             const apartment = this.state.apartments.find(a => a.id == currentId);
-            
+
             if (apartment) {
                 this.state.apartmentImages = [
                     apartment.image,
@@ -283,7 +283,7 @@ class ApertureFind {
                     'https://images.unsplash.com/photo-1494203484021-3ce26331d648',
                     'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8'
                 ];
-                
+
                 this.renderGallery();
             }
         }
@@ -297,7 +297,7 @@ class ApertureFind {
                      class="fade-in">
             `;
         }
-        
+
         if (this.galleryThumbnails) {
             this.galleryThumbnails.innerHTML = this.state.apartmentImages
                 .map((img, index) => `
@@ -331,23 +331,23 @@ class ApertureFind {
                 </div>
                 <button class="btn btn-secondary" data-close-share>Close</button>
             `;
-            
+
             document.body.appendChild(sharePopup);
-            
+
             this.shareButton.addEventListener('click', () => {
                 sharePopup.classList.add('active');
             });
-            
+
             sharePopup.querySelector('[data-close-share]').addEventListener('click', () => {
                 sharePopup.classList.remove('active');
             });
-            
+
             sharePopup.querySelectorAll('.share-option').forEach(option => {
                 option.addEventListener('click', () => {
                     const platform = option.dataset.platform;
                     const url = window.location.href;
                     const title = document.title;
-                    
+
                     let shareUrl;
                     switch (platform) {
                         case 'facebook':
@@ -360,11 +360,11 @@ class ApertureFind {
                             shareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(url)}`;
                             break;
                     }
-                    
+
                     if (shareUrl) {
                         window.open(shareUrl, '_blank');
                     }
-                    
+
                     sharePopup.classList.remove('active');
                 });
             });
@@ -372,4 +372,4 @@ class ApertureFind {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => new ApertureFind());
+document.addEventListener('DOMContentLoaded', () => new Green Valley());

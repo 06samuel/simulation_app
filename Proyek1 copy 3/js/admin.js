@@ -1,6 +1,6 @@
-class ApertureFindAdmin {
+class Green ValleyAdmin {
     constructor() {
-        this.api = new ApertureFindAPI();
+        this.api = new Green ValleyAPI();
         this.state = {
             apartments: [],
             tenants: [],

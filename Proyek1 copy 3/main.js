@@ -8,17 +8,17 @@ const initializeTheme = () => {
 const toggleTheme = () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
+
     // Add transition class for smooth theme change
     document.documentElement.classList.add('theme-transition');
-    
+
     // Update theme
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    
+
     // Update colors with transition
     updateThemeColors(newTheme);
-    
+
     // Remove transition class after animation completes
     setTimeout(() => {
         document.documentElement.classList.remove('theme-transition');
@@ -95,7 +95,7 @@ document.head.appendChild(themeStyle);
 // Initialize theme on load
 document.addEventListener('DOMContentLoaded', () => {
     initializeTheme();
-    
+
     // Add theme toggle button listener
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.classList.toggle('collapsed');
-    
+
     // Add smooth transition
     sidebar.style.transition = 'width 0.3s ease-in-out';
-    
+
     // Update content margin
     const content = document.querySelector('.main-content');
     if (content) {
@@ -122,17 +122,17 @@ function toggleSidebar() {
 function toggleNavbar() {
     const navbar = document.querySelector('.navbar');
     const navbarToggle = document.querySelector('.navbar-toggle');
-    
+
     if (navbar) {
         navbar.classList.toggle('collapsed');
-        
+
         // Add smooth transition
         navbar.style.transition = 'height 0.3s ease-in-out';
-        
+
         // Update toggle button icon
         if (navbarToggle) {
-            navbarToggle.innerHTML = navbar.classList.contains('collapsed') 
-                ? '<i class="fas fa-bars"></i>' 
+            navbarToggle.innerHTML = navbar.classList.contains('collapsed')
+                ? '<i class="fas fa-bars"></i>'
                 : '<i class="fas fa-times"></i>';
         }
     }
@@ -142,15 +142,15 @@ function toggleNavbar() {
 document.addEventListener('DOMContentLoaded', () => {
     const sidebarToggle = document.querySelector('.sidebar-toggle');
     const navbarToggle = document.querySelector('.navbar-toggle');
-    
+
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', toggleSidebar);
     }
-    
+
     if (navbarToggle) {
         navbarToggle.addEventListener('click', toggleNavbar);
     }
-    
+
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         // Alt + S to toggle sidebar
@@ -158,19 +158,19 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             toggleSidebar();
         }
-        
+
         // Alt + N to toggle navbar
         if (e.altKey && e.key === 'n') {
             e.preventDefault();
             toggleNavbar();
         }
     });
-    
+
     // Add responsive behavior
     window.addEventListener('resize', () => {
         const sidebar = document.querySelector('.sidebar');
         const navbar = document.querySelector('.navbar');
-        
+
         if (window.innerWidth <= 768) {
             sidebar?.classList.add('collapsed');
             navbar?.classList.add('collapsed');
@@ -219,12 +219,12 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-class ApertureFindAdmin {
+class Green ValleyAdmin {
     constructor() {
-        this.api = new ApertureFindAPI();
+        this.api = new Green ValleyAPI();
         this.state = {
             apartments: this.getStorageItem('apartments', []),
-            tenants: this.getStorageItem('tenants', []), 
+            tenants: this.getStorageItem('tenants', []),
             payments: this.getStorageItem('payments', []),
             maintenance: this.getStorageItem('maintenance', []),
             notifications: this.getStorageItem('notifications', []),
@@ -301,12 +301,12 @@ class ApertureFindAdmin {
             this.state.tenants = tenants;
             this.state.payments = payments;
             this.state.maintenance = maintenance;
-            
+
             this.setStorageItem('lastSync', new Date().toISOString());
         } catch (error) {
             console.error('Error loading data:', error);
             this.showNotification('error', 'Failed to load data. Using cached data.');
-            
+
             // Fallback to localStorage
             this.state.apartments = this.getStorageItem('apartments', []);
             this.state.tenants = this.getStorageItem('tenants', []);
@@ -377,7 +377,7 @@ class ApertureFindAdmin {
 
         document.addEventListener('touchmove', (e) => {
             if (!sidebar) return;
-            
+
             const touchEndX = e.touches[0].clientX;
             const diff = touchStartX - touchEndX;
 
@@ -392,7 +392,7 @@ class ApertureFindAdmin {
             btn.addEventListener('click', () => {
                 this.elements.tabButtons.forEach(b => b.classList.remove('tabs__btn--active'));
                 btn.classList.add('tabs__btn--active');
-                
+
                 // Smooth content transition
                 this.fadeContent(() => {
                     this.handleTabChange(btn.dataset.tab);
@@ -430,7 +430,7 @@ class ApertureFindAdmin {
 
     setupWebSocket() {
         const ws = new WebSocket(this.api.wsUrl);
-        
+
         ws.onmessage = (event) => {
             const update = JSON.parse(event.data);
             this.handleRealtimeUpdate(update);
@@ -445,7 +445,7 @@ class ApertureFindAdmin {
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey || e.metaKey) {
-                switch(e.key) {
+                switch (e.key) {
                     case 'f':
                         e.preventDefault();
                         this.elements.searchInput?.focus();
@@ -475,7 +475,7 @@ class ApertureFindAdmin {
     setStorageItem(key, value) {
         try {
             localStorage.setItem(key, JSON.stringify(value));
-            window.dispatchEvent(new CustomEvent('stateChange', { 
+            window.dispatchEvent(new CustomEvent('stateChange', {
                 detail: { key, value, timestamp: new Date().toISOString() }
             }));
         } catch (error) {
@@ -488,7 +488,7 @@ class ApertureFindAdmin {
 // Initialize application with error boundary
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        window.admin = new ApertureFindAdmin();
+        window.admin = new Green ValleyAdmin();
     } catch (error) {
         console.error('Failed to initialize application:', error);
         const errorDiv = document.createElement('div');
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-class ApertureFindAPI {
+class Green ValleyAPI {
     constructor() {
         this.baseUrl = '/simulation_app/Proyek1 copy 3/api';
         this.wsUrl = `ws://${window.location.host}/ws`;
@@ -587,7 +587,7 @@ function debounce(func, wait) {
 // Lazy load images
 document.addEventListener('DOMContentLoaded', () => {
     const lazyImages = document.querySelectorAll('img[data-src]');
-    
+
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        
+
         lazyImages.forEach(img => imageObserver.observe(img));
     } else {
         // Fallback for browsers that don't support IntersectionObserver

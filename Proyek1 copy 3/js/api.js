@@ -1,4 +1,4 @@
-class ApertureFindAPI {
+class Green ValleyAPI {
     constructor() {
         this.baseUrl = '/simulation_app/Proyek1 copy 3/api';
     }

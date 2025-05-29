@@ -1,5 +1,5 @@
-CREATE DATABASE aperturefind;
-USE aperturefind;
+CREATE DATABASE Green Valley;
+USE Green Valley;
 
 CREATE TABLE apartments (
     id INT AUTO_INCREMENT PRIMARY KEY,
