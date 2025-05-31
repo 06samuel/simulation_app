@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Dashboard manajemen persewaan apartemen Green Valley. Kelola properti, penyewa, dan lainnya dengan mudah." />
+  <meta name="keywords" content="dashboard, sewa apartemen, manajemen properti, green valley" />
+  <meta name="author" content="Green Valley Team" />
+
+  <!-- Judul Halaman Dinamis (akan diupdate oleh JS) -->
+  <title>Green Valley - Dashboard</title>
+
+  <!-- Ikon Favicon (Contoh menggunakan emoji, idealnya ganti dengan file .ico atau .png) -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏡</text></svg>">
+
+  <!-- Gaya Font dari Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <!-- Ikon Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* === VARIABEL CSS GLOBAL (PALET WARNA & UTILITIES) === */
+    :root {
+      --primary-color: #2563eb;
+      /* Biru Primer yang Menarik */
+      --primary-color-light: #dbeafe;
+      /* Turunan Warna Primer (Lebih Terang) */
+      --primary-color-dark: #1e40af;
+      /* Turunan Warna Primer (Lebih Gelap) */
+      --accent-color: #10b981;
+      /* Warna Aksen (misalnya untuk sukses, sorotan positif) */
+      --accent-color-alt: #f59e0b;
+      /* Warna Aksen Alternatif (misalnya untuk peringatan) */
+      --danger-color: #ef4444;
+      /* Warna Bahaya */
+
+      --bg-primary: #f0f4f8;
+      /* Latar Belakang Utama Aplikasi */
+      --bg-secondary: #ffffff;
+      /* Latar Belakang untuk Komponen seperti Kartu */
+      --bg-sidebar: #1f2937;
+      /* Latar Belakang Sidebar */
+      --bg-sidebar-hover: #374151;
+      /* Latar Belakang Hover Item Sidebar */
+      --bg-sidebar-active: var(--primary-color);
+      /* Latar Belakang Item Sidebar Aktif */
+
+      --text-primary: #111827;
+      /* Warna Teks Utama */
+      --text-secondary: #4b5563;
+      /* Warna Teks Sekunder (Lebih Redup) */
+      --text-light: #f9fafb;
+      /* Warna Teks Terang (untuk latar gelap) */
+      --text-on-primary: #ffffff;
+      /* Warna Teks di atas Latar Primer */
+
+      --border-color: #e5e7eb;
+      /* Warna Border Umum */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+      --border-radius-sm: 0.375rem;
+      /* 6px */
+      --border-radius-md: 0.5rem;
+      /* 8px */
+      --border-radius-lg: 0.75rem;
+      /* 12px */
+      --border-radius-xl: 1rem;
+      /* 16px */
+      --border-radius-full: 9999px;
+      /* Untuk elemen bulat sempurna */
+
+      --font-family-main: 'Poppins', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+      --transition-duration: 0.3s;
+      --transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-main: all var(--transition-duration) var(--transition-timing-function);
+    }
+
+    /* === RESET CSS & GAYA DASAR === */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      /* Basis font untuk unit rem */
+      scroll-behavior: smooth;
+      /* Scroll halus untuk anchor link */
+      -webkit-font-smoothing: antialiased;
+      /* Teks lebih halus di Webkit */
+      -moz-osx-font-smoothing: grayscale;
+      /* Teks lebih halus di Firefox */
+    }
+
+    body {
+      font-family: var(--font-family-main);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      /* Memastikan layout utama menggunakan flex */
+      overflow-x: hidden;
+      /* Mencegah scroll horizontal yang tidak diinginkan */
+    }
+
+    /* === STRUKTUR UTAMA APLIKASI (SPA) === */
+    #app-container {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
+      transition: margin-left var(--transition-duration) var(--transition-timing-function);
+      /* Transisi untuk sidebar collapse/expand */
+    }
+
+    /* === SIDEBAR NAVIGASI === */
+    .sidebar {
+      width: 260px;
+      /* Lebar sidebar */
+      min-width: 260px;
+      background-color: var(--bg-sidebar);
+      color: var(--text-light);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      /* Sidebar tetap saat scrolling */
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1000;
+      /* Di atas konten lain */
+      box-shadow: var(--shadow-lg);
+      transition: transform var(--transition-duration) var(--transition-timing-function),
+        width var(--transition-duration) var(--transition-timing-function);
+    }
+
+    .sidebar.collapsed {
+      width: 80px;
+      /* Lebar sidebar saat diciutkan */
+    }
+
+    .sidebar.collapsed .sidebar-logo span,
+    .sidebar.collapsed .nav-item span,
+    .sidebar.collapsed .sidebar-footer span {
+      display: none;
+      /* Sembunyikan teks saat diciutkan */
+    }
+
+    .sidebar.collapsed .sidebar-logo,
+    .sidebar.collapsed .nav-item,
+    .sidebar.collapsed .sidebar-footer {
+      justify-content: center;
+    }
+
+    .sidebar.collapsed .nav-item i {
+      margin-right: 0;
+    }
+
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* Untuk tombol collapse */
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--bg-sidebar-hover);
+    }
+
+    .sidebar-logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      gap: 0.75rem;
+      /* Jarak antara ikon dan teks logo */
+      white-space: nowrap;
+      /* Mencegah teks logo wrap */
+      overflow: hidden;
+      /* Sembunyikan teks yang meluap saat transisi */
+    }
+
+    .sidebar-logo i {
+      color: var(--accent-color);
+      font-size: 1.8rem;
+    }
+
+    .sidebar-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--border-radius-sm);
+      transition: background-color var(--transition-duration) var(--transition-timing-function);
+    }
+
+    .sidebar-toggle-btn:hover {
+      background-color: var(--bg-sidebar-hover);
+    }
+
+    .sidebar.collapsed .sidebar-toggle-btn i::before {
+      content: "\f054";
+      /* Icon panah kanan FontAwesome (chevron-right) */
+    }
+
+
+    .nav-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+      /* Agar menu mengisi ruang tersedia */
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: var(--border-radius-md);
+      color: var(--text-light);
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: background-color var(--transition-duration) var(--transition-timing-function),
+        color var(--transition-duration) var(--transition-timing-function);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .nav-item:hover {
+      background-color: var(--bg-sidebar-hover);
+    }
+
+    .nav-item.active {
+      background-color: var(--bg-sidebar-active);
+      color: var(--text-on-primary);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-item.active::before {
+      /* Indikator aktif yang lebih fancy */
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 15%;
+      bottom: 15%;
+      width: 4px;
+      background-color: var(--accent-color);
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    .sidebar.collapsed .nav-item.active::before {
+      display: none;
+      /* Sembunyikan bar jika sidebar diciutkan */
+    }
+
+    .sidebar.collapsed .nav-item.active {
+      background-color: var(--bg-sidebar-active);
+      /* Pertahankan bg aktif */
+    }
+
+
+    .nav-item i {
+      font-size: 1.1rem;
+      margin-right: 0.85rem;
+      width: 24px;
+      /* Konsistensi lebar ikon */
+      text-align: center;
+      transition: transform var(--transition-duration) var(--transition-timing-function);
+    }
+
+    .nav-item:hover i {
+      transform: scale(1.1);
+    }
+
+    .sidebar-footer {
+      padding-top: 1.5rem;
+      margin-top: auto;
+      /* Mendorong footer ke bawah */
+      border-top: 1px solid var(--bg-sidebar-hover);
+      font-size: 0.875rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .sidebar-footer span {
+      display: block;
+      opacity: 0.7;
+    }
+
+
+    /* === AREA KONTEN UTAMA === */
+    .main-wrapper {
+      flex-grow: 1;
+      padding-left: 260px;
+      /* Sesuaikan dengan lebar sidebar */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: padding-left var(--transition-duration) var(--transition-timing-function);
+    }
+
+    .main-wrapper.sidebar-collapsed {
+      padding-left: 80px;
+      /* Lebar sidebar diciutkan */
+    }
+
+    /* --- TOPBAR / HEADER KONTEN --- */
+    .topbar {
+      background-color: var(--bg-secondary);
+      height: 70px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      /* Topbar tetap di atas saat scroll konten */
+      top: 0;
+      z-index: 900;
+      /* Di bawah sidebar, di atas konten */
+    }
+
+    .topbar-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mobile-menu-toggle {
+      /* Tombol hamburger untuk mobile */
+      display: none;
+      /* Sembunyikan di desktop */
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-primary);
+      border-radius: var(--border-radius-full);
+      padding: 0.5rem 1rem;
+      width: 350px;
+      transition: var(--transition-main);
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 0 0 2px var(--primary-color-light);
+      background-color: var(--bg-secondary);
+    }
+
+    .search-bar i {
+      color: var(--text-secondary);
+      margin-right: 0.5rem;
+    }
+
+    .search-bar input {
+      border: none;
+      background-color: transparent;
+      outline: none;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      width: 100%;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .notification-bell {
+      position: relative;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 1.3rem;
+      transition: color var(--transition-duration);
+    }
+
+    .notification-bell:hover {
+      color: var(--primary-color);
+    }
+
+    .notification-bell .badge {
+      position: absolute;
+      top: -5px;
+      right: -8px;
+      background-color: var(--danger-color);
+      color: var(--text-on-primary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: var(--border-radius-full);
+      padding: 0.15em 0.5em;
+      line-height: 1;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--border-radius-full);
+      object-fit: cover;
+      border: 2px solid var(--primary-color-light);
+      transition: transform var(--transition-duration), box-shadow var(--transition-duration);
+    }
+
+    .user-profile:hover .user-avatar {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 3px var(--primary-color);
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+
+    /* --- KONTEN HALAMAN AKTUAL --- */
+    .page-content {
+      padding: 2rem;
+      /* Padding untuk konten */
+      flex-grow: 1;
+    }
+
+    /* Kontainer untuk setiap "halaman" SPA */
+    .app-page {
+      display: none;
+      /* Semua halaman disembunyikan secara default */
+      animation: fadeIn 0.5s var(--transition-timing-function) forwards;
+    }
+
+    .app-page.active {
+      display: block;
+      /* Hanya halaman aktif yang ditampilkan */
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+    /* === KOMPONEN UMUM (KARTU, TOMBOL, DLL) === */
+    .card {
+      background-color: var(--bg-secondary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      /* Jarak antar kartu */
+      transition: transform var(--transition-duration), box-shadow var(--transition-duration);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary-color-dark);
+      margin: 0;
+    }
+
+    /* Grid System Sederhana */
+    .grid-container {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Untuk responsivitas grid yang lebih baik */
+    .grid-responsive {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    }
+
+
+    /* Tombol (Buttons) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--font-family-main);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius-md);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition-main);
+      user-select: none;
+      /* Mencegah teks tombol terseleksi */
+      white-space: nowrap;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--primary-color-dark);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--text-on-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-color-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: var(--text-secondary);
+      color: var(--text-on-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--text-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary-color-light);
+      color: var(--primary-color-dark);
+      border-color: var(--primary-color-dark);
+    }
+
+    .btn-icon {
+      padding: 0.6rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-lg {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-block {
+      width: 100%;
+      display: block;
+    }
+
+
+    /* Formulir */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      transition: border-color var(--transition-duration), box-shadow var(--transition-duration);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px var(--primary-color-light);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Tabel */
+    .table-container {
+      overflow-x: auto;
+      /* Scroll horizontal untuk tabel lebar */
+      background-color: var(--bg-secondary);
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .table th,
+    .table td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .table th {
+      background-color: var(--bg-primary);
+      color: var(--primary-color-dark);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .table tbody tr:hover {
+      background-color: var(--primary-color-light);
+      cursor: default;
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Badge Status */
+    .status-badge {
+      display: inline-block;
+      padding: 0.3em 0.8em;
+      border-radius: var(--border-radius-full);
+      font-size: 0.8em;
+      font-weight: 600;
+      color: var(--text-on-primary);
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .status-active {
+      background-color: var(--accent-color);
+    }
+
+    .status-pending {
+      background-color: var(--accent-color-alt);
+    }
+
+    .status-canceled,
+    .status-vacant {
+      background-color: var(--danger-color);
+    }
+
+    .status-info {
+      background-color: var(--primary-color);
+    }
+
+    /* Kartu Statistik (Khas Dashboard) */
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+
+    .stat-card-icon {
+      font-size: 2.5rem;
+      padding: 1rem;
+      border-radius: var(--border-radius-md);
+      color: var(--text-on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-card-icon.bg-primary {
+      background-color: var(--primary-color);
+    }
+
+    .stat-card-icon.bg-accent {
+      background-color: var(--accent-color);
+    }
+
+    .stat-card-icon.bg-warning {
+      background-color: var(--accent-color-alt);
+    }
+
+    .stat-card-icon.bg-danger {
+      background-color: var(--danger-color);
+    }
+
+    .stat-card-info .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .stat-card-info .label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card-info .change {
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-card-info .change.positive {
+      color: var(--accent-color);
+    }
+
+    .stat-card-info .change.negative {
+      color: var(--danger-color);
+    }
+
+    /* Placeholder untuk Chart */
+    .chart-placeholder {
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-primary);
+      color: var(--text-secondary);
+      border-radius: var(--border-radius-md);
+      font-style: italic;
+    }
+
+    /* Hero Section Styling */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-color-light) 0%, var(--primary-color) 100%);
+      color: var(--text-on-primary);
+      padding: 4rem 2rem;
+      text-align: center;
+      border-radius: var(--border-radius-xl);
+      margin-bottom: 2rem;
+      /* Mirip .card */
+    }
+
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--bg-secondary);
+      /* Kontras dengan gradient */
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-section p {
+      font-size: 1.15rem;
+      max-width: 700px;
+      margin: 0 auto 2rem auto;
+      opacity: 0.9;
+    }
+
+    .hero-actions .btn {
+      margin: 0 0.5rem;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+    }
+
+    .hero-actions .btn-primary {
+      /* Khususkan tombol primer di hero */
+      background-color: var(--bg-secondary);
+      color: var(--primary-color-dark);
+    }
+
+    .hero-actions .btn-primary:hover {
+      background-color: var(--primary-color-light);
+    }
+
+    .hero-actions .btn-outline {
+      border-color: var(--bg-secondary);
+      color: var(--bg-secondary);
+    }
+
+    .hero-actions .btn-outline:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Features, Testimonials, Pricing Sections */
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--primary-color-dark);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      /* Garis bawah dekoratif */
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: var(--accent-color);
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    .feature-card,
+    .testimonial-card,
+    .pricing-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover,
+    .testimonial-card:hover,
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      display: inline-block;
+      /* Agar bisa di-center */
+      background-color: var(--primary-color-light);
+      padding: 1rem;
+      border-radius: var(--border-radius-full);
+      line-height: 1;
+      /* Penting untuk ikon yang paddingnya bulat */
+    }
+
+    .feature-title,
+    .pricing-plan {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-desc,
+    .pricing-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .testimonial-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid var(--primary-color-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+    }
+
+    .testimonial-role {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .testimonial-quote {
+      color: var(--text-secondary);
+      font-style: italic;
+      font-size: 1rem;
+      position: relative;
+      padding: 0 1rem;
+    }
+
+    .testimonial-quote::before,
+    .testimonial-quote::after {
+      /* Tanda kutip dekoratif */
+      content: '"';
+      font-size: 2rem;
+      color: var(--primary-color-light);
+      position: absolute;
+      line-height: 1;
+    }
+
+    .testimonial-quote::before {
+      top: -0.2rem;
+      left: -0.5rem;
+    }
+
+    .testimonial-quote::after {
+      bottom: -0.8rem;
+      right: -0.5rem;
+    }
+
+    .pricing-card.featured {
+      border: 3px solid var(--accent-color);
+      transform: scale(1.05);
+      /* Sedikit lebih besar */
+      position: relative;
+      z-index: 10;
+      /* Agar di atas kartu lain jika ada overlap saat hover */
+    }
+
+    .pricing-card.featured::before {
+      /* Pita "Populer" */
+      content: "Populer";
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--accent-color);
+      color: var(--text-on-primary);
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: var(--border-radius-full);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pricing-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin: 0.5rem 0;
+    }
+
+    .pricing-price span {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .pricing-features i {
+      color: var(--accent-color);
+      font-size: 1.1rem;
+    }
+
+    /* Recent Activity List */
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-color-light);
+    }
+
+    .activity-details p {
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .activity-details strong {
+      color: var(--text-primary);
+    }
+
+    .activity-time {
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      margin-top: 0.2em;
+    }
+
+
+    /* === RESPONSIVITAS === */
+    @media (max-width: 1200px) {
+      .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 992px) {
+
+      /* Tablet dan di bawahnya */
+      .sidebar {
+        transform: translateX(-100%);
+        /* Sembunyikan sidebar secara default */
+        z-index: 1100;
+        /* Di atas overlay */
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        /* Tampilkan sidebar */
+      }
+
+      .main-wrapper {
+        padding-left: 0;
+        /* Konten mengisi penuh saat sidebar tersembunyi */
+      }
+
+      .main-wrapper.sidebar-collapsed {
+        /* Jika tetap collapse di mobile, sesuaikan */
+        padding-left: 0;
+      }
+
+      .topbar {
+        padding: 0 1rem;
+      }
+
+      .topbar-title {
+        display: none;
+        /* Sembunyikan judul di topbar agar hemat ruang */
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+        /* Tampilkan tombol hamburger */
+        margin-right: 1rem;
+      }
+
+      .search-bar {
+        width: auto;
+        /* Lebar otomatis atau disembunyikan */
+        flex-grow: 1;
+        margin: 0 1rem;
+      }
+
+      .user-info {
+        display: none;
+        /* Sembunyikan info nama & role di mobile, hanya avatar */
+      }
+
+      .grid-cols-3 {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .recent-activity-table-grid {
+        /* Layout khusus untuk bagian activity & table di mobile */
+        grid-template-columns: 1fr !important;
+        /* Paksa jadi 1 kolom */
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      /* Ponsel besar dan di bawahnya */
+      html {
+        font-size: 15px;
+      }
+
+      .page-content {
+        padding: 1rem;
+      }
+
+      .topbar {
+        height: 60px;
+      }
+
+      .search-bar {
+        display: none;
+      }
+
+      /* Sembunyikan search bar di ponsel kecil */
+      .user-menu {
+        gap: 1rem;
+      }
+
+      .hero-section h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-section p {
+        font-size: 1rem;
+      }
+
+      .hero-actions .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .hero-actions .btn:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .grid-cols-4,
+      .grid-cols-3,
+      .grid-cols-2,
+      .grid-responsive {
+        grid-template-columns: 1fr;
+        /* Semua grid jadi 1 kolom */
+      }
+
+      .stat-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .stat-card-icon {
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+        padding: 0.8rem;
+      }
+
+      .stat-card-info .value {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      /* Ponsel kecil */
+      html {
+        font-size: 14px;
+      }
+
+      .sidebar {
+        width: 240px;
+      }
+
+      /* Sidebar lebih kecil sedikit di mobile */
+      .sidebar.collapsed {
+        width: 60px;
+      }
+
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+      }
+
+      .notification-bell {
+        font-size: 1.1rem;
+      }
+
+      .notification-bell .badge {
+        top: -3px;
+        right: -5px;
+        font-size: 0.65rem;
+      }
+
+      .hero-section {
+        padding: 3rem 1rem;
+      }
+
+      .hero-section h1 {
+        font-size: 1.8rem;
+      }
+
+    }
+
+    /* Overlay untuk mobile menu */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1050;
+      /* Di bawah sidebar, di atas konten */
+      display: none;
+      /* Sembunyikan secara default */
+      opacity: 0;
+      transition: opacity var(--transition-duration) var(--transition-timing-function);
+    }
+
+    .overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Utilitas Tambahan */
+    .text-center {
+      text-align: center;
+    }
+
+    .mb-1 {
+      margin-bottom: 0.25rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1rem;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+
+    .mb-5 {
+      margin-bottom: 2rem;
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .align-items-center {
+      align-items: center;
+    }
+
+    .justify-content-between {
+      justify-content: space-between;
+    }
+
+    .justify-content-center {
+      justify-content: center;
+    }
+
+    .w-full {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app-container">
+    <!-- SIDEBAR NAVIGASI -->
+    <aside class="sidebar" id="appSidebar" aria-label="Navigasi Utama">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-logo" data-page="dashboard">
+          <i class="fas fa-building-columns"></i>
+          <span>Green Valley</span>
+        </a>
+        <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Ciutkan/Luaskan Sidebar">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+      <nav role="navigation">
+        <ul class="nav-menu">
+          <li><a href="#" class="nav-item active" data-page="dashboard" tabindex="0"><i
+                class="fas fa-tachometer-alt fa-fw"></i><span>Dashboard</span></a></li>
+          <li><a href="#" class="nav-item" data-page="landing-elements" tabindex="0"><i
+                class="fas fa-rocket fa-fw"></i><span>Intro & Fitur</span></a></li>
+          <li><a href="#" class="nav-item" data-page="properties" tabindex="0"><i
+                class="fas fa-city fa-fw"></i><span>Properti</span></a></li>
+          <li><a href="#" class="nav-item" data-page="tenants" tabindex="0"><i
+                class="fas fa-users fa-fw"></i><span>Penyewa</span></a></li>
+          <li><a href="#" class="nav-item" data-page="leases" tabindex="0"><i
+                class="fas fa-file-signature fa-fw"></i><span>Sewa</span></a></li>
+          <li><a href="#" class="nav-item" data-page="bookings" tabindex="0"><i
+                class="fas fa-calendar-check fa-fw"></i><span>Pemesanan</span></a></li>
+          <li><a href="#" class="nav-item" data-page="maintenance" tabindex="0"><i
+                class="fas fa-tools fa-fw"></i><span>Pemeliharaan</span></a></li>
+          <li><a href="#" class="nav-item" data-page="reports" tabindex="0"><i
+                class="fas fa-chart-line fa-fw"></i><span>Laporan</span></a></li>
+          <li><a href="#" class="nav-item" data-page="settings" tabindex="0"><i
+                class="fas fa-cog fa-fw"></i><span>Pengaturan</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="sidebarFooterText">© <span id="currentYear"></span> Green Valley.</span>
+      </div>
+    </aside>
+
+    <!-- PEMBUNGKUS KONTEN UTAMA (TERMASUK TOPBAR & KONTEN HALAMAN) -->
+    <div class="main-wrapper" id="mainWrapper">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="d-flex align-items-center">
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Buka Menu">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="topbar-title" id="pageTitle">Dashboard</h1> <!-- Judul akan diupdate JS -->
+        </div>
+
+        <div class="search-bar" role="search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Cari apartemen, penyewa..." aria-label="Pencarian" />
+        </div>
+
+        <div class="user-menu">
+          <div class="notification-bell" role="button" tabindex="0" aria-label="Notifikasi, 2 belum dibaca">
+            <i class="fas fa-bell"></i>
+            <span class="badge">2</span>
+          </div>
+          <div class="user-profile" role="button" tabindex="0" aria-label="Menu Pengguna">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto Profil Pengguna"
+              class="user-avatar" />
+            <div class="user-info">
+              <span class="user-name">Citra Ayu</span>
+              <span class="user-role">Administrator</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- AREA KONTEN HALAMAN (DINAMIS) -->
+      <main class="page-content" id="pageContentContainer" role="main">
+        <!-- Halaman Dashboard (Contoh) -->
+        <section id="page-dashboard" class="app-page active">
+          <!-- Ikhtisar Statistik -->
+          <div class="grid-container grid-responsive mb-5">
+            <div class="card stat-card">
+              <div class="stat-card-icon bg-primary"><i class="fas fa-door-open"></i></div>
+              <div class="stat-card-info">
+                <div class="label">Total Apartemen</div>
+                <div class="value">128</div>
+                <div class="change positive"><i class="fas fa-arrow-up"></i> 5% dari bulan lalu</div>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card-icon bg-accent"><i class="fas fa-users"></i></div>
+              <div class="stat-card-info">
+                <div class="label">Penyewa Aktif</div>
+                <div class="value">97</div>
+                <div class="change positive"><i class="fas fa-arrow-up"></i> 3% meningkat</div>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card-icon bg-warning"><i class="fas fa-calendar-check"></i></div>
+              <div class="stat-card-info">
+                <div class="label">Pemesanan Bulan Ini</div>
+                <div class="value">42</div>
+                <div class="change negative"><i class="fas fa-arrow-down"></i> 1.2% dari bulan lalu</div>
+              </div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-card-icon bg-danger"><i class="fas fa-dollar-sign"></i></div>
+              <div class="stat-card-info">
+                <div class="label">Pembayaran Diterima</div>
+                <div class="value">Rp124jt</div>
+                <div class="change positive"><i class="fas fa-arrow-up"></i> 8.7% dari bulan lalu</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grafik & Tombol Aksi -->
+          <div class="card mb-5">
+            <div class="card-header">
+              <h2 class="card-title">Performa Penyewaan</h2>
+              <div>
+                <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Ekspor</button>
+                <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Tambah Apartemen</button>
+              </div>
+            </div>
+            <div class="grid-container grid-cols-1 md:grid-cols-2"
+              style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));">
+              <div class="chart-placeholder">
+                <p><i class="fas fa-chart-pie mr-2"></i> Grafik Tingkat Hunian (Placeholder)</p>
+              </div>
+              <div class="chart-placeholder">
+                <p><i class="fas fa-chart-bar mr-2"></i> Grafik Pendapatan Bulanan (Placeholder)</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aktivitas Terbaru & Tabel Proyek (Grid Responsif) -->
+          <div class="grid-container grid-responsive recent-activity-table-grid"
+            style="grid-template-columns: 1fr 2fr; gap:1.5rem;">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Aktivitas Terbaru</h3>
+                <button class="btn btn-icon btn-sm btn-secondary" aria-label="Opsi lainnya">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+              </div>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar Michael"
+                    class="activity-avatar" />
+                  <div class="activity-details">
+                    <p><strong>Michael Tan</strong> memesan Apartemen #A12</p>
+                    <p class="activity-time">2 jam lalu</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Avatar Sarah"
+                    class="activity-avatar" />
+                  <div class="activity-details">
+                    <p><strong>Sarah Lim</strong> menyetujui pemeliharaan untuk #B05</p>
+                    <p class="activity-time">4 jam lalu</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Avatar Robert"
+                    class="activity-avatar" />
+                  <div class="activity-details">
+                    <p><strong>Robert Lee</strong> membayar sewa untuk #C03</p>
+                    <p class="activity-time">1 hari lalu</p>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm w-full mt-4">Lihat Semua Aktivitas</button>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Pemesanan Terbaru</h3>
+                <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Pemesanan Baru</button>
+              </div>
+              <div class="table-container">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Apartemen</th>
+                      <th>Penyewa</th>
+                      <th>Status</th>
+                      <th>Sewa</th>
+                      <th>Mulai Sewa</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>#A12</td>
+                      <td>Michael Tan</td>
+                      <td><span class="status-badge status-active">Aktif</span></td>
+                      <td>Rp12.000.000</td>
+                      <td>2024-06-01</td>
+                      <td class="action-buttons">
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Lihat Detail A12"><i
+                            class="fas fa-eye"></i></button>
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Edit A12"><i
+                            class="fas fa-pencil-alt"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#B05</td>
+                      <td>Sarah Lim</td>
+                      <td><span class="status-badge status-pending">Tertunda</span></td>
+                      <td>Rp9.500.000</td>
+                      <td>2024-06-10</td>
+                      <td class="action-buttons">
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Lihat Detail B05"><i
+                            class="fas fa-eye"></i></button>
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Edit B05"><i
+                            class="fas fa-pencil-alt"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#C03</td>
+                      <td>Robert Lee</td>
+                      <td><span class="status-badge status-active">Aktif</span></td>
+                      <td>Rp10.500.000</td>
+                      <td>2024-05-20</td>
+                      <td class="action-buttons">
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Lihat Detail C03"><i
+                            class="fas fa-eye"></i></button>
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Edit C03"><i
+                            class="fas fa-pencil-alt"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>#D07</td>
+                      <td>-</td>
+                      <td><span class="status-badge status-vacant">Kosong</span></td>
+                      <td>Rp13.000.000</td>
+                      <td>-</td>
+                      <td class="action-buttons">
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Lihat Detail D07"><i
+                            class="fas fa-eye"></i></button>
+                        <button class="btn btn-icon btn-sm btn-outline" aria-label="Edit D07"><i
+                            class="fas fa-pencil-alt"></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Halaman Intro & Fitur (Landing Page Elements) -->
+        <section id="page-landing-elements" class="app-page">
+          <!-- HERO SECTION -->
+          <section class="hero-section card" aria-labelledby="hero-title">
+            <h1 id="hero-title">Kelola Persewaan Apartemen Anda dengan Mudah</h1>
+            <p>
+              Dasbor lengkap untuk pemilik dan manajer apartemen. Lacak properti, penyewa, pemesanan, pembayaran, dan
+              pemeliharaan di satu tempat.
+            </p>
+            <div class="hero-actions">
+              <button class="btn btn-primary"
+                onclick="document.querySelector('.nav-item[data-page=\'pricing\']').click()">
+                Mulai Gratis
+              </button>
+              <a href="#pricing" class="btn btn-outline"
+                onclick="document.querySelector('.nav-item[data-page=\'pricing\']').click(); return false;">
+                Lihat Harga
+              </a>
+            </div>
+          </section>
+
+          <!-- FEATURES SECTION -->
+          <section class="card mb-5" aria-labelledby="features-title">
+            <h2 id="features-title" class="section-title">Mengapa Memilih Green Valley?</h2>
+            <div class="grid-container grid-responsive">
+              <div class="feature-card card">
+                <span class="feature-icon"><i class="fas fa-calendar-alt"></i></span>
+                <h3 class="feature-title">Manajemen Pemesanan Mudah</h3>
+                <p class="feature-desc">Kelola pemesanan apartemen, check-in, dan check-out dengan beberapa klik.</p>
+              </div>
+              <div class="feature-card card">
+                <span class="feature-icon"><i class="fas fa-credit-card"></i></span>
+                <h3 class="feature-title">Pembayaran Otomatis</h3>
+                <p class="feature-desc">Lacak pembayaran sewa, kirim pengingat, dan hasilkan faktur secara otomatis.</p>
+              </div>
+              <div class="feature-card card">
+                <span class="feature-icon"><i class="fas fa-wrench"></i></span>
+                <h3 class="feature-title">Permintaan Pemeliharaan</h3>
+                <p class="feature-desc">Penyewa dapat mengajukan permintaan pemeliharaan dan melacak progresnya.</p>
+              </div>
+              <div class="feature-card card">
+                <span class="feature-icon"><i class="fas fa-user-shield"></i></span>
+                <h3 class="feature-title">Data Penyewa Aman</h3>
+                <p class="feature-desc">Semua data penyewa dan properti dienkripsi dan disimpan dengan aman.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- TESTIMONIALS SECTION -->
+          <section class="card mb-5" aria-labelledby="testimonials-title">
+            <h2 id="testimonials-title" class="section-title">Apa Kata Klien Kami</h2>
+            <div class="grid-container grid-responsive">
+              <div class="testimonial-card card">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto Michael Tan"
+                  class="testimonial-avatar" />
+                <h3 class="testimonial-name">Michael Tan</h3>
+                <p class="testimonial-role">Pemilik Apartemen</p>
+                <blockquote class="testimonial-quote">"Green Valley membuat pengelolaan unit sewa saya dan pelacakan
+                  pembayaran menjadi sangat mudah."</blockquote>
+              </div>
+              <div class="testimonial-card card">
+                <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Foto Sarah Lim"
+                  class="testimonial-avatar" />
+                <h3 class="testimonial-name">Sarah Lim</h3>
+                <p class="testimonial-role">Manajer Properti</p>
+                <blockquote class="testimonial-quote">"Permintaan pemeliharaan kini terorganisir dan penyewa lebih
+                  bahagia dari sebelumnya!"</blockquote>
+              </div>
+              <div class="testimonial-card card">
+                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Foto Robert Lee"
+                  class="testimonial-avatar" />
+                <h3 class="testimonial-name">Robert Lee</h3>
+                <p class="testimonial-role">Penyewa</p>
+                <blockquote class="testimonial-quote">"Saya suka bisa membayar sewa dan meminta perbaikan langsung dari
+                  ponsel saya."</blockquote>
+              </div>
+            </div>
+          </section>
+
+          <!-- PRICING SECTION -->
+          <section id="pricing" class="card" aria-labelledby="pricing-title">
+            <h2 id="pricing-title" class="section-title">Harga Sederhana dan Transparan</h2>
+            <div class="grid-container grid-responsive">
+              <div class="pricing-card card">
+                <h3 class="pricing-plan">Pemula</h3>
+                <div class="pricing-price">Gratis</div>
+                <p class="pricing-desc">Untuk pemilik dengan hingga 3 apartemen.</p>
+                <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Hingga 3 properti</li>
+                  <li><i class="fas fa-check-circle"></i> Manajemen pemesanan dasar</li>
+                  <li><i class="fas fa-check-circle"></i> Dukungan email</li>
+                </ul>
+                <button class="btn btn-outline btn-block">Mulai Gratis</button>
+              </div>
+              <div class="pricing-card card featured">
+                <h3 class="pricing-plan">Pro</h3>
+                <div class="pricing-price">Rp290rb<span>/bln</span></div>
+                <p class="pricing-desc">Untuk manajer dan agensi dengan banyak unit.</p>
+                <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Properti tak terbatas</li>
+                  <li><i class="fas fa-check-circle"></i> Pembayaran otomatis</li>
+                  <li><i class="fas fa-check-circle"></i> Pelacakan pemeliharaan</li>
+                  <li><i class="fas fa-check-circle"></i> Dukungan prioritas</li>
+                </ul>
+                <button class="btn btn-primary btn-block">Coba Pro</button>
+              </div>
+              <div class="pricing-card card">
+                <h3 class="pricing-plan">Enterprise</h3>
+                <div class="pricing-price">Kustom</div>
+                <p class="pricing-desc">Untuk portofolio properti besar.</p>
+                <ul class="pricing-features">
+                  <li><i class="fas fa-check-circle"></i> Integrasi kustom</li>
+                  <li><i class="fas fa-check-circle"></i> Manajer khusus</li>
+                  <li><i class="fas fa-check-circle"></i> SLA & kepatuhan</li>
+                </ul>
+                <button class="btn btn-outline btn-block">Hubungi Sales</button>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <!-- Halaman Properti (Placeholder) -->
+        <section id="page-properties" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Manajemen Properti</h2>
+            <p>Konten untuk manajemen properti akan ditampilkan di sini. Anda dapat menambahkan daftar properti, detail,
+              dan fungsionalitas terkait.</p>
+            <button class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Properti Baru</button>
+          </div>
+        </section>
+
+        <!-- Halaman Penyewa (Placeholder) -->
+        <section id="page-tenants" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Manajemen Penyewa</h2>
+            <p>Daftar penyewa, informasi kontak, dan riwayat sewa akan ada di sini.</p>
+          </div>
+        </section>
+
+        <!-- Halaman Sewa (Placeholder) -->
+        <section id="page-leases" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Manajemen Kontrak Sewa</h2>
+            <p>Detail mengenai kontrak sewa aktif, berakhir, atau akan datang.</p>
+          </div>
+        </section>
+
+        <!-- Halaman Pemesanan (Placeholder) -->
+        <section id="page-bookings" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Manajemen Pemesanan</h2>
+            <p>Kalender pemesanan, permintaan baru, dan status pemesanan.</p>
+          </div>
+        </section>
+
+        <!-- Halaman Pemeliharaan (Placeholder) -->
+        <section id="page-maintenance" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Permintaan Pemeliharaan</h2>
+            <p>Lacak permintaan perbaikan, tugaskan teknisi, dan perbarui status.</p>
+          </div>
+        </section>
+
+        <!-- Halaman Laporan (Placeholder) -->
+        <section id="page-reports" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Laporan Keuangan & Operasional</h2>
+            <p>Grafik dan tabel untuk laporan pendapatan, pengeluaran, tingkat hunian, dll.</p>
+          </div>
+        </section>
+
+        <!-- Halaman Pengaturan (Placeholder) -->
+        <section id="page-settings" class="app-page">
+          <div class="card">
+            <h2 class="card-title">Pengaturan Aplikasi</h2>
+            <p>Pengaturan akun, preferensi notifikasi, manajemen pengguna, dan konfigurasi sistem.</p>
+            <div class="form-group">
+              <label for="appName" class="form-label">Nama Aplikasi</label>
+              <input type="text" id="appName" class="form-control" value="Green Valley Dashboard">
+            </div>
+            <button class="btn btn-primary">Simpan Pengaturan</button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Overlay untuk mobile menu -->
+  <div class="overlay" id="pageOverlay"></div>
+
+  <script>
+    // Pastikan DOM sudah siap sepenuhnya
+    document.addEventListener('DOMContentLoaded', function () {
+      // === ELEMEN DOM YANG SERING DIGUNAKAN ===
+      const appSidebar = document.getElementById('appSidebar');
+      const mainWrapper = document.getElementById('mainWrapper');
+      const sidebarToggleBtn = document.getElementById('sidebarToggle');
+      const mobileMenuToggleBtn = document.getElementById('mobileMenuToggle');
+      const pageOverlay = document.getElementById('pageOverlay');
+      const navItems = document.querySelectorAll('.nav-item');
+      const appPages = document.querySelectorAll('.app-page');
+      const pageTitleElement = document.getElementById('pageTitle');
+      const documentTitleBase = "Green Valley";
+      const currentYearElement = document.getElementById('currentYear');
+      const sidebarFooterTextElement = document.getElementById('sidebarFooterText');
+
+
+      // === STATE APLIKASI SEDERHANA ===
+      let isSidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+      let isMobileMenuOpen = false;
+
+      // === FUNGSI UTILITIES ===
+      /**
+       * Mengatur judul dokumen dan judul halaman di topbar.
+       * @param {string} title - Judul halaman yang akan ditampilkan.
+       */
+      function updateTitles(title) {
+        const capitalizedTitle = title.charAt(0).toUpperCase() + title.slice(1);
+        document.title = `${documentTitleBase} - ${capitalizedTitle}`;
+        pageTitleElement.textContent = capitalizedTitle;
+      }
+
+      /**
+       * Menampilkan halaman yang dipilih dan menyembunyikan yang lain.
+       * @param {string} pageId - ID halaman target (tanpa 'page-').
+       */
+      function showPage(pageId) {
+        appPages.forEach(page => {
+          page.classList.remove('active');
+          if (page.id === `page-${pageId}`) {
+            page.classList.add('active');
+          }
+        });
+        // Update judul berdasarkan halaman yang aktif
+        const activeNavItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+        if (activeNavItem) {
+          updateTitles(activeNavItem.querySelector('span').textContent);
+        }
+      }
+
+      /**
+       * Mengatur status aktif pada item navigasi.
+       * @param {HTMLElement} targetItem - Item navigasi yang akan diaktifkan.
+       */
+      function setActiveNavItem(targetItem) {
+        navItems.forEach(item => item.classList.remove('active'));
+        targetItem.classList.add('active');
+      }
+
+      /**
+       * Toggle collapse/expand sidebar.
+       */
+      function toggleSidebarCollapse() {
+        isSidebarCollapsed = !isSidebarCollapsed;
+        appSidebar.classList.toggle('collapsed', isSidebarCollapsed);
+        mainWrapper.classList.toggle('sidebar-collapsed', isSidebarCollapsed);
+        sidebarToggleBtn.querySelector('i').classList.toggle('fa-chevron-left', !isSidebarCollapsed);
+        sidebarToggleBtn.querySelector('i').classList.toggle('fa-chevron-right', isSidebarCollapsed);
+        sidebarToggleBtn.setAttribute('aria-label', isSidebarCollapsed ? 'Luaskan Sidebar' : 'Ciutkan Sidebar');
+        sidebarToggleBtn.setAttribute('aria-expanded', !isSidebarCollapsed);
+        localStorage.setItem('sidebarCollapsed', isSidebarCollapsed);
+
+        // Update teks footer saat diciutkan/diluaskan
+        if (isSidebarCollapsed) {
+          sidebarFooterTextElement.innerHTML = `<i class="fas fa-shield-alt"></i>`;
+        } else {
+          sidebarFooterTextElement.innerHTML = `© <span id="currentYear">${new Date().getFullYear()}</span> Green Valley.`;
+        }
+      }
+
+      /**
+       * Toggle menu mobile.
+       */
+      function toggleMobileMenu() {
+        isMobileMenuOpen = !isMobileMenuOpen;
+        appSidebar.classList.toggle('open', isMobileMenuOpen);
+        pageOverlay.classList.toggle('active', isMobileMenuOpen);
+        mobileMenuToggleBtn.setAttribute('aria-expanded', isMobileMenuOpen);
+        mobileMenuToggleBtn.setAttribute('aria-label', isMobileMenuOpen ? 'Tutup Menu' : 'Buka Menu');
+      }
+
+
+      // === INISIALISASI ===
+      // Atur tahun saat ini di footer
+      if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+      }
+
+      // Terapkan status sidebar collapsed dari localStorage
+      if (isSidebarCollapsed) {
+        appSidebar.classList.add('collapsed');
+        mainWrapper.classList.add('sidebar-collapsed');
+        sidebarToggleBtn.querySelector('i').classList.remove('fa-chevron-left');
+        sidebarToggleBtn.querySelector('i').classList.add('fa-chevron-right');
+        sidebarToggleBtn.setAttribute('aria-label', 'Luaskan Sidebar');
+        sidebarToggleBtn.setAttribute('aria-expanded', 'false');
+        sidebarFooterTextElement.innerHTML = `<i class="fas fa-shield-alt"></i>`;
+      } else {
+        sidebarFooterTextElement.innerHTML = `© <span id="currentYear">${new Date().getFullYear()}</span> Green Valley.`;
+      }
+
+
+      // Inisialisasi halaman default (misalnya dari URL hash atau item aktif pertama)
+      let initialPage = 'dashboard'; // Default page
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        const targetNavItem = document.querySelector(`.nav-item[data-page="${hash}"]`);
+        if (targetNavItem) {
+          initialPage = hash;
+        }
+      }
+
+      const initialActiveNavItem = document.querySelector(`.nav-item[data-page="${initialPage}"]`) || navItems[0];
+      setActiveNavItem(initialActiveNavItem);
+      showPage(initialPage);
+      if (initialPage !== 'dashboard') { // Set URL hash jika bukan halaman default
+        window.location.hash = initialPage;
+      }
+
+
+      // === EVENT LISTENERS ===
+      // Navigasi SPA
+      navItems.forEach(item => {
+        item.addEventListener('click', function (event) {
+          event.preventDefault();
+          const targetPageId = this.dataset.page;
+
+          setActiveNavItem(this);
+          showPage(targetPageId);
+          window.location.hash = targetPageId; // Update URL hash untuk navigasi browser & bookmark
+
+          // Tutup mobile menu jika terbuka
+          if (isMobileMenuOpen) {
+            toggleMobileMenu();
+          }
+        });
+        // Aksesibilitas Keyboard untuk Nav Item
+        item.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.click();
+          }
+        });
+      });
+
+      // Navigasi via tombol back/forward browser
+      window.addEventListener('hashchange', function () {
+        const pageIdFromHash = window.location.hash.substring(1) || 'dashboard';
+        const targetNavItem = document.querySelector(`.nav-item[data-page="${pageIdFromHash}"]`);
+        if (targetNavItem) {
+          setActiveNavItem(targetNavItem);
+          showPage(pageIdFromHash);
+        }
+      });
+
+      // Tombol collapse/expand sidebar
+      if (sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', toggleSidebarCollapse);
+      }
+
+      // Tombol menu mobile (hamburger)
+      if (mobileMenuToggleBtn) {
+        mobileMenuToggleBtn.addEventListener('click', toggleMobileMenu);
+      }
+
+      // Klik overlay untuk menutup mobile menu
+      if (pageOverlay) {
+        pageOverlay.addEventListener('click', function () {
+          if (isMobileMenuOpen) {
+            toggleMobileMenu();
+          }
+        });
+      }
+
+      // Menutup mobile menu dengan tombol Escape
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && isMobileMenuOpen) {
+          toggleMobileMenu();
+        }
+      });
+
+      // Placeholder untuk fungsionalitas masa depan
+      console.log("Green Valley Dashboard Inisialisasi Selesai. Siap Digunakan!");
+
+      // Contoh: Menambahkan event listener ke tombol "Mulai Gratis" di Hero Section
+      const heroStartFreeButton = document.querySelector('.hero-actions .btn-primary');
+      if (heroStartFreeButton) {
+        heroStartFreeButton.addEventListener('click', () => {
+          // Arahkan ke halaman harga atau pendaftaran
+          // Ini sudah ditangani oleh atribut onclick, tapi bisa juga di sini:
+          // const pricingNavItem = document.querySelector('.nav-item[data-page="pricing"]');
+          // if (pricingNavItem) pricingNavItem.click();
+          console.log("Tombol 'Mulai Gratis' di Hero diklik!");
+        });
+      }
+
+    });
+  </script>
+</body>
+
+</html>

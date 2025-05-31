@@ -12,22 +12,23 @@
         /* === CSS RESET & DASAR === */
         :root {
             --primary-color: #00A9FF;
-            /* Biru terang sebagai aksen */
             --secondary-color: #89CFF3;
-            /* Biru muda */
             --background-color: #1a1a1a;
-            /* Latar belakang gelap */
             --card-background-color: #2c2c2c;
-            /* Latar belakang kartu */
             --text-color: #e0e0e0;
-            /* Teks terang */
             --text-muted-color: #a0a0a0;
-            /* Teks abu-abu */
             --border-color: #444444;
             --shadow-color: rgba(0, 0, 0, 0.2);
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --border-radius: 8px;
             --transition-speed: 0.3s;
+
+            /* Colors for notifications */
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: var(--primary-color);
+            /* Using primary for info */
         }
 
         * {
@@ -53,10 +54,24 @@
             transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
+        /* Visually hidden class */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         /* === STRUKTUR UTAMA & SEMANTIK === */
         .site-header {
             background-color: var(--card-background-color);
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
+            /* Adjusted padding */
             text-align: center;
             box-shadow: 0 2px 10px var(--shadow-color);
             border-bottom: 1px solid var(--border-color);
@@ -64,15 +79,42 @@
 
         .site-header h1 {
             color: var(--primary-color);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+            /* Adjusted size */
+            margin-bottom: 0.3rem;
             font-weight: 700;
         }
 
         .site-header p {
             color: var(--text-muted-color);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            /* Adjusted size */
+            margin-bottom: 0.5rem;
         }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color var(--transition-speed);
+        }
+
+        .action-button:hover {
+            background-color: var(--secondary-color);
+        }
+
 
         .site-main {
             flex-grow: 1;
@@ -95,7 +137,6 @@
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            /* Responsif grid */
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -109,29 +150,24 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            /* Indikasi bisa diklik */
         }
 
         .gallery-item:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 8px 25px rgba(0, 169, 255, 0.3);
-            /* Bayangan aksen saat hover */
         }
 
         .gallery-item__image-container {
             width: 100%;
             height: 220px;
-            /* Tinggi tetap untuk konsistensi */
             overflow: hidden;
             background-color: #333;
-            /* Placeholder jika gambar lama dimuat */
         }
 
         .gallery-item__image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Pastikan gambar mengisi area tanpa distorsi */
             display: block;
             transition: transform var(--transition-speed) ease;
         }
@@ -143,7 +179,6 @@
         .gallery-item__caption {
             padding: 1rem;
             flex-grow: 1;
-            /* Agar caption mengisi sisa ruang jika ada */
         }
 
         .gallery-item__title {
@@ -161,12 +196,10 @@
             color: var(--text-muted-color);
             display: -webkit-box;
             -webkit-line-clamp: 2;
-            /* Batasi deskripsi hingga 2 baris */
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
             min-height: 2.5em;
-            /* Cukup ruang untuk 2 baris */
         }
 
         /* === PAGINASI === */
@@ -175,10 +208,14 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            /* Agar responsif di layar kecil */
             gap: 0.5rem;
             margin-top: 2rem;
             padding: 1rem 0;
+        }
+
+        .pagination-nav__ellipsis {
+            padding: 0.6rem 0.5rem;
+            color: var(--text-muted-color);
         }
 
         .pagination-nav__button {
@@ -191,7 +228,6 @@
             transition: background-color var(--transition-speed), color var(--transition-speed), transform var(--transition-speed);
             font-size: 0.9rem;
             min-width: 40px;
-            /* Lebar minimum tombol */
             text-align: center;
         }
 
@@ -216,7 +252,7 @@
             border-color: #333;
         }
 
-        /* === MODAL LIGHTBOX (Untuk tampilan gambar lebih besar) === */
+        /* === MODAL LIGHTBOX === */
         .lightbox {
             position: fixed;
             top: 0;
@@ -224,13 +260,10 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
-            /* Latar belakang transparan gelap */
             display: none;
-            /* Awalnya tersembunyi */
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            /* Di atas konten lain */
             opacity: 0;
             transition: opacity var(--transition-speed) ease-in-out;
             padding: 1rem;
@@ -269,9 +302,7 @@
         .lightbox__image {
             max-width: 100%;
             max-height: 70vh;
-            /* Batasi tinggi gambar agar caption muat */
             object-fit: contain;
-            /* Jaga rasio aspek gambar */
             border-radius: var(--border-radius);
             margin-bottom: 1rem;
         }
@@ -294,7 +325,6 @@
         .lightbox__close {
             position: absolute;
             top: -15px;
-            /* Posisikan sedikit di luar kotak */
             right: -15px;
             background-color: var(--primary-color);
             color: var(--background-color);
@@ -317,6 +347,308 @@
             transform: rotate(90deg);
         }
 
+        /* === TOAST NOTIFICATIONS === */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+            /* Above most elements */
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background-color: var(--card-background-color);
+            color: var(--text-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            min-width: 250px;
+            border-left: 5px solid var(--info-color);
+            /* Default border */
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast--success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast--error {
+            border-left-color: var(--error-color);
+        }
+
+        .toast--warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .toast--info {
+            border-left-color: var(--info-color);
+        }
+
+        .toast__message {
+            flex-grow: 1;
+            font-size: 0.9rem;
+        }
+
+        .toast__close-button {
+            background: none;
+            border: none;
+            color: var(--text-muted-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.2rem;
+            line-height: 1;
+        }
+
+        .toast__close-button:hover {
+            color: var(--text-color);
+        }
+
+
+        /* === ALERT MODAL === */
+        .alert-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Slightly less dark than lightbox */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1010;
+            /* Above lightbox, below toast potentially */
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease-in-out;
+            padding: 1rem;
+        }
+
+        .alert-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .alert-modal__content {
+            background-color: var(--card-background-color);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px var(--shadow-color);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: lightbox-appear 0.2s ease-out;
+            /* Reuse animation */
+        }
+
+        .alert-modal__title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .alert-modal__message {
+            font-size: 1rem;
+            color: var(--text-muted-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .alert-modal__actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .alert-modal__button {
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        .alert-modal__button--primary {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border-color: var(--primary-color);
+        }
+
+        .alert-modal__button--primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .alert-modal__button--secondary {
+            background-color: transparent;
+            color: var(--text-color);
+        }
+
+        .alert-modal__button--secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        /* === FLASH MESSAGES === */
+        .flash-message-container {
+            position: fixed;
+            /* Or absolute if you want it within a specific parent */
+            top: 0;
+            /* Adjust if you have a fixed header, maybe below header */
+            left: 0;
+            width: 100%;
+            z-index: 1005;
+            /* Below modals, above main content */
+            padding: 0;
+            /* Container takes full width */
+        }
+
+        .flash-message {
+            padding: 1rem 1.5rem;
+            margin-bottom: 0;
+            /* Messages stack directly if multiple */
+            color: var(--background-color);
+            /* Text color on colored background */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            font-size: 0.95rem;
+        }
+
+        .flash-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flash-message--success {
+            background-color: var(--success-color);
+        }
+
+        .flash-message--error {
+            background-color: var(--error-color);
+        }
+
+        .flash-message--warning {
+            background-color: var(--warning-color);
+        }
+
+        .flash-message--info {
+            background-color: var(--info-color);
+        }
+
+        .flash-message__text {
+            flex-grow: 1;
+        }
+
+        .flash-message__close-button {
+            background: none;
+            border: none;
+            color: inherit;
+            /* Inherits from flash message (e.g., dark text on light bg) */
+            opacity: 0.7;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            margin-left: 1rem;
+            line-height: 1;
+        }
+
+        .flash-message__close-button:hover {
+            opacity: 1;
+        }
+
+
+        /* === OFF-CANVAS PANEL === */
+        .off-canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1030;
+            /* Below off-canvas, above other content */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed) linear;
+        }
+
+        .off-canvas-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .off-canvas {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            /* Start off-screen (width + some buffer) */
+            width: 320px;
+            /* Width of the panel */
+            height: 100%;
+            background-color: var(--card-background-color);
+            box-shadow: -5px 0 15px var(--shadow-color);
+            z-index: 1040;
+            /* Above overlay */
+            transition: right var(--transition-speed) ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .off-canvas.open {
+            right: 0;
+        }
+
+        .off-canvas__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .off-canvas__title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .off-canvas__close-button {
+            background: none;
+            border: none;
+            color: var(--text-muted-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .off-canvas__close-button:hover {
+            color: var(--text-color);
+        }
+
+        .off-canvas__body p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+
         /* === UTILITIES & ANIMASI TAMBAHAN === */
         .loading-indicator {
             text-align: center;
@@ -325,10 +657,10 @@
             color: var(--text-muted-color);
         }
 
-        /* Media Queries untuk penyesuaian lebih lanjut jika diperlukan */
+        /* Media Queries */
         @media (max-width: 768px) {
             .site-header h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .gallery-grid {
@@ -342,12 +674,16 @@
             .lightbox__description {
                 font-size: 0.9rem;
             }
+
+            .off-canvas {
+                width: 280px;
+                right: -300px;
+            }
         }
 
         @media (max-width: 480px) {
             html {
                 font-size: 14px;
-                /* Kecilkan font dasar untuk layar sangat kecil */
             }
 
             .site-main {
@@ -367,6 +703,29 @@
                 padding: 0.5rem 0.8rem;
                 font-size: 0.8rem;
             }
+
+            .toast-container {
+                right: 10px;
+                bottom: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .toast {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .alert-modal__content {
+                width: 95%;
+            }
+
+            .off-canvas {
+                width: 100%;
+                right: -100%;
+            }
+
+            /* Full width on small screens */
+
         }
     </style>
 </head>
@@ -376,20 +735,26 @@
     <header class="site-header" role="banner">
         <h1>Galeri Foto Memukau</h1>
         <p>Jelajahi koleksi foto-foto pilihan dengan desain yang memanjakan mata.</p>
+        <div class="header-actions">
+            <button id="show-toast-btn" class="action-button">Tampilkan Toast</button>
+            <button id="show-alert-btn" class="action-button">Tampilkan Alert</button>
+            <button id="show-flash-btn" class="action-button">Tampilkan Flash</button>
+            <button id="open-off-canvas-btn" class="action-button">Pengaturan</button>
+        </div>
     </header>
+
+    <!-- Flash Message Container -->
+    <div id="flash-message-container" class="flash-message-container"></div>
 
     <main class="site-main" role="main">
         <section id="gallery-section" aria-labelledby="gallery-heading">
             <h2 id="gallery-heading" class="visually-hidden">Koleksi Foto</h2>
-            <!-- visually-hidden class bisa digunakan untuk menyembunyikan teks dari tampilan visual tapi tetap bisa dibaca screen reader -->
             <div id="gallery-container" class="gallery-grid" aria-live="polite">
-                <!-- Gambar akan dimuat di sini oleh JavaScript -->
                 <p class="loading-indicator">Memuat gambar...</p>
             </div>
         </section>
 
         <nav id="pagination-container" class="pagination-nav" aria-label="Navigasi Halaman Galeri">
-            <!-- Tombol pagination akan dimuat di sini oleh JavaScript -->
         </nav>
     </main>
 
@@ -410,24 +775,57 @@
         </div>
     </div>
 
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="alert-modal" role="dialog" aria-modal="true" aria-labelledby="alert-title"
+        aria-describedby="alert-message">
+        <div class="alert-modal__content">
+            <h3 id="alert-title" class="alert-modal__title">Judul Alert</h3>
+            <p id="alert-message" class="alert-modal__message">Ini adalah pesan alert.</p>
+            <div id="alert-actions" class="alert-modal__actions">
+                <!-- Buttons will be added here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Off-Canvas Panel -->
+    <div id="off-canvas-overlay" class="off-canvas-overlay"></div>
+    <div id="settings-off-canvas" class="off-canvas" role="dialog" aria-modal="true" aria-labelledby="off-canvas-title">
+        <div class="off-canvas__header">
+            <h3 id="off-canvas-title" class="off-canvas__title">Pengaturan Galeri</h3>
+            <button id="off-canvas-close-btn" class="off-canvas__close-button" aria-label="Tutup Pengaturan">×</button>
+        </div>
+        <div class="off-canvas__body">
+            <p>Ini adalah panel off-canvas untuk pengaturan atau informasi tambahan.</p>
+            <p>Anda bisa menambahkan berbagai kontrol atau konten di sini.</p>
+            <label for="itemsPerPageSelect">Item per halaman:</label>
+            <select id="itemsPerPageSelect" name="itemsPerPageSelect"
+                style="padding: 5px; margin-top:5px; background-color: var(--card-background-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: var(--border-radius)">
+                <option value="6">6</option>
+                <option value="9" selected>9</option>
+                <option value="12">12</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+    </div>
+
+
     <script>
         // === STATE APLIKASI & KONFIGURASI ===
         const AppState = {
             currentPage: 1,
-            itemsPerPage: 9, // Jumlah gambar per halaman
-            allImages: [],     // Akan diisi dengan data gambar
+            itemsPerPage: 9,
+            allImages: [],
             totalPages: 0,
             isLoading: true,
         };
 
-        // === DATA GAMBAR (Contoh) ===
-        // Ganti dengan path atau URL gambar Anda sendiri.
-        // Untuk contoh, saya akan buat data dummy yang banyak agar paginasi terlihat.
         const imageData = [];
         for (let i = 1; i <= 50; i++) {
             imageData.push({
                 id: `img${i}`,
-                // Gunakan Picsum Photos untuk contoh gambar yang berbeda setiap kali
                 src: `https://picsum.photos/seed/${i + 100}/400/300`,
                 alt: `Gambar Pemandangan Alam ${i}`,
                 title: `Keindahan Alam #${i}`,
@@ -446,29 +844,235 @@
             lightboxTitle: document.getElementById('lightbox-title'),
             lightboxDescription: document.getElementById('lightbox-description'),
             lightboxCloseButton: document.getElementById('lightbox-close-button'),
+            // New UI elements
+            toastContainer: document.getElementById('toast-container'),
+            alertModal: document.getElementById('alert-modal'),
+            alertTitle: document.getElementById('alert-title'),
+            alertMessage: document.getElementById('alert-message'),
+            alertActions: document.getElementById('alert-actions'),
+            flashMessageContainer: document.getElementById('flash-message-container'),
+            offCanvas: document.getElementById('settings-off-canvas'),
+            offCanvasOverlay: document.getElementById('off-canvas-overlay'),
+            offCanvasCloseBtn: document.getElementById('off-canvas-close-btn'),
+            itemsPerPageSelect: document.getElementById('itemsPerPageSelect'),
+            // Trigger buttons
+            showToastBtn: document.getElementById('show-toast-btn'),
+            showAlertBtn: document.getElementById('show-alert-btn'),
+            showFlashBtn: document.getElementById('show-flash-btn'),
+            openOffCanvasBtn: document.getElementById('open-off-canvas-btn'),
         };
 
-        // === FUNGSI UTAMA ===
-
+        // === TOAST NOTIFICATION FUNCTIONS ===
         /**
-         * Memuat dan menampilkan gambar untuk halaman saat ini.
-         * @param {number} page - Nomor halaman yang ingin ditampilkan.
+         * Shows a toast notification.
+         * @param {string} message - The message to display.
+         * @param {string} type - Type of toast ('success', 'error', 'warning', 'info').
+         * @param {number} duration - Duration in ms before auto-hide. 0 for no auto-hide.
          */
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast--${type}`;
+            toast.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
+            // toast.setAttribute('aria-live', type === 'error' || type === 'warning' ? 'assertive' : 'polite'); // Container has aria-live
+
+            const messageEl = document.createElement('span');
+            messageEl.className = 'toast__message';
+            messageEl.textContent = message;
+
+            const closeButton = document.createElement('button');
+            closeButton.className = 'toast__close-button';
+            closeButton.innerHTML = '×';
+            closeButton.setAttribute('aria-label', 'Tutup notifikasi');
+            closeButton.onclick = () => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), parseFloat(getComputedStyle(toast).transitionDuration) * 1000 || 300);
+            };
+
+            toast.appendChild(messageEl);
+            toast.appendChild(closeButton);
+            DOM.toastContainer.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 50);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    // Wait for fade out animation to complete before removing
+                    setTimeout(() => toast.remove(), parseFloat(getComputedStyle(toast).transitionDuration) * 1000 || 300);
+                }, duration);
+            }
+        }
+
+        // === ALERT MODAL FUNCTIONS ===
+        let currentAlertResolve = null;
+        /**
+         * Shows a modal alert.
+         * @param {string} title - The title of the alert.
+         * @param {string} message - The message content of the alert.
+         * @param {Array<object>} buttons - Array of button objects e.g. [{text: 'OK', type: 'primary', value: true}]
+         * @returns {Promise<any>} A promise that resolves with the value of the clicked button.
+         */
+        function showAlert(title, message, buttons = [{ text: 'OK', type: 'primary', value: true, closesModal: true }]) {
+            return new Promise((resolve) => {
+                currentAlertResolve = resolve;
+                DOM.alertTitle.textContent = title;
+                DOM.alertMessage.textContent = message;
+                DOM.alertActions.innerHTML = ''; // Clear previous buttons
+
+                buttons.forEach(btnConfig => {
+                    const button = document.createElement('button');
+                    button.className = `alert-modal__button alert-modal__button--${btnConfig.type || 'secondary'}`;
+                    button.textContent = btnConfig.text;
+                    button.onclick = () => {
+                        if (btnConfig.closesModal !== false) { // Default to true
+                            closeAlert();
+                        }
+                        if (currentAlertResolve) {
+                            currentAlertResolve(btnConfig.value);
+                            currentAlertResolve = null;
+                        }
+                        if (btnConfig.callback) {
+                            btnConfig.callback();
+                        }
+                    };
+                    DOM.alertActions.appendChild(button);
+                });
+
+                DOM.alertModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                // Focus the first button if available
+                const firstButton = DOM.alertActions.querySelector('button');
+                if (firstButton) firstButton.focus();
+                document.addEventListener('keydown', handleAlertKeydown);
+            });
+        }
+
+        function closeAlert() {
+            DOM.alertModal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleAlertKeydown);
+            if (currentAlertResolve) { // Resolve with a default if closed via Esc or overlay
+                currentAlertResolve(null); // Or a specific value like 'dismissed'
+                currentAlertResolve = null;
+            }
+        }
+
+        function handleAlertKeydown(event) {
+            if (event.key === 'Escape') {
+                closeAlert();
+            }
+        }
+
+        // === FLASH MESSAGE FUNCTIONS ===
+        /**
+         * Shows a flash message at the top of the page.
+         * @param {string} message - The message to display.
+         * @param {string} type - Type of message ('success', 'error', 'warning', 'info').
+         * @param {number} duration - Duration in ms. 0 for sticky (manual dismiss).
+         */
+        function showFlashMessage(message, type = 'info', duration = 5000) {
+            const flashMessage = document.createElement('div');
+            flashMessage.className = `flash-message flash-message--${type}`;
+            flashMessage.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
+
+            const textEl = document.createElement('span');
+            textEl.className = 'flash-message__text';
+            textEl.textContent = message;
+            flashMessage.appendChild(textEl);
+
+            const closeButton = document.createElement('button');
+            closeButton.className = 'flash-message__close-button';
+            closeButton.innerHTML = '×';
+            closeButton.setAttribute('aria-label', 'Tutup pesan');
+            closeButton.onclick = () => {
+                flashMessage.classList.remove('show');
+                setTimeout(() => flashMessage.remove(), parseFloat(getComputedStyle(flashMessage).transitionDuration) * 1000 || 300);
+            };
+            flashMessage.appendChild(closeButton);
+
+            DOM.flashMessageContainer.appendChild(flashMessage);
+            setTimeout(() => flashMessage.classList.add('show'), 50);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    flashMessage.classList.remove('show');
+                    setTimeout(() => flashMessage.remove(), parseFloat(getComputedStyle(flashMessage).transitionDuration) * 1000 || 300);
+                }, duration);
+            }
+        }
+
+
+        // === OFF-CANVAS PANEL FUNCTIONS ===
+        let previouslyFocusedElementOffCanvas = null;
+        function openOffCanvas(id = 'settings-off-canvas') {
+            const offCanvasEl = document.getElementById(id);
+            if (!offCanvasEl) return;
+
+            previouslyFocusedElementOffCanvas = document.activeElement;
+            offCanvasEl.classList.add('open');
+            DOM.offCanvasOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.addEventListener('keydown', handleOffCanvasKeydown);
+            offCanvasEl.querySelector('.off-canvas__close-button, button, a, input, select, textarea').focus();
+
+            // Trap focus
+            const focusableElements = offCanvasEl.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstFocusableElement = focusableElements[0];
+            const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+            offCanvasEl.addEventListener('keydown', function (e) {
+                if (e.key !== 'Tab') return;
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastFocusableElement) {
+                        firstFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+        function closeOffCanvas(id = 'settings-off-canvas') {
+            const offCanvasEl = document.getElementById(id);
+            if (!offCanvasEl) return;
+
+            offCanvasEl.classList.remove('open');
+            DOM.offCanvasOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleOffCanvasKeydown);
+            if (previouslyFocusedElementOffCanvas) {
+                previouslyFocusedElementOffCanvas.focus();
+                previouslyFocusedElementOffCanvas = null;
+            }
+        }
+
+        function handleOffCanvasKeydown(event) {
+            if (event.key === 'Escape') {
+                closeOffCanvas();
+            }
+        }
+
+
+        // === FUNGSI UTAMA GALERI (Existing functions modified or kept as is) ===
         function displayGalleryPage(page) {
             AppState.currentPage = page;
             AppState.isLoading = true;
             updateLoadingIndicator();
 
-            // Simulasi delay loading (bisa dihapus jika data sudah siap)
             setTimeout(() => {
-                DOM.galleryContainer.innerHTML = ''; // Kosongkan kontainer sebelum memuat item baru
-
+                DOM.galleryContainer.innerHTML = '';
                 const startIndex = (page - 1) * AppState.itemsPerPage;
                 const endIndex = startIndex + AppState.itemsPerPage;
                 const paginatedItems = AppState.allImages.slice(startIndex, endIndex);
 
                 if (paginatedItems.length === 0 && AppState.allImages.length > 0) {
-                    // Kasus jika halaman yang diminta di luar jangkauan tapi ada gambar
                     DOM.galleryContainer.innerHTML = '<p class="loading-indicator">Halaman tidak ditemukan.</p>';
                     AppState.isLoading = false;
                     updateLoadingIndicator();
@@ -482,32 +1086,27 @@
                     return;
                 }
 
-                const fragment = document.createDocumentFragment(); // Optimasi DOM manipulation
-
+                const fragment = document.createDocumentFragment();
                 paginatedItems.forEach(image => {
                     const galleryItem = document.createElement('figure');
                     galleryItem.className = 'gallery-item';
-                    galleryItem.setAttribute('tabindex', '0'); // Aksesibilitas: bisa di-fokus
+                    galleryItem.setAttribute('tabindex', '0');
                     galleryItem.setAttribute('role', 'button');
                     galleryItem.setAttribute('aria-label', `Lihat ${image.title} lebih besar`);
-                    galleryItem.dataset.imageId = image.id; // Untuk identifikasi saat diklik
+                    galleryItem.dataset.imageId = image.id;
 
                     const imageContainer = document.createElement('div');
                     imageContainer.className = 'gallery-item__image-container';
-
                     const imgElement = document.createElement('img');
                     imgElement.className = 'gallery-item__image';
                     imgElement.src = image.src;
                     imgElement.alt = image.alt;
-                    imgElement.loading = 'lazy'; // Lazy loading untuk gambar
-
+                    imgElement.loading = 'lazy';
                     const caption = document.createElement('figcaption');
                     caption.className = 'gallery-item__caption';
-
                     const title = document.createElement('h3');
                     title.className = 'gallery-item__title';
                     title.textContent = image.title;
-
                     const description = document.createElement('p');
                     description.className = 'gallery-item__description';
                     description.textContent = image.description;
@@ -517,59 +1116,44 @@
                     caption.appendChild(description);
                     galleryItem.appendChild(imageContainer);
                     galleryItem.appendChild(caption);
-
                     fragment.appendChild(galleryItem);
                 });
 
                 DOM.galleryContainer.appendChild(fragment);
                 AppState.isLoading = false;
                 updateLoadingIndicator();
-                addGalleryItemEventListeners(); // Tambahkan event listener ke item baru
-            }, 300); // Delay simulasi
+                addGalleryItemEventListeners();
+                // Example: showFlashMessage(`Halaman ${page} berhasil dimuat.`, 'success', 3000);
+            }, 300);
         }
 
-        /**
-         * Mengatur dan menampilkan kontrol paginasi.
-         */
         function setupPagination() {
-            DOM.paginationContainer.innerHTML = ''; // Kosongkan kontainer
+            DOM.paginationContainer.innerHTML = '';
             AppState.totalPages = Math.ceil(AppState.allImages.length / AppState.itemsPerPage);
-
-            if (AppState.totalPages <= 1) return; // Tidak perlu paginasi jika hanya 1 halaman atau kurang
+            if (AppState.totalPages <= 1) return;
 
             const fragment = document.createDocumentFragment();
-
-            // Tombol "Sebelumnya"
             const prevButton = createPaginationButton('Sebelumnya', AppState.currentPage - 1);
             prevButton.disabled = AppState.currentPage === 1;
             prevButton.setAttribute('aria-label', 'Halaman Sebelumnya');
             fragment.appendChild(prevButton);
 
-            // Tombol Nomor Halaman
-            // Logika untuk menampilkan rentang nomor halaman (misal: 1 ... 5 6 7 ... 10)
-            const MAX_VISIBLE_PAGES = 5; // Jumlah maksimal tombol halaman yang terlihat (selain prev/next/ellipsis)
+            const MAX_VISIBLE_PAGES = 5;
             let startPage, endPage;
-
             if (AppState.totalPages <= MAX_VISIBLE_PAGES) {
-                startPage = 1;
-                endPage = AppState.totalPages;
+                startPage = 1; endPage = AppState.totalPages;
             } else {
                 const maxPagesBeforeCurrent = Math.floor(MAX_VISIBLE_PAGES / 2);
                 const maxPagesAfterCurrent = Math.ceil(MAX_VISIBLE_PAGES / 2) - 1;
-
                 if (AppState.currentPage <= maxPagesBeforeCurrent) {
-                    startPage = 1;
-                    endPage = MAX_VISIBLE_PAGES;
+                    startPage = 1; endPage = MAX_VISIBLE_PAGES;
                 } else if (AppState.currentPage + maxPagesAfterCurrent >= AppState.totalPages) {
-                    startPage = AppState.totalPages - MAX_VISIBLE_PAGES + 1;
-                    endPage = AppState.totalPages;
+                    startPage = AppState.totalPages - MAX_VISIBLE_PAGES + 1; endPage = AppState.totalPages;
                 } else {
-                    startPage = AppState.currentPage - maxPagesBeforeCurrent;
-                    endPage = AppState.currentPage + maxPagesAfterCurrent;
+                    startPage = AppState.currentPage - maxPagesBeforeCurrent; endPage = AppState.currentPage + maxPagesAfterCurrent;
                 }
             }
 
-            // Ellipsis awal jika perlu
             if (startPage > 1) {
                 fragment.appendChild(createPaginationButton('1', 1));
                 if (startPage > 2) {
@@ -579,7 +1163,6 @@
                     fragment.appendChild(ellipsisStart);
                 }
             }
-
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = createPaginationButton(i.toString(), i);
                 if (i === AppState.currentPage) {
@@ -588,8 +1171,6 @@
                 }
                 fragment.appendChild(pageButton);
             }
-
-            // Ellipsis akhir jika perlu
             if (endPage < AppState.totalPages) {
                 if (endPage < AppState.totalPages - 1) {
                     const ellipsisEnd = document.createElement('span');
@@ -600,22 +1181,13 @@
                 fragment.appendChild(createPaginationButton(AppState.totalPages.toString(), AppState.totalPages));
             }
 
-
-            // Tombol "Berikutnya"
             const nextButton = createPaginationButton('Berikutnya', AppState.currentPage + 1);
             nextButton.disabled = AppState.currentPage === AppState.totalPages;
             nextButton.setAttribute('aria-label', 'Halaman Berikutnya');
             fragment.appendChild(nextButton);
-
             DOM.paginationContainer.appendChild(fragment);
         }
 
-        /**
-         * Membuat sebuah tombol paginasi.
-         * @param {string} text - Teks pada tombol.
-         * @param {number} pageNumber - Nomor halaman tujuan tombol.
-         * @returns {HTMLButtonElement} - Elemen tombol yang sudah jadi.
-         */
         function createPaginationButton(text, pageNumber) {
             const button = document.createElement('button');
             button.className = 'pagination-nav__button';
@@ -624,17 +1196,13 @@
             button.addEventListener('click', () => {
                 if (pageNumber >= 1 && pageNumber <= AppState.totalPages) {
                     displayGalleryPage(pageNumber);
-                    setupPagination(); // Perbarui tampilan paginasi
-                    // Scroll ke atas galeri setelah pindah halaman
+                    setupPagination();
                     document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth' });
                 }
             });
             return button;
         }
 
-        /**
-         * Menampilkan atau menyembunyikan indikator loading.
-         */
         function updateLoadingIndicator() {
             const existingIndicator = DOM.galleryContainer.querySelector('.loading-indicator');
             if (AppState.isLoading) {
@@ -642,81 +1210,64 @@
                     const p = document.createElement('p');
                     p.className = 'loading-indicator';
                     p.textContent = 'Memuat gambar...';
-                    DOM.galleryContainer.innerHTML = ''; // Kosongkan dulu
+                    DOM.galleryContainer.innerHTML = '';
                     DOM.galleryContainer.appendChild(p);
                 }
             } else {
                 if (existingIndicator) {
-                    // Hapus hanya jika tidak ada item galeri. Jika ada, displayGalleryPage sudah mengurusnya.
                     if (DOM.galleryContainer.querySelectorAll('.gallery-item').length === 0 && DOM.galleryContainer.textContent.includes('Memuat gambar...')) {
-                        DOM.galleryContainer.removeChild(existingIndicator);
-                    } else if (existingIndicator && DOM.galleryContainer.querySelectorAll('.gallery-item').length > 0) {
-                        existingIndicator.remove(); // Hapus jika sudah ada item
+                        // No items and still showing loading text (e.g. page not found) - keep custom message
+                    } else {
+                        existingIndicator.remove();
                     }
                 }
             }
         }
 
-        /**
-         * Menambahkan event listener ke setiap item galeri untuk membuka lightbox.
-         */
         function addGalleryItemEventListeners() {
             const galleryItems = DOM.galleryContainer.querySelectorAll('.gallery-item');
             galleryItems.forEach(item => {
                 item.addEventListener('click', handleGalleryItemClick);
-                item.addEventListener('keydown', (event) => { // Aksesibilitas keyboard
+                item.addEventListener('keydown', (event) => {
                     if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault(); // Mencegah scroll jika spasi ditekan
-                        handleGalleryItemClick.call(item, event); // Panggil dengan konteks yang benar
+                        event.preventDefault();
+                        handleGalleryItemClick.call(item, event);
                     }
                 });
             });
         }
 
-        /**
-         * Handler untuk klik pada item galeri.
-         * @param {Event} event - Objek event.
-         */
         function handleGalleryItemClick(event) {
-            const imageId = this.dataset.imageId; // 'this' merujuk ke galleryItem yang diklik
-            constimageData = AppState.allImages.find(img => img.id === imageId);
-            if (imageData) {
-                openLightbox(imageData);
+            const imageId = this.dataset.imageId;
+            const imgData = AppState.allImages.find(img => img.id === imageId);
+            if (imgData) {
+                openLightbox(imgData);
             }
         }
 
-        // === FUNGSI LIGHTBOX ===
-        /**
-         * Membuka lightbox dengan detail gambar yang dipilih.
-         * @param {object} image - Objek data gambar.
-         */
+        let previouslyFocusedElementLightbox = null;
         function openLightbox(image) {
-            DOM.lightboxImage.src = image.src; // Gunakan src original untuk kualitas terbaik
+            previouslyFocusedElementLightbox = document.activeElement;
+            DOM.lightboxImage.src = image.src;
             DOM.lightboxImage.alt = image.alt;
             DOM.lightboxTitle.textContent = image.title;
             DOM.lightboxDescription.textContent = image.description;
             DOM.lightboxModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Mencegah scroll background
-            DOM.lightboxCloseButton.focus(); // Fokus ke tombol tutup untuk aksesibilitas
-
-            // Tambah event listener untuk menutup lightbox via Escape key
+            document.body.style.overflow = 'hidden';
+            DOM.lightboxCloseButton.focus();
             document.addEventListener('keydown', handleLightboxKeydown);
         }
 
-        /**
-         * Menutup lightbox.
-         */
         function closeLightbox() {
             DOM.lightboxModal.classList.remove('active');
-            document.body.style.overflow = ''; // Kembalikan scroll background
-            // Hapus event listener Escape key agar tidak menumpuk
+            document.body.style.overflow = '';
             document.removeEventListener('keydown', handleLightboxKeydown);
+            if (previouslyFocusedElementLightbox) {
+                previouslyFocusedElementLightbox.focus();
+                previouslyFocusedElementLightbox = null;
+            }
         }
 
-        /**
-         * Handler untuk event keydown pada lightbox (misalnya tombol Escape).
-         * @param {KeyboardEvent} event 
-         */
         function handleLightboxKeydown(event) {
             if (event.key === 'Escape') {
                 closeLightbox();
@@ -726,10 +1277,8 @@
 
         // === INISIALISASI APLIKASI ===
         function initializeApp() {
-            // Set tahun copyright
             DOM.currentYearSpan.textContent = new Date().getFullYear();
 
-            // Tampilkan halaman pertama galeri
             if (AppState.allImages.length > 0) {
                 displayGalleryPage(AppState.currentPage);
                 setupPagination();
@@ -739,17 +1288,71 @@
                 updateLoadingIndicator();
             }
 
-            // Event listener untuk menutup lightbox
             DOM.lightboxCloseButton.addEventListener('click', closeLightbox);
             DOM.lightboxModal.addEventListener('click', (event) => {
-                // Tutup jika klik di luar area konten lightbox
-                if (event.target === DOM.lightboxModal) {
-                    closeLightbox();
+                if (event.target === DOM.lightboxModal) closeLightbox();
+            });
+
+            // Event Listeners for new UI components
+            DOM.showToastBtn.addEventListener('click', () => {
+                showToast('Ini adalah notifikasi toast!', 'info', 3000);
+                setTimeout(() => showToast('Toast sukses!', 'success', 3500), 500);
+                setTimeout(() => showToast('Peringatan penting!', 'warning', 4000), 1000);
+                setTimeout(() => showToast('Terjadi kesalahan!', 'error', 0), 1500); // 0 for sticky
+            });
+
+            DOM.showAlertBtn.addEventListener('click', async () => {
+                const result = await showAlert(
+                    'Konfirmasi Aksi',
+                    'Apakah Anda yakin ingin melanjutkan aksi ini? Tindakan ini tidak dapat diurungkan.',
+                    [
+                        { text: 'Batal', type: 'secondary', value: false, closesModal: true },
+                        { text: 'Ya, Lanjutkan', type: 'primary', value: true, closesModal: true, callback: () => showToast('Aksi dilanjutkan!', 'success') }
+                    ]
+                );
+                console.log('Hasil Alert:', result);
+                if (result === true) {
+                    showFlashMessage('Anda memilih untuk melanjutkan.', 'info');
+                } else if (result === false) {
+                    showFlashMessage('Anda memilih untuk batal.', 'warning');
+                } else {
+                    showFlashMessage('Alert ditutup tanpa pilihan.', 'info', 2000);
                 }
             });
+            DOM.alertModal.addEventListener('click', (event) => { // Close on overlay click
+                if (event.target === DOM.alertModal) closeAlert();
+            });
+
+
+            DOM.showFlashBtn.addEventListener('click', () => {
+                showFlashMessage('Ini adalah pesan flash Info yang akan hilang.', 'info', 5000);
+                setTimeout(() => showFlashMessage('Pesan flash Sukses!', 'success', 0), 600); // Sticky
+            });
+
+            DOM.openOffCanvasBtn.addEventListener('click', () => openOffCanvas('settings-off-canvas'));
+            DOM.offCanvasCloseBtn.addEventListener('click', () => closeOffCanvas('settings-off-canvas'));
+            DOM.offCanvasOverlay.addEventListener('click', () => closeOffCanvas('settings-off-canvas'));
+
+            DOM.itemsPerPageSelect.value = AppState.itemsPerPage; // Set initial value from state
+            DOM.itemsPerPageSelect.addEventListener('change', (e) => {
+                const newItemsPerPage = parseInt(e.target.value, 10);
+                if (newItemsPerPage !== AppState.itemsPerPage) {
+                    AppState.itemsPerPage = newItemsPerPage;
+                    AppState.currentPage = 1; // Reset to first page
+                    displayGalleryPage(AppState.currentPage);
+                    setupPagination();
+                    showToast(`Menampilkan ${AppState.itemsPerPage} item per halaman.`, 'info');
+                    closeOffCanvas(); // Optionally close canvas after change
+                }
+            });
+
+            // Initial welcome messages
+            showToast('Selamat datang di Galeri Foto!', 'info', 3000);
+            if (AppState.allImages.length > 0) {
+                showFlashMessage(`Galeri dimuat dengan ${AppState.allImages.length} gambar. Selamat menikmati!`, 'success', 6000);
+            }
         }
 
-        // Jalankan aplikasi setelah DOM sepenuhnya dimuat
         document.addEventListener('DOMContentLoaded', initializeApp);
 
     </script>

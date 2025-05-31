@@ -38,6 +38,11 @@
             /* Sun Flower Yellow */
             --color-accent-dark: #f39c12;
             /* Orange */
+            --color-error-light: #e74c3c;
+            /* Pomegranate Red */
+            --color-error-dark: #c0392b;
+            /* Darker Pomegranate Red */
+
 
             /* Warna Netral & Latar Belakang */
             --color-bg-light: #f4f7f6;
@@ -84,6 +89,7 @@
             --app-secondary-hover: var(--color-secondary-dark);
             --app-accent: var(--color-accent-light);
             --app-accent-hover: var(--color-accent-dark);
+            --app-error: var(--color-error-light);
             --app-bg: var(--color-bg-light);
             --app-surface: var(--color-surface-light);
             --app-text: var(--color-text-light);
@@ -101,6 +107,7 @@
             --app-secondary-hover: var(--color-secondary-light);
             --app-accent: var(--color-accent-dark);
             --app-accent-hover: var(--color-accent-light);
+            --app-error: var(--color-error-dark);
             --app-bg: var(--color-bg-dark);
             --app-surface: var(--color-surface-dark);
             --app-text: var(--color-text-dark);
@@ -233,7 +240,7 @@
         .nav-link:hover,
         .nav-link.active {
             color: var(--app-primary);
-            background-color: rgba(var(--app-primary), 0.1);
+            background-color: color-mix(in srgb, var(--app-primary) 10%, transparent);
             /* Warna primer dengan opacity rendah */
         }
 
@@ -499,7 +506,7 @@
         .btn-primary:hover {
             background-color: var(--app-primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(var(--app-primary), 0.3);
+            box-shadow: 0 4px 8px color-mix(in srgb, var(--app-primary) 30%, transparent);
         }
 
         html[data-theme="dark"] .btn-primary {
@@ -516,7 +523,7 @@
         .btn-secondary:hover {
             background-color: var(--app-secondary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(var(--app-secondary), 0.3);
+            box-shadow: 0 4px 8px color-mix(in srgb, var(--app-secondary) 30%, transparent);
         }
 
         .btn-outline-primary {
@@ -573,7 +580,7 @@
         .form-select:focus {
             outline: none;
             border-color: var(--app-primary);
-            box-shadow: 0 0 0 3px rgba(var(--app-primary), 0.2);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-primary) 20%, transparent);
         }
 
         .filter-form-container {
@@ -603,7 +610,7 @@
 
         /* Hero Section di Dashboard */
         .hero-section {
-            background: linear-gradient(135deg, rgba(var(--app-primary), 0.8), rgba(var(--app-secondary), 0.7)),
+            background: linear-gradient(135deg, color-mix(in srgb, var(--app-primary) 80%, transparent), color-mix(in srgb, var(--app-secondary) 70%, transparent)),
                 url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
             padding: calc(var(--spacing-unit) * 8) calc(var(--spacing-unit) * 3);
             border-radius: var(--border-radius-large);
@@ -674,14 +681,14 @@
         }
 
         .table th {
-            background-color: rgba(var(--app-primary), 0.1);
+            background-color: color-mix(in srgb, var(--app-primary) 10%, transparent);
             font-weight: 600;
             font-family: var(--font-primary);
             color: var(--app-primary);
         }
 
         .table tbody tr:hover {
-            background-color: rgba(var(--app-secondary), 0.05);
+            background-color: color-mix(in srgb, var(--app-secondary) 5%, transparent);
         }
 
         .table td .btn {
@@ -805,6 +812,395 @@
                 width: 100%;
             }
         }
+
+        /* --- BARU: UI Components Styles --- */
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--spacing-unit) * 2 + 70px);
+            /* Bawah header */
+            right: calc(var(--spacing-unit) * 2);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-unit);
+            max-width: 350px;
+        }
+
+        .toast {
+            background-color: var(--app-surface);
+            color: var(--app-text);
+            padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--app-primary);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            min-width: 250px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-unit);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.hide {
+            /* For controlled exit animation if needed, current JS removes directly after timeout */
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .toast-icon {
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex-grow: 1;
+        }
+
+        .toast-success {
+            border-left-color: var(--app-primary);
+        }
+
+        .toast-success .toast-icon {
+            color: var(--app-primary);
+        }
+
+        .toast-error {
+            border-left-color: var(--app-error);
+        }
+
+        .toast-error .toast-icon {
+            color: var(--app-error);
+        }
+
+        .toast-info {
+            border-left-color: var(--app-secondary);
+        }
+
+        .toast-info .toast-icon {
+            color: var(--app-secondary);
+        }
+
+        .toast-warning {
+            border-left-color: var(--app-accent);
+        }
+
+        .toast-warning .toast-icon {
+            color: var(--app-accent);
+        }
+
+        /* Alert System */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s 0.3s linear;
+        }
+
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .alert-box {
+            background-color: var(--app-surface);
+            color: var(--app-text);
+            padding: calc(var(--spacing-unit) * 3);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 500px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .alert-overlay.show .alert-box {
+            transform: scale(1);
+        }
+
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            padding-bottom: var(--spacing-unit);
+            border-bottom: 1px solid var(--app-border);
+        }
+
+        .alert-header h3 {
+            font-family: var(--font-primary);
+            font-size: 1.3em;
+            margin: 0;
+            color: var(--app-text);
+            /* Default, can be overridden by JS for type */
+        }
+
+        .alert-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--app-text-muted);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .alert-close-btn:hover {
+            color: var(--app-text);
+        }
+
+        .alert-body {
+            margin-bottom: calc(var(--spacing-unit) * 3);
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .alert-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-unit);
+        }
+
+        /* Flash Messages */
+        .flash-message-container {
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .flash-message {
+            padding: calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius-medium);
+            margin-bottom: var(--spacing-unit);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: flashFadeIn 0.5s ease forwards;
+        }
+
+        @keyframes flashFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash-message-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-unit);
+        }
+
+        .flash-message-icon {
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .flash-message-text {
+            flex-grow: 1;
+        }
+
+        .flash-message-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: inherit;
+            opacity: 0.7;
+            cursor: pointer;
+            padding: calc(var(--spacing-unit) * 0.5);
+            margin-left: var(--spacing-unit);
+            flex-shrink: 0;
+        }
+
+        .flash-message-close-btn:hover {
+            opacity: 1;
+        }
+
+        .flash-message-success {
+            background-color: var(--app-primary);
+            color: var(--color-surface-light);
+            border: 1px solid var(--app-primary-hover);
+        }
+
+        html[data-theme="dark"] .flash-message-success {
+            background-color: var(--app-primary);
+            color: var(--color-text-dark);
+            border: 1px solid var(--app-primary-hover);
+        }
+
+        .flash-message-error {
+            background-color: var(--app-error);
+            color: white;
+            border: 1px solid color-mix(in srgb, var(--app-error) 80%, black);
+        }
+
+        .flash-message-info {
+            background-color: var(--app-secondary);
+            color: var(--color-surface-light);
+            border: 1px solid var(--app-secondary-hover);
+        }
+
+        html[data-theme="dark"] .flash-message-info {
+            background-color: var(--app-secondary);
+            color: var(--color-text-dark);
+            border: 1px solid var(--app-secondary-hover);
+        }
+
+        .flash-message-warning {
+            background-color: var(--app-accent);
+            color: var(--app-text);
+            border: 1px solid var(--app-accent-hover);
+        }
+
+        html[data-theme="dark"] .flash-message-warning {
+            background-color: var(--app-accent);
+            color: var(--app-text);
+            border: 1px solid var(--app-accent-hover);
+        }
+
+
+        /* Off-Canvas Panel */
+        .off-canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s 0.3s linear;
+        }
+
+        .off-canvas-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .off-canvas-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            /* Start off-screen */
+            width: 90%;
+            max-width: 450px;
+            height: 100%;
+            background-color: var(--app-surface);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1600;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .off-canvas-panel.open {
+            right: 0;
+        }
+
+        .off-canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(var(--spacing-unit) * 2);
+            border-bottom: 1px solid var(--app-border);
+            background-color: var(--app-surface);
+            /* Ensure it matches panel */
+            flex-shrink: 0;
+        }
+
+        .off-canvas-title {
+            font-family: var(--font-primary);
+            font-size: 1.4em;
+            margin: 0;
+            color: var(--app-primary);
+        }
+
+        .off-canvas-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--app-text-muted);
+            cursor: pointer;
+            padding: calc(var(--spacing-unit) * 0.5);
+            line-height: 1;
+        }
+
+        .off-canvas-close-btn:hover {
+            color: var(--app-primary);
+        }
+
+        .off-canvas-content {
+            padding: calc(var(--spacing-unit) * 2);
+            overflow-y: auto;
+            flex-grow: 1;
+            color: var(--app-text);
+        }
+
+        .off-canvas-property-detail img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-medium);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .off-canvas-property-detail h3 {
+            font-family: var(--font-primary);
+            font-size: 1.5em;
+            color: var(--app-primary);
+            margin-bottom: var(--spacing-unit);
+        }
+
+        .off-canvas-property-detail p {
+            margin-bottom: var(--spacing-unit);
+            line-height: 1.6;
+        }
+
+        .off-canvas-property-detail .features {
+            list-style: none;
+            padding: 0;
+            margin: calc(var(--spacing-unit) * 2) 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-unit);
+        }
+
+        .off-canvas-property-detail .features li {
+            background-color: color-mix(in srgb, var(--app-primary) 10%, transparent);
+            padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
+            border-radius: var(--border-radius-small);
+            font-size: 0.9em;
+        }
+
+        .off-canvas-property-detail .price {
+            font-family: var(--font-primary);
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--app-primary);
+            margin-top: calc(var(--spacing-unit) * 2);
+            text-align: right;
+        }
+
+        /* --- End of UI Components Styles --- */
     </style>
 </head>
 
@@ -816,7 +1212,7 @@
                 <a href="#dashboard" class="navbar-brand page-router">
                     <i class="fas fa-mountain-sun icon"></i> Green<span>Valley</span>
                 </a>
-                <button class="navbar-toggler" id="navbarToggler" aria-label="Toggle navigasi">
+                <button class="navbar-toggler" id="navbarToggler" aria-label="Toggle navigasi" aria-expanded="false">
                     <i class="fas fa-bars"></i>
                 </button>
                 <ul class="nav-menu" id="navMenu">
@@ -839,6 +1235,8 @@
     <!-- Konten Utama Aplikasi -->
     <main class="app-main">
         <div class="app-container">
+            <!-- BARU: Flash Message Container -->
+            <div id="flashMessageContainer" class="flash-message-container"></div>
 
             <!-- Halaman Dasbor -->
             <section id="dashboard-page" class="page">
@@ -925,8 +1323,9 @@
                 <p>Halaman ini adalah contoh untuk fitur manajemen properti (CRUD). Dalam aplikasi nyata, ini akan
                     terhubung ke sistem backend untuk mengelola data properti.</p>
 
-                <button class="btn btn-primary" style="margin-bottom: calc(var(--spacing-unit) * 2);"><i
-                        class="fas fa-plus icon"></i> Tambah Properti Baru</button>
+                <button id="addPropertyBtn" class="btn btn-primary"
+                    style="margin-bottom: calc(var(--spacing-unit) * 2);"><i class="fas fa-plus icon"></i> Tambah
+                    Properti Baru</button>
 
                 <div class="table-responsive">
                     <table class="table">
@@ -950,7 +1349,8 @@
                                             class="fas fa-eye"></i></button>
                                     <button class="btn btn-sm btn-accent" title="Edit"><i
                                             class="fas fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-danger-custom" title="Hapus"><i
+                                    <button class="btn btn-sm btn-danger-custom delete-property-btn" title="Hapus"
+                                        data-property-id="GVX001" data-property-name="The Royal Emerald"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
@@ -964,7 +1364,8 @@
                                             class="fas fa-eye"></i></button>
                                     <button class="btn btn-sm btn-accent" title="Edit"><i
                                             class="fas fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-danger-custom" title="Hapus"><i
+                                    <button class="btn btn-sm btn-danger-custom delete-property-btn" title="Hapus"
+                                        data-property-id="GVX002" data-property-name="Azure Sky Suites"><i
                                             class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
@@ -974,17 +1375,23 @@
                 <style>
                     /* CSS tambahan untuk tombol danger custom jika tidak ada utility class-nya */
                     .btn-danger-custom {
-                        background-color: #e74c3c;
+                        background-color: var(--app-error);
                         color: white;
                     }
 
                     .btn-danger-custom:hover {
-                        background-color: #c0392b;
+                        background-color: color-mix(in srgb, var(--app-error) 80%, black);
                     }
 
                     .btn-accent {
                         background-color: var(--app-accent);
                         color: var(--app-text);
+                        /* For light theme, may need adjustment for dark */
+                    }
+
+                    html[data-theme="dark"] .btn-accent {
+                        color: var(--color-bg-dark);
+                        /* Better contrast for dark yellow */
                     }
 
                     .btn-accent:hover {
@@ -1030,6 +1437,24 @@
         </article>
     </template>
 
+    <!-- BARU: Off-Canvas Container (Panel dan Overlay) -->
+    <div id="offCanvasContainer" class="off-canvas-container">
+        <div id="offCanvasOverlay" class="off-canvas-overlay" tabindex="-1"></div>
+        <div id="offCanvasPanel" class="off-canvas-panel" role="dialog" aria-modal="true"
+            aria-labelledby="offCanvasTitle">
+            <div class="off-canvas-header">
+                <h2 id="offCanvasTitle" class="off-canvas-title">Detail Properti</h2>
+                <button id="offCanvasCloseBtn" class="off-canvas-close-btn" aria-label="Tutup Panel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="offCanvasContent" class="off-canvas-content">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // IIFE untuk enkapsulasi kode aplikasi
         (function GreenValleyApp() {
@@ -1064,7 +1489,16 @@
                 filterBedroomsSelect: document.getElementById('filterBedrooms'),
                 filterPriceSelect: document.getElementById('filterPrice'),
                 noResultsMessage: document.getElementById('noResultsMessage'),
-                currentYearSpan: document.getElementById('currentYear')
+                currentYearSpan: document.getElementById('currentYear'),
+                // New UI Component Elements
+                flashMessageContainerEl: document.getElementById('flashMessageContainer'),
+                offCanvasPanel: document.getElementById('offCanvasPanel'),
+                offCanvasOverlay: document.getElementById('offCanvasOverlay'),
+                offCanvasTitleEl: document.getElementById('offCanvasTitle'),
+                offCanvasContentEl: document.getElementById('offCanvasContent'),
+                offCanvasCloseBtn: document.getElementById('offCanvasCloseBtn'),
+                addPropertyBtn: document.getElementById('addPropertyBtn'), // Specific button for flash message demo
+                crudPage: document.getElementById('crud-page') // For CRUD delete alerts
             };
 
             // UTILITIES
@@ -1072,12 +1506,306 @@
                 formatPrice: (price) => {
                     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
                 },
-                // Fungsi untuk membatasi deskripsi
                 truncateText: (text, maxLength) => {
                     if (text.length <= maxLength) return text;
-                    return text.substring(0, text.lastIndexOf(' ', maxLength)) + '...';
+                    let truncated = text.substring(0, maxLength);
+                    const lastSpace = truncated.lastIndexOf(' ');
+                    if (lastSpace > Math.floor(maxLength * 0.6)) { // Only cut at space if it's reasonably far
+                        truncated = truncated.substring(0, lastSpace);
+                    }
+                    return truncated + '...';
                 }
             };
+
+            // UI MANAGER (Toast, Alert, Flash, OffCanvas)
+            const UIManager = {
+                toastContainer: null,
+                offCanvasTabTrapListener: null, // For focus trapping
+
+                initToastContainer: () => {
+                    if (!UIManager.toastContainer) {
+                        UIManager.toastContainer = document.createElement('div');
+                        UIManager.toastContainer.className = 'toast-container';
+                        document.body.appendChild(UIManager.toastContainer);
+                    }
+                },
+
+                showToast: (message, type = 'info', duration = 3000) => {
+                    UIManager.initToastContainer();
+
+                    const toast = document.createElement('div');
+                    toast.className = `toast toast-${type}`;
+
+                    let iconClass = 'fas fa-info-circle';
+                    if (type === 'success') iconClass = 'fas fa-check-circle';
+                    else if (type === 'error') iconClass = 'fas fa-times-circle';
+                    else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+
+                    toast.innerHTML = `<i class="toast-icon ${iconClass}"></i> <span class="toast-message">${message}</span>`;
+
+                    UIManager.toastContainer.appendChild(toast);
+
+                    requestAnimationFrame(() => {
+                        toast.classList.add('show');
+                    });
+
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        toast.addEventListener('transitionend', () => {
+                            if (toast.parentElement) toast.remove();
+                        }, { once: true });
+                    }, duration);
+                },
+
+                showAlert: (title, message, type = 'info', options = {}) => {
+                    const { confirmText = 'OK', cancelText = 'Batal', onConfirm, onCancel, showCancelButton = false } = options;
+
+                    let alertOverlay = document.querySelector('.alert-overlay');
+                    if (alertOverlay) alertOverlay.remove();
+
+                    alertOverlay = document.createElement('div');
+                    alertOverlay.className = 'alert-overlay';
+                    alertOverlay.setAttribute('role', 'alertdialog');
+                    alertOverlay.setAttribute('aria-labelledby', 'alertTitle');
+                    alertOverlay.setAttribute('aria-describedby', 'alertMessage');
+
+
+                    const alertBox = document.createElement('div');
+                    alertBox.className = 'alert-box';
+
+                    let titleColor = 'var(--app-text)';
+                    if (type === 'error') titleColor = 'var(--app-error)';
+                    else if (type === 'warning') titleColor = 'var(--app-accent)';
+
+                    alertBox.innerHTML = `
+                        <div class="alert-header">
+                            <h3 id="alertTitle" style="color: ${titleColor};">${title}</h3>
+                            <button class="alert-close-btn" aria-label="Tutup Peringatan">×</button>
+                        </div>
+                        <div class="alert-body">
+                            <p id="alertMessage">${message}</p>
+                        </div>
+                        <div class="alert-footer">
+                            ${showCancelButton ? `<button class="btn btn-outline-secondary alert-cancel-btn">${cancelText}</button>` : ''}
+                            <button class="btn btn-primary alert-confirm-btn">${confirmText}</button>
+                        </div>
+                    `;
+
+                    alertOverlay.appendChild(alertBox);
+                    document.body.appendChild(alertOverlay);
+                    document.body.style.overflow = 'hidden';
+
+
+                    requestAnimationFrame(() => {
+                        alertOverlay.classList.add('show');
+                    });
+
+                    const focusableElements = alertBox.querySelectorAll('button');
+                    const firstFocusable = focusableElements[0];
+                    const lastFocusable = focusableElements[focusableElements.length - 1];
+                    if (firstFocusable) firstFocusable.focus();
+
+
+                    const closeAlert = (action) => {
+                        document.body.style.overflow = '';
+                        alertOverlay.classList.remove('show');
+                        alertOverlay.addEventListener('transitionend', () => {
+                            if (alertOverlay.parentElement) alertOverlay.remove();
+                            if (action === 'confirm' && typeof onConfirm === 'function') onConfirm();
+                            if ((action === 'cancel' || action === 'close') && typeof onCancel === 'function') onCancel();
+                        }, { once: true });
+                        document.removeEventListener('keydown', escapeListener);
+                        alertBox.removeEventListener('keydown', tabTrapListener);
+                    };
+
+                    const escapeListener = (e) => {
+                        if (e.key === 'Escape') {
+                            closeAlert(showCancelButton ? 'cancel' : 'close');
+                        }
+                    };
+                    document.addEventListener('keydown', escapeListener);
+
+                    const tabTrapListener = (e) => {
+                        if (e.key === 'Tab') {
+                            if (e.shiftKey) { // Shift + Tab
+                                if (document.activeElement === firstFocusable) {
+                                    lastFocusable.focus();
+                                    e.preventDefault();
+                                }
+                            } else { // Tab
+                                if (document.activeElement === lastFocusable) {
+                                    firstFocusable.focus();
+                                    e.preventDefault();
+                                }
+                            }
+                        }
+                    };
+                    alertBox.addEventListener('keydown', tabTrapListener);
+
+
+                    alertBox.querySelector('.alert-confirm-btn').addEventListener('click', () => closeAlert('confirm'));
+                    if (showCancelButton) {
+                        alertBox.querySelector('.alert-cancel-btn').addEventListener('click', () => closeAlert('cancel'));
+                    }
+                    alertBox.querySelector('.alert-close-btn').addEventListener('click', () => closeAlert('close'));
+                },
+
+                showFlashMessage: (message, type = 'info', dismissible = true, duration = 0) => {
+                    const container = DOMElements.flashMessageContainerEl;
+                    if (!container) return;
+
+                    const flashDiv = document.createElement('div');
+                    flashDiv.className = `flash-message flash-message-${type}`;
+                    flashDiv.setAttribute('role', 'status'); // or 'alert' for more urgent messages
+
+                    let iconClass = 'fas fa-info-circle';
+                    if (type === 'success') iconClass = 'fas fa-check-circle';
+                    else if (type === 'error') iconClass = 'fas fa-times-circle';
+                    else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+
+                    let closeButtonHtml = '';
+                    if (dismissible) {
+                        closeButtonHtml = `<button class="flash-message-close-btn" aria-label="Tutup Pesan">×</button>`;
+                    }
+
+                    flashDiv.innerHTML = `
+                        <div class="flash-message-content">
+                            <i class="flash-message-icon ${iconClass}"></i>
+                            <span class="flash-message-text">${message}</span>
+                        </div>
+                        ${closeButtonHtml}
+                    `;
+
+                    container.appendChild(flashDiv);
+
+                    const removeFlash = () => {
+                        flashDiv.style.transition = 'opacity 0.3s, transform 0.3s, margin-bottom 0.3s, padding 0.3s, height 0.3s';
+                        flashDiv.style.opacity = '0';
+                        flashDiv.style.transform = 'translateY(-100%)';
+                        flashDiv.style.paddingTop = '0';
+                        flashDiv.style.paddingBottom = '0';
+                        flashDiv.style.marginBottom = '0';
+                        flashDiv.style.height = '0';
+                        setTimeout(() => {
+                            if (flashDiv.parentElement) flashDiv.remove();
+                        }, 300);
+                    };
+
+                    if (dismissible) {
+                        const closeBtn = flashDiv.querySelector('.flash-message-close-btn');
+                        if (closeBtn) closeBtn.addEventListener('click', removeFlash);
+                    }
+
+                    if (duration > 0) {
+                        setTimeout(removeFlash, duration);
+                    }
+                    return flashDiv;
+                },
+
+                openOffCanvas: (title, contentHTML) => {
+                    if (!DOMElements.offCanvasPanel) return;
+                    DOMElements.offCanvasTitleEl.innerHTML = title; // Use innerHTML for potential icons in title
+                    DOMElements.offCanvasContentEl.innerHTML = contentHTML;
+
+                    DOMElements.offCanvasOverlay.classList.add('show');
+                    DOMElements.offCanvasPanel.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+
+                    DOMElements.offCanvasCloseBtn.focus();
+
+                    // Focus trap for off-canvas
+                    const focusableElements = Array.from(DOMElements.offCanvasPanel.querySelectorAll(
+                        'a[href], button:not([disabled]), textarea, input, select'
+                    ));
+                    const firstFocusable = focusableElements[0];
+                    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+                    if (UIManager.offCanvasTabTrapListener) {
+                        DOMElements.offCanvasPanel.removeEventListener('keydown', UIManager.offCanvasTabTrapListener);
+                    }
+                    UIManager.offCanvasTabTrapListener = (e) => {
+                        if (e.key === 'Tab') {
+                            if (e.shiftKey) { // Shift + Tab
+                                if (document.activeElement === firstFocusable) {
+                                    lastFocusable.focus();
+                                    e.preventDefault();
+                                }
+                            } else { // Tab
+                                if (document.activeElement === lastFocusable) {
+                                    firstFocusable.focus();
+                                    e.preventDefault();
+                                }
+                            }
+                        }
+                    };
+                    DOMElements.offCanvasPanel.addEventListener('keydown', UIManager.offCanvasTabTrapListener);
+                },
+
+                closeOffCanvas: () => {
+                    if (!DOMElements.offCanvasPanel) return;
+                    DOMElements.offCanvasOverlay.classList.remove('show');
+                    DOMElements.offCanvasPanel.classList.remove('open');
+                    document.body.style.overflow = '';
+                    if (UIManager.offCanvasTabTrapListener) {
+                        DOMElements.offCanvasPanel.removeEventListener('keydown', UIManager.offCanvasTabTrapListener);
+                        UIManager.offCanvasTabTrapListener = null;
+                    }
+                },
+
+                initOffCanvasListeners: () => {
+                    if (DOMElements.offCanvasCloseBtn) {
+                        DOMElements.offCanvasCloseBtn.addEventListener('click', UIManager.closeOffCanvas);
+                    }
+                    if (DOMElements.offCanvasOverlay) {
+                        DOMElements.offCanvasOverlay.addEventListener('click', UIManager.closeOffCanvas);
+                    }
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && DOMElements.offCanvasPanel.classList.contains('open')) {
+                            UIManager.closeOffCanvas();
+                        }
+                    });
+                },
+
+                initCrudPageListeners: () => {
+                    if (DOMElements.crudPage) {
+                        DOMElements.crudPage.addEventListener('click', (e) => {
+                            const deleteButton = e.target.closest('.delete-property-btn');
+                            if (deleteButton) {
+                                const propertyId = deleteButton.dataset.propertyId;
+                                const propertyName = deleteButton.dataset.propertyName || propertyId;
+                                UIManager.showAlert(
+                                    'Konfirmasi Hapus',
+                                    `Anda yakin ingin menghapus properti "<strong>${propertyName}</strong>"?<br>Tindakan ini tidak dapat dibatalkan.`,
+                                    'warning',
+                                    {
+                                        showCancelButton: true,
+                                        confirmText: 'Ya, Hapus',
+                                        cancelText: 'Batal',
+                                        onConfirm: () => {
+                                            console.log(`Properti ${propertyName} (ID: ${propertyId}) dihapus (simulasi).`);
+                                            UIManager.showToast(`Properti "${propertyName}" berhasil dihapus.`, 'success');
+                                            deleteButton.closest('tr').remove(); // Simple removal for demo
+                                        }
+                                    }
+                                );
+                            }
+                        });
+                    }
+                    if (DOMElements.addPropertyBtn) {
+                        DOMElements.addPropertyBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            UIManager.showFlashMessage(
+                                '<strong>Fitur Demo:</strong> Formulir untuk menambah properti baru akan ditampilkan di sini.',
+                                'info',
+                                true,
+                                7000
+                            );
+                            // UIManager.showAlert('Info', 'Fitur tambah properti sedang dalam pengembangan.', 'info');
+                        });
+                    }
+                }
+            };
+
 
             // FUNGSI THEME
             const ThemeManager = {
@@ -1093,6 +1821,7 @@
                 toggleTheme: () => {
                     const newTheme = appState.currentTheme === 'light' ? 'dark' : 'light';
                     ThemeManager.applyTheme(newTheme);
+                    UIManager.showToast(`Tema diubah ke ${newTheme === 'light' ? 'Terang' : 'Gelap'}.`, 'info', 2000);
                 },
                 init: () => {
                     ThemeManager.applyTheme(appState.currentTheme);
@@ -1111,7 +1840,6 @@
                         targetPage.classList.add('active');
                         appState.currentPageId = pageId;
 
-                        // Update active state di navbar
                         DOMElements.navLinks.forEach(link => {
                             link.classList.remove('active');
                             if (link.getAttribute('href') === '#' + pageId) {
@@ -1119,28 +1847,23 @@
                             }
                         });
 
-                        // Update URL hash tanpa trigger hashchange (jika sudah ditangani)
                         if (window.location.hash !== '#' + pageId) {
-                            // history.pushState(null, '', '#' + pageId); // untuk URL lebih bersih, tapi hash lebih sederhana
                             window.location.hash = pageId;
                         }
-                        // Tutup menu mobile setelah navigasi
                         if (DOMElements.navMenu.classList.contains('open')) {
                             DOMElements.navMenu.classList.remove('open');
                             DOMElements.navbarToggler.innerHTML = '<i class="fas fa-bars"></i>';
                             DOMElements.navbarToggler.setAttribute('aria-expanded', 'false');
                         }
-
-                        window.scrollTo(0, 0); // Scroll ke atas halaman
+                        window.scrollTo(0, 0);
                     } else {
                         console.warn(`Halaman dengan ID "${pageId}-page" tidak ditemukan. Mengarahkan ke dasbor.`);
-                        Router.navigateTo('dashboard'); // Fallback ke dashboard
+                        Router.navigateTo('dashboard');
                     }
                 },
                 handleHashChange: () => {
                     const hash = window.location.hash.substring(1);
                     const pageId = hash.split('/')[0] || 'dashboard';
-                    // const param = hash.split('/')[1]; // Untuk parameter detail, belum diimplementasikan
                     Router.navigateTo(pageId);
                 },
                 init: () => {
@@ -1152,7 +1875,7 @@
                         });
                     });
                     window.addEventListener('hashchange', Router.handleHashChange);
-                    Router.handleHashChange(); // Panggil saat load untuk halaman awal
+                    Router.handleHashChange();
                 }
             };
 
@@ -1166,7 +1889,6 @@
                     const cardClone = DOMElements.propertyCardTemplate.content.cloneNode(true);
                     const cardElement = cardClone.querySelector('.property-card');
 
-                    // Isi data ke elemen kartu
                     const imageEl = cardElement.querySelector('.property-card-image');
                     imageEl.src = property.image || 'https://via.placeholder.com/400x240.png?text=Properti+GreenValley';
                     imageEl.alt = `Gambar ${property.name}`;
@@ -1182,19 +1904,35 @@
                     cardElement.querySelector('.property-card-price').textContent = Utils.formatPrice(property.price);
 
                     const detailsLink = cardElement.querySelector('.property-details-link');
-                    detailsLink.href = `#property/${property.id}`; // Placeholder untuk rute detail
+                    detailsLink.href = `#apartments?property=${property.id}`;
                     detailsLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        // Logika untuk menampilkan detail properti (bisa modal atau halaman baru)
-                        alert(`Menampilkan detail untuk: ${property.name}\nFitur ini belum diimplementasikan sepenuhnya.`);
-                        // Contoh navigasi jika ada halaman detail: Router.navigateTo(`property-detail/${property.id}`);
+                        const propertyDetailHTML = `
+                            <div class="off-canvas-property-detail">
+                                <img src="${property.image || 'https://via.placeholder.com/400x240.png?text=Properti'}" alt="Gambar ${property.name}">
+                                <h3>${property.name}</h3>
+                                <p><i class="fas fa-map-marker-alt icon"></i> ${property.location}</p>
+                                <ul class="features">
+                                    <li><i class="fas fa-bed icon"></i> ${property.bedrooms} K. Tidur</li>
+                                    <li><i class="fas fa-bath icon"></i> ${property.bathrooms} K. Mandi</li>
+                                    <li><i class="fas fa-ruler-combined icon"></i> ${property.area} m²</li>
+                                </ul>
+                                <p>${property.description}</p>
+                                <div class="price">${Utils.formatPrice(property.price)}</div>
+                                <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" 
+                                        onclick="GreenValleyApp.UIManager.showToast('Tombol Kontak Agen diklik (Demo)', 'info')">
+                                    <i class="fas fa-phone-alt icon"></i> Kontak Agen
+                                </button>
+                            </div>
+                        `;
+                        UIManager.openOffCanvas(`Detail: ${property.name}`, propertyDetailHTML);
                     });
 
                     return cardElement;
                 },
                 displayProperties: (propertiesToDisplay) => {
                     if (!DOMElements.propertyListContainer) return;
-                    DOMElements.propertyListContainer.innerHTML = ''; // Kosongkan kontainer
+                    DOMElements.propertyListContainer.innerHTML = '';
 
                     if (propertiesToDisplay.length === 0) {
                         DOMElements.noResultsMessage.style.display = 'block';
@@ -1234,6 +1972,11 @@
                         return keywordMatch && bedroomMatch && priceMatch;
                     });
                     PropertyRenderer.displayProperties(filteredProperties);
+                    if (document.activeElement !== DOMElements.searchKeywordInput && // only show toast if not actively typing
+                        document.activeElement !== DOMElements.filterBedroomsSelect &&
+                        document.activeElement !== DOMElements.filterPriceSelect) {
+                        UIManager.showToast('Filter berhasil diterapkan.', 'success', 2000);
+                    }
                 },
                 init: () => {
                     if (DOMElements.filterForm) {
@@ -1242,11 +1985,12 @@
                             PropertyFilter.filter();
                         });
                         DOMElements.filterForm.addEventListener('reset', () => {
-                            // Sedikit delay agar reset value selesai sebelum filter
-                            setTimeout(PropertyFilter.filter, 0);
+                            setTimeout(() => { // Allow form to reset values before filtering
+                                PropertyFilter.filter();
+                                UIManager.showToast('Filter direset.', 'info', 2000);
+                            }, 0);
                         });
                     }
-                    // Tampilkan semua properti awal saat halaman dimuat
                     PropertyRenderer.displayProperties(appState.propertiesData);
                 }
             };
@@ -1270,19 +2014,28 @@
             const initApp = () => {
                 ThemeManager.init();
                 Router.init();
-                PropertyFilter.init(); // Ini juga akan menampilkan properti awal
+                PropertyFilter.init();
                 MobileNav.init();
+                UIManager.initOffCanvasListeners(); // Initialize listeners for off-canvas
+                UIManager.initCrudPageListeners(); // Initialize listeners for CRUD page (add, delete)
+
 
                 if (DOMElements.currentYearSpan) {
                     DOMElements.currentYearSpan.textContent = new Date().getFullYear();
                 }
-                console.log("Green Valley Estetika App Initialized!");
-                console.log("State Aplikasi Awal:", appState);
-                console.log("Elemen DOM yang di-cache:", DOMElements);
+                console.log("Green Valley Estetika App Initialized with UI Components!");
+                UIManager.showFlashMessage("Selamat datang di Green Valley Estetika!", "success", true, 5000);
             };
 
             // Jalankan aplikasi saat DOM siap
             document.addEventListener('DOMContentLoaded', initApp);
+
+            // Expose UIManager if needed for inline JS like the "Kontak Agen" button
+            // This is generally not the best practice but useful for quick demos.
+            window.GreenValleyApp = {
+                UIManager: UIManager
+            };
+
 
         })(); // Akhir dari IIFE
     </script>

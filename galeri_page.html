@@ -4,30 +4,62 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galeri Kartu Interaktif - SPA</title>
+    <title>Galeri Kartu Interaktif - SPA Pro</title>
+    <!-- Menggunakan Font Awesome via CDN untuk ikon fancy (sebagai contoh, jika karakter unicode tidak cukup) -->
+    <!-- Jika tidak boleh ada CDN sama sekali, ikon harus diganti dengan karakter Unicode atau CSS shapes -->
+    <!-- Untuk saat ini, saya akan menggunakan karakter Unicode untuk ikon dasar seperti menu dan close -->
+
     <style>
         /* --- Variabel CSS Global --- */
         :root {
-            --primary-color: #3498db;
-            /* Biru Cerah */
-            --secondary-color: #2ecc71;
-            /* Hijau Segar */
-            --background-color: #f4f7f6;
-            /* Abu-abu Sangat Muda */
-            --text-color: #333333;
-            /* Abu-abu Tua */
-            --card-overlay-color: rgba(0, 0, 0, 0.4);
-            --figcaption-bg-color: rgba(255, 255, 255, 0.85);
+            --primary-color: #007bff;
+            /* Biru yang lebih modern dan cerah */
+            --secondary-color: #28a745;
+            /* Hijau yang lebih segar */
+            --accent-color: #ffc107;
+            /* Kuning sebagai aksen */
+            --background-color: #f8f9fa;
+            /* Latar belakang yang sangat terang */
+            --surface-color: #ffffff;
+            /* Warna permukaan seperti kartu, modal */
+            --text-color: #212529;
+            /* Teks utama, lebih gelap untuk kontras */
+            --text-color-muted: #6c757d;
+            /* Teks sekunder/muted */
+            --border-color: #dee2e6;
+            /* Warna border standar */
+
+            --card-overlay-color: rgba(0, 0, 0, 0.5);
+            --figcaption-bg-color: rgba(255, 255, 255, 0.9);
+            /* Lebih opak untuk keterbacaan */
+
             --button-bg-color: var(--primary-color);
-            --button-hover-bg-color: #2980b9;
-            /* Biru Lebih Tua */
+            --button-hover-bg-color: #0056b3;
+            /* Lebih gelap dari primary */
             --button-text-color: white;
-            --font-family-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            --font-family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* Font modern */
             --base-font-size: 16px;
-            --header-height: 70px;
-            --footer-height: 50px;
-            --border-radius: 8px;
-            --transition-speed: 0.3s;
+            --line-height-base: 1.7;
+            /* Sedikit lebih lega */
+
+            --header-height-desktop: 70px;
+            --footer-height: 60px;
+            --border-radius: 0.375rem;
+            /* 6px, standar bootstrap */
+            --box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
+            --box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+            --box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+
+            --transition-speed-fast: 0.2s;
+            --transition-speed-normal: 0.3s;
+            --transition-speed-slow: 0.5s;
+
+            --container-max-width: 1140px;
+            /* Lebar kontainer standar */
+            --spacing-unit: 1rem;
+            /* Unit spasi dasar */
         }
 
         /* --- Reset & Gaya Dasar --- */
@@ -48,26 +80,42 @@
             font-family: var(--font-family-sans-serif);
             background-color: var(--background-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: var(--line-height-base);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             overflow-x: hidden;
             /* Mencegah scroll horizontal yang tidak diinginkan */
+            -webkit-font-smoothing: antialiased;
+            /* Tampilan font lebih halus di Webkit */
+            -moz-osx-font-smoothing: grayscale;
+            /* Tampilan font lebih halus di Firefox */
         }
 
-        /* Menyembunyikan scrollbar standar untuk konsistensi lintas browser */
-        body {
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE 10+ */
+        body.no-scroll {
+            overflow-y: hidden;
         }
 
+        /* Styling scrollbar (opsional, jika ingin tetap ada tapi lebih halus) */
         body::-webkit-scrollbar {
-            display: none;
-            /* Chrome, Safari, Opera */
+            width: 8px;
         }
+
+        body::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--background-color);
+        }
+
+        body {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--background-color);
+        }
+
 
         /* --- Struktur Utama SPA --- */
         .app-container {
@@ -77,78 +125,146 @@
         }
 
         #app-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.8rem 1rem;
+            background-color: var(--surface-color);
+            color: var(--text-color);
+            /* Teks header agar kontras dengan bg putih */
+            padding: 0 var(--spacing-unit);
             position: fixed;
-            /* Header tetap di atas */
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
-            /* Pastikan header di atas konten lain */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            height: var(--header-height);
+            box-shadow: var(--box-shadow-sm);
+            height: var(--header-height-desktop);
+            display: flex;
+            align-items: center;
+        }
+
+        #app-header .header-content-wrapper {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            width: 100%;
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+        }
+
+        #app-header .logo-container {
+            display: flex;
+            align-items: center;
         }
 
         #app-header .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.75rem;
+            font-weight: 700;
+            /* Bold */
             text-decoration: none;
-            color: white;
+            color: var(--primary-color);
+            margin-right: calc(var(--spacing-unit) * 1.5);
+            letter-spacing: -0.5px;
+        }
+
+        #menu-toggle-btn {
+            font-size: 1.5rem;
+            /* Ukuran ikon hamburger */
+            padding: 0.5rem 0.8rem;
+            background-color: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: color var(--transition-speed-fast);
+            display: none;
+            /* Hanya muncul di mobile */
+        }
+
+        #menu-toggle-btn:hover {
+            color: var(--button-hover-bg-color);
+        }
+
+
+        #app-nav {
+            display: flex;
+            align-items: center;
         }
 
         #app-nav .nav-link {
-            color: white;
+            color: var(--text-color-muted);
             text-decoration: none;
-            margin-left: 1.5rem;
+            margin-left: calc(var(--spacing-unit) * 1.5);
             padding: 0.5rem 0.8rem;
             border-radius: var(--border-radius);
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            transition: background-color var(--transition-speed-fast) ease, color var(--transition-speed-fast) ease;
+            font-weight: 500;
+            /* Medium */
+        }
+
+        #app-nav .nav-link:first-child {
+            margin-left: 0;
         }
 
         #app-nav .nav-link:hover,
         #app-nav .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #f1f1f1;
+            color: var(--primary-color);
+            background-color: rgba(0, 123, 255, 0.05);
+            /* Warna primer dengan opacity rendah */
         }
+
+        #app-nav .nav-link.active {
+            font-weight: 700;
+            /* Bold untuk link aktif */
+        }
+
+        .header-actions {
+            margin-left: auto;
+            /* Pindah ke ujung kanan */
+            display: flex;
+            gap: calc(var(--spacing-unit) * 0.5);
+            align-items: center;
+        }
+
+        /* Sembunyikan header actions (tombol test) di mobile jika navigasi utama disembunyikan */
+        /* Ini bisa diatur ulang jika tombol ini penting di mobile */
+
 
         #app-main {
             flex-grow: 1;
-            padding-top: var(--header-height);
-            /* Mencegah konten tertutup header */
-            /* padding-bottom: var(--footer-height); Akan diurus oleh konten halaman */
+            padding-top: var(--header-height-desktop);
+            position: relative;
+            /* Untuk flash message container */
         }
 
         #app-footer {
-            background-color: #333;
-            color: #f4f4f4;
+            background-color: var(--text-color);
+            color: var(--background-color);
             text-align: center;
-            padding: 1rem;
-            height: var(--footer-height);
+            padding: calc(var(--spacing-unit) * 1.5) var(--spacing-unit);
+            height: auto;
+            /* Biarkan tinggi otomatis menyesuaikan konten */
+            min-height: var(--footer-height);
             flex-shrink: 0;
-            /* Mencegah footer mengecil jika konten sedikit */
+            font-size: 0.9rem;
+        }
+
+        #app-footer p {
+            margin-bottom: 0;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: var(--container-max-width);
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 var(--spacing-unit);
         }
 
         /* --- Gaya Konten Halaman (Umum) --- */
         .page-content {
-            padding: 2rem 1rem;
-            animation: fadeIn var(--transition-speed) ease-in-out;
+            padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+            animation: fadeIn var(--transition-speed-normal) ease-in-out;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
 
             to {
@@ -157,117 +273,196 @@
             }
         }
 
-        .page-content h2 {
+        .page-content h1,
+        .page-content h2,
+        .page-content h3 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            margin-bottom: var(--spacing-unit);
+            font-weight: 700;
+        }
+
+        .page-content h1 {
+            font-size: 2.5rem;
+        }
+
+        .page-content h2 {
+            font-size: 2rem;
         }
 
         .page-content p {
-            margin-bottom: 0.8rem;
+            margin-bottom: var(--spacing-unit);
+            color: var(--text-color-muted);
         }
+
+        .page-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .page-content a:hover {
+            text-decoration: underline;
+        }
+
 
         /* --- Komponen: Tombol --- */
         .btn {
             position: relative;
             overflow: hidden;
-            margin: 0.4rem;
+            margin: calc(var(--spacing-unit) * 0.25);
             padding: 0.6em 1.5em;
             font-size: 1rem;
+            font-weight: 500;
             min-height: 44px;
-            /* Aksesibilitas ukuran target sentuh */
+            /* Ukuran minimum untuk target sentuh (aksesibilitas) */
             background-color: var(--button-bg-color);
             color: var(--button-text-color);
-            border: none;
+            border: 1px solid transparent;
+            /* Border untuk konsistensi, bisa diubah */
             border-radius: var(--border-radius);
             cursor: pointer;
-            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform 0.2s ease;
+            transition: background-color var(--transition-speed-fast) ease, color var(--transition-speed-fast) ease, transform var(--transition-speed-fast) ease, box-shadow var(--transition-speed-fast) ease;
             text-decoration: none;
-            /* Untuk elemen <a> yang diberi kelas .btn */
-            display: inline-block;
-            /* Agar margin dan padding bekerja dengan baik */
+            display: inline-flex;
+            /* Untuk align icon dan text */
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            user-select: none;
+            /* Mencegah teks terseleksi saat diklik cepat */
         }
 
         .btn span {
-            /* Untuk teks di dalam tombol agar tetap di atas efek ripple */
+            /* Untuk teks di dalam tombol agar ripple effect tidak mengganggu */
             position: relative;
             z-index: 1;
             color: inherit;
-            /* Mewarisi warna dari .btn */
         }
 
         .btn a,
         .btn a:visited,
         .btn a:hover,
         .btn a:active {
+            /* Jika tombol adalah link */
             text-decoration: none;
             color: inherit;
-            /* Agar link di dalam tombol tidak memiliki gaya default browser */
         }
 
-
+        /* Efek Ripple pada Tombol */
         .btn::before {
-            /* Efek ripple */
             content: "";
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 0%;
-            height: 0%;
-            /* Mulai dari 0% height agar efeknya lebih 'mengembang' */
+            width: 0;
+            height: 0;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            transition: width 0.5s ease, height 0.5s ease;
-            /* Transisi terpisah untuk width dan height */
+            transition: width var(--transition-speed-slow) ease, height var(--transition-speed-slow) ease;
+            opacity: 0;
             z-index: 0;
         }
 
-        .btn:hover::before,
-        .btn:focus::before {
-            width: 250%;
-            /* Ukuran ripple yang lebih besar untuk menutupi tombol */
-            height: 250%;
+        .btn:active::before {
+            width: 300%;
+            /* Ukuran ripple lebih besar */
+            height: 300%;
+            opacity: 1;
+            transition: 0s;
+            /* Ripple muncul instan saat aktif */
         }
 
         .btn:hover,
         .btn:focus {
             background-color: var(--button-hover-bg-color);
-            color: white;
-            /* Pastikan teks tetap kontras */
+            color: var(--button-text-color);
             transform: translateY(-2px);
-            /* Efek angkat kecil */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--box-shadow);
+            outline: none;
+            /* Hilangkan outline default, ganti dengan shadow atau border jika perlu untuk fokus */
+        }
+
+        /* Aksesibilitas: Pastikan state fokus terlihat jelas */
+        .btn:focus-visible {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .5);
+            /* Shadow fokus mirip Bootstrap */
         }
 
         .btn:active {
             transform: translateY(0px);
-            /* Kembali ke posisi saat ditekan */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--box-shadow-sm);
         }
 
-        /* --- Komponen: Kartu Tumpang Tindih (Scroll Overlap Cards) --- */
+        .btn.btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn.btn-secondary:hover {
+            background-color: #1e7e34;
+            border-color: #1c7430;
+        }
+
+        /* Warna hover lebih gelap */
+        .btn.btn-secondary:focus-visible {
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, .5);
+        }
+
+        .btn.btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn.btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .btn.btn-danger:focus-visible {
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, .5);
+        }
+
+        .btn.btn-outline-primary {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn.btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: var(--button-text-color);
+        }
+
+        .btn-icon {
+            /* Tombol hanya dengan ikon */
+            padding: 0.5rem;
+            min-width: 44px;
+            /* Sama dengan min-height */
+            font-size: 1.25rem;
+        }
+
+
+        /* --- Komponen: Kartu Tumpang Tindih (Sticky Cards) --- */
         .card-stack-container {
             position: relative;
-            /* Konteks untuk elemen sticky */
-            /* Tidak perlu height eksplisit, akan ditentukan oleh total tinggi card */
+            /* Diperlukan agar z-index pada card-item bekerja */
         }
 
         .card-item {
             position: sticky;
-            top: var(--header-height);
-            /* Kartu akan menempel di bawah header */
-            height: calc(100vh - var(--header-height));
-            /* Tinggi kartu mengisi sisa viewport */
+            /* Efek tumpang tindih saat scroll */
+            top: var(--header-height-desktop);
+            /* Menempel di bawah header */
+            height: calc(100vh - var(--header-height-desktop));
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            /* Mencegah konten gambar keluar dari batas kartu */
-            /* z-index akan diatur secara dinamis oleh JavaScript atau secara berurutan oleh CSS */
+            background-color: var(--background-color);
+            /* Latar belakang jika gambar tidak penuh */
         }
 
-        /* Memberikan z-index agar kartu di atas menutupi kartu di bawahnya saat sticky */
+        /* Urutan tumpukan kartu */
         .card-item:nth-child(1) {
             z-index: 1;
         }
@@ -284,28 +479,29 @@
             z-index: 4;
         }
 
-        /* Tambahkan jika ada lebih banyak kartu, atau atur via JS */
+        /* Tambahkan jika ada lebih banyak kartu */
 
         .card-item-content {
             width: 100%;
             height: 100%;
             position: relative;
-            /* Untuk positioning absolut di dalamnya */
         }
 
         .card-item-content img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Gambar menutupi area, mungkin terpotong */
+            /* Gambar mengisi area tanpa distorsi */
             display: block;
-            transition: transform 0.5s ease-out;
-            /* Efek zoom halus */
+            transition: transform var(--transition-speed-slow) ease-out, filter var(--transition-speed-normal) ease;
+            filter: brightness(1);
         }
 
         .card-item:hover .card-item-content img {
-            transform: scale(1.05);
-            /* Sedikit zoom pada hover kartu */
+            transform: scale(1.03);
+            /* Efek zoom halus saat hover */
+            filter: brightness(0.9);
+            /* Sedikit meredupkan gambar agar teks lebih fokus */
         }
 
         .card-item figure {
@@ -314,63 +510,434 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            /* Mendorong figcaption ke bawah */
+            /* Untuk menempatkan figcaption di bawah */
+            justify-content: flex-end;
+            /* Figcaption menempel di bawah */
             position: relative;
-            /* Untuk overlay */
             color: white;
-            /* Teks default di atas gambar (jika tidak ada figcaption) */
         }
 
+        /* Overlay Gradien Halus pada Gambar */
         .card-item figure::before {
-            /* Overlay gelap untuk kontras teks */
             content: '';
             position: absolute;
+            bottom: 0;
+            /* Mulai dari bawah */
+            left: 0;
+            width: 100%;
+            height: 70%;
+            /* Tinggi gradien */
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 30%, rgba(0, 0, 0, 0.7) 100%);
+            z-index: 1;
+            pointer-events: none;
+            /* Agar tidak menghalangi interaksi dengan tombol di atasnya */
+            transition: opacity var(--transition-speed-normal) ease;
+            opacity: 0.8;
+        }
+
+        .card-item:hover figure::before {
+            opacity: 1;
+        }
+
+
+        .card-item figcaption {
+            position: relative;
+            z-index: 2;
+            /* Di atas overlay */
+            padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 2);
+            background-color: transparent;
+            /* Dihilangkan karena sudah ada gradien */
+            color: var(--surface-color);
+            /* Teks putih agar kontras dengan gradien gelap */
+            /* backdrop-filter: blur(3px); Jika ingin efek blur pada gradien di belakangnya */
+            /* -webkit-backdrop-filter: blur(3px); */
+            border-top: none;
+            /* Tidak perlu border karena desain baru */
+            margin-top: auto;
+            /* Memastikan di bagian bawah */
+            transform: translateY(20px);
+            /* Posisi awal untuk animasi masuk */
+            opacity: 0;
+            transition: transform var(--transition-speed-normal) ease-out var(--transition-speed-fast), opacity var(--transition-speed-normal) ease-out var(--transition-speed-fast);
+        }
+
+        .card-item:hover figcaption {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+
+        .card-item figcaption h3 {
+            margin: 0 0 calc(var(--spacing-unit) * 0.5) 0;
+            font-size: 2.25rem;
+            /* Lebih besar dan impactful */
+            color: var(--surface-color);
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            /* Bayangan teks agar lebih terbaca */
+        }
+
+        .card-item figcaption p {
+            font-size: 1.1rem;
+            margin-bottom: calc(var(--spacing-unit) * 1);
+            color: rgba(255, 255, 255, 0.9);
+            /* Putih dengan sedikit transparansi */
+            max-width: 70ch;
+            /* Batas lebar teks untuk keterbacaan */
+        }
+
+        .card-item .card-action-btn {
+            /* Tombol di dalam kartu */
+            position: absolute;
+            bottom: calc(var(--spacing-unit) * 1.5);
+            /* Disesuaikan dengan padding figcaption */
+            right: calc(var(--spacing-unit) * 2);
+            z-index: 3;
+            /* Di atas figcaption dan overlay */
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border-color: var(--accent-color);
+            transform: translateY(20px) scale(0.9);
+            /* Posisi awal untuk animasi */
+            opacity: 0;
+            transition: transform var(--transition-speed-normal) ease-out calc(var(--transition-speed-normal) + 0.1s), opacity var(--transition-speed-normal) ease-out calc(var(--transition-speed-normal) + 0.1s), background-color var(--transition-speed-fast) ease, color var(--transition-speed-fast) ease;
+        }
+
+        .card-item .card-action-btn:hover {
+            background-color: #e0a800;
+            /* Lebih gelap dari aksen */
+            border-color: #d39e00;
+            color: var(--text-color);
+        }
+
+        .card-item .card-action-btn:focus-visible {
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, .5);
+        }
+
+        .card-item:hover .card-action-btn {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* --- Komponen: Toast Notifikasi --- */
+        #toast-container {
+            position: fixed;
+            bottom: calc(var(--spacing-unit) * 1.5);
+            right: calc(var(--spacing-unit) * 1.5);
+            z-index: 2000;
+            /* Di atas segalanya */
+            display: flex;
+            flex-direction: column-reverse;
+            /* Toast baru muncul di atas */
+            gap: var(--spacing-unit);
+            max-width: 350px;
+            /* Batas lebar toast */
+        }
+
+        .toast-message {
+            background-color: var(--text-color);
+            /* Default, gelap */
+            color: var(--surface-color);
+            padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.25);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-lg);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-speed-normal) ease, transform var(--transition-speed-normal) ease;
+            min-width: 280px;
+            font-size: 0.95rem;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-message.success {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .toast-message.error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .toast-message.warning {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        .toast-message.info {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+
+        /* --- Komponen: Alert (Modal) --- */
+        .alert-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--card-overlay-color);
-            z-index: 1;
-            /* Di bawah teks figcaption tapi di atas gambar */
+            background-color: rgba(0, 0, 0, 0.65);
+            /* Lebih gelap untuk fokus */
+            z-index: 1900;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-unit);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed-normal) ease, visibility 0s var(--transition-speed-normal) linear;
         }
 
-        .card-item figcaption {
-            position: relative;
-            /* Agar di atas overlay figur */
-            z-index: 2;
-            /* Di atas overlay figur */
-            padding: 1.5rem 2rem;
-            background-color: var(--figcaption-bg-color);
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .alert-modal {
+            background-color: var(--surface-color);
             color: var(--text-color);
-            backdrop-filter: blur(5px);
-            /* Efek frosted glass jika didukung */
-            -webkit-backdrop-filter: blur(5px);
-            border-top: 3px solid var(--primary-color);
-            margin-top: auto;
-            /* Mendorong ke bawah jika konten di atasnya sedikit */
+            padding: calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-lg);
+            min-width: 320px;
+            max-width: 90vw;
+            width: 500px;
+            transform: scale(0.95) translateY(30px);
+            transition: transform var(--transition-speed-normal) ease-out, opacity var(--transition-speed-normal) ease-out;
+            opacity: 0;
         }
 
-        .card-item figcaption h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.8rem;
+        .alert-overlay.show .alert-modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .alert-modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-unit);
+            padding-bottom: var(--spacing-unit);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .alert-modal-body {
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            line-height: var(--line-height-base);
+            color: var(--text-color-muted);
+        }
+
+        .alert-modal-body strong {
+            color: var(--text-color);
+        }
+
+        .alert-modal-footer {
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            gap: calc(var(--spacing-unit) * 0.5);
+        }
+
+        .alert-modal-footer .btn {
+            margin-left: 0;
+        }
+
+        /* --- Komponen: Flash Message --- */
+        #flash-message-container {
+            position: sticky;
+            /* Menempel di bawah header saat scroll */
+            top: var(--header-height-desktop);
+            z-index: 1500;
+            /* Di bawah header, di atas konten utama */
+            padding: 0;
+            /* Padding diatur oleh .flash-message itu sendiri */
+        }
+
+        .flash-message {
+            padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+            border-left: 5px solid var(--primary-color);
+            background-color: #e7f3ff;
+            /* Warna latar yang lebih lembut */
+            color: var(--text-color);
+            box-shadow: var(--box-shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: opacity var(--transition-speed-normal) ease, transform var(--transition-speed-normal) ease;
+            margin: var(--spacing-unit);
+            /* Jarak dari tepi container */
+            border-radius: var(--border-radius);
+        }
+
+        .flash-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flash-message.success {
+            border-left-color: var(--secondary-color);
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .flash-message.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .flash-message.warning {
+            border-left-color: var(--accent-color);
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .flash-message.info {
+            border-left-color: var(--primary-color);
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .flash-message-text {
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .flash-message-close-btn {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            /* Lebih besar agar mudah diklik */
+            color: inherit;
+            /* Mengikuti warna teks flash message */
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 0 0.5rem;
+            margin-left: var(--spacing-unit);
+            line-height: 1;
+            transition: opacity var(--transition-speed-fast);
+        }
+
+        .flash-message-close-btn:hover {
+            opacity: 1;
+        }
+
+
+        /* --- Komponen: Off-Canvas Menu --- */
+        .off-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Defaultnya di kiri */
+            width: 300px;
+            max-width: 85%;
+            /* Agar tidak terlalu lebar di layar kecil */
+            height: 100vh;
+            background-color: var(--surface-color);
+            box-shadow: var(--box-shadow-lg);
+            transform: translateX(-100%);
+            transition: transform var(--transition-speed-normal) ease-in-out;
+            z-index: 1800;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-color);
+        }
+
+        .off-canvas.open {
+            transform: translateX(0);
+        }
+
+        .off-canvas-header {
+            padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .off-canvas-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .off-canvas-close-btn {
+            background: none;
+            border: none;
+            font-size: 2.25rem;
+            /* Lebih besar */
+            color: var(--text-color-muted);
+            opacity: 0.8;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color var(--transition-speed-fast), transform var(--transition-speed-fast);
+        }
+
+        .off-canvas-close-btn:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .off-canvas-body {
+            padding: var(--spacing-unit);
+            flex-grow: 1;
+            overflow-y: auto;
+            /* Scroll jika konten banyak */
+        }
+
+        .off-canvas-body .nav-link {
+            display: block;
+            padding: calc(var(--spacing-unit)*0.8) var(--spacing-unit);
+            color: var(--text-color-muted);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            margin-bottom: calc(var(--spacing-unit)*0.25);
+            transition: background-color var(--transition-speed-fast) ease, color var(--transition-speed-fast) ease;
+            font-weight: 500;
+        }
+
+        .off-canvas-body .nav-link:hover {
+            background-color: rgba(0, 123, 255, 0.05);
             color: var(--primary-color);
         }
 
-        .card-item figcaption p {
-            font-size: 1rem;
-            margin-bottom: 1rem;
+        .off-canvas-body .nav-link.active {
+            background-color: var(--primary-color);
+            color: var(--surface-color);
+            font-weight: 700;
         }
 
-        /* Tombol di dalam kartu */
-        .card-item .btn {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 3;
-            /* Di atas segalanya di dalam kartu */
+
+        .off-canvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.55);
+            /* Sedikit lebih gelap */
+            z-index: 1799;
+            /* Di bawah off-canvas, di atas konten lain */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed-normal) ease, visibility 0s var(--transition-speed-normal) linear;
         }
 
+        .off-canvas-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
 
         /* --- Utilitas CSS --- */
         .hidden {
@@ -381,79 +948,210 @@
             text-align: center;
         }
 
+        .sr-only {
+            /* Screen Reader Only, untuk aksesibilitas */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* --- Halaman Detail Khusus --- */
+        .detail-page-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            box-shadow: var(--box-shadow);
+        }
+
         /* --- Media Queries untuk Responsivitas --- */
+        @media (max-width: 992px) {
+
+            /* Tablet dan di bawahnya */
+            .card-item figcaption h3 {
+                font-size: 1.8rem;
+            }
+
+            .card-item figcaption p {
+                font-size: 1rem;
+            }
+        }
+
         @media (max-width: 768px) {
+
+            /* Mobile */
             :root {
                 --base-font-size: 15px;
-                --header-height: 60px;
+                /* --header-height-desktop: auto; /* Header akan menyesuaikan tinggi konten */
             }
 
             #app-header {
-                padding: 0.5rem 1rem;
-                flex-direction: column;
                 height: auto;
-                /* Biarkan tinggi header menyesuaikan */
-                align-items: flex-start;
+                /* Tinggi header fleksibel */
+                padding: calc(var(--spacing-unit) * 0.5) var(--spacing-unit);
+            }
+
+            #app-header .header-content-wrapper {
+                flex-wrap: wrap;
+                /* Memungkinkan item pindah baris */
+            }
+
+            #menu-toggle-btn {
+                display: inline-block;
+                /* Tampilkan tombol hamburger */
+                order: -1;
+                /* Posisikan di paling kiri */
+                margin-right: var(--spacing-unit);
             }
 
             #app-header .logo {
-                margin-bottom: 0.5rem;
+                /* Logo tetap di tempatnya atau bisa dipusatkan jika navigasi hilang */
+                margin-right: auto;
+                /* Dorong elemen lain ke kanan */
             }
 
             #app-nav {
-                width: 100%;
-                display: flex;
-                justify-content: space-around;
-                /* Atau flex-start jika terlalu banyak item */
+                display: none;
+                /* Sembunyikan navigasi utama di header, pindah ke off-canvas */
             }
 
-            #app-nav .nav-link {
-                margin-left: 0;
-                font-size: 0.9rem;
-                padding: 0.4rem 0.6rem;
+            .header-actions {
+                /* Tombol tes bisa tetap ada atau disembunyikan/dipindah ke off-canvas */
+                /* Untuk contoh ini, kita biarkan ada */
+                gap: calc(var(--spacing-unit) * 0.25);
             }
 
+            .header-actions .btn {
+                font-size: 0.8rem;
+                padding: 0.4em 0.8em;
+                min-height: 36px;
+            }
+
+            /* Penyesuaian padding-top untuk main content karena tinggi header dinamis */
+            /* Kita perlu nilai yang cukup aman. Bisa juga dihitung dengan JS jika sangat dinamis. */
+            /* Untuk kesederhanaan, kita set nilai tetap yang cukup. */
             #app-main {
-                padding-top: 100px;
-                /* Sesuaikan dengan tinggi header baru */
+                padding-top: 70px;
+                /* Perkiraan tinggi header mobile */
             }
+
+            #flash-message-container {
+                top: 70px;
+                /* Sesuaikan dengan padding-top #app-main */
+            }
+
+            /* Jika card-item top di set dinamis dengan JS, ini tidak perlu diubah */
+            .card-item {
+                top: 70px;
+                /* Sesuaikan dengan padding-top #app-main */
+                height: calc(100vh - 70px);
+            }
+
 
             .page-content {
-                padding: 1.5rem 0.8rem;
+                padding: var(--spacing-unit) calc(var(--spacing-unit) * 0.8);
+            }
+
+            .page-content h1 {
+                font-size: 2rem;
+            }
+
+            .page-content h2 {
+                font-size: 1.75rem;
             }
 
             .card-item figcaption {
-                padding: 1rem 1.5rem;
+                padding: var(--spacing-unit) calc(var(--spacing-unit) * 1.5);
             }
 
             .card-item figcaption h3 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
 
             .card-item figcaption p {
                 font-size: 0.9rem;
             }
 
-            .card-item .btn {
+            .card-item .card-action-btn {
                 font-size: 0.9rem;
                 padding: 0.5em 1.2em;
-                top: 1rem;
-                right: 1rem;
+                bottom: var(--spacing-unit);
+                right: var(--spacing-unit);
+            }
+
+            .alert-modal {
+                width: 95vw;
+                padding: var(--spacing-unit);
+            }
+
+            .alert-modal-header {
+                font-size: 1.25rem;
+            }
+
+            .alert-modal-body {
+                font-size: 0.95rem;
+            }
+
+            #toast-container {
+                right: var(--spacing-unit);
+                bottom: var(--spacing-unit);
+                max-width: calc(100vw - var(--spacing-unit) * 2);
             }
         }
 
         @media (max-width: 480px) {
+
+            /* Very small devices */
             :root {
                 --base-font-size: 14px;
             }
 
-            #app-nav .nav-link {
-                font-size: 0.8rem;
-                padding: 0.3rem 0.5rem;
+            #app-header .logo {
+                font-size: 1.5rem;
             }
 
+            .header-actions .btn {
+                font-size: 0.75rem;
+                padding: 0.3em 0.6em;
+                min-height: 32px;
+            }
+
+            /* Perkiraan tinggi header mobile mungkin perlu disesuaikan lagi jika berubah drastis */
+            #app-main {
+                padding-top: 60px;
+            }
+
+            #flash-message-container {
+                top: 60px;
+            }
+
+            .card-item {
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+
+
             .card-item figcaption h3 {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
+            }
+
+            .card-item figcaption p {
+                font-size: 0.85rem;
+            }
+
+            .page-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .page-content h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -462,67 +1160,94 @@
 <body>
     <div class="app-container">
         <header id="app-header">
-            <a href="#/" class="logo" data-route="/">GaleriKu</a>
-            <nav id="app-nav">
-                <a href="#/" class="nav-link active" data-route="/">Beranda (Kartu)</a>
-                <a href="#/tentang" class="nav-link" data-route="/tentang">Tentang Aplikasi</a>
-                <a href="#/detail/kartu-1" class="nav-link" data-route="/detail/kartu-1">Contoh Detail</a>
-            </nav>
+            <div class="header-content-wrapper">
+                <div class="logo-container">
+                    <button id="menu-toggle-btn" class="btn-icon" aria-label="Buka Menu Navigasi" aria-expanded="false"
+                        aria-controls="main-off-canvas">
+                        <span>☰</span> <!-- Karakter Unicode untuk Hamburger Icon -->
+                    </button>
+                    <a href="#/" class="logo" data-route="/">GaleriPro</a>
+                </div>
+                <nav id="app-nav" aria-label="Navigasi Utama">
+                    <a href="#/" class="nav-link active" data-route="/">Beranda</a>
+                    <a href="#/tentang" class="nav-link" data-route="/tentang">Tentang</a>
+                    <a href="#/detail/kartu-1" class="nav-link" data-route="/detail/kartu-1">Detail Contoh</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="show-toast-btn"><span>Toast</span></button>
+                    <button class="btn btn-outline-primary" id="show-alert-btn"><span>Alert</span></button>
+                    <button class="btn btn-danger" id="show-flash-btn"><span>Flash</span></button>
+                </div>
+            </div>
         </header>
 
         <main id="app-main">
+            <div id="flash-message-container" role="region" aria-live="polite">
+                <!-- Flash messages akan muncul di sini -->
+            </div>
             <!-- Konten dinamis akan dirender di sini oleh JavaScript -->
         </main>
 
         <footer id="app-footer">
-            <p>© <span id="current-year"></span> Aplikasi Galeri Kartu Interaktif. Dibuat dengan Cinta.</p>
+            <p>© <span id="current-year"></span> Aplikasi Galeri Kartu Interaktif Pro. Dirancang dengan Penuh Dedikasi.
+            </p>
         </footer>
+    </div>
+
+    <!-- Off-Canvas Menu -->
+    <aside id="main-off-canvas" class="off-canvas" tabindex="-1" aria-labelledby="offcanvas-title" aria-hidden="true">
+        <div class="off-canvas-header">
+            <h3 id="offcanvas-title">Menu Navigasi</h3>
+            <button class="off-canvas-close-btn" data-close-offcanvas="main-off-canvas"
+                aria-label="Tutup Menu Navigasi">
+                <span>×</span> <!-- Karakter Unicode untuk Close Icon -->
+            </button>
+        </div>
+        <nav class="off-canvas-body" aria-label="Navigasi Tambahan">
+            <a href="#/" class="nav-link" data-route="/" data-close-offcanvas="main-off-canvas">Beranda (Kartu)</a>
+            <a href="#/tentang" class="nav-link" data-route="/tentang" data-close-offcanvas="main-off-canvas">Tentang
+                Aplikasi</a>
+            <a href="#/detail/kartu-1" class="nav-link" data-route="/detail/kartu-1"
+                data-close-offcanvas="main-off-canvas">Contoh Detail (Kartu 1)</a>
+            <a href="#/detail/kartu-2" class="nav-link" data-route="/detail/kartu-2"
+                data-close-offcanvas="main-off-canvas">Contoh Detail (Kartu 2)</a>
+            <a href="#/pengaturan" class="nav-link" data-route="/pengaturan"
+                data-close-offcanvas="main-off-canvas">Pengaturan Aplikasi</a>
+        </nav>
+    </aside>
+    <div id="off-canvas-overlay" class="off-canvas-overlay" data-close-offcanvas="main-off-canvas" tabindex="-1"
+        aria-hidden="true"></div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" role="region" aria-live="assertive" aria-atomic="true">
+        <!-- Toast messages akan muncul di sini -->
     </div>
 
     <script>
         // --- State Aplikasi & Data ---
-        const state = {
+        const appState = { // Mengganti nama 'state' menjadi 'appState' untuk kejelasan
             currentPage: '/',
             cardData: [
-                {
-                    id: 'kartu-1',
-                    title: 'Pemandangan Gunung Memukau',
-                    description: 'Nikmati keindahan puncak gunung yang tertutup salju abadi dengan langit biru cerah.',
-                    imageUrl: 'https://picsum.photos/id/10/1920/1080',
-                    link: '#/detail/kartu-1',
-                    linkText: 'Selengkapnya'
-                },
-                {
-                    id: 'kartu-2',
-                    title: 'Hutan Pinus yang Tenang',
-                    description: 'Jelajahi kedamaian hutan pinus dengan kabut pagi yang menyelimuti.',
-                    imageUrl: 'https://picsum.photos/id/1015/1920/1080',
-                    link: '#/detail/kartu-2',
-                    linkText: 'Lihat Detail'
-                },
-                {
-                    id: 'kartu-3',
-                    title: 'Pantai Tropis Tersembunyi',
-                    description: 'Temukan surga tropis dengan pasir putih lembut dan air laut yang jernih.',
-                    imageUrl: 'https://picsum.photos/id/1016/1920/1080',
-                    link: '#/detail/kartu-3',
-                    linkText: 'Jelajahi'
-                },
-                {
-                    id: 'kartu-4',
-                    title: 'Kota Metropolitan Malam Hari',
-                    description: 'Saksikan gemerlap lampu kota metropolitan yang tidak pernah tidur dari ketinggian.',
-                    imageUrl: 'https://picsum.photos/id/1021/1920/1080',
-                    link: '#/detail/kartu-4',
-                    linkText: 'Observasi'
-                }
+                { id: 'kartu-1', title: 'Gunung Bersalju nan Agung', description: 'Saksikan kemegahan puncak gunung yang diselimuti salju abadi, menjulang tinggi menantang langit biru.', imageUrl: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80', link: '#/detail/kartu-1', linkText: 'Jelajahi Keajaiban' },
+                { id: 'kartu-2', title: 'Hutan Pinus Berkabut Pagi', description: 'Rasakan ketenangan mistis di tengah hutan pinus yang diselimuti kabut pagi, suara alam menjadi simfoni.', imageUrl: 'https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80', link: '#/detail/kartu-2', linkText: 'Selami Misteri' },
+                { id: 'kartu-3', title: 'Pantai Tropis Eksotis', description: 'Temukan surga tersembunyi dengan hamparan pasir putih lembut dan air laut biru jernih yang menenangkan jiwa.', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80', link: '#/detail/kartu-3', linkText: 'Nikmati Surga' },
+                { id: 'kartu-4', title: 'Metropolitan Berkilau Malam', description: 'Terpesona oleh panorama gemerlap lampu kota metropolitan dari ketinggian, sebuah simfoni cahaya tak terlupakan.', imageUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80', link: '#/detail/kartu-4', linkText: 'Saksikan Gemerlap' }
             ],
-            // Tambahkan data lain jika diperlukan
+            isOffCanvasOpen: false, // State untuk off-canvas
+            focusedElementBeforeModal: null, // Untuk mengembalikan fokus setelah modal/off-canvas ditutup
         };
 
         // --- Utilitas DOM Sederhana ---
         const $ = (selector, parent = document) => parent.querySelector(selector);
-        const $$ = (selector, parent = document) => parent.querySelectorAll(selector);
+        const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector)); // Konversi ke Array agar bisa pakai .forEach dll.
+
+        /**
+         * Membuat elemen HTML dengan atribut dan children.
+         * @param {string} tag - Nama tag HTML.
+         * @param {object} attributes - Atribut untuk elemen.
+         * @param {(Node|string)[]} children - Array node anak atau string.
+         * @returns {HTMLElement} Elemen yang dibuat.
+         */
         const createElement = (tag, attributes = {}, children = []) => {
             const element = document.createElement(tag);
             for (const key in attributes) {
@@ -530,214 +1255,592 @@
                     element.className = attributes[key];
                 } else if (key === 'textContent') {
                     element.textContent = attributes[key];
+                } else if (key === 'innerHTML') {
+                    element.innerHTML = attributes[key]; // Gunakan dengan hati-hati, pastikan konten aman
                 } else if (key.startsWith('data-')) {
                     element.setAttribute(key, attributes[key]);
-                }
-                else {
+                } else {
                     element.setAttribute(key, attributes[key]);
                 }
             }
             children.forEach(child => {
                 if (typeof child === 'string') {
                     element.appendChild(document.createTextNode(child));
-                } else {
+                } else if (child instanceof Node) {
                     element.appendChild(child);
                 }
             });
             return element;
         };
 
-        // --- Templating Komponen ---
+        // --- Implementasi Komponen UI ---
 
-        // Fungsi untuk membuat elemen kartu individual
+        // Toast Notification
+        const toastContainer = $('#toast-container');
+        /**
+         * Menampilkan notifikasi toast.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {'info'|'success'|'warning'|'error'} type - Jenis toast.
+         * @param {number} duration - Durasi tampilan toast dalam milidetik.
+         */
+        function showToast(message, type = 'info', duration = 3500) {
+            if (!toastContainer) { console.error('DOM Error: #toast-container tidak ditemukan.'); return; }
+
+            const toastId = `toast-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+            const toast = createElement('div', {
+                id: toastId,
+                className: `toast-message ${type}`,
+                role: 'status',
+                'aria-live': (type === 'error' || type === 'warning') ? 'assertive' : 'polite', // Lebih tegas untuk error/warning
+                'aria-atomic': 'true',
+                textContent: message
+            });
+
+            toastContainer.prepend(toast); // Prepend agar toast baru muncul di atas (jika flex-direction: column)
+            // atau di bawah jika flex-direction: column-reverse (seperti di CSS saat ini)
+
+            // Memicu reflow agar transisi berjalan
+            void toast.offsetWidth;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => {
+                    if (toast.parentElement) toast.remove();
+                }, { once: true });
+            }, duration);
+        }
+
+        // Alert (Modal)
+        let currentAlertCloseHandler = null;
+        /**
+         * Menampilkan modal alert.
+         * @param {string} title - Judul modal.
+         * @param {string} message - Pesan dalam modal (bisa HTML).
+         * @param {Array<{text: string, className?: string, action?: Function}>} buttons - Konfigurasi tombol.
+         */
+        function showAlert(title, message, buttons = [{ text: 'OK', className: 'btn-primary' }]) {
+            appState.focusedElementBeforeModal = document.activeElement; // Simpan elemen yang sedang fokus
+
+            const existingAlert = $('.alert-overlay');
+            if (existingAlert) existingAlert.remove(); // Hapus alert lama jika ada
+
+            const alertTitleId = `alert-title-${Date.now()}`;
+            const alertMessageId = `alert-message-${Date.now()}`;
+
+            const modalHeader = createElement('h2', { id: alertTitleId, className: 'alert-modal-header', textContent: title });
+            const modalBody = createElement('div', { id: alertMessageId, className: 'alert-modal-body', innerHTML: message }); // Hati-hati dengan innerHTML jika message dari user input
+            const modalFooter = createElement('div', { className: 'alert-modal-footer' });
+
+            buttons.forEach((btnConfig, index) => {
+                const button = createElement('button', {
+                    className: `btn ${btnConfig.className || 'btn-secondary'}`,
+                    type: 'button' // Pastikan tipe button untuk mencegah submit form jika ada
+                }, [createElement('span', { textContent: btnConfig.text })]);
+
+                button.addEventListener('click', () => {
+                    if (btnConfig.action) btnConfig.action();
+                    closeAlert();
+                });
+                modalFooter.appendChild(button);
+                if (index === 0 && buttons.length > 1) { // Fokus tombol cancel/sekunder jika ada lebih dari 1 tombol
+                    // button.focus(); // Atau tombol utama, tergantung preferensi UX
+                } else if (index === buttons.length - 1) {
+                    // Fokus tombol utama (seringkali tombol terakhir)
+                    // defer focus until modal is shown
+                }
+            });
+
+            const modal = createElement('div', {
+                className: 'alert-modal',
+                role: 'alertdialog',
+                'aria-modal': 'true',
+                'aria-labelledby': alertTitleId,
+                'aria-describedby': alertMessageId,
+                tabindex: '-1' // Agar modal bisa di-fokus
+            }, [modalHeader, modalBody, modalFooter]);
+
+            const overlay = createElement('div', { className: 'alert-overlay' }, [modal]);
+            document.body.appendChild(overlay);
+            document.body.classList.add('no-scroll');
+
+            void overlay.offsetWidth; // Trigger reflow
+            overlay.classList.add('show');
+
+            // Fokus pada modal atau tombol pertama yang actionable
+            const firstFocusableElement = modalFooter.querySelector('button:not([disabled])') || modal;
+            firstFocusableElement.focus();
+
+            // Trap focus inside modal
+            const focusableElements = $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', modal);
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            currentAlertCloseHandler = (event) => {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeAlert();
+                }
+                if (event.key === 'Tab') {
+                    if (event.shiftKey) { // Shift + Tab
+                        if (document.activeElement === firstFocusable) {
+                            lastFocusable.focus();
+                            event.preventDefault();
+                        }
+                    } else { // Tab
+                        if (document.activeElement === lastFocusable) {
+                            firstFocusable.focus();
+                            event.preventDefault();
+                        }
+                    }
+                }
+            };
+            document.addEventListener('keydown', currentAlertCloseHandler);
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) closeAlert(); // Tutup jika klik di luar modal
+            });
+
+            function closeAlert() {
+                if (!overlay.classList.contains('show')) return; // Mencegah double close
+
+                document.body.classList.remove('no-scroll');
+                overlay.classList.remove('show');
+
+                overlay.addEventListener('transitionend', () => {
+                    if (overlay.parentElement) overlay.remove();
+                    document.removeEventListener('keydown', currentAlertCloseHandler);
+                    currentAlertCloseHandler = null;
+                    if (appState.focusedElementBeforeModal) {
+                        appState.focusedElementBeforeModal.focus(); // Kembalikan fokus
+                        appState.focusedElementBeforeModal = null;
+                    }
+                }, { once: true });
+            }
+            return { close: closeAlert }; // Kembalikan fungsi close jika perlu kontrol eksternal
+        }
+
+        // Flash Message
+        const flashMessageContainer = $('#flash-message-container');
+        /**
+         * Menampilkan pesan flash.
+         * @param {string} message - Pesan yang akan ditampilkan.
+         * @param {'info'|'success'|'warning'|'error'} type - Jenis pesan.
+         * @param {number} duration - Durasi tampilan. 0 untuk manual close.
+         * @param {boolean} dismissible - Apakah bisa ditutup manual.
+         */
+        function showFlashMessage(message, type = 'info', duration = 7000, dismissible = true) {
+            if (!flashMessageContainer) { console.error('DOM Error: #flash-message-container tidak ditemukan.'); return; }
+
+            // Hapus flash message lama (jika hanya ingin satu per satu)
+            // while (flashMessageContainer.firstChild) {
+            //    flashMessageContainer.removeChild(flashMessageContainer.firstChild);
+            // }
+
+            const flashId = `flash-${Date.now()}`;
+            const flashMessageText = createElement('span', { className: 'flash-message-text', textContent: message });
+            const flashMessage = createElement('div', {
+                id: flashId,
+                className: `flash-message ${type}`,
+                role: 'alert'
+            }, [flashMessageText]);
+
+            if (dismissible) {
+                const closeButton = createElement('button', {
+                    className: 'flash-message-close-btn',
+                    innerHTML: '<span>×</span>', // Karakter close
+                    'aria-label': 'Tutup pesan notifikasi',
+                    'aria-controls': flashId
+                });
+                closeButton.addEventListener('click', () => removeFlash(flashMessage, timeoutId), { once: true });
+                flashMessage.appendChild(closeButton);
+            }
+
+            flashMessageContainer.appendChild(flashMessage);
+            void flashMessage.offsetWidth; // Trigger reflow
+            flashMessage.classList.add('show');
+
+            let timeoutId = null;
+            if (duration > 0) {
+                timeoutId = setTimeout(() => removeFlash(flashMessage, timeoutId), duration);
+            }
+
+            function removeFlash(fmElement, tId) {
+                clearTimeout(tId);
+                fmElement.classList.remove('show');
+                fmElement.addEventListener('transitionend', () => {
+                    if (fmElement.parentElement) fmElement.remove();
+                }, { once: true });
+            }
+            return { close: () => removeFlash(flashMessage, timeoutId) };
+        }
+
+        // Off-Canvas Menu
+        const offCanvasOverlay = $('#off-canvas-overlay');
+        const menuToggleButton = $('#menu-toggle-btn');
+        let currentOffCanvasCloseHandler = null;
+        /**
+         * Mengontrol tampilan off-canvas menu.
+         * @param {string} canvasId - ID elemen off-canvas.
+         * @param {boolean} [forceOpen] - Paksa buka/tutup. undefined untuk toggle.
+         */
+        function toggleOffCanvas(canvasId, forceOpen) {
+            const offCanvasPanel = $(`#${canvasId}`);
+            if (!offCanvasPanel || !offCanvasOverlay) {
+                console.error(`DOM Error: Off-canvas panel #${canvasId} atau overlay tidak ditemukan.`);
+                return;
+            }
+
+            const isOpen = offCanvasPanel.classList.contains('open');
+            const open = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
+
+            if (open) {
+                appState.focusedElementBeforeModal = document.activeElement; // Simpan fokus
+                offCanvasPanel.classList.add('open');
+                offCanvasPanel.setAttribute('aria-hidden', 'false');
+                offCanvasOverlay.classList.add('show');
+                document.body.classList.add('no-scroll');
+                menuToggleButton?.setAttribute('aria-expanded', 'true');
+
+                // Fokus pada elemen pertama yang bisa difokus di dalam off-canvas
+                const focusableElements = $$('a[href], button:not([disabled])', offCanvasPanel);
+                if (focusableElements.length > 0) {
+                    focusableElements[0].focus();
+                } else {
+                    offCanvasPanel.focus(); // Fokus ke panel jika tidak ada elemen interaktif
+                }
+
+                // Trap focus
+                const firstFocusable = focusableElements[0] || offCanvasPanel;
+                const lastFocusable = focusableElements[focusableElements.length - 1] || offCanvasPanel;
+
+                currentOffCanvasCloseHandler = (event) => {
+                    if (event.key === 'Escape') {
+                        event.preventDefault();
+                        toggleOffCanvas(canvasId, false);
+                    }
+                    if (event.key === 'Tab') {
+                        if (event.shiftKey) { // Shift + Tab
+                            if (document.activeElement === firstFocusable) {
+                                lastFocusable.focus();
+                                event.preventDefault();
+                            }
+                        } else { // Tab
+                            if (document.activeElement === lastFocusable) {
+                                firstFocusable.focus();
+                                event.preventDefault();
+                            }
+                        }
+                    }
+                };
+                document.addEventListener('keydown', currentOffCanvasCloseHandler);
+                appState.isOffCanvasOpen = true;
+            } else {
+                offCanvasPanel.classList.remove('open');
+                offCanvasPanel.setAttribute('aria-hidden', 'true');
+                offCanvasOverlay.classList.remove('show');
+                document.body.classList.remove('no-scroll');
+                menuToggleButton?.setAttribute('aria-expanded', 'false');
+
+                if (currentOffCanvasCloseHandler) {
+                    document.removeEventListener('keydown', currentOffCanvasCloseHandler);
+                    currentOffCanvasCloseHandler = null;
+                }
+                if (appState.focusedElementBeforeModal) {
+                    appState.focusedElementBeforeModal.focus(); // Kembalikan fokus
+                    appState.focusedElementBeforeModal = null;
+                }
+                appState.isOffCanvasOpen = false;
+            }
+        }
+
+        // --- Templating Komponen Halaman ---
+        /** Membuat elemen kartu untuk halaman beranda. */
         function createCardItemElement(card) {
             const figcaption = createElement('figcaption', {}, [
                 createElement('h3', { textContent: card.title }),
                 createElement('p', { textContent: card.description }),
             ]);
-
             const figure = createElement('figure', {}, [
-                createElement('img', { src: card.imageUrl, alt: card.title, loading: 'lazy' }),
+                createElement('img', { src: card.imageUrl, alt: `Pemandangan ${card.title}`, loading: 'lazy', decoding: 'async' }), // decoding async
                 figcaption
             ]);
-
             const button = createElement('a', {
                 href: card.link,
                 className: 'btn card-action-btn',
-                'data-route': card.link.substring(1) // Simpan route untuk navigasi SPA
-            }, [
-                createElement('span', { textContent: card.linkText || 'Lihat' })
-            ]);
+                'data-route': card.link.substring(1) // Hapus '#' dari link untuk route
+            }, [createElement('span', { textContent: card.linkText || 'Lihat Detail' })]);
 
             const cardContent = createElement('div', { className: 'card-item-content' }, [figure]);
-
-            const cardItem = createElement('section', {
+            return createElement('article', { // Menggunakan <article> untuk semantic content
                 className: 'card-item',
-                id: `card-item-${card.id}`
-            }, [
-                button, // Tombol diletakkan di luar figure agar bisa absolute thd card-item
-                cardContent
-            ]);
-
-            return cardItem;
+                id: `card-item-${card.id}`,
+                'aria-labelledby': `card-title-${card.id}` // Untuk aksesibilitas jika judul H3 di figcaption punya ID ini
+            }, [button, cardContent]); // Tombol di luar figure agar tidak tertutup overlay gradien jika pointer-events tidak diatur
         }
 
-        // Fungsi untuk membuat halaman "Tentang"
+        /** Membuat konten untuk halaman "Tentang". */
         function createAboutPageElement() {
-            return createElement('div', { className: 'page-content container' }, [
-                createElement('h2', { textContent: 'Tentang Aplikasi Galeri Kartu Interaktif' }),
-                createElement('p', { textContent: 'Aplikasi ini adalah contoh implementasi efek kartu tumpang tindih (scroll-overlap cards) menggunakan HTML, CSS, dan JavaScript murni (vanilla). Ini dibangun sebagai Single Page Application (SPA) monolitik tanpa menggunakan framework atau library eksternal.' }),
-                createElement('p', { textContent: 'Fitur Utama:' }),
-                createElement('ul', {}, [
-                    createElement('li', { textContent: 'Efek scroll tumpang tindih yang menarik secara visual.' }),
-                    createElement('li', { textContent: 'Navigasi SPA menggunakan hash routes.' }),
-                    createElement('li', { textContent: 'Desain responsif untuk berbagai ukuran layar.' }),
-                    createElement('li', { textContent: 'Kode yang bersih, terstruktur, dan mengikuti best practices.' }),
-                    createElement('li', { textContent: 'Pemuatan gambar secara lazy untuk optimasi performa.' }),
-                    createElement('li', { textContent: 'Tombol dengan efek interaktif.' })
+            return createElement('section', { className: 'page-content container', 'aria-labelledby': 'about-page-title' }, [
+                createElement('h1', { id: 'about-page-title', textContent: 'Tentang Aplikasi Galeri Kartu Interaktif Pro' }),
+                createElement('p', { textContent: 'Selamat datang di Galeri Kartu Interaktif Pro! Aplikasi ini adalah demonstrasi canggih dari efek kartu tumpang tindih (sticky cards) yang dibangun sepenuhnya menggunakan HTML, CSS, dan JavaScript murni (vanilla JS). Dirancang sebagai Single Page Application (SPA) monolitik yang modern dan responsif.' }),
+                createElement('p', { textContent: 'Fitur Unggulan: Navigasi SPA yang mulus, animasi halus, komponen UI interaktif seperti Toast, Alert kustom, Flash Message, dan Off-Canvas Menu yang aksesibel. Desain visual dirancang agar "fancy", memanjakan mata, dan mengikuti praktik terbaik UI/UX terkini.' }),
+                createElement('h2', { textContent: 'Teknologi & Prinsip' }),
+                createElement('ul', { style: 'list-style-position: inside; margin-bottom: var(--spacing-unit); padding-left: var(--spacing-unit); color: var(--text-color-muted);' }, [
+                    createElement('li', { textContent: 'Vanilla JavaScript (ES6+): Tanpa framework atau library eksternal untuk logika inti.' }),
+                    createElement('li', { textContent: 'CSS3 Modern: Memanfaatkan Flexbox, Grid, variabel CSS, dan transisi untuk layout dan animasi.' }),
+                    createElement('li', { textContent: 'HTML5 Semantik: Struktur dokumen yang jelas dan bermakna.' }),
+                    createElement('li', { textContent: 'Responsif & Adaptif: Tampilan optimal di semua perangkat, dari desktop hingga mobile.' }),
+                    createElement('li', { textContent: 'Aksesibilitas (A11Y): Perhatian pada standar WCAG, penggunaan ARIA attributes, dan navigasi keyboard.' }),
+                    createElement('li', { textContent: 'Performa: Optimasi aset, lazy loading gambar, dan kode yang efisien.' })
                 ]),
-                createElement('p', { textContent: 'Tujuan dari proyek ini adalah untuk mendemonstrasikan kemampuan membangun aplikasi web yang interaktif dan modern hanya dengan teknologi web dasar.' })
+                createElement('button', { className: 'btn btn-secondary', id: 'trigger-sample-alert', type: 'button' }, [createElement('span', { textContent: 'Tampilkan Alert Interaktif' })])
             ]);
         }
 
-        // Fungsi untuk membuat halaman detail kartu (placeholder)
+        /** Membuat konten untuk halaman detail kartu. */
         function createDetailPageElement(cardId) {
-            const card = state.cardData.find(c => c.id === cardId);
-            if (!card) {
-                return createNotFoundPageElement(`Detail untuk kartu dengan ID "${cardId}" tidak ditemukan.`);
-            }
+            const card = appState.cardData.find(c => c.id === cardId);
+            if (!card) return createNotFoundPageElement(`Detail untuk kartu dengan ID "${cardId}" tidak dapat ditemukan.`);
 
-            return createElement('div', { className: 'page-content container' }, [
-                createElement('h2', { textContent: `Detail untuk: ${card.title}` }),
-                createElement('img', { src: card.imageUrl, alt: card.title, style: 'max-width: 100%; height: auto; border-radius: var(--border-radius); margin-bottom: 1rem;' }),
+            const pageTitleId = `detail-page-title-${card.id}`;
+            return createElement('article', { className: 'page-content container', 'aria-labelledby': pageTitleId }, [
+                createElement('h1', { id: pageTitleId, textContent: `Detail: ${card.title}` }),
+                createElement('img', { className: 'detail-page-image', src: card.imageUrl, alt: `Gambar besar ${card.title}`, loading: 'lazy' }),
                 createElement('p', { textContent: card.description }),
-                createElement('p', { textContent: 'Ini adalah halaman detail untuk kartu yang Anda pilih. Konten lebih lanjut dapat ditambahkan di sini.' }),
-                createElement('a', { href: '#/', className: 'btn', 'data-route': '/' }, [
-                    createElement('span', { textContent: 'Kembali ke Beranda' })
+                createElement('p', { textContent: 'Ini adalah halaman detail. Di aplikasi nyata, bagian ini akan berisi informasi lebih lengkap, galeri foto tambahan, peta, atau fitur interaktif lainnya yang relevan dengan konten kartu.' }),
+                createElement('div', { style: 'margin-top: calc(var(--spacing-unit)*2);' }, [
+                    createElement('a', { href: '#/', className: 'btn btn-outline-primary', 'data-route': '/' }, [createElement('span', { textContent: 'Kembali ke Beranda' })])
                 ])
             ]);
         }
 
-        // Fungsi untuk membuat halaman "Tidak Ditemukan" (404)
-        function createNotFoundPageElement(message = 'Halaman yang Anda cari tidak ditemukan.') {
-            return createElement('div', { className: 'page-content container text-center' }, [
-                createElement('h2', { textContent: 'Oops! (404)' }),
-                createElement('p', { textContent: message }),
-                createElement('a', { href: '#/', className: 'btn', 'data-route': '/' }, [
-                    createElement('span', { textContent: 'Kembali ke Beranda' })
-                ])
+        /** Membuat konten untuk halaman "Pengaturan". */
+        function createSettingsPageElement() {
+            const pageTitleId = `settings-page-title`;
+            return createElement('section', { className: 'page-content container', 'aria-labelledby': pageTitleId }, [
+                createElement('h1', { id: pageTitleId, textContent: 'Pengaturan Aplikasi' }),
+                createElement('p', { textContent: 'Sesuaikan preferensi aplikasi Anda di sini. Perubahan yang Anda buat akan disimpan secara lokal (fitur ini adalah contoh dan belum menyimpan state permanen).' }),
+
+                createElement('div', { className: 'setting-item', style: 'margin-bottom: var(--spacing-unit);' }, [
+                    createElement('label', { htmlFor: 'theme-select', textContent: 'Pilih Tema Aplikasi: ', style: 'margin-right: 0.5rem; font-weight: 500;' }),
+                    createElement('select', { id: 'theme-select', name: 'theme', style: 'padding: 0.5rem; border-radius: var(--border-radius); border: 1px solid var(--border-color); min-width: 150px;' }, [
+                        createElement('option', { value: 'light', textContent: 'Mode Terang (Default)' }),
+                        createElement('option', { value: 'dark', textContent: 'Mode Gelap (Segera Hadir)' }),
+                    ])
+                ]),
+                createElement('div', { className: 'setting-item', style: 'margin-bottom: var(--spacing-unit);' }, [
+                    createElement('label', { htmlFor: 'notif-toggle', textContent: 'Notifikasi Email: ', style: 'margin-right: 0.5rem; font-weight: 500;' }),
+                    createElement('input', { type: 'checkbox', id: 'notif-toggle', name: 'notifications', checked: true, style: 'transform: scale(1.2); margin-right: 0.3rem;' }),
+                    createElement('span', { textContent: 'Aktifkan' })
+                ]),
+                createElement('button', { className: 'btn btn-primary', type: 'button', onclick: () => showToast('Pengaturan disimpan (simulasi)!', 'success') }, [createElement('span', { textContent: 'Simpan Pengaturan' })]),
+            ]);
+        }
+
+        /** Membuat konten untuk halaman 404 Not Found. */
+        function createNotFoundPageElement(message = 'Maaf, halaman yang Anda cari tidak dapat ditemukan di server kami.') {
+            const pageTitleId = `notfound-page-title`;
+            return createElement('section', { className: 'page-content container text-center', 'aria-labelledby': pageTitleId }, [
+                createElement('h1', { id: pageTitleId, textContent: 'Oops! Halaman Tidak Ditemukan (404)' }),
+                createElement('p', { style: 'font-size: 1.2rem; color: var(--text-color-muted);', textContent: message }),
+                createElement('p', { textContent: 'Mungkin URL yang Anda masukkan salah atau halaman tersebut telah dipindahkan.' }),
+                createElement('a', { href: '#/', className: 'btn btn-primary', 'data-route': '/', style: 'margin-top: var(--spacing-unit);' }, [createElement('span', { textContent: 'Kembali ke Halaman Utama' })])
             ]);
         }
 
 
         // --- Logika Rendering Halaman ---
         const appMain = $('#app-main');
+        /**
+         * Merender konten halaman utama.
+         * @param {Function} pageElementFactory - Fungsi yang mengembalikan elemen halaman.
+         * @param  {...any} args - Argumen untuk factory function.
+         */
+        function renderPageContent(pageElementFactory, ...args) {
+            // Hapus konten lama kecuali flash message container
+            // Array.from(appMain.children).forEach(child => {
+            //    if (child.id !== 'flash-message-container') child.remove();
+            // });
+            // Cara lebih aman:
+            const flashContainer = $('#flash-message-container');
+            appMain.innerHTML = ''; // Kosongkan main
+            if (flashContainer) appMain.appendChild(flashContainer); // Tambahkan kembali flash container
 
+            try {
+                const pageElement = pageElementFactory(...args);
+                appMain.appendChild(pageElement);
+            } catch (error) {
+                console.error("Error saat merender halaman:", error);
+                appMain.appendChild(createNotFoundPageElement("Terjadi kesalahan saat memuat halaman ini."));
+            }
+
+            // Pastikan scrollbar kembali normal jika halaman sebelumnya menyembunyikannya
+            // (meskipun body.no-scroll seharusnya sudah dihandle oleh modal/offcanvas)
+            if (!document.body.classList.contains('no-scroll')) {
+                document.body.style.overflowY = 'auto';
+            }
+        }
+
+        /** Merender halaman beranda dengan tumpukan kartu. */
         function renderHomePage() {
-            appMain.innerHTML = ''; // Bersihkan konten sebelumnya
+            const flashContainer = $('#flash-message-container');
+            appMain.innerHTML = '';
+            if (flashContainer) appMain.appendChild(flashContainer);
+
             const cardStackContainer = createElement('div', { className: 'card-stack-container' });
-
-            state.cardData.forEach((cardInfo, index) => {
-                const cardElement = createCardItemElement(cardInfo);
-                // Atur z-index secara eksplisit jika diperlukan, meskipun CSS nth-child sudah menangani
-                // cardElement.style.zIndex = index + 1; // Semakin besar index, semakin atas
-                cardStackContainer.appendChild(cardElement);
-            });
+            if (appState.cardData && appState.cardData.length > 0) {
+                appState.cardData.forEach(cardInfo => cardStackContainer.appendChild(createCardItemElement(cardInfo)));
+            } else {
+                cardStackContainer.appendChild(createElement('p', { textContent: 'Tidak ada kartu untuk ditampilkan saat ini.', style: 'text-align:center; padding: 2rem;' }));
+            }
             appMain.appendChild(cardStackContainer);
-            // Pastikan body bisa di-scroll jika kontennya adalah card stack
-            document.body.style.overflowY = 'auto';
+            document.body.style.overflowY = 'auto'; // Halaman beranda biasanya bisa di-scroll
         }
 
-        function renderAboutPage() {
-            appMain.innerHTML = '';
-            appMain.appendChild(createAboutPageElement());
-            document.body.style.overflowY = 'auto'; // Atau 'hidden' jika halaman pendek
-        }
-
-        function renderDetailPage(cardId) {
-            appMain.innerHTML = '';
-            appMain.appendChild(createDetailPageElement(cardId));
-            document.body.style.overflowY = 'auto';
-        }
-
-        function renderNotFoundPage() {
-            appMain.innerHTML = '';
-            appMain.appendChild(createNotFoundPageElement());
-            document.body.style.overflowY = 'auto';
-        }
-
-        // --- Router Sederhana ---
+        // --- Router Sederhana Berbasis Hash ---
+        /** Fungsi router utama untuk menangani perubahan hash URL. */
         function router() {
-            const path = window.location.hash.slice(1) || '/'; // Dapatkan path dari hash, default ke '/'
-            state.currentPage = path;
+            const path = window.location.hash.slice(1) || '/'; // Ambil path dari hash, default ke '/'
+            appState.currentPage = path;
 
-            // Sembunyikan semua konten dulu (opsional, tergantung strategi render)
-            // appMain.innerHTML = ''; 
+            // Opsi: Sembunyikan flash message saat navigasi
+            // const currentFlash = $('#flash-message-container .flash-message');
+            // if (currentFlash) currentFlash.remove();
+            let pageTitle = "Galeri Kartu Interaktif Pro"; // Default title
 
             if (path === '/') {
                 renderHomePage();
+                pageTitle = "Beranda - Galeri Pro";
             } else if (path === '/tentang') {
-                renderAboutPage();
+                renderPageContent(createAboutPageElement);
+                pageTitle = "Tentang Aplikasi - Galeri Pro";
             } else if (path.startsWith('/detail/')) {
                 const cardId = path.substring('/detail/'.length);
-                renderDetailPage(cardId);
+                renderPageContent(createDetailPageElement, cardId);
+                const card = appState.cardData.find(c => c.id === cardId);
+                pageTitle = card ? `Detail: ${card.title} - Galeri Pro` : "Detail Tidak Ditemukan - Galeri Pro";
+            } else if (path === '/pengaturan') {
+                renderPageContent(createSettingsPageElement);
+                pageTitle = "Pengaturan - Galeri Pro";
+            } else {
+                renderPageContent(createNotFoundPageElement);
+                pageTitle = "Halaman Tidak Ditemukan - Galeri Pro";
             }
-            else {
-                renderNotFoundPage();
-            }
+
+            document.title = pageTitle; // Update judul tab browser
             updateActiveNavLink();
-            window.scrollTo(0, 0); // Scroll ke atas setiap pindah halaman
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke atas halaman dengan halus
         }
 
         // --- Manajemen Navigasi & State UI ---
+        /** Memperbarui status aktif pada link navigasi. */
         function updateActiveNavLink() {
-            const navLinks = $$('#app-nav .nav-link');
+            const navLinks = $$('#app-nav .nav-link, .off-canvas-body .nav-link');
             navLinks.forEach(link => {
-                if (link.getAttribute('data-route') === state.currentPage ||
-                    (state.currentPage.startsWith('/detail/') && link.getAttribute('data-route').startsWith('/detail/'))) { // Handle active state for detail pages
-                    link.classList.add('active');
+                const route = link.getAttribute('data-route');
+                // Logika pencocokan route yang lebih baik:
+                // Cocok jika route sama persis ATAU jika halaman saat ini adalah sub-halaman dari route tersebut (misal /detail/* untuk link /detail)
+                // Namun, untuk kasus ini, pencocokan persis lebih sering diinginkan kecuali untuk root '/'.
+                let isActive = false;
+                if (route === '/') {
+                    isActive = appState.currentPage === '/';
                 } else {
-                    link.classList.remove('active');
+                    isActive = appState.currentPage === route || (appState.currentPage.startsWith(route + '/') && route !== '/');
                 }
+                link.classList.toggle('active', isActive);
+                link.setAttribute('aria-current', isActive ? 'page' : 'false');
             });
         }
 
+        /** Memperbarui tahun di footer. */
         function updateCurrentYear() {
             const yearSpan = $('#current-year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
         }
 
-        // --- Event Listeners ---
-        window.addEventListener('DOMContentLoaded', () => {
-            // Inisialisasi aplikasi
-            router(); // Render halaman awal berdasarkan hash
+        // --- Inisialisasi Aplikasi & Event Listeners ---
+        /** Fungsi utama untuk inisialisasi aplikasi. */
+        function initializeApp() {
+            router(); // Panggil router untuk memuat halaman awal
             updateCurrentYear();
 
-            // Delegasi event untuk link navigasi dan tombol di dalam kartu
+            // Event listener untuk tombol tes komponen UI
+            $('#show-toast-btn')?.addEventListener('click', () => {
+                showToast('Ini pesan toast sukses!', 'success');
+                setTimeout(() => showToast('Ini info toast biasa.', 'info', 4000), 700);
+                setTimeout(() => showToast('Peringatan! Ada sesuatu yang perlu dicek.', 'warning', 5000), 1400);
+                setTimeout(() => showToast('Error! Terjadi kesalahan sistem.', 'error', 6000), 2100);
+            });
+
+            $('#show-alert-btn')?.addEventListener('click', () => showAlert(
+                'Konfirmasi Tindakan Kritis',
+                'Anda akan melakukan tindakan yang berpotensi mengubah data secara signifikan. Apakah Anda benar-benar yakin ingin melanjutkan? <strong>Tindakan ini tidak dapat dibatalkan.</strong>',
+                [
+                    { text: 'Batal', className: 'btn-secondary', action: () => showToast('Tindakan dibatalkan oleh pengguna.', 'info') },
+                    { text: 'Ya, Lanjutkan', className: 'btn-danger', action: () => showToast('Tindakan berhasil dilakukan (simulasi)!', 'success') }
+                ]
+            ));
+
+            $('#show-flash-btn')?.addEventListener('click', () => showFlashMessage('Pemberitahuan Penting: Sistem akan melakukan maintenance terjadwal malam ini pukul 23:00.', 'warning', 10000, true));
+
+            // Event listener untuk tombol toggle Off-Canvas Menu
+            menuToggleButton?.addEventListener('click', () => toggleOffCanvas('main-off-canvas'));
+
+            // Delegasi event listener pada body untuk menangani:
+            // 1. Klik pada link SPA (dengan atribut data-route)
+            // 2. Klik pada elemen penutup Off-Canvas (dengan atribut data-close-offcanvas)
+            // 3. Klik pada tombol lain yang mungkin ada di konten dinamis
             document.body.addEventListener('click', (event) => {
-                const targetLink = event.target.closest('a[data-route]');
-                if (targetLink) {
-                    event.preventDefault(); // Mencegah navigasi default browser
-                    const newRoute = targetLink.getAttribute('data-route');
-                    if (window.location.hash.slice(1) !== newRoute) {
-                        window.location.hash = newRoute; // Mengubah hash akan memicu 'hashchange'
-                    } else {
-                        // Jika route sama, panggil router secara manual untuk re-render jika diperlukan (misalnya, data berubah)
-                        // Untuk kasus ini, biasanya tidak perlu jika hanya pindah ke route yang sama
-                        router();
+                const target = event.target;
+                const targetLink = target.closest('a[data-route]');
+                const offCanvasCloseTarget = target.closest('[data-close-offcanvas]');
+
+                // Handle Off-Canvas Close actions
+                if (offCanvasCloseTarget) {
+                    const canvasIdToClose = offCanvasCloseTarget.getAttribute('data-close-offcanvas') || (offCanvasCloseTarget.id === 'off-canvas-overlay' ? 'main-off-canvas' : null);
+                    if (canvasIdToClose) {
+                        event.preventDefault(); // Mencegah perilaku default jika link adalah penutup
+                        toggleOffCanvas(canvasIdToClose, false); // Paksa tutup
                     }
                 }
+
+                // Handle SPA Navigation links
+                if (targetLink && !offCanvasCloseTarget) { // Pastikan bukan link yang juga menutup off-canvas (sudah dihandle di atas)
+                    event.preventDefault(); // Mencegah full page reload
+                    const newRoute = targetLink.getAttribute('data-route');
+                    if ((window.location.hash.slice(1) || '/') !== newRoute) {
+                        window.location.hash = newRoute; // Ini akan memicu event 'hashchange'
+                    } else {
+                        // Jika route sama, mungkin perlu re-render atau scroll ke atas
+                        router(); // Panggil router untuk memastikan konsistensi (misal, jika ada state internal halaman)
+                    }
+                }
+
+                // Handle tombol contoh di halaman "Tentang"
+                if (target.id === 'trigger-sample-alert' || target.closest('#trigger-sample-alert')) {
+                    showAlert(
+                        'Alert dari Halaman Dinamis',
+                        'Ini adalah contoh modal alert yang dipicu dari tombol yang dirender secara dinamis di dalam konten halaman "Tentang". Ini menunjukkan bahwa event delegation bekerja dengan baik!',
+                        [{ text: 'Luar Biasa!', className: 'btn-primary' }]
+                    );
+                }
             });
-        });
 
-        window.addEventListener('hashchange', router); // Panggil router setiap kali hash URL berubah
+            // Listener untuk perubahan hash URL (navigasi SPA)
+            window.addEventListener('hashchange', router);
 
-        // --- Inisialisasi Skrip Efek Tambahan (jika ada) ---
-        // (Untuk saat ini, efek scroll sudah ditangani oleh CSS `position: sticky`)
+            console.info('Aplikasi Galeri Kartu Interaktif Pro berhasil dimuat dan diinisialisasi.');
+            showFlashMessage('Selamat datang di Galeri Kartu Interaktif Pro!', 'info', 5000);
+        }
 
-        console.log('Aplikasi Galeri Kartu Interaktif SPA telah dimuat.');
+        // Jalankan inisialisasi setelah DOM sepenuhnya dimuat
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp(); // DOM sudah siap
+        }
+
     </script>
 </body>
 

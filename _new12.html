@@ -1,0 +1,3713 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Platform penyewaan apartemen dengan pencarian canggih, pembayaran aman, dan manajemen booking efisien">
+    <meta name="keywords" content="penyewaan apartemen, manajemen properti, sistem sewa">
+    <meta name="author" content="Green Valley">
+    <title>Green Valley - Penyewaan Apartemen</title>
+    <!-- Mengganti favicon SVG dengan data URI PNG sederhana (huruf G) untuk menghindari SVG -->
+    <link rel="icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHBJREFUOE9jZCAD/M9ABMD//PzJyMDw/wuG//8ZGBjYgBFGDKgAZGCQ/w8DA8NPDAwMnxgaGBjAASPD+H8MDAygBlQAMjAwyMWgyXABYkYMTgXYwKCUAwMMgGRgUBo0oP8ZDINhmAAYAPUnAwMDEFh47cCeKO0AAAAASUVORK5CYII=">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ======= DESIGN TOKENS ======= */
+        :root {
+            /* Colors */
+            --color-primary: hsl(210, 90%, 45%);
+            --color-primary-light: hsl(210, 90%, 55%);
+            --color-primary-dark: hsl(210, 90%, 35%);
+            --color-accent: hsl(25, 95%, 55%);
+            --color-success: hsl(142, 76%, 42%);
+            --color-danger: hsl(0, 84%, 55%);
+            --color-warning: hsl(36, 100%, 45%);
+            --color-bg: hsl(210, 20%, 98%);
+            --color-surface: hsl(0, 0%, 100%);
+            --color-surface-hover: hsl(210, 15%, 97%);
+            --color-border: hsl(210, 16%, 88%);
+            --color-muted: hsl(210, 12%, 55%);
+            --color-foreground: hsl(210, 25%, 15%);
+            --color-white: hsl(0, 0%, 100%);
+
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+
+            /* Typography */
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-md: 1.125rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 1.75rem;
+            --font-size-3xl: 2rem;
+            --line-height-normal: 1.6;
+
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 1rem;
+            --space-4: 1.5rem;
+            --space-5: 2rem;
+            --space-6: 3rem;
+
+            /* Border radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 400ms ease;
+
+            /* Heights */
+            --navbar-height: 60px;
+        }
+
+        /* ======= BASE STYLES ======= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        html {
+            font-size: 16px;
+            font-family: var(--font-family);
+            background: var(--color-bg);
+            color: var(--color-foreground);
+            line-height: var(--line-height-normal);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        a:hover {
+            color: var(--color-primary-light);
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+            font-size: inherit;
+            background: none;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* ======= UTILITY CLASSES ======= */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-3);
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .justify-end {
+            justify-content: flex-end;
+        }
+
+        .flex-grow {
+            flex-grow: 1;
+        }
+
+        .gap-1 {
+            gap: var(--space-1);
+        }
+
+        .gap-2 {
+            gap: var(--space-2);
+        }
+
+        .gap-3 {
+            gap: var(--space-3);
+        }
+
+        .gap-4 {
+            gap: var(--space-4);
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .p-1 {
+            padding: var(--space-1);
+        }
+
+        .p-2 {
+            padding: var(--space-2);
+        }
+
+        .p-3 {
+            padding: var(--space-3);
+        }
+
+        .p-4 {
+            padding: var(--space-4);
+        }
+
+        .py-2 {
+            padding-top: var(--space-2);
+            padding-bottom: var(--space-2);
+        }
+
+        .py-3 {
+            padding-top: var(--space-3);
+            padding-bottom: var(--space-3);
+        }
+
+        .py-4 {
+            padding-top: var(--space-4);
+            padding-bottom: var(--space-4);
+        }
+
+        .py-6 {
+            padding-top: var(--space-6);
+            padding-bottom: var(--space-6);
+        }
+
+        .px-3 {
+            padding-left: var(--space-3);
+            padding-right: var(--space-3);
+        }
+
+        .mb-1 {
+            margin-bottom: var(--space-1);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--space-2);
+        }
+
+        .mb-3 {
+            margin-bottom: var(--space-3);
+        }
+
+        .mb-4 {
+            margin-bottom: var(--space-4);
+        }
+
+        .mb-6 {
+            margin-bottom: var(--space-6);
+        }
+
+        .mt-2 {
+            margin-top: var(--space-2);
+        }
+
+        .mt-3 {
+            margin-top: var(--space-3);
+        }
+
+        .mt-4 {
+            margin-top: var(--space-4);
+        }
+
+        .mt-6 {
+            margin-top: var(--space-6);
+        }
+
+        .pl-4 {
+            padding-left: var(--space-4);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: var(--color-muted);
+        }
+
+        .text-primary {
+            color: var(--color-primary);
+        }
+
+        .text-success {
+            color: var(--color-success);
+        }
+
+        .text-danger {
+            color: var(--color-danger);
+        }
+
+        .text-warning {
+            color: var(--color-warning);
+        }
+
+        .text-white {
+            color: var(--color-white);
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .text-xs {
+            font-size: var(--font-size-xs);
+        }
+
+        .text-sm {
+            font-size: var(--font-size-sm);
+        }
+
+        .text-base {
+            font-size: var(--font-size-base);
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .text-xl {
+            font-size: var(--font-size-xl);
+        }
+
+        .text-2xl {
+            font-size: var(--font-size-2xl);
+        }
+
+        .text-3xl {
+            font-size: var(--font-size-3xl);
+        }
+
+        .text-4xl {
+            font-size: 2.25rem;
+        }
+
+        .rounded {
+            border-radius: var(--radius-md);
+        }
+
+        .rounded-sm {
+            border-radius: var(--radius-sm);
+        }
+
+        .rounded-lg {
+            border-radius: var(--radius-lg);
+        }
+
+        .rounded-xl {
+            border-radius: var(--radius-xl);
+        }
+
+        .rounded-full {
+            border-radius: 9999px;
+        }
+
+        .shadow {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .shadow-md {
+            box-shadow: var(--shadow-md);
+        }
+
+        .shadow-lg {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bg-surface {
+            background-color: var(--color-surface);
+        }
+
+        .bg-surface-hover {
+            background-color: var(--color-surface-hover);
+        }
+
+        .bg-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .bg-success {
+            background-color: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .bg-danger {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+        }
+
+        .bg-warning {
+            background-color: var(--color-warning);
+            color: var(--color-foreground);
+        }
+
+        .bg-muted {
+            background-color: var(--color-muted);
+            color: var(--color-white);
+        }
+
+        .border {
+            border: 1px solid var(--color-border);
+        }
+
+        .border-t {
+            border-top: 1px solid var(--color-border);
+        }
+
+        .border-b {
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .transition {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: var(--transition-normal);
+        }
+
+        .hover\:bg-surface-hover:hover {
+            background-color: var(--color-surface-hover);
+        }
+
+        .sticky-sidebar {
+            position: sticky;
+            top: calc(var(--navbar-height) + var(--space-3));
+            align-self: flex-start;
+        }
+
+        /* Grid Layout Utilities */
+        .hero-search-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .property-grid-layout {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .property-grid-layout-search {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .gallery-grid-layout {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .amenities-grid-layout {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        .footer-grid-layout {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* ======= COMPONENTS ======= */
+        /* Navigation */
+        .navbar {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--navbar-height);
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 var(--space-3);
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--space-3);
+        }
+
+        .nav-link {
+            padding: var(--space-2);
+            font-weight: 500;
+            color: var(--color-foreground);
+            position: relative;
+            transition: color var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--color-primary);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 2px;
+            background: var(--color-primary);
+            border-radius: 2px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-badge::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: var(--color-danger);
+            color: var(--color-white);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast) 0s linear var(--transition-fast);
+        }
+
+        .notification-badge[data-count]:not([data-count="0"])::after {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+            transition-delay: 0s;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            color: var(--color-foreground);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-light);
+            border-color: var(--color-primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-foreground);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--color-primary);
+            background-color: hsla(210, 90%, 45%, 0.05);
+            color: var(--color-primary);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: var(--color-white);
+            border-color: var(--color-success);
+        }
+
+        .btn-success:hover {
+            background: hsl(142, 76%, 50%);
+            border-color: hsl(142, 76%, 50%);
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: var(--color-white);
+            border-color: var(--color-danger);
+        }
+
+        .btn-danger:hover {
+            background: hsl(0, 84%, 60%);
+            border-color: hsl(0, 84%, 60%);
+        }
+
+        .btn-sm {
+            padding: var(--space-1) var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .btn-lg {
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-lg);
+        }
+
+        .btn-icon {
+            padding: var(--space-2);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-icon.btn-outline:hover {
+            background-color: var(--color-surface-hover);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-body {
+            padding: var(--space-3);
+        }
+
+        .card-footer {
+            padding: var(--space-3);
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Property Card Specifics */
+        .property-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card .card-body {
+            flex-grow: 1;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: var(--space-2);
+            left: var(--space-2);
+            background: var(--color-surface);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .property-card .relative {
+            position: relative;
+        }
+
+        .property-card .wishlist-btn {
+            position: absolute;
+            top: var(--space-2);
+            right: var(--space-2);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-muted);
+            transition: color var(--transition-fast), transform var(--transition-fast);
+            z-index: 10;
+        }
+
+        .property-card .wishlist-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .property-card .wishlist-btn.active {
+            color: var(--color-danger);
+        }
+
+        .property-price {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            color: var(--color-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            color: var(--color-warning);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: var(--space-3);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-1);
+            font-weight: 500;
+            color: var(--color-foreground);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            color: var(--color-foreground);
+        }
+
+        .form-control:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px hsla(210, 90%, 45%, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: var(--color-muted);
+            opacity: 1;
+        }
+
+        /* Ganti panah SVG select dengan ikon Font Awesome */
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: none;
+            padding-right: var(--space-6);
+            /* Ruang untuk ikon kustom */
+            position: relative;
+        }
+
+        .form-select::after {
+            content: '\f078';
+            /* Font Awesome chevron-down */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--color-muted);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            cursor: pointer;
+            color: var(--color-foreground);
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            appearance: none;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background-color var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .checkbox-input:checked {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .checkbox-input:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--color-white);
+            font-size: var(--font-size-sm);
+            font-weight: bold;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--color-border);
+            border-radius: 3px;
+            outline: none;
+            margin: var(--space-2) 0;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform var(--transition-fast);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: transform var(--transition-fast);
+        }
+
+        .range-slider:hover::-webkit-slider-thumb,
+        .range-slider:hover::-moz-range-thumb {
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-normal), visibility var(--transition-normal) 0s linear var(--transition-normal);
+            padding: var(--space-3);
+        }
+
+        .modal.modal-open {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95) translateY(20px);
+            transition: transform var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal.modal-open .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-body {
+            padding: var(--space-3);
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .modal-footer {
+            padding: var(--space-3);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-2);
+            flex-shrink: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-lg);
+            cursor: pointer;
+            color: var(--color-muted);
+            padding: var(--space-1);
+        }
+
+        .modal-close:hover {
+            color: var(--color-foreground);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--space-3);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: var(--space-2) var(--space-3);
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            color: var(--color-muted);
+            transition: color var(--transition-fast);
+        }
+
+        .tab:hover {
+            color: var(--color-foreground);
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn var(--transition-normal);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Alerts */
+        .alert {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background: hsla(142, 76%, 42%, 0.1);
+            color: var(--color-success);
+            border-color: hsla(142, 76%, 42%, 0.3);
+        }
+
+        .alert-danger {
+            background: hsla(0, 84%, 55%, 0.1);
+            color: var(--color-danger);
+            border-color: hsla(0, 84%, 55%, 0.3);
+        }
+
+        .alert-warning {
+            background: hsla(36, 100%, 45%, 0.1);
+            color: var(--color-warning);
+            border-color: hsla(36, 100%, 45%, 0.3);
+        }
+
+        .alert i {
+            font-size: var(--font-size-lg);
+        }
+
+        /* Reviews */
+        .review {
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-1);
+        }
+
+        .review-author {
+            font-weight: 500;
+        }
+
+        .review-date {
+            color: var(--color-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .review-rating {
+            color: var(--color-warning);
+            margin-bottom: var(--space-1);
+        }
+
+        .review-body {
+            margin-top: var(--space-2);
+            color: var(--color-foreground);
+            line-height: var(--line-height-normal);
+        }
+
+        /* Chat */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background-color: var(--color-surface);
+        }
+
+        .chat-header {
+            padding: var(--space-2) var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+            background: var(--color-surface-hover);
+            flex-shrink: 0;
+        }
+
+        .chat-header .user-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: var(--font-size-xs);
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: var(--space-3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-lg);
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .chat-message.sent {
+            align-self: flex-end;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-bottom-right-radius: var(--radius-sm);
+        }
+
+        .chat-message.received {
+            align-self: flex-start;
+            background: var(--color-surface-hover);
+            border: 1px solid var(--color-border);
+            border-bottom-left-radius: var(--radius-sm);
+        }
+
+        .chat-meta {
+            display: block;
+            font-size: var(--font-size-xs);
+            margin-top: var(--space-1);
+            opacity: 0.8;
+        }
+
+        .chat-message.sent .chat-meta {
+            text-align: right;
+            color: hsla(0, 0%, 100%, 0.7);
+        }
+
+        .chat-message.received .chat-meta {
+            text-align: left;
+            color: var(--color-muted);
+        }
+
+        .chat-input-container {
+            padding: var(--space-2);
+            border-top: 1px solid var(--color-border);
+            background: var(--color-surface-hover);
+            flex-shrink: 0;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            resize: none;
+        }
+
+        .chat-input-container .btn {
+            height: 40px;
+        }
+
+        /* Booking Timeline */
+        .timeline {
+            position: relative;
+            padding-left: var(--space-4);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: var(--space-1);
+            bottom: var(--space-1);
+            left: 7px;
+            /* Adjusted to align with dot center (16px dot / 2 - 1px half-width = 7px) */
+            width: 2px;
+            background: var(--color-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-3);
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -15px;
+            /* -(dot_width/2 - line_width/2 + border_width) = -(8 - 1 + 2) incorrect, should be left of line*/
+            /* Recalculate left for timeline-dot: timeline padding-left is var(--space-4)=1rem=16px. Line is at 7px from left edge of timeline. Dot is 16px wide.
+            To center dot on line: left: 7px (line pos) - 8px (half dot width) = -1px. Let's try.
+            If line is at 7px in padding area, and dot is 16px, then to center it ON the line:
+            its left edge should be 7px - 16px/2 = -1px.
+            The padding-left: var(--space-4) on .timeline gives space for the dot.
+            Let's adjust left value: -( (width/2) - (lineWidth/2) ) */
+            left: calc((var(--space-4) * -1) + 7px);
+            /* This should put it on the line */
+            left: -8px;
+            /* Simpler: centered on left edge of timeline content area after padding */
+
+            top: var(--space-1);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 2px solid var(--color-surface);
+            /* Adjusting based on visual: left: 0 positions it to the left of the content, inside the padding.
+            Want it over the line. Line is at 7px in the padding. Dot is 16px.
+            Left edge of dot to be 7 - (16/2) = -1px relative to timeline's left edge if no padding.
+            With padding-left: 16px, dot's left: 16px (padding) - 1px - 16px = -1px from outer container edge.
+            Let's simplify: dot's center should be at `7px` from the left edge of the `.timeline` container.
+            So, dot's left edge is `7px - (16px / 2) = -1px`.
+            This means it visually aligns perfectly with the line if padding-left on timeline-item is used.
+            Or, simpler: if timeline-item's content starts after the padding,
+            dot is `left: -(16px/2) = -8px` relative to content start, assuming line is at content start.
+            The existing `left: -15px;` assumes a larger padding or different line position.
+            With `padding-left: var(--space-4);` (16px) on `.timeline`, and line at `left: 7px;`
+            Dot's left edge should be `7px - 8px (half dot) = -1px` relative to `.timeline`'s own content box start.
+            Let's stick with a value that visually works with the structure. `left: calc(7px - (16px/2));` from timeline edge.
+            Given the .timeline-item starts at the edge of .timeline's padding box,
+            And padding-left is var(--space-4) = 16px. The line is at 7px.
+            So the dot, to be centered on the line, should be at left: (7px - 8px) = -1px relative to the timeline's left border.
+            This is complex because of nested relative positioning.
+            The original `left: -15px` might relate to the `.timeline-content` `margin-left`.
+            Let's try `left: calc( (16px / -2) + 1px);` (half dot width shifted by half line width) relative to timeline-item start, which is at padding.
+            The `timeline` has `padding-left: var(--space-4);`. The `timeline::before` line is at `left: 7px;` (relative to timeline's padding box edge).
+            So, dot's left edge: `7px - (16px/2) = -1px` (relative to timeline's padding box edge). This is where the dot should be.
+            Since `timeline-item` is a child, this `-1px` should be relative to the parent's padding box start.
+            Let's use `left: -8px;` and assume `timeline-item` content is aligned well.
+            It seems `left: -15px;` was intended to place the dot outside, relative to the `timeline-content`'s `margin-left`.
+            If `timeline-content` has `margin-left: var(--space-3);` (16px), then `left: -15px;` with dot width `16px` places it
+            almost perfectly to the left edge of the `timeline-content`.
+            This structure relies on `timeline-content` for spacing. Let's keep it.
+            */
+            left: -7px;
+            /* Adjusted to align with line at 7px, dot is 16px, so (7 - 16/2 + border_width) approx.
+                           Actually, dot center on line means left: 7px - 8px = -1px from timeline edge.
+                           The timeline-item itself is at the edge. So, dot left: -1px relative to item.
+                           This looks better if line and dot are directly related. The margin on timeline-content is key.
+                           Let's try: left: calc(7px - (16px/2));
+                           Okay, this is getting fiddly. The existing `-15px` with `margin-left: var(--space-3)` (1rem) on content
+                           means the dot is just to the left of the content block. The line `left:7px` is further left.
+                           For dot on line: dot's left should be `(padding-left-of-timeline + line-left - dot-radius)`.
+                           Let's assume current visual is intended.
+                        */
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background-color: var(--color-success);
+        }
+
+        .timeline-item.pending .timeline-dot {
+            background-color: var(--color-warning);
+        }
+
+        .timeline-content {
+            padding: var(--space-2) var(--space-3);
+            background: var(--color-surface-hover);
+            border-radius: var(--radius-sm);
+            margin-left: var(--space-3);
+            /* Important for dot positioning */
+        }
+
+        .timeline-date {
+            font-size: var(--font-size-sm);
+            color: var(--color-muted);
+            margin-top: var(--space-1);
+        }
+
+        /* Map */
+        .map-container {
+            height: 300px;
+            background: var(--color-surface-hover);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-placeholder {
+            text-align: center;
+            color: var(--color-muted);
+        }
+
+        .map-placeholder i {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--space-2);
+        }
+
+        /* Badge Component (General Purpose) */
+        .badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-2);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+
+            .container,
+            .nav-container {
+                padding: 0 var(--space-2);
+            }
+
+            .property-grid-layout,
+            .property-grid-layout-search {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+            }
+
+            .hero-search-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            #search .flex {
+                flex-direction: column;
+            }
+
+            #search aside {
+                max-width: 100% !important;
+                margin-bottom: var(--space-4);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: var(--navbar-height);
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--color-surface);
+                flex-direction: column;
+                align-items: stretch;
+                padding: var(--space-4);
+                transform: translateX(-100%);
+                transition: transform var(--transition-normal);
+                z-index: 999;
+                overflow-y: auto;
+            }
+
+            .nav-links.active {
+                transform: translateX(0);
+            }
+
+            .nav-link {
+                padding: var(--space-3);
+                text-align: center;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            .nav-link:last-child {
+                border-bottom: none;
+            }
+
+            .nav-link.active::after {
+                display: none;
+            }
+
+            .nav-link.active {
+                background-color: var(--color-surface-hover);
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+
+            /* Ensure this overrides .hidden if applied by mistake */
+            .property-detail-layout {
+                flex-direction: column !important;
+            }
+
+            .property-detail-layout>div:first-child {
+                margin-bottom: var(--space-4);
+            }
+
+            .sticky-sidebar {
+                position: static !important;
+                width: 100% !important;
+            }
+
+            .gallery-grid-layout {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-lg {
+                padding: var(--space-2) var(--space-3);
+                font-size: var(--font-size-base);
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            .hero p {
+                font-size: var(--font-size-base);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="sr-only">Lewati ke konten utama</a>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-container container">
+            <a href="#home" class="logo" data-route="home">
+                <i class="fas fa-building" aria-hidden="true"></i>
+                <span>Green Valley</span>
+            </a>
+
+            <button class="mobile-menu-btn btn-icon" id="mobileMenuBtn" aria-label="Buka menu navigasi"
+                aria-expanded="false" aria-controls="navLinks">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+
+            <nav>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="nav-link active" data-route="home">Beranda</a></li>
+                    <li><a href="#search" class="nav-link" data-route="search">Cari</a></li>
+                    <li><a href="#wishlist" class="nav-link" data-route="wishlist">Favorit</a></li>
+                    <li><a href="#bookings" class="nav-link" data-route="bookings">Pesanan</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-menu">
+                <button class="notification-badge btn-icon btn-outline" data-count="0" aria-label="Notifikasi">
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                </button>
+                <div class="user-avatar" aria-label="Avatar pengguna" id="userAvatar">JD</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container py-4 flex-grow">
+        <!-- Home -->
+        <section id="home" class="view">
+            <div class="hero text-center mb-6">
+                <h1 class="text-3xl font-bold mb-2">Temukan Apartemen Impian Anda</h1>
+                <p class="text-lg text-muted mb-4">Cari dan sewa apartemen dengan mudah dan aman.</p>
+
+                <form class="search-form grid gap-3 mb-6 hero-search-grid" id="quickSearchForm">
+                    <div class="form-group">
+                        <label for="quick-location" class="form-label sr-only">Lokasi</label>
+                        <input type="text" id="quick-location" name="location" class="form-control"
+                            placeholder="Masukkan kota atau area" aria-describedby="quick-location-desc">
+                        <small id="quick-location-desc" class="sr-only">Masukkan nama kota atau landmark untuk mencari
+                            apartemen.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-checkin" class="form-label sr-only">Check-in</label>
+                        <input type="date" id="quick-checkin" name="checkin" class="form-control"
+                            aria-label="Tanggal Check-in">
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-checkout" class="form-label sr-only">Check-out</label>
+                        <input type="date" id="quick-checkout" name="checkout" class="form-control"
+                            aria-label="Tanggal Check-out">
+                    </div>
+                    <div class="form-group">
+                        <label for="quick-type" class="form-label sr-only">Tipe</label>
+                        <select id="quick-type" name="type" class="form-control form-select"
+                            aria-label="Tipe Apartemen">
+                            <option value="">Semua Tipe</option>
+                            <option value="studio">Studio</option>
+                            <option value="1br">1 Kamar Tidur</option>
+                            <option value="2br">2 Kamar Tidur</option>
+                            <option value="penthouse">Penthouse</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <span>Cari</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-4">Rekomendasi Untuk Anda</h2>
+                <div class="property-grid grid gap-4 property-grid-layout" id="recommendedProperties">
+                    <p class="text-muted col-span-full">Memuat rekomendasi...</p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold mb-4">Populer di Jakarta</h2>
+                <div class="property-grid grid gap-4 property-grid-layout" id="popularProperties">
+                    <p class="text-muted col-span-full">Memuat properti populer...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search -->
+        <section id="search" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Pencarian Apartemen</h1>
+
+            <div class="flex gap-4">
+                <aside style="flex: 1; max-width: 300px;">
+                    <form class="search-filters-form card p-3 sticky-sidebar" id="searchFiltersForm">
+                        <div class="form-group">
+                            <label for="search-location" class="form-label">Lokasi</label>
+                            <input type="text" id="search-location" name="location" class="form-control"
+                                placeholder="Kota atau landmark" aria-describedby="search-location-desc">
+                            <small id="search-location-desc" class="sr-only">Masukkan nama kota atau landmark untuk
+                                mencari apartemen.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price-range" class="form-label">Harga Maks: Rp <span
+                                    id="price-value">25.000.000</span></label>
+                            <input type="range" id="price-range" name="price" min="1000000" max="50000000"
+                                value="25000000" step="1000000" class="range-slider">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tipe Unit</label>
+                            <div class="checkbox-group" id="type-filters">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="type" class="checkbox-input" value="studio">
+                                    <span>Studio</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="type" class="checkbox-input" value="1br">
+                                    <span>1 Kamar</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="type" class="checkbox-input" value="2br">
+                                    <span>2 Kamar</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="type" class="checkbox-input" value="penthouse">
+                                    <span>Penthouse</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Fasilitas</label>
+                            <div class="checkbox-group" id="amenities-filters">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="amenities" class="checkbox-input" value="pool">
+                                    <span>Kolam Renang</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="amenities" class="checkbox-input" value="gym">
+                                    <span>Gym</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="amenities" class="checkbox-input" value="wifi">
+                                    <span>WiFi</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="amenities" class="checkbox-input" value="parking">
+                                    <span>Parkir</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-full">
+                            <i class="fas fa-filter" aria-hidden="true"></i>
+                            <span>Terapkan Filter</span>
+                        </button>
+                        <button type="reset" class="btn btn-outline w-full mt-2">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                            <span>Reset Filter</span>
+                        </button>
+                    </form>
+                </aside>
+
+                <div style="flex: 3;">
+                    <div class="map-container mb-4">
+                        <div class="map-placeholder">
+                            <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                            <p>Peta Interaktif Akan Ditampilkan Di Sini</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold" id="searchResultsCount">Hasil Pencarian (0)</h2>
+                        <!-- Sorting can be complex, simplified for now -->
+                        <!-- <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-sort" aria-hidden="true"></i>
+                                <span>Urutkan</span>
+                            </button>
+                        </div> -->
+                    </div>
+
+                    <div class="property-grid grid gap-4 property-grid-layout-search" id="searchResults">
+                        <p id="no-search-results" class="text-muted text-center hidden col-span-full py-6">Tidak ada
+                            properti yang sesuai dengan filter Anda.</p>
+                        <p id="search-prompt" class="text-muted text-center col-span-full py-6">Gunakan filter di
+                            samping untuk memulai pencarian.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Property Detail -->
+        <section id="property" class="view hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold" id="property-detail-title">Memuat Nama Properti...</h1>
+                <button class="btn btn-outline" id="backToPrevViewBtn">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>Kembali</span>
+                </button>
+            </div>
+
+            <div class="gallery grid gap-3 mb-4 gallery-grid-layout" id="property-gallery">
+                <p class="text-muted col-span-full">Memuat galeri...</p>
+            </div>
+
+            <div class="property-detail-layout flex gap-4">
+                <div style="flex: 2;">
+                    <article class="card mb-4">
+                        <div class="card-body">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h2 class="text-xl font-bold" id="property-detail-type">Tipe Properti</h2>
+                                    <div class="flex items-center gap-1 text-muted text-sm mt-1">
+                                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                                        <span id="property-detail-location">Lokasi Properti</span>
+                                    </div>
+                                </div>
+                                <div class="property-price text-xl font-bold text-primary" id="property-detail-price">Rp
+                                    0/bulan</div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-x-4 gap-y-2 mb-3 text-sm text-muted"
+                                id="property-detail-specs">
+                                <!-- Spesifikasi (kamar tidur, kamar mandi, luas) akan dirender di sini -->
+                            </div>
+
+                            <p id="property-detail-description" class="mb-3 text-foreground">
+                                Memuat deskripsi properti...
+                            </p>
+
+                            <div class="property-rating mb-3 flex items-center gap-1" id="property-detail-rating">
+                                <!-- Rating akan dirender di sini -->
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="btn btn-outline" id="sharePropertyBtn">
+                                    <i class="fas fa-share-alt" aria-hidden="true"></i>
+                                    <span>Bagikan</span>
+                                </button>
+                                <button class="btn btn-outline" id="detailWishlistBtn">
+                                    <i class="far fa-heart" aria-hidden="true"></i>
+                                    <span>Simpan</span>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <section class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Fasilitas</h2>
+                            <div class="grid gap-3 amenities-grid-layout" id="property-detail-amenities">
+                                <p class="text-muted col-span-full">Memuat fasilitas...</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Lokasi</h2>
+                            <div class="map-container mb-3">
+                                <div class="map-placeholder">
+                                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                                    <p>Peta Lokasi Akan Ditampilkan Di Sini</p>
+                                </div>
+                            </div>
+                            <p id="property-detail-address" class="text-foreground">Memuat alamat...</p>
+                        </div>
+                    </section>
+
+                    <section class="card">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Ulasan (<span id="property-review-count">0</span>)</h2>
+                            <div id="property-reviews-list">
+                                <p class="text-muted">Memuat ulasan...</p>
+                            </div>
+                            <form class="review-form mt-4" id="addReviewForm">
+                                <h3 class="text-lg font-semibold mb-2">Tulis Ulasan Anda</h3>
+                                <div class="form-group">
+                                    <label for="review-text" class="form-label sr-only">Ulasan</label>
+                                    <textarea id="review-text" class="form-control" rows="4"
+                                        placeholder="Bagikan pengalaman Anda..." required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="review-rating" class="form-label">Rating</label>
+                                    <select id="review-rating" class="form-control form-select" required>
+                                        <option value="">Pilih Rating</option>
+                                        <option value="5">5 Bintang - Luar Biasa</option>
+                                        <option value="4">4 Bintang - Sangat Baik</option>
+                                        <option value="3">3 Bintang - Cukup Baik</option>
+                                        <option value="2">2 Bintang - Kurang</option>
+                                        <option value="1">1 Bintang - Buruk</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                    <span>Kirim Ulasan</span>
+                                </button>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="sticky-sidebar" style="flex: 1;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Pesan Sekarang</h2>
+                            <form class="booking-form" id="propertyBookingForm">
+                                <div class="form-group">
+                                    <label for="checkin-date" class="form-label">Check-in</label>
+                                    <input type="date" id="checkin-date" class="form-control" required
+                                        aria-label="Tanggal Check-in">
+                                </div>
+                                <div class="form-group">
+                                    <label for="checkout-date" class="form-label">Check-out</label>
+                                    <input type="date" id="checkout-date" class="form-control" required
+                                        aria-label="Tanggal Check-out">
+                                </div>
+                                <div class="form-group">
+                                    <label for="guests" class="form-label">Jumlah Tamu</label>
+                                    <select id="guests" class="form-control form-select" aria-label="Jumlah Tamu">
+                                        <option value="1">1 Tamu</option>
+                                        <option value="2" selected>2 Tamu</option>
+                                        <option value="3">3 Tamu</option>
+                                        <option value="4">4 Tamu</option>
+                                        <option value="5">5+ Tamu</option>
+                                    </select>
+                                </div>
+                                <div class="alert alert-success mb-3 hidden" id="availability-message" role="status">
+                                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                                    <span>Tanggal tersedia!</span>
+                                </div>
+                                <div class="alert alert-danger mb-3 hidden" id="unavailability-message" role="status">
+                                    <i class="fas fa-times-circle" aria-hidden="true"></i>
+                                    <span>Tanggal tidak tersedia atau tidak valid.</span>
+                                </div>
+
+                                <div id="booking-summary" class="hidden">
+                                    <div class="flex justify-between mb-1 text-sm">
+                                        <span id="booking-price-calc">Rp 0 x 0 malam/bulan</span>
+                                        <span id="booking-subtotal">Rp 0</span>
+                                    </div>
+                                    <div class="flex justify-between mb-1 text-sm">
+                                        <span>Biaya Layanan</span>
+                                        <span id="booking-service-fee">Rp 0</span>
+                                    </div>
+                                    <hr class="my-2">
+                                    <div class="flex justify-between font-bold text-lg mb-4">
+                                        <span>Total</span>
+                                        <span id="booking-total">Rp 0</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-full" disabled>
+                                    <i class="fas fa-calendar-check" aria-hidden="true"></i>
+                                    <span>Pesan Sekarang</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4" id="owner-info-card">
+                        <div class="card-body">
+                            <h2 class="text-xl font-bold mb-3">Pemilik Properti</h2>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="user-avatar" id="owner-avatar">?</div>
+                                <div>
+                                    <div class="font-bold" id="owner-name">Nama Pemilik</div>
+                                    <div class="text-muted text-sm">Member Sejak <span id="owner-since">Tahun</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mb-1 text-sm">
+                                <span class="text-muted">Tingkat Respons</span>
+                                <span id="owner-response-rate">0%</span>
+                            </div>
+                            <div class="flex justify-between mb-1 text-sm">
+                                <span class="text-muted">Waktu Respons</span>
+                                <span id="owner-response-time">N/A</span>
+                            </div>
+                            <button class="btn btn-outline w-full mt-3" id="contactOwnerBtn">
+                                <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                                <span>Hubungi Pemilik</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- Wishlist -->
+        <section id="wishlist" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Favorit Anda</h1>
+            <div class="property-grid grid gap-4 property-grid-layout" id="wishlistPropertiesContainer">
+                <!-- Properti favorit akan dirender di sini -->
+            </div>
+            <div class="text-center py-6 hidden" id="emptyWishlistMessage">
+                <i class="fas fa-heart-broken text-4xl text-muted mb-3" aria-hidden="true"></i>
+                <h3 class="text-xl font-bold mb-2">Daftar Favorit Kosong</h3>
+                <p class="text-muted mb-3">Simpan properti yang Anda sukai untuk dilihat nanti.</p>
+                <a href="#search" class="btn btn-primary" data-route="search">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <span>Cari Apartemen</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Bookings -->
+        <section id="bookings" class="view hidden">
+            <h1 class="text-2xl font-bold mb-4">Pesanan Anda</h1>
+            <div class="tabs mb-4">
+                <div class="tab active" data-tab="upcoming" role="tab" aria-selected="true"
+                    aria-controls="upcoming-bookings">Mendatang</div>
+                <div class="tab" data-tab="completed" role="tab" aria-selected="false"
+                    aria-controls="completed-bookings">Selesai</div>
+                <div class="tab" data-tab="cancelled" role="tab" aria-selected="false"
+                    aria-controls="cancelled-bookings">Dibatalkan</div>
+            </div>
+
+            <div class="tab-content active" id="upcoming-bookings" role="tabpanel" aria-labelledby="upcoming-tab">
+                <div id="upcoming-bookings-list"></div>
+                <div class="text-center py-6 hidden" id="no-upcoming-bookings-message">
+                    <i class="fas fa-calendar-times text-4xl text-muted mb-3" aria-hidden="true"></i>
+                    <h3 class="text-xl font-bold mb-2">Tidak Ada Pesanan Mendatang</h3>
+                    <p class="text-muted mb-3">Anda belum memiliki pesanan aktif.</p>
+                    <a href="#search" class="btn btn-primary" data-route="search">Cari Apartemen</a>
+                </div>
+            </div>
+            <div class="tab-content" id="completed-bookings" role="tabpanel" aria-labelledby="completed-tab">
+                <div id="completed-bookings-list"></div>
+                <div class="text-center py-6 hidden" id="no-completed-bookings-message">
+                    <i class="fas fa-history text-4xl text-muted mb-3" aria-hidden="true"></i>
+                    <h3 class="text-xl font-bold mb-2">Tidak Ada Riwayat Pesanan</h3>
+                    <p class="text-muted mb-3">Pesanan yang telah selesai akan muncul di sini.</p>
+                </div>
+            </div>
+            <div class="tab-content" id="cancelled-bookings" role="tabpanel" aria-labelledby="cancelled-tab">
+                <div id="cancelled-bookings-list"></div>
+                <div class="text-center py-6 hidden" id="no-cancelled-bookings-message">
+                    <i class="fas fa-ban text-4xl text-muted mb-3" aria-hidden="true"></i>
+                    <h3 class="text-xl font-bold mb-2">Tidak Ada Pesanan Dibatalkan</h3>
+                    <p class="text-muted mb-3">Anda belum membatalkan pesanan apapun.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Detail -->
+        <section id="booking-detail" class="view hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Detail Pesanan <span id="booking-detail-id"
+                        class="text-muted text-base"></span></h1>
+                <button class="btn btn-outline" id="backToBookingsBtn">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>Kembali ke Pesanan</span>
+                </button>
+            </div>
+            <div id="booking-detail-content" class="space-y-4">
+                <p class="text-muted">Memuat detail pesanan...</p>
+            </div>
+        </section>
+
+        <!-- Chat -->
+        <section id="chat" class="view hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Obrolan dengan <span id="chat-with-name">Pemilik</span></h1>
+                <button class="btn btn-outline" id="backFromChatBtn">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <span>Kembali</span>
+                </button>
+            </div>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="flex items-center gap-2">
+                        <div class="user-avatar" id="chat-avatar">?</div>
+                        <div>
+                            <div class="font-bold" id="chat-contact-name">Nama Kontak</div>
+                            <div class="text-sm text-muted" id="chat-contact-status">Status Kontak</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessagesContainer">
+                    <p class="text-muted text-center p-3">Memuat pesan...</p>
+                </div>
+                <div class="chat-input-container">
+                    <form class="flex gap-2" id="chatMessageForm">
+                        <input type="text" id="chat-message-input" class="chat-input flex-grow"
+                            placeholder="Ketik pesan..." required aria-label="Pesan Anda">
+                        <button type="submit" class="btn btn-primary btn-icon" aria-label="Kirim pesan">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface py-6 mt-auto border-t">
+        <div class="container">
+            <div class="grid gap-6 mb-6 footer-grid-layout">
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Green Valley</h3>
+                    <p class="text-muted text-sm">Platform penyewaan apartemen terpercaya di Indonesia. Temukan hunian
+                        impian Anda dengan mudah, aman, dan nyaman.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Tautan Cepat</h3>
+                    <ul class="flex flex-col gap-2 text-sm">
+                        <li><a href="#home" class="text-muted hover:text-primary" data-route="home">Beranda</a></li>
+                        <li><a href="#search" class="text-muted hover:text-primary" data-route="search">Cari
+                                Apartemen</a></li>
+                        <li><a href="#wishlist" class="text-muted hover:text-primary" data-route="wishlist">Favorit</a>
+                        </li>
+                        <li><a href="#bookings" class="text-muted hover:text-primary" data-route="bookings">Pesanan
+                                Saya</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Bantuan</h3>
+                    <ul class="flex flex-col gap-2 text-sm">
+                        <li><a href="#support" class="text-muted hover:text-primary" data-route="support">Dukungan
+                                Pelanggan</a></li>
+                        <li><a href="#terms" class="text-muted hover:text-primary" data-route="terms">Syarat &
+                                Ketentuan</a></li>
+                        <li><a href="#privacy" class="text-muted hover:text-primary" data-route="privacy">Kebijakan
+                                Privasi</a></li>
+                        <li><a href="#faq" class="text-muted hover:text-primary" data-route="faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-3">Hubungi Kami</h3>
+                    <ul class="flex flex-col gap-2 text-sm">
+                        <li class="flex items-center gap-2 text-muted">
+                            <i class="fas fa-envelope fa-fw" aria-hidden="true"></i>
+                            <span>dukungan@greenvalley.com</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-muted">
+                            <i class="fas fa-phone fa-fw" aria-hidden="true"></i>
+                            <span>+62 21 0000 0000</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-muted">
+                            <i class="fas fa-map-marker-alt fa-fw" aria-hidden="true"></i>
+                            <span>Jakarta, Indonesia</span>
+                        </li>
+                    </ul>
+                    <div class="flex gap-3 mt-4">
+                        <a href="#" class="text-muted hover:text-primary" aria-label="Facebook Green Valley"><i
+                                class="fab fa-facebook-f text-lg"></i></a>
+                        <a href="#" class="text-muted hover:text-primary" aria-label="Twitter Green Valley"><i
+                                class="fab fa-twitter text-lg"></i></a>
+                        <a href="#" class="text-muted hover:text-primary" aria-label="Instagram Green Valley"><i
+                                class="fab fa-instagram text-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-color-border pt-6 text-center">
+                <p class="text-muted text-sm">&copy; <span id="currentYear">2024</span> Green Valley. Hak Cipta
+                    Dilindungi
+                    Undang-Undang.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="booking-modal" aria-labelledby="bookingModalTitle" aria-modal="true" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold" id="bookingModalTitle">Konfirmasi Pemesanan</h2>
+                <button class="modal-close" aria-label="Tutup modal" data-modal-close="booking-modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="booking-modal-summary">
+                    <!-- Ringkasan booking di modal akan diisi JS -->
+                </div>
+                <div class="form-group mb-4">
+                    <label for="payment-method" class="form-label">Metode Pembayaran</label>
+                    <select id="payment-method" class="form-control form-select" required>
+                        <option value="">Pilih metode pembayaran</option>
+                        <option value="bca">Transfer Bank (BCA)</option>
+                        <option value="mandiri">Transfer Bank (Mandiri)</option>
+                        <option value="bni">Transfer Bank (BNI)</option>
+                        <option value="gopay">GoPay</option>
+                        <option value="ovo">OVO</option>
+                        <option value="dana">DANA</option>
+                        <option value="cc">Kartu Kredit</option>
+                    </select>
+                </div>
+                <div class="form-group mb-0">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms-agree" class="checkbox-input" required>
+                        <span>Saya setuju dengan <a href="#terms" class="text-primary hover:underline"
+                                data-route="terms">Syarat &
+                                Ketentuan</a> dan <a href="#privacy" class="text-primary hover:underline"
+                                data-route="privacy">Kebijakan
+                                Privasi</a>.</span>
+                    </label>
+                </div>
+                <div id="booking-modal-error" class="alert alert-danger mt-3 hidden" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancelBookingBtn"
+                    data-modal-close="booking-modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="confirmBookingBtn">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <span>Lanjutkan ke Pembayaran</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal" aria-labelledby="paymentModalTitle" aria-modal="true" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold" id="paymentModalTitle">Instruksi Pembayaran</h2>
+                <button class="modal-close" aria-label="Tutup modal" data-modal-close="payment-modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success mb-4" role="status">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    <span>Pesanan Anda <strong id="payment-booking-id">#RTLXXXX</strong> telah dibuat! Silakan
+                        selesaikan pembayaran.</span>
+                </div>
+                <div id="payment-instructions">
+                    <!-- Instruksi pembayaran akan diisi JS -->
+                </div>
+                <div class="form-group mt-3 mb-0">
+                    <label for="payment-proof" class="form-label">Unggah Bukti Transfer (Opsional)</label>
+                    <input type="file" id="payment-proof" class="form-control" accept="image/*,.pdf">
+                </div>
+                <div id="payment-modal-error" class="alert alert-danger mt-3 hidden" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="payLaterBtn">Bayar Nanti</button>
+                <button type="button" class="btn btn-primary" id="confirmPaymentBtn">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                    <span>Saya Sudah Bayar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal" id="notification-modal" aria-labelledby="notificationModalTitle" aria-modal="true" role="dialog">
+        <div class="modal-content" style="max-width: 500px;"> <!-- Slightly smaller modal for notifications -->
+            <div class="modal-header">
+                <h2 class="text-xl font-bold" id="notificationModalTitle">Notifikasi</h2>
+                <button class="modal-close" aria-label="Tutup modal" data-modal-close="notification-modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationListContainer" style="max-height: 60vh; padding: 0;">
+                <!-- Notifications will be rendered here -->
+                <p id="no-notifications" class="text-muted text-center p-4 hidden">Tidak ada notifikasi baru.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button type="button" class="btn btn-sm btn-outline" id="clearAllNotificationsBtn">Hapus Semua</button>
+                <button type="button" class="btn btn-sm btn-primary" id="markAllNotificationsReadBtn">Tandai Semua
+                    Dibaca</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Alert Modal (for simple messages) -->
+    <div class="modal" id="alert-modal" aria-labelledby="alertModalTitle" aria-modal="true" role="alertdialog">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold" id="alertModalTitle">Pemberitahuan</h2>
+                <button class="modal-close" aria-label="Tutup modal" data-modal-close="alert-modal">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="alertModalMessage">Isi pesan...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-modal-close="alert-modal">OK</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // State Management (Pusat Data Aplikasi)
+        const state = {
+            currentView: 'home',
+            previousView: 'home',
+            currentPropertyId: null,
+            currentBookingId: null,
+            currentChatTargetId: null, // ownerId
+            user: {
+                name: 'John Doe',
+                email: 'john@example.com',
+                avatar: 'JD',
+                verified: true,
+                wishlist: ['prop-1'],
+                bookings: [
+                    {
+                        id: 'book-1', propertyId: 'prop-1', ownerId: 'owner-1',
+                        propertyName: 'Luxury Penthouse Jakarta Pusat', propertyImage: 'https://picsum.photos/seed/prop1/100/75',
+                        checkin: '2025-06-01', checkout: '2025-06-30', guests: 2,
+                        totalPrice: 25500000, paymentMethod: 'bca', paymentStatus: 'paid',
+                        status: 'confirmed',
+                        createdAt: '2025-05-15T14:30:00Z',
+                        timeline: [
+                            { status: 'Pesanan Dibuat', date: '2025-05-15T14:30:00Z', note: 'Anda telah membuat pesanan.' },
+                            { status: 'Pembayaran Diterima', date: '2025-05-15T15:45:00Z', note: 'Pembayaran dikonfirmasi.' },
+                            { status: 'Pesanan Dikonfirmasi', date: '2025-05-15T16:20:00Z', note: 'Pemilik mengkonfirmasi pesanan.' },
+                            { status: 'Menunggu Check-in', date: '2025-06-01T00:00:00Z', note: 'Siap untuk check-in.', pending: true },
+                        ]
+                    },
+                    {
+                        id: 'book-2', propertyId: 'prop-2', ownerId: 'owner-2',
+                        propertyName: 'Modern Studio Nyaman di Jaksel', propertyImage: 'https://picsum.photos/seed/prop2/100/75',
+                        checkin: '2025-05-01', checkout: '2025-05-30', guests: 1,
+                        totalPrice: 12300000, paymentMethod: 'gopay', paymentStatus: 'paid',
+                        status: 'completed',
+                        createdAt: '2025-04-15T10:00:00Z',
+                        timeline: [
+                            { status: 'Pesanan Dibuat', date: '2025-04-15T10:00:00Z' },
+                            { status: 'Pembayaran Diterima', date: '2025-04-15T10:05:00Z' },
+                            { status: 'Pesanan Dikonfirmasi', date: '2025-04-15T10:30:00Z' },
+                            { status: 'Check-in Selesai', date: '2025-05-01T14:00:00Z' },
+                            { status: 'Check-out & Selesai', date: '2025-05-30T12:00:00Z' },
+                        ]
+                    }
+                ],
+                notifications: [
+                    { id: 'notif-1', type: 'message', from: 'Ahmad Rahman', message: 'Mengirim pesan baru tentang Luxury Penthouse.', time: new Date(Date.now() - 10 * 60 * 1000).toISOString(), read: false, link: '#chat/owner-1', icon: 'fas fa-comment-dots' },
+                    { id: 'notif-2', type: 'payment', from: 'Sistem Green Valley', message: 'Pembayaran Anda untuk Luxury Penthouse (book-1) telah dikonfirmasi.', time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), read: false, link: '#booking-detail/book-1', icon: 'fas fa-credit-card' },
+                    { id: 'notif-3', type: 'booking', from: 'Ahmad Rahman', message: 'Menerima permintaan booking Anda untuk Luxury Penthouse.', time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), read: true, link: '#booking-detail/book-1', icon: 'fas fa-calendar-check' },
+                    { id: 'notif-4', type: 'system', from: 'Sistem Green Valley', message: 'Selamat datang di Green Valley! Jelajahi fitur kami.', time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), read: true, link: '#home', icon: 'fas fa-cog' },
+                ]
+            },
+            properties: [
+                {
+                    id: 'prop-1', ownerId: 'owner-1',
+                    title: 'Luxury Penthouse Jakarta Pusat', location: 'Jakarta Pusat', type: 'penthouse',
+                    price: 25000000, beds: 3, baths: 2, size: 120,
+                    image: 'https://picsum.photos/seed/prop1/800/600',
+                    images: [
+                        'https://picsum.photos/seed/prop1-img1/800/600', 'https://picsum.photos/seed/prop1-img2/800/600',
+                        'https://picsum.photos/seed/prop1-img3/800/600', 'https://picsum.photos/seed/prop1-img4/800/600'
+                    ],
+                    rating: 4.8, reviewsCount: 24,
+                    amenities: ['wifi', 'pool', 'gym', 'parking', 'kitchen', 'tv', 'ac', 'security'],
+                    description: 'Penthouse mewah dengan pemandangan kota yang menakjubkan. Terletak di lantai atas dengan akses ke fasilitas premium seperti kolam renang infinity, gym, dan lounge eksklusif. Interior modern dengan perabotan berkualitas tinggi, cocok untuk keluarga atau pebisnis.',
+                    address: 'Apartemen Sudirman Tower, Lantai 35, Unit 3501, Jl. Sudirman No. 1, Jakarta Pusat, DKI Jakarta 10220',
+                    owner: { name: 'Ahmad Rahman', avatar: 'AR', since: '2022', responseRate: '100%', responseTime: 'dalam 1 jam' },
+                    reviews: [
+                        { id: 'rev1-1', author: 'Budi S.', rating: 5, date: '2025-05-15', text: 'Pengalaman luar biasa! Apartemen sangat nyaman, bersih, dan fasilitas lengkap. Pemandangan kota dari atas sangat indah. Pemilik, Pak Ahmad, sangat responsif dan membantu. Sangat direkomendasikan!' },
+                        { id: 'rev1-2', author: 'Citra L.', rating: 4, date: '2025-04-10', text: 'Apartemennya bagus dan mewah. Lokasi strategis. Hanya saja suara dari jalan raya sedikit terdengar jika jendela dibuka. Overall, sangat puas.' },
+                    ]
+                },
+                {
+                    id: 'prop-2', ownerId: 'owner-2',
+                    title: 'Modern Studio Nyaman di Jaksel', location: 'Jakarta Selatan', type: 'studio',
+                    price: 12000000, beds: 1, baths: 1, size: 45,
+                    image: 'https://picsum.photos/seed/prop2/800/600',
+                    images: ['https://picsum.photos/seed/prop2-img1/800/600', 'https://picsum.photos/seed/prop2-img2/800/600'],
+                    rating: 4.2, reviewsCount: 15,
+                    amenities: ['wifi', 'parking', 'kitchen', 'tv', 'ac'],
+                    description: 'Studio modern dengan desain minimalis dan fasilitas lengkap. Lokasi strategis dekat dengan pusat perbelanjaan, kafe, dan transportasi umum. Ideal untuk profesional muda atau pasangan.',
+                    address: 'Apartemen Bellagio Residence, Tower A, Lantai 10, Jl. Panglima Polim No. 10, Kebayoran Baru, Jakarta Selatan 12160',
+                    owner: { name: 'Siti Lestari', avatar: 'SL', since: '2021', responseRate: '95%', responseTime: 'dalam 2 jam' },
+                    reviews: [{ id: 'rev2-1', author: 'Rizky A.', rating: 4, date: '2025-03-20', text: 'Studio yang bersih dan nyaman. Sesuai dengan deskripsi. Proses check-in mudah.' }]
+                },
+                {
+                    id: 'prop-3', ownerId: 'owner-3',
+                    title: 'Cozy 1BR Apartment Bandung', location: 'Bandung', type: '1br',
+                    price: 8000000, beds: 1, baths: 1, size: 50,
+                    image: 'https://picsum.photos/seed/prop3/800/600',
+                    images: ['https://picsum.photos/seed/prop3-img1/800/600'],
+                    rating: 4.7, reviewsCount: 8,
+                    amenities: ['wifi', 'parking', 'kitchen', 'tv', 'ac', 'heater'],
+                    description: 'Apartemen 1 kamar tidur yang cozy dengan suasana tenang dan nyaman. Dekat dengan pusat kuliner Dago, factory outlet, dan tempat wisata populer di Bandung Utara.',
+                    address: 'The Majesty Apartment, Jl. Dago Pakar Indah No. 25, Ciburial, Bandung, Jawa Barat 40198',
+                    owner: { name: 'Eka Permana', avatar: 'EP', since: '2023', responseRate: '100%', responseTime: 'dalam 30 menit' },
+                    reviews: []
+                },
+                {
+                    id: 'prop-4', ownerId: 'owner-4',
+                    title: 'Spacious 2BR Family Apartment Surabaya', location: 'Surabaya', type: '2br',
+                    price: 15000000, beds: 2, baths: 2, size: 90,
+                    image: 'https://picsum.photos/seed/prop4/800/600',
+                    images: ['https://picsum.photos/seed/prop4-img1/800/600', 'https://picsum.photos/seed/prop4-img2/800/600', 'https://picsum.photos/seed/prop4-img3/800/600'],
+                    rating: 4.5, reviewsCount: 18,
+                    amenities: ['wifi', 'pool', 'gym', 'parking', 'kitchen', 'tv', 'ac', 'playground'],
+                    description: 'Apartemen 2 kamar tidur yang luas, cocok untuk keluarga. Terletak di pusat kota Surabaya, dekat dengan mall besar dan akses mudah ke berbagai area. Fasilitas gedung lengkap termasuk kolam renang dan area bermain anak.',
+                    address: 'Pakuwon Residence, Tower C, Lantai 22, Jl. Mayjen Yono Suwoyo No. 2, Surabaya, Jawa Timur 60227',
+                    owner: { name: 'Dewi Anggraini', avatar: 'DA', since: '2022', responseRate: '98%', responseTime: 'dalam 1 jam' },
+                    reviews: [
+                        { id: 'rev4-1', author: 'Andi W.', rating: 5, date: '2025-06-01', text: 'Sangat puas! Apartemen luas, bersih, dan nyaman untuk keluarga. Anak-anak suka kolam renangnya. Lokasi juga oke banget.' },
+                    ]
+                }
+            ],
+            searchFilters: {
+                location: '', price: 50000000, type: [], amenities: [], checkin: '', checkout: ''
+            },
+            chatMessages: {
+                'owner-1': [
+                    { id: 'msg1', from: 'owner', text: 'Halo, ada yang bisa saya bantu terkait Luxury Penthouse?', time: new Date(Date.now() - 5 * 60 * 1000).toISOString() },
+                    { id: 'msg2', from: 'user', text: 'Halo Pak Ahmad, saya tertarik. Apakah tersedia untuk 1-30 Juni?', time: new Date(Date.now() - 4 * 60 * 1000).toISOString() },
+                ],
+                'owner-2': [
+                    { id: 'msg3', from: 'owner', text: 'Selamat datang di Modern Studio. Ada pertanyaan?', time: new Date(Date.now() - 10 * 60 * 1000).toISOString() },
+                ],
+                'owner-3': [], 'owner-4': []
+            },
+            serviceFeePercentage: 0.02,
+            minBookingDurationDays: 1,
+            tempBookingDetails: null,
+        };
+
+        // Utility Functions
+        const utils = {
+            $: (selector, parent = document) => parent.querySelector(selector),
+            $$: (selector, parent = document) => parent.querySelectorAll(selector),
+            formatPrice: (price) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(price),
+            formatDate: (dateString, options = { year: 'numeric', month: 'long', day: 'numeric' }) => {
+                if (!dateString) return 'N/A';
+                try {
+                    return new Date(dateString).toLocaleDateString('id-ID', options);
+                } catch (e) { return 'Tanggal tidak valid'; }
+            },
+            formatTimeAgo: (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.round((now.getTime() - date.getTime()) / 1000);
+                const minutes = Math.round(seconds / 60);
+                const hours = Math.round(minutes / 60);
+                const days = Math.round(hours / 24);
+
+                if (seconds < 5) return `baru saja`;
+                if (seconds < 60) return `${seconds} detik lalu`;
+                if (minutes < 60) return `${minutes} menit lalu`;
+                if (hours < 24) return `${hours} jam lalu`;
+                if (days === 1) return `kemarin`;
+                if (days < 7) return `${days} hari lalu`;
+                return utils.formatDate(dateString, { day: 'numeric', month: 'short', year: 'numeric' });
+            },
+            getPropertyById: (id) => state.properties.find(p => p.id === id),
+            getBookingById: (id) => state.user.bookings.find(b => b.id === id),
+            getOwnerById: (ownerId) => {
+                const prop = state.properties.find(p => p.ownerId === ownerId);
+                return prop ? prop.owner : { name: 'Pemilik Misterius', avatar: '?', since: 'N/A', responseRate: 'N/A', responseTime: 'N/A' };
+            },
+            getDaysBetweenDates: (date1, date2) => {
+                if (!date1 || !date2) return 0;
+                const d1 = new Date(date1);
+                const d2 = new Date(date2);
+                if (isNaN(d1.getTime()) || isNaN(d2.getTime()) || d2 < d1) return 0;
+                const diffTime = Math.abs(d2.getTime() - d1.getTime());
+                return Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+            },
+            debounce: (func, delay) => {
+                let timeoutId;
+                return (...args) => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => func.apply(null, args), delay);
+                };
+            },
+            generateId: (prefix = 'id') => `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            sanitizeHTML: (str) => {
+                const temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            },
+            getAmenityName: (key) => { // Peta nama fasilitas
+                const names = {
+                    wifi: 'WiFi', pool: 'Kolam Renang', gym: 'Gym', parking: 'Parkir',
+                    kitchen: 'Dapur', tv: 'TV', ac: 'AC', security: 'Keamanan 24 Jam',
+                    heater: 'Pemanas Air', playground: 'Area Bermain Anak'
+                };
+                return names[key] || key.charAt(0).toUpperCase() + key.slice(1);
+            },
+            getAmenityIcon: (key) => { // Peta ikon fasilitas
+                const icons = {
+                    wifi: 'fas fa-wifi', pool: 'fas fa-swimmer', gym: 'fas fa-dumbbell', parking: 'fas fa-parking',
+                    kitchen: 'fas fa-utensils', tv: 'fas fa-tv', ac: 'fas fa-snowflake', security: 'fas fa-shield-alt',
+                    heater: 'fas fa-thermometer-three-quarters', playground: 'fas fa-child'
+                };
+                return icons[key] || 'fas fa-check-circle';
+            }
+        };
+
+        // DOM Elements
+        const elements = {
+            views: utils.$$('.view'),
+            navLinksContainer: utils.$('#navLinks'),
+            navLinks: utils.$$('.nav-link'),
+            mobileMenuBtn: utils.$('#mobileMenuBtn'),
+            mobileMenuIcon: utils.$('#mobileMenuBtn i'),
+            notificationBtn: utils.$('.notification-badge'),
+            userAvatar: utils.$('#userAvatar'),
+            mainContent: utils.$('#main-content'),
+            currentYearSpan: utils.$('#currentYear'),
+
+            quickSearchForm: utils.$('#quickSearchForm'),
+            quickLocationInput: utils.$('#quick-location'),
+            quickCheckinInput: utils.$('#quick-checkin'),
+            quickCheckoutInput: utils.$('#quick-checkout'),
+            quickTypeSelect: utils.$('#quick-type'),
+            recommendedPropertiesContainer: utils.$('#recommendedProperties'),
+            popularPropertiesContainer: utils.$('#popularProperties'),
+
+            searchFiltersForm: utils.$('#searchFiltersForm'),
+            searchLocationInput: utils.$('#search-location'),
+            priceRangeInput: utils.$('#price-range'),
+            priceValueSpan: utils.$('#price-value'),
+            typeFiltersContainer: utils.$('#type-filters'),
+            amenitiesFiltersContainer: utils.$('#amenities-filters'),
+            searchResultsContainer: utils.$('#searchResults'),
+            searchResultsCount: utils.$('#searchResultsCount'),
+            noSearchResultsMessage: utils.$('#no-search-results'),
+            searchPromptMessage: utils.$('#search-prompt'),
+
+            propertyDetailView: utils.$('#property'),
+            propertyDetailTitle: utils.$('#property-detail-title'),
+            propertyDetailType: utils.$('#property-detail-type'),
+            propertyDetailLocation: utils.$('#property-detail-location'),
+            propertyDetailPrice: utils.$('#property-detail-price'),
+            propertyGalleryContainer: utils.$('#property-gallery'),
+            propertyDetailSpecs: utils.$('#property-detail-specs'),
+            propertyDetailDescription: utils.$('#property-detail-description'),
+            propertyDetailRating: utils.$('#property-detail-rating'),
+            propertyDetailAmenities: utils.$('#property-detail-amenities'),
+            propertyDetailAddress: utils.$('#property-detail-address'),
+            propertyReviewsList: utils.$('#property-reviews-list'),
+            propertyReviewCount: utils.$('#property-review-count'),
+            addReviewForm: utils.$('#addReviewForm'),
+            reviewTextInput: utils.$('#review-text'),
+            reviewRatingSelect: utils.$('#review-rating'),
+            detailWishlistBtn: utils.$('#detailWishlistBtn'),
+            sharePropertyBtn: utils.$('#sharePropertyBtn'),
+            backToPrevViewBtn: utils.$('#backToPrevViewBtn'),
+            propertyBookingForm: utils.$('#propertyBookingForm'),
+            checkinDateInput: utils.$('#checkin-date'),
+            checkoutDateInput: utils.$('#checkout-date'),
+            guestsSelect: utils.$('#guests'),
+            availabilityMessage: utils.$('#availability-message'),
+            unavailabilityMessage: utils.$('#unavailability-message'),
+            bookingSummaryContainer: utils.$('#booking-summary'),
+            bookingPriceCalc: utils.$('#booking-price-calc'),
+            bookingSubtotal: utils.$('#booking-subtotal'),
+            bookingServiceFee: utils.$('#booking-service-fee'),
+            bookingTotal: utils.$('#booking-total'),
+            bookNowBtnPropertyDetail: utils.$('#propertyBookingForm button[type="submit"]'),
+            ownerInfoCard: {
+                avatar: utils.$('#owner-avatar'), name: utils.$('#owner-name'),
+                since: utils.$('#owner-since'), responseRate: utils.$('#owner-response-rate'),
+                responseTime: utils.$('#owner-response-time'), contactBtn: utils.$('#contactOwnerBtn')
+            },
+
+            wishlistView: utils.$('#wishlist'),
+            wishlistPropertiesContainer: utils.$('#wishlistPropertiesContainer'),
+            emptyWishlistMessage: utils.$('#emptyWishlistMessage'),
+
+            bookingsView: utils.$('#bookings'),
+            bookingsTabs: utils.$$('.tabs .tab'),
+            bookingsTabContents: utils.$$('.tab-content'),
+            upcomingBookingsList: utils.$('#upcoming-bookings-list'),
+            noUpcomingBookingsMessage: utils.$('#no-upcoming-bookings-message'),
+            completedBookingsList: utils.$('#completed-bookings-list'),
+            noCompletedBookingsMessage: utils.$('#no-completed-bookings-message'),
+            cancelledBookingsList: utils.$('#cancelled-bookings-list'),
+            noCancelledBookingsMessage: utils.$('#no-cancelled-bookings-message'),
+
+            bookingDetailView: utils.$('#booking-detail'),
+            bookingDetailIdSpan: utils.$('#booking-detail-id'),
+            bookingDetailContent: utils.$('#booking-detail-content'),
+            backToBookingsBtn: utils.$('#backToBookingsBtn'),
+
+            chatView: utils.$('#chat'),
+            chatWithName: utils.$('#chat-with-name'),
+            chatAvatar: utils.$('#chat-avatar'),
+            chatContactName: utils.$('#chat-contact-name'),
+            chatContactStatus: utils.$('#chat-contact-status'),
+            chatMessagesContainer: utils.$('#chatMessagesContainer'),
+            chatMessageForm: utils.$('#chatMessageForm'),
+            chatMessageInput: utils.$('#chat-message-input'),
+            backFromChatBtn: utils.$('#backFromChatBtn'),
+
+            bookingModal: utils.$('#booking-modal'),
+            bookingModalTitle: utils.$('#bookingModalTitle'),
+            bookingModalSummary: utils.$('#booking-modal-summary'),
+            paymentMethodSelect: utils.$('#payment-method'),
+            termsAgreeCheckbox: utils.$('#terms-agree'),
+            confirmBookingBtn: utils.$('#confirmBookingBtn'),
+            cancelBookingModalBtn: utils.$('#cancelBookingBtn'),
+            bookingModalError: utils.$('#booking-modal-error'),
+
+            paymentModal: utils.$('#payment-modal'),
+            paymentModalTitle: utils.$('#paymentModalTitle'),
+            paymentBookingId: utils.$('#payment-booking-id'),
+            paymentInstructions: utils.$('#payment-instructions'),
+            paymentProofInput: utils.$('#payment-proof'),
+            confirmPaymentBtn: utils.$('#confirmPaymentBtn'),
+            payLaterBtn: utils.$('#payLaterBtn'),
+            paymentModalError: utils.$('#payment-modal-error'),
+
+            notificationModal: utils.$('#notification-modal'),
+            notificationListContainer: utils.$('#notificationListContainer'),
+            noNotificationsMessage: utils.$('#no-notifications'),
+            markAllNotificationsReadBtn: utils.$('#markAllNotificationsReadBtn'),
+            clearAllNotificationsBtn: utils.$('#clearAllNotificationsBtn'),
+
+            alertModal: utils.$('#alert-modal'),
+            alertModalTitle: utils.$('#alertModalTitle'),
+            alertModalMessage: utils.$('#alertModalMessage'),
+        };
+
+        // --- RENDERING FUNCTIONS ---
+        function renderPropertyCard(property, isWishlisted = false) {
+            const isFav = state.user.wishlist.includes(property.id);
+            return `
+                <article class="card property-card" data-property-id="${property.id}">
+                    <div class="relative">
+                        <img src="${utils.sanitizeHTML(property.image)}" alt="${utils.sanitizeHTML(property.title)}" class="property-image">
+                        <span class="property-badge bg-accent text-white">${utils.sanitizeHTML(property.type.toUpperCase())}</span>
+                        <button class="wishlist-btn ${isFav ? 'active' : ''}" aria-label="${isFav ? 'Hapus dari favorit' : 'Tambah ke favorit'}" data-property-id="${property.id}">
+                            <i class="${isFav ? 'fas' : 'far'} fa-heart" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-1">
+                            <a href="#property/${property.id}" data-route="property/${property.id}" class="hover:underline">${utils.sanitizeHTML(property.title)}</a>
+                        </h3>
+                        <div class="property-location mb-2">
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            <span>${utils.sanitizeHTML(property.location)}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="property-rating">
+                                <i class="fas fa-star" aria-hidden="true"></i>
+                                <span>${property.rating} (${property.reviewsCount} ulasan)</span>
+                            </div>
+                        </div>
+                         <div class="text-sm text-muted mb-2">
+                            ${property.beds} <i class="fas fa-bed"></i> &bull;
+                            ${property.baths} <i class="fas fa-bath"></i> &bull;
+                            ${property.size} m²
+                        </div>
+                        <div class="property-price mb-3">${utils.formatPrice(property.price)}/bulan</div>
+                        <a href="#property/${property.id}" data-route="property/${property.id}" class="btn btn-primary w-full btn-sm">Lihat Detail</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderHome() {
+            // Rekomendasi (ambil 2 properti acak)
+            const recommended = [...state.properties].sort(() => 0.5 - Math.random()).slice(0, 2);
+            elements.recommendedPropertiesContainer.innerHTML = recommended.map(p => renderPropertyCard(p)).join('');
+
+            // Populer di Jakarta (filter berdasarkan lokasi dan rating)
+            const popular = state.properties
+                .filter(p => p.location.toLowerCase().includes('jakarta'))
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 4);
+            elements.popularPropertiesContainer.innerHTML = popular.map(p => renderPropertyCard(p)).join('');
+
+            // Set tanggal minimum untuk quick search
+            const today = new Date().toISOString().split('T')[0];
+            elements.quickCheckinInput.min = today;
+            elements.quickCheckoutInput.min = today;
+
+            addWishlistButtonListeners(elements.recommendedPropertiesContainer);
+            addWishlistButtonListeners(elements.popularPropertiesContainer);
+            addNavigationLinkListeners(elements.recommendedPropertiesContainer);
+            addNavigationLinkListeners(elements.popularPropertiesContainer);
+        }
+
+        function renderSearchPage(filters = state.searchFilters) {
+            // Update filter form inputs
+            elements.searchLocationInput.value = filters.location;
+            elements.priceRangeInput.value = filters.price;
+            elements.priceValueSpan.textContent = utils.formatPrice(filters.price);
+
+            utils.$$('input[name="type"]', elements.typeFiltersContainer).forEach(cb => {
+                cb.checked = filters.type.includes(cb.value);
+            });
+            utils.$$('input[name="amenities"]', elements.amenitiesFiltersContainer).forEach(cb => {
+                cb.checked = filters.amenities.includes(cb.value);
+            });
+
+            // Jangan langsung filter jika belum ada interaksi user di halaman search
+            if (!state.searchFilters.initialSearchDone) {
+                elements.searchResultsContainer.innerHTML = '';
+                elements.searchPromptMessage.classList.remove('hidden');
+                elements.noSearchResultsMessage.classList.add('hidden');
+                elements.searchResultsCount.textContent = `Hasil Pencarian (0)`;
+                return;
+            }
+            elements.searchPromptMessage.classList.add('hidden');
+
+            const filteredProperties = state.properties.filter(p => {
+                const matchesLocation = filters.location ? p.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
+                const matchesPrice = p.price <= filters.price;
+                const matchesType = filters.type.length > 0 ? filters.type.includes(p.type) : true;
+                const matchesAmenities = filters.amenities.length > 0 ? filters.amenities.every(am => p.amenities.includes(am)) : true;
+                // TODO: Add checkin/checkout date availability if these filters are active
+                return matchesLocation && matchesPrice && matchesType && matchesAmenities;
+            });
+
+            elements.searchResultsCount.textContent = `Hasil Pencarian (${filteredProperties.length})`;
+            if (filteredProperties.length > 0) {
+                elements.searchResultsContainer.innerHTML = filteredProperties.map(p => renderPropertyCard(p)).join('');
+                elements.noSearchResultsMessage.classList.add('hidden');
+                addWishlistButtonListeners(elements.searchResultsContainer);
+                addNavigationLinkListeners(elements.searchResultsContainer);
+            } else {
+                elements.searchResultsContainer.innerHTML = '';
+                elements.noSearchResultsMessage.classList.remove('hidden');
+            }
+        }
+
+        function renderPropertyDetail(propertyId) {
+            const property = utils.getPropertyById(propertyId);
+            if (!property) {
+                elements.propertyDetailView.innerHTML = `<p class="text-danger text-center">Properti tidak ditemukan.</p>`;
+                return;
+            }
+            state.currentPropertyId = propertyId; // Simpan ID properti yang sedang dilihat
+
+            elements.propertyDetailTitle.textContent = utils.sanitizeHTML(property.title);
+            elements.propertyDetailType.textContent = utils.sanitizeHTML(property.type.charAt(0).toUpperCase() + property.type.slice(1));
+            elements.propertyDetailLocation.textContent = utils.sanitizeHTML(property.location);
+            elements.propertyDetailPrice.textContent = `${utils.formatPrice(property.price)}/bulan`;
+
+            elements.propertyGalleryContainer.innerHTML = property.images.map((img, index) => `
+                <img src="${utils.sanitizeHTML(img)}" alt="Gambar properti ${index + 1}" class="rounded shadow-sm w-full h-auto object-cover aspect-[4/3] cursor-pointer" loading="lazy" onclick="openImageModal('${utils.sanitizeHTML(img)}')">
+            `).join(''); // TODO: openImageModal
+
+            elements.propertyDetailSpecs.innerHTML = `
+                <span class="flex items-center gap-1"><i class="fas fa-bed" aria-hidden="true"></i> ${property.beds} Kamar Tidur</span>
+                <span class="flex items-center gap-1"><i class="fas fa-bath" aria-hidden="true"></i> ${property.baths} Kamar Mandi</span>
+                <span class="flex items-center gap-1"><i class="fas fa-ruler-combined" aria-hidden="true"></i> ${property.size} m²</span>
+            `;
+            elements.propertyDetailDescription.textContent = utils.sanitizeHTML(property.description);
+
+            elements.propertyDetailRating.innerHTML = `
+                <i class="fas fa-star text-warning" aria-hidden="true"></i>
+                <span class="font-bold">${property.rating}</span>
+                <span class="text-muted">(${property.reviewsCount} ulasan)</span>
+            `;
+
+            elements.propertyDetailAmenities.innerHTML = property.amenities.map(amenity => `
+                <div class="flex items-center gap-2 text-sm p-2 bg-surface-hover rounded">
+                    <i class="${utils.getAmenityIcon(amenity)} text-primary" aria-hidden="true"></i>
+                    <span>${utils.sanitizeHTML(utils.getAmenityName(amenity))}</span>
+                </div>
+            `).join('');
+
+            elements.propertyDetailAddress.textContent = utils.sanitizeHTML(property.address);
+
+            renderReviews(property.id);
+            updateDetailWishlistButton(property.id);
+
+            // Booking form dates
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            elements.checkinDateInput.min = today.toISOString().split('T')[0];
+            elements.checkoutDateInput.min = tomorrow.toISOString().split('T')[0];
+            elements.checkinDateInput.value = ''; // Reset
+            elements.checkoutDateInput.value = ''; // Reset
+            elements.guestsSelect.value = '2';
+            updateBookingSummary(); // Reset summary
+
+            // Owner info
+            const owner = property.owner;
+            elements.ownerInfoCard.avatar.textContent = utils.sanitizeHTML(owner.avatar);
+            elements.ownerInfoCard.name.textContent = utils.sanitizeHTML(owner.name);
+            elements.ownerInfoCard.since.textContent = utils.sanitizeHTML(owner.since);
+            elements.ownerInfoCard.responseRate.textContent = utils.sanitizeHTML(owner.responseRate);
+            elements.ownerInfoCard.responseTime.textContent = utils.sanitizeHTML(owner.responseTime);
+            elements.ownerInfoCard.contactBtn.dataset.ownerId = property.ownerId;
+        }
+
+        function renderReviews(propertyId) {
+            const property = utils.getPropertyById(propertyId);
+            if (!property) return;
+
+            elements.propertyReviewCount.textContent = property.reviews.length;
+            if (property.reviews.length > 0) {
+                elements.propertyReviewsList.innerHTML = property.reviews.map(review => `
+                    <div class="review" id="review-${review.id}">
+                        <div class="review-header">
+                            <span class="review-author font-semibold">${utils.sanitizeHTML(review.author)}</span>
+                            <span class="review-date text-sm text-muted">${utils.formatDate(review.date)}</span>
+                        </div>
+                        <div class="review-rating mb-1">
+                            ${Array(5).fill(0).map((_, i) => `<i class="fas fa-star ${i < review.rating ? 'text-warning' : 'text-muted'}"></i>`).join('')}
+                        </div>
+                        <p class="review-body">${utils.sanitizeHTML(review.text)}</p>
+                    </div>
+                `).join('');
+            } else {
+                elements.propertyReviewsList.innerHTML = `<p class="text-muted">Belum ada ulasan untuk properti ini.</p>`;
+            }
+        }
+
+        function renderWishlist() {
+            const wishlistProperties = state.user.wishlist.map(id => utils.getPropertyById(id)).filter(p => p);
+            if (wishlistProperties.length > 0) {
+                elements.wishlistPropertiesContainer.innerHTML = wishlistProperties.map(p => renderPropertyCard(p, true)).join('');
+                elements.emptyWishlistMessage.classList.add('hidden');
+                elements.wishlistPropertiesContainer.classList.remove('hidden');
+                addWishlistButtonListeners(elements.wishlistPropertiesContainer);
+                addNavigationLinkListeners(elements.wishlistPropertiesContainer);
+            } else {
+                elements.wishlistPropertiesContainer.innerHTML = '';
+                elements.wishlistPropertiesContainer.classList.add('hidden');
+                elements.emptyWishlistMessage.classList.remove('hidden');
+            }
+        }
+
+        function renderBookingCard(booking) {
+            const property = utils.getPropertyById(booking.propertyId);
+            const propertyName = property ? property.title : booking.propertyName || 'Properti Tidak Diketahui';
+            const propertyImage = property ? property.image : booking.propertyImage || 'https://picsum.photos/seed/default/100/75';
+
+            let statusBadgeClass = '';
+            let statusText = '';
+            switch (booking.status) {
+                case 'confirmed': statusBadgeClass = 'bg-success'; statusText = 'Terkonfirmasi'; break;
+                case 'pending': statusBadgeClass = 'bg-warning'; statusText = 'Menunggu Konfirmasi'; break;
+                case 'completed': statusBadgeClass = 'bg-muted'; statusText = 'Selesai'; break;
+                case 'cancelled': statusBadgeClass = 'bg-danger'; statusText = 'Dibatalkan'; break;
+                default: statusBadgeClass = 'bg-primary'; statusText = booking.status;
+            }
+
+            return `
+                <div class="card mb-3">
+                    <div class="card-body flex gap-3">
+                        <img src="${utils.sanitizeHTML(propertyImage)}" alt="${utils.sanitizeHTML(propertyName)}" class="rounded" style="width:100px; height:75px; object-fit:cover;">
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-lg font-semibold">${utils.sanitizeHTML(propertyName)}</h3>
+                                <span class="badge ${statusBadgeClass} text-xs">${statusText}</span>
+                            </div>
+                            <p class="text-sm text-muted">ID Pesanan: ${utils.sanitizeHTML(booking.id)}</p>
+                            <p class="text-sm">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i> 
+                                ${utils.formatDate(booking.checkin)} - ${utils.formatDate(booking.checkout)}
+                            </p>
+                            <p class="text-sm font-semibold">${utils.formatPrice(booking.totalPrice)}</p>
+                        </div>
+                        <div class="flex flex-col justify-center items-end gap-2">
+                             <a href="#booking-detail/${booking.id}" data-route="booking-detail/${booking.id}" class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye" aria-hidden="true"></i> Detail
+                            </a>
+                            ${booking.status === 'confirmed' ? `
+                                <button class="btn btn-sm btn-danger btn-outline cancel-booking-btn" data-booking-id="${booking.id}">
+                                    <i class="fas fa-times-circle" aria-hidden="true"></i> Batalkan
+                                </button>
+                            ` : ''}
+                             ${booking.status === 'completed' && !property.reviews.find(r => r.author === state.user.name) ? ` <!-- Cek jika user sudah review properti ini -->
+                                <a href="#property/${booking.propertyId}" data-route="property/${booking.propertyId}" data-focus-review="true" class="btn btn-sm btn-outline">
+                                    <i class="fas fa-star" aria-hidden="true"></i> Beri Ulasan
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBookings() {
+            const now = new Date();
+            const upcoming = state.user.bookings.filter(b => (b.status === 'confirmed' || b.status === 'pending') && new Date(b.checkin) >= now);
+            const completed = state.user.bookings.filter(b => b.status === 'completed' || (b.status === 'confirmed' && new Date(b.checkout) < now));
+            const cancelled = state.user.bookings.filter(b => b.status === 'cancelled');
+
+            elements.upcomingBookingsList.innerHTML = upcoming.length ? upcoming.map(renderBookingCard).join('') : '';
+            elements.noUpcomingBookingsMessage.classList.toggle('hidden', upcoming.length > 0);
+            addBookingActionListeners(elements.upcomingBookingsList);
+
+            elements.completedBookingsList.innerHTML = completed.length ? completed.map(renderBookingCard).join('') : '';
+            elements.noCompletedBookingsMessage.classList.toggle('hidden', completed.length > 0);
+            addBookingActionListeners(elements.completedBookingsList);
+
+            elements.cancelledBookingsList.innerHTML = cancelled.length ? cancelled.map(renderBookingCard).join('') : '';
+            elements.noCancelledBookingsMessage.classList.toggle('hidden', cancelled.length > 0);
+            addBookingActionListeners(elements.cancelledBookingsList);
+        }
+
+        function renderBookingDetail(bookingId) {
+            const booking = utils.getBookingById(bookingId);
+            if (!booking) {
+                elements.bookingDetailContent.innerHTML = `<p class="text-danger text-center">Pesanan tidak ditemukan.</p>`;
+                return;
+            }
+            state.currentBookingId = bookingId;
+            elements.bookingDetailIdSpan.textContent = `#${utils.sanitizeHTML(booking.id)}`;
+            const property = utils.getPropertyById(booking.propertyId);
+
+            elements.bookingDetailContent.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="text-xl font-bold">Properti: ${utils.sanitizeHTML(property ? property.title : booking.propertyName)}</h2>
+                        <p class="text-sm text-muted">${utils.sanitizeHTML(property ? property.location : 'Lokasi tidak diketahui')}</p>
+                    </div>
+                    <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="font-semibold mb-1">Detail Pemesanan:</h3>
+                            <p><strong>Check-in:</strong> ${utils.formatDate(booking.checkin)}</p>
+                            <p><strong>Check-out:</strong> ${utils.formatDate(booking.checkout)}</p>
+                            <p><strong>Tamu:</strong> ${booking.guests} orang</p>
+                            <p><strong>Total Harga:</strong> ${utils.formatPrice(booking.totalPrice)}</p>
+                            <p><strong>Metode Pembayaran:</strong> ${utils.sanitizeHTML(booking.paymentMethod.toUpperCase())}</p>
+                            <p><strong>Status Pembayaran:</strong> <span class="font-semibold ${booking.paymentStatus === 'paid' ? 'text-success' : 'text-warning'}">${booking.paymentStatus === 'paid' ? 'Lunas' : 'Belum Lunas'}</span></p>
+                            <p><strong>Status Pesanan:</strong> <span class="font-semibold text-primary">${utils.sanitizeHTML(booking.status.charAt(0).toUpperCase() + booking.status.slice(1))}</span></p>
+                            <p><strong>Dipesan pada:</strong> ${utils.formatDate(booking.createdAt, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>
+                        ${property ? `
+                        <div>
+                            <h3 class="font-semibold mb-1">Info Pemilik:</h3>
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="user-avatar text-sm">${utils.sanitizeHTML(property.owner.avatar)}</div>
+                                <div>
+                                    <p class="font-medium">${utils.sanitizeHTML(property.owner.name)}</p>
+                                    <button class="text-primary text-sm hover:underline contact-owner-from-booking-detail" data-owner-id="${property.ownerId}">Hubungi Pemilik</button>
+                                </div>
+                            </div>
+                            <img src="${utils.sanitizeHTML(property.image)}" alt="${utils.sanitizeHTML(property.title)}" class="rounded shadow w-full h-auto object-cover aspect-video">
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><h2 class="text-xl font-bold">Linimasa Pesanan</h2></div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            ${booking.timeline.map(item => `
+                                <div class="timeline-item ${item.date <= new Date().toISOString() && !item.pending ? 'completed' : (item.pending ? 'pending' : '')}">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content">
+                                        <p class="font-semibold">${utils.sanitizeHTML(item.status)}</p>
+                                        ${item.note ? `<p class="text-sm text-muted">${utils.sanitizeHTML(item.note)}</p>` : ''}
+                                        <p class="timeline-date">${utils.formatDate(item.date, { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            const contactBtn = utils.$('.contact-owner-from-booking-detail', elements.bookingDetailContent);
+            if (contactBtn) {
+                contactBtn.addEventListener('click', (e) => {
+                    const ownerId = e.currentTarget.dataset.ownerId;
+                    if (ownerId) navigateToChat(ownerId);
+                });
+            }
+        }
+
+        function renderChat(ownerId) {
+            state.currentChatTargetId = ownerId;
+            const owner = utils.getOwnerById(ownerId);
+            elements.chatWithName.textContent = utils.sanitizeHTML(owner.name);
+            elements.chatAvatar.textContent = utils.sanitizeHTML(owner.avatar);
+            elements.chatContactName.textContent = utils.sanitizeHTML(owner.name);
+            elements.chatContactStatus.textContent = 'Online'; // Placeholder
+
+            const messages = state.chatMessages[ownerId] || [];
+            if (messages.length > 0) {
+                elements.chatMessagesContainer.innerHTML = messages.map(msg => `
+                    <div class="chat-message ${msg.from === 'user' ? 'sent' : 'received'}">
+                        ${utils.sanitizeHTML(msg.text)}
+                        <span class="chat-meta">${utils.formatTimeAgo(msg.time)}</span>
+                    </div>
+                `).join('');
+            } else {
+                elements.chatMessagesContainer.innerHTML = `<p class="text-muted text-center p-3">Mulai percakapan dengan ${utils.sanitizeHTML(owner.name)}.</p>`;
+            }
+            elements.chatMessagesContainer.scrollTop = elements.chatMessagesContainer.scrollHeight;
+        }
+
+        function renderNotifications() {
+            const unreadNotifications = state.user.notifications.filter(n => !n.read);
+            elements.notificationBtn.dataset.count = unreadNotifications.length;
+
+            if (state.user.notifications.length === 0) {
+                elements.notificationListContainer.innerHTML = ''; // Clear previous
+                elements.noNotificationsMessage.classList.remove('hidden');
+                return;
+            }
+
+            elements.noNotificationsMessage.classList.add('hidden');
+            elements.notificationListContainer.innerHTML = state.user.notifications.sort((a, b) => new Date(b.time) - new Date(a.time)).map(notif => `
+                <a href="${notif.link}" data-route="${notif.link.substring(1)}" data-notification-id="${notif.id}" 
+                   class="notification-item flex items-start gap-3 p-3 border-b hover:bg-surface-hover ${!notif.read ? 'bg-primary-lightest font-medium' : ''}" 
+                   style="${!notif.read ? 'background-color: hsl(210, 90%, 95%);' : ''}">
+                    <i class="${notif.icon || 'fas fa-info-circle'} text-primary text-lg mt-1 fa-fw" aria-hidden="true"></i>
+                    <div class="flex-grow">
+                        <p class="text-sm ${!notif.read ? 'font-semibold' : ''}">${utils.sanitizeHTML(notif.message)}</p>
+                        <p class="text-xs text-muted">${utils.formatTimeAgo(notif.time)}</p>
+                    </div>
+                    ${!notif.read ? '<span class="unread-dot w-2 h-2 bg-primary rounded-full mt-1 self-center"></span>' : ''}
+                </a>
+            `).join('');
+
+            // Add event listeners for each notification item
+            utils.$$('.notification-item', elements.notificationListContainer).forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const notifId = this.dataset.notificationId;
+                    markNotificationAsRead(notifId);
+                    closeModal('notification-modal');
+                    // The router will handle navigation based on data-route
+                    const route = this.dataset.route;
+                    if (route) {
+                        navigateTo(route);
+                    }
+                });
+            });
+        }
+
+        // --- UI UPDATE FUNCTIONS ---
+        function updateNavLinks(activeRoute) {
+            elements.navLinks.forEach(link => {
+                if (link.dataset.route === activeRoute || (activeRoute.startsWith(link.dataset.route) && link.dataset.route !== 'home' && activeRoute !== link.dataset.route)) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            // Special handling for routes like property/id or booking-detail/id
+            if (activeRoute.startsWith('property/')) {
+                utils.$('.nav-link[data-route="search"]', elements.navLinksContainer)?.classList.add('active');
+            } else if (activeRoute.startsWith('booking-detail/')) {
+                utils.$('.nav-link[data-route="bookings"]', elements.navLinksContainer)?.classList.add('active');
+            } else if (activeRoute.startsWith('chat/')) {
+                // No specific nav link for chat, maybe highlight previous or related view if applicable
+            }
+        }
+
+        function updateWishlistButton(propertyId, container = document) {
+            const isFav = state.user.wishlist.includes(propertyId);
+            utils.$$(`.wishlist-btn[data-property-id="${propertyId}"]`, container).forEach(btn => {
+                btn.classList.toggle('active', isFav);
+                btn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" aria-hidden="true"></i>`;
+                btn.setAttribute('aria-label', isFav ? 'Hapus dari favorit' : 'Tambah ke favorit');
+            });
+        }
+
+        function updateDetailWishlistButton(propertyId) {
+            const isFav = state.user.wishlist.includes(propertyId);
+            elements.detailWishlistBtn.classList.toggle('active', isFav);
+            elements.detailWishlistBtn.innerHTML = `
+                <i class="${isFav ? 'fas' : 'far'} fa-heart" aria-hidden="true"></i>
+                <span>${isFav ? 'Tersimpan' : 'Simpan'}</span>
+            `;
+            elements.detailWishlistBtn.setAttribute('aria-label', isFav ? 'Hapus dari favorit' : 'Tambah ke favorit');
+        }
+
+        function updateBookingSummary() {
+            const property = utils.getPropertyById(state.currentPropertyId);
+            if (!property) {
+                elements.bookNowBtnPropertyDetail.disabled = true;
+                elements.bookingSummaryContainer.classList.add('hidden');
+                return;
+            }
+
+            const checkin = elements.checkinDateInput.value;
+            const checkout = elements.checkoutDateInput.value;
+            const guests = parseInt(elements.guestsSelect.value);
+            const duration = utils.getDaysBetweenDates(checkin, checkout);
+
+            elements.availabilityMessage.classList.add('hidden');
+            elements.unavailabilityMessage.classList.add('hidden');
+
+            if (checkin && checkout && new Date(checkout) > new Date(checkin) && duration >= state.minBookingDurationDays) {
+                elements.availabilityMessage.classList.remove('hidden');
+                const subtotal = property.price * (duration / 30); // Assuming price is per month, rough calculation
+                const serviceFee = subtotal * state.serviceFeePercentage;
+                const total = subtotal + serviceFee;
+
+                elements.bookingPriceCalc.textContent = `${utils.formatPrice(property.price)} x ${duration} malam (estimasi)`; // More accurate if price/night known
+                elements.bookingSubtotal.textContent = utils.formatPrice(subtotal);
+                elements.bookingServiceFee.textContent = utils.formatPrice(serviceFee);
+                elements.bookingTotal.textContent = utils.formatPrice(total);
+                elements.bookingSummaryContainer.classList.remove('hidden');
+                elements.bookNowBtnPropertyDetail.disabled = false;
+
+                state.tempBookingDetails = {
+                    propertyId: property.id, propertyName: property.title, propertyImage: property.image,
+                    checkin, checkout, guests, subtotal, serviceFee, total,
+                    pricePerNightOrMonth: property.price, // Assuming monthly for now
+                    durationText: `${duration} malam`, // This might need adjustment based on price unit
+                };
+
+            } else {
+                elements.bookingSummaryContainer.classList.add('hidden');
+                elements.bookNowBtnPropertyDetail.disabled = true;
+                if (checkin && checkout && new Date(checkout) <= new Date(checkin)) {
+                    elements.unavailabilityMessage.textContent = 'Tanggal check-out harus setelah tanggal check-in.';
+                    elements.unavailabilityMessage.classList.remove('hidden');
+                } else if (checkin && checkout && duration < state.minBookingDurationDays) {
+                    elements.unavailabilityMessage.textContent = `Durasi sewa minimal adalah ${state.minBookingDurationDays} malam.`;
+                    elements.unavailabilityMessage.classList.remove('hidden');
+                }
+            }
+        }
+
+        // --- MODAL FUNCTIONS ---
+        function openModal(modalId) {
+            const modal = utils.$(`#${modalId}`);
+            if (modal) {
+                modal.classList.add('modal-open');
+                modal.setAttribute('aria-hidden', 'false');
+                // Fokus pada elemen pertama yang bisa difokus di dalam modal
+                const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusable) focusable.focus();
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = utils.$(`#${modalId}`);
+            if (modal) {
+                modal.classList.remove('modal-open');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        }
+
+        function showAlertModal(title, message) {
+            elements.alertModalTitle.textContent = utils.sanitizeHTML(title);
+            elements.alertModalMessage.textContent = utils.sanitizeHTML(message);
+            openModal('alert-modal');
+        }
+
+        // --- EVENT HANDLERS & LOGIC ---
+        function handleNavClick(e) {
+            // Check if the click is on a link or child of a link with data-route
+            const targetLink = e.target.closest('a[data-route]');
+            if (targetLink) {
+                e.preventDefault();
+                const route = targetLink.dataset.route;
+                navigateTo(route);
+                if (elements.navLinksContainer.classList.contains('active')) { // Close mobile menu
+                    elements.navLinksContainer.classList.remove('active');
+                    elements.mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    elements.mobileMenuIcon.classList.remove('fa-times');
+                    elements.mobileMenuIcon.classList.add('fa-bars');
+                }
+            }
+        }
+
+        function addNavigationLinkListeners(container = document) {
+            utils.$$('a[data-route]', container).forEach(link => {
+                // Remove old listener before adding new one to prevent duplicates if called multiple times
+                link.removeEventListener('click', handleNavClick);
+                link.addEventListener('click', handleNavClick);
+            });
+        }
+
+        function toggleMobileMenu() {
+            elements.navLinksContainer.classList.toggle('active');
+            const isExpanded = elements.navLinksContainer.classList.contains('active');
+            elements.mobileMenuBtn.setAttribute('aria-expanded', isExpanded.toString());
+            if (isExpanded) {
+                elements.mobileMenuIcon.classList.remove('fa-bars');
+                elements.mobileMenuIcon.classList.add('fa-times');
+            } else {
+                elements.mobileMenuIcon.classList.remove('fa-times');
+                elements.mobileMenuIcon.classList.add('fa-bars');
+            }
+        }
+
+        function handleQuickSearch(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            state.searchFilters.location = formData.get('location') || '';
+            state.searchFilters.type = formData.get('type') ? [formData.get('type')] : [];
+            state.searchFilters.checkin = formData.get('checkin') || '';
+            state.searchFilters.checkout = formData.get('checkout') || '';
+            state.searchFilters.amenities = []; // Quick search doesn't have amenity filters
+            state.searchFilters.price = 50000000; // Default max price for quick search
+            state.searchFilters.initialSearchDone = true;
+            navigateTo('search'); // Filters will be applied in renderSearchPage
+        }
+
+        function handleFilterSearch(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            state.searchFilters.location = formData.get('location') || '';
+            state.searchFilters.price = parseInt(formData.get('price')) || 50000000;
+            state.searchFilters.type = formData.getAll('type');
+            state.searchFilters.amenities = formData.getAll('amenities');
+            // Checkin/checkout from filters not implemented yet
+            state.searchFilters.initialSearchDone = true;
+            renderSearchPage(state.searchFilters); // Re-render with new filters
+        }
+
+        function handleFilterReset(e) {
+            e.preventDefault();
+            state.searchFilters = { location: '', price: 50000000, type: [], amenities: [], checkin: '', checkout: '', initialSearchDone: false };
+            elements.searchFiltersForm.reset(); // Resets form inputs
+            elements.priceValueSpan.textContent = utils.formatPrice(state.searchFilters.price); // Update price display
+            renderSearchPage(); // Re-render search page (will show prompt)
+        }
+
+        function handlePriceRangeChange(e) {
+            elements.priceValueSpan.textContent = utils.formatPrice(e.target.value);
+            // Debounced search can be added here if desired
+            // state.searchFilters.price = parseInt(e.target.value);
+            // renderSearchPage(state.searchFilters);
+        }
+        const debouncedPriceRangeSearch = utils.debounce(() => {
+            state.searchFilters.price = parseInt(elements.priceRangeInput.value);
+            state.searchFilters.initialSearchDone = true;
+            renderSearchPage(state.searchFilters);
+        }, 500);
+
+
+        function toggleWishlist(propertyId) {
+            const index = state.user.wishlist.indexOf(propertyId);
+            if (index > -1) {
+                state.user.wishlist.splice(index, 1); // Remove
+            } else {
+                state.user.wishlist.push(propertyId); // Add
+            }
+            // Update buttons on current view
+            updateWishlistButton(propertyId); // General property cards
+            if (state.currentView === 'property' && state.currentPropertyId === propertyId) {
+                updateDetailWishlistButton(propertyId); // Detail page button
+            }
+            // If on wishlist page, re-render
+            if (state.currentView === 'wishlist') {
+                renderWishlist();
+            }
+            // Save to localStorage
+            localStorage.setItem('greenValleyWishlist', JSON.stringify(state.user.wishlist));
+        }
+
+        function addWishlistButtonListeners(container) {
+            utils.$$('.wishlist-btn', container).forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent card click if button is inside link
+                    const propertyId = e.currentTarget.dataset.propertyId;
+                    toggleWishlist(propertyId);
+                });
+            });
+        }
+
+        function handleAddReview(e) {
+            e.preventDefault();
+            const property = utils.getPropertyById(state.currentPropertyId);
+            if (!property) return;
+
+            const text = elements.reviewTextInput.value.trim();
+            const rating = parseInt(elements.reviewRatingSelect.value);
+
+            if (!text || !rating) {
+                showAlertModal('Input Tidak Lengkap', 'Mohon isi ulasan dan rating Anda.');
+                return;
+            }
+
+            const newReview = {
+                id: utils.generateId('rev'),
+                author: state.user.name, // Assuming logged-in user
+                rating: rating,
+                date: new Date().toISOString(),
+                text: text
+            };
+            property.reviews.unshift(newReview); // Add to beginning
+            property.reviewsCount = property.reviews.length; // Update count
+            // Ideally, recalculate average rating here as well
+            // property.rating = calculateNewAverageRating(property.reviews);
+
+            renderReviews(property.id); // Re-render reviews section
+            elements.addReviewForm.reset(); // Clear form
+            showAlertModal('Ulasan Terkirim', 'Terima kasih atas ulasan Anda!');
+        }
+
+        function handlePropertyBookingFormChange() {
+            updateBookingSummary();
+        }
+
+        function handlePropertyBookingFormSubmit(e) {
+            e.preventDefault();
+            if (!state.tempBookingDetails) {
+                showAlertModal('Kesalahan', 'Detail pemesanan tidak lengkap. Silakan periksa tanggal.');
+                return;
+            }
+
+            // Populate booking modal summary
+            elements.bookingModalSummary.innerHTML = `
+                <h3 class="text-lg font-semibold mb-2">${utils.sanitizeHTML(state.tempBookingDetails.propertyName)}</h3>
+                <p><strong>Check-in:</strong> ${utils.formatDate(state.tempBookingDetails.checkin)}</p>
+                <p><strong>Check-out:</strong> ${utils.formatDate(state.tempBookingDetails.checkout)}</p>
+                <p><strong>Durasi:</strong> ${state.tempBookingDetails.durationText}</p>
+                <p><strong>Tamu:</strong> ${state.tempBookingDetails.guests} orang</p>
+                <hr class="my-2">
+                <div class="flex justify-between"><span>Subtotal:</span> <span>${utils.formatPrice(state.tempBookingDetails.subtotal)}</span></div>
+                <div class="flex justify-between"><span>Biaya Layanan:</span> <span>${utils.formatPrice(state.tempBookingDetails.serviceFee)}</span></div>
+                <div class="flex justify-between font-bold text-lg mt-1"><span>Total:</span> <span>${utils.formatPrice(state.tempBookingDetails.total)}</span></div>
+            `;
+            elements.paymentMethodSelect.value = '';
+            elements.termsAgreeCheckbox.checked = false;
+            elements.bookingModalError.classList.add('hidden');
+            openModal('booking-modal');
+        }
+
+        function handleConfirmBooking() {
+            const paymentMethod = elements.paymentMethodSelect.value;
+            const termsAgreed = elements.termsAgreeCheckbox.checked;
+
+            if (!paymentMethod) {
+                elements.bookingModalError.textContent = 'Silakan pilih metode pembayaran.';
+                elements.bookingModalError.classList.remove('hidden');
+                return;
+            }
+            if (!termsAgreed) {
+                elements.bookingModalError.textContent = 'Anda harus menyetujui Syarat & Ketentuan.';
+                elements.bookingModalError.classList.remove('hidden');
+                return;
+            }
+            elements.bookingModalError.classList.add('hidden');
+
+            const newBookingId = utils.generateId('book');
+            state.tempBookingDetails.id = newBookingId;
+            state.tempBookingDetails.paymentMethod = paymentMethod;
+
+            // Store temp booking, will be finalized after payment
+            // For now, directly add to bookings and simulate payment steps
+
+            closeModal('booking-modal');
+            elements.paymentBookingId.textContent = `#${newBookingId}`;
+            // Generate payment instructions based on method
+            elements.paymentInstructions.innerHTML = `
+                <p>Silakan transfer sejumlah <strong>${utils.formatPrice(state.tempBookingDetails.total)}</strong> ke rekening berikut:</p>
+                <p><strong>Bank ${paymentMethod.toUpperCase()}:</strong> 123-456-7890 a.n. Green Valley Estate</p>
+                <p class="mt-2 text-sm text-muted">Selesaikan pembayaran dalam 1 jam atau pesanan Anda akan otomatis dibatalkan.</p>
+            `;
+            elements.paymentProofInput.value = ''; // Reset file input
+            elements.paymentModalError.classList.add('hidden');
+            openModal('payment-modal');
+        }
+
+        function handleConfirmPayment() {
+            // This is where actual payment processing would happen in a real app
+            // For simulation:
+            const bookingDetails = state.tempBookingDetails;
+            if (!bookingDetails) return;
+
+            const newBooking = {
+                id: bookingDetails.id,
+                propertyId: bookingDetails.propertyId,
+                ownerId: utils.getPropertyById(bookingDetails.propertyId).ownerId,
+                propertyName: bookingDetails.propertyName,
+                propertyImage: bookingDetails.propertyImage,
+                checkin: bookingDetails.checkin,
+                checkout: bookingDetails.checkout,
+                guests: bookingDetails.guests,
+                totalPrice: bookingDetails.total,
+                paymentMethod: bookingDetails.paymentMethod,
+                paymentStatus: 'paid', // Assume payment is successful
+                status: 'confirmed', // Or 'pending' if owner confirmation is needed
+                createdAt: new Date().toISOString(),
+                timeline: [
+                    { status: 'Pesanan Dibuat', date: new Date().toISOString(), note: 'Anda telah membuat pesanan.' },
+                    { status: 'Pembayaran Diterima', date: new Date(Date.now() + 5 * 60000).toISOString(), note: 'Pembayaran dikonfirmasi oleh sistem.' }, // Simulate 5 mins later
+                    { status: 'Pesanan Dikonfirmasi', date: new Date(Date.now() + 10 * 60000).toISOString(), note: 'Pemilik mengkonfirmasi pesanan (simulasi).' }, // Simulate 10 mins later
+                    { status: 'Menunggu Check-in', date: new Date(bookingDetails.checkin).toISOString(), note: 'Siap untuk check-in.', pending: true },
+                ]
+            };
+            state.user.bookings.unshift(newBooking);
+
+            // Add notification
+            const property = utils.getPropertyById(newBooking.propertyId);
+            addNotification({
+                type: 'booking',
+                from: 'Sistem Green Valley',
+                message: `Pesanan Anda untuk ${property.title} (#${newBooking.id}) telah dikonfirmasi!`,
+                link: `#booking-detail/${newBooking.id}`,
+                icon: 'fas fa-calendar-check'
+            });
+
+
+            closeModal('payment-modal');
+            showAlertModal('Pembayaran Berhasil', `Pesanan #${newBooking.id} telah dikonfirmasi. Detail pesanan dapat dilihat di halaman Pesanan Saya.`);
+            navigateTo('bookings');
+            state.tempBookingDetails = null; // Clear temp details
+        }
+
+        function handlePayLater() {
+            // For simulation: treat as pending payment
+            const bookingDetails = state.tempBookingDetails;
+            if (!bookingDetails) return;
+
+            const newBooking = {
+                id: bookingDetails.id,
+                propertyId: bookingDetails.propertyId,
+                ownerId: utils.getPropertyById(bookingDetails.propertyId).ownerId,
+                propertyName: bookingDetails.propertyName,
+                propertyImage: bookingDetails.propertyImage,
+                checkin: bookingDetails.checkin,
+                checkout: bookingDetails.checkout,
+                guests: bookingDetails.guests,
+                totalPrice: bookingDetails.total,
+                paymentMethod: bookingDetails.paymentMethod,
+                paymentStatus: 'pending',
+                status: 'pending', // Pending payment and owner confirmation
+                createdAt: new Date().toISOString(),
+                timeline: [
+                    { status: 'Pesanan Dibuat', date: new Date().toISOString(), note: 'Menunggu pembayaran.' },
+                    { status: 'Menunggu Pembayaran', date: new Date().toISOString(), note: 'Selesaikan pembayaran untuk konfirmasi.', pending: true },
+                ]
+            };
+            state.user.bookings.unshift(newBooking);
+
+            // Add notification
+            const property = utils.getPropertyById(newBooking.propertyId);
+            addNotification({
+                type: 'booking',
+                from: 'Sistem Green Valley',
+                message: `Pesanan Anda untuk ${property.title} (#${newBooking.id}) menunggu pembayaran.`,
+                link: `#booking-detail/${newBooking.id}`,
+                icon: 'fas fa-hourglass-half'
+            });
+
+            closeModal('payment-modal');
+            showAlertModal('Pesanan Diterima', `Pesanan #${newBooking.id} telah diterima dan menunggu pembayaran. Silakan selesaikan pembayaran segera.`);
+            navigateTo('bookings');
+            state.tempBookingDetails = null;
+        }
+
+
+        function handleTabClick(e) {
+            const clickedTab = e.target.closest('.tab');
+            if (!clickedTab || clickedTab.classList.contains('active')) return;
+
+            elements.bookingsTabs.forEach(tab => tab.classList.remove('active', 'aria-selected'));
+            elements.bookingsTabContents.forEach(content => content.classList.remove('active'));
+
+            clickedTab.classList.add('active');
+            clickedTab.setAttribute('aria-selected', 'true');
+            const tabTargetId = clickedTab.dataset.tab;
+            utils.$(`#${tabTargetId}-bookings`).classList.add('active');
+        }
+
+        function handleChatMessageSubmit(e) {
+            e.preventDefault();
+            const text = elements.chatMessageInput.value.trim();
+            if (!text || !state.currentChatTargetId) return;
+
+            const ownerId = state.currentChatTargetId;
+            if (!state.chatMessages[ownerId]) {
+                state.chatMessages[ownerId] = [];
+            }
+
+            const newMessage = {
+                id: utils.generateId('msg'),
+                from: 'user',
+                text: text,
+                time: new Date().toISOString()
+            };
+            state.chatMessages[ownerId].push(newMessage);
+            elements.chatMessageInput.value = '';
+            renderChat(ownerId); // Re-render chat with new message
+
+            // Simulate reply from owner after a delay
+            setTimeout(() => {
+                const replyText = "Terima kasih atas pesan Anda. Saya akan segera merespons.";
+                const ownerReply = {
+                    id: utils.generateId('msg'),
+                    from: 'owner',
+                    text: replyText,
+                    time: new Date().toISOString()
+                };
+                state.chatMessages[ownerId].push(ownerReply);
+                // Only re-render if user is still on this chat page
+                if (state.currentView === 'chat' && state.currentChatTargetId === ownerId) {
+                    renderChat(ownerId);
+                }
+                // Add notification for new message if user not on chat page or different chat
+                if (!(state.currentView === 'chat' && state.currentChatTargetId === ownerId)) {
+                    const owner = utils.getOwnerById(ownerId);
+                    addNotification({
+                        type: 'message',
+                        from: owner.name,
+                        message: `Anda menerima pesan baru dari ${owner.name}.`,
+                        link: `#chat/${ownerId}`,
+                        icon: 'fas fa-comment-dots'
+                    });
+                }
+            }, 2000);
+        }
+
+        function navigateToChat(ownerId) {
+            const owner = utils.getOwnerById(ownerId);
+            if (owner) {
+                state.currentChatTargetId = ownerId;
+                navigateTo(`chat/${ownerId}`);
+            } else {
+                showAlertModal('Error', 'Pemilik tidak ditemukan.');
+            }
+        }
+
+        function addNotification(notificationData) {
+            const newNotif = {
+                id: utils.generateId('notif'),
+                time: new Date().toISOString(),
+                read: false,
+                ...notificationData // type, from, message, link, icon
+            };
+            state.user.notifications.unshift(newNotif);
+            renderNotifications(); // Update badge and modal list if open
+        }
+
+        function markNotificationAsRead(notificationId) {
+            const notif = state.user.notifications.find(n => n.id === notificationId);
+            if (notif && !notif.read) {
+                notif.read = true;
+                renderNotifications(); // Update UI
+            }
+        }
+
+        function markAllNotificationsAsRead() {
+            state.user.notifications.forEach(n => n.read = true);
+            renderNotifications();
+        }
+        function clearAllNotifications() {
+            state.user.notifications = [];
+            renderNotifications();
+        }
+
+        function handleCancelBooking(bookingId) {
+            // Confirmation dialog
+            if (!confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+                return;
+            }
+
+            const booking = utils.getBookingById(bookingId);
+            if (booking) {
+                booking.status = 'cancelled';
+                booking.timeline.push({
+                    status: 'Pesanan Dibatalkan',
+                    date: new Date().toISOString(),
+                    note: 'Pesanan dibatalkan oleh pengguna.'
+                });
+
+                // Re-render bookings view if currently active
+                if (state.currentView === 'bookings') {
+                    renderBookings();
+                }
+                // Re-render booking detail if currently active
+                if (state.currentView === 'booking-detail' && state.currentBookingId === bookingId) {
+                    renderBookingDetail(bookingId);
+                }
+
+                showAlertModal('Pesanan Dibatalkan', `Pesanan #${booking.id} telah berhasil dibatalkan.`);
+                // Add notification
+                const property = utils.getPropertyById(booking.propertyId);
+                addNotification({
+                    type: 'booking',
+                    from: 'Sistem Green Valley',
+                    message: `Pesanan Anda untuk ${property.title} (#${booking.id}) telah dibatalkan.`,
+                    link: `#booking-detail/${booking.id}`,
+                    icon: 'fas fa-ban'
+                });
+            } else {
+                showAlertModal('Error', 'Gagal membatalkan pesanan. Pesanan tidak ditemukan.');
+            }
+        }
+
+        function addBookingActionListeners(container) {
+            utils.$$('.cancel-booking-btn', container).forEach(btn => {
+                // Remove old listener
+                const newBtn = btn.cloneNode(true); // Clone to remove listeners
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', (e) => {
+                    const bookingId = e.currentTarget.dataset.bookingId;
+                    handleCancelBooking(bookingId);
+                });
+            });
+            utils.$$('a[data-route][data-focus-review="true"]', container).forEach(link => {
+                const newLink = link.cloneNode(true);
+                link.parentNode.replaceChild(newLink, link);
+                newLink.addEventListener('click', (e) => {
+                    handleNavClick(e); // Standard navigation
+                    // After navigation, the router will handle focusing review form
+                });
+            });
+            addNavigationLinkListeners(container); // For detail links
+        }
+
+        // --- ROUTING ---
+        function handleRouteChange() {
+            const hash = window.location.hash || '#home';
+            const [path, ...params] = hash.substring(1).split('/');
+
+            state.previousView = state.currentView;
+            state.currentView = path || 'home'; // Default to home if path is empty
+
+            elements.views.forEach(view => view.classList.add('hidden'));
+            let targetView = utils.$(`#${path}`);
+
+            updateNavLinks(path);
+            window.scrollTo(0, 0); // Scroll to top on view change
+
+            switch (path) {
+                case 'home':
+                    renderHome();
+                    break;
+                case 'search':
+                    renderSearchPage(); // Will use existing filters or default
+                    break;
+                case 'property':
+                    const propertyId = params[0];
+                    if (propertyId) {
+                        state.currentPropertyId = propertyId;
+                        renderPropertyDetail(propertyId);
+                        // Check if focus review is needed
+                        const urlParams = new URLSearchParams(window.location.search); // Not used here, but for future
+                        const currentHash = window.location.hash;
+                        if (currentHash.includes('focusReview=true')) {
+                            setTimeout(() => elements.reviewTextInput.focus(), 300); // Delay for rendering
+                            // Clean up hash
+                            history.replaceState(null, '', `#property/${propertyId}`);
+                        }
+
+                    } else {
+                        navigateTo('home'); // Fallback if no ID
+                        targetView = utils.$('#home');
+                    }
+                    break;
+                case 'wishlist':
+                    renderWishlist();
+                    break;
+                case 'bookings':
+                    renderBookings();
+                    break;
+                case 'booking-detail':
+                    const bookingId = params[0];
+                    if (bookingId) {
+                        state.currentBookingId = bookingId;
+                        renderBookingDetail(bookingId);
+                    } else {
+                        navigateTo('bookings');
+                        targetView = utils.$('#bookings');
+                    }
+                    break;
+                case 'chat':
+                    const ownerId = params[0];
+                    if (ownerId) {
+                        state.currentChatTargetId = ownerId;
+                        renderChat(ownerId);
+                    } else {
+                        // Fallback, maybe to previous view or home
+                        navigateTo(state.previousView || 'home');
+                        targetView = utils.$(`#${state.previousView || 'home'}`);
+                    }
+                    break;
+                case 'support': case 'terms': case 'privacy': case 'faq':
+                    // These are placeholder routes, show a generic message or a dedicated view if created
+                    showAlertModal('Halaman Dalam Pengembangan', `Halaman "${path}" sedang dalam tahap pengembangan.`);
+                    // Fallback to home or previous view after alert
+                    targetView = utils.$(`#${state.previousView || 'home'}`);
+                    if (targetView) targetView.classList.remove('hidden'); else utils.$('#home').classList.remove('hidden');
+                    // Update hash to previous view to avoid broken state
+                    history.replaceState(null, '', `#${state.previousView || 'home'}`);
+                    updateNavLinks(state.previousView || 'home');
+                    return; // Early exit to prevent hiding the fallback view
+                default:
+                    navigateTo('home'); // Fallback for unknown routes
+                    targetView = utils.$('#home');
+            }
+
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                targetView.setAttribute('aria-hidden', 'false');
+                // Set focus to the main heading of the new view for accessibility
+                const mainHeading = utils.$('h1', targetView);
+                if (mainHeading) {
+                    mainHeading.setAttribute('tabindex', '-1'); // Make it focusable
+                    mainHeading.focus();
+                }
+            } else {
+                utils.$('#home').classList.remove('hidden'); // Fallback if targetView is null
+            }
+        }
+
+        function navigateTo(routeTarget) {
+            // If routeTarget already starts with #, use it, else add #
+            const newHash = routeTarget.startsWith('#') ? routeTarget : `#${routeTarget}`;
+            if (window.location.hash === newHash) {
+                // If navigating to the same hash, force re-evaluation if needed
+                // (e.g. for query param changes not affecting hash string, but here hash is the primary route)
+                handleRouteChange(); // Or specific logic if needed for same-hash navigation
+            } else {
+                window.location.hash = newHash;
+            }
+        }
+
+
+        // --- INITIALIZATION ---
+        function init() {
+            elements.currentYearSpan.textContent = new Date().getFullYear();
+            elements.userAvatar.textContent = state.user.avatar;
+
+            // Load wishlist from localStorage
+            const storedWishlist = localStorage.getItem('greenValleyWishlist');
+            if (storedWishlist) {
+                try {
+                    state.user.wishlist = JSON.parse(storedWishlist);
+                } catch (e) {
+                    console.error("Gagal memuat wishlist dari localStorage:", e);
+                    localStorage.removeItem('greenValleyWishlist'); // Clear invalid data
+                }
+            }
+
+
+            window.addEventListener('hashchange', handleRouteChange);
+            handleRouteChange(); // Initial route handling
+
+            // Global event listeners
+            elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            elements.quickSearchForm.addEventListener('submit', handleQuickSearch);
+            elements.searchFiltersForm.addEventListener('submit', handleFilterSearch);
+            elements.searchFiltersForm.addEventListener('reset', handleFilterReset);
+            elements.priceRangeInput.addEventListener('input', handlePriceRangeChange);
+            elements.priceRangeInput.addEventListener('change', debouncedPriceRangeSearch); // Final search on release
+
+            elements.addReviewForm.addEventListener('submit', handleAddReview);
+            elements.detailWishlistBtn.addEventListener('click', () => toggleWishlist(state.currentPropertyId));
+            elements.sharePropertyBtn.addEventListener('click', () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: document.title,
+                        text: `Lihat properti menarik ini: ${elements.propertyDetailTitle.textContent}`,
+                        url: window.location.href,
+                    }).catch(console.error);
+                } else {
+                    showAlertModal('Bagikan', 'Fitur bagikan tidak didukung browser Anda. Salin URL secara manual.');
+                }
+            });
+
+            elements.backToPrevViewBtn.addEventListener('click', () => navigateTo(state.previousView || 'search'));
+            elements.backToBookingsBtn.addEventListener('click', () => navigateTo('bookings'));
+            elements.backFromChatBtn.addEventListener('click', () => navigateTo(state.previousView || 'home'));
+
+
+            // Property Booking Form listeners
+            elements.checkinDateInput.addEventListener('change', handlePropertyBookingFormChange);
+            elements.checkoutDateInput.addEventListener('change', handlePropertyBookingFormChange);
+            elements.guestsSelect.addEventListener('change', handlePropertyBookingFormChange);
+            elements.propertyBookingForm.addEventListener('submit', handlePropertyBookingFormSubmit);
+            elements.ownerInfoCard.contactBtn.addEventListener('click', (e) => {
+                const ownerId = e.currentTarget.dataset.ownerId;
+                if (ownerId) navigateToChat(ownerId);
+            });
+
+            // Bookings tabs
+            elements.bookingsTabs.forEach(tab => tab.addEventListener('click', handleTabClick));
+
+            // Chat form
+            elements.chatMessageForm.addEventListener('submit', handleChatMessageSubmit);
+
+            // Modal close buttons
+            utils.$$('[data-modal-close]').forEach(btn => {
+                btn.addEventListener('click', () => closeModal(btn.dataset.modalClose));
+            });
+
+            // Booking Modal
+            elements.confirmBookingBtn.addEventListener('click', handleConfirmBooking);
+
+            // Payment Modal
+            elements.confirmPaymentBtn.addEventListener('click', handleConfirmPayment);
+            elements.payLaterBtn.addEventListener('click', handlePayLater);
+
+            // Notification Modal
+            elements.notificationBtn.addEventListener('click', () => {
+                renderNotifications(); // Make sure it's up-to-date before opening
+                openModal('notification-modal');
+            });
+            elements.markAllNotificationsReadBtn.addEventListener('click', markAllNotificationsAsRead);
+            elements.clearAllNotificationsBtn.addEventListener('click', clearAllNotifications);
+
+
+            addNavigationLinkListeners(); // For nav links, footer links, etc.
+            renderNotifications(); // Initial notification badge update
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Judul halaman yang dinamis, diatur oleh JavaScript, dengan emoji sebagai pengganti favicon SVG -->
+    <title>GreenValley Estates</title>
+    <meta name="description"
+        content="Temukan apartemen, rumah, dan properti impian Anda di GreenValley Estates. Manajemen properti modern dengan daftar terkini dan desain yang memukau.">
+    <meta name="keywords"
+        content="apartemen, rumah, properti, sewa, beli, greenvalley, real estate, manajemen properti, modern, fancy">
+    <meta name="author" content="GreenValley Estates">
+    <meta name="theme-color" content="#10B981"> <!-- Warna tema untuk address bar browser mobile -->
+
+    <!-- Ikon Online Gratis: Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Font Online Gratis: Google Fonts (Poppins untuk display, Inter untuk sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Internal - Untuk menjaga kesatuan file dan memenuhi permintaan "monolith" -->
+    <style>
+        /* --- Reset CSS Dasar & Pengaturan Global --- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            /* Untuk rendering font yang lebih halus di WebKit */
+            -moz-osx-font-smoothing: grayscale;
+            /* Untuk rendering font yang lebih halus di Firefox */
+        }
+
+        /* --- Variabel CSS (Palet Warna Fancy, Tipografi, Spasi, dll.) --- */
+        :root {
+            --primary-hue: 158;
+            /* Hijau zamrud */
+            --secondary-hue: 217;
+            /* Biru langit */
+            --accent-hue: 39;
+            /* Emas hangat */
+
+            --primary-color: hsl(var(--primary-hue), 70%, 50%);
+            /* #10B981 */
+            --primary-dark: hsl(var(--primary-hue), 70%, 40%);
+            --primary-light: hsl(var(--primary-hue), 70%, 60%);
+            --primary-ultra-light: hsl(var(--primary-hue), 70%, 95%);
+
+            --secondary-color: hsl(var(--secondary-hue), 80%, 60%);
+            /* #3B82F6 */
+            --secondary-dark: hsl(var(--secondary-hue), 80%, 50%);
+            --secondary-light: hsl(var(--secondary-hue), 80%, 70%);
+
+            --accent-color: hsl(var(--accent-hue), 90%, 55%);
+            /* #F59E0B */
+            --accent-dark: hsl(var(--accent-hue), 90%, 45%);
+            --accent-light: hsl(var(--accent-hue), 90%, 65%);
+
+            --neutral-hue: 220;
+            --text-color: hsl(var(--neutral-hue), 20%, 15%);
+            --text-muted-color: hsl(var(--neutral-hue), 15%, 45%);
+            --bg-color: hsl(var(--neutral-hue), 30%, 98%);
+            --card-bg-color: #FFFFFF;
+            --border-color: hsl(var(--neutral-hue), 25%, 88%);
+            --input-bg-color: #FFFFFF;
+            --overlay-bg-color: hsla(var(--neutral-hue), 20%, 15%, 0.5);
+
+            --font-display: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-fancy: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+
+            --rounded-sm: 0.25rem;
+            --rounded-md: 0.5rem;
+            --rounded-lg: 0.75rem;
+            --rounded-full: 9999px;
+
+            --spacing-xxs: 0.25rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-xxl: 3rem;
+
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --z-index-dropdown: 1000;
+            --z-index-sticky: 1020;
+            --z-index-modal-backdrop: 1040;
+            --z-index-modal: 1050;
+            --z-index-toast: 1100;
+        }
+
+        /* --- Mode Gelap --- */
+        html.dark {
+            --text-color: hsl(var(--neutral-hue), 15%, 85%);
+            --text-muted-color: hsl(var(--neutral-hue), 15%, 65%);
+            --bg-color: hsl(var(--neutral-hue), 15%, 12%);
+            /* #1e2124 */
+            --card-bg-color: hsl(var(--neutral-hue), 15%, 18%);
+            /* #282c31 */
+            --border-color: hsl(var(--neutral-hue), 15%, 28%);
+            --input-bg-color: hsl(var(--neutral-hue), 15%, 22%);
+            --overlay-bg-color: hsla(0, 0%, 0%, 0.6);
+            --primary-ultra-light: hsl(var(--primary-hue), 40%, 20%);
+            /* Background untuk elemen aktif/hover di mode gelap */
+        }
+
+        /* --- Pengaturan HTML & Body --- */
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            /* Basis font untuk unit rem */
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.65;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        /* --- Tipografi Dasar & Fancy --- */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.3;
+            margin-bottom: var(--spacing-md);
+        }
+
+        html.dark h1,
+        html.dark h2,
+        html.dark h3,
+        html.dark h4,
+        html.dark h5,
+        html.dark h6 {
+            color: var(--primary-light);
+        }
+
+        h1 {
+            font-size: clamp(2.25rem, 5vw, 3rem);
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: clamp(1.35rem, 3vw, 1.75rem);
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: var(--spacing-md);
+        }
+
+        a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+        }
+
+        a:hover,
+        a:focus {
+            color: var(--secondary-dark);
+            text-decoration: underline;
+            outline-offset: 2px;
+        }
+
+        html.dark a {
+            color: var(--secondary-light);
+        }
+
+        html.dark a:hover,
+        html.dark a:focus {
+            color: var(--secondary-color);
+        }
+
+        /* --- Kontainer Aplikasi Utama --- */
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* Wrapper untuk konten halaman dengan batasan lebar maksimum dan padding */
+        .page-content-wrapper {
+            width: 100%;
+            max-width: 1280px;
+            /* Batas lebar konten */
+            margin-left: auto;
+            margin-right: auto;
+            padding: var(--spacing-lg) var(--spacing-md);
+            /* Padding atas/bawah lebih besar dari kiri/kanan */
+            flex: 1;
+            /* Agar mengisi ruang yang tersedia */
+        }
+
+        @media (min-width: 768px) {
+            .page-content-wrapper {
+                padding: var(--spacing-xl) var(--spacing-lg);
+            }
+        }
+
+        /* --- Komponen UI Umum --- */
+        .btn {
+            display: inline-flex;
+            /* Agar ikon dan teks sejajar */
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: var(--rounded-md);
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            border: 2px solid transparent;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover,
+        .btn:focus {
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .btn:focus-visible {
+            /* Style fokus yang lebih jelas untuk aksesibilitas */
+            outline: 3px solid var(--secondary-light);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: #fff;
+            border-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            background-color: var(--secondary-dark);
+            border-color: var(--secondary-dark);
+            color: #fff;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline:hover,
+        .btn-outline:focus {
+            background-color: var(--primary-ultra-light);
+            color: var(--primary-dark);
+        }
+
+        html.dark .btn-outline {
+            color: var(--primary-light);
+            border-color: var(--primary-light);
+        }
+
+        html.dark .btn-outline:hover,
+        html.dark .btn-outline:focus {
+            background-color: hsl(var(--primary-hue), 30%, 25%);
+        }
+
+        .btn-sm {
+            padding: calc(var(--spacing-xs) - 2px) calc(var(--spacing-sm) - 2px);
+            /* Adjust padding for smaller buttons */
+            font-size: 0.85rem;
+        }
+
+        .btn-icon {
+            /* Tombol hanya ikon */
+            padding: var(--spacing-sm);
+            font-size: 1.25rem;
+            border-radius: var(--rounded-full);
+            background-color: transparent;
+            color: var(--text-muted-color);
+            box-shadow: none;
+        }
+
+        .btn-icon:hover,
+        .btn-icon:focus {
+            background-color: var(--primary-ultra-light);
+            color: var(--primary-color);
+            transform: none;
+            /* Hapus efek angkat untuk tombol ikon */
+            box-shadow: none;
+        }
+
+        html.dark .btn-icon:hover,
+        html.dark .btn-icon:focus {
+            background-color: hsl(var(--neutral-hue), 15%, 25%);
+            color: var(--primary-light);
+        }
+
+
+        /* --- Form Styling --- */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            /* Agar label berada di atas input */
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .form-label .required-asterisk {
+            color: var(--accent-dark);
+            font-weight: bold;
+            margin-left: var(--spacing-xxs);
+        }
+
+        html.dark .form-label .required-asterisk {
+            color: var(--accent-light);
+        }
+
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--rounded-md);
+            background-color: var(--input-bg-color);
+            color: var(--text-color);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px hsla(var(--primary-hue), 70%, 50%, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Placeholder styling */
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: hsl(var(--neutral-hue), 10%, 65%);
+            opacity: 1;
+            /* Firefox memiliki opacity default yang lebih rendah */
+        }
+
+        html.dark .form-input::placeholder,
+        html.dark .form-textarea::placeholder {
+            color: hsl(var(--neutral-hue), 10%, 55%);
+        }
+
+        /* --- Card Styling (Untuk properti, dll) --- */
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: var(--rounded-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            /* Untuk memastikan gambar di dalam card tidak keluar dari rounded corners */
+            transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            /* Agar konten di dalam card tersusun vertikal */
+        }
+
+        .card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            /* Gambar akan mengisi area tanpa distorsi */
+            display: block;
+            /* Hapus spasi bawah default pada gambar */
+        }
+
+        .card-content {
+            padding: var(--spacing-lg);
+            flex-grow: 1;
+            /* Konten mengisi sisa ruang di card */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--primary-dark);
+            /* Judul card lebih menonjol */
+        }
+
+        html.dark .card-title {
+            color: var(--primary-light);
+        }
+
+        .card-text {
+            font-size: 0.95rem;
+            color: var(--text-muted-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .card-actions {
+            margin-top: auto;
+            /* Dorong tombol aksi ke bagian bawah card */
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            /* Tombol aksi di kanan */
+            gap: var(--spacing-sm);
+        }
+
+
+        /* --- Navbar Styling --- */
+        #navbar-container {
+            position: sticky;
+            /* Navbar tetap di atas saat scroll */
+            top: 0;
+            background-color: hsla(0, 0%, 100%, 0.85);
+            /* Transparansi halus */
+            backdrop-filter: blur(10px) saturate(180%);
+            /* Efek glassmorphism */
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
+            box-shadow: var(--shadow-sm);
+            z-index: var(--z-index-sticky);
+            padding: var(--spacing-sm) 0;
+            transition: background-color var(--transition-normal), box-shadow var(--transition-normal);
+        }
+
+        html.dark #navbar-container {
+            background-color: hsla(var(--neutral-hue), 15%, 12%, 0.85);
+            /* #1e2124 dengan transparansi */
+        }
+
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 var(--spacing-md);
+            /* Padding kiri-kanan untuk konten navbar */
+        }
+
+        @media (min-width: 768px) {
+            .navbar-content {
+                padding: 0 var(--spacing-lg);
+            }
+        }
+
+        .navbar-brand {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .navbar-brand:hover {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        html.dark .navbar-brand {
+            color: var(--primary-light);
+        }
+
+        html.dark .navbar-brand:hover {
+            color: var(--primary-color);
+        }
+
+        .navbar-brand-icon {
+            font-size: 1.8rem;
+            /* Sesuaikan ukuran ikon brand */
+            transition: transform var(--transition-normal);
+        }
+
+        .navbar-brand:hover .navbar-brand-icon {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        .navbar-nav {
+            display: none;
+            /* Sembunyikan di mobile, akan dibuat toggle nanti */
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        @media (min-width: 768px) {
+
+            /* Tampilkan di desktop */
+            .navbar-nav {
+                display: flex;
+            }
+        }
+
+        .nav-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            color: var(--text-muted-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: var(--rounded-md);
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+            position: relative;
+            /* Untuk pseudo-element underline */
+        }
+
+        .nav-link i {
+            margin-right: var(--spacing-xs);
+            font-size: 1.1em;
+            /* Ikon sedikit lebih besar dari teks */
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: var(--primary-color);
+            background-color: var(--primary-ultra-light);
+            text-decoration: none;
+        }
+
+        html.dark .nav-link:hover,
+        html.dark .nav-link:focus {
+            color: var(--primary-light);
+            background-color: hsl(var(--neutral-hue), 15%, 25%);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        html.dark .nav-link.active {
+            color: var(--primary-light);
+        }
+
+        /* Efek underline fancy untuk link aktif */
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            /* Jarak dari teks */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: var(--rounded-full);
+        }
+
+        html.dark .nav-link.active::after {
+            background-color: var(--primary-light);
+        }
+
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        #theme-toggle-btn {
+            /* Menggunakan .btn-icon */
+        }
+
+        #mobile-menu-toggle-btn {
+            /* Tombol hamburger */
+            display: block;
+            /* Tampilkan di mobile */
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+        }
+
+        html.dark #mobile-menu-toggle-btn {
+            color: var(--primary-light);
+        }
+
+        @media (min-width: 768px) {
+            #mobile-menu-toggle-btn {
+                display: none;
+            }
+
+            /* Sembunyikan di desktop */
+        }
+
+        /* Mobile Menu (Dropdown) */
+        #mobile-nav-menu {
+            display: none;
+            /* Default tersembunyi */
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            /* Di bawah navbar */
+            left: 0;
+            right: 0;
+            background-color: var(--card-bg-color);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-md);
+            z-index: calc(var(--z-index-sticky) - 1);
+            /* Di bawah navbar tapi di atas konten */
+            border-top: 1px solid var(--border-color);
+        }
+
+        #mobile-nav-menu.open {
+            display: flex;
+        }
+
+        #mobile-nav-menu .nav-link {
+            padding: var(--spacing-md);
+            display: block;
+            /* Agar link mengisi lebar */
+            width: 100%;
+            text-align: center;
+        }
+
+
+        /* --- Footer Styling --- */
+        #footer-container {
+            background-color: var(--card-bg-color);
+            /* Footer dengan background berbeda */
+            padding: var(--spacing-xl) var(--spacing-md);
+            text-align: center;
+            color: var(--text-muted-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: var(--spacing-xxl);
+            /* Beri jarak dari konten utama */
+        }
+
+        html.dark #footer-container {
+            background-color: hsl(var(--neutral-hue), 15%, 10%);
+            /* Lebih gelap dari card di dark mode */
+        }
+
+        .footer-content p {
+            margin-bottom: var(--spacing-xs);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            margin-top: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            margin: 0 var(--spacing-xs);
+            color: var(--text-muted-color);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        html.dark .footer-links a:hover {
+            color: var(--primary-light);
+        }
+
+
+        /* --- Grid System (Sederhana) --- */
+        .grid-container {
+            display: grid;
+            gap: var(--spacing-lg);
+        }
+
+        /* Kolom untuk berbagai ukuran layar */
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        @media (min-width: 640px) {
+
+            /* sm */
+            .sm-grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            /* md */
+            .md-grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .md-grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+
+            /* lg */
+            .lg-grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .lg-grid-cols-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* --- Halaman Properti --- */
+        .filter-form-container {
+            background-color: var(--card-bg-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--rounded-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            align-items: end;
+            /* Agar tombol sejajar dengan input terakhir */
+        }
+
+        .filter-form .form-group {
+            margin-bottom: 0;
+            /* Hapus margin bawah default karena sudah diatur oleh gap grid */
+        }
+
+        .filter-form .btn {
+            width: 100%;
+            /* Tombol filter mengisi lebar kolomnya */
+            padding-top: calc(var(--spacing-sm) + 2px);
+            /* Sesuaikan padding agar tinggi sama dengan input */
+            padding-bottom: calc(var(--spacing-sm) + 2px);
+        }
+
+        @media (min-width: 768px) {
+            .filter-form .btn {
+                grid-column: span 1;
+                /* Di layar besar, tombol filter mengambil 1 kolom */
+                /* width: auto;  opsional jika ingin lebar tombol sesuai konten */
+            }
+        }
+
+
+        /* --- Properti Card (Spesifik) --- */
+        .property-card {
+            /* Menggunakan .card sebagai basis */
+            /* Bisa ditambahkan style spesifik jika perlu */
+        }
+
+        .property-card .card-image {
+            border-bottom: 3px solid var(--primary-color);
+            /* Aksen warna pada gambar */
+        }
+
+        .property-card-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        html.dark .property-card-price {
+            color: var(--accent-light);
+        }
+
+        .property-card-details {
+            display: flex;
+            justify-content: space-between;
+            /* Better for even spacing */
+            flex-wrap: wrap;
+            /* Allow wrapping if too many details */
+            gap: var(--spacing-xs);
+            /* Gap between detail items */
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-muted-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .property-card-details span {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xxs);
+        }
+
+        .property-card-details i {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+        }
+
+        html.dark .property-card-details i {
+            color: var(--secondary-light);
+        }
+
+
+        /* --- Halaman Dasbor --- */
+        .dashboard-hero {
+            background: linear-gradient(135deg, hsla(var(--primary-hue), 70%, 50%, 0.9), hsla(var(--secondary-hue), 80%, 60%, 0.9)),
+                url('https://source.unsplash.com/random/1600x900/?modern,architecture,city') no-repeat center center/cover;
+            color: white;
+            padding: var(--spacing-xxl) var(--spacing-lg);
+            border-radius: var(--rounded-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-hero h1 {
+            color: white;
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .dashboard-hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.9;
+        }
+
+        /* --- Utilitas Tambahan --- */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        .mt-auto {
+            margin-top: auto;
+        }
+
+        /* Untuk mendorong elemen ke bawah dalam flex container */
+
+        .visually-hidden {
+            /* Untuk aksesibilitas, menyembunyikan elemen visual tapi tetap dibaca screen reader */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Animasi Sederhana untuk Konten Halaman */
+        .page-enter-active {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Styling untuk pesan Not Found */
+        .not-found-container {
+            text-align: center;
+            padding: var(--spacing-xxl) 0;
+        }
+
+        .not-found-container i {
+            font-size: 5rem;
+            color: var(--accent-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Styling untuk Toast/Notifikasi (contoh) */
+        .toast-notification {
+            position: fixed;
+            bottom: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--rounded-md);
+            box-shadow: var(--shadow-lg);
+            z-index: var(--z-index-toast);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity var(--transition-normal), transform var(--transition-normal);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container" class="app-container">
+        <!-- Header (Navbar) akan dirender di sini oleh JavaScript -->
+        <header id="navbar-container" role="banner"></header>
+
+        <!-- Konten halaman utama akan dirender di sini oleh JavaScript -->
+        <main id="page-content-container" role="main"></main>
+
+        <!-- Footer akan dirender di sini oleh JavaScript -->
+        <footer id="footer-container" role="contentinfo"></footer>
+
+        <!-- Elemen untuk notifikasi (opsional, bisa dibuat dinamis) -->
+        <div id="toast-area"></div>
+    </div>
+
+    <script type="text/javascript">
+        // Struktur kode JavaScript ini diatur agar lebih modular dan mudah dibaca,
+        // meskipun berada dalam satu file untuk memenuhi permintaan "monolith native".
+
+        // Melakukan pembungkusan dengan IIFE (Immediately Invoked Function Expression)
+        // untuk menciptakan scope privat dan menghindari polusi global.
+        (function (window, document) {
+            'use strict'; // Mengaktifkan mode ketat untuk kualitas kode yang lebih baik
+
+            // --- 🏡 KONSTANTA GLOBAL & DATA AWAL ---
+            const APP_TITLE_BASE = 'GreenValley Estates';
+            const APP_BRAND_ICON = 'bi-buildings-fill'; // Ikon untuk brand di navbar
+            const NAV_LINKS = [
+                { id: 'dashboard', name: 'Dasbor', path: '#/', icon: 'bi-speedometer2', pageTitle: 'Dasbor Utama' },
+                { id: 'properties', name: 'Properti', path: '#/properti', icon: 'bi-house-door-fill', pageTitle: 'Daftar Properti' },
+                { id: 'manage', name: 'Kelola Properti', path: '#/kelola', icon: 'bi-pencil-square', pageTitle: 'Kelola Properti' },
+                // ENHANCEMENT: Added parent and isSubMenu for better semantic organization, isSubMenu is used in Navbar rendering
+                { id: 'add-property', name: 'Tambah Properti', path: '#/kelola/tambah', icon: 'bi-plus-circle-fill', pageTitle: 'Tambah Properti Baru', parent: 'manage', isSubMenu: true },
+            ];
+            const MOCK_PROPERTIES_DATA = [
+                { id: 'p1', nama: 'Apartemen Sky Tower Deluxe', lokasi: 'Jakarta Pusat', harga: 2500000000, tipe: 'Apartemen', kamarTidur: 3, kamarMandi: 2, luas: 120, imageUrl: 'https://source.unsplash.com/random/800x600/?luxury,apartment,interior', deskripsi: 'Apartemen mewah di jantung kota dengan pemandangan spektakuler dan fasilitas lengkap. Nikmati hidup modern dengan akses mudah ke pusat bisnis dan hiburan. Unit ini dilengkapi dengan perabotan berkualitas tinggi.', fasilitas: ['Kolam Renang', 'Gym', 'Keamanan 24 Jam', 'Parkir Basement'] },
+                { id: 'p2', nama: 'Rumah Klasik Oakwood Residence', lokasi: 'Bandung Utara', harga: 4500000000, tipe: 'Rumah', kamarTidur: 5, kamarMandi: 4, luas: 350, imageUrl: 'https://source.unsplash.com/random/800x600/?classic,house,exterior', deskripsi: 'Rumah bergaya klasik Eropa dengan taman luas dan udara sejuk pegunungan. Ideal untuk keluarga besar yang mencari ketenangan dan kemewahan.', fasilitas: ['Taman Luas', 'Garasi 2 Mobil', 'Area BBQ', 'Gazebo'] },
+                { id: 'p3', nama: 'Studio Modern Urban Living', lokasi: 'Surabaya Barat', harga: 850000000, tipe: 'Apartemen', kamarTidur: 1, kamarMandi: 1, luas: 45, imageUrl: 'https://source.unsplash.com/random/800x600/?modern,studio,apartment', deskripsi: 'Studio apartemen modern dan fungsional, cocok untuk profesional muda. Lokasi strategis dekat dengan pusat perbelanjaan dan transportasi publik.', fasilitas: ['Smart Home System', 'Co-working Space', 'Rooftop Cafe'] },
+                { id: 'p4', nama: 'Villa Tepi Pantai Paradise', lokasi: 'Bali, Seminyak', harga: 7500000000, tipe: 'Villa', kamarTidur: 4, kamarMandi: 4, luas: 500, imageUrl: 'https://source.unsplash.com/random/800x600/?beachfront,villa,bali', deskripsi: 'Villa eksklusif dengan akses langsung ke pantai, kolam renang pribadi, dan pemandangan matahari terbenam yang memukau. Pengalaman liburan tak terlupakan.', fasilitas: ['Private Pool', 'Direct Beach Access', 'Butler Service', 'Jacuzzi'] },
+                { id: 'p5', nama: 'Townhouse Cozy Greenleaf', lokasi: 'Tangerang Selatan', harga: 1800000000, tipe: 'Rumah', kamarTidur: 3, kamarMandi: 2, luas: 150, imageUrl: 'https://source.unsplash.com/random/800x600/?cozy,townhouse', deskripsi: 'Townhouse nyaman dalam cluster hijau dengan fasilitas keluarga lengkap. Lingkungan aman dan asri, cocok untuk pertumbuhan anak-anak.', fasilitas: ['Clubhouse', 'Jogging Track', 'Playground', 'One Gate System'] },
+            ];
+
+            // --- 🌟 STATE APLIKASI (SINGLE SOURCE OF TRUTH) ---
+            const appState = {
+                theme: localStorage.getItem('greenvalley_theme') || 'light',
+                currentPage: '', // Will be the raw path, e.g., '/', '/properti', '/kelola/tambah'
+                currentPathForNavHighlight: '', // Will be used for nav active class, e.g., '/' or '/properti' or '/kelola'
+                currentTitle: APP_TITLE_BASE,
+                properties: [],
+                filteredProperties: [],
+                filters: {
+                    searchTerm: '',
+                    propertyType: 'semua',
+                    minPrice: '',
+                    maxPrice: '',
+                    bedrooms: 'semua'
+                },
+                isLoading: false,
+                toastMessage: null,
+                isMobileMenuOpen: false,
+            };
+
+            // --- 🛠️ FUNGSI UTILITAS ---
+            const Utils = {
+                formatCurrency: (number) => {
+                    if (isNaN(number)) return 'N/A';
+                    return new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(number);
+                },
+                qs: (selector, parent = document) => parent.querySelector(selector),
+                qsAll: (selector, parent = document) => parent.querySelectorAll(selector),
+                createElement: (tag, { classList = [], attributes = {}, textContent = '', innerHTML = '' } = {}) => {
+                    const el = document.createElement(tag);
+                    if (classList.length > 0) el.classList.add(...classList);
+                    for (const attr in attributes) {
+                        el.setAttribute(attr, attributes[attr]);
+                    }
+                    if (textContent) el.textContent = textContent;
+                    if (innerHTML) el.innerHTML = innerHTML; // Use with caution, ensure HTML is safe
+                    return el;
+                },
+                debounce: (func, delay) => {
+                    let timeoutId;
+                    return (...args) => {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => func.apply(this, args), delay);
+                    };
+                },
+                sanitizeHTML: (str) => {
+                    if (str === null || typeof str === 'undefined') return '';
+                    const temp = document.createElement('div');
+                    temp.textContent = String(str); // Ensure it's a string
+                    return temp.innerHTML;
+                },
+                generateId: (prefix = 'id_') => `${prefix}${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+                showToast: (message, type = 'info', duration = 3000) => {
+                    const toastArea = Utils.qs('#toast-area');
+                    if (!toastArea) return;
+
+                    const toastId = Utils.generateId('toast_');
+                    const toastColors = {
+                        info: 'var(--secondary-color)',
+                        success: 'var(--primary-color)',
+                        error: 'var(--accent-dark)' // Changed to accent-dark for better visibility
+                    };
+
+                    const toastDiv = Utils.createElement('div', {
+                        classList: ['toast-notification'],
+                        attributes: { id: toastId, role: 'alert', 'aria-live': 'assertive' }
+                    });
+                    toastDiv.style.backgroundColor = toastColors[type] || toastColors.info;
+                    toastDiv.textContent = message;
+
+                    toastArea.appendChild(toastDiv);
+                    setTimeout(() => toastDiv.classList.add('show'), 10);
+                    setTimeout(() => {
+                        toastDiv.classList.remove('show');
+                        toastDiv.addEventListener('transitionend', () => toastDiv.remove(), { once: true });
+                    }, duration);
+                }
+            };
+
+            // --- 🎨 MANAJEMEN TEMA (TERANG/GELAP) ---
+            const ThemeManager = {
+                applyTheme: () => {
+                    document.documentElement.classList.toggle('dark', appState.theme === 'dark');
+                    localStorage.setItem('greenvalley_theme', appState.theme);
+                    const themeToggleIcon = Utils.qs('#theme-toggle-btn i');
+                    if (themeToggleIcon) {
+                        themeToggleIcon.className = appState.theme === 'light' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+                    }
+                    const themeToggleBtn = Utils.qs('#theme-toggle-btn');
+                    if (themeToggleBtn) {
+                        themeToggleBtn.setAttribute('aria-label', `Ganti ke tema ${appState.theme === 'light' ? 'gelap' : 'terang'}`);
+                    }
+                },
+                toggleTheme: () => {
+                    appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+                    ThemeManager.applyTheme();
+                    Utils.showToast(`Tema diubah ke ${appState.theme === 'light' ? 'Terang' : 'Gelap'}`, 'info');
+                }
+            };
+
+            // --- 🧩 PEMBUAT KOMPONEN UI (MENGGUNAKAN TEMPLATE LITERALS) ---
+            const UIComponents = {
+                Navbar: () => {
+                    const { currentPathForNavHighlight, theme, isMobileMenuOpen } = appState;
+                    return `
+                    <div class="navbar-content">
+                        <a href="#/" class="navbar-brand" aria-label="Beranda ${APP_TITLE_BASE}">
+                            <i class="${APP_BRAND_ICON} navbar-brand-icon" aria-hidden="true"></i>
+                            <span>${APP_TITLE_BASE}</span>
+                        </a>
+                        <nav class="navbar-nav" aria-label="Navigasi Utama">
+                            ${NAV_LINKS.filter(link => !link.isSubMenu).map(link => `
+                                <a href="${link.path}"
+                                   class="nav-link ${currentPathForNavHighlight === link.path.slice(1) ? 'active' : ''}"
+                                   aria-current="${currentPathForNavHighlight === link.path.slice(1) ? 'page' : 'false'}">
+                                    <i class="${link.icon}" aria-hidden="true"></i> ${Utils.sanitizeHTML(link.name)}
+                                </a>
+                            `).join('')}
+                        </nav>
+                        <div class="navbar-actions">
+                            <button id="theme-toggle-btn" class="btn btn-icon" type="button" aria-label="Ganti ke tema ${theme === 'light' ? 'gelap' : 'terang'}">
+                                <i class="${theme === 'light' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill'}" aria-hidden="true"></i>
+                            </button>
+                            <button id="mobile-menu-toggle-btn" class="btn btn-icon" type="button" aria-label="${isMobileMenuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}" aria-expanded="${isMobileMenuOpen}">
+                                <i class="bi ${isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'}" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <nav id="mobile-nav-menu" class="${isMobileMenuOpen ? 'open' : ''}" aria-label="Navigasi Seluler">
+                        ${NAV_LINKS.filter(link => !link.isSubMenu).map(link => `
+                            <a href="${link.path}"
+                               class="nav-link ${currentPathForNavHighlight === link.path.slice(1) ? 'active' : ''}"
+                               aria-current="${currentPathForNavHighlight === link.path.slice(1) ? 'page' : 'false'}">
+                                <i class="${link.icon}" aria-hidden="true"></i> ${Utils.sanitizeHTML(link.name)}
+                            </a>
+                        `).join('')}
+                    </nav>
+                `;
+                },
+                Footer: () => {
+                    return `
+                    <div class="page-content-wrapper footer-content">
+                        <p>© ${new Date().getFullYear()} ${APP_TITLE_BASE}. Semua hak dilindungi.</p>
+                        <p>Dibuat dengan <i class="bi bi-heart-fill" style="color: var(--accent-color);"></i> dan Vanilla JS.</p>
+                        <div class="footer-links">
+                            <a href="#/privasi">Kebijakan Privasi</a> |
+                            <a href="#/syarat">Syarat & Ketentuan</a>
+                        </div>
+                    </div>
+                `;
+                },
+                PropertyCard: (property) => {
+                    // FIX: Truncate description and ensure it grows
+                    const shortDescription = property.deskripsi.length > 100
+                        ? Utils.sanitizeHTML(property.deskripsi.substring(0, 100)) + '...'
+                        : Utils.sanitizeHTML(property.deskripsi);
+
+                    return `
+                    <article class="card property-card" id="property-${property.id}" tabindex="0" aria-labelledby="property-title-${property.id}">
+                        <img src="${Utils.sanitizeHTML(property.imageUrl)}" alt="Gambar ${Utils.sanitizeHTML(property.nama)}" class="card-image">
+                        <div class="card-content">
+                            <h3 id="property-title-${property.id}" class="card-title">${Utils.sanitizeHTML(property.nama)}</h3>
+                            <p class="card-text"><i class="bi bi-geo-alt-fill"></i> ${Utils.sanitizeHTML(property.lokasi)}</p>
+                            <p class="property-card-price">${Utils.formatCurrency(property.harga)}</p>
+                            <div class="property-card-details">
+                                <span><i class="bi bi-tag-fill"></i> ${Utils.sanitizeHTML(property.tipe)}</span>
+                                <span><i class="bi bi-door-open-fill"></i> ${property.kamarTidur} KT</span>
+                                <span><i class="bi bi-droplet-half"></i> ${property.kamarMandi} KM</span>
+                                <span><i class="bi bi-rulers"></i> ${property.luas} m²</span>
+                            </div>
+                            <p class="card-text" style="font-size:0.9em; flex-grow:1;">${shortDescription}</p>
+                            <div class="card-actions">
+                                <button class="btn btn-outline btn-sm view-details-btn" data-property-id="${property.id}">
+                                    <i class="bi bi-eye-fill"></i> Detail
+                                </button>
+                                <button class="btn btn-primary btn-sm contact-property-btn" data-property-id="${property.id}">
+                                    <i class="bi bi-envelope-fill"></i> Hubungi
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
+                },
+                DashboardPage: () => {
+                    return `
+                    <div class="dashboard-hero">
+                        <h1>Selamat Datang di ${APP_TITLE_BASE}</h1>
+                        <p>Temukan properti impian Anda dengan mudah. Kami menyediakan daftar apartemen, rumah, dan villa terbaik dengan manajemen modern dan terpercaya.</p>
+                        <a href="#/properti" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search"></i> Lihat Semua Properti
+                        </a>
+                    </div>
+                    <h2 class="text-center" style="margin-bottom: var(--spacing-lg);">Fitur Unggulan Kami</h2>
+                    <div class="grid-container md-grid-cols-3" style="margin-bottom: var(--spacing-xl);">
+                        <div class="card text-center">
+                            <div class="card-content">
+                                <i class="bi bi-shield-check" style="font-size: 3rem; color: var(--primary-color); margin-bottom: var(--spacing-sm);"></i>
+                                <h3 class="card-title">Properti Terverifikasi</h3>
+                                <p class="card-text">Semua listing properti telah melalui proses verifikasi ketat untuk kenyamanan dan keamanan Anda.</p>
+                            </div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-content">
+                                <i class="bi bi-headset" style="font-size: 3rem; color: var(--primary-color); margin-bottom: var(--spacing-sm);"></i>
+                                <h3 class="card-title">Dukungan Profesional</h3>
+                                <p class="card-text">Tim kami siap membantu Anda dalam setiap langkah, mulai dari pencarian hingga transaksi.</p>
+                            </div>
+                        </div>
+                        <div class="card text-center">
+                            <div class="card-content">
+                                <i class="bi bi-lightbulb" style="font-size: 3rem; color: var(--primary-color); margin-bottom: var(--spacing-sm);"></i>
+                                <h3 class="card-title">Desain Inovatif</h3>
+                                <p class="card-text">Platform dengan desain modern dan intuitif, memudahkan Anda menjelajahi properti.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="text-center" style="margin-bottom: var(--spacing-lg);">Properti Pilihan</h2>
+                     <div id="featured-properties" class="grid-container md-grid-cols-3">
+                        ${appState.properties.slice(0, 3).map(p => UIComponents.PropertyCard(p)).join('')}
+                    </div>
+                `;
+                },
+                PropertiesPage: () => {
+                    const { searchTerm, propertyType, minPrice, maxPrice, bedrooms } = appState.filters;
+                    const uniquePropertyTypes = ['semua', ...new Set(appState.properties.map(p => p.tipe))];
+                    const uniqueBedrooms = ['semua', ...new Set(appState.properties.map(p => p.kamarTidur.toString()))].sort((a, b) => a === 'semua' ? -1 : b === 'semua' ? 1 : parseInt(a) - parseInt(b));
+
+                    return `
+                    <h1 class="mb-0">Temukan Properti Impian Anda</h1>
+                    <p class="text-muted-color" style="margin-bottom: var(--spacing-lg);">Gunakan filter untuk menemukan properti yang sesuai dengan kebutuhan Anda.</p>
+
+                    <div class="filter-form-container">
+                        <form id="filter-form" class="filter-form" novalidate>
+                            <div class="form-group">
+                                <label for="searchTerm" class="form-label">Kata Kunci</label>
+                                <input type="text" id="searchTerm" class="form-input" placeholder="Nama, lokasi..." value="${Utils.sanitizeHTML(searchTerm)}">
+                            </div>
+                            <div class="form-group">
+                                <label for="propertyType" class="form-label">Tipe Properti</label>
+                                <select id="propertyType" class="form-select">
+                                    ${uniquePropertyTypes.map(type => `<option value="${type}" ${propertyType === type ? 'selected' : ''}>${type === 'semua' ? 'Semua Tipe' : Utils.sanitizeHTML(type)}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="bedrooms" class="form-label">Jumlah Kamar Tidur</label>
+                                <select id="bedrooms" class="form-select">
+                                    ${uniqueBedrooms.map(bed => `<option value="${bed}" ${bedrooms === bed ? 'selected' : ''}>${bed === 'semua' ? 'Semua Jumlah' : `${bed} KT`}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="minPrice" class="form-label">Harga Minimum (Rp)</label>
+                                <input type="number" id="minPrice" class="form-input" placeholder="Mis: 500000000" value="${Utils.sanitizeHTML(minPrice)}" min="0" step="1000000">
+                            </div>
+                             <div class="form-group">
+                                <label for="maxPrice" class="form-label">Harga Maksimum (Rp)</label>
+                                <input type="number" id="maxPrice" class="form-input" placeholder="Mis: 2000000000" value="${Utils.sanitizeHTML(maxPrice)}" min="0" step="1000000">
+                            </div>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-funnel-fill"></i> Terapkan Filter</button>
+                            <button type="reset" id="reset-filter-btn" class="btn btn-outline"><i class="bi bi-arrow-counterclockwise"></i> Reset Filter</button>
+                        </form>
+                    </div>
+
+                    <div id="property-list-info" style="margin-bottom: var(--spacing-md);">
+                        Menampilkan ${appState.filteredProperties.length} dari ${appState.properties.length} properti.
+                    </div>
+                    <div id="property-list" class="grid-container sm-grid-cols-2 lg-grid-cols-3">
+                        ${appState.filteredProperties.length > 0
+                            ? appState.filteredProperties.map(p => UIComponents.PropertyCard(p)).join('')
+                            : '<p>Tidak ada properti yang cocok dengan kriteria pencarian Anda.</p>'
+                        }
+                    </div>
+                `;
+                },
+                ManagePropertiesPage: () => {
+                    return `
+                    <h1>Kelola Properti</h1>
+                    <p>Di halaman ini Anda dapat mengelola daftar properti. Tambah properti baru atau edit yang sudah ada.</p>
+                    <a href="#/kelola/tambah" class="btn btn-primary" style="margin-bottom: var(--spacing-lg);">
+                        <i class="bi bi-plus-circle-fill"></i> Tambah Properti Baru
+                    </a>
+                    
+                    <h2>Daftar Properti Saat Ini</h2>
+                    <div id="manage-property-list">
+                        ${appState.properties.length > 0
+                            ? appState.properties.map(p => `
+                                <div class="card" style="margin-bottom: var(--spacing-md); padding: var(--spacing-md); display:flex; flex-direction:row; align-items:center; justify-content:space-between; flex-wrap: wrap; gap: var(--spacing-sm);">
+                                    <div style="flex-grow: 1; min-width: 250px;">
+                                        <h4 style="margin-bottom: var(--spacing-xs);">${Utils.sanitizeHTML(p.nama)}</h4>
+                                        <p class="text-muted-color mb-0">${Utils.sanitizeHTML(p.lokasi)} - ${Utils.formatCurrency(p.harga)}</p>
+                                    </div>
+                                    <div style="display:flex; gap: var(--spacing-sm); align-items:center;">
+                                        <button class="btn btn-outline btn-sm edit-property-btn" data-property-id="${p.id}"><i class="bi bi-pencil-fill"></i> Edit</button>
+                                        <button class="btn btn-icon delete-property-btn" data-property-id="${p.id}" aria-label="Hapus ${Utils.sanitizeHTML(p.nama)}"><i class="bi bi-trash-fill" style="color: var(--accent-dark);"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')
+                            : '<p>Belum ada properti yang ditambahkan.</p>'
+                        }
+                    </div>
+                `;
+                },
+                AddEditPropertyPage: (propertyId = null) => {
+                    const isEditing = propertyId !== null;
+                    const property = isEditing ? appState.properties.find(p => p.id === propertyId) : {};
+                    if (isEditing && !property) return UIComponents.NotFoundPage('Properti untuk diedit tidak ditemukan.');
+
+                    const pageTitle = isEditing ? 'Edit Properti' : 'Tambah Properti Baru';
+                    const submitButtonText = isEditing ? 'Simpan Perubahan' : 'Tambahkan Properti';
+
+                    // ENHANCEMENT: Added required asterisk span
+                    const req = `<span class="required-asterisk" aria-hidden="true">*</span>`;
+
+                    return `
+                    <h1>${pageTitle}</h1>
+                    <p>${isEditing ? 'Ubah detail properti di bawah ini.' : 'Lengkapi form di bawah untuk menambahkan properti baru.'}</p>
+                    <form id="property-form" class="grid-container md-grid-cols-2" novalidate>
+                        <input type="hidden" id="propertyId" value="${isEditing ? property.id : ''}">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="propertyName" class="form-label">Nama Properti ${req}</label>
+                            <input type="text" id="propertyName" class="form-input" value="${isEditing ? Utils.sanitizeHTML(property.nama) : ''}" required placeholder="Contoh: Apartemen Indah Jaya Lantai 10">
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyLocation" class="form-label">Lokasi ${req}</label>
+                            <input type="text" id="propertyLocation" class="form-input" value="${isEditing ? Utils.sanitizeHTML(property.lokasi) : ''}" required placeholder="Contoh: Jakarta Selatan">
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyPrice" class="form-label">Harga (IDR) ${req}</label>
+                            <input type="number" id="propertyPrice" class="form-input" value="${isEditing ? property.harga : ''}" required placeholder="Contoh: 1500000000" min="0" step="1000000">
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyType" class="form-label">Tipe Properti ${req}</label>
+                            <select id="propertyTypeSelect" class="form-select" required> <!-- Renamed ID to avoid conflict if another 'propertyType' element exists on the page by chance -->
+                                <option value="">Pilih Tipe</option>
+                                <option value="Apartemen" ${isEditing && property.tipe === 'Apartemen' ? 'selected' : ''}>Apartemen</option>
+                                <option value="Rumah" ${isEditing && property.tipe === 'Rumah' ? 'selected' : ''}>Rumah</option>
+                                <option value="Villa" ${isEditing && property.tipe === 'Villa' ? 'selected' : ''}>Villa</option>
+                                <option value="Tanah" ${isEditing && property.tipe === 'Tanah' ? 'selected' : ''}>Tanah</option>
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="propertyBedrooms" class="form-label">Jumlah Kamar Tidur ${req}</label>
+                            <input type="number" id="propertyBedrooms" class="form-input" value="${isEditing ? property.kamarTidur : ''}" required placeholder="Contoh: 3" min="0">
+                        </div>
+                         <div class="form-group">
+                            <label for="propertyBathrooms" class="form-label">Jumlah Kamar Mandi ${req}</label>
+                            <input type="number" id="propertyBathrooms" class="form-input" value="${isEditing ? property.kamarMandi : ''}" required placeholder="Contoh: 2" min="0">
+                        </div>
+                         <div class="form-group">
+                            <label for="propertyArea" class="form-label">Luas (m²) ${req}</label>
+                            <input type="number" id="propertyArea" class="form-input" value="${isEditing ? property.luas : ''}" required placeholder="Contoh: 120" min="0">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="propertyImageUrl" class="form-label">URL Gambar ${req}</label>
+                            <input type="url" id="propertyImageUrl" class="form-input" value="${isEditing ? Utils.sanitizeHTML(property.imageUrl) : ''}" required placeholder="https://contoh.com/gambar.jpg">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="propertyDescription" class="form-label">Deskripsi ${req}</label>
+                            <textarea id="propertyDescription" class="form-textarea" rows="4" required placeholder="Deskripsi lengkap properti...">${isEditing ? Utils.sanitizeHTML(property.deskripsi) : ''}</textarea>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="propertyFacilities" class="form-label">Fasilitas (pisahkan dengan koma)</label>
+                            <input type="text" id="propertyFacilities" class="form-input" value="${isEditing && property.fasilitas ? Utils.sanitizeHTML(property.fasilitas.join(', ')) : ''}" placeholder="Contoh: Kolam Renang, Gym, Keamanan 24 Jam">
+                        </div>
+                        <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: var(--spacing-md);">
+                            <button type="button" id="cancel-property-form" class="btn btn-outline">Batal</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi ${isEditing ? 'bi-save-fill' : 'bi-plus-circle-fill'}"></i> ${submitButtonText}
+                            </button>
+                        </div>
+                    </form>
+                `;
+                },
+                NotFoundPage: (customMessage = 'Halaman yang Anda cari tidak ditemukan.') => {
+                    return `
+                    <div class="not-found-container page-content-wrapper text-center">
+                        <i class="bi bi-compass-fill"></i>
+                        <h1>404 - Tersesat?</h1>
+                        <p>${Utils.sanitizeHTML(customMessage)}</p>
+                        <a href="#/" class="btn btn-primary"><i class="bi bi-house-door-fill"></i> Kembali ke Dasbor</a>
+                    </div>
+                `;
+                }
+            };
+
+            // --- 🔄 RENDER FUNGSI (MEMASUKKAN HTML KE DOM & ATTACH EVENT LISTENERS) ---
+            const RenderEngine = {
+                Layout: () => {
+                    const navbarContainer = Utils.qs('#navbar-container');
+                    const footerContainer = Utils.qs('#footer-container');
+
+                    if (navbarContainer) {
+                        navbarContainer.innerHTML = UIComponents.Navbar();
+                        const themeToggleBtn = Utils.qs('#theme-toggle-btn', navbarContainer);
+                        if (themeToggleBtn) themeToggleBtn.addEventListener('click', ThemeManager.toggleTheme);
+                        const mobileMenuToggleBtn = Utils.qs('#mobile-menu-toggle-btn', navbarContainer);
+                        if (mobileMenuToggleBtn) mobileMenuToggleBtn.addEventListener('click', RenderEngine.toggleMobileMenu);
+
+                        const mobileNavLinks = Utils.qsAll('#mobile-nav-menu .nav-link', navbarContainer);
+                        mobileNavLinks.forEach(link => link.addEventListener('click', () => {
+                            if (appState.isMobileMenuOpen) RenderEngine.toggleMobileMenu();
+                        }));
+                    }
+                    if (footerContainer) {
+                        footerContainer.innerHTML = UIComponents.Footer();
+                    }
+                },
+                PageContent: (pageHTML) => {
+                    const pageContentContainer = Utils.qs('#page-content-container');
+                    if (pageContentContainer) {
+                        pageContentContainer.innerHTML = '';
+                        const wrapper = Utils.createElement('div', { classList: ['page-content-wrapper', 'page-enter-active'] });
+                        wrapper.innerHTML = pageHTML;
+                        pageContentContainer.appendChild(wrapper);
+                        window.scrollTo(0, 0);
+                    }
+                    RenderEngine.attachPageSpecificListeners(appState.currentPage);
+                },
+                toggleMobileMenu: () => {
+                    appState.isMobileMenuOpen = !appState.isMobileMenuOpen;
+                    RenderEngine.Layout();
+                },
+                attachPageSpecificListeners: (rawPagePath) => {
+                    // rawPagePath is the full hash path like '/kelola/tambah' or '/properti'
+                    if (rawPagePath === '/' || rawPagePath.startsWith('/#/')) { // Dasbor specific
+                        const featuredProperties = Utils.qs('#featured-properties');
+                        if (featuredProperties) {
+                            featuredProperties.addEventListener('click', EventHandlers.handlePropertyCardActions);
+                        }
+                    }
+                    if (rawPagePath.startsWith('/properti')) {
+                        const filterForm = Utils.qs('#filter-form');
+                        if (filterForm) {
+                            filterForm.addEventListener('submit', EventHandlers.handleFilterProperties);
+                            const resetBtn = Utils.qs('#reset-filter-btn', filterForm);
+                            if (resetBtn) resetBtn.addEventListener('click', EventHandlers.handleResetFilters);
+
+                            const searchTermInput = Utils.qs('#searchTerm', filterForm);
+                            if (searchTermInput) {
+                                searchTermInput.addEventListener('input', Utils.debounce((e) => {
+                                    appState.filters.searchTerm = e.target.value;
+                                    // For now, filtering happens on submit. If auto-filter is desired:
+                                    // BusinessLogic.filterProperties(); 
+                                }, 500));
+                            }
+                        }
+                        const propertyList = Utils.qs('#property-list');
+                        if (propertyList) {
+                            propertyList.addEventListener('click', EventHandlers.handlePropertyCardActions);
+                        }
+                    }
+
+                    if (rawPagePath === '/kelola') {
+                        const managePropertyList = Utils.qs('#manage-property-list');
+                        if (managePropertyList) {
+                            managePropertyList.addEventListener('click', EventHandlers.handleManagePropertyActions);
+                        }
+                    }
+
+                    if (rawPagePath === '/kelola/tambah' || rawPagePath.startsWith('/kelola/edit/')) {
+                        const propertyForm = Utils.qs('#property-form');
+                        if (propertyForm) {
+                            propertyForm.addEventListener('submit', EventHandlers.handlePropertyFormSubmit);
+                            const cancelBtn = Utils.qs('#cancel-property-form', propertyForm);
+                            if (cancelBtn) cancelBtn.addEventListener('click', () => Router.navigate('#/kelola'));
+                        }
+                    }
+                }
+            };
+
+            // --- 🚦 LOGIKA ROUTING & NAVIGASI ---
+            const Router = {
+                routes: {
+                    '/': { component: UIComponents.DashboardPage, title: 'Dasbor Utama', navHighlightPath: '/' },
+                    '/properti': { component: UIComponents.PropertiesPage, title: 'Daftar Properti', navHighlightPath: '/properti' },
+                    '/kelola': { component: UIComponents.ManagePropertiesPage, title: 'Kelola Properti', navHighlightPath: '/kelola' },
+                    '/kelola/tambah': { component: () => UIComponents.AddEditPropertyPage(), title: 'Tambah Properti Baru', navHighlightPath: '/kelola' },
+                    '/kelola/edit/:id': { component: (params) => UIComponents.AddEditPropertyPage(params.id), title: 'Edit Properti', navHighlightPath: '/kelola' }
+                },
+                resolveRoute: () => {
+                    let rawPath = location.hash.slice(1) || '/';
+                    appState.currentPage = rawPath; // Store the raw, full path
+
+                    let routeDefinition = Router.routes[rawPath];
+                    let params = {};
+                    let navHighlightPath = rawPath; // Default nav highlight to the raw path
+
+                    if (!routeDefinition) {
+                        for (const routeKey in Router.routes) {
+                            const routeKeyParts = routeKey.split('/');
+                            const pathParts = rawPath.split('/');
+                            if (routeKeyParts.length === pathParts.length) {
+                                let match = true;
+                                let currentParams = {};
+                                for (let i = 0; i < routeKeyParts.length; i++) {
+                                    if (routeKeyParts[i].startsWith(':')) {
+                                        currentParams[routeKeyParts[i].slice(1)] = pathParts[i];
+                                    } else if (routeKeyParts[i] !== pathParts[i]) {
+                                        match = false;
+                                        break;
+                                    }
+                                }
+                                if (match) {
+                                    routeDefinition = Router.routes[routeKey];
+                                    params = currentParams;
+                                    // FIX: Use navHighlightPath from route definition for parent menu highlighting
+                                    navHighlightPath = routeDefinition.navHighlightPath || rawPath;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        navHighlightPath = routeDefinition.navHighlightPath || rawPath;
+                    }
+
+                    appState.currentPathForNavHighlight = navHighlightPath; // Set for navbar active class
+
+                    let pageHTML, pageTitle;
+
+                    if (routeDefinition) {
+                        pageHTML = typeof routeDefinition.component === 'function' ? routeDefinition.component(params) : routeDefinition.component;
+
+                        // Determine page title:
+                        // 1. From NAV_LINKS if it's a direct match or a defined sub-page
+                        // 2. From routeDefinition.title as a fallback
+                        // 3. Special override for specific dynamic pages if needed
+                        const navLinkForTitle = NAV_LINKS.find(link => link.path.slice(1) === rawPath);
+                        if (navLinkForTitle && navLinkForTitle.pageTitle) {
+                            pageTitle = navLinkForTitle.pageTitle;
+                        } else {
+                            pageTitle = routeDefinition.title; // Fallback to router definition title
+                        }
+                        // Specific overrides for dynamic titles
+                        if (rawPath.startsWith('/kelola/edit/')) pageTitle = 'Edit Properti';
+
+                    } else {
+                        pageHTML = UIComponents.NotFoundPage();
+                        pageTitle = '404 - Halaman Tidak Ditemukan';
+                        appState.currentPathForNavHighlight = '/404'; // Or some other non-matching path for nav
+                    }
+
+                    appState.currentTitle = `${pageTitle} | ${APP_TITLE_BASE}`;
+                    document.title = `🏡 ${appState.currentTitle}`;
+
+                    RenderEngine.PageContent(pageHTML);
+                    RenderEngine.Layout(); // Re-render layout (navbar) for active link and mobile menu icon update
+                },
+                navigate: (path) => {
+                    location.hash = path;
+                }
+            };
+
+            // --- 📈 LOGIKA BISNIS (FILTER, MANAJEMEN DATA, DLL) ---
+            const BusinessLogic = {
+                loadInitialData: () => {
+                    appState.isLoading = true;
+                    appState.properties = MOCK_PROPERTIES_DATA.map(p => ({ ...p })); // Deep copy mock data
+                    appState.filteredProperties = [...appState.properties];
+                    appState.isLoading = false;
+                    Router.resolveRoute();
+                },
+                filterProperties: () => {
+                    const { searchTerm, propertyType, minPrice, maxPrice, bedrooms } = appState.filters;
+                    const searchLower = searchTerm.toLowerCase();
+                    const minP = parseFloat(minPrice) || 0;
+                    const maxP = parseFloat(maxPrice) || Infinity;
+
+                    appState.filteredProperties = appState.properties.filter(p => {
+                        const nameMatch = p.nama.toLowerCase().includes(searchLower);
+                        const locationMatch = p.lokasi.toLowerCase().includes(searchLower);
+                        const typeMatch = propertyType === 'semua' || p.tipe === propertyType;
+                        const priceMatch = p.harga >= minP && p.harga <= maxP;
+                        const bedroomMatch = bedrooms === 'semua' || p.kamarTidur.toString() === bedrooms;
+                        return (nameMatch || locationMatch) && typeMatch && priceMatch && bedroomMatch;
+                    });
+
+                    if (appState.currentPage.startsWith('/properti')) {
+                        RenderEngine.PageContent(UIComponents.PropertiesPage());
+                    }
+                },
+                addProperty: (propertyData) => {
+                    const newProperty = {
+                        id: Utils.generateId('prop_'),
+                        ...propertyData,
+                        harga: parseFloat(propertyData.harga),
+                        kamarTidur: parseInt(propertyData.kamarTidur),
+                        kamarMandi: parseInt(propertyData.kamarMandi),
+                        luas: parseFloat(propertyData.luas),
+                        fasilitas: propertyData.fasilitas ? propertyData.fasilitas.split(',').map(f => f.trim()).filter(f => f) : []
+                    };
+                    appState.properties.push(newProperty);
+                    BusinessLogic.filterProperties();
+                    Utils.showToast('Properti berhasil ditambahkan!', 'success');
+                    Router.navigate('#/kelola');
+                },
+                updateProperty: (propertyData) => {
+                    const index = appState.properties.findIndex(p => p.id === propertyData.id);
+                    if (index !== -1) {
+                        appState.properties[index] = {
+                            ...appState.properties[index],
+                            ...propertyData,
+                            harga: parseFloat(propertyData.harga),
+                            kamarTidur: parseInt(propertyData.kamarTidur),
+                            kamarMandi: parseInt(propertyData.kamarMandi),
+                            luas: parseFloat(propertyData.luas),
+                            fasilitas: propertyData.fasilitas ? propertyData.fasilitas.split(',').map(f => f.trim()).filter(f => f) : []
+                        };
+                        BusinessLogic.filterProperties();
+                        Utils.showToast('Properti berhasil diperbarui!', 'success');
+                        Router.navigate('#/kelola');
+                    } else {
+                        Utils.showToast('Gagal memperbarui properti: ID tidak ditemukan.', 'error');
+                    }
+                },
+                deleteProperty: (propertyId) => {
+                    if (confirm('Apakah Anda yakin ingin menghapus properti ini? Tindakan ini tidak dapat dibatalkan.')) {
+                        appState.properties = appState.properties.filter(p => p.id !== propertyId);
+                        BusinessLogic.filterProperties();
+                        Utils.showToast('Properti berhasil dihapus.', 'success');
+                        if (appState.currentPage === '/kelola') {
+                            RenderEngine.PageContent(UIComponents.ManagePropertiesPage());
+                        }
+                    }
+                }
+            };
+
+            // --- 🖱️ EVENT HANDLERS ---
+            const EventHandlers = {
+                handleFilterProperties: (event) => {
+                    event.preventDefault();
+                    const form = event.target;
+                    appState.filters.searchTerm = Utils.qs('#searchTerm', form).value;
+                    appState.filters.propertyType = Utils.qs('#propertyType', form).value;
+                    appState.filters.bedrooms = Utils.qs('#bedrooms', form).value;
+                    appState.filters.minPrice = Utils.qs('#minPrice', form).value;
+                    appState.filters.maxPrice = Utils.qs('#maxPrice', form).value;
+                    BusinessLogic.filterProperties();
+                },
+                handleResetFilters: (event) => {
+                    event.preventDefault();
+                    const form = Utils.qs('#filter-form');
+                    if (form) form.reset();
+                    appState.filters = { searchTerm: '', propertyType: 'semua', minPrice: '', maxPrice: '', bedrooms: 'semua' };
+                    BusinessLogic.filterProperties();
+                },
+                handlePropertyCardActions: (event) => {
+                    const targetButton = event.target.closest('button');
+                    if (!targetButton) return;
+
+                    const propertyId = targetButton.dataset.propertyId;
+                    const property = appState.properties.find(p => p.id === propertyId);
+
+                    if (targetButton.classList.contains('view-details-btn')) {
+                        console.log('Lihat Detail Properti:', property);
+                        Utils.showToast(`Membuka detail untuk: ${property ? Utils.sanitizeHTML(property.nama) : 'properti tidak dikenal'}. Fitur ini sedang dikembangkan.`, 'info');
+                    } else if (targetButton.classList.contains('contact-property-btn')) {
+                        console.log('Hubungi untuk Properti ID:', propertyId);
+                        Utils.showToast(`Menghubungi agen untuk ${property ? Utils.sanitizeHTML(property.nama) : 'properti tidak dikenal'}. Fitur ini sedang dikembangkan.`, 'info');
+                    }
+                },
+                handleManagePropertyActions: (event) => {
+                    const targetButton = event.target.closest('button');
+                    if (!targetButton) return;
+
+                    const propertyId = targetButton.dataset.propertyId;
+                    if (targetButton.classList.contains('edit-property-btn')) {
+                        Router.navigate(`#/kelola/edit/${propertyId}`);
+                    } else if (targetButton.classList.contains('delete-property-btn')) {
+                        BusinessLogic.deleteProperty(propertyId);
+                    }
+                },
+                handlePropertyFormSubmit: (event) => {
+                    event.preventDefault();
+                    const form = event.target;
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        // ENHANCEMENT: Provide toast feedback for validation errors
+                        Utils.showToast('Harap isi semua field yang wajib diisi dengan benar.', 'error');
+                        return;
+                    }
+
+                    const propertyData = {
+                        id: Utils.qs('#propertyId', form).value,
+                        nama: Utils.qs('#propertyName', form).value,
+                        lokasi: Utils.qs('#propertyLocation', form).value,
+                        harga: Utils.qs('#propertyPrice', form).value,
+                        tipe: Utils.qs('#propertyTypeSelect', form).value, // Changed ID here
+                        kamarTidur: Utils.qs('#propertyBedrooms', form).value,
+                        kamarMandi: Utils.qs('#propertyBathrooms', form).value,
+                        luas: Utils.qs('#propertyArea', form).value,
+                        imageUrl: Utils.qs('#propertyImageUrl', form).value,
+                        deskripsi: Utils.qs('#propertyDescription', form).value,
+                        fasilitas: Utils.qs('#propertyFacilities', form).value,
+                    };
+
+                    if (propertyData.id) {
+                        BusinessLogic.updateProperty(propertyData);
+                    } else {
+                        BusinessLogic.addProperty(propertyData);
+                    }
+                }
+            };
+
+            // --- 🚀 INISIALISASI APLIKASI ---
+            const initApp = () => {
+                ThemeManager.applyTheme();
+                BusinessLogic.loadInitialData();
+                window.addEventListener('hashchange', Router.resolveRoute);
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth >= 768 && appState.isMobileMenuOpen) {
+                        RenderEngine.toggleMobileMenu();
+                    }
+                });
+                console.log(`${APP_TITLE_BASE} berhasil dimuat! Selamat datang.`);
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initApp);
+            } else {
+                initApp();
+            }
+
+        })(window, document);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apartemen Impian Anda</title>
+  <!-- Favicon (Contoh, ganti dengan milik Anda) -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/128/10918/10918027.png" type="image/png">
+
+  <!-- Bootstrap Icons (Online Gratis, bukan SVG) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <!-- Google Fonts (Contoh: Inter dan Montserrat untuk desain fancy) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* --- Reset Dasar & Konfigurasi Awal --- */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Warna Tema Utama (Fancy & Modern) */
+      --primary-color: #6366F1;
+      /* Indigo */
+      --primary-color-hover: #4F46E5;
+      --secondary-color: #EC4899;
+      /* Pink */
+      --secondary-color-hover: #D9267A;
+
+      /* Warna Netral */
+      --bg-light: #F9FAFB;
+      /* Sangat terang, hampir putih */
+      --bg-dark: #111827;
+      /* Sangat gelap */
+      --card-bg-light: #FFFFFF;
+      --card-bg-dark: #1F2937;
+      --text-light-primary: #1F2937;
+      /* Teks gelap pada bg terang */
+      --text-light-secondary: #4B5563;
+      --text-dark-primary: #F3F4F6;
+      /* Teks terang pada bg gelap */
+      --text-dark-secondary: #9CA3AF;
+      --border-light: #E5E7EB;
+      --border-dark: #374151;
+
+      /* Tipografi */
+      --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      --font-headings: 'Montserrat', sans-serif;
+      --font-size-base: 16px;
+      /* Ukuran dasar untuk rem */
+      --line-height-base: 1.6;
+
+      /* Spasi & Ukuran */
+      --space-unit: 8px;
+      --space-xs: calc(var(--space-unit) * 1);
+      /* 8px */
+      --space-sm: calc(var(--space-unit) * 2);
+      /* 16px */
+      --space-md: calc(var(--space-unit) * 3);
+      /* 24px */
+      --space-lg: calc(var(--space-unit) * 4);
+      /* 32px */
+      --space-xl: calc(var(--space-unit) * 6);
+      /* 48px */
+      --space-xxl: calc(var(--space-unit) * 8);
+      /* 64px */
+
+      /* Border Radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+
+      /* Shadow (Fancy) */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-inset: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+      /* Transisi */
+      --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+      /* Z-index (Hirarki) */
+      --z-tooltip: 1000;
+      --z-modal: 900;
+      --z-header: 800;
+      --z-dropdown: 700;
+
+      /* State Saat Ini (Akan disesuaikan oleh JS) */
+      --current-bg: var(--bg-light);
+      --current-card-bg: var(--card-bg-light);
+      --current-text-primary: var(--text-light-primary);
+      --current-text-secondary: var(--text-light-secondary);
+      --current-border: var(--border-light);
+    }
+
+    [data-theme="dark"] {
+      --current-bg: var(--bg-dark);
+      --current-card-bg: var(--card-bg-dark);
+      --current-text-primary: var(--text-dark-primary);
+      --current-text-secondary: var(--text-dark-secondary);
+      --current-border: var(--border-dark);
+    }
+
+    html {
+      font-size: var(--font-size-base);
+      scroll-behavior: smooth;
+      -webkit-tap-highlight-color: transparent;
+      /* Untuk mobile, hapus highlight biru saat tap */
+    }
+
+    body {
+      font-family: var(--font-primary);
+      line-height: var(--line-height-base);
+      background-color: var(--current-bg);
+      color: var(--current-text-primary);
+      transition: background-color var(--transition-medium), color var(--transition-medium);
+      overflow-x: hidden;
+      /* Mencegah scroll horizontal yang tidak diinginkan */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- Utilitas Umum (Reusable) --- */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      /* Maksimum lebar konten */
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: var(--space-md);
+      padding-right: var(--space-md);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding-left: var(--space-sm);
+        padding-right: var(--space-sm);
+      }
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .flex-column {
+      flex-direction: column;
+    }
+
+    .justify-content-center {
+      justify-content: center;
+    }
+
+    .justify-content-between {
+      justify-content: space-between;
+    }
+
+    .align-items-center {
+      align-items: center;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    .h-100 {
+      height: 100%;
+    }
+
+    /* Grid System Sederhana (Flexbox based) */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: calc(var(--space-sm) / -2);
+      margin-right: calc(var(--space-sm) / -2);
+    }
+
+    .col {
+      flex-grow: 1;
+      flex-basis: 0;
+      padding-left: calc(var(--space-sm) / 2);
+      padding-right: calc(var(--space-sm) / 2);
+      max-width: 100%;
+    }
+
+    /* Contoh kolom responsif */
+    .col-md-6 {
+      /* Pada layar medium ke atas, ambil 50% */
+    }
+
+    @media (min-width: 768px) {
+
+      /* Contoh breakpoint medium */
+      .col-md-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+      }
+
+      .col-md-4 {
+        flex: 0 0 33.3333%;
+        max-width: 33.3333%;
+      }
+
+      .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+
+      .col-md-8 {
+        flex: 0 0 66.6667%;
+        max-width: 66.6667%;
+      }
+
+      .col-md-9 {
+        flex: 0 0 75%;
+        max-width: 75%;
+      }
+
+      .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+    }
+
+    /* --- Styling Elemen Dasar --- */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: var(--font-headings);
+      color: var(--current-text-primary);
+      margin-bottom: var(--space-sm);
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    /* clamp(2rem, 5vw, 3rem) */
+    h2 {
+      font-size: 2rem;
+    }
+
+    h3 {
+      font-size: 1.75rem;
+    }
+
+    p {
+      margin-bottom: var(--space-md);
+      color: var(--current-text-secondary);
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+
+    a:hover,
+    a:focus {
+      color: var(--primary-color-hover);
+      text-decoration: underline;
+    }
+
+    img,
+    video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-md);
+    }
+
+    /* --- Tombol (Fancy & Reusable) --- */
+    .btn {
+      display: inline-flex;
+      /* agar ikon dan teks sejajar */
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--space-xs) * 1.5) var(--space-md);
+      /* 12px 24px */
+      font-family: var(--font-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      text-decoration: none;
+      /* Hapus underline jika <a> jadi tombol */
+      white-space: nowrap;
+      /* Cegah teks tombol turun baris */
+    }
+
+    .btn:focus-visible {
+      /* Aksesibilitas: outline jelas saat fokus keyboard */
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    .btn i {
+      /* Ikon di dalam tombol */
+      margin-right: var(--space-xs);
+      font-size: 1.1em;
+      /* Sedikit lebih besar dari teks tombol */
+    }
+
+    .btn.btn-icon-only i {
+      margin-right: 0;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: var(--primary-color-hover);
+      color: white;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-secondary:hover,
+    .btn-secondary:focus {
+      background-color: var(--secondary-color-hover);
+      color: white;
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border-color: var(--current-border);
+      color: var(--current-text-primary);
+    }
+
+    .btn-outline:hover,
+    .btn-outline:focus {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: white;
+    }
+
+    [data-theme="dark"] .btn-outline {
+      border-color: var(--border-dark);
+    }
+
+
+    /* --- Header / Navbar (Fancy & Sticky) --- */
+    .app-header {
+      background-color: color-mix(in srgb, var(--current-card-bg) 85%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--current-border);
+      padding: var(--space-sm) 0;
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+      transition: var(--transition-medium);
+    }
+
+    .app-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-headings);
+      font-size: 1.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      color: var(--current-text-primary);
+      transition: opacity var(--transition-fast);
+    }
+
+    .logo:hover {
+      opacity: 0.8;
+      text-decoration: none;
+    }
+
+    .logo i {
+      /* Ikon untuk logo */
+      color: var(--primary-color);
+      margin-right: var(--space-xs);
+      font-size: 1.2em;
+    }
+
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .main-nav a {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--current-text-secondary);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      position: relative;
+    }
+
+    .main-nav a::after {
+      /* Efek garis bawah fancy */
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background-color: var(--primary-color);
+      transition: width var(--transition-fast);
+    }
+
+    .main-nav a:hover,
+    .main-nav a:focus,
+    .main-nav a.active {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .main-nav a:hover::after,
+    .main-nav a:focus::after,
+    .main-nav a.active::after {
+      width: 80%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--current-text-secondary);
+      font-size: 1.5rem;
+      /* Ukuran ikon */
+      cursor: pointer;
+      padding: var(--space-xs);
+      border-radius: var(--radius-md);
+      transition: var(--transition-fast);
+    }
+
+    .theme-toggle-btn:hover {
+      color: var(--primary-color);
+      background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      /* Hanya tampil di mobile */
+      background: transparent;
+      border: none;
+      color: var(--current-text-primary);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    /* Navigasi Mobile (Sidebar) */
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      /* Mulai dari luar layar */
+      width: 280px;
+      height: 100vh;
+      background-color: var(--current-card-bg);
+      box-shadow: var(--shadow-xl);
+      padding: var(--space-xl) var(--space-md);
+      z-index: calc(var(--z-header) + 10);
+      /* Di atas header */
+      transition: transform var(--transition-medium);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-nav.open {
+      transform: translateX(-300px);
+    }
+
+    .mobile-nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .mobile-nav a {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--current-text-primary);
+      padding: var(--space-sm);
+      display: block;
+      border-radius: var(--radius-md);
+    }
+
+    .mobile-nav a:hover,
+    .mobile-nav a.active {
+      background-color: color-mix(in srgb, var(--primary-color) 15%, transparent);
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .mobile-nav .close-btn {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--current-text-secondary);
+      cursor: pointer;
+    }
+
+    .overlay {
+      /* Overlay untuk menutup menu mobile saat diklik di luar */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: var(--z-header) + 5;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-medium), visibility var(--transition-medium);
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+
+    @media (max-width: 992px) {
+
+      /* Tablet dan di bawahnya */
+      .main-nav {
+        display: none;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+
+    /* --- Konten Utama (Main Content Area) --- */
+    #app-content {
+      flex-grow: 1;
+      /* Agar footer tetap di bawah jika konten pendek */
+      padding-top: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity var(--transition-slow), transform var(--transition-slow);
+    }
+
+    #app-content.loading {
+      /* State saat konten baru dimuat */
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* --- Halaman Spesifik (Contoh) --- */
+    .page-hero {
+      background-color: color-mix(in srgb, var(--primary-color) 10%, var(--current-bg));
+      padding: var(--space-xxl) 0;
+      text-align: center;
+      border-bottom: 1px solid var(--current-border);
+    }
+
+    .page-hero h1 {
+      color: var(--primary-color);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      /* Ukuran font responsif */
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-hero p {
+      font-size: 1.25rem;
+      color: var(--current-text-secondary);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* --- Kartu Galeri (Fancy) --- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .gallery-card {
+      background-color: var(--current-card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: var(--transition-medium);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--current-border);
+      cursor: pointer;
+      opacity: 0;
+      /* Untuk animasi masuk */
+      transform: translateY(20px);
+      /* Untuk animasi masuk */
+      animation: fadeInCard 0.5s ease-out forwards;
+    }
+
+    .gallery-card:hover,
+    .gallery-card:focus-within {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .gallery-card-image {
+      width: 100%;
+      height: 220px;
+      /* Tinggi gambar konsisten */
+      object-fit: cover;
+      /* Gambar akan mengisi area tanpa distorsi */
+      transition: transform var(--transition-slow);
+      border-bottom: 1px solid var(--current-border);
+    }
+
+    .gallery-card:hover .gallery-card-image {
+      transform: scale(1.1);
+    }
+
+    .gallery-card-body {
+      padding: var(--space-md);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gallery-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+      color: var(--current-text-primary);
+    }
+
+    .gallery-card-category {
+      font-size: 0.875rem;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .gallery-card-description {
+      font-size: 0.95rem;
+      color: var(--current-text-secondary);
+      flex-grow: 1;
+      /* Agar deskripsi mengisi sisa ruang */
+      line-height: 1.5;
+    }
+
+    /* Animasi untuk kartu galeri */
+    @keyframes fadeInCard {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Filter Galeri */
+    .gallery-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--current-border);
+    }
+
+    .filter-btn {
+      /* Menggunakan kelas .btn yang sudah ada, tapi dengan sedikit modifikasi */
+      background-color: var(--current-card-bg);
+      color: var(--current-text-secondary);
+      border: 1px solid var(--current-border);
+      font-weight: 500;
+      padding: var(--space-xs) var(--space-md);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* --- Modal (Fancy & Vanilla) --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: var(--z-modal);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-medium), visibility var(--transition-medium);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--current-card-bg);
+      padding: var(--space-lg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      width: 90%;
+      max-width: 700px;
+      /* Maksimum lebar modal */
+      position: relative;
+      transform: scale(0.95) translateY(20px);
+      transition: transform var(--transition-medium);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--current-text-secondary);
+      cursor: pointer;
+      padding: var(--space-xs);
+      line-height: 1;
+      transition: color var(--transition-fast);
+    }
+
+    .modal-close-btn:hover {
+      color: var(--secondary-color);
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 70vh;
+      /* Agar tidak terlalu tinggi di layar kecil */
+      object-fit: contain;
+      /* Agar gambar utuh terlihat */
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .modal-description {
+      font-size: 1rem;
+      color: var(--current-text-secondary);
+    }
+
+    /* --- Formulir (Fancy) --- */
+    .form-group {
+      margin-bottom: var(--space-md);
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+      color: var(--current-text-primary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: calc(var(--space-xs) * 1.5) var(--space-sm);
+      /* 12px 16px */
+      font-size: 1rem;
+      border: 1px solid var(--current-border);
+      border-radius: var(--radius-md);
+      background-color: var(--current-bg);
+      color: var(--current-text-primary);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      box-shadow: var(--shadow-inset);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 25%, transparent), var(--shadow-inset);
+    }
+
+    .form-control::placeholder {
+      color: var(--current-text-secondary);
+      opacity: 0.7;
+    }
+
+    .form-control.is-invalid {
+      border-color: var(--secondary-color);
+      /* Warna error */
+    }
+
+    .form-control.is-invalid:focus {
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--secondary-color) 25%, transparent), var(--shadow-inset);
+    }
+
+    .invalid-feedback {
+      display: block;
+      color: var(--secondary-color);
+      font-size: 0.875rem;
+      margin-top: var(--space-xs);
+    }
+
+    /* --- Footer (Fancy) --- */
+    .app-footer {
+      background-color: var(--current-card-bg);
+      /* Sedikit berbeda dari bg utama */
+      border-top: 1px solid var(--current-border);
+      padding: var(--space-xl) 0;
+      color: var(--current-text-secondary);
+      margin-top: auto;
+      /* Mendorong footer ke bawah */
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .footer-section h4 {
+      font-size: 1.1rem;
+      color: var(--current-text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: var(--space-xs);
+    }
+
+    .footer-section a {
+      color: var(--current-text-secondary);
+    }
+
+    .footer-section a:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+
+    .footer-socials a {
+      font-size: 1.5rem;
+      /* Ukuran ikon sosial */
+      margin-right: var(--space-sm);
+      color: var(--current-text-secondary);
+      transition: color var(--transition-fast);
+    }
+
+    .footer-socials a:last-child {
+      margin-right: 0;
+    }
+
+    .footer-socials a:hover {
+      color: var(--primary-color);
+    }
+
+    .footer-copyright {
+      text-align: center;
+      font-size: 0.9rem;
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--current-border);
+    }
+
+    /* --- Tabel (Fancy) --- */
+    .fancy-table {
+      width: 100%;
+      border-collapse: collapse;
+      /* Hapus spasi antar border sel */
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      /* Agar radius terlihat di sudut tabel */
+    }
+
+    .fancy-table th,
+    .fancy-table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--current-border);
+    }
+
+    .fancy-table thead th {
+      background-color: color-mix(in srgb, var(--primary-color) 10%, var(--current-card-bg));
+      color: var(--current-text-primary);
+      font-weight: 600;
+      font-family: var(--font-headings);
+      border-bottom-width: 2px;
+      /* Garis bawah header lebih tebal */
+      border-bottom-color: var(--primary-color);
+    }
+
+    .fancy-table tbody tr:nth-child(even) {
+      /* Efek zebra stripe */
+      background-color: color-mix(in srgb, var(--current-text-primary) 2%, var(--current-card-bg));
+    }
+
+    .fancy-table tbody tr:hover {
+      background-color: color-mix(in srgb, var(--primary-color) 15%, var(--current-card-bg));
+    }
+
+    .fancy-table td:first-child,
+    .fancy-table th:first-child {
+      padding-left: var(--space-lg);
+    }
+
+    .fancy-table td:last-child,
+    .fancy-table th:last-child {
+      padding-right: var(--space-lg);
+    }
+
+    /* Utility untuk menyembunyikan secara aksesibel */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Overlay untuk menu mobile -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Header Aplikasi -->
+  <header class="app-header" id="app-header" role="banner">
+    <div class="container">
+      <a href="#beranda" class="logo" aria-label="Beranda Green Valley">
+        <i class="bi bi-buildings-fill"></i> <!-- Contoh ikon -->
+        <span>Green Valley</span>
+      </a>
+      <nav class="main-nav" role="navigation" aria-label="Navigasi Utama">
+        <ul>
+          <li><a href="#beranda" class="nav-link">Beranda</a></li>
+          <li><a href="#galeri" class="nav-link">Galeri</a></li>
+          <li><a href="#fasilitas" class="nav-link">Fasilitas</a></li>
+          <li><a href="#kontak" class="nav-link">Kontak</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle-btn" id="theme-toggle" aria-label="Ganti Tema" title="Ganti Tema">
+          <i class="bi bi-moon-stars-fill"></i> <!-- Ikon awal untuk mode terang -->
+        </button>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Buka Menu" aria-expanded="false"
+          aria-controls="mobile-nav">
+          <i class="bi bi-list"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigasi Mobile (Sidebar) -->
+  <nav class="mobile-nav" id="mobile-nav" aria-hidden="true" role="navigation" aria-label="Navigasi Seluler">
+    <button class="close-btn" id="mobile-menu-close" aria-label="Tutup Menu">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <ul>
+      <li><a href="#beranda" class="nav-link">Beranda</a></li>
+      <li><a href="#galeri" class="nav-link">Galeri</a></li>
+      <li><a href="#fasilitas" class="nav-link">Fasilitas</a></li>
+      <li><a href="#kontak" class="nav-link">Kontak</a></li>
+    </ul>
+    <div style="margin-top: auto; padding-top: var(--space-md); border-top: 1px solid var(--current-border);">
+      <p style="font-size: 0.9rem; text-align: center; color: var(--current-text-secondary);">Green Valley © 2024</p>
+    </div>
+  </nav>
+
+  <!-- Konten Utama Aplikasi (SPA) -->
+  <main id="app-content" role="main">
+    <!-- Konten akan dimuat di sini oleh JavaScript -->
+  </main>
+
+  <!-- Footer Aplikasi -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Green Valley</h4>
+          <p>Menyediakan hunian apartemen modern dan nyaman di lokasi strategis. Temukan rumah impian Anda bersama kami.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>Tautan Cepat</h4>
+          <ul>
+            <li><a href="#beranda">Beranda</a></li>
+            <li><a href="#galeri">Galeri Foto</a></li>
+            <li><a href="#fasilitas">Fasilitas Unggulan</a></li>
+            <li><a href="#kontak">Hubungi Kami</a></li>
+            <li><a href="#privasi">Kebijakan Privasi</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Hubungi Kami</h4>
+          <p>
+            Jl. Apartemen Indah No. 123<br>
+            Kota Metropolitan, ID 12345<br>
+            Email: <a href="mailto:info@greenvalley.id">info@greenvalley.id</a><br>
+            Telepon: <a href="tel:+622112345678">(021) 1234-5678</a>
+          </p>
+        </div>
+        <div class="footer-section">
+          <h4>Ikuti Kami</h4>
+          <div class="footer-socials">
+            <a href="#" aria-label="Facebook Green Valley" target="_blank" rel="noopener noreferrer"><i
+                class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Instagram Green Valley" target="_blank" rel="noopener noreferrer"><i
+                class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="Twitter Green Valley" target="_blank" rel="noopener noreferrer"><i
+                class="bi bi-twitter-x"></i></a>
+            <a href="#" aria-label="LinkedIn Green Valley" target="_blank" rel="noopener noreferrer"><i
+                class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        © <span id="current-year"></span> Green Valley. Semua Hak Cipta Dilindungi. Didesain dengan <i
+          class="bi bi-heart-fill" style="color: var(--secondary-color);"></i>.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Template untuk Modal Gambar (Vanilla JS) -->
+  <div class="modal-overlay" id="imageModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+    style="display: none;">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Tutup Modal">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <img src="" alt="" id="modalImageSrc" class="modal-image">
+      <h3 id="modalTitle" class="modal-title"></h3>
+      <p id="modalDescription" class="modal-description"></p>
+    </div>
+  </div>
+
+  <script>
+    // IIFE untuk enkapsulasi kode (Module Pattern Sederhana)
+    (function App() {
+      "use strict";
+
+      // --- STATE APLIKASI ---
+      const state = {
+        currentPage: null,
+        currentTheme: localStorage.getItem('theme') || 'light',
+        galleryFilter: 'all',
+        isMobileMenuOpen: false,
+        isModalOpen: false,
+        lastFocusedElement: null, // Untuk aksesibilitas modal
+      };
+
+      // --- KONSTANTA & DATA ---
+      const galleryData = [
+        { id: 1, url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Apartemen Modern", category: "Apartemen", description: "Apartemen modern dengan pemandangan kota yang menakjubkan dan desain interior elegan." },
+        { id: 2, url: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Kolam Renang Oasis", category: "Fasilitas", description: "Fasilitas kolam renang bergaya oasis, sempurna untuk relaksasi dan berolahraga." },
+        { id: 3, url: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Lingkungan Hijau Asri", category: "Lingkungan", description: "Lingkungan apartemen yang dikelilingi taman hijau subur, menciptakan suasana tenang." },
+        { id: 4, url: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Ruang Tamu Nyaman", category: "Interior", description: "Interior ruang tamu apartemen yang dirancang untuk kenyamanan maksimal dan estetika modern." },
+        { id: 5, url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Eksterior Megah", category: "Eksterior", description: "Tampilan eksterior gedung apartemen yang megah dengan arsitektur kontemporer." },
+        { id: 6, url: "https://images.unsplash.com/photo-1523712999610-f77fbcfc3843?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Pusat Kebugaran Lengkap", category: "Fasilitas", description: "Fasilitas gym dengan peralatan modern dan lengkap untuk menjaga kebugaran penghuni." },
+        { id: 7, url: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Lobi Mewah", category: "Apartemen", description: "Lobi utama apartemen yang dirancang dengan kesan mewah dan pelayanan resepsionis 24 jam." },
+        { id: 8, url: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Area Bermain Anak", category: "Fasilitas", description: "Area bermain anak yang aman, menyenangkan, dan edukatif untuk buah hati Anda." },
+        { id: 9, url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Parkir Luas & Aman", category: "Eksterior", description: "Area parkir kendaraan yang luas, aman, dan mudah diakses oleh semua penghuni." },
+        { id: 10, url: "https://images.unsplash.com/photo-1515859005217-8a1f08870f59?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Pemandangan Malam Kota", category: "Lingkungan", description: "Nikmati pemandangan malam kota yang gemerlap langsung dari balkon apartemen Anda." },
+        { id: 11, url: "https://images.unsplash.com/photo-1529778873920-4da4926a72c2?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Dapur Minimalis Modern", category: "Interior", description: "Desain dapur minimalis yang fungsional, dilengkapi dengan peralatan modern berkualitas." },
+        { id: 12, url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600", title: "Arsitektur Unik", category: "Lainnya", description: "Detail arsitektur unik yang menjadi ciri khas dan menambah nilai estetika bangunan." },
+      ];
+      const categories = ['all', ...new Set(galleryData.map(item => item.category))];
+
+      // --- ELEMEN DOM ---
+      // Fungsi utilitas untuk mendapatkan elemen DOM
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => document.querySelectorAll(selector);
+
+      const appContentEl = $('#app-content');
+      const themeToggleBtn = $('#theme-toggle');
+      const mobileMenuToggleBtn = $('#mobile-menu-toggle');
+      const mobileMenuCloseBtn = $('#mobile-menu-close');
+      const mobileNavEl = $('#mobile-nav');
+      const overlayEl = $('#overlay');
+      const navLinks = $$('.nav-link'); // Semua link navigasi termasuk mobile
+
+      // Modal elements
+      const imageModalEl = $('#imageModal');
+      const modalImageSrcEl = $('#modalImageSrc');
+      const modalTitleEl = $('#modalTitle');
+      const modalDescriptionEl = $('#modalDescription');
+      const modalCloseBtnEl = $('#modalCloseBtn');
+
+
+      // --- FUNGSI RENDER HALAMAN (TEMPLATE HTML STRING) ---
+      // Setiap fungsi render mengembalikan string HTML untuk konten halaman
+      // Ini adalah pendekatan sederhana untuk templating di Vanilla JS
+
+      function renderBerandaPage() {
+        document.title = "Beranda - Green Valley Apartments";
+        return `
+          <section class="page-hero">
+            <div class="container">
+              <h1>Temukan Hunian Impian Anda</h1>
+              <p>Apartemen Green Valley menawarkan kenyamanan, kemewahan, dan gaya hidup modern di tengah kota. Jelajahi pilihan unit kami dan fasilitas eksklusif.</p>
+              <a href="#galeri" class="btn btn-primary btn-lg"><i class="bi bi-images"></i> Lihat Galeri</a>
+              <a href="#kontak" class="btn btn-outline btn-lg" style="margin-left: var(--space-sm);"><i class="bi bi-telephone-fill"></i> Hubungi Kami</a>
+            </div>
+          </section>
+          <section class="container" style="padding-top: var(--space-xl); padding-bottom: var(--space-xl);">
+            <div class="row" style="gap: var(--space-lg) 0;">
+              <div class="col col-md-6 d-flex align-items-center">
+                <div>
+                  <h2 style="font-size: 2.2rem;">Selamat Datang di Green Valley</h2>
+                  <p>Kami bangga mempersembahkan Green Valley, sebuah kompleks apartemen yang dirancang untuk memenuhi kebutuhan gaya hidup urban modern. Dengan lokasi strategis, desain arsitektur yang menawan, dan fasilitas lengkap, Green Valley adalah pilihan ideal bagi Anda yang mencari kualitas hidup terbaik.</p>
+                  <p>Setiap unit dirancang dengan detail untuk memaksimalkan kenyamanan dan fungsionalitas. Dari interior yang elegan hingga pemandangan kota yang memukau, kami memastikan pengalaman tinggal Anda tak terlupakan.</p>
+                  <a href="#fasilitas" class="btn btn-secondary"><i class="bi bi-gem"></i> Jelajahi Fasilitas</a>
+                </div>
+              </div>
+              <div class="col col-md-6">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=800" alt="Interior Apartemen Modern" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+              </div>
+            </div>
+             <div class="row" style="margin-top: var(--space-xxl); gap: var(--space-lg) 0;">
+                <div class="col col-md-6" style="order: 2; text-align:right;">
+                     <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=800" alt="Dapur modern" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
+                </div>
+                <div class="col col-md-6 d-flex align-items-center" style="order: 1;">
+                    <div>
+                        <h2 style="font-size: 2.2rem;">Desain yang Memanjakan Mata</h2>
+                        <p>Setiap sudut Green Valley dirancang dengan mempertimbangkan estetika dan fungsionalitas. Kami percaya bahwa lingkungan yang indah dapat meningkatkan kualitas hidup.</p>
+                        <ul style="list-style: none; padding-left: 0; margin-bottom: var(--space-md);">
+                            <li style="margin-bottom: var(--space-xs);"><i class="bi bi-check-circle-fill" style="color: var(--primary-color); margin-right: var(--space-xs);"></i> Interior elegan dan modern</li>
+                            <li style="margin-bottom: var(--space-xs);"><i class="bi bi-check-circle-fill" style="color: var(--primary-color); margin-right: var(--space-xs);"></i> Pemanfaatan cahaya alami maksimal</li>
+                            <li style="margin-bottom: var(--space-xs);"><i class="bi bi-check-circle-fill" style="color: var(--primary-color); margin-right: var(--space-xs);"></i> Material berkualitas tinggi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function renderGaleriPage() {
+        document.title = "Galeri Foto - Green Valley Apartments";
+        let filterButtonsHTML = categories.map(cat =>
+          `<button class="btn filter-btn ${cat === state.galleryFilter ? 'active' : ''}" data-filter="${cat}" type="button" aria-pressed="${cat === state.galleryFilter}">
+            ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+           </button>`
+        ).join('');
+
+        return `
+          <section class="container">
+            <div class="text-center" style="margin-bottom: var(--space-xl);">
+              <h1>Galeri Apartemen</h1>
+              <p>Lihat lebih dekat keindahan dan fasilitas yang ditawarkan oleh Green Valley.</p>
+            </div>
+            <div class="gallery-filters" role="tablist" aria-label="Filter Galeri">
+              ${filterButtonsHTML}
+            </div>
+            <div class="gallery-grid" id="galleryGridContainer">
+              <!-- Kartu galeri akan dirender di sini oleh JS -->
+            </div>
+          </section>
+        `;
+      }
+
+      function renderFasilitasPage() {
+        document.title = "Fasilitas Unggulan - Green Valley Apartments";
+        return `
+            <section class="container">
+              <div class="text-center" style="margin-bottom: var(--space-xl);">
+                <h1>Fasilitas Unggulan Kami</h1>
+                <p>Nikmati berbagai fasilitas premium yang dirancang untuk kenyamanan dan gaya hidup Anda.</p>
+              </div>
+
+              <div class="row" style="gap: var(--space-lg) 0; align-items: stretch;">
+                <div class="col col-md-4">
+                  <div class="gallery-card" style="height: 100%; cursor:default;">
+                    <img src="https://images.unsplash.com/photo-1574036063316-e9ef038b2945?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" alt="Kolam Renang" class="gallery-card-image">
+                    <div class="gallery-card-body">
+                      <h3 class="gallery-card-title">Kolam Renang Mewah</h3>
+                      <p class="gallery-card-description">Kolam renang outdoor dan indoor dengan desain modern, area santai, dan pemandangan menakjubkan.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col col-md-4">
+                  <div class="gallery-card" style="height: 100%; cursor:default;">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" alt="Pusat Kebugaran" class="gallery-card-image">
+                    <div class="gallery-card-body">
+                      <h3 class="gallery-card-title">Pusat Kebugaran</h3>
+                      <p class="gallery-card-description">Peralatan gym terkini, studio yoga, dan kelas kebugaran untuk mendukung gaya hidup sehat Anda.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col col-md-4">
+                  <div class="gallery-card" style="height: 100%; cursor:default;">
+                    <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600" alt="Lounge Bersama" class="gallery-card-image">
+                    <div class="gallery-card-body">
+                      <h3 class="gallery-card-title">Lounge & Area Komunal</h3>
+                      <p class="gallery-card-description">Ruang bersama yang nyaman untuk bersosialisasi, bekerja, atau bersantai dengan fasilitas Wi-Fi gratis.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: var(--space-xl);">
+                <h2 style="text-align:center; margin-bottom: var(--space-lg);">Daftar Fasilitas Lengkap</h2>
+                <table class="fancy-table">
+                    <thead>
+                        <tr>
+                            <th>Kategori</th>
+                            <th>Fasilitas</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Olahraga & Rekreasi</td>
+                            <td>Kolam Renang Dewasa & Anak</td>
+                            <td>Terpisah, dengan lifeguard</td>
+                        </tr>
+                        <tr>
+                            <td>Olahraga & Rekreasi</td>
+                            <td>Pusat Kebugaran</td>
+                            <td>Peralatan kardio & beban lengkap</td>
+                        </tr>
+                        <tr>
+                            <td>Olahraga & Rekreasi</td>
+                            <td>Lapangan Tenis & Basket</td>
+                            <td>Outdoor, standar internasional</td>
+                        </tr>
+                        <tr>
+                            <td>Kenyamanan</td>
+                            <td>Lounge Eksklusif</td>
+                            <td>Dengan Wi-Fi dan area co-working</td>
+                        </tr>
+                        <tr>
+                            <td>Kenyamanan</td>
+                            <td>Taman Bermain Anak</td>
+                            <td>Aman dan diawasi</td>
+                        </tr>
+                         <tr>
+                            <td>Kenyamanan</td>
+                            <td>Area BBQ</td>
+                            <td>Dapat dipesan untuk acara pribadi</td>
+                        </tr>
+                        <tr>
+                            <td>Keamanan</td>
+                            <td>Keamanan 24 Jam & CCTV</td>
+                            <td>Patroli rutin dan pengawasan</td>
+                        </tr>
+                        <tr>
+                            <td>Keamanan</td>
+                            <td>Akses Kartu Pribadi</td>
+                            <td>Untuk lift dan unit</td>
+                        </tr>
+                         <tr>
+                            <td>Lainnya</td>
+                            <td>Parkir Basement Luas</td>
+                            <td>Rasio parkir 1:1</td>
+                        </tr>
+                        <tr>
+                            <td>Lainnya</td>
+                            <td>Minimarket & Kafe</td>
+                            <td>Di dalam area kompleks</td>
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
+            </section>
+          `;
+      }
+
+      function renderKontakPage() {
+        document.title = "Hubungi Kami - Green Valley Apartments";
+        return `
+          <section class="container">
+            <div class="text-center" style="margin-bottom: var(--space-xl);">
+              <h1>Hubungi Tim Kami</h1>
+              <p>Kami siap membantu Anda menemukan apartemen impian. Jangan ragu untuk menghubungi kami.</p>
+            </div>
+            <div class="row" style="gap: var(--space-lg) 0;">
+              <div class="col col-md-6">
+                <h3 style="font-size: 1.8rem;">Formulir Kontak</h3>
+                <form id="contactForm">
+                  <div class="form-group">
+                    <label for="nama" class="form-label">Nama Lengkap Anda</label>
+                    <input type="text" id="nama" class="form-control" placeholder="cth. Budi Santoso" required>
+                    <div class="invalid-feedback">Nama wajib diisi.</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="form-label">Alamat Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="cth. budi@example.com" required>
+                    <div class="invalid-feedback">Format email tidak valid.</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="telepon" class="form-label">Nomor Telepon (Opsional)</label>
+                    <input type="tel" id="telepon" class="form-control" placeholder="cth. 08123456789">
+                  </div>
+                  <div class="form-group">
+                    <label for="subjek" class="form-label">Subjek Pesan</label>
+                    <input type="text" id="subjek" class="form-control" placeholder="cth. Pertanyaan Mengenai Tipe Studio" required>
+                     <div class="invalid-feedback">Subjek wajib diisi.</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="pesan" class="form-label">Pesan Anda</label>
+                    <textarea id="pesan" class="form-control" rows="5" placeholder="Tuliskan pertanyaan atau pesan Anda di sini..." required></textarea>
+                    <div class="invalid-feedback">Pesan wajib diisi.</div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-send-fill"></i> Kirim Pesan</button>
+                </form>
+              </div>
+              <div class="col col-md-6">
+                <h3 style="font-size: 1.8rem;">Informasi Kontak</h3>
+                <p>Anda juga dapat mengunjungi kantor pemasaran kami atau menghubungi kami melalui detail di bawah ini.</p>
+                <ul style="list-style: none; padding-left:0;">
+                  <li style="margin-bottom: var(--space-md); display:flex; align-items: flex-start;">
+                    <i class="bi bi-geo-alt-fill" style="font-size: 1.5rem; color: var(--primary-color); margin-right: var(--space-sm); margin-top:3px;"></i>
+                    <div>
+                      <strong>Alamat Kantor Pemasaran:</strong><br>
+                      Jl. Apartemen Indah No. 123, Lantai Dasar<br>
+                      Kota Metropolitan, ID 12345
+                    </div>
+                  </li>
+                  <li style="margin-bottom: var(--space-md); display:flex; align-items: flex-start;">
+                    <i class="bi bi-telephone-inbound-fill" style="font-size: 1.5rem; color: var(--primary-color); margin-right: var(--space-sm); margin-top:3px;"></i>
+                    <div>
+                      <strong>Telepon:</strong><br>
+                      <a href="tel:+622112345678">(021) 1234-5678</a> (Kantor)<br>
+                      <a href="tel:+6281298765432">0812-9876-5432</a> (WhatsApp Marketing)
+                    </div>
+                  </li>
+                  <li style="margin-bottom: var(--space-md); display:flex; align-items: flex-start;">
+                    <i class="bi bi-envelope-paper-fill" style="font-size: 1.5rem; color: var(--primary-color); margin-right: var(--space-sm); margin-top:3px;"></i>
+                    <div>
+                      <strong>Email:</strong><br>
+                      <a href="mailto:info@greenvalley.id">info@greenvalley.id</a> (Informasi Umum)<br>
+                      <a href="mailto:sales@greenvalley.id">sales@greenvalley.id</a> (Tim Penjualan)
+                    </div>
+                  </li>
+                  <li style="margin-bottom: var(--space-md); display:flex; align-items: flex-start;">
+                    <i class="bi bi-clock-history" style="font-size: 1.5rem; color: var(--primary-color); margin-right: var(--space-sm); margin-top:3px;"></i>
+                    <div>
+                      <strong>Jam Operasional:</strong><br>
+                      Senin - Jumat: 09:00 - 18:00 WIB<br>
+                      Sabtu - Minggu: 10:00 - 17:00 WIB (Kantor Pemasaran)
+                    </div>
+                  </li>
+                </ul>
+                <div style="margin-top: var(--space-lg); border-radius: var(--radius-lg); overflow:hidden; box-shadow: var(--shadow-md);">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15866.669667897447!2d106.8271527!3d-6.1753924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2d4f19c7d49a22!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1678886543210!5m2!1sid!2sid" 
+                        width="100%" 
+                        height="300" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Lokasi Green Valley Apartments">
+                    </iframe>
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function renderNotFoundPage() {
+        document.title = "404 Halaman Tidak Ditemukan - Green Valley";
+        return `
+            <section class="container text-center" style="padding: var(--space-xxl) 0;">
+                <i class="bi bi-compass-fill" style="font-size: 6rem; color: var(--primary-color); margin-bottom: var(--space-md);"></i>
+                <h1 style="font-size: 3rem;">Oops! Halaman Hilang.</h1>
+                <p style="font-size: 1.25rem; max-width: 600px; margin: 0 auto var(--space-lg);">Sepertinya halaman yang Anda cari tidak ada atau telah dipindahkan. Mari kembali ke jalan yang benar.</p>
+                <a href="#beranda" class="btn btn-primary btn-lg"><i class="bi bi-house-heart-fill"></i> Kembali ke Beranda</a>
+            </section>
+        `;
+      }
+
+      function renderPrivasiPage() {
+        document.title = "Kebijakan Privasi - Green Valley Apartments";
+        return `
+            <section class="container">
+              <div class="text-center" style="margin-bottom: var(--space-xl);">
+                <h1>Kebijakan Privasi</h1>
+                <p>Privasi Anda penting bagi kami. Dokumen ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda.</p>
+              </div>
+              
+              <h3>1. Informasi yang Kami Kumpulkan</h3>
+              <p>Kami dapat mengumpulkan informasi pribadi dari Anda melalui berbagai cara, termasuk namun tidak terbatas pada, saat Anda mengunjungi situs kami, mengisi formulir, atau berinteraksi dengan layanan kami. Informasi yang mungkin dikumpulkan meliputi:</p>
+              <ul>
+                <li>Nama lengkap</li>
+                <li>Alamat email</li>
+                <li>Nomor telepon</li>
+                <li>Informasi demografis (seperti preferensi unit apartemen)</li>
+                <li>Data penggunaan situs (melalui cookies atau teknologi serupa)</li>
+              </ul>
+
+              <h3>2. Penggunaan Informasi</h3>
+              <p>Informasi yang kami kumpulkan digunakan untuk tujuan berikut:</p>
+              <ul>
+                <li>Untuk menyediakan dan meningkatkan layanan kami.</li>
+                <li>Untuk mempersonalisasi pengalaman pengguna.</li>
+                <li>Untuk mengirim email periodik terkait informasi produk, promosi, atau berita perusahaan.</li>
+                <li>Untuk menanggapi pertanyaan atau permintaan Anda.</li>
+                <li>Untuk analisis internal dan peningkatan operasional.</li>
+              </ul>
+
+              <h3>3. Perlindungan Informasi</h3>
+              <p>Kami menerapkan berbagai langkah keamanan untuk menjaga keamanan informasi pribadi Anda. Kami menggunakan enkripsi untuk melindungi data sensitif yang ditransmisikan secara online, dan kami juga melindungi informasi Anda secara offline. Hanya karyawan yang memerlukan informasi tersebut untuk melakukan pekerjaan tertentu (misalnya, layanan pelanggan) yang diberikan akses ke informasi pribadi yang dapat diidentifikasi.</p>
+
+              <h3>4. Penggunaan Cookies</h3>
+              <p>Situs kami dapat menggunakan "cookies" untuk meningkatkan pengalaman pengguna. Browser web pengguna menempatkan cookies di hard drive mereka untuk tujuan pencatatan dan terkadang untuk melacak informasi tentang mereka. Pengguna dapat memilih untuk mengatur browser web mereka untuk menolak cookies, atau untuk memberi tahu Anda ketika cookies dikirim. Jika mereka melakukannya, perhatikan bahwa beberapa bagian Situs mungkin tidak berfungsi dengan baik.</p>
+              
+              <h3>5. Berbagi Informasi Pribadi</h3>
+              <p>Kami tidak menjual, memperdagangkan, atau menyewakan informasi identifikasi pribadi pengguna kepada pihak lain. Kami dapat membagikan informasi demografis agregat generik yang tidak terkait dengan informasi identifikasi pribadi apa pun mengenai pengunjung dan pengguna dengan mitra bisnis kami, afiliasi tepercaya, dan pengiklan untuk tujuan yang diuraikan di atas.</p>
+
+              <h3>6. Perubahan pada Kebijakan Privasi Ini</h3>
+              <p>Green Valley memiliki keleluasaan untuk memperbarui kebijakan privasi ini kapan saja. Ketika kami melakukannya, kami akan merevisi tanggal pembaruan di bagian bawah halaman ini. Kami mendorong Pengguna untuk sering memeriksa halaman ini untuk setiap perubahan agar tetap mendapat informasi tentang bagaimana kami membantu melindungi informasi pribadi yang kami kumpulkan. Anda mengakui dan setuju bahwa merupakan tanggung jawab Anda untuk meninjau kebijakan privasi ini secara berkala dan menjadi sadar akan modifikasi.</p>
+
+              <h3>7. Penerimaan Anda terhadap Persyaratan Ini</h3>
+              <p>Dengan menggunakan Situs ini, Anda menandakan penerimaan Anda terhadap kebijakan ini. Jika Anda tidak menyetujui kebijakan ini, mohon jangan gunakan Situs kami. Penggunaan Situs yang berkelanjutan setelah posting perubahan pada kebijakan ini akan dianggap sebagai penerimaan Anda terhadap perubahan tersebut.</p>
+
+              <h3>8. Menghubungi Kami</h3>
+              <p>Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, praktik situs ini, atau urusan Anda dengan situs ini, silakan hubungi kami di <a href="mailto:privasi@greenvalley.id">privasi@greenvalley.id</a>.</p>
+              
+              <p style="margin-top: var(--space-lg); font-size: 0.9rem; color: var(--current-text-secondary);">Dokumen ini terakhir diperbarui pada: <span id="privacy-update-date"></span>.</p>
+            </section>
+          `;
+      }
+
+
+      // --- FUNGSI PEMBANTU (UTILITIES) ---
+      function setActiveNavLink(path) {
+        navLinks.forEach(link => {
+          // Handle link yang mungkin memiliki hash dan path (misal /index.html#beranda)
+          const linkPath = link.getAttribute('href').substring(link.getAttribute('href').indexOf('#'));
+          if (linkPath === path) {
+            link.classList.add('active');
+            // Untuk aksesibilitas, tandai link aktif
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.classList.remove('active');
+            link.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        state.currentTheme = theme;
+        localStorage.setItem('theme', theme);
+        // Update ikon tombol tema
+        const icon = theme === 'dark' ? 'bi-sun-fill' : 'bi-moon-stars-fill';
+        if (themeToggleBtn) themeToggleBtn.innerHTML = `<i class="bi ${icon}"></i>`;
+      }
+
+      function toggleMobileMenu(forceOpen) {
+        const open = typeof forceOpen === 'boolean' ? forceOpen : !state.isMobileMenuOpen;
+        if (open) {
+          mobileNavEl.classList.add('open');
+          overlayEl.classList.add('active');
+          mobileMenuToggleBtn.setAttribute('aria-expanded', 'true');
+          mobileNavEl.setAttribute('aria-hidden', 'false');
+          // Fokus ke tombol close di menu mobile untuk aksesibilitas
+          setTimeout(() => mobileMenuCloseBtn.focus(), 50);
+        } else {
+          mobileNavEl.classList.remove('open');
+          overlayEl.classList.remove('active');
+          mobileMenuToggleBtn.setAttribute('aria-expanded', 'false');
+          mobileNavEl.setAttribute('aria-hidden', 'true');
+          // Kembalikan fokus ke tombol burger
+          mobileMenuToggleBtn.focus();
+        }
+        state.isMobileMenuOpen = open;
+      }
+
+      // --- FUNGSI SPESIFIK HALAMAN (Inisialisasi, Event Listener) ---
+      function initGaleriPage() {
+        const galleryGridContainer = $('#galleryGridContainer');
+        if (!galleryGridContainer) return; // Pastikan elemen ada
+
+        // Render kartu galeri
+        function renderGalleryItems(filter = 'all') {
+          galleryGridContainer.innerHTML = ''; // Kosongkan dulu
+          const filteredData = filter === 'all'
+            ? galleryData
+            : galleryData.filter(item => item.category === filter);
+
+          if (filteredData.length === 0) {
+            galleryGridContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align:center; color: var(--current-text-secondary);">Tidak ada item yang cocok dengan filter "${filter}".</p>`;
+            return;
+          }
+
+          filteredData.forEach((item, index) => {
+            const card = document.createElement('article');
+            card.className = 'gallery-card';
+            card.setAttribute('tabindex', '0'); // Aksesibilitas keyboard
+            card.setAttribute('role', 'button');
+            card.setAttribute('aria-label', `Lihat detail untuk ${item.title}`);
+            card.style.animationDelay = `${index * 0.05}s`; // Animasi masuk berurutan
+
+            card.innerHTML = `
+                    <img src="${item.url}" alt="${item.title}" class="gallery-card-image" loading="lazy">
+                    <div class="gallery-card-body">
+                        <h3 class="gallery-card-title">${item.title}</h3>
+                        <span class="gallery-card-category">${item.category}</span>
+                        <p class="gallery-card-description">${item.description.substring(0, 80)}...</p>
+                    </div>
+                `;
+            card.addEventListener('click', () => openImageModal(item));
+            card.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openImageModal(item);
+              }
+            });
+            galleryGridContainer.appendChild(card);
+          });
+        }
+
+        // Event listener untuk tombol filter
+        const filterButtons = $$('.filter-btn');
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const newFilter = button.dataset.filter;
+            if (state.galleryFilter === newFilter) return; // Jangan render ulang jika filter sama
+
+            state.galleryFilter = newFilter;
+            filterButtons.forEach(btn => {
+              btn.classList.toggle('active', btn.dataset.filter === newFilter);
+              btn.setAttribute('aria-pressed', btn.dataset.filter === newFilter);
+            });
+            renderGalleryItems(newFilter);
+          });
+        });
+
+        renderGalleryItems(state.galleryFilter); // Render awal
+      }
+
+      function initKontakPage() {
+        const form = $('#contactForm');
+        if (!form) return;
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          let isValid = true;
+
+          // Validasi sederhana
+          const nama = $('#nama');
+          const email = $('#email');
+          const subjek = $('#subjek');
+          const pesan = $('#pesan');
+
+          [nama, email, subjek, pesan].forEach(input => {
+            const feedbackEl = input.parentElement.querySelector('.invalid-feedback');
+            if (input.value.trim() === '') {
+              input.classList.add('is-invalid');
+              if (feedbackEl) feedbackEl.style.display = 'block';
+              isValid = false;
+            } else if (input.type === 'email' && !/^\S+@\S+\.\S+$/.test(input.value)) {
+              input.classList.add('is-invalid');
+              if (feedbackEl) {
+                feedbackEl.textContent = 'Format email tidak valid.';
+                feedbackEl.style.display = 'block';
+              }
+              isValid = false;
+            } else {
+              input.classList.remove('is-invalid');
+              if (feedbackEl) feedbackEl.style.display = 'none';
+            }
+          });
+
+          if (isValid) {
+            // Simulasi pengiriman form
+            console.log('Formulir valid, mengirim data:', {
+              nama: nama.value,
+              email: email.value,
+              telepon: $('#telepon').value,
+              subjek: subjek.value,
+              pesan: pesan.value
+            });
+            alert('Pesan Anda telah berhasil dikirim! (Ini adalah simulasi)');
+            form.reset(); // Bersihkan form setelah submit
+          } else {
+            // Fokus ke field pertama yang error untuk aksesibilitas
+            const firstInvalid = $('.is-invalid');
+            if (firstInvalid) firstInvalid.focus();
+          }
+        });
+
+        // Hapus status error saat pengguna mulai mengetik
+        [nama, email, subjek, pesan].forEach(input => {
+          input.addEventListener('input', () => {
+            if (input.classList.contains('is-invalid')) {
+              input.classList.remove('is-invalid');
+              const feedbackEl = input.parentElement.querySelector('.invalid-feedback');
+              if (feedbackEl) feedbackEl.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      function initPrivasiPage() {
+        const privacyDateEl = $('#privacy-update-date');
+        if (privacyDateEl) {
+          const today = new Date();
+          const options = { year: 'numeric', month: 'long', day: 'numeric' };
+          privacyDateEl.textContent = today.toLocaleDateString('id-ID', options);
+        }
+      }
+
+      // --- FUNGSI MODAL GAMBAR ---
+      function openImageModal(item) {
+        if (!imageModalEl || !modalImageSrcEl || !modalTitleEl || !modalDescriptionEl) return;
+
+        state.lastFocusedElement = document.activeElement; // Simpan elemen yang sedang fokus
+
+        modalImageSrcEl.src = item.url.replace('w=600', 'w=1200'); // Ambil versi lebih besar jika ada
+        modalImageSrcEl.alt = item.title;
+        modalTitleEl.textContent = item.title;
+        modalDescriptionEl.textContent = item.description;
+
+        imageModalEl.style.display = 'flex'; // Tampilkan modal overlay
+        setTimeout(() => { // Timeout kecil untuk transisi
+          imageModalEl.classList.add('active');
+          // Fokus ke tombol close di modal untuk aksesibilitas
+          modalCloseBtnEl.focus();
+        }, 10);
+
+        state.isModalOpen = true;
+        document.body.style.overflow = 'hidden'; // Cegah scroll body saat modal terbuka
+
+        // Event listener untuk menutup modal dengan tombol Escape
+        document.addEventListener('keydown', handleModalEscKey);
+      }
+
+      function closeImageModal() {
+        if (!imageModalEl) return;
+
+        imageModalEl.classList.remove('active');
+        setTimeout(() => {
+          imageModalEl.style.display = 'none'; // Sembunyikan setelah transisi selesai
+          modalImageSrcEl.src = ""; // Kosongkan src untuk cegah loading saat tersembunyi
+          modalImageSrcEl.alt = "";
+          modalTitleEl.textContent = "";
+          modalDescriptionEl.textContent = "";
+        }, 300); // Sesuaikan dengan durasi transisi CSS --transition-medium
+
+        state.isModalOpen = false;
+        document.body.style.overflow = ''; // Kembalikan scroll body
+
+        // Kembalikan fokus ke elemen terakhir yang aktif sebelum modal dibuka
+        if (state.lastFocusedElement) {
+          state.lastFocusedElement.focus();
+          state.lastFocusedElement = null;
+        }
+        document.removeEventListener('keydown', handleModalEscKey);
+      }
+
+      function handleModalEscKey(event) {
+        if (event.key === 'Escape' && state.isModalOpen) {
+          closeImageModal();
+        }
+      }
+
+
+      // --- ROUTER (Vanilla JS SPA) ---
+      const routes = {
+        'beranda': { render: renderBerandaPage, init: null, title: "Beranda" },
+        'galeri': { render: renderGaleriPage, init: initGaleriPage, title: "Galeri" },
+        'fasilitas': { render: renderFasilitasPage, init: null, title: "Fasilitas" },
+        'kontak': { render: renderKontakPage, init: initKontakPage, title: "Kontak" },
+        'privasi': { render: renderPrivasiPage, init: initPrivasiPage, title: "Kebijakan Privasi" },
+        // Halaman 404 (jika path tidak cocok) akan ditangani di fungsi router
+      };
+
+      function router() {
+        const path = window.location.hash.substring(1) || 'beranda'; // Default ke beranda
+        const route = routes[path] || { render: renderNotFoundPage, init: null, title: "404 Halaman Tidak Ditemukan" };
+
+        state.currentPage = path;
+
+        // Animasi keluar untuk konten lama
+        appContentEl.classList.add('loading');
+
+        // Setelah animasi keluar selesai (sesuaikan timeout dengan durasi transisi)
+        setTimeout(() => {
+          appContentEl.innerHTML = route.render();
+          document.title = `${route.title} - Green Valley`;
+          setActiveNavLink(`#${path}`);
+
+          // Scroll ke atas halaman
+          window.scrollTo(0, 0);
+
+          // Jalankan fungsi inisialisasi untuk halaman baru (jika ada)
+          if (route.init) {
+            route.init();
+          }
+
+          // Animasi masuk untuk konten baru
+          appContentEl.classList.remove('loading');
+        }, 300); // Harus sama dengan --transition-slow atau waktu transisi opacity
+
+        // Tutup menu mobile jika terbuka saat navigasi
+        if (state.isMobileMenuOpen) {
+          toggleMobileMenu(false);
+        }
+      }
+
+
+      // --- EVENT LISTENERS GLOBAL ---
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+          const newTheme = state.currentTheme === 'light' ? 'dark' : 'light';
+          applyTheme(newTheme);
+        });
+      }
+
+      if (mobileMenuToggleBtn) {
+        mobileMenuToggleBtn.addEventListener('click', () => toggleMobileMenu());
+      }
+      if (mobileMenuCloseBtn) {
+        mobileMenuCloseBtn.addEventListener('click', () => toggleMobileMenu(false));
+      }
+      if (overlayEl) {
+        overlayEl.addEventListener('click', () => {
+          if (state.isMobileMenuOpen) toggleMobileMenu(false);
+        });
+      }
+
+      // Menutup menu mobile dengan tombol Escape
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && state.isMobileMenuOpen) {
+          toggleMobileMenu(false);
+        }
+      });
+
+      // Menutup modal dengan klik di luar konten modal
+      if (imageModalEl) {
+        imageModalEl.addEventListener('click', (event) => {
+          if (event.target === imageModalEl && state.isModalOpen) { // Pastikan klik pada overlay, bukan konten
+            closeImageModal();
+          }
+        });
+      }
+      if (modalCloseBtnEl) {
+        modalCloseBtnEl.addEventListener('click', closeImageModal);
+      }
+
+      // Navigasi link
+      // Perlu memastikan bahwa semua link navigasi internal memicu router, bukan reload halaman
+      // Ini sudah ditangani dengan href="#path" dan event listener 'hashchange'
+
+      window.addEventListener('hashchange', router);
+
+      // --- INISIALISASI APLIKASI ---
+      function initApp() {
+        // Terapkan tema awal
+        applyTheme(state.currentTheme);
+
+        // Update tahun copyright
+        const currentYearEl = $('#current-year');
+        if (currentYearEl) currentYearEl.textContent = new Date().getFullYear();
+
+        // Jalankan router untuk memuat halaman awal
+        router();
+
+        console.log("Aplikasi Green Valley (Vanilla SPA) berhasil dimuat.");
+        console.log("State awal:", state);
+      }
+
+      // Tunggu DOM siap, lalu inisialisasi aplikasi
+      document.addEventListener('DOMContentLoaded', initApp);
+
+    })(); // Akhir dari IIFE App
+  </script>
+</body>
+
+</html>

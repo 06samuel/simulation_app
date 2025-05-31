@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Green Valley Rentals: Platform persewaan apartemen modern dengan fitur seperti SPA dalam satu file. Temukan apartemen impian Anda dengan pencarian lanjutan, pemesanan mudah, dan manajemen profil pengguna yang intuitif. Desain responsif, fancy, dan sangat teroptimasi.">
+    <meta name="keywords"
+        content="sewa apartemen, properti, green valley, rental, apartemen modern, spa, vanilla js, desain fancy">
+    <meta name="author" content="Green Valley Team">
+    <link rel="icon"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/pngs/solid/house-chimney-window.png"
+        type="image/png"> <!-- Contoh Favicon menggunakan Font Awesome PNG -->
+
+    <title>Green Valley Rentals - Sewa Apartemen Impian Anda</title>
+
+    <!-- Google Fonts: Inter dan Poppins untuk tampilan modern dan bersih -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome: Untuk ikon yang fancy dan konsisten -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Bootstrap CSS (v5.3): Digunakan untuk grid system, komponen UI dasar, dan responsivitas -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+
+    <style>
+        /* --- VARIABEL GLOBAL CSS UNTUK TEMA DAN DESAIN --- */
+        :root {
+            --gv-primary-color: #00796b;
+            /* Teal gelap sebagai warna utama, lebih elegan */
+            --gv-primary-color-light: #48a999;
+            --gv-primary-color-dark: #004c40;
+            --gv-secondary-color: #607d8b;
+            /* Biru abu-abu untuk elemen sekunder */
+            --gv-accent-color: #ff8f00;
+            /* Oranye sebagai aksen, menarik perhatian */
+            --gv-success-color: #4caf50;
+            --gv-danger-color: #f44336;
+            --gv-warning-color: #ffc107;
+            --gv-info-color: #03a9f4;
+
+            --gv-light-bg: #f7f9fc;
+            /* Latar belakang terang yang sangat halus */
+            --gv-dark-bg: #1e293b;
+            /* Latar belakang gelap yang modern (slate) */
+            --gv-light-text: #334155;
+            /* Teks gelap pada latar terang (slate) */
+            --gv-dark-text: #e2e8f0;
+            /* Teks terang pada latar gelap (slate) */
+
+            --gv-card-bg-light: #ffffff;
+            --gv-card-bg-dark: #2b3748;
+            /* Sedikit lebih terang dari dark-bg untuk kontras */
+            --gv-border-color-light: #e0e0e0;
+            --gv-border-color-dark: #4a5568;
+            /* Warna border yang lebih lembut */
+            --gv-input-bg-light: #ffffff;
+            --gv-input-bg-dark: #334155;
+            --gv-input-border-light: #ced4da;
+            --gv-input-border-dark: #526173;
+
+            --font-family-primary: 'Poppins', 'Inter', sans-serif;
+            /* Poppins sebagai font utama */
+            --font-family-secondary: 'Inter', sans-serif;
+
+            --bs-body-font-family: var(--font-family-primary);
+            --bs-border-radius: 0.375rem;
+            /* Sedikit lebih membulat */
+            --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+            /* Default ke tema terang */
+            --current-bg: var(--gv-light-bg);
+            --current-text: var(--gv-light-text);
+            --current-card-bg: var(--gv-card-bg-light);
+            --current-border-color: var(--gv-border-color-light);
+            --current-input-bg: var(--gv-input-bg-light);
+            --current-input-border: var(--gv-input-border-light);
+            --current-primary-text-on-bg: var(--gv-primary-color);
+            /* Teks warna primer di atas bg terang */
+        }
+
+        body.dark-theme {
+            --current-bg: var(--gv-dark-bg);
+            --current-text: var(--gv-dark-text);
+            --current-card-bg: var(--gv-card-bg-dark);
+            --current-border-color: var(--gv-border-color-dark);
+            --current-input-bg: var(--gv-input-bg-dark);
+            --current-input-border: var(--gv-input-border-dark);
+            --current-primary-text-on-bg: var(--gv-primary-color-light);
+            /* Teks warna primer di atas bg gelap */
+        }
+
+        /* --- GAYA DASAR DAN UTILITAS --- */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            /* Model kotak yang lebih intuitif */
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            /* Scroll yang lebih halus */
+            font-size: 16px;
+            /* Basis ukuran font */
+        }
+
+        body {
+            background-color: var(--current-bg);
+            color: var(--current-text);
+            font-family: var(--bs-body-font-family);
+            line-height: 1.6;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            /* Memastikan footer selalu di bawah */
+        }
+
+        main {
+            flex-grow: 1;
+            /* Konten utama mengambil sisa ruang */
+        }
+
+        /* --- GAYA HALAMAN SPA --- */
+        .page {
+            display: none;
+            /* Halaman disembunyikan secara default */
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInPage 0.5s forwards;
+        }
+
+        .page.active {
+            display: block;
+            /* Halaman aktif ditampilkan */
+        }
+
+        @keyframes fadeInPage {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- KOMPONEN UI KHUSUS --- */
+
+        /* Header & Navigasi */
+        .navbar {
+            background-color: var(--current-card-bg) !important;
+            border-bottom: 1px solid var(--current-border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .navbar-brand {
+            color: var(--current-primary-text-on-bg) !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-brand i {
+            color: var(--gv-primary-color);
+            /* Ikon selalu warna primer utama */
+        }
+
+        body.dark-theme .navbar-brand i {
+            color: var(--gv-primary-color-light);
+        }
+
+
+        .nav-link {
+            color: var(--current-text) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: var(--bs-border-radius);
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--gv-primary-color) !important;
+        }
+
+        body.dark-theme .nav-link:hover,
+        body.dark-theme .nav-link.active {
+            color: var(--gv-primary-color-light) !important;
+        }
+
+        .nav-link.active {
+            background-color: rgba(var(--gv-primary-color-rgb), 0.1);
+            /* Latar belakang lembut untuk link aktif */
+        }
+
+        body.dark-theme .nav-link.active {
+            background-color: rgba(var(--gv-primary-color-light-rgb), 0.15);
+        }
+
+        /* Tombol */
+        .btn {
+            font-weight: 600;
+            padding: 0.6rem 1.25rem;
+            border-radius: var(--bs-border-radius);
+            transition: all 0.2s ease-in-out;
+            text-transform: capitalize;
+        }
+
+        .btn-primary {
+            background-color: var(--gv-primary-color);
+            border-color: var(--gv-primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--gv-primary-color-dark);
+            border-color: var(--gv-primary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline-success {
+            color: var(--gv-success-color);
+            border-color: var(--gv-success-color);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--gv-success-color);
+            color: white;
+        }
+
+        .btn-outline-secondary {
+            color: var(--gv-secondary-color);
+            border-color: var(--gv-secondary-color);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--gv-secondary-color);
+            color: white;
+        }
+
+
+        /* Kartu Apartemen */
+        .apartment-card {
+            background-color: var(--current-card-bg);
+            border: 1px solid var(--current-border-color);
+            border-radius: var(--bs-border-radius);
+            box-shadow: var(--bs-box-shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            /* Untuk border-radius pada gambar */
+        }
+
+        .apartment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .apartment-card img {
+            height: 220px;
+            object-fit: cover;
+            width: 100%;
+            border-bottom: 1px solid var(--current-border-color);
+        }
+
+        .card-title {
+            color: var(--current-primary-text-on-bg);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .card-text .fa-map-marker-alt,
+        .card-text .fa-bed,
+        .card-text .fa-dollar-sign {
+            color: var(--gv-secondary-color);
+            margin-right: 0.3rem;
+        }
+
+        body.dark-theme .card-text .fa-map-marker-alt,
+        body.dark-theme .card-text .fa-bed,
+        body.dark-theme .card-text .fa-dollar-sign {
+            color: var(--gv-dark-text);
+            opacity: 0.8;
+        }
+
+
+        /* Formulir */
+        .form-control,
+        .form-select {
+            background-color: var(--current-input-bg);
+            color: var(--current-text);
+            border: 1px solid var(--current-input-border);
+            padding: 0.75rem 1rem;
+            border-radius: var(--bs-border-radius);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: var(--current-input-bg);
+            color: var(--current-text);
+            border-color: var(--gv-primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(var(--gv-primary-color-rgb), 0.25);
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--current-card-bg);
+            border-top: 1px solid var(--current-border-color);
+            color: var(--current-text);
+            padding: 2rem 0;
+            margin-top: auto;
+            /* Mendorong footer ke bawah */
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin-bottom: 0.25rem;
+        }
+
+        footer .fab {
+            font-size: 1.5rem;
+            color: var(--gv-secondary-color);
+            margin: 0 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        footer .fab:hover {
+            color: var(--gv-primary-color);
+        }
+
+        body.dark-theme footer .fab:hover {
+            color: var(--gv-primary-color-light);
+        }
+
+        /* Utilitas Tambahan */
+        .display-5 {
+            font-weight: 700;
+            color: var(--current-primary-text-on-bg);
+        }
+
+        .lead {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--gv-secondary-color);
+        }
+
+        body.dark-theme .lead {
+            color: var(--gv-dark-text);
+            opacity: 0.8;
+        }
+
+        .text-success {
+            color: var(--gv-success-color) !important;
+        }
+
+        .text-accent {
+            color: var(--gv-accent-color) !important;
+        }
+
+        /* Penyesuaian untuk tombol tema */
+        #themeToggler {
+            min-width: 130px;
+            /* Lebar tetap agar tidak melompat saat teks berubah */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #themeToggler i {
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-theme #themeToggler .fa-moon {
+            display: none;
+        }
+
+        body:not(.dark-theme) #themeToggler .fa-sun {
+            display: none;
+        }
+
+        /* Styling untuk pesan "tidak ada apartemen" */
+        #noApartmentsMessage {
+            border: 2px dashed var(--current-border-color);
+            padding: 2rem;
+            border-radius: var(--bs-border-radius);
+            color: var(--gv-secondary-color);
+        }
+
+        body.dark-theme #noApartmentsMessage {
+            color: var(--gv-dark-text);
+            opacity: 0.7;
+        }
+
+        /* Untuk memastikan warna RGB untuk box-shadow bisa diakses */
+        :root {
+            /* Ini perlu dihitung manual atau dengan JS jika warna primer berubah-ubah drastis */
+            --gv-primary-color-rgb: 0, 121, 107;
+            /* RGB untuk #00796b */
+            --gv-primary-color-light-rgb: 72, 169, 153;
+            /* RGB untuk #48a999 */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header: Navigasi utama aplikasi, sticky di atas -->
+    <header class="sticky-top shadow-sm">
+        <nav class="navbar navbar-expand-lg px-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#dashboard" data-route="dashboard">
+                    <i class="fas fa-house-chimney-window me-2"></i>Green Valley
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigasi">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" data-route="dashboard" href="#dashboard"
+                                aria-current="page">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-route="apartments" href="#apartments">Apartemen</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-route="add-apartment" href="#add-apartment">Tambah Baru</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-route="profile" href="#profile">Profil</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <button id="themeToggler" class="btn btn-outline-secondary btn-sm"
+                                aria-label="Toggle tema gelap/terang">
+                                <i class="fas fa-moon"></i>
+                                <i class="fas fa-sun"></i>
+                                <span class="theme-text">Mode Gelap</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Konten Utama Aplikasi: Tempat halaman-halaman SPA akan dimuat -->
+    <main class="container py-4 py-md-5">
+        <!-- Halaman Dashboard: Halaman utama saat aplikasi dimuat -->
+        <section id="page-dashboard" class="page" aria-labelledby="dashboard-title">
+            <h1 id="dashboard-title" class="mb-4 display-5">Selamat Datang di Green Valley!</h1>
+            <p class="lead mb-5">Destinasi premium Anda untuk menemukan apartemen yang sempurna.</p>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="p-4 p-lg-5 rounded-3 apartment-card h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-search-location fa-2x text-accent me-3"></i>
+                            <h3 class="card-title mb-0">Temukan Apartemen</h3>
+                        </div>
+                        <p class="text-secondary flex-grow-1">Jelajahi daftar lengkap apartemen kami. Gunakan
+                            filter canggih untuk menemukan yang sesuai kebutuhan Anda.</p>
+                        <a href="#apartments" data-route="apartments"
+                            class="btn btn-primary mt-auto align-self-start">
+                            <i class="fas fa-list-ul me-2"></i>Lihat Apartemen
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-4 p-lg-5 rounded-3 apartment-card h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-plus-circle fa-2x text-success me-3"></i>
+                            <h3 class="card-title mb-0">Daftarkan Properti Anda</h3>
+                        </div>
+                        <p class="text-secondary flex-grow-1">Punya apartemen untuk disewakan? Tambahkan ke
+                            platform kami dan jangkau ribuan penyewa potensial.</p>
+                        <a href="#add-apartment" data-route="add-apartment"
+                            class="btn btn-outline-success mt-auto align-self-start">
+                            <i class="fas fa-building me-2"></i>Tambah Listing Baru
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 p-4 rounded-3 apartment-card">
+                <h3 class="mb-3"><i class="fas fa-chart-line me-2 text-accent"></i>Statistik Cepat</h3>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="fs-5">Total Apartemen Terdaftar: <strong id="totalApartmentsStat"
+                                class="text-primary">0</strong></p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="fs-5">Harga Rata-Rata: <strong class="text-primary">Rp<span
+                                    id="averagePriceStat">0</span>/bulan</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Daftar Apartemen: Menampilkan semua apartemen dengan filter -->
+        <section id="page-apartments" class="page" aria-labelledby="apartments-title">
+            <h1 id="apartments-title" class="mb-4 display-5">Apartemen Tersedia</h1>
+            <!-- Filter -->
+            <div class="row mb-4 g-3 p-4 rounded-3 apartment-card align-items-end">
+                <div class="col-lg-3 col-md-6">
+                    <label for="filterLocation" class="form-label">Lokasi</label>
+                    <input type="text" id="filterLocation" class="form-control"
+                        placeholder="Cth: Pusat Kota, Sudirman">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="filterBedrooms" class="form-label">Jumlah Kamar Tidur</label>
+                    <select id="filterBedrooms" class="form-select">
+                        <option value="">Semua</option>
+                        <option value="1">1 Kamar Tidur</option>
+                        <option value="2">2 Kamar Tidur</option>
+                        <option value="3">3 Kamar Tidur</option>
+                        <option value="4">4+ Kamar Tidur</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label for="filterMaxPrice" class="form-label">Harga Maksimum (Rp)</label>
+                    <input type="number" id="filterMaxPrice" class="form-control" placeholder="Cth: 15000000">
+                </div>
+                <div class="col-lg-2 col-md-6 d-grid">
+                    <button id="applyFiltersBtn" class="btn btn-primary w-100"><i
+                            class="fas fa-filter me-1"></i>Filter</button>
+                </div>
+                <div class="col-lg-1 col-md-12 d-grid">
+                    <button id="clearFiltersBtn" class="btn btn-outline-secondary w-100 mt-2 mt-lg-0"
+                        aria-label="Hapus Filter">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Kontainer Kartu Apartemen -->
+            <div id="apartmentListContainer" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <!-- Konten dinamis dari JavaScript -->
+            </div>
+            <p id="noApartmentsMessage" class="text-center w-100 lead mt-5 p-5" style="display: none;">
+                <i class="fas fa-exclamation-circle fa-3x mb-3"></i><br>
+                Oops! Tidak ada apartemen yang cocok dengan kriteria Anda. Coba ubah filter pencarian.
+            </p>
+        </section>
+
+        <!-- Halaman Tambah Apartemen: Formulir untuk menambahkan properti baru -->
+        <section id="page-add-apartment" class="page" aria-labelledby="add-apartment-title">
+            <h1 id="add-apartment-title" class="mb-4 display-5">Tambah Apartemen Baru</h1>
+            <form id="addApartmentForm" class="p-4 p-md-5 rounded-3 apartment-card needs-validation" novalidate>
+                <div class="mb-4">
+                    <label for="aptName" class="form-label">Nama/Judul Apartemen <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="aptName" required minlength="5" maxlength="100">
+                    <div class="invalid-feedback">Nama apartemen wajib diisi (minimal 5 karakter).</div>
+                </div>
+                <div class="mb-4">
+                    <label for="aptLocation" class="form-label">Lokasi (Cth: Pusat Kota, Kebayoran Baru) <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="aptLocation" required minlength="3"
+                        maxlength="50">
+                    <div class="invalid-feedback">Lokasi wajib diisi (minimal 3 karakter).</div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="aptPrice" class="form-label">Harga (per bulan, Rp) <span
+                                class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="aptPrice" required min="100000"
+                            step="50000">
+                        <div class="invalid-feedback">Harga wajib diisi (minimal Rp100.000).</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="aptBedrooms" class="form-label">Jumlah Kamar Tidur <span
+                                class="text-danger">*</span></label>
+                        <select id="aptBedrooms" class="form-select" required>
+                            <option value="" disabled selected>Pilih jumlah kamar...</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4+</option>
+                        </select>
+                        <div class="invalid-feedback">Jumlah kamar tidur wajib dipilih.</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="aptDescription" class="form-label">Deskripsi <span
+                            class="text-danger">*</span></label>
+                    <textarea class="form-control" id="aptDescription" rows="4" required minlength="20"
+                        maxlength="500"></textarea>
+                    <div class="invalid-feedback">Deskripsi wajib diisi (minimal 20 karakter).</div>
+                </div>
+                <div class="mb-4">
+                    <label for="aptImageUrl" class="form-label">URL Gambar (opsional, gunakan placeholder jika
+                        kosong)</label>
+                    <input type="url" class="form-control" id="aptImageUrl"
+                        placeholder="https://via.placeholder.com/400x250/00796b/ffffff?text=Green+Valley+Home">
+                    <div class="invalid-feedback">Masukkan URL gambar yang valid.</div>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                    <i class="fas fa-plus-circle me-2"></i>Tambah Apartemen
+                </button>
+            </form>
+        </section>
+
+        <!-- Halaman Profil Pengguna: Untuk mengelola data pengguna -->
+        <section id="page-profile" class="page" aria-labelledby="profile-title">
+            <h1 id="profile-title" class="mb-4 display-5">Profil Pengguna</h1>
+            <div class="p-4 p-md-5 rounded-3 apartment-card">
+                <form id="profileForm" class="needs-validation" novalidate>
+                    <div class="text-center mb-4">
+                        <img src="https://via.placeholder.com/150/607d8b/ffffff?text=User" alt="Foto Profil"
+                            class="rounded-circle img-thumbnail" id="profileImagePreview"
+                            style="width: 150px; height: 150px; object-fit: cover;">
+                        <input type="file" id="profileImageUpload" class="d-none" accept="image/*">
+                        <button type="button" id="changeProfileImageBtn"
+                            class="btn btn-sm btn-outline-secondary mt-2">Ubah Foto</button>
+                    </div>
+                    <div class="mb-4">
+                        <label for="profileName" class="form-label">Nama Lengkap <span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="profileName" required>
+                        <div class="invalid-feedback">Nama lengkap wajib diisi.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="profileEmail" class="form-label">Alamat Email <span
+                                class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="profileEmail" required>
+                        <div class="invalid-feedback">Masukkan alamat email yang valid.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save me-2"></i>Simpan Perubahan
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer: Informasi hak cipta dan tautan sosial media -->
+    <footer class="text-center">
+        <div class="container">
+            <p class="mb-2">© <span id="currentYear"></span> Green Valley Rentals. Hak Cipta Dilindungi.</p>
+            <p class="mb-3 small">Sebuah Demo Aplikasi SPA Monolitik yang Fancy & Responsif.</p>
+            <div>
+                <a href="#" class="fab fa-facebook-f" aria-label="Facebook Green Valley"></a>
+                <a href="#" class="fab fa-twitter" aria-label="Twitter Green Valley"></a>
+                <a href="#" class="fab fa-instagram" aria-label="Instagram Green Valley"></a>
+                <a href="#" class="fab fa-linkedin-in" aria-label="LinkedIn Green Valley"></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (termasuk Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- JavaScript Aplikasi Kustom (Vanilla JS) -->
+    <script>
+        // --- KONFIGURASI DAN STATE APLIKASI ---
+        const AppConfig = {
+            DEFAULT_THEME: 'light', // Tema default: 'light' atau 'dark'
+            DEFAULT_PAGE: 'dashboard', // Halaman default saat aplikasi dimuat
+            CURRENCY_SYMBOL: 'Rp',
+            PLACEHOLDER_IMAGE_URL: 'https://via.placeholder.com/400x250/00796b/ffffff?text=Properti+GV',
+            ANIMATION_DURATION: 300, // Durasi animasi dalam milidetik
+        };
+
+        const AppState = {
+            currentPage: AppConfig.DEFAULT_PAGE,
+            theme: localStorage.getItem('gv-theme') || AppConfig.DEFAULT_THEME,
+            apartments: [
+                // Data contoh awal, akan dimuat dari localStorage jika ada
+                { id: 'apt-1', name: 'Apartemen Studio Mewah di SCBD', location: 'SCBD, Jakarta Selatan', price: 15000000, bedrooms: 1, description: 'Studio menawan dengan fasilitas lengkap dan pemandangan kota yang spektakuler. Cocok untuk profesional muda.', imageUrl: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=800&auto=format&fit=crop' },
+                { id: 'apt-2', name: 'Hunian Keluarga Lega di BSD', location: 'BSD City, Tangerang', price: 25000000, bedrooms: 3, description: 'Sempurna untuk keluarga, dengan taman bermain anak, kolam renang, dan keamanan 24 jam.', imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop' },
+                { id: 'apt-3', name: 'Loft Modern Pusat Kota Bandung', location: 'Pusat Kota, Bandung', price: 18000000, bedrooms: 2, description: 'Apartemen loteng yang ramping dan bergaya dengan akses mudah ke berbagai kafe dan factory outlet.', imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop' },
+                { id: 'apt-4', name: 'Retret Tenang Pinggir Kota Jogja', location: 'Sleman, Yogyakarta', price: 8000000, bedrooms: 2, description: 'Nikmati ketenangan hidup jauh dari hiruk pikuk kota, dengan udara segar dan pemandangan hijau.', imageUrl: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=800&auto=format&fit=crop' }
+            ],
+            nextApartmentIdCounter: 5, // Counter untuk ID apartemen berikutnya
+            userProfile: { // Data profil pengguna contoh
+                name: 'Pengguna GreenValley',
+                email: 'user@greenvalley.com',
+                imageUrl: 'https://via.placeholder.com/150/607d8b/ffffff?text=User'
+            }
+        };
+
+        // --- UTILITAS ---
+        const Utils = {
+            // Fungsi untuk menghasilkan ID unik (sederhana)
+            generateId: (prefix = 'item') => `${prefix}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+
+            // Fungsi untuk membersihkan HTML dari string (mencegah XSS dasar)
+      escapeHTML: (str) => {
+                if (str === null || typeof str === 'undefined') return '';
+                return String(str).replace(/[&<>"']/g, (match) => {
+                    const escape = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;'
+                    };
+                    return escape[match];
+                });
+            },
+
+
+            // Fungsi untuk memformat angka menjadi format mata uang
+            formatCurrency: (amount, symbol = AppConfig.CURRENCY_SYMBOL) => {
+                return `${symbol}${Number(amount).toLocaleString('id-ID')}`;
+            },
+
+            // Fungsi debounce untuk menunda eksekusi fungsi (berguna untuk input filter)
+            debounce: (func, delay) => {
+                let timeout;
+                return function (...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), delay);
+                };
+            }
+        };
+
+        // --- ELEMEN DOM YANG SERING DIGUNAKAN ---
+        const DOMElements = {
+            body: document.body,
+            pages: document.querySelectorAll('.page'),
+            navLinks: document.querySelectorAll('.nav-link[data-route]'),
+            themeToggler: document.getElementById('themeToggler'),
+            themeText: document.querySelector('#themeToggler .theme-text'),
+            themeIcons: {
+                moon: document.querySelector('#themeToggler .fa-moon'),
+                sun: document.querySelector('#themeToggler .fa-sun')
+            },
+            apartmentListContainer: document.getElementById('apartmentListContainer'),
+            addApartmentForm: document.getElementById('addApartmentForm'),
+            profileForm: document.getElementById('profileForm'),
+            profileImagePreview: document.getElementById('profileImagePreview'),
+            profileImageUpload: document.getElementById('profileImageUpload'),
+            changeProfileImageBtn: document.getElementById('changeProfileImageBtn'),
+            filterLocation: document.getElementById('filterLocation'),
+            filterBedrooms: document.getElementById('filterBedrooms'),
+            filterMaxPrice: document.getElementById('filterMaxPrice'),
+            applyFiltersBtn: document.getElementById('applyFiltersBtn'),
+            clearFiltersBtn: document.getElementById('clearFiltersBtn'),
+            noApartmentsMessage: document.getElementById('noApartmentsMessage'),
+            totalApartmentsStat: document.getElementById('totalApartmentsStat'),
+            averagePriceStat: document.getElementById('averagePriceStat'),
+            currentYear: document.getElementById('currentYear'),
+            allForms: document.querySelectorAll('.needs-validation')
+        };
+
+        // --- FUNGSI PEMBUAT KOMPONEN HTML (TEMPLATE) ---
+        function createApartmentCardHTML(apartment) {
+            const safeName = Utils.escapeHTML(apartment.name);
+            const safeLocation = Utils.escapeHTML(apartment.location);
+            const safeDescription = Utils.escapeHTML(apartment.description);
+            const imageUrl = apartment.imageUrl || AppConfig.PLACEHOLDER_IMAGE_URL;
+
+            // Tombol detail bisa di-extend untuk membuka modal atau halaman detail
+            return `
+                <div class="col">
+                    <article class="card h-100 apartment-card">
+                        <img src="${imageUrl}" class="card-img-top" alt="Gambar ${safeName}">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-title h5 mb-2">${safeName}</h3>
+                            <p class="card-text text-secondary small mb-1"><i class="fas fa-map-marker-alt"></i> ${safeLocation}</p>
+                            <p class="card-text fw-bold mb-2">${Utils.formatCurrency(apartment.price)}/bulan | <i class="fas fa-bed"></i> ${Utils.escapeHTML(String(apartment.bedrooms))} Kamar</p>
+                            <p class="card-text small flex-grow-1 mb-3">${safeDescription.substring(0, 100)}${safeDescription.length > 100 ? '...' : ''}</p>
+                            <button class="btn btn-sm btn-outline-primary mt-auto align-self-start" onclick="alert('Melihat detail untuk: ${safeName.replace(/'/g, "\\'")}')" aria-label="Lihat detail ${safeName}">
+                                <i class="fas fa-eye me-1"></i>Lihat Detail
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            `;
+        }
+
+        // --- FUNGSI RENDER (MEMPERBARUI UI) ---
+        function renderApartments(apartmentsToRender = AppState.apartments) {
+            if (!DOMElements.apartmentListContainer) return; // Pastikan elemen ada
+
+            DOMElements.apartmentListContainer.innerHTML = ''; // Kosongkan kontainer
+            if (apartmentsToRender.length === 0) {
+                DOMElements.noApartmentsMessage.style.display = 'block';
+            } else {
+                DOMElements.noApartmentsMessage.style.display = 'none';
+                const fragment = document.createDocumentFragment(); // Optimasi performa DOM
+                apartmentsToRender.forEach(apt => {
+                    const cardElement = document.createElement('div'); // Buat elemen sementara
+                    cardElement.innerHTML = createApartmentCardHTML(apt);
+                    fragment.appendChild(cardElement.firstChild); // Tambahkan anak elemen ke fragment
+                });
+                DOMElements.apartmentListContainer.appendChild(fragment);
+            }
+        }
+
+        function renderDashboardStats() {
+            if (DOMElements.totalApartmentsStat) {
+                DOMElements.totalApartmentsStat.textContent = AppState.apartments.length;
+            }
+            if (DOMElements.averagePriceStat) {
+                const totalPrices = AppState.apartments.reduce((sum, apt) => sum + apt.price, 0);
+                const avgPrice = AppState.apartments.length > 0 ? (totalPrices / AppState.apartments.length) : 0;
+                DOMElements.averagePriceStat.textContent = Utils.formatCurrency(avgPrice, '').replace(',00', ''); // Hapus desimal jika 00
+            }
+        }
+
+        // --- MANAJEMEN ROUTING DAN NAVIGASI (SPA) ---
+        function navigateTo(pageId) {
+            // Validasi apakah pageId ada
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (!targetPage) {
+                console.warn(`Halaman dengan ID "page-${pageId}" tidak ditemukan. Kembali ke dashboard.`);
+                pageId = AppConfig.DEFAULT_PAGE; // Kembali ke halaman default jika tidak valid
+            }
+
+            AppState.currentPage = pageId;
+            window.location.hash = pageId; // Perbarui hash URL
+
+            // Sembunyikan semua halaman dan tampilkan yang aktif
+            DOMElements.pages.forEach(page => {
+                page.classList.remove('active');
+                page.setAttribute('aria-hidden', 'true');
+            });
+
+            const activePage = document.getElementById(`page-${pageId}`);
+            if (activePage) {
+                activePage.classList.add('active');
+                activePage.removeAttribute('aria-hidden');
+                // Fokus ke judul halaman untuk aksesibilitas
+                const pageTitleElement = activePage.querySelector('h1');
+                if (pageTitleElement) pageTitleElement.focus();
+            }
+
+
+            // Perbarui status aktif pada link navigasi
+            DOMElements.navLinks.forEach(link => {
+                const isActive = link.dataset.route === pageId;
+                link.classList.toggle('active', isActive);
+                link.setAttribute('aria-current', isActive ? 'page' : 'false');
+            });
+
+            // Aksi spesifik berdasarkan halaman yang dimuat
+            switch (pageId) {
+                case 'apartments':
+                    renderApartments();
+                    break;
+                case 'dashboard':
+                    renderDashboardStats();
+                    break;
+                case 'profile':
+                    loadProfileDataToForm();
+                    break;
+                case 'add-apartment':
+                    DOMElements.addApartmentForm.reset(); // Reset form saat halaman diakses
+                    DOMElements.addApartmentForm.classList.remove('was-validated');
+                    break;
+            }
+        }
+
+        function handleHashChange() {
+            // Ambil hash dari URL, hapus '#' di awal, atau gunakan halaman default
+            const hash = window.location.hash.substring(1) || AppConfig.DEFAULT_PAGE;
+            navigateTo(hash);
+        }
+
+        // --- MANAJEMEN TEMA (TERANG/GELAP) ---
+        function applyTheme(theme) {
+            DOMElements.body.classList.toggle('dark-theme', theme === 'dark');
+            DOMElements.themeText.textContent = theme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
+
+            // Ganti ikon berdasarkan tema
+            if (DOMElements.themeIcons.moon && DOMElements.themeIcons.sun) {
+                DOMElements.themeIcons.moon.style.display = theme === 'light' ? 'inline-block' : 'none';
+                DOMElements.themeIcons.sun.style.display = theme === 'dark' ? 'inline-block' : 'none';
+            }
+
+            localStorage.setItem('gv-theme', theme); // Simpan preferensi tema
+            AppState.theme = theme;
+        }
+
+        function toggleTheme() {
+            const newTheme = AppState.theme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+        }
+
+        // --- MANAJEMEN DATA (CRUD SEDERHANA) ---
+
+        // CREATE: Menambahkan apartemen baru
+        function handleAddApartment(event) {
+            event.preventDefault();
+            event.stopPropagation(); // Hentikan propagasi untuk validasi Bootstrap
+
+            const form = DOMElements.addApartmentForm;
+            form.classList.add('was-validated'); // Tampilkan feedback validasi Bootstrap
+
+            if (!form.checkValidity()) { // Jika form tidak valid
+                // Fokus ke input pertama yang tidak valid
+                const firstInvalidField = form.querySelector(':invalid');
+                if (firstInvalidField) firstInvalidField.focus();
+                return;
+            }
+
+            const newApartment = {
+                id: Utils.generateId('apt'),
+                name: form.aptName.value.trim(),
+                location: form.aptLocation.value.trim(),
+                price: parseInt(form.aptPrice.value),
+                bedrooms: parseInt(form.aptBedrooms.value),
+                description: form.aptDescription.value.trim(),
+                imageUrl: form.aptImageUrl.value.trim() || AppConfig.PLACEHOLDER_IMAGE_URL
+            };
+
+            AppState.apartments.push(newApartment);
+            saveApartmentsToLocalStorage(); // Simpan ke localStorage
+            alert('Apartemen berhasil ditambahkan!');
+            form.reset();
+            form.classList.remove('was-validated');
+            navigateTo('apartments'); // Navigasi ke halaman daftar apartemen
+        }
+
+        // UPDATE: Memperbarui profil pengguna
+        function handleProfileSave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const form = DOMElements.profileForm;
+            form.classList.add('was-validated');
+
+            if (!form.checkValidity()) {
+                const firstInvalidField = form.querySelector(':invalid');
+                if (firstInvalidField) firstInvalidField.focus();
+                return;
+            }
+
+            AppState.userProfile.name = DOMElements.profileForm.profileName.value.trim();
+            AppState.userProfile.email = DOMElements.profileForm.profileEmail.value.trim();
+            // AppState.userProfile.imageUrl sudah diupdate oleh handleProfileImageChange
+
+            saveUserProfileToLocalStorage(); // Simpan ke localStorage
+            alert('Profil berhasil diperbarui!');
+        }
+
+        function handleProfileImageChange(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    DOMElements.profileImagePreview.src = e.target.result;
+                    AppState.userProfile.imageUrl = e.target.result; // Simpan sebagai base64 string
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert('Harap pilih file gambar yang valid (JPG, PNG, GIF).');
+            }
+        }
+
+
+        // READ: Memuat data profil ke formulir
+        function loadProfileDataToForm() {
+            if (DOMElements.profileForm) {
+                DOMElements.profileForm.profileName.value = AppState.userProfile.name;
+                DOMElements.profileForm.profileEmail.value = AppState.userProfile.email;
+                DOMElements.profileImagePreview.src = AppState.userProfile.imageUrl;
+                DOMElements.profileForm.classList.remove('was-validated');
+            }
+        }
+
+        // --- FUNGSI FILTER APARTEMEN ---
+        function handleFilterApartments() {
+            const locationFilter = DOMElements.filterLocation.value.toLowerCase().trim();
+            const bedroomsFilter = parseInt(DOMElements.filterBedrooms.value);
+            const maxPriceFilter = parseFloat(DOMElements.filterMaxPrice.value);
+
+            const filteredApartments = AppState.apartments.filter(apt => {
+                const matchesLocation = locationFilter ? apt.location.toLowerCase().includes(locationFilter) : true;
+                const matchesBedrooms = bedroomsFilter ? apt.bedrooms >= bedroomsFilter : true; // Jika 3+, maka 3 dan 4 cocok
+                const matchesPrice = !isNaN(maxPriceFilter) && maxPriceFilter > 0 ? apt.price <= maxPriceFilter : true;
+                return matchesLocation && matchesBedrooms && matchesPrice;
+            });
+            renderApartments(filteredApartments);
+        }
+
+        function clearFilters() {
+            DOMElements.filterLocation.value = '';
+            DOMElements.filterBedrooms.value = '';
+            DOMElements.filterMaxPrice.value = '';
+            renderApartments(AppState.apartments); // Tampilkan semua apartemen
+        }
+
+
+        // --- MANAJEMEN LOCALSTORAGE ---
+        function saveApartmentsToLocalStorage() {
+            try {
+                localStorage.setItem('gv-apartments', JSON.stringify(AppState.apartments));
+                localStorage.setItem('gv-nextApartmentIdCounter', AppState.nextApartmentIdCounter);
+            } catch (error) {
+                console.error("Gagal menyimpan data apartemen ke localStorage:", error);
+                // Mungkin tampilkan pesan ke pengguna jika localStorage penuh
+            }
+        }
+
+        function loadApartmentsFromLocalStorage() {
+            try {
+                const storedApartments = localStorage.getItem('gv-apartments');
+                const storedCounter = localStorage.getItem('gv-nextApartmentIdCounter');
+                if (storedApartments) {
+                    AppState.apartments = JSON.parse(storedApartments);
+                }
+                if (storedCounter) {
+                    AppState.nextApartmentIdCounter = parseInt(storedCounter);
+                }
+            } catch (error) {
+                console.error("Gagal memuat data apartemen dari localStorage:", error);
+                // Jika gagal, data contoh akan digunakan
+            }
+        }
+
+        function saveUserProfileToLocalStorage() {
+            try {
+                localStorage.setItem('gv-userProfile', JSON.stringify(AppState.userProfile));
+            } catch (error) {
+                console.error("Gagal menyimpan profil pengguna ke localStorage:", error);
+            }
+        }
+
+        function loadUserProfileFromLocalStorage() {
+            try {
+                const storedProfile = localStorage.getItem('gv-userProfile');
+                if (storedProfile) {
+                    AppState.userProfile = JSON.parse(storedProfile);
+                }
+            } catch (error) {
+                console.error("Gagal memuat profil pengguna dari localStorage:", error);
+            }
+        }
+
+        // --- INISIALISASI APLIKASI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Muat data dari localStorage
+            loadApartmentsFromLocalStorage();
+            loadUserProfileFromLocalStorage();
+
+            // Tetapkan tahun saat ini di footer
+            if (DOMElements.currentYear) DOMElements.currentYear.textContent = new Date().getFullYear();
+
+            // Terapkan tema awal
+            applyTheme(AppState.theme);
+
+            // Atur event listener untuk navigasi
+            DOMElements.navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Cegah perilaku default tautan
+                    navigateTo(link.dataset.route);
+                    // Untuk navigasi mobile Bootstrap, tutup menu setelah diklik
+                    const navbarToggler = document.querySelector('.navbar-toggler');
+                    const mainNav = document.getElementById('mainNav');
+                    if (navbarToggler.offsetParent !== null && mainNav.classList.contains('show')) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(mainNav);
+                        if (bsCollapse) bsCollapse.hide();
+                    }
+                });
+            });
+
+            // Event listener untuk tombol tema
+            DOMElements.themeToggler.addEventListener('click', toggleTheme);
+
+            // Event listener untuk form tambah apartemen
+            if (DOMElements.addApartmentForm) {
+                DOMElements.addApartmentForm.addEventListener('submit', handleAddApartment);
+            }
+
+            // Event listener untuk form profil
+            if (DOMElements.profileForm) {
+                DOMElements.profileForm.addEventListener('submit', handleProfileSave);
+            }
+            if (DOMElements.changeProfileImageBtn && DOMElements.profileImageUpload) {
+                DOMElements.changeProfileImageBtn.addEventListener('click', () => DOMElements.profileImageUpload.click());
+                DOMElements.profileImageUpload.addEventListener('change', handleProfileImageChange);
+            }
+
+
+            // Event listener untuk filter apartemen
+            // Menggunakan debounce untuk input teks agar tidak memfilter pada setiap ketikan
+            const debouncedFilter = Utils.debounce(handleFilterApartments, 500);
+            if (DOMElements.applyFiltersBtn) DOMElements.applyFiltersBtn.addEventListener('click', handleFilterApartments);
+            if (DOMElements.clearFiltersBtn) DOMElements.clearFiltersBtn.addEventListener('click', clearFilters);
+            if (DOMElements.filterLocation) DOMElements.filterLocation.addEventListener('input', debouncedFilter);
+            if (DOMElements.filterMaxPrice) DOMElements.filterMaxPrice.addEventListener('input', debouncedFilter);
+            if (DOMElements.filterBedrooms) DOMElements.filterBedrooms.addEventListener('change', handleFilterApartments);
+
+            // Event listener untuk perubahan hash URL (navigasi back/forward browser)
+            window.addEventListener('hashchange', handleHashChange);
+
+            // Muat halaman awal berdasarkan hash atau default
+            handleHashChange();
+
+            // Inisialisasi validasi Bootstrap untuk semua form
+            DOMElements.allForms.forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+            console.log("Aplikasi Green Valley Rentals berhasil dimuat!");
+        });
+    </script>
+</body>
+
+</html>

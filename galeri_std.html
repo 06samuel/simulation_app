@@ -7,7 +7,6 @@
     <title>Galeri Foto Dinamis Interaktif</title>
     <meta name="description"
         content="Sebuah galeri foto dinamis yang dibangun dengan HTML, CSS, dan JavaScript murni, menampilkan arsitektur SPA sederhana dan berbagai fitur interaktif.">
-    <!-- Favicon sederhana sebagai contoh -->
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
 
@@ -20,9 +19,9 @@
          * 5. Utility-First Approach (parsial): Untuk spacing, flex, dll.
          * 6. Mobile-First Responsive Design.
          * 7. Clean Code: Terstruktur, mudah dibaca, dan dikomentari.
-         * 8. Reusable Components (konsep): Kartu galeri, modal.
+         * 8. Reusable Components (konsep): Kartu galeri, modal, toast, alert, flash, off-canvas.
          * 9. User Experience: Interaksi halus, lazy loading, tema.
-         * 10. Accessibility (dasar): Alt text untuk gambar, aria-label.
+         * 10. Accessibility (dasar): Alt text, aria-labels, roles.
          * 11. Hirarki: Struktur HTML, CSS, dan JS yang jelas.
          * 12. Paradigma: Event-driven, fungsional (parsial) dalam JS.
          * 13. Keterangan Teks: Bahasa Indonesia (kecuali tag, properti, atribut).
@@ -50,22 +49,17 @@
             color: var(--color-foreground);
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-            /* Selalu tampilkan scrollbar untuk mencegah lompatan layout, tapi sembunyikan visualnya */
             overflow-y: scroll;
         }
 
-        /* Sembunyikan scrollbar secara visual tapi tetap fungsional */
         body::-webkit-scrollbar {
             display: none;
         }
 
-        /* Webkit (Chrome, Safari, Opera) */
         body {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
-        /* IE, Edge Legacy, Firefox */
 
         img,
         picture,
@@ -86,19 +80,22 @@
             --color-primary-hover: #0056b3;
             --color-primary-foreground: #ffffff;
             --color-secondary: #6c757d;
-            /* Warna sekunder untuk elemen pendukung */
             --color-background: #f8f9fa;
-            /* Latar belakang utama aplikasi */
             --color-foreground: #212529;
-            /* Warna teks utama */
             --color-card-background: #ffffff;
-            /* Latar belakang kartu */
             --color-card-foreground: #343a40;
-            /* Warna teks pada kartu */
             --color-border: #dee2e6;
-            /* Warna border standar */
             --color-muted-foreground: #6c757d;
-            /* Warna teks yang lebih lembut (deskripsi, dll) */
+
+            /* Warna Status */
+            --color-success: #28a745;
+            --color-success-foreground: #ffffff;
+            --color-error: #dc3545;
+            --color-error-foreground: #ffffff;
+            --color-warning: #ffc107;
+            --color-warning-foreground: #212529;
+            --color-info: #17a2b8;
+            --color-info-foreground: #ffffff;
 
             /* RGB individual untuk box-shadow (digunakan dalam :focus pada tombol) */
             --color-primary-rgb: 0, 123, 255;
@@ -107,22 +104,16 @@
             /* Tipografi */
             --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --font-size-xs: 0.75rem;
-            /* 12px */
             --font-size-sm: 0.875rem;
-            /* 14px */
             --font-size-base: 1rem;
-            /* 16px */
             --font-size-md: 1.125rem;
-            /* 18px */
             --font-size-lg: 1.5rem;
-            /* 24px */
             --font-size-xl: 2rem;
-            /* 32px */
             --font-weight-normal: 400;
             --font-weight-medium: 500;
             --font-weight-bold: 700;
 
-            /* Spasi (Konsisten dengan skala dasar 0.25rem atau 4px) */
+            /* Spasi */
             --space-0: 0rem;
             --space-1: 0.25rem;
             --space-2: 0.5rem;
@@ -137,15 +128,10 @@
             /* Border & Radius */
             --border-width: 1px;
             --radius-sm: 0.2rem;
-            /* ~3px */
             --radius-md: 0.375rem;
-            /* ~6px */
             --radius-lg: 0.5rem;
-            /* 8px */
             --radius-xl: 1rem;
-            /* 16px */
             --radius-pill: 9999px;
-            /* Untuk elemen berbentuk pil */
 
             /* Shadow */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -159,33 +145,50 @@
             --transition-duration-slow: 500ms;
             --transition-timing-function: ease-in-out;
 
-            /* Z-Index (Skala untuk mengatur tumpukan elemen) */
+            /* Z-Index */
+            --z-index-flash-message: 1010;
             --z-index-sticky: 1020;
+            /* Header */
+            --z-index-offcanvas-backdrop: 1025;
+            --z-index-offcanvas: 1030;
             --z-index-modal-backdrop: 1040;
             --z-index-modal: 1050;
+            --z-index-alert-backdrop: 1055;
+            /* Alert bisa di atas modal jika perlu */
+            --z-index-alert: 1060;
+            --z-index-toast: 1070;
+            /* Tertinggi */
+
 
             /* Ukuran Kontainer */
             --container-max-width: 1200px;
             --container-padding-x: var(--space-4);
-            /* Padding horizontal untuk kontainer */
         }
 
         [data-theme="dark"] {
             --color-primary: #3b82f6;
-            /* Biru yang sedikit lebih terang untuk dark mode */
             --color-primary-hover: #2563eb;
             --color-background: #111827;
-            /* Abu-abu gelap kebiruan */
             --color-foreground: #f3f4f6;
-            /* Putih keabu-abuan */
             --color-card-background: #1f2937;
-            /* Abu-abu lebih gelap untuk kartu */
             --color-card-foreground: #e5e7eb;
             --color-border: #374151;
-            /* Border lebih gelap */
             --color-muted-foreground: #9ca3af;
             --color-primary-rgb: 59, 130, 246;
-            /* RGB untuk tema gelap */
+
+            /* Warna Status Dark Theme */
+            --color-success: #10b981;
+            /* Hijau lebih cerah */
+            --color-success-foreground: #064e3b;
+            --color-error: #ef4444;
+            /* Merah lebih cerah */
+            --color-error-foreground: #fef2f2;
+            --color-warning: #f59e0b;
+            /* Kuning lebih cerah */
+            --color-warning-foreground: #78350f;
+            --color-info: #38bdf8;
+            /* Biru muda */
+            --color-info-foreground: #0c4a6e;
         }
 
         /* ======================================= */
@@ -205,6 +208,10 @@
             display: flex !important;
         }
 
+        .d-inline-flex {
+            display: inline-flex !important;
+        }
+
         /* Flexbox */
         .flex-col {
             flex-direction: column !important;
@@ -218,6 +225,10 @@
             justify-content: space-between !important;
         }
 
+        .justify-end {
+            justify-content: flex-end !important;
+        }
+
         .items-center {
             align-items: center !important;
         }
@@ -225,6 +236,27 @@
         .flex-grow-1 {
             flex-grow: 1 !important;
         }
+
+        .flex-wrap {
+            flex-wrap: wrap !important;
+        }
+
+        .gap-1 {
+            gap: var(--space-1) !important;
+        }
+
+        .gap-2 {
+            gap: var(--space-2) !important;
+        }
+
+        .gap-3 {
+            gap: var(--space-3) !important;
+        }
+
+        .gap-4 {
+            gap: var(--space-4) !important;
+        }
+
 
         /* Spacing (m-margin, p-padding, t-top, b-bottom, l-left, r-right, x-horizontal, y-vertical) */
         .m-0 {
@@ -309,6 +341,14 @@
 
         .mb-8 {
             margin-bottom: var(--space-8) !important;
+        }
+
+        .ml-auto {
+            margin-left: auto !important;
+        }
+
+        .mr-auto {
+            margin-right: auto !important;
         }
 
         .mx-auto {
@@ -495,6 +535,14 @@
             color: var(--color-muted-foreground) !important;
         }
 
+        .text-sm {
+            font-size: var(--font-size-sm) !important;
+        }
+
+        .text-lg {
+            font-size: var(--font-size-lg) !important;
+        }
+
         .text-xl {
             font-size: var(--font-size-xl) !important;
         }
@@ -531,12 +579,10 @@
         /* === LAYOUT COMPONENTS === */
         .app-header {
             background-color: var(--color-card-background);
-            /* Menggunakan warna kartu agar konsisten */
             padding: var(--space-3) var(--container-padding-x);
             box-shadow: var(--shadow-sm);
             border-bottom: var(--border-width) solid var(--color-border);
             position: sticky;
-            /* Header tetap terlihat saat scroll */
             top: 0;
             z-index: var(--z-index-sticky);
             transition: background-color var(--transition-duration-base) var(--transition-timing-function),
@@ -544,7 +590,6 @@
         }
 
         .app-header .container {
-            /* Inner container untuk header */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -593,31 +638,24 @@
         /* === COMPONENT: BUTTON === */
         .btn {
             display: inline-flex;
-            /* Agar bisa align-items dan justify-content */
             align-items: center;
             justify-content: center;
             position: relative;
-            /* Untuk efek ripple */
             padding: var(--space-2) var(--space-4);
             font-size: var(--font-size-base);
             font-weight: var(--font-weight-medium);
             line-height: 1.5;
-            /* Ketinggian baris standar */
             border-radius: var(--radius-md);
             cursor: pointer;
             text-decoration: none;
             border: var(--border-width) solid transparent;
-            /* Border transparan untuk konsistensi ukuran */
             transition: background-color var(--transition-duration-fast) var(--transition-timing-function),
                 border-color var(--transition-duration-fast) var(--transition-timing-function),
                 color var(--transition-duration-fast) var(--transition-timing-function),
                 box-shadow var(--transition-duration-fast) var(--transition-timing-function);
             overflow: hidden;
-            /* Penting untuk efek ripple */
             user-select: none;
-            /* Mencegah seleksi teks pada tombol */
             min-height: 44px;
-            /* Ukuran minimum untuk aksesibilitas sentuh (target size) */
         }
 
         .btn-primary {
@@ -632,62 +670,75 @@
             border-color: var(--color-primary-hover);
         }
 
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-primary-foreground);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            background-color: var(--color-muted-foreground);
+            border-color: var(--color-muted-foreground);
+        }
+
+        .btn-outline-secondary {
+            background-color: transparent;
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+
+        .btn-outline-secondary:hover,
+        .btn-outline-secondary:focus {
+            background-color: var(--color-secondary);
+            color: var(--color-primary-foreground);
+        }
+
+
         .btn:focus {
-            /* Generic focus style, bisa disesuaikan per varian */
             outline: none;
             box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-rgb), 0.5);
         }
 
-        /* Tombol Toggle Tema (varian khusus) */
-        .btn-toggle-theme {
+        .btn-toggle-theme,
+        .btn-offcanvas-toggle {
             background-color: var(--color-secondary);
             color: var(--color-primary-foreground);
-            /* Biasanya foreground primary cocok di sini */
             padding: var(--space-2);
             font-size: var(--font-size-lg);
-            /* Ukuran ikon lebih besar */
             min-width: 44px;
-            /* Pastikan ukuran target terpenuhi */
             height: 44px;
             border-color: var(--color-secondary);
         }
 
         .btn-toggle-theme:hover,
-        .btn-toggle-theme:focus {
+        .btn-toggle-theme:focus,
+        .btn-offcanvas-toggle:hover,
+        .btn-offcanvas-toggle:focus {
             background-color: var(--color-muted-foreground);
-            /* Warna hover lebih gelap */
             border-color: var(--color-muted-foreground);
         }
 
-        /* Efek ripple sederhana pada tombol */
         .btn::after {
             content: "";
             position: absolute;
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.3);
-            /* Warna ripple */
             width: 100px;
-            /* Ukuran awal ripple */
             height: 100px;
             margin-top: -50px;
-            /* Posisi tengah */
             margin-left: -50px;
             top: 50%;
             left: 50%;
             transform: scale(0);
-            /* Mulai dari kecil */
             opacity: 0;
             pointer-events: none;
-            /* Agar tidak menghalangi klik */
         }
 
         .btn:active::after {
-            /* Efek saat tombol ditekan */
             transform: scale(3);
-            /* Perbesar ripple */
             opacity: 1;
             transition: transform 0.5s ease-out, opacity 0.7s ease-out;
-            /* Animasi ripple */
         }
 
         /* ======================================= */
@@ -695,15 +746,11 @@
         /* === COMPONENT: GALLERY GRID === */
         .gallery-grid {
             display: grid;
-            /* Membuat kolom responsif: mengisi sebanyak mungkin kolom dengan lebar minimal 300px */
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: var(--space-6);
-            /* Jarak antar item galeri */
         }
 
         @media (max-width: 768px) {
-
-            /* Tablet dan perangkat lebih kecil */
             .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: var(--space-4);
@@ -711,28 +758,23 @@
         }
 
         @media (max-width: 480px) {
-
-            /* Ponsel */
             .gallery-grid {
                 grid-template-columns: 1fr;
-                /* Satu kolom pada layar sangat kecil */
                 gap: var(--space-4);
             }
         }
 
         /* ======================================= */
 
-        /* === COMPONENT: CARD (untuk item galeri) === */
+        /* === COMPONENT: CARD === */
         .card {
             background-color: var(--color-card-background);
             border: var(--border-width) solid var(--color-border);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
             overflow: hidden;
-            /* Agar gambar tidak keluar dari border radius */
             display: flex;
             flex-direction: column;
-            /* Susun gambar di atas, konten di bawah */
             transition: transform var(--transition-duration-base) var(--transition-timing-function),
                 box-shadow var(--transition-duration-base) var(--transition-timing-function),
                 background-color var(--transition-duration-base) var(--transition-timing-function),
@@ -741,20 +783,16 @@
 
         .card:hover {
             transform: translateY(-6px);
-            /* Efek angkat saat hover */
             box-shadow: var(--shadow-lg);
         }
 
         .card-image-wrapper {
             position: relative;
-            /* Untuk positioning gambar absolut di dalamnya */
             width: 100%;
-            /* Aspect ratio 3:2 (tinggi = 2/3 dari lebar). Sesuaikan jika perlu (misal 16:9 -> 56.25%) */
             padding-top: 66.66%;
+            /* 3:2 aspect ratio */
             overflow: hidden;
-            /* Untuk efek zoom pada hover gambar jika diinginkan */
             background-color: var(--color-border);
-            /* Placeholder color sebelum gambar load */
         }
 
         .card-image {
@@ -764,30 +802,20 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Pastikan gambar menutupi area tanpa distorsi */
             opacity: 0;
-            /* Awalnya transparan untuk efek fade-in saat lazy loading */
             transition: opacity var(--transition-duration-slow) var(--transition-timing-function),
                 transform var(--transition-duration-base) var(--transition-timing-function);
         }
 
-        .card:hover .card-image {
-            /* transform: scale(1.03); */
-            /* Efek zoom halus pada gambar saat hover kartu (opsional) */
-        }
-
         .card-image.loaded {
-            /* Kelas ditambahkan oleh JS setelah gambar dimuat */
             opacity: 1;
         }
 
         .card-body {
             padding: var(--space-4);
             flex-grow: 1;
-            /* Agar body mengisi sisa ruang jika card punya tinggi berbeda-beda */
             display: flex;
             flex-direction: column;
-            /* Konten body tersusun vertikal */
         }
 
         .card-title {
@@ -803,16 +831,12 @@
             color: var(--color-muted-foreground);
             margin-bottom: var(--space-3);
             flex-grow: 1;
-            /* Dorong tombol ke bawah jika ada teks deskripsi */
             transition: color var(--transition-duration-base) var(--transition-timing-function);
         }
 
         .card .btn {
-            /* Styling khusus untuk tombol di dalam card */
             margin-top: auto;
-            /* Dorong tombol ke bagian bawah card-body */
             align-self: flex-end;
-            /* Rata kanan tombol */
         }
 
         /* ======================================= */
@@ -820,52 +844,37 @@
         /* === COMPONENT: MODAL === */
         .modal-overlay {
             display: none;
-            /* Awalnya tersembunyi */
             position: fixed;
-            /* Menutupi seluruh viewport */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
-            /* Latar belakang gelap transparan */
             z-index: var(--z-index-modal-backdrop);
             opacity: 0;
-            /* Awalnya transparan untuk animasi */
             transition: opacity var(--transition-duration-base) var(--transition-timing-function);
-            /* Menggunakan flex untuk memusatkan konten modal */
             justify-content: center;
             align-items: center;
             padding: var(--space-4);
-            /* Padding agar konten modal tidak menempel tepi layar */
         }
 
         .modal-overlay.active {
-            /* Kelas saat modal aktif */
             display: flex;
-            /* Menjadi flex untuk memusatkan */
             opacity: 1;
         }
 
         .modal-content {
             background-color: var(--color-card-background);
-            /* Sama dengan card untuk konsistensi */
             padding: var(--space-2);
-            /* Padding kecil di sekitar gambar */
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-xl);
             max-width: 95vw;
-            /* Lebar maksimal konten modal */
             max-height: 95vh;
-            /* Tinggi maksimal konten modal */
             display: flex;
-            /* Untuk centering gambar jika padding besar */
             justify-content: center;
             align-items: center;
             position: relative;
-            /* Untuk tombol close absolut */
             transform: scale(0.9);
-            /* Efek scale-up saat muncul */
             opacity: 0;
             transition: transform var(--transition-duration-base) var(--transition-timing-function),
                 opacity var(--transition-duration-base) var(--transition-timing-function),
@@ -873,7 +882,6 @@
         }
 
         .modal-overlay.active .modal-content {
-            /* Animasi saat modal aktif */
             transform: scale(1);
             opacity: 1;
         }
@@ -881,29 +889,23 @@
         .modal-image {
             display: block;
             max-width: 100%;
-            /* Tinggi gambar dikurangi padding modal agar pas */
             max-height: calc(95vh - (var(--space-2) * 2) - (var(--space-4) * 2));
             border-radius: var(--radius-md);
-            /* Radius lebih kecil dari modal-content */
             object-fit: contain;
-            /* Agar seluruh gambar terlihat tanpa crop */
         }
 
         .modal-close-btn {
             position: absolute;
             top: calc(var(--space-3) * -1 - var(--space-1));
-            /* Posisikan di luar sedikit */
             right: calc(var(--space-3) * -1 - var(--space-1));
             background: var(--color-card-background);
             color: var(--color-foreground);
             border: var(--border-width) solid var(--color-border);
             border-radius: var(--radius-pill);
-            /* Tombol bulat */
             width: 40px;
             height: 40px;
             font-size: var(--font-size-lg);
             line-height: 1;
-            /* Untuk centering teks/simbol X */
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -921,21 +923,324 @@
 
         /* ======================================= */
 
+        /* === COMPONENT: TOAST === */
+        .toast-container {
+            position: fixed;
+            bottom: var(--space-4);
+            right: var(--space-4);
+            z-index: var(--z-index-toast);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            /* Toasts stack nicely */
+            gap: var(--space-3);
+        }
+
+        .toast {
+            background-color: var(--color-card-background);
+            color: var(--color-card-foreground);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--color-info);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function),
+                transform var(--transition-duration-base) var(--transition-timing-function);
+            min-width: 250px;
+            max-width: 350px;
+            font-size: var(--font-size-sm);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            border-left-color: var(--color-success);
+            background-color: var(--color-success);
+            color: var(--color-success-foreground);
+        }
+
+        .toast-error {
+            border-left-color: var(--color-error);
+            background-color: var(--color-error);
+            color: var(--color-error-foreground);
+        }
+
+        .toast-warning {
+            border-left-color: var(--color-warning);
+            background-color: var(--color-warning);
+            color: var(--color-warning-foreground);
+        }
+
+        .toast-info {
+            border-left-color: var(--color-info);
+            background-color: var(--color-info);
+            color: var(--color-info-foreground);
+        }
+
+        .toast-close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2em;
+            line-height: 1;
+            padding: 0 var(--space-1);
+            margin-left: var(--space-2);
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .toast-close-btn:hover {
+            opacity: 1;
+        }
+
+        /* ======================================= */
+
+        /* === COMPONENT: ALERT (Simple Modal) === */
+        .alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: var(--z-index-alert-backdrop);
+            opacity: 0;
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function);
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-4);
+        }
+
+        .alert-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .alert-content {
+            background-color: var(--color-card-background);
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform var(--transition-duration-base) var(--transition-timing-function),
+                opacity var(--transition-duration-base) var(--transition-timing-function),
+                background-color var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .alert-overlay.active .alert-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .alert-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-card-foreground);
+            margin-bottom: var(--space-3);
+        }
+
+        .alert-message {
+            font-size: var(--font-size-base);
+            color: var(--color-muted-foreground);
+            margin-bottom: var(--space-6);
+        }
+
+        .alert-actions .btn {
+            margin: 0 var(--space-1);
+        }
+
+        /* ======================================= */
+
+        /* === COMPONENT: FLASH MESSAGE === */
+        #flash-message-container {
+            position: fixed;
+            top: 0;
+            /* Adjusted by JS if header is present */
+            left: 0;
+            width: 100%;
+            z-index: var(--z-index-flash-message);
+            pointer-events: none;
+            /* Allow clicks through unless on the message itself */
+        }
+
+        .flash-message {
+            padding: var(--space-3) var(--space-4);
+            text-align: center;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function),
+                transform var(--transition-duration-base) var(--transition-timing-function);
+            pointer-events: auto;
+            /* Enable clicks on the message */
+            box-shadow: var(--shadow-sm);
+        }
+
+        .flash-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flash-message-success {
+            background-color: var(--color-success);
+            color: var(--color-success-foreground);
+        }
+
+        .flash-message-error {
+            background-color: var(--color-error);
+            color: var(--color-error-foreground);
+        }
+
+        .flash-message-warning {
+            background-color: var(--color-warning);
+            color: var(--color-warning-foreground);
+        }
+
+        .flash-message-info {
+            background-color: var(--color-info);
+            color: var(--color-info-foreground);
+        }
+
+        /* ======================================= */
+
+        /* === COMPONENT: OFF-CANVAS === */
+        .offcanvas-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: var(--z-index-offcanvas-backdrop);
+            opacity: 0;
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function);
+        }
+
+        .offcanvas-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .offcanvas-panel {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            /* Start off-screen, width can be variable */
+            width: 300px;
+            /* Example width */
+            max-width: 80vw;
+            height: 100%;
+            background-color: var(--color-card-background);
+            color: var(--color-card-foreground);
+            box-shadow: var(--shadow-lg);
+            z-index: var(--z-index-offcanvas);
+            transition: transform var(--transition-duration-base) var(--transition-timing-function),
+                background-color var(--transition-duration-base) var(--transition-timing-function),
+                color var(--transition-duration-base) var(--transition-timing-function);
+            padding: var(--space-6);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .offcanvas-panel.active {
+            transform: translateX(-100%);
+        }
+
+        .offcanvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .offcanvas-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .offcanvas-close-btn {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            color: var(--color-muted-foreground);
+            cursor: pointer;
+            padding: var(--space-1);
+            line-height: 1;
+        }
+
+        .offcanvas-close-btn:hover {
+            color: var(--color-foreground);
+        }
+
+        .offcanvas-body {
+            flex-grow: 1;
+        }
+
+        .offcanvas-body nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .offcanvas-body nav li a {
+            display: block;
+            padding: var(--space-2) 0;
+            text-decoration: none;
+            color: var(--color-foreground);
+            font-size: var(--font-size-base);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .offcanvas-body nav li a:hover {
+            color: var(--color-primary);
+        }
+
+        .offcanvas-body nav li:last-child a {
+            border-bottom: none;
+        }
+
+        /* ======================================= */
+
         /* === STATE CLASSES === */
-        /* Mencegah scroll pada body saat modal aktif */
-        body.modal-open {
+        /* Mencegah scroll pada body saat modal, alert, atau offcanvas aktif */
+        body.modal-open,
+        body.alert-open,
+        body.offcanvas-open {
             overflow: hidden;
         }
     </style>
 </head>
 
 <body>
+    <!-- Flash Message Container -->
+    <div id="flash-message-container" role="status" aria-live="polite"></div>
+
     <!-- Wadah utama untuk aplikasi SPA (Single Page Application) -->
     <div id="app-container">
         <!-- Header Aplikasi -->
         <header class="app-header">
             <div class="container">
-                <a href="#" class="app-title" aria-label="Beranda Galeri Foto Interaktif">Galeri Foto Interaktif</a>
+                <div class="d-flex items-center gap-3">
+                    <button id="offcanvas-toggle-btn" class="btn btn-offcanvas-toggle" aria-label="Buka Menu"
+                        aria-expanded="false" aria-controls="app-offcanvas">
+                        ☰
+                    </button>
+                    <a href="#" class="app-title" aria-label="Beranda Galeri Foto Interaktif">Galeri Foto</a>
+                </div>
                 <button id="theme-toggle-btn" class="btn btn-toggle-theme" aria-label="Toggle Tema">
                     <!-- Ikon akan diisi oleh JavaScript berdasarkan tema saat ini -->
                 </button>
@@ -946,13 +1251,14 @@
         <main id="main-content" class="app-main">
             <div class="container">
                 <h1 class="text-center font-bold text-xl mb-6">Koleksi Gambar Pilihan Kami</h1>
+                <div class="d-flex justify-center gap-2 mb-6">
+                    <button id="show-toast-btn" class="btn btn-primary">Tampilkan Toast</button>
+                    <button id="show-alert-btn" class="btn btn-secondary">Tampilkan Alert</button>
+                </div>
                 <section id="gallery-section" aria-labelledby="gallery-title-heading">
                     <h2 id="gallery-title-heading" class="d-none">Galeri Gambar</h2>
-                    <!-- Judul tersembunyi untuk aksesibilitas -->
                     <div class="gallery-grid" id="gallery-grid-container">
                         <!-- Item galeri akan dirender secara dinamis oleh JavaScript -->
-                        <!-- Contoh placeholder jika JS gagal (opsional) -->
-                        <!-- <p class="text-center text-muted">Memuat galeri...</p> -->
                     </div>
                 </section>
             </div>
@@ -960,7 +1266,7 @@
 
         <!-- Footer Aplikasi -->
         <footer class="app-footer">
-            <p>© <span id="current-year"></span> Galeri Foto Dinamis. Dibuat dengan Penuh Semangat oleh Pengembang.</p>
+            <p>© <span id="current-year"></span> Galeri Foto Dinamis. Dibuat dengan Penuh Semangat.</p>
         </footer>
     </div>
 
@@ -968,100 +1274,73 @@
     <div id="image-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true"
         aria-labelledby="modal-image-title">
         <div class="modal-content">
-            <!-- Judul modal untuk aksesibilitas, bisa diisi dari alt gambar -->
             <h3 id="modal-image-title" class="d-none">Pratinjau Gambar Diperbesar</h3>
             <button id="modal-close-btn" class="modal-close-btn" aria-label="Tutup Pratinjau Gambar">×</button>
             <img id="modal-image-content" src="" alt="Pratinjau Gambar Diperbesar" class="modal-image">
         </div>
     </div>
 
+    <!-- Alert (Simple Modal) -->
+    <div id="alert-overlay" class="alert-overlay" role="alertdialog" aria-modal="true" aria-labelledby="alert-title"
+        aria-describedby="alert-message">
+        <div class="alert-content">
+            <h4 id="alert-title" class="alert-title">Judul Alert</h4>
+            <p id="alert-message" class="alert-message">Ini adalah pesan alert.</p>
+            <div id="alert-actions" class="alert-actions">
+                <!-- Tombol akan ditambahkan oleh JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container" aria-live="assertive" aria-relevant="additions"></div>
+
+    <!-- Off-Canvas Panel -->
+    <div id="offcanvas-backdrop" class="offcanvas-backdrop"></div>
+    <aside id="app-offcanvas" class="offcanvas-panel" aria-labelledby="offcanvas-main-title">
+        <div class="offcanvas-header">
+            <h3 id="offcanvas-main-title" class="offcanvas-title">Menu Navigasi</h3>
+            <button id="offcanvas-close-btn" class="offcanvas-close-btn" aria-label="Tutup Menu">×</button>
+        </div>
+        <div class="offcanvas-body">
+            <nav aria-label="Navigasi utama">
+                <ul>
+                    <li><a href="#">Beranda</a></li>
+                    <li><a href="#">Tentang Kami</a></li>
+                    <li><a href="#">Layanan</a></li>
+                    <li><a href="#">Kontak</a></li>
+                </ul>
+            </nav>
+            <button class="btn btn-primary mt-auto"
+                onclick="Utils.showToast('Tombol di Off-canvas diklik!', 'info')">Aksi di Off-canvas</button>
+        </div>
+    </aside>
+
+
     <script>
         // === JAVASCRIPT APPLICATION LOGIC ===
-        "use strict"; // Mengaktifkan mode ketat untuk penulisan kode yang lebih aman dan mencegah error umum.
+        "use strict";
 
-        /**
-         * AppState: Menyimpan state global aplikasi.
-         * Ini adalah pendekatan sederhana untuk state management dalam aplikasi vanilla JS.
-         */
         const appState = {
             currentTheme: localStorage.getItem('appPreferredTheme') ||
                 (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
             isModalOpen: false,
-            galleryData: [ // Data galeri yang akan dirender secara dinamis
-                {
-                    id: "img1",
-                    src: "https://picsum.photos/id/1035/800/533", // Aspect ratio 3:2
-                    alt: "Arsitektur gedung modern dengan langit biru",
-                    title: "Struktur Megah",
-                    description: "Pemandangan detail arsitektur gedung modern yang menjulang tinggi di bawah langit biru cerah."
-                },
-                {
-                    id: "img2",
-                    src: "https://picsum.photos/id/1037/800/533",
-                    alt: "Jalanan kota yang sibuk di malam hari dengan jejak lampu kendaraan",
-                    title: "Kilau Malam Kota",
-                    description: "Suasana dinamis jalanan kota metropolitan pada malam hari, dihiasi jejak cahaya lampu kendaraan."
-                },
-                {
-                    id: "img3",
-                    src: "https://picsum.photos/id/1047/800/533",
-                    alt: "Pegunungan yang diselimuti kabut tebal di pagi hari",
-                    title: "Kabut Pagi di Lembah",
-                    description: "Lanskap pegunungan yang dramatis dan misterius, diselimuti kabut tebal saat fajar menyingsing."
-                },
-                {
-                    id: "img4",
-                    src: "https://picsum.photos/id/1050/800/533",
-                    alt: "Pantai tropis yang indah dengan perahu nelayan tradisional",
-                    title: "Surga Tropis Tersembunyi",
-                    description: "Keindahan pantai eksotis dengan pasir putih lembut, air laut jernih, dan perahu nelayan tradisional."
-                },
-                {
-                    id: "img5",
-                    src: "https://picsum.photos/id/1075/800/533",
-                    alt: "Hutan pinus yang lebat dengan sinar matahari menembus dedaunan",
-                    title: "Kedamaian Hutan Pinus",
-                    description: "Jajaran pohon pinus yang tinggi menjulang menciptakan suasana tenang, damai, dan menyegarkan."
-                },
-                {
-                    id: "img6",
-                    src: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=533&q=80",
-                    alt: "Jembatan gantung kayu di atas sungai deras di tengah hutan hijau",
-                    title: "Jembatan Petualangan",
-                    description: "Sebuah jembatan gantung kayu yang kokoh melintasi sungai deras, menghubungkan dua sisi hutan lebat."
-                },
-                {
-                    id: "img7",
-                    src: "https://picsum.photos/id/1015/800/533",
-                    alt: "Danau pegunungan dengan air jernih memantulkan langit dan pepohonan",
-                    title: "Refleksi Sempurna Alam",
-                    description: "Permukaan danau pegunungan yang tenang bagai cermin, memantulkan keindahan langit biru dan hijaunya pepohonan."
-                },
-                {
-                    id: "img8",
-                    src: "https://picsum.photos/id/188/800/533",
-                    alt: "Buku terbuka di atas meja kayu dengan secangkir kopi di sampingnya",
-                    title: "Momen Relaksasi Pribadi",
-                    description: "Kombinasi sempurna untuk relaksasi: buku bacaan menarik ditemani secangkir kopi hangat mengepul."
-                },
-                {
-                    id: "img9",
-                    src: "https://picsum.photos/id/703/800/533",
-                    alt: "Jalan setapak berkelok di taman kota yang rimbun dengan bunga",
-                    title: "Jelajah Taman Kota Asri",
-                    description: "Jalan setapak yang mengundang untuk berjalan santai dan menjelajahi keindahan serta keteduhan taman kota."
-                }
+            isAlertOpen: false,
+            isOffCanvasOpen: false,
+            galleryData: [
+                { id: "img1", src: "https://picsum.photos/id/1035/800/533", alt: "Arsitektur gedung modern", title: "Struktur Megah", description: "Detail arsitektur gedung modern di bawah langit biru." },
+                { id: "img2", src: "https://picsum.photos/id/1037/800/533", alt: "Jalanan kota malam hari", title: "Kilau Malam Kota", description: "Jalanan kota metropolitan malam hari dengan jejak cahaya." },
+                { id: "img3", src: "https://picsum.photos/id/1047/800/533", alt: "Pegunungan berkabut", title: "Kabut Pagi", description: "Lanskap pegunungan dramatis diselimuti kabut fajar." },
+                { id: "img4", src: "https://picsum.photos/id/1050/800/533", alt: "Pantai tropis", title: "Surga Tropis", description: "Pantai eksotis dengan pasir putih dan air jernih." },
+                { id: "img5", src: "https://picsum.photos/id/1075/800/533", alt: "Hutan pinus", title: "Kedamaian Hutan", description: "Jajaran pohon pinus tinggi menciptakan suasana tenang." },
+                { id: "img6", src: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=533&q=80", alt: "Jembatan gantung", title: "Jembatan Petualangan", description: "Jembatan gantung kayu di atas sungai deras hutan." },
             ]
         };
 
-        /**
-         * DOM Element Selectors: Mengumpulkan semua elemen DOM yang sering diakses.
-         * Ini meningkatkan keterbacaan, memudahkan maintenance, dan sedikit meningkatkan performa
-         * dengan mengurangi query DOM berulang.
-         */
         const DOMElements = {
             html: document.documentElement,
             body: document.body,
+            header: document.querySelector('.app-header'),
             themeToggleButton: document.getElementById('theme-toggle-btn'),
             galleryGridContainer: document.getElementById('gallery-grid-container'),
             modalOverlay: document.getElementById('image-modal-overlay'),
@@ -1069,179 +1348,235 @@
             modalImageTitle: document.getElementById('modal-image-title'),
             modalCloseButton: document.getElementById('modal-close-btn'),
             currentYearSpan: document.getElementById('current-year'),
+
+            // New UI Elements
+            toastContainer: document.getElementById('toast-container'),
+            alertOverlay: document.getElementById('alert-overlay'),
+            alertTitle: document.getElementById('alert-title'),
+            alertMessage: document.getElementById('alert-message'),
+            alertActions: document.getElementById('alert-actions'),
+            flashMessageContainer: document.getElementById('flash-message-container'),
+            offCanvasPanel: document.getElementById('app-offcanvas'),
+            offCanvasToggleBtn: document.getElementById('offcanvas-toggle-btn'),
+            offCanvasCloseBtn: document.getElementById('offcanvas-close-btn'),
+            offCanvasBackdrop: document.getElementById('offcanvas-backdrop'),
+
+            // Demo buttons
+            showToastBtn: document.getElementById('show-toast-btn'),
+            showAlertBtn: document.getElementById('show-alert-btn'),
         };
 
-        /**
-         * UTILITIES: Kumpulan fungsi-fungsi bantuan (helper functions) yang reusable.
-         */
         const Utils = {
-            /**
-             * Menerapkan tema (terang atau gelap) ke aplikasi.
-             * @param {string} theme - Nama tema yang akan diterapkan ('light' atau 'dark').
-             */
             applyTheme: (theme) => {
                 DOMElements.html.setAttribute('data-theme', theme);
                 appState.currentTheme = theme;
-                localStorage.setItem('appPreferredTheme', theme); // Simpan preferensi tema pengguna
-
-                // Update ikon dan aria-label tombol tema
+                localStorage.setItem('appPreferredTheme', theme);
                 if (DOMElements.themeToggleButton) {
                     DOMElements.themeToggleButton.innerHTML = theme === 'dark' ? '☀️<span class="d-none"> Ganti ke Tema Terang</span>' : '🌙<span class="d-none"> Ganti ke Tema Gelap</span>';
                     DOMElements.themeToggleButton.setAttribute('aria-label', theme === 'dark' ? 'Ganti ke Tema Terang' : 'Ganti ke Tema Gelap');
                 }
             },
-
-            /**
-             * Toggle tema antara terang dan gelap.
-             */
             toggleTheme: () => {
                 const newTheme = appState.currentTheme === 'light' ? 'dark' : 'light';
                 Utils.applyTheme(newTheme);
+                Utils.showToast(`Tema diubah ke ${newTheme === 'light' ? 'Terang' : 'Gelap'}!`, newTheme === 'light' ? 'info' : 'info', 2000);
             },
 
-            /**
-             * Membuka modal dengan gambar yang dipilih.
-             * @param {string} imageSrc - URL sumber gambar.
-             * @param {string} imageAlt - Teks alternatif untuk gambar (digunakan juga untuk judul modal).
-             */
             openModal: (imageSrc, imageAlt) => {
                 if (!DOMElements.modalOverlay || !DOMElements.modalImageContent || !DOMElements.modalImageTitle) return;
-
                 DOMElements.modalImageContent.src = imageSrc;
-                DOMElements.modalImageContent.alt = imageAlt; // Penting untuk aksesibilitas
-                DOMElements.modalImageTitle.textContent = imageAlt; // Gunakan alt sebagai judul modal
-
+                DOMElements.modalImageContent.alt = imageAlt;
+                DOMElements.modalImageTitle.textContent = imageAlt;
                 DOMElements.modalOverlay.classList.add('active');
-                DOMElements.body.classList.add('modal-open'); // Mencegah scroll body saat modal terbuka
-
-                // Fokus ke tombol tutup modal untuk navigasi keyboard yang lebih baik
+                DOMElements.body.classList.add('modal-open');
                 DOMElements.modalCloseButton.focus();
                 appState.isModalOpen = true;
             },
-
-            /**
-             * Menutup modal.
-             */
             closeModal: () => {
-                if (!DOMElements.modalOverlay) return;
+                if (!DOMElements.modalOverlay || !appState.isModalOpen) return;
                 DOMElements.modalOverlay.classList.remove('active');
-                DOMElements.body.classList.remove('modal-open'); // Aktifkan kembali scroll body
+                DOMElements.body.classList.remove('modal-open');
                 appState.isModalOpen = false;
             },
 
-            /**
-             * Membuat elemen kartu galeri HTML secara dinamis.
-             * @param {object} itemData - Data untuk satu item galeri (id, src, alt, title, description).
-             * @returns {HTMLElement} Elemen kartu (<article class="card">) yang sudah jadi.
-             */
             createGalleryCard: (itemData) => {
                 const card = document.createElement('article');
-                card.className = 'card shadow-md rounded-lg'; // Tambahkan kelas utilitas langsung
+                card.className = 'card shadow-md rounded-lg';
                 card.setAttribute('data-image-id', itemData.id);
                 card.setAttribute('aria-labelledby', `card-title-${itemData.id}`);
 
                 const imageWrapper = document.createElement('div');
                 imageWrapper.className = 'card-image-wrapper';
-
                 const img = document.createElement('img');
                 img.className = 'card-image';
                 img.src = itemData.src;
                 img.alt = itemData.alt;
-                img.loading = 'lazy'; // Atribut native HTML5 untuk lazy loading gambar
-                // Efek fade-in setelah gambar dimuat
+                img.loading = 'lazy';
                 img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-                img.addEventListener('error', () => { // Fallback jika gambar gagal dimuat
-                    img.alt = `Gagal memuat gambar: ${itemData.alt}`;
-                    imageWrapper.style.backgroundColor = '#e0e0e0'; // Warna placeholder error
+                img.addEventListener('error', () => {
+                    img.alt = `Gagal memuat: ${itemData.alt}`;
+                    imageWrapper.style.backgroundColor = '#e0e0e0';
                 }, { once: true });
-
-
                 imageWrapper.appendChild(img);
 
                 const cardBody = document.createElement('div');
                 cardBody.className = 'card-body';
-
                 const title = document.createElement('h3');
                 title.className = 'card-title';
                 title.id = `card-title-${itemData.id}`;
                 title.textContent = itemData.title;
-
                 const description = document.createElement('p');
                 description.className = 'card-text text-muted';
                 description.textContent = itemData.description;
-
                 const viewButton = document.createElement('button');
                 viewButton.className = 'btn btn-primary view-image-btn';
                 viewButton.textContent = 'Lihat Detail';
-                viewButton.setAttribute('aria-label', `Lihat detail gambar: ${itemData.title}`);
+                viewButton.setAttribute('aria-label', `Lihat detail: ${itemData.title}`);
 
                 cardBody.appendChild(title);
                 cardBody.appendChild(description);
                 cardBody.appendChild(viewButton);
                 card.appendChild(imageWrapper);
                 card.appendChild(cardBody);
-
                 return card;
             },
-
-            /**
-             * Merender semua item galeri ke dalam kontainer DOM.
-             */
             renderGallery: () => {
-                if (!DOMElements.galleryGridContainer) {
-                    console.error("Kontainer galeri tidak ditemukan.");
-                    return;
-                }
-                // Kosongkan kontainer sebelum merender ulang (jika ada data baru/filter di masa depan)
+                if (!DOMElements.galleryGridContainer) return;
                 DOMElements.galleryGridContainer.innerHTML = '';
-
                 if (appState.galleryData.length === 0) {
-                    DOMElements.galleryGridContainer.innerHTML = '<p class="text-center text-muted">Tidak ada gambar untuk ditampilkan saat ini.</p>';
+                    DOMElements.galleryGridContainer.innerHTML = '<p class="text-center text-muted">Tidak ada gambar.</p>';
                     return;
                 }
-
-                const fragment = document.createDocumentFragment(); // Optimasi untuk penambahan banyak elemen
-                appState.galleryData.forEach(item => {
-                    const cardElement = Utils.createGalleryCard(item);
-                    fragment.appendChild(cardElement);
-                });
+                const fragment = document.createDocumentFragment();
+                appState.galleryData.forEach(item => fragment.appendChild(Utils.createGalleryCard(item)));
                 DOMElements.galleryGridContainer.appendChild(fragment);
-            }
+            },
+
+            // === NEW UI COMPONENT UTILS ===
+            showToast: (message, type = 'info', duration = 3000) => {
+                if (!DOMElements.toastContainer) return;
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`; // e.g. toast-success
+                toast.setAttribute('role', 'status');
+                toast.setAttribute('aria-live', 'polite');
+
+                const messageSpan = document.createElement('span');
+                messageSpan.textContent = message;
+                toast.appendChild(messageSpan);
+
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '×';
+                closeBtn.className = 'toast-close-btn';
+                closeBtn.setAttribute('aria-label', 'Tutup notifikasi');
+                closeBtn.onclick = () => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300); // Allow animation
+                };
+                toast.appendChild(closeBtn);
+
+                DOMElements.toastContainer.appendChild(toast);
+                // Trigger animation
+                setTimeout(() => toast.classList.add('show'), 50);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        setTimeout(() => toast.remove(), 300); // Allow animation
+                    }, duration);
+                }
+            },
+
+            showAlert: (title, message, options = {}) => {
+                if (!DOMElements.alertOverlay) return;
+                DOMElements.alertTitle.textContent = title;
+                DOMElements.alertMessage.innerHTML = message; // Use innerHTML to allow simple HTML in message
+                DOMElements.alertActions.innerHTML = ''; // Clear previous actions
+
+                const buttons = options.buttons || [{ text: 'OK', type: 'primary', action: Utils.closeAlert }];
+
+                buttons.forEach(btnConfig => {
+                    const button = document.createElement('button');
+                    button.className = `btn btn-${btnConfig.type || 'primary'}`;
+                    button.textContent = btnConfig.text;
+                    button.onclick = () => {
+                        if (btnConfig.action) btnConfig.action();
+                        Utils.closeAlert(); // Always close alert after action
+                    };
+                    DOMElements.alertActions.appendChild(button);
+                });
+
+                DOMElements.alertOverlay.classList.add('active');
+                DOMElements.body.classList.add('alert-open');
+                // Focus on the first button for accessibility
+                if (DOMElements.alertActions.firstChild) DOMElements.alertActions.firstChild.focus();
+                appState.isAlertOpen = true;
+            },
+            closeAlert: () => {
+                if (!DOMElements.alertOverlay || !appState.isAlertOpen) return;
+                DOMElements.alertOverlay.classList.remove('active');
+                DOMElements.body.classList.remove('alert-open');
+                appState.isAlertOpen = false;
+            },
+
+            showFlashMessage: (message, type = 'info', duration = 5000) => {
+                if (!DOMElements.flashMessageContainer) return;
+
+                // Remove any existing flash message
+                const existingFlash = DOMElements.flashMessageContainer.querySelector('.flash-message');
+                if (existingFlash) existingFlash.remove();
+
+                const flash = document.createElement('div');
+                flash.className = `flash-message flash-message-${type}`;
+                flash.textContent = message;
+
+                // Adjust top position if header is present and sticky
+                if (DOMElements.header && getComputedStyle(DOMElements.header).position === 'sticky') {
+                    const headerHeight = DOMElements.header.offsetHeight;
+                    DOMElements.flashMessageContainer.style.top = `${headerHeight}px`;
+                } else {
+                    DOMElements.flashMessageContainer.style.top = '0px';
+                }
+
+                DOMElements.flashMessageContainer.appendChild(flash);
+                setTimeout(() => flash.classList.add('show'), 50); // Trigger animation
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        flash.classList.remove('show');
+                        setTimeout(() => flash.remove(), 300);
+                    }, duration);
+                }
+            },
+
+            toggleOffCanvas: () => {
+                const isActive = DOMElements.offCanvasPanel.classList.toggle('active');
+                DOMElements.offCanvasBackdrop.classList.toggle('active', isActive);
+                DOMElements.body.classList.toggle('offcanvas-open', isActive);
+                DOMElements.offCanvasToggleBtn.setAttribute('aria-expanded', isActive.toString());
+                appState.isOffCanvasOpen = isActive;
+                if (isActive) {
+                    DOMElements.offCanvasCloseBtn.focus();
+                } else {
+                    DOMElements.offCanvasToggleBtn.focus();
+                }
+            },
         };
 
-        /**
-         * EVENT LISTENERS: Mengatur semua event listener untuk interaksi pengguna.
-         */
         const EventListeners = {
             init: () => {
-                // Event listener untuk tombol toggle tema
                 if (DOMElements.themeToggleButton) {
                     DOMElements.themeToggleButton.addEventListener('click', Utils.toggleTheme);
                 }
 
-                // Event listener untuk menutup modal
                 if (DOMElements.modalOverlay) {
                     DOMElements.modalOverlay.addEventListener('click', (e) => {
-                        // Tutup modal hanya jika klik dilakukan pada area overlay (latar belakang),
-                        // bukan pada konten modal itu sendiri.
-                        if (e.target === DOMElements.modalOverlay) {
-                            Utils.closeModal();
-                        }
+                        if (e.target === DOMElements.modalOverlay) Utils.closeModal();
                     });
                 }
                 if (DOMElements.modalCloseButton) {
                     DOMElements.modalCloseButton.addEventListener('click', Utils.closeModal);
                 }
 
-                // Event listener untuk menutup modal dengan tombol 'Escape' pada keyboard
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && appState.isModalOpen) {
-                        Utils.closeModal();
-                    }
-                });
-
-                // Event delegation untuk tombol "Lihat Detail" di dalam setiap kartu galeri.
-                // Ini lebih efisien daripada menambahkan event listener ke setiap tombol secara individual.
                 if (DOMElements.galleryGridContainer) {
                     DOMElements.galleryGridContainer.addEventListener('click', (e) => {
                         const viewButton = e.target.closest('.view-image-btn');
@@ -1254,35 +1589,73 @@
                         }
                     });
                 }
+
+                // New UI Event Listeners
+                if (DOMElements.alertOverlay) {
+                    DOMElements.alertOverlay.addEventListener('click', (e) => {
+                        if (e.target === DOMElements.alertOverlay) Utils.closeAlert();
+                    });
+                }
+                // No default close button for alert, actions handle it.
+
+                if (DOMElements.offCanvasToggleBtn) {
+                    DOMElements.offCanvasToggleBtn.addEventListener('click', Utils.toggleOffCanvas);
+                }
+                if (DOMElements.offCanvasCloseBtn) {
+                    DOMElements.offCanvasCloseBtn.addEventListener('click', Utils.toggleOffCanvas);
+                }
+                if (DOMElements.offCanvasBackdrop) {
+                    DOMElements.offCanvasBackdrop.addEventListener('click', Utils.toggleOffCanvas);
+                }
+
+                // Demo button listeners
+                if (DOMElements.showToastBtn) {
+                    DOMElements.showToastBtn.addEventListener('click', () => {
+                        Utils.showToast('Ini adalah notifikasi toast!', 'success');
+                        setTimeout(() => Utils.showToast('Toast kedua, tipe error.', 'error', 5000), 1000);
+                        setTimeout(() => Utils.showToast('Toast ketiga, tipe warning, tanpa auto-close.', 'warning', 0), 2000);
+                    });
+                }
+                if (DOMElements.showAlertBtn) {
+                    DOMElements.showAlertBtn.addEventListener('click', () => {
+                        Utils.showAlert(
+                            'Konfirmasi Tindakan',
+                            'Apakah Anda yakin ingin melanjutkan? Tindakan ini <strong>tidak dapat</strong> dibatalkan.',
+                            {
+                                buttons: [
+                                    { text: 'Batal', type: 'outline-secondary', action: () => Utils.showToast('Aksi dibatalkan', 'info') },
+                                    { text: 'Ya, Lanjutkan', type: 'primary', action: () => Utils.showFlashMessage('Aksi berhasil dikonfirmasi!', 'success') }
+                                ]
+                            }
+                        );
+                    });
+                }
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (appState.isModalOpen) Utils.closeModal();
+                        if (appState.isAlertOpen) Utils.closeAlert();
+                        if (appState.isOffCanvasOpen) Utils.toggleOffCanvas();
+                    }
+                });
             }
         };
 
-        /**
-         * App Initialization: Fungsi utama untuk memulai aplikasi.
-         * Dipanggil setelah seluruh struktur DOM siap.
-         */
         function initializeApp() {
-            // 1. Terapkan tema awal (dari localStorage atau preferensi sistem)
             Utils.applyTheme(appState.currentTheme);
-
-            // 2. Render item-item galeri secara dinamis
             Utils.renderGallery();
-
-            // 3. Set tahun saat ini di footer (untuk copyright)
             if (DOMElements.currentYearSpan) {
                 DOMElements.currentYearSpan.textContent = new Date().getFullYear();
             }
-
-            // 4. Inisialisasi semua event listener
             EventListeners.init();
 
-            // (Untuk pengembangan SPA lebih lanjut, di sini bisa ditambahkan logika routing sederhana)
-            console.log("Aplikasi Galeri Foto Dinamis berhasil diinisialisasi dengan sukses.");
+            // Example Flash Message on load
+            Utils.showFlashMessage('Selamat datang di Galeri Foto Interaktif!', 'info', 6000);
+
+            console.log("Aplikasi Galeri Foto Dinamis berhasil diinisialisasi.");
         }
 
-        // Jalankan fungsi inisialisasi aplikasi setelah DOM sepenuhnya dimuat dan siap.
         document.addEventListener('DOMContentLoaded', initializeApp);
-
     </script>
 </body>
 
