@@ -1,229 +1,3736 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Scroll Overlap Cards</title>
+    <meta name="description"
+        content="Aplikasi Web SPA Modern dengan Efek Kartu Gulir Interaktif dan Fitur UI Lengkap. Dibangun dengan Vanilla HTML, CSS, dan JavaScript untuk pengalaman pengguna yang canggih dan responsif.">
+    <meta name="keywords" content="SPA, Vanilla JS, HTML5, CSS3, Scroll Cards, UI Modern, Desain Fancy, Aplikasi Web">
+    <meta name="author" content="Pengembang Aplikasi Canggih">
+    <title>Aplikasi SPA Canggih - Beranda</title>
+
+    <!-- Favicon (Ganti dengan path favicon Anda) -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Contoh menggunakan emoji sebagai favicon jika tidak ada file .ico -->
+    <!-- <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>"> -->
+
+    <!-- Font Awesome Icons (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Gaya Utama Aplikasi -->
     <style>
-        * {
+        /* -------------------------------------------------------------------------- */
+        /*                            VARIABEL GLOBAL CSS                             */
+        /* -------------------------------------------------------------------------- */
+        :root {
+            /* Skema Warna Utama (Mode Terang Default) */
+            --primary-color: #007AFF;
+            /* Biru iOS */
+            --primary-hover: #005ECC;
+            --primary-light: #E5F2FF;
+            --secondary-color: #8E8E93;
+            /* Abu-abu Netral iOS */
+            --secondary-hover: #727275;
+            --success-color: #34C759;
+            /* Hijau iOS */
+            --error-color: #FF3B30;
+            /* Merah iOS */
+            --warning-color: #FF9500;
+            /* Oranye iOS */
+            --info-color: #5AC8FA;
+            /* Biru Muda iOS */
+
+            --background-color: #F2F2F7;
+            /* Latar Belakang Sangat Terang (iOS-like) */
+            --surface-color: #FFFFFF;
+            /* Permukaan Konten (Kartu, Modal) */
+            --surface-elevated-color: #FFFFFF;
+            /* Untuk elemen yang sedikit terangkat */
+
+            --on-primary-color: #FFFFFF;
+            --on-surface-color: #1C1C1E;
+            /* Teks Utama di atas Surface (Hitam Pekat iOS) */
+            --on-background-color: #3A3A3C;
+            /* Teks di atas Background */
+            --muted-text-color: #8A8A8E;
+            /* Teks Redup/Sekunder */
+            --border-color: #C6C6C8;
+            /* Warna Border (iOS Separator) */
+            --placeholder-color: #C7C7CD;
+
+            /* Tipografi */
+            --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-size-base: 16px;
+            /* Default 16px, bisa disesuaikan */
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            --line-height-base: 1.55;
+            --line-height-heading: 1.3;
+
+            /* Bayangan (Shadows) - Halus dan modern */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.06);
+
+            /* Radius Sudut */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-pill: 9999px;
+            /* Untuk tombol/elemen berbentuk pil */
+
+            /* Transisi */
+            --transition-duration-fast: 0.15s;
+            --transition-duration-base: 0.25s;
+            --transition-duration-slow: 0.4s;
+            --transition-timing-function: ease-in-out;
+            --transition-base: all var(--transition-duration-base) var(--transition-timing-function);
+            --transition-fast: all var(--transition-duration-fast) var(--transition-timing-function);
+
+            /* Z-index (untuk konsistensi layering) */
+            --z-index-sticky: 1020;
+            --z-index-flash-message: 1030;
+            --z-index-modal-backdrop: 1040;
+            --z-index-modal: 1050;
+            --z-index-offcanvas-backdrop: 1190;
+            --z-index-offcanvas: 1200;
+            --z-index-toast: 1300;
+            --z-index-dropdown: 1000;
+
+
+            /* Ukuran Kontainer */
+            --container-max-width: 1140px;
+            --container-padding-x: 1.5rem;
+            /* 24px */
+
+            /* Header */
+            --header-height: 60px;
+            /* Default, bisa diupdate JS */
+        }
+
+        /* Mode Gelap */
+        body.dark-mode {
+            --primary-color: #0A84FF;
+            /* Biru iOS (Dark Mode) */
+            --primary-hover: #3399FF;
+            --primary-light: rgba(10, 132, 255, 0.15);
+            --secondary-color: #8E8E93;
+            /* Tetap sama, kontras cukup */
+            --secondary-hover: #A0A0A3;
+            --success-color: #30D158;
+            /* Hijau iOS (Dark Mode) */
+            --error-color: #FF453A;
+            /* Merah iOS (Dark Mode) */
+            --warning-color: #FF9F0A;
+            /* Oranye iOS (Dark Mode) */
+            --info-color: #64D2FF;
+            /* Biru Muda iOS (Dark Mode) */
+
+            --background-color: #000000;
+            /* Latar Belakang Hitam Pekat (iOS OLED-like) */
+            --surface-color: #1C1C1E;
+            /* Permukaan Konten Gelap (iOS) */
+            --surface-elevated-color: #2C2C2E;
+            /* Sedikit lebih terang dari surface */
+
+            --on-primary-color: #FFFFFF;
+            --on-surface-color: #FFFFFF;
+            /* Teks Putih di atas Surface Gelap */
+            --on-background-color: #E5E5EA;
+            /* Teks Terang di atas Background Gelap */
+            --muted-text-color: #8D8D92;
+            /* Teks Redup Terang */
+            --border-color: #38383A;
+            /* Warna Border Gelap (iOS Separator Dark) */
+            --placeholder-color: #8D8D92;
+
+            /* Bayangan di mode gelap mungkin perlu disesuaikan atau dikurangi intensitasnya */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                                RESET & DASAR                               */
+        /* -------------------------------------------------------------------------- */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            /* Hilangkan highlight biru saat tap di mobile */
+        }
+
+        html {
+            font-size: var(--font-size-base);
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            /* Mencegah pembesaran font otomatis di iOS */
         }
 
         body {
-            height: 100vh;
-            font-family: sans-serif;
-            overflow: auto;
-            /* tetap bisa scroll */
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE 10+ */
-            scroll-behavior: smooth;
+            font-family: var(--font-family-sans-serif);
+            line-height: var(--line-height-base);
+            color: var(--on-background-color);
+            background-color: var(--background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            transition: background-color var(--transition-duration-base) var(--transition-timing-function),
+                color var(--transition-duration-base) var(--transition-timing-function);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            /* Mencegah scroll horizontal yang tidak diinginkan */
+        }
+
+        /* Kustomisasi Scrollbar (Fancy) */
+        body {
+            scrollbar-width: thin;
+            /* Untuk Firefox */
+            scrollbar-color: var(--primary-color) var(--surface-color);
+            /* Thumb dan Track */
+        }
+
+        body.dark-mode {
+            scrollbar-color: var(--primary-color) var(--surface-elevated-color);
         }
 
         body::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: var(--surface-color);
+            border-radius: var(--border-radius-pill);
+        }
+
+        body.dark-mode::-webkit-scrollbar-track {
+            background: var(--surface-elevated-color);
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius-pill);
+            border: 2px solid var(--surface-color);
+            /* Memberi efek padding pada thumb */
+        }
+
+        body.dark-mode::-webkit-scrollbar-thumb {
+            border: 2px solid var(--surface-elevated-color);
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: var(--primary-hover);
+        }
+
+
+        img,
+        picture,
+        video,
+        canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            /* Menjaga rasio aspek */
+        }
+
+        input,
+        button,
+        textarea,
+        select {
+            font: inherit;
+            color: var(--on-surface-color);
+            min-height: 44px;
+            /* Aksesibilitas: target sentuh minimal */
+        }
+
+        /* Beberapa browser mungkin butuh ini untuk konsistensi tombol */
+        button,
+        [type="button"],
+        [type="reset"],
+        [type="submit"] {
+            -webkit-appearance: button;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+            /* Reset padding default browser */
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+            /* Umumnya baik untuk aksesibilitas */
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin-top: 0;
+            margin-bottom: 0.8em;
+            /* Jarak bawah default untuk heading */
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-heading);
+            color: var(--on-surface-color);
+        }
+
+        .page-main-title {
+            /* Judul utama halaman */
+            font-size: 2.25rem;
+            /* 36px */
+            font-weight: var(--font-weight-bold);
+            margin-bottom: 0.25em;
+        }
+
+        .page-main-subtitle {
+            /* Subjudul utama halaman */
+            font-size: 1.125rem;
+            /* 18px */
+            color: var(--muted-text-color);
+            margin-bottom: 2em;
+            max-width: 65ch;
+            /* Batas karakter per baris untuk keterbacaan */
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        /* 40px */
+        h2 {
+            font-size: 1.875rem;
+        }
+
+        /* 30px */
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        /* 24px */
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        /* 20px */
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        address {
+            font-style: normal;
+            /* Reset italic default */
+        }
+
+        /* Kelas utilitas untuk menyembunyikan elemen secara aksesibel */
+        .visually-hidden {
+            border: 0;
+            clip: rect(0 0 0 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            width: 1px;
+            white-space: nowrap;
+            /* Opsional */
+        }
+
+        .visually-hidden:focus,
+        .visually-hidden:active {
+            /* Jika elemen fokusabel, tampilkan */
+            clip: auto;
+            height: auto;
+            margin: 0;
+            overflow: visible;
+            position: static;
+            width: auto;
+            white-space: inherit;
+        }
+
+        /* Untuk konten yang belum terisi (placeholder) */
+        .dynamic-content-placeholder {
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                                  LAYOUT                                    */
+        /* -------------------------------------------------------------------------- */
+        .container {
+            width: 100%;
+            max-width: var(--container-max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--container-padding-x);
+            padding-right: var(--container-padding-x);
+        }
+
+        #app-content {
+            flex-grow: 1;
+            /* Mendorong footer ke bawah */
+            width: 100%;
+        }
+
+        .page-padding {
+            /* Padding standar untuk konten halaman */
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        .page-header-content {
+            /* Wrapper untuk judul dan subjudul halaman */
+            margin-bottom: 2.5rem;
+            text-align: center;
+            /* Default, bisa di-override */
+        }
+
+        .page-header-content .page-main-title,
+        .page-header-content .page-main-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .full-height-centered {
+            /* Untuk halaman seperti 404 agar konten di tengah vertikal & horizontal */
+            min-height: calc(100vh - var(--header-height) - var(--footer-height, 150px));
+            /* Asumsi footer height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                                 HEADER                                     */
+        /* -------------------------------------------------------------------------- */
+        .app-header {
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-sm);
+            padding: 0 var(--container-padding-x);
+            /* Padding x disamakan dengan container */
+            height: var(--header-height);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-index-sticky);
+            transition: background-color var(--transition-base), box-shadow var(--transition-base);
+            border-bottom: 1px solid var(--border-color);
+            /* Garis bawah halus */
+        }
+
+        body.dark-mode .app-header {
+            background-color: var(--surface-elevated-color);
+            /* Sedikit beda di dark mode */
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+            max-width: var(--container-max-width);
+            /* Samakan dengan container */
+            margin: 0 auto;
+            /* Pusatkan konten header */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--on-surface-color);
+            font-weight: var(--font-weight-bold);
+            font-size: 1.375rem;
+            /* 22px */
+            gap: 0.5em;
+        }
+
+        .logo:hover {
+            text-decoration: none;
+            /* Hindari underline pada logo */
+        }
+
+        .logo-icon {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            /* Relatif terhadap font-size .logo */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Efek 'pop' */
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.1) rotate(-10deg);
+        }
+
+        .logo-text {
+            transition: color var(--transition-base);
+        }
+
+        .logo-highlight {
+            color: var(--primary-color);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .app-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 0.5rem;
+            /* Jarak antar item navigasi */
+        }
+
+        .app-nav .nav-link {
+            color: var(--muted-text-color);
+            font-weight: var(--font-weight-semibold);
+            padding: 0.5rem 1rem;
+            /* Area klik lebih besar */
+            border-radius: var(--border-radius-md);
+            position: relative;
+            transition: color var(--transition-fast), background-color var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            font-size: 0.9375rem;
+            /* 15px */
+        }
+
+        .app-nav .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .app-nav .nav-link.active {
+            color: var(--primary-color);
+            font-weight: var(--font-weight-bold);
+            background-color: var(--primary-light);
+        }
+
+        body.dark-mode .app-nav .nav-link:hover,
+        body.dark-mode .app-nav .nav-link.active {
+            background-color: rgba(var(--primary-rgb, 10, 132, 255), 0.2);
+            /* RGB dari primary color dark mode */
+        }
+
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-actions .btn {
+            /* Tombol di header bisa lebih kecil */
+            padding: 0.5em 1em;
+            font-size: 0.9375rem;
+            /* 15px */
+        }
+
+        .header-actions .btn-icon {
+            /* Tombol ikon di header */
+            padding: 0.6em;
+            font-size: 1.25rem;
+            width: auto;
+            min-width: 40px;
+            /* Ukuran minimal tombol ikon */
+            min-height: 40px;
+            border-radius: var(--border-radius-pill);
+            /* Bulat */
+        }
+
+        .header-actions .btn-icon:hover {
+            background-color: var(--primary-light);
+        }
+
+        body.dark-mode .header-actions .btn-icon:hover {
+            background-color: rgba(var(--primary-rgb, 10, 132, 255), 0.2);
+        }
+
+
+        #app-offcanvas-toggle {
             display: none;
-            /* Chrome, Safari, Opera */
+            /* Sembunyikan di desktop, tampilkan di mobile via media query */
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                                  FOOTER                                    */
+        /* -------------------------------------------------------------------------- */
+        .app-footer {
+            background-color: var(--surface-elevated-color);
+            color: var(--muted-text-color);
+            padding: 3rem 0 1.5rem;
+            margin-top: auto;
+            /* Mendorong footer ke bawah jika konten pendek */
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9375rem;
+            /* 15px */
+        }
+
+        body.dark-mode .app-footer {
+            background-color: #121212;
+            /* Sedikit lebih gelap dari surface dark */
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-section .footer-title {
+            color: var(--on-surface-color);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            /* 18px */
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .footer-section p,
+        .footer-section ul li a {
+            color: var(--muted-text-color);
+            transition: color var(--transition-fast);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: var(--muted-text-color);
+            font-size: 1.375rem;
+            /* 22px */
+            transition: color var(--transition-fast), transform var(--transition-fast);
+            display: inline-block;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px) scale(1.1);
+            text-decoration: none;
+        }
+
+        .contact-info p i {
+            margin-right: 0.6em;
+            color: var(--primary-color);
+            width: 1.2em;
+            /* Agar ikon rata */
+            text-align: center;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            /* 14px */
+            color: var(--muted-text-color);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                               KOMPONEN UMUM                                */
+        /* -------------------------------------------------------------------------- */
+
+        /* --- Tombol (Buttons) --- */
+        .btn {
+            position: relative;
+            /* Untuk efek ripple atau pseudo-elements */
+            overflow: hidden;
+            /* Untuk efek ripple */
+            padding: 0.625em 1.5em;
+            /* 10px 24px untuk font 16px */
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            border: 1px solid transparent;
+            /* Border default transparan */
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            transition: var(--transition-base);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            user-select: none;
+            line-height: var(--line-height-base);
+            white-space: nowrap;
+            /* Mencegah teks tombol wrap */
+        }
+
+        .btn:focus {
+            outline: none;
+            /* Hapus outline default */
+        }
+
+        .btn:focus-visible {
+            /* Style fokus yang jelas untuk aksesibilitas keyboard */
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        body.dark-mode .btn:focus-visible {
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 10, 132, 255), 0.3);
+        }
+
+        .btn i,
+        .btn svg {
+            /* Ikon di dalam tombol */
+            margin-right: 0.5em;
+            font-size: 1.1em;
+            /* Ikon sedikit lebih besar dari teks */
+        }
+
+        .btn.btn-icon i,
+        .btn.btn-icon svg {
+            /* Tombol yang hanya ikon */
+            margin-right: 0;
+        }
+
+        .btn>span:not([class]) {
+            /* Teks di dalam tombol, untuk spacing jika ikon di kanan */
+            /* Bisa ditambahkan margin-left jika ikon di kanan */
+        }
+
+        /* Variasi Tombol Utama */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--on-primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: var(--on-primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--on-primary-color);
+            /* Asumsi teks terang di atas secondary */
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-hover);
+            border-color: var(--secondary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Tombol Outline */
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Tombol Warna Status */
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background-color: color-mix(in srgb, var(--success-color) 85%, black);
+            border-color: color-mix(in srgb, var(--success-color) 80%, black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-danger {
+            background-color: var(--error-color);
+            border-color: var(--error-color);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: color-mix(in srgb, var(--error-color) 85%, black);
+            border-color: color-mix(in srgb, var(--error-color) 80%, black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: #fff;
+        }
+
+        /* Teks putih lebih kontras di oranye */
+        .btn-warning:hover {
+            background-color: color-mix(in srgb, var(--warning-color) 85%, black);
+            border-color: color-mix(in srgb, var(--warning-color) 80%, black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            border-color: var(--info-color);
+            color: #fff;
+        }
+
+        .btn-info:hover {
+            background-color: color-mix(in srgb, var(--info-color) 85%, black);
+            border-color: color-mix(in srgb, var(--info-color) 80%, black);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Ukuran Tombol */
+        .btn-lg {
+            padding: 0.8em 2em;
+            font-size: 1.125rem;
+            /* 18px */
+        }
+
+        .btn-sm {
+            padding: 0.4em 1em;
+            font-size: 0.875rem;
+            /* 14px */
+        }
+
+        .btn-block {
+            display: flex;
+            /* Agar justify-content: center bekerja */
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Tombol Aksi di Kartu */
+        .btn-outline.card-action-btn {
+            color: #FFFFFF;
+            /* Teks selalu putih untuk kontras di atas gambar */
+            border-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(0, 0, 0, 0.25);
+            /* Latar sedikit gelap agar terbaca */
+            backdrop-filter: blur(4px);
+            /* Efek frost glass halus */
+            box-shadow: var(--shadow-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .btn-outline.card-action-btn:hover {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+
+        /* --- Initial Loader --- */
+        .initial-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - var(--header-height) - 100px);
+            /* Tinggi viewport dikurangi header & estimasi footer */
+            font-size: 1.25rem;
+            /* 20px */
+            color: var(--muted-text-color);
+            text-align: center;
+        }
+
+        .initial-loader i {
+            font-size: 3rem;
+            /* 48px */
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            animation: spin 1.5s linear infinite;
+        }
+
+        .initial-loader p {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                         KONTROL & KARTU (HALAMAN BERANDA)                  */
+        /* -------------------------------------------------------------------------- */
+        .controls-container {
+            padding: 2.5rem var(--container-padding-x);
+            background-color: var(--surface-elevated-color);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+            /* Jarak ke konten kartu */
+            box-shadow: var(--shadow-sm);
+        }
+
+        body.dark-mode .controls-container {
+            background-color: var(--background-color);
+            /* Di dark mode, bisa sama dengan bg utama */
+        }
+
+        .controls-container .page-main-title {
+            font-size: 2rem;
+            /* Judul di kontrol bisa lebih kecil */
+        }
+
+        .controls-container .page-main-subtitle {
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .control-buttons .btn {
+            margin: 0.25rem;
+            font-size: 0.9375rem;
+            /* Tombol demo lebih kecil */
+        }
+
+        /* --- Card Styles (Refined & Fancy) --- */
+        .card-section-wrapper {
+            padding: 1rem 0 3rem;
+            /* Jarak dari kontrol dan ke footer */
+            /* Bisa diberi background gradien halus jika diinginkan */
+            /* background: linear-gradient(to bottom, var(--background-color), color-mix(in srgb, var(--background-color) 95%, black)); */
         }
 
         .card-container {
             position: relative;
+            /* Untuk stacking context kartu sticky */
+            max-width: 800px;
+            /* Batasi lebar container kartu agar tidak terlalu lebar di layar besar */
+            margin: 0 auto;
         }
 
         .card {
             position: sticky;
-            top: 0;
-            height: 106vh;
+            /* Top = tinggi header + margin atas yang diinginkan */
+            top: calc(var(--header-height) + 1.5rem);
+            height: calc(100vh - var(--header-height) - 3rem);
+            /* Tinggi kartu = viewport - header - (2x margin) */
+            max-height: 650px;
+            /* Batas tinggi maksimum kartu */
+            overflow: hidden;
+            border-radius: var(--border-radius-xl);
+            /* Sudut lebih besar untuk tampilan modern */
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2.5rem;
+            /* Jarak vertikal antar kartu (efektif untuk kartu terakhir) */
+
+            background-color: var(--surface-color);
+            /* Fallback jika gambar tidak termuat */
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1;
+            /* Agar figure mengisi penuh */
+            transition: transform var(--transition-duration-slow) cubic-bezier(0.16, 1, 0.3, 1),
+                opacity var(--transition-duration-slow) ease-in-out,
+                box-shadow var(--transition-base);
+            /* Efek scaling saat scroll (jika diinginkan, perlu JS untuk trigger) */
+            /* transform: scale(0.95); */
+            /* opacity: 0.8; */
         }
 
-        .card-content {
+        /* .card.is-in-view {
+    transform: scale(1);
+    opacity: 1;
+} */
+
+        .card figure {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* Susun gambar (bg) dan figcaption secara vertikal */
+            height: 100%;
             width: 100%;
-            height: 102%;
             margin: 0;
+        }
+
+        /* Wrapper untuk gambar sudah tidak diperlukan jika menggunakan background-image pada .card */
+
+        figcaption {
+            padding: 2rem 1.75rem;
+            /* Padding lebih lega */
+            color: #FFFFFF;
+            /* Teks selalu putih karena di atas gambar */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
+            /* Tidak menggunakan backdrop-filter untuk performa, gradien sudah cukup */
+            z-index: 5;
+            margin-top: auto;
+            /* Mendorong figcaption ke dasar kartu */
+            transition: background-color var(--transition-base), color var(--transition-base);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            /* Shadow tipis pada teks agar lebih terbaca */
+        }
+
+        .card-title {
+            margin: 0 0 0.5rem 0;
             padding: 0;
-            overflow: hidden;
+            font-size: 1.75rem;
+            /* 28px */
+            color: #FFFFFF;
+            font-weight: var(--font-weight-bold);
+            line-height: 1.2;
         }
 
-        .card img {
-            width: 100%;
-            height: 130vh;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* button */
-        .btn {
-            position: relative;
-            overflow: hidden;
-            margin: 0.4rem;
-            float: right;
-            padding: 0.6em 1.5em;
+        .card-description {
+            margin: 0 0 1.5rem 0;
+            /* Jarak ke tombol */
             font-size: 1rem;
-            min-height: 44px;
-            background-color: steelblue;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: color 0.3s ease;
+            /* 16px */
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            max-width: 55ch;
+            /* Batasi lebar deskripsi */
         }
 
-        .btn * {
-            text-decoration: none;
-            color: aliceblue;
+        .card-action-btn {
+            /* Tombol sudah di-style oleh .btn-outline.card-action-btn */
+            /* Tidak perlu styling spesifik di sini lagi kecuali posisi */
+            align-self: flex-start;
+            /* Tombol rata kiri */
         }
 
-        .btn::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0%;
-            height: 300%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%) rotate(45deg);
-            transition: width 0.4s ease;
-            z-index: 0;
-        }
-
-        .btn:hover::before {
-            width: 140%;
-        }
-
-        .btn:hover {
-            color: #001F3F;
-            background-color: navy;
-        }
-
-        .btn span {
-            position: relative;
+        /* Layering Z-index untuk efek tumpukan kartu (fancy) */
+        /* Semakin ke bawah di DOM, z-index semakin tinggi agar kartu baru menimpa yang lama */
+        .card-container>.card:nth-child(1) {
             z-index: 1;
         }
 
-        @media (max-width: 600px) {
-            .btn {
-                font-size: 0.875rem;
-                padding: 0.5em 1.2em;
-            }
-        }
-
-        /* Layering with increasing z-index for stacking effect */
-        .card:nth-child(1) {
-            z-index: 1;
-        }
-
-        .card:nth-child(2) {
+        .card-container>.card:nth-child(2) {
             z-index: 2;
         }
 
-        .card:nth-child(3) {
+        .card-container>.card:nth-child(3) {
             z-index: 3;
         }
 
-        .card:nth-child(4) {
+        .card-container>.card:nth-child(4) {
             z-index: 4;
         }
 
-        /* Optional: add a fade or zoom-in effect */
-        .card figure {
-            margin: 0;
-            height: 100%;
+        /* dst. */
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                              HALAMAN FITUR                                 */
+        /* -------------------------------------------------------------------------- */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            /* Kolom responsif */
+            gap: 2rem;
+            /* Jarak antar item fitur */
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            background-color: var(--surface-color);
+            padding: 2rem 1.75rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: transform var(--transition-base), box-shadow var(--transition-base);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            color: white;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
+            align-items: center;
+            /* Pusatkan konten */
         }
 
-        .img {
-            object-fit: fill;
-            width: 100vw !important;
-            height: 100vh !important;
+        .feature-item:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: var(--shadow-lg);
         }
 
-        figcaption {
-            margin: 0;
-            padding: 3rem 0 4rem 3rem;
-            color: black;
-            z-index: 120;
-            background-color: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .feature-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 0 0 8px color-mix(in srgb, var(--primary-light) 50%, transparent);
+            /* Efek glow */
+            transition: var(--transition-base);
         }
 
-        figcaption h2 {
-            margin: 0.3rem 0;
-            padding: 0.01em 0;
+        .feature-item:hover .feature-icon-wrapper {
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            box-shadow: 0 0 0 10px color-mix(in srgb, var(--primary-light) 30%, transparent);
+        }
+
+        body.dark-mode .feature-icon-wrapper {
+            background-color: rgba(var(--primary-rgb, 10, 132, 255), 0.2);
+            box-shadow: 0 0 0 8px rgba(var(--primary-rgb, 10, 132, 255), 0.1);
+        }
+
+        body.dark-mode .feature-item:hover .feature-icon-wrapper {
+            background-color: var(--primary-color);
+            box-shadow: 0 0 0 10px rgba(var(--primary-rgb, 10, 132, 255), 0.15);
+        }
+
+
+        .feature-icon {
+            font-size: 1.8em;
+            /* Relatif terhadap wrapper */
+        }
+
+        .feature-title {
+            font-size: 1.375rem;
+            /* 22px */
+            margin-bottom: 0.75rem;
+            color: var(--on-surface-color);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .feature-description {
+            font-size: 0.9375rem;
+            /* 15px */
+            color: var(--muted-text-color);
+            line-height: 1.65;
+            flex-grow: 1;
+            /* Agar deskripsi mengisi ruang jika item tidak sama tinggi */
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                     HALAMAN TENTANG, DETAIL, PRIVASI                       */
+        /* -------------------------------------------------------------------------- */
+        .content-section {
+            /* Kontainer umum untuk konten teks panjang */
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .content-section.rich-text {
+            /* Untuk konten dengan format kaya (heading, list, dll) */
+            font-size: 1.05rem;
+            /* Sedikit lebih besar untuk keterbacaan */
+            line-height: 1.75;
+            max-width: 75ch;
+            /* Batasi lebar teks untuk kenyamanan membaca */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .rich-text h2 {
+            font-size: 1.6rem;
+            margin-top: 2em;
+            margin-bottom: 0.8em;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .rich-text h3 {
+            font-size: 1.3rem;
+            margin-top: 1.8em;
+            margin-bottom: 0.7em;
+        }
+
+        .rich-text ul,
+        .rich-text ol {
+            margin-bottom: 1.5em;
+            padding-left: 1.8em;
+            /* Indentasi list */
+        }
+
+        .rich-text li {
+            margin-bottom: 0.5em;
+        }
+
+        .rich-text strong {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .rich-text em {
+            font-style: italic;
+        }
+
+        .rich-text a {
+            text-decoration: underline;
+        }
+
+        .rich-text a:hover {
+            text-decoration-thickness: 2px;
+        }
+
+        .rich-text small {
+            font-size: 0.85em;
+            color: var(--muted-text-color);
+            display: block;
+            margin-top: 1.5em;
+        }
+
+        .team-image-placeholder {
+            text-align: center;
+            margin: 2.5rem 0;
+            padding: 2rem;
+            background-color: var(--background-color);
+            border-radius: var(--border-radius-md);
+            border: 1px dashed var(--border-color);
+        }
+
+        .team-image-placeholder i {
+            color: var(--muted-text-color);
+            opacity: 0.7;
+        }
+
+        .team-image-placeholder figcaption {
+            margin-top: 0.75rem;
+            font-style: italic;
+            color: var(--muted-text-color);
+            font-size: 0.9rem;
+        }
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                              HALAMAN KONTAK                                */
+        /* -------------------------------------------------------------------------- */
+        .contact-form-section {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 720px;
+            /* Lebar form kontak yang optimal */
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+            /* Jarak antar grup form */
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label,
+        .label-like {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--on-surface-color);
+            font-size: 0.9375rem;
+            /* 15px */
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8em 1em;
+            /* Padding input field */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background-color: var(--background-color);
+            /* Input field sedikit beda warna dari surface form */
+            color: var(--on-surface-color);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            font-size: 1rem;
+            /* Ukuran font input field */
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--placeholder-color);
+            opacity: 1;
+            /* Firefox butuh ini */
+        }
+
+        /* Warna input di dark mode */
+        body.dark-mode .form-group input[type="text"],
+        body.dark-mode .form-group input[type="email"],
+        body.dark-mode .form-group textarea,
+        body.dark-mode .form-group select {
+            background-color: var(--surface-elevated-color);
+            /* Input field di mode gelap */
+            border-color: var(--border-color);
+        }
+
+        /* Style fokus input */
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        body.dark-mode .form-group input[type="text"]:focus,
+        body.dark-mode .form-group input[type="email"]:focus,
+        body.dark-mode .form-group textarea:focus,
+        body.dark-mode .form-group select:focus {
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 10, 132, 255), 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 130px;
+            resize: vertical;
+            /* Izinkan resize vertikal */
+        }
+
+        .form-group select {
+            appearance: none;
+            /* Hapus tampilan default select */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+            /* Ikon dropdown kustom (ganti warna stroke jika perlu) */
+            background-repeat: no-repeat;
+            background-position: right 1em center;
+            background-size: 1em;
+            padding-right: 2.5em;
+            /* Ruang untuk ikon dropdown */
+        }
+
+        body.dark-mode .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23DDD' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+        }
+
+
+        .form-error-message {
+            display: block;
+            color: var(--error-color);
+            font-size: 0.875rem;
+            /* 14px */
+            margin-top: 0.4rem;
+        }
+
+        .form-submit-group {
+            margin-top: 2rem;
+            /* Jarak lebih besar untuk tombol submit */
+        }
+
+        /* Pengaturan Checkbox & Radio (Fancy) */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            position: relative;
+            /* Untuk custom style */
+        }
+
+        .checkbox-group input[type="checkbox"],
+        .radio-group input[type="radio"] {
+            opacity: 0;
+            /* Sembunyikan input asli */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+        }
+
+        .checkbox-group label,
+        .radio-group label {
+            position: relative;
+            padding-left: 28px;
+            /* Ruang untuk custom checkbox/radio */
+            cursor: pointer;
+            font-weight: var(--font-weight-normal);
+            color: var(--on-surface-color);
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        /* Custom Checkbox/Radio Box */
+        .checkbox-group label::before,
+        .radio-group label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            background-color: var(--surface-color);
+            transition: var(--transition-fast);
+        }
+
+        .checkbox-group label::before {
+            border-radius: var(--border-radius-sm);
+        }
+
+        .radio-group label::before {
+            border-radius: 50%;
+        }
+
+        /* Custom Checkbox/Radio Checked State */
+        .checkbox-group input[type="checkbox"]:checked+label::before,
+        .radio-group input[type="radio"]:checked+label::before {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Custom Checkmark/Radio Dot */
+        .checkbox-group label::after,
+        .radio-group label::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            /* Sembunyikan default */
+            transition: transform var(--transition-fast);
+        }
+
+        /* Checkmark (untuk checkbox) */
+        .checkbox-group input[type="checkbox"]:checked+label::after {
+            left: 7px;
+            /* Posisi checkmark */
+            top: 40%;
+            width: 6px;
+            height: 12px;
+            border: solid var(--on-primary-color);
+            border-width: 0 2px 2px 0;
+            transform: translateY(-50%) rotate(45deg) scale(1);
+        }
+
+        /* Radio Dot (untuk radio button) */
+        .radio-group input[type="radio"]:checked+label::after {
+            left: 5px;
+            /* Posisi dot */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--on-primary-color);
+            transform: translateY(-50%) scale(1);
+        }
+
+        /* Fokus state untuk aksesibilitas */
+        .checkbox-group input[type="checkbox"]:focus-visible+label::before,
+        .radio-group input[type="radio"]:focus-visible+label::before {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 1px;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                            HALAMAN PROFIL & PENGATURAN                     */
+        /* -------------------------------------------------------------------------- */
+        .profile-section,
+        .settings-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .profile-avatar-placeholder {
+            color: var(--muted-text-color);
+        }
+
+        .profile-name {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            color: var(--on-surface-color);
+        }
+
+        .profile-email {
+            color: var(--muted-text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-details {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-details h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-details p {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .profile-details .status-active {
+            color: var(--success-color);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .settings-form {
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                            SISTEM NOTIFIKASI UI                            */
+        /* -------------------------------------------------------------------------- */
+
+        /* --- Toast Notifications --- */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: var(--z-index-toast);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.75rem;
+            pointer-events: none;
+            /* Agar tidak mengganggu klik di bawahnya */
+        }
+
+        .toast {
+            background-color: color-mix(in srgb, var(--on-surface-color) 85%, transparent);
+            /* Warna toast default */
+            color: var(--surface-color);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(120%) scale(0.9);
+            /* Animasi masuk dari kanan + scale */
+            transition: opacity var(--transition-duration-slow) cubic-bezier(0.075, 0.82, 0.165, 1),
+                transform var(--transition-duration-slow) cubic-bezier(0.075, 0.82, 0.165, 1);
+            min-width: 300px;
+            max-width: 380px;
+            pointer-events: auto;
+            /* Aktifkan pointer events untuk toast itu sendiri */
+        }
+
+        body.dark-mode .toast {
+            background-color: color-mix(in srgb, var(--surface-elevated-color) 90%, black);
+            color: var(--on-surface-color);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+
+        .toast i {
+            /* Ikon di toast */
+            margin-right: 0.85rem;
+            font-size: 1.5em;
+            /* Ikon lebih besar di toast */
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            font-weight: var(--font-weight-normal);
+            line-height: 1.4;
+        }
+
+        /* Warna Toast Berdasarkan Tipe */
+        .toast.success {
+            background-color: var(--success-color);
+            color: #fff;
+        }
+
+        .toast.error {
+            background-color: var(--error-color);
+            color: #fff;
+        }
+
+        .toast.info {
+            background-color: var(--info-color);
+            color: #fff;
+        }
+
+        .toast.warning {
+            background-color: var(--warning-color);
+            color: #fff;
+        }
+
+        /* Teks putih juga untuk warning */
+
+
+        /* --- Alert Modal --- */
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Overlay lebih lembut */
+            backdrop-filter: blur(5px);
+            /* Efek frost glass pada overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: var(--z-index-modal);
+            opacity: 0;
+            visibility: hidden;
+            /* Untuk aksesibilitas dan performa */
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function),
+                visibility 0s var(--transition-duration-base);
+            /* Delay visibility */
+        }
+
+        .alert-overlay[hidden] {
+            display: none !important;
+        }
+
+        /* Pastikan benar-benar hilang */
+
+        .alert-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        .alert-box {
+            background-color: var(--surface-color);
+            padding: 2rem 2.25rem;
+            /* Padding lebih besar */
+            border-radius: var(--border-radius-xl);
+            /* Sudut lebih besar */
+            box-shadow: var(--shadow-xl);
+            /* Bayangan lebih kuat */
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            transform: scale(0.9) translateY(30px);
+            opacity: 0;
+            transition: transform var(--transition-duration-base) cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                /* Efek 'pop' */
+                opacity var(--transition-duration-base) ease-in-out;
+            color: var(--on-surface-color);
+        }
+
+        .alert-overlay.show .alert-box {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .alert-box .alert-title-dynamic {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            /* 24px */
+            font-weight: var(--font-weight-bold);
+        }
+
+        .alert-box .alert-message-dynamic {
+            margin-bottom: 1.75rem;
+            font-size: 1rem;
+            /* 16px */
+            color: var(--muted-text-color);
+            line-height: 1.6;
+        }
+
+        .alert-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .alert-actions .btn {
+            min-width: 120px;
+            /* Lebar minimal tombol di modal */
+            font-weight: var(--font-weight-semibold);
+        }
+
+        /* --- Flash Messages --- */
+        #flash-message-container {
+            position: fixed;
+            top: var(--header-height);
+            /* Di bawah header sticky */
+            left: 0;
+            width: 100%;
+            z-index: var(--z-index-flash-message);
+            pointer-events: none;
+            /* Hanya flash message itu sendiri yang bisa diinteraksi */
+        }
+
+        .flash-message {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            color: #FFFFFF;
+            /* Teks terang default */
+            opacity: 0;
+            transform: translateY(-120%);
+            transition: opacity var(--transition-duration-slow) cubic-bezier(0.23, 1, 0.32, 1),
+                transform var(--transition-duration-slow) cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            pointer-events: auto;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .flash-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flash-message-content {
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+        }
+
+        .flash-message-content i {
+            font-size: 1.2em;
+        }
+
+        .flash-message.success {
+            background-color: var(--success-color);
+        }
+
+        .flash-message.error {
+            background-color: var(--error-color);
+        }
+
+        .flash-message.info {
+            background-color: var(--info-color);
+        }
+
+        .flash-message.warning {
+            background-color: var(--warning-color);
+            color: #fff;
+        }
+
+        /* Teks putih juga untuk warning */
+
+        .flash-close-btn {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.5rem;
+            /* Ukuran ikon close */
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            /* Area klik */
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity var(--transition-fast), transform var(--transition-fast);
+            margin-left: 1rem;
+            /* Jarak dari teks */
+        }
+
+        .flash-close-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+
+        /* --- Off-Canvas Panel --- */
+        #offcanvas-panel {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            /* Mulai dari luar layar, lebar 320px */
+            width: 320px;
+            height: 100%;
+            background-color: var(--surface-color);
+            box-shadow: var(--shadow-xl);
+            /* Bayangan kuat untuk off-canvas */
+            z-index: var(--z-index-offcanvas);
+            transition: right var(--transition-duration-base) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            flex-direction: column;
+            color: var(--on-surface-color);
+        }
+
+        #offcanvas-panel[hidden] {
+            display: none !important;
+        }
+
+        #offcanvas-panel.open {
+            right: 0;
+        }
+
+        .offcanvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            /* Padding header off-canvas */
+            height: var(--header-height);
+            /* Samakan dengan tinggi header utama */
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            /* Header tidak menyusut */
+        }
+
+        .offcanvas-header .offcanvas-title-main {
+            margin-bottom: 0;
+            font-size: 1.25rem;
+            /* 20px */
+            font-weight: var(--font-weight-bold);
+        }
+
+        .offcanvas-close-btn {
+            font-size: 1.75rem;
+            /* Ukuran ikon close */
+            color: var(--muted-text-color);
+            padding: 0.5rem;
+            /* Area klik */
+            line-height: 1;
+            border-radius: 50%;
+            transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .offcanvas-close-btn:hover {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        body.dark-mode .offcanvas-close-btn:hover {
+            background-color: rgba(var(--primary-rgb, 10, 132, 255), 0.2);
+        }
+
+
+        .offcanvas-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            /* Scroll jika konten panjang */
+            flex-grow: 1;
+        }
+
+        .offcanvas-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .offcanvas-nav ul li a.offcanvas-link {
+            display: flex;
+            align-items: center;
+            gap: 0.85em;
+            padding: 0.85rem 1rem;
+            /* Padding link off-canvas */
+            margin: 0 -1rem;
+            /* Agar background hover full width */
+            text-decoration: none;
+            color: var(--on-surface-color);
+            font-size: 1.05rem;
+            /* 17px */
+            font-weight: var(--font-weight-semibold);
+            border-radius: var(--border-radius-md);
+            transition: color var(--transition-fast), background-color var(--transition-fast), padding-left var(--transition-fast);
+        }
+
+        .offcanvas-nav ul li a.offcanvas-link i {
+            width: 22px;
+            /* Lebar tetap untuk ikon agar teks rata */
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 1.2em;
+        }
+
+        .offcanvas-nav ul li a.offcanvas-link:hover,
+        .offcanvas-nav ul li a.offcanvas-link.active {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            /* padding-left: 1.5rem; Efek indent saat hover/active */
+        }
+
+        body.dark-mode .offcanvas-nav ul li a.offcanvas-link:hover,
+        body.dark-mode .offcanvas-nav ul li a.offcanvas-link.active {
+            background-color: rgba(var(--primary-rgb, 10, 132, 255), 0.2);
+        }
+
+
+        .offcanvas-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            flex-shrink: 0;
+            /* Footer tidak menyusut */
+        }
+
+
+        #offcanvas-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Overlay lebih gelap sedikit */
+            /* backdrop-filter: blur(3px); Efek blur bisa berat, opsional */
+            z-index: var(--z-index-offcanvas-backdrop);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-duration-base) var(--transition-timing-function),
+                visibility 0s var(--transition-duration-base);
+        }
+
+        #offcanvas-overlay[hidden] {
+            display: none !important;
+        }
+
+        #offcanvas-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s;
+        }
+
+        /* --- Scroll to Top Button --- */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            /* Pindahkan ke kanan, toast di kiri jika perlu */
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(100px) scale(0.8);
+            transition: opacity var(--transition-duration-base),
+                visibility 0s var(--transition-duration-base),
+                transform var(--transition-duration-base) cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                background-color var(--transition-duration-base);
+            z-index: var(--z-index-sticky);
+        }
+
+        .scroll-to-top[hidden] {
+            display: none !important;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+            transition-delay: 0s;
+        }
+
+        .scroll-to-top:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px) scale(1.05);
+            /* Efek hover lebih dinamis */
+        }
+
+        .scroll-to-top:active {
+            transform: translateY(0px) scale(1);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /*                                HALAMAN 404                                 */
+        /* -------------------------------------------------------------------------- */
+        .error-icon-404 {
+            color: var(--primary-color);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-code-404 {
+            font-size: clamp(5rem, 20vw, 10rem);
+            /* Ukuran kode error responsif */
+            color: var(--on-surface-color);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: 0;
+            line-height: 1;
+        }
+
+        .full-height-centered .page-main-title {
+            margin-top: 0.5rem;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+        }
+
+        .full-height-centered .page-main-subtitle {
+            margin-bottom: 2.5rem;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+        }
+
+
+        /* -------------------------------------------------------------------------- */
+        /*                                RESPONSIVITAS                               */
+        /* -------------------------------------------------------------------------- */
+        @media (max-width: 1024px) {
+
+            /* Tablet Lanskap dan di bawahnya */
+            :root {
+                --font-size-base: 15px;
+                /* Sedikit perkecil font dasar */
+                --header-height: 56px;
+            }
+
+            .page-main-title {
+                font-size: 2rem;
+            }
+
+            .page-main-subtitle {
+                font-size: 1.05rem;
+            }
+
+            .card-container {
+                max-width: 700px;
+                /* Lebar kartu di tablet */
+            }
+
+            .card {
+                top: calc(var(--header-height) + 1.25rem);
+                height: calc(100vh - var(--header-height) - 2.5rem);
+                max-height: 600px;
+            }
+
+            figcaption {
+                padding: 1.75rem 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.6rem;
+            }
+
+            .card-description {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Tablet Portrait dan di bawahnya */
+            .app-nav {
+                display: none;
+                /* Sembunyikan navigasi utama di header */
+            }
+
+            #app-offcanvas-toggle {
+                display: inline-flex;
+                /* Tampilkan tombol burger menu */
+            }
+
+            /* Sembunyikan teks "Masuk" di header, tampilkan ikon saja */
+            .header-actions #app-login-btn span {
+                display: none;
+            }
+
+            .header-actions #app-login-btn i {
+                margin-right: 0;
+            }
+
+            .header-actions #app-login-btn {
+                padding: 0.6em;
+                /* Jadi tombol ikon */
+            }
+
+            .card {
+                /* Kartu di mobile/tablet tidak sticky agar bisa digulir normal */
+                position: relative;
+                /* Non-sticky */
+                top: auto;
+                height: auto;
+                /* Tinggi otomatis sesuai konten */
+                min-height: 75vh;
+                /* Beri tinggi minimal yang cukup */
+                margin: 0 auto 2.5rem auto;
+                /* Pusatkan kartu dan beri jarak bawah */
+                max-width: calc(100% - 2rem);
+                /* Batasi lebar kartu agar ada padding samping */
+                /* Hilangkan z-index agar tidak ada isu stacking yang tidak perlu */
+                z-index: auto !important;
+            }
+
+            .card-container {
+                /* Tidak perlu max-width di sini karena kartu sudah diatur */
+            }
+
+            figcaption {
+                padding: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .card-description {
+                font-size: 0.9rem;
+            }
+
+            .page-main-title {
+                font-size: 1.8rem;
+            }
+
+            .page-main-subtitle {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .controls-container {
+                padding: 2rem var(--container-padding-x);
+            }
+
+            #toast-container {
+                /* Toast full width di mobile */
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                align-items: stretch;
+                /* Agar toast mengisi lebar */
+            }
+
+            .toast {
+                min-width: unset;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .alert-box {
+                padding: 1.75rem;
+            }
+
+            .alert-box .alert-title-dynamic {
+                font-size: 1.375rem;
+            }
+
+            .alert-box .alert-message-dynamic {
+                font-size: 0.95rem;
+            }
+
+            .alert-actions {
+                flex-direction: column-reverse;
+                gap: 0.5rem;
+            }
+
+            /* Tombol modal vertikal */
+            .alert-actions .btn {
+                width: 100%;
+            }
+
+            #offcanvas-panel {
+                width: min(85vw, 300px);
+                /* Offcanvas lebih ramping, maks 300px */
+                right: calc(-1 * min(85vw, 300px));
+            }
+
+            #offcanvas-panel.open {
+                right: 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                /* Satu kolom di mobile */
+                text-align: center;
+            }
+
+            .footer-section .footer-title {
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Smartphone Portrait */
+            :root {
+                --font-size-base: 14px;
+                /* Perkecil lagi font dasar */
+                --header-height: 52px;
+                --container-padding-x: 1rem;
+                /* 16px */
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+            }
+
+            .logo-icon {
+                font-size: 1.4em;
+            }
+
+            .header-actions {
+                gap: 0.5rem;
+            }
+
+            .header-actions .btn,
+            .header-actions .btn-icon {
+                min-width: 38px;
+                min-height: 38px;
+                font-size: 1.1rem;
+                /* Ukuran ikon di tombol */
+            }
+
+            .header-actions #app-login-btn {
+                font-size: 0.85rem;
+            }
+
+
+            .page-main-title {
+                font-size: 1.6rem;
+            }
+
+            .page-main-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .card {
+                min-height: 70vh;
+            }
+
+            figcaption {
+                padding: 1.25rem;
+            }
+
+            .card-title {
+                font-size: 1.35rem;
+            }
+
+            .card-description {
+                font-size: 0.875rem;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .control-buttons .btn {
+                width: 100%;
+                margin: 0.25rem 0;
+            }
+
+            .content-section,
+            .contact-form-section,
+            .settings-form {
+                padding: 1.5rem;
+            }
+
+            .rich-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Aksesibilitas: Preferensi reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+                animation-delay: 0ms !important;
+                transition-delay: 0ms !important;
+            }
+
+            .logo:hover .logo-icon,
+            .btn:hover,
+            .btn:active,
+            .social-icons a:hover,
+            .feature-item:hover,
+            .offcanvas-close-btn:hover,
+            .scroll-to-top:hover,
+            .scroll-to-top:active,
+            .toast,
+            .alert-box,
+            .flash-message,
+            #offcanvas-panel {
+                transform: none !important;
+                /* Nonaktifkan semua transform based animation */
+            }
+
+            .initial-loader i {
+                animation: none !important;
+                /* Hentikan animasi spinner */
+            }
         }
     </style>
 </head>
 
-<body>
-
-    <div class="card-container">
-        <div class="card">
-            <div class="card-content">
-                <figure>
-                    <button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1001/1920/1080" loading="lazy" class="img" alt="Image 1" />
-                    <figcaption>
-                        <h2>Kartu 1</h2>
-                        <p>Ini adalah isi dari kartu pertama.</p>
-
-                    </figcaption>
-                </figure>
+<body class="light-mode"> <!-- Default ke mode terang, bisa diubah oleh JS -->
+    <!-- Header Aplikasi -->
+    <header class="app-header">
+        <div class="container header-content">
+            <a href="#home" class="logo" aria-label="Beranda Aplikasi Canggih">
+                <i class="fas fa-rocket logo-icon" aria-hidden="true"></i>
+                <span class="logo-text">Aplikasi<span class="logo-highlight">Canggih</span></span>
+            </a>
+            <nav class="app-nav" aria-label="Navigasi Utama">
+                <ul>
+                    <li><a href="#home" class="nav-link active" data-route="home"><i class="fas fa-home"
+                                aria-hidden="true"></i> Beranda</a></li>
+                    <li><a href="#fitur" class="nav-link" data-route="fitur"><i class="fas fa-star"
+                                aria-hidden="true"></i> Fitur</a></li>
+                    <li><a href="#tentang" class="nav-link" data-route="tentang"><i class="fas fa-info-circle"
+                                aria-hidden="true"></i> Tentang</a></li>
+                    <li><a href="#kontak" class="nav-link" data-route="kontak"><i class="fas fa-envelope"
+                                aria-hidden="true"></i> Kontak</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-icon" id="toggle-theme-btn" aria-label="Ganti ke Mode Gelap">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-primary" id="app-login-btn"><i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    <span>Masuk</span></button>
+                <button class="btn btn-icon" id="app-offcanvas-toggle" aria-label="Buka Menu Samping"
+                    aria-expanded="false" aria-controls="offcanvas-panel">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
+    </header>
 
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1020/1920/1080" loading="lazy" class="img" alt="Image 2" />
-                    <figcaption>
-                        <h2>Kartu 2</h2>
-                        <p>Ini adalah isi dari kartu kedua.</p>
-                    </figcaption>
-                </figure>
+    <!-- Kontainer untuk Flash Messages (Pesan Cepat) -->
+    <div id="flash-message-container" role="region" aria-live="assertive"></div>
+
+    <!-- Konten Utama Aplikasi (dimuat secara dinamis) -->
+    <main id="app-content" aria-live="polite">
+        <!-- Loader awal saat konten pertama dimuat -->
+        <div class="initial-loader" role="status" aria-label="Memuat konten halaman">
+            <i class="fas fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
+            <p>Memuat Konten...</p>
+        </div>
+    </main>
+
+    <!-- Footer Aplikasi -->
+    <footer class="app-footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3 class="footer-title">Aplikasi<span class="logo-highlight">Canggih</span></h3>
+                    <p>Solusi inovatif untuk kebutuhan digital Anda. Dirancang dengan penuh dedikasi untuk pengalaman
+                        pengguna terbaik.</p>
+                    <div class="social-icons" aria-label="Tautan Media Sosial">
+                        <a href="#" aria-label="Kunjungi Facebook kami" target="_blank" rel="noopener noreferrer"><i
+                                class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Kunjungi Twitter kami" target="_blank" rel="noopener noreferrer"><i
+                                class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Kunjungi Instagram kami" target="_blank" rel="noopener noreferrer"><i
+                                class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Kunjungi LinkedIn kami" target="_blank" rel="noopener noreferrer"><i
+                                class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section links">
+                    <h3 class="footer-title">Tautan Navigasi</h3>
+                    <ul aria-label="Tautan Cepat Footer">
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#fitur">Fitur Unggulan</a></li>
+                        <li><a href="#tentang">Tentang Kami</a></li>
+                        <li><a href="#kontak">Hubungi Kami</a></li>
+                        <li><a href="#privasi" data-route="privasi">Kebijakan Privasi</a></li>
+                        <!-- Contoh link ke halaman lain -->
+                    </ul>
+                </div>
+                <div class="footer-section contact-info">
+                    <h3 class="footer-title">Informasi Kontak</h3>
+                    <address>
+                        <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Jalan Web Kreatif No. 123, Kota
+                            Digital</p>
+                        <p><i class="fas fa-phone" aria-hidden="true"></i> <a href="tel:+62215551234">+62 21 555
+                                1234</a></p>
+                        <p><i class="fas fa-envelope" aria-hidden="true"></i> <a
+                                href="mailto:info@aplikasicanggih.com">info@aplikasicanggih.com</a></p>
+                    </address>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="current-year">2024</span> AplikasiCanggih. Semua Hak Cipta Dilindungi.</p>
             </div>
         </div>
+    </footer>
 
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn" style="position: absolute !important; top: 4px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1002/1920/1080" loading="lazy" class="img" alt="Image 3" />
-                    <figcaption>
-                        <h2>Kartu 3</h2>
-                        <p>Ini adalah isi dari kartu ketiga.</p>
-                    </figcaption>
-                </figure>
-            </div>
-        </div>
+    <!-- Kontainer UI (Toast, Modal, Off-canvas) - Diletakkan di akhir body untuk stacking context yang benar -->
+    <div id="toast-container" role="region" aria-live="assertive"></div>
 
-        <div class="card">
-            <div class="card-content">
-                <figure><button class="btn"
-                        style="position: absolute !important; top: 27px !important; margin-top: 27px !important;"><span><a
-                                href="#">Lihat</a></span></button>
-                    <img src="https://picsum.photos/id/1012/1920/1080" loading="lazy" class="img" alt="Image 4" />
-                    <figcaption>
-                        <h2>Kartu 4</h2>
-                        <p>Ini adalah isi dari kartu keempat.</p>
-                    </figcaption>
-                </figure>
+    <div id="alert-overlay" class="alert-overlay" role="dialog" aria-modal="true" aria-labelledby="alert-title-dynamic"
+        aria-describedby="alert-message-dynamic" hidden>
+        <div id="alert-box" class="alert-box">
+            <h3 id="alert-title-dynamic" class="alert-title-dynamic">Judul Alert Default</h3>
+            <p id="alert-message-dynamic" class="alert-message-dynamic">Ini adalah pesan alert generik.</p>
+            <div class="alert-actions">
+                <button id="alert-confirm-btn" class="btn btn-primary">Ya</button>
+                <button id="alert-cancel-btn" class="btn btn-secondary">Batal</button>
+                <button id="alert-close-btn" class="btn btn-secondary" style="display:none;">OK</button>
             </div>
         </div>
     </div>
 
+    <aside id="offcanvas-panel" class="offcanvas-panel" aria-labelledby="offcanvas-title" hidden>
+        <div class="offcanvas-header">
+            <h2 id="offcanvas-title" class="offcanvas-title-main">Menu Utama</h2>
+            <button id="offcanvas-close-btn" class="offcanvas-close-btn" aria-label="Tutup menu samping">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="offcanvas-body">
+            <nav class="offcanvas-nav" aria-label="Navigasi Menu Samping">
+                <ul>
+                    <li><a href="#home" class="offcanvas-link" data-route="home"><i class="fas fa-home"
+                                aria-hidden="true"></i> Beranda</a></li>
+                    <li><a href="#fitur" class="offcanvas-link" data-route="fitur"><i class="fas fa-star"
+                                aria-hidden="true"></i> Fitur</a></li>
+                    <li><a href="#tentang" class="offcanvas-link" data-route="tentang"><i class="fas fa-info-circle"
+                                aria-hidden="true"></i> Tentang</a></li>
+                    <li><a href="#kontak" class="offcanvas-link" data-route="kontak"><i class="fas fa-envelope"
+                                aria-hidden="true"></i> Kontak</a></li>
+                    <li><a href="#profil" class="offcanvas-link" data-route="profil"><i class="fas fa-user"
+                                aria-hidden="true"></i> Profil Saya</a></li>
+                    <li><a href="#pengaturan" class="offcanvas-link" data-route="pengaturan"><i class="fas fa-cog"
+                                aria-hidden="true"></i> Pengaturan</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="offcanvas-footer">
+            <button class="btn btn-danger btn-block" id="app-logout-btn"><i class="fas fa-sign-out-alt"
+                    aria-hidden="true"></i> Keluar</button>
+        </div>
+    </aside>
+    <div id="offcanvas-overlay" class="offcanvas-overlay" hidden></div>
+
+    <!-- Tombol Scroll ke Atas -->
+    <button id="scroll-to-top-btn" class="scroll-to-top" aria-label="Gulir ke atas halaman" hidden>
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- TEMPLATE UNTUK SETIAP "HALAMAN" -->
+    <!-- Halaman Beranda (Home) dengan Kartu Gulir -->
+    <template id="view-home">
+        <div class="controls-container" role="toolbar" aria-label="Kontrol Demonstrasi Fitur UI">
+            <h1 class="page-main-title">Jelajahi Visual Interaktif</h1>
+            <p class="page-main-subtitle">Pengalaman menelusuri kartu dengan efek gulir yang memukau dan dinamis,
+                dibangun murni dengan teknologi web native.</p>
+            <div class="control-buttons">
+                <button class="btn" id="demo-toast-success"><i class="fas fa-check-circle" aria-hidden="true"></i>Toast
+                    Sukses</button>
+                <button class="btn" id="demo-toast-error"><i class="fas fa-times-circle" aria-hidden="true"></i>Toast
+                    Error</button>
+                <button class="btn" id="demo-alert-confirm"><i class="fas fa-exclamation-triangle"
+                        aria-hidden="true"></i>Alert Konfirmasi</button>
+                <button class="btn" id="demo-flash-info"><i class="fas fa-info-circle" aria-hidden="true"></i>Flash
+                    Info</button>
+                <button class="btn" id="demo-flash-warning"><i class="fas fa-exclamation-circle"
+                        aria-hidden="true"></i>Flash Peringatan</button>
+            </div>
+        </div>
+
+        <section class="card-section-wrapper" aria-labelledby="card-gallery-title">
+            <!-- Judul untuk section kartu, bisa disembunyikan jika tidak diperlukan secara visual -->
+            <h2 id="card-gallery-title" class="visually-hidden">Galeri Kartu Interaktif</h2>
+            <div class="card-container">
+                <article class="card" style="--card-bg-image: url('https://picsum.photos/id/1012/1920/1080');"
+                    aria-labelledby="card-title-1">
+                    <figure>
+                        <!-- Gambar dimuat via CSS background untuk efek dan kontrol lebih baik -->
+                        <figcaption>
+                            <h3 id="card-title-1" class="card-title">Keajaiban Alam Semesta</h3>
+                            <p class="card-description">Menyelami keindahan tak terbatas dari kosmos, bintang, dan
+                                galaksi yang memukau imajinasi.</p>
+                            <a href="#detail/alam-semesta" class="btn btn-outline card-action-btn"
+                                data-route="detail/alam-semesta"><i class="fas fa-search-plus" aria-hidden="true"></i>
+                                Lihat Detail</a>
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <article class="card" style="--card-bg-image: url('https://picsum.photos/id/20/1920/1080');"
+                    aria-labelledby="card-title-2">
+                    <figure>
+                        <figcaption>
+                            <h3 id="card-title-2" class="card-title">Pesona Hutan Berkabut</h3>
+                            <p class="card-description">Temukan kedamaian dan misteri di tengah hutan lebat yang
+                                diselimuti kabut pagi.</p>
+                            <a href="#detail/hutan-berkabut" class="btn btn-outline card-action-btn"
+                                data-route="detail/hutan-berkabut"><i class="fas fa-search-plus" aria-hidden="true"></i>
+                                Selengkapnya</a>
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <article class="card" style="--card-bg-image: url('https://picsum.photos/id/1002/1920/1080');"
+                    aria-labelledby="card-title-3">
+                    <figure>
+                        <figcaption>
+                            <h3 id="card-title-3" class="card-title">Metropolis Malam Hari</h3>
+                            <p class="card-description">Menikmati perspektif urban dengan gemerlap lampu kota yang tak
+                                pernah tidur.</p>
+                            <a href="#detail/kota-malam" class="btn btn-outline card-action-btn"
+                                data-route="detail/kota-malam"><i class="fas fa-search-plus" aria-hidden="true"></i>
+                                Pelajari Lebih</a>
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <article class="card" style="--card-bg-image: url('https://picsum.photos/id/420/1920/1080');"
+                    aria-labelledby="card-title-4">
+                    <figure>
+                        <figcaption>
+                            <h3 id="card-title-4" class="card-title">Ekspedisi Tak Terlupakan</h3>
+                            <p class="card-description">Rencanakan perjalanan petualangan berikutnya dan abadikan setiap
+                                momen berharga.</p>
+                            <a href="#detail/ekspedisi" class="btn btn-outline card-action-btn"
+                                data-route="detail/ekspedisi"><i class="fas fa-search-plus" aria-hidden="true"></i>
+                                Jelajahi Sekarang</a>
+                        </figcaption>
+                    </figure>
+                </article>
+            </div>
+        </section>
+    </template>
+
+    <!-- Halaman Fitur -->
+    <template id="view-fitur">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Fitur Unggulan Aplikasi Kami</h1>
+                <p class="page-main-subtitle">Dirancang untuk memberikan pengalaman terbaik dengan teknologi terdepan
+                    dan desain yang intuitif.</p>
+            </header>
+            <section class="feature-grid" aria-label="Daftar Fitur Unggulan">
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-bolt fa-2x feature-icon" aria-hidden="true"></i>
+                    </div>
+                    <h2 class="feature-title">Performa Kilat</h2>
+                    <p class="feature-description">Dibangun dengan teknologi native Vanilla JS, memastikan kecepatan
+                        maksimal dan responsivitas tinggi tanpa ketergantungan pada library berat.</p>
+                </article>
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-palette fa-2x feature-icon"
+                            aria-hidden="true"></i></div>
+                    <h2 class="feature-title">Desain Elegan & Modern</h2>
+                    <p class="feature-description">Antarmuka pengguna yang bersih, intuitif, dan memanjakan mata, dengan
+                        mode terang dan gelap yang adaptif.</p>
+                </article>
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-shield-alt fa-2x feature-icon"
+                            aria-hidden="true"></i></div>
+                    <h2 class="feature-title">Keamanan Terdepan</h2>
+                    <p class="feature-description">Mengikuti praktik terbaik dalam pengembangan web untuk menjaga data
+                        dan privasi pengguna tetap aman.</p>
+                </article>
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-mobile-alt fa-2x feature-icon"
+                            aria-hidden="true"></i></div>
+                    <h2 class="feature-title">Responsif Sepenuhnya</h2>
+                    <p class="feature-description">Tampilan yang optimal dan fungsionalitas penuh di semua perangkat,
+                        mulai dari desktop hingga smartphone.</p>
+                </article>
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-puzzle-piece fa-2x feature-icon"
+                            aria-hidden="true"></i></div>
+                    <h2 class="feature-title">Modular & Reusable</h2>
+                    <p class="feature-description">Komponen UI dibangun secara modular untuk kemudahan pemeliharaan dan
+                        pengembangan lebih lanjut.</p>
+                </article>
+                <article class="feature-item">
+                    <div class="feature-icon-wrapper"><i class="fas fa-universal-access fa-2x feature-icon"
+                            aria-hidden="true"></i></div>
+                    <h2 class="feature-title">Aksesibel</h2>
+                    <p class="feature-description">Dirancang dengan mempertimbangkan standar aksesibilitas web (WCAG)
+                        untuk kenyamanan semua pengguna.</p>
+                </article>
+            </section>
+        </div>
+    </template>
+
+    <!-- Halaman Tentang -->
+    <template id="view-tentang">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Tentang AplikasiCanggih</h1>
+                <p class="page-main-subtitle">Mengenal lebih dekat visi, misi, dan tim di balik pengembangan aplikasi
+                    inovatif ini.</p>
+            </header>
+            <article class="content-section rich-text">
+                <h2>Visi Kami</h2>
+                <p>Menjadi platform digital terdepan yang memberdayakan pengguna melalui solusi teknologi yang intuitif,
+                    efisien, dan aman. Kami percaya bahwa teknologi seharusnya mempermudah kehidupan, bukan sebaliknya.
+                </p>
+
+                <h2>Misi Kami</h2>
+                <ul>
+                    <li>Mengembangkan aplikasi web berkualitas tinggi dengan fokus pada pengalaman pengguna (UX) yang
+                        superior.</li>
+                    <li>Menerapkan inovasi berkelanjutan dalam setiap aspek pengembangan produk.</li>
+                    <li>Menjaga standar tertinggi dalam keamanan data dan privasi pengguna.</li>
+                    <li>Membangun komunitas pengguna yang aktif dan suportif.</li>
+                </ul>
+
+                <h2>Tim Kami</h2>
+                <p>AplikasiCanggih dikembangkan oleh tim profesional yang terdiri dari pengembang perangkat lunak,
+                    desainer UI/UX, dan pakar strategi produk yang berdedikasi. Kami adalah individu-individu yang
+                    bersemangat tentang teknologi dan berkomitmen untuk menciptakan dampak positif melalui karya kami.
+                    Setiap baris kode ditulis dengan cermat, setiap piksel dirancang dengan penuh pertimbangan.</p>
+
+                <figure class="team-image-placeholder" aria-label="Ilustrasi tim AplikasiCanggih">
+                    <!-- Ganti dengan gambar tim jika ada, atau biarkan sebagai placeholder -->
+                    <i class="fas fa-users fa-5x" aria-hidden="true"></i>
+                    <figcaption>Tim Inovator AplikasiCanggih</figcaption>
+                </figure>
+            </article>
+        </div>
+    </template>
+
+    <!-- Halaman Kontak -->
+    <template id="view-kontak">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Hubungi Tim Kami</h1>
+                <p class="page-main-subtitle">Kami selalu senang mendengar dari Anda. Sampaikan pertanyaan, masukan,
+                    atau ide kolaborasi melalui formulir di bawah ini.</p>
+            </header>
+            <section class="contact-form-section">
+                <form id="contact-form" class="contact-form" aria-label="Formulir Kontak">
+                    <div class="form-group">
+                        <label for="nama-kontak">Nama Lengkap Anda</label>
+                        <input type="text" id="nama-kontak" name="nama" required placeholder="Contoh: Budi Santoso"
+                            aria-describedby="nama-error">
+                        <small id="nama-error" class="form-error-message" hidden>Nama wajib diisi.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-kontak">Alamat Email Aktif</label>
+                        <input type="email" id="email-kontak" name="email" required
+                            placeholder="Contoh: budi.s@example.com" aria-describedby="email-error">
+                        <small id="email-error" class="form-error-message" hidden>Format email tidak valid.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="subjek-kontak">Subjek Pesan</label>
+                        <input type="text" id="subjek-kontak" name="subjek" required
+                            placeholder="Contoh: Pertanyaan tentang Fitur X" aria-describedby="subjek-error">
+                        <small id="subjek-error" class="form-error-message" hidden>Subjek wajib diisi.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="pesan-kontak">Isi Pesan Anda</label>
+                        <textarea id="pesan-kontak" name="pesan" rows="6" required
+                            placeholder="Tuliskan detail pesan Anda di sini..."
+                            aria-describedby="pesan-error"></textarea>
+                        <small id="pesan-error" class="form-error-message" hidden>Pesan tidak boleh kosong.</small>
+                    </div>
+                    <div class="form-group form-submit-group">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fas fa-paper-plane"
+                                aria-hidden="true"></i> Kirim Pesan Sekarang</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </template>
+
+    <!-- Halaman Detail (Contoh untuk Routing dengan Parameter) -->
+    <template id="view-detail">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Detail Item: <span id="detail-item-name"
+                        class="dynamic-content-placeholder">[Nama Item]</span></h1>
+                <p class="page-main-subtitle">Informasi mendalam mengenai item <span id="detail-item-id-subtitle"
+                        class="dynamic-content-placeholder">[ID Item]</span> yang Anda pilih.</p>
+            </header>
+            <article class="content-section rich-text" id="detail-content-area">
+                <p id="detail-text-content" class="dynamic-content-placeholder">[Deskripsi detail item akan dimuat di
+                    sini...]</p>
+                <figure id="detail-image-container" style="text-align: center;" hidden>
+                    <img id="detail-image-element" src="" alt="Gambar Detail Item"
+                        style="max-width: 100%; height: auto; margin-top: 20px; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md);">
+                    <figcaption id="detail-image-caption" class="dynamic-content-placeholder"
+                        style="font-style: italic; color: var(--muted-text-color); margin-top: 0.5rem;">[Keterangan
+                        Gambar]</figcaption>
+                </figure>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="#home" class="btn btn-secondary"><i class="fas fa-arrow-left" aria-hidden="true"></i>
+                        Kembali ke Beranda</a>
+                </div>
+            </article>
+        </div>
+    </template>
+
+    <!-- Halaman Kebijakan Privasi (Contoh Halaman Statis Sederhana) -->
+    <template id="view-privasi">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Kebijakan Privasi</h1>
+                <p class="page-main-subtitle">Komitmen kami untuk melindungi data dan privasi Anda.</p>
+            </header>
+            <article class="content-section rich-text">
+                <h2>Pengumpulan Informasi</h2>
+                <p>Kami mengumpulkan informasi yang Anda berikan secara langsung kepada kami, misalnya saat Anda membuat
+                    akun, mengisi formulir kontak, atau berinteraksi dengan fitur tertentu. Informasi ini dapat mencakup
+                    nama, alamat email, nomor telepon, dan detail lain yang relevan.</p>
+
+                <h2>Penggunaan Informasi</h2>
+                <p>Informasi yang kami kumpulkan digunakan untuk:</p>
+                <ul>
+                    <li>Menyediakan, mengoperasikan, dan memelihara layanan kami.</li>
+                    <li>Meningkatkan, mempersonalisasi, dan memperluas layanan kami.</li>
+                    <li>Memahami dan menganalisis bagaimana Anda menggunakan layanan kami.</li>
+                    <li>Mengembangkan produk, layanan, fitur, dan fungsionalitas baru.</li>
+                    <li>Berkomunikasi dengan Anda, baik secara langsung maupun melalui salah satu mitra kami, termasuk
+                        untuk layanan pelanggan, untuk memberi Anda pembaruan dan informasi lain yang berkaitan dengan
+                        layanan, dan untuk tujuan pemasaran dan promosi.</li>
+                    <li>Mengirimkan email kepada Anda.</li>
+                    <li>Menemukan dan mencegah penipuan.</li>
+                </ul>
+
+                <h2>Keamanan Data</h2>
+                <p>Kami mengambil langkah-langkah yang wajar untuk melindungi informasi pribadi Anda dari kehilangan,
+                    penyalahgunaan, dan akses tidak sah, pengungkapan, perubahan, dan perusakan. Namun, harap diingat
+                    bahwa tidak ada metode transmisi melalui internet atau metode penyimpanan elektronik yang 100% aman.
+                </p>
+
+                <h2>Perubahan Kebijakan</h2>
+                <p>Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberi tahu Anda tentang
+                    perubahan apa pun dengan memposting Kebijakan Privasi baru di halaman ini. Anda disarankan untuk
+                    meninjau Kebijakan Privasi ini secara berkala untuk setiap perubahan.</p>
+
+                <h2>Hubungi Kami</h2>
+                <p>Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui halaman <a
+                        href="#kontak">Kontak</a>.</p>
+                <small>Terakhir diperbarui: <span id="privacy-last-updated"></span></small>
+            </article>
+        </div>
+    </template>
+
+    <!-- Halaman Profil Pengguna (Contoh) -->
+    <template id="view-profil">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Profil Pengguna</h1>
+                <p class="page-main-subtitle">Kelola informasi pribadi dan preferensi akun Anda.</p>
+            </header>
+            <section class="profile-section">
+                <div class="profile-card">
+                    <div class="profile-avatar-wrapper">
+                        <i class="fas fa-user-circle fa-5x profile-avatar-placeholder" aria-hidden="true"></i>
+                        <!-- <img src="path/to/avatar.jpg" alt="Foto Profil [Nama Pengguna]" class="profile-avatar"> -->
+                    </div>
+                    <h2 class="profile-name">[Nama Pengguna]</h2>
+                    <p class="profile-email">[email@pengguna.com]</p>
+                    <button class="btn btn-outline profile-edit-btn"><i class="fas fa-edit" aria-hidden="true"></i> Edit
+                        Profil</button>
+                </div>
+                <div class="profile-details">
+                    <h3>Detail Akun</h3>
+                    <p><strong>Tanggal Bergabung:</strong> [Tanggal Bergabung]</p>
+                    <p><strong>Status Akun:</strong> <span class="status-active">Aktif</span></p>
+                    <h3>Preferensi</h3>
+                    <p><strong>Notifikasi Email:</strong> Aktif</p>
+                    <p><strong>Bahasa:</strong> Indonesia</p>
+                </div>
+            </section>
+        </div>
+    </template>
+
+    <!-- Halaman Pengaturan (Contoh) -->
+    <template id="view-pengaturan">
+        <div class="container page-padding">
+            <header class="page-header-content">
+                <h1 class="page-main-title">Pengaturan Aplikasi</h1>
+                <p class="page-main-subtitle">Sesuaikan preferensi aplikasi sesuai kebutuhan Anda.</p>
+            </header>
+            <section class="settings-section">
+                <form id="settings-form" class="settings-form" aria-label="Formulir Pengaturan">
+                    <div class="form-group">
+                        <label for="setting-bahasa">Bahasa Antarmuka</label>
+                        <select id="setting-bahasa" name="bahasa">
+                            <option value="id" selected>Bahasa Indonesia</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span class="label-like">Notifikasi</span>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif-email" name="notif_email" checked>
+                            <label for="notif-email">Terima notifikasi melalui email</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif-push" name="notif_push">
+                            <label for="notif-push">Aktifkan notifikasi push (jika didukung)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <span class="label-like">Mode Tampilan</span>
+                        <p>Mode saat ini: <strong id="current-theme-display">Terang</strong>. Gunakan tombol <i
+                                class="fas fa-moon"></i> / <i class="fas fa-sun"></i> di header untuk mengganti.</p>
+                    </div>
+                    <div class="form-group form-submit-group">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save" aria-hidden="true"></i>
+                            Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </template>
+
+    <!-- Halaman 404 Not Found -->
+    <template id="view-404">
+        <div class="container page-padding text-center full-height-centered">
+            <div> <!-- Wrapper untuk centering vertikal -->
+                <i class="fas fa-ghost fa-7x error-icon-404" aria-hidden="true"></i>
+                <h1 class="page-title-large error-code-404">404</h1>
+                <h2 class="page-main-title">Oops! Halaman Tidak Ditemukan</h2>
+                <p class="page-main-subtitle">Maaf, halaman yang Anda cari tidak ada atau mungkin telah dipindahkan.
+                    Coba periksa kembali URL Anda.</p>
+                <a href="#home" class="btn btn-primary btn-lg"><i class="fas fa-home" aria-hidden="true"></i> Kembali ke
+                    Beranda</a>
+            </div>
+        </div>
+    </template>
+
+    <!-- Skrip Utama Aplikasi (wajib di akhir body) -->
+    <script>
+
+        /**
+         * ============================================================================
+         *  Aplikasi SPA Canggih - Logika Utama (Vanilla JS)
+         * ============================================================================
+         *  Versi: 1.0.0
+         *  Penulis: Pengembang Aplikasi Canggih
+         *  Deskripsi:
+         *  File ini mengontrol seluruh fungsionalitas Single Page Application (SPA),
+         *  termasuk routing, pemuatan konten dinamis, manajemen komponen UI
+         *  (Toast, Modal, Off-canvas, Flash Message), dan interaksi pengguna lainnya.
+         *  Dibuat murni dengan HTML, CSS, dan JavaScript standar tanpa framework/library
+         *  eksternal (kecuali Font Awesome untuk ikon).
+         *
+         *  Struktur Kode:
+         *  1.  Mode Ketat & Scope Utama
+         *  2.  State Aplikasi & Konfigurasi Global
+         *  3.  Cache Elemen DOM Utama
+         *  4.  Utilitas Umum (Helper Functions)
+         *  5.  Sistem Routing SPA
+         *  6.  Manajemen Komponen UI
+         *      - Toast Notifikasi
+         *      - Modal Alert/Konfirmasi
+         *      - Flash Messages (Pesan Cepat)
+         *      - Off-Canvas Panel (Menu Samping)
+         *      - Theme Toggle (Mode Terang/Gelap)
+         *      - Scroll to Top Button
+         *  7.  Fungsi Inisialisasi Spesifik Halaman
+         *  8.  Event Listeners Utama & Global
+         *  9.  Fungsi Inisialisasi Aplikasi
+         *  10. Eksekusi Inisialisasi Aplikasi
+         * ============================================================================
+         */
+
+        (function () { // Scope utama untuk mencegah polusi global
+            'use strict';
+
+            // --------------------------------------------------------------------------
+            // 2. STATE APLIKASI & KONFIGURASI GLOBAL
+            // --------------------------------------------------------------------------
+            const appState = {
+                currentPage: null,
+                isLoading: false,
+                theme: localStorage.getItem('appPreferredTheme') || 'light', // 'light' atau 'dark'
+                offcanvasOpen: false,
+                modalOpen: false,
+                // Tambahkan state lain yang relevan di sini
+            };
+
+            const config = {
+                defaultRoute: 'home',
+                appContentId: 'app-content',
+                headerElementSelector: '.app-header',
+                toastDefaultDuration: 3800, //ms
+                flashDefaultDuration: 4800, //ms
+                // Definisikan konstanta dan konfigurasi lain di sini
+            };
+
+            // --------------------------------------------------------------------------
+            // 3. CACHE ELEMEN DOM UTAMA
+            // --------------------------------------------------------------------------
+            const DOMElements = {
+                // Diisi saat inisialisasi untuk memastikan elemen ada
+            };
+
+            function cacheDOMElements() {
+                DOMElements.appBody = document.body;
+                DOMElements.appContent = document.getElementById(config.appContentId);
+                DOMElements.appHeader = document.querySelector(config.headerElementSelector);
+
+                DOMElements.flashMessageContainer = document.getElementById('flash-message-container');
+                DOMElements.toastContainer = document.getElementById('toast-container');
+
+                DOMElements.alertOverlay = document.getElementById('alert-overlay');
+                DOMElements.alertBox = document.getElementById('alert-box');
+                DOMElements.alertTitle = document.getElementById('alert-title-dynamic');
+                DOMElements.alertMessage = document.getElementById('alert-message-dynamic');
+                DOMElements.alertConfirmBtn = document.getElementById('alert-confirm-btn');
+                DOMElements.alertCancelBtn = document.getElementById('alert-cancel-btn');
+                DOMElements.alertCloseBtn = document.getElementById('alert-close-btn');
+
+                DOMElements.offcanvasPanel = document.getElementById('offcanvas-panel');
+                DOMElements.offcanvasOverlay = document.getElementById('offcanvas-overlay');
+                DOMElements.offcanvasToggleBtn = document.getElementById('app-offcanvas-toggle');
+                DOMElements.offcanvasCloseBtn = document.getElementById('offcanvas-close-btn');
+
+                DOMElements.scrollToTopBtn = document.getElementById('scroll-to-top-btn');
+                DOMElements.themeToggleBtn = document.getElementById('toggle-theme-btn');
+                DOMElements.currentYearSpan = document.getElementById('current-year');
+                DOMElements.currentThemeDisplaySettings = document.getElementById('current-theme-display'); // Untuk halaman pengaturan
+                DOMElements.privacyLastUpdated = document.getElementById('privacy-last-updated');
+            }
+
+
+            // --------------------------------------------------------------------------
+            // 4. UTILITAS UMUM (HELPER FUNCTIONS)
+            // --------------------------------------------------------------------------
+
+            /**
+             * Membuat elemen DOM dengan atribut dan konten (lebih aman dari innerHTML untuk teks).
+             * @param {string} tagName Nama tag HTML.
+             * @param {object} attributes Objek atribut (opsional).
+             * @param {string|Node|Array<Node>} children Konten atau anak elemen (opsional).
+             * @returns {HTMLElement} Elemen yang dibuat.
+             */
+            function createElement(tagName, attributes = {}, children = null) {
+                const element = document.createElement(tagName);
+                for (const key in attributes) {
+                    if (Object.hasOwnProperty.call(attributes, key)) {
+                        if (key.startsWith('data-')) {
+                            element.setAttribute(key, attributes[key]);
+                        } else {
+                            element[key] = attributes[key]; // Lebih aman untuk properti seperti className, id, dll.
+                        }
+                    }
+                }
+                if (children) {
+                    const appendChild = (child) => {
+                        if (typeof child === 'string') {
+                            element.appendChild(document.createTextNode(child));
+                        } else if (child instanceof Node) {
+                            element.appendChild(child);
+                        }
+                    };
+                    if (Array.isArray(children)) {
+                        children.forEach(appendChild);
+                    } else {
+                        appendChild(children);
+                    }
+                }
+                return element;
+            }
+
+            /**
+             * Fungsi debounce untuk menunda eksekusi fungsi hingga jeda tertentu setelah event terakhir.
+             * @param {Function} func Fungsi yang akan di-debounce.
+             * @param {number} delay Waktu tunda dalam milidetik.
+             * @returns {Function} Fungsi yang sudah di-debounce.
+             */
+            function debounce(func, delay) {
+                let timeoutId;
+                return function (...args) {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        func.apply(this, args);
+                    }, delay);
+                };
+            }
+
+            /**
+             * Memperbarui tahun hak cipta di footer.
+             */
+            function updateCopyrightYear() {
+                if (DOMElements.currentYearSpan) {
+                    DOMElements.currentYearSpan.textContent = new Date().getFullYear();
+                }
+            }
+
+            /**
+             * Memformat tanggal untuk tampilan (contoh: Kebijakan Privasi).
+             */
+            function formatDate(date = new Date()) {
+                return date.toLocaleDateString('id-ID', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+
+
+            /**
+             * Mengukur tinggi header dan menyimpannya di CSS variable.
+             * Juga mengatur offset untuk flash messages.
+             */
+            function updateHeaderLayout() {
+                if (DOMElements.appHeader) {
+                    const headerHeight = DOMElements.appHeader.offsetHeight;
+                    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+
+                    if (DOMElements.flashMessageContainer) {
+                        DOMElements.flashMessageContainer.style.top = `${headerHeight}px`;
+                    }
+                }
+            }
+
+            /**
+             * Mengelola atribut 'hidden' untuk efisiensi dan aksesibilitas.
+             * @param {HTMLElement} element Elemen yang akan diubah.
+             * @param {boolean} hide True untuk menyembunyikan, false untuk menampilkan.
+             */
+            function toggleHiddenAttribute(element, hide) {
+                if (element) {
+                    if (hide) {
+                        element.setAttribute('hidden', '');
+                    } else {
+                        element.removeAttribute('hidden');
+                    }
+                }
+            }
+
+            // --------------------------------------------------------------------------
+            // 5. SISTEM ROUTING SPA
+            // --------------------------------------------------------------------------
+            const routes = {
+                // Format: 'path': { title: 'Judul Halaman', templateId: 'id-template', init: functionUntukInisialisasi }
+                'home': { title: 'Beranda', templateId: 'view-home', init: initHomePage },
+                'fitur': { title: 'Fitur Unggulan', templateId: 'view-fitur', init: null },
+                'tentang': { title: 'Tentang Kami', templateId: 'view-tentang', init: null },
+                'kontak': { title: 'Hubungi Kami', templateId: 'view-kontak', init: initKontakPage },
+                'privasi': { title: 'Kebijakan Privasi', templateId: 'view-privasi', init: initPrivasiPage },
+                'profil': { title: 'Profil Pengguna', templateId: 'view-profil', init: initProfilPage },
+                'pengaturan': { title: 'Pengaturan Aplikasi', templateId: 'view-pengaturan', init: initPengaturanPage },
+                'detail/:id': { title: 'Detail Item', templateId: 'view-detail', init: initDetailPage }, // Route dengan parameter
+            };
+            const route404 = { title: 'Halaman Tidak Ditemukan', templateId: 'view-404', init: null };
+
+            /**
+             * Memparsing hash URL untuk mendapatkan path route dan parameter.
+             * @param {string} hash String hash dari URL (misal: '#/detail/item-1?sort=asc').
+             * @returns {{path: string, params: object, query: object}}
+             */
+            function parseHash(hash) {
+                const fullHashPath = hash.substring(1) || config.defaultRoute; // Hapus '#'
+                const [pathSegment, queryString] = fullHashPath.split('?');
+
+                let routeKeyToMatch = pathSegment;
+                const params = {};
+
+                // Mencocokkan path dengan route yang memiliki parameter dinamis (misal, 'detail/:id')
+                for (const definedRouteKey in routes) {
+                    if (definedRouteKey.includes(':')) {
+                        const definedRouteParts = definedRouteKey.split('/');
+                        const currentPathParts = pathSegment.split('/');
+
+                        if (definedRouteParts.length === currentPathParts.length) {
+                            let match = true;
+                            const tempParams = {};
+                            for (let i = 0; i < definedRouteParts.length; i++) {
+                                if (definedRouteParts[i].startsWith(':')) {
+                                    tempParams[definedRouteParts[i].substring(1)] = decodeURIComponent(currentPathParts[i]);
+                                } else if (definedRouteParts[i] !== currentPathParts[i]) {
+                                    match = false;
+                                    break;
+                                }
+                            }
+                            if (match) {
+                                routeKeyToMatch = definedRouteKey; // Gunakan key route asli (e.g., 'detail/:id')
+                                Object.assign(params, tempParams);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                const query = {};
+                if (queryString) {
+                    new URLSearchParams(queryString).forEach((value, key) => {
+                        query[key] = value;
+                    });
+                }
+
+                return { path: routeKeyToMatch, params, query };
+            }
+
+            /**
+             * Memuat konten halaman berdasarkan route yang aktif.
+             * @param {string} routePath Path route (misal: 'home', 'detail/:id').
+             * @param {object} params Parameter dari URL (misal: {id: 'item-1'}).
+             * @param {object} query Objek query string dari URL.
+             */
+            async function loadPageContent(routePath, params = {}, query = {}) {
+                if (appState.isLoading) return;
+                appState.isLoading = true;
+
+                // Tampilkan loader sederhana (jika bukan pemuatan awal)
+                if (appState.currentPage !== null) {
+                    DOMElements.appContent.innerHTML = `<div class="initial-loader" role="status"><i class="fas fa-spinner fa-spin fa-3x"></i><p>Memuat...</p></div>`;
+                }
+
+                const routeConfig = routes[routePath] || route404;
+
+                let templateHtml = '';
+                if (typeof routeConfig.templateId === 'string') {
+                    const templateElement = document.getElementById(routeConfig.templateId);
+                    if (templateElement) {
+                        templateHtml = templateElement.innerHTML;
+                    } else {
+                        console.error(`Error: Template dengan ID "${routeConfig.templateId}" tidak ditemukan.`);
+                        // Fallback ke 404 jika template tidak ada
+                        const fallbackTemplate = document.getElementById(route404.templateId);
+                        if (fallbackTemplate) templateHtml = fallbackTemplate.innerHTML;
+                        document.title = `Kesalahan - ${route404.title}`;
+                    }
+                } else {
+                    console.error(`Error: templateId untuk route "${routePath}" tidak valid.`);
+                }
+
+                // Update judul halaman
+                let pageTitle = routeConfig.title;
+                if (routePath === 'detail/:id' && params.id) { // Kustomisasi judul untuk halaman detail
+                    pageTitle = `Detail: ${params.id.replace(/-/g, ' ')}`; // Ganti '-' dengan spasi untuk tampilan
+                }
+                document.title = `AplikasiCanggih - ${pageTitle}`;
+                appState.currentPage = routePath;
+
+                // Ganti konten utama dan jalankan fungsi inisialisasi halaman
+                // Penundaan kecil untuk memastikan loader terlihat jika pemuatan sangat cepat
+                setTimeout(() => {
+                    DOMElements.appContent.innerHTML = templateHtml;
+
+                    if (typeof routeConfig.init === 'function') {
+                        routeConfig.init(params, query); // Kirim params dan query ke fungsi init
+                    }
+
+                    updateActiveNavLinks(routePath);
+                    window.scrollTo(0, 0); // Gulir ke atas halaman setiap pindah halaman
+                    appState.isLoading = false;
+
+                    // Hapus loader awal jika masih ada setelah pemuatan pertama
+                    const initialLoader = DOMElements.appContent.querySelector('.initial-loader:first-child');
+                    if (initialLoader && DOMElements.appContent.children.length > 1) {
+                        // initialLoader.remove(); // Ini malah menghapus kontennya, cukup jika ada konten lain
+                    }
+
+                }, appState.currentPage === null ? 10 : 100); // Pemuatan pertama lebih cepat, selanjutnya beri waktu loader
+            }
+
+            /**
+             * Mengupdate kelas 'active' pada link navigasi di header dan off-canvas.
+             * @param {string} currentRoutePath Path route yang sedang aktif.
+             */
+            function updateActiveNavLinks(currentRoutePath) {
+                const navLinks = document.querySelectorAll('.app-nav .nav-link, .offcanvas-nav .offcanvas-link');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    // data-route lebih prioritas, jika tidak ada, ambil dari href
+                    const linkRoute = link.dataset.route || (link.getAttribute('href') || '').substring(1);
+
+                    // Penanganan untuk route dasar (misal 'detail' untuk 'detail/:id')
+                    const baseCurrentRoute = currentRoutePath.split('/')[0];
+                    const baseLinkRoute = linkRoute.split('/')[0];
+
+                    if (linkRoute === currentRoutePath || baseLinkRoute === baseCurrentRoute && currentRoutePath.includes(':')) {
+                        // Cocok persis, atau cocok base path jika route saat ini punya parameter
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            /**
+             * Handler untuk event perubahan hash URL.
+             */
+            function handleHashChange() {
+                const { path, params, query } = parseHash(window.location.hash);
+                loadPageContent(path, params, query);
+            }
+
+            // --------------------------------------------------------------------------
+            // 6. MANAJEMEN KOMPONEN UI
+            // --------------------------------------------------------------------------
+
+            // --- Toast Notification System ---
+            function showToast(message, type = 'info', duration = config.toastDefaultDuration) {
+                if (!DOMElements.toastContainer) return;
+
+                const toast = createElement('div', { className: `toast ${type}` });
+
+                let iconClass = 'fas fa-info-circle'; // Default icon
+                if (type === 'success') iconClass = 'fas fa-check-circle';
+                else if (type === 'error') iconClass = 'fas fa-times-circle';
+                else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+
+                const iconElement = createElement('i', { className: iconClass, 'aria-hidden': 'true' });
+                const messageElement = createElement('span', { className: 'toast-message' }, message);
+
+                toast.appendChild(iconElement);
+                toast.appendChild(messageElement);
+                DOMElements.toastContainer.appendChild(toast);
+
+                // Animate in (paksa reflow untuk transisi)
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+
+                // Auto dismiss
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+                }, duration);
+            }
+
+            // --- Alert Modal System ---
+            let alertResolveCallback = null; // Untuk menangani promise dari showAlert
+
+            /**
+             * Menampilkan modal alert atau konfirmasi.
+             * @param {string} title Judul modal.
+             * @param {string} message Pesan modal (bisa berisi HTML sederhana).
+             * @param {'info'|'confirm'} type Tipe modal ('info' -> OK, 'confirm' -> Ya/Batal).
+             * @returns {Promise<boolean>} Promise yang resolve true jika dikonfirmasi, false jika dibatalkan/ditutup.
+             */
+            function showAlert(title, message, type = 'info') {
+                return new Promise((resolve) => {
+                    if (!DOMElements.alertOverlay || !DOMElements.alertBox) {
+                        resolve(false); // Komponen tidak ada
+                        return;
+                    }
+                    alertResolveCallback = resolve;
+
+                    DOMElements.alertTitle.textContent = title;
+                    DOMElements.alertMessage.innerHTML = message; // Izinkan HTML sederhana untuk pesan
+
+                    const isConfirmType = type === 'confirm';
+                    toggleHiddenAttribute(DOMElements.alertConfirmBtn, !isConfirmType);
+                    toggleHiddenAttribute(DOMElements.alertCancelBtn, !isConfirmType);
+                    toggleHiddenAttribute(DOMElements.alertCloseBtn, isConfirmType);
+
+                    toggleHiddenAttribute(DOMElements.alertOverlay, false);
+                    DOMElements.alertOverlay.classList.add('show');
+                    DOMElements.appBody.style.overflow = 'hidden';
+                    appState.modalOpen = true;
+
+                    // Fokus ke tombol yang relevan
+                    const focusElement = isConfirmType ? DOMElements.alertConfirmBtn : DOMElements.alertCloseBtn;
+                    setTimeout(() => focusElement.focus(), 50); // Sedikit delay untuk transisi
+                });
+            }
+
+            function closeAlert(confirmedResult) {
+                if (!DOMElements.alertOverlay || !appState.modalOpen) return;
+
+                DOMElements.alertOverlay.classList.remove('show');
+                DOMElements.appBody.style.overflow = '';
+                appState.modalOpen = false;
+
+                // Tunggu transisi selesai sebelum menyembunyikan sepenuhnya
+                DOMElements.alertOverlay.addEventListener('transitionend', () => {
+                    toggleHiddenAttribute(DOMElements.alertOverlay, true);
+                }, { once: true });
+
+                if (alertResolveCallback) {
+                    alertResolveCallback(confirmedResult);
+                    alertResolveCallback = null;
+                }
+            }
+
+            // --- Flash Message System ---
+            function showFlashMessage(message, type = 'info', duration = config.flashDefaultDuration) {
+                if (!DOMElements.flashMessageContainer) return;
+
+                // Hapus flash message yang ada sebelumnya
+                const existingFlash = DOMElements.flashMessageContainer.querySelector('.flash-message');
+                if (existingFlash) existingFlash.remove();
+
+                const flash = createElement('div', { className: `flash-message ${type}` });
+
+                let iconClass = 'fas fa-info-circle';
+                if (type === 'success') iconClass = 'fas fa-check-circle';
+                else if (type === 'error') iconClass = 'fas fa-times-circle';
+                else if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+
+                const iconElement = createElement('i', { className: iconClass, 'aria-hidden': 'true' });
+                const messageSpan = createElement('span', {}, message);
+                const contentWrapper = createElement('div', { className: 'flash-message-content' }, [iconElement, messageSpan]);
+
+                const closeBtn = createElement('button', {
+                    className: 'flash-close-btn',
+                    'aria-label': 'Tutup pesan',
+                    innerHTML: '<i class="fas fa-times" aria-hidden="true"></i>' // Ikon Font Awesome
+                });
+
+                closeBtn.onclick = () => { // Fungsi untuk menutup flash message
+                    flash.classList.remove('show');
+                    flash.addEventListener('transitionend', () => flash.remove(), { once: true });
+                };
+
+                flash.appendChild(contentWrapper);
+                flash.appendChild(closeBtn);
+                DOMElements.flashMessageContainer.appendChild(flash);
+
+                requestAnimationFrame(() => flash.classList.add('show'));
+
+                if (duration > 0) { // Auto-dismiss jika durasi > 0
+                    setTimeout(() => {
+                        if (flash.classList.contains('show')) { // Cek apakah masih ada
+                            closeBtn.onclick(); // Panggil fungsi close untuk animasi yang konsisten
+                        }
+                    }, duration);
+                }
+            }
+
+            // --- Off-Canvas Panel System ---
+            function toggleOffcanvas(forceOpen) {
+                const isOpen = typeof forceOpen === 'boolean' ? forceOpen : !appState.offcanvasOpen;
+                if (!DOMElements.offcanvasPanel || !DOMElements.offcanvasOverlay) return;
+
+                appState.offcanvasOpen = isOpen;
+                DOMElements.offcanvasPanel.classList.toggle('open', isOpen);
+                DOMElements.offcanvasOverlay.classList.toggle('show', isOpen);
+                toggleHiddenAttribute(DOMElements.offcanvasPanel, !isOpen);
+                toggleHiddenAttribute(DOMElements.offcanvasOverlay, !isOpen);
+                DOMElements.offcanvasToggleBtn.setAttribute('aria-expanded', isOpen.toString());
+
+                if (isOpen) {
+                    DOMElements.appBody.style.overflow = 'hidden';
+                    // Fokus ke elemen pertama yang bisa difokus di dalam offcanvas
+                    setTimeout(() => { // Delay untuk transisi
+                        const focusableElement = DOMElements.offcanvasPanel.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                        if (focusableElement) focusableElement.focus();
+                    }, 50);
+                } else {
+                    DOMElements.appBody.style.overflow = '';
+                    DOMElements.offcanvasToggleBtn.focus(); // Kembalikan fokus ke tombol toggle
+                }
+            }
+
+            // --- Theme Toggle System ---
+            function applyTheme(newTheme) {
+                DOMElements.appBody.classList.remove('light-mode', 'dark-mode');
+                DOMElements.appBody.classList.add(`${newTheme}-mode`);
+                appState.theme = newTheme;
+                localStorage.setItem('appPreferredTheme', newTheme);
+
+                if (DOMElements.themeToggleBtn) {
+                    const icon = DOMElements.themeToggleBtn.querySelector('i');
+                    const isDark = newTheme === 'dark';
+                    icon.className = `fas ${isDark ? 'fa-sun' : 'fa-moon'}`;
+                    DOMElements.themeToggleBtn.setAttribute('aria-label', `Ganti ke Mode ${isDark ? 'Terang' : 'Gelap'}`);
+                }
+
+                // Update teks di halaman pengaturan jika halaman tersebut aktif
+                if (DOMElements.currentThemeDisplaySettings && appState.currentPage === 'pengaturan') {
+                    DOMElements.currentThemeDisplaySettings.textContent = newTheme === 'dark' ? 'Gelap' : 'Terang';
+                }
+
+                // Kirim event custom jika ada komponen lain yang perlu merespons perubahan tema
+                document.dispatchEvent(new CustomEvent('appThemeChanged', { detail: { theme: newTheme } }));
+            }
+
+            // --- Scroll to Top Button ---
+            function handleScrollToTopButton() {
+                if (!DOMElements.scrollToTopBtn) return;
+                const show = window.scrollY > 300;
+                DOMElements.scrollToTopBtn.classList.toggle('show', show);
+                toggleHiddenAttribute(DOMElements.scrollToTopBtn, !show);
+            }
+
+            // --------------------------------------------------------------------------
+            // 7. FUNGSI INISIALISASI SPESIFIK HALAMAN
+            // --------------------------------------------------------------------------
+            function initHomePage() {
+                // console.log('Beranda diinisialisasi.');
+                // Tambahkan event listener untuk tombol-tombol demo di Beranda
+                document.getElementById('demo-toast-success')?.addEventListener('click', () => {
+                    showToast('Operasi berhasil! Data telah disimpan.', 'success');
+                });
+                document.getElementById('demo-toast-error')?.addEventListener('click', () => {
+                    showToast('Gagal memproses permintaan Anda.', 'error', 5000);
+                });
+                document.getElementById('demo-alert-confirm')?.addEventListener('click', async () => {
+                    const confirmed = await showAlert(
+                        'Konfirmasi Penting',
+                        'Apakah Anda yakin ingin <strong>menghapus item ini</strong>? Tindakan ini tidak dapat dibatalkan.',
+                        'confirm'
+                    );
+                    if (confirmed) {
+                        showToast('Item telah "dihapus". (Demo)', 'info');
+                    } else {
+                        showToast('Penghapusan item dibatalkan.', 'warning');
+                    }
+                });
+                document.getElementById('demo-flash-info')?.addEventListener('click', () => {
+                    showFlashMessage('Informasi: Pembaruan sistem terjadwal pukul 03:00 WIB.', 'info');
+                });
+                document.getElementById('demo-flash-warning')?.addEventListener('click', () => {
+                    showFlashMessage('Peringatan: Kapasitas penyimpanan hampir penuh!', 'warning', 0); // 0 = tidak auto-dismiss
+                });
+
+                // Inisialisasi kartu jika ada logika khusus (misal, efek saat scroll)
+                // Untuk saat ini, efek sticky sudah cukup dari CSS.
+            }
+
+            function initKontakPage() {
+                // console.log('Halaman Kontak diinisialisasi.');
+                const contactForm = document.getElementById('contact-form');
+                contactForm?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(contactForm);
+                    const name = formData.get('nama');
+                    // Validasi sederhana (bisa lebih kompleks)
+                    let isValid = true;
+                    ['nama', 'email', 'subjek', 'pesan'].forEach(fieldName => {
+                        const input = contactForm.elements[fieldName];
+                        const errorElement = document.getElementById(`${fieldName}-error`); // Asumsi ID error field
+                        if (input && !input.value.trim()) {
+                            isValid = false;
+                            input.style.borderColor = 'var(--error-color)'; // Contoh visual feedback
+                            if (errorElement) {
+                                errorElement.textContent = `${input.labels[0].textContent} wajib diisi.`;
+                                toggleHiddenAttribute(errorElement, false);
+                            }
+                        } else if (input && input.type === 'email' && !/^\S+@\S+\.\S+$/.test(input.value)) {
+                            isValid = false;
+                            input.style.borderColor = 'var(--error-color)';
+                            if (errorElement) {
+                                errorElement.textContent = `Format email tidak valid.`;
+                                toggleHiddenAttribute(errorElement, false);
+                            }
+                        } else if (input) {
+                            input.style.borderColor = ''; // Reset border
+                            if (errorElement) toggleHiddenAttribute(errorElement, true);
+                        }
+                    });
+
+                    if (isValid) {
+                        // Simulasi pengiriman data
+                        showToast(`Terima kasih, ${name}! Pesan Anda telah "dikirim". (Ini hanya demo)`, 'success');
+                        contactForm.reset();
+                        // Reset semua style error
+                        ['nama', 'email', 'subjek', 'pesan'].forEach(fieldName => {
+                            const input = contactForm.elements[fieldName];
+                            const errorElement = document.getElementById(`${fieldName}-error`);
+                            if (input) input.style.borderColor = '';
+                            if (errorElement) toggleHiddenAttribute(errorElement, true);
+                        });
+                    } else {
+                        showToast('Harap perbaiki kesalahan pada formulir.', 'error');
+                    }
+                });
+            }
+
+            async function initDetailPage(params) {
+                // console.log(`Halaman Detail diinisialisasi untuk ID: ${params.id}`);
+                const itemNameSpan = document.getElementById('detail-item-name');
+                const itemIdSubtitleSpan = document.getElementById('detail-item-id-subtitle');
+                const detailTextContentP = document.getElementById('detail-text-content');
+                const detailImageContainer = document.getElementById('detail-image-container');
+                const detailImageElement = document.getElementById('detail-image-element');
+                const detailImageCaption = document.getElementById('detail-image-caption');
+
+                const formattedItemName = params.id ? params.id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '[Nama Item Tidak Valid]';
+
+                if (itemNameSpan) itemNameSpan.textContent = formattedItemName;
+                if (itemIdSubtitleSpan) itemIdSubtitleSpan.textContent = params.id || '[ID Tidak Valid]';
+
+                // Simulasi pengambilan data detail
+                if (detailTextContentP && detailImageContainer && detailImageElement && detailImageCaption) {
+                    detailTextContentP.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memuat detail untuk ${formattedItemName}...`;
+                    toggleHiddenAttribute(detailImageContainer, true);
+
+                    // Contoh data item (ganti dengan data asli jika ada)
+                    const itemData = {
+                        'alam-semesta': { desc: 'Menjelajahi keindahan kosmos, nebula yang berwarna-warni, dan misteri lubang hitam. Alam semesta menyimpan rahasia tak terbatas yang menunggu untuk diungkap.', imgId: 10, caption: 'Nebula Elang yang memukau.' },
+                        'hutan-berkabut': { desc: 'Suasana magis hutan yang diselimuti kabut tebal di pagi hari. Sinar matahari mencoba menembus dedaunan, menciptakan pemandangan yang surealis dan menenangkan.', imgId: 20, caption: 'Jalan setapak di tengah hutan berkabut.' },
+                        'kota-malam': { desc: 'Gemerlap lampu kota metropolitan di malam hari, menciptakan simfoni cahaya yang tak pernah padam. Gedung pencakar langit menjulang tinggi, menjadi saksi bisu aktivitas kota.', imgId: 30, caption: 'Pemandangan kota dari ketinggian.' },
+                        'ekspedisi': { desc: 'Perlengkapan esensial untuk petualangan berikutnya: kamera vintage, peta tua, dan kompas. Setiap perjalanan adalah cerita baru yang siap ditulis.', imgId: 40, caption: 'Siap untuk petualangan baru.' },
+                    };
+
+                    const currentItem = itemData[params.id];
+
+                    setTimeout(async () => { // Simulasi delay network
+                        if (currentItem) {
+                            detailTextContentP.textContent = currentItem.desc;
+                            const imageUrl = `https://picsum.photos/id/${currentItem.imgId}/1200/600`;
+
+                            try {
+                                // Preload gambar
+                                await new Promise((resolve, reject) => {
+                                    const img = new Image();
+                                    img.onload = () => {
+                                        detailImageElement.src = imageUrl;
+                                        detailImageElement.alt = `Gambar ilustrasi untuk ${formattedItemName}`;
+                                        resolve();
+                                    };
+                                    img.onerror = reject;
+                                    img.src = imageUrl;
+                                });
+
+                                detailImageCaption.textContent = currentItem.caption;
+                                toggleHiddenAttribute(detailImageContainer, false);
+
+                            } catch (error) {
+                                console.error("Gagal memuat gambar detail:", error);
+                                detailTextContentP.innerHTML += `<br><br><em style="color:var(--error-color);">Gagal memuat gambar ilustrasi.</em>`;
+                                showToast('Gagal memuat gambar detail.', 'error');
+                            }
+
+                        } else {
+                            detailTextContentP.textContent = `Detail untuk item "${formattedItemName}" tidak ditemukan. Mungkin item ini sudah tidak tersedia atau URL salah.`;
+                            showToast(`Konten untuk ${formattedItemName} tidak ditemukan.`, 'warning');
+                        }
+                    }, 500); // Delay 0.5 detik
+                }
+            }
+
+            function initPrivasiPage() {
+                // console.log('Halaman Kebijakan Privasi diinisialisasi.');
+                if (DOMElements.privacyLastUpdated) {
+                    DOMElements.privacyLastUpdated.textContent = formatDate(); // Tanggal hari ini
+                }
+            }
+
+            function initProfilPage() {
+                // console.log('Halaman Profil Pengguna diinisialisasi.');
+                // Logika untuk memuat data profil pengguna jika ada (misalnya dari localStorage atau API)
+                const profileName = document.querySelector('.profile-name');
+                const profileEmail = document.querySelector('.profile-email');
+                if (profileName) profileName.textContent = "Pengguna Demo"; // Contoh
+                if (profileEmail) profileEmail.textContent = "demo@aplikasicanggih.com"; // Contoh
+            }
+
+            function initPengaturanPage() {
+                // console.log('Halaman Pengaturan diinisialisasi.');
+                if (DOMElements.currentThemeDisplaySettings) {
+                    DOMElements.currentThemeDisplaySettings.textContent = appState.theme === 'dark' ? 'Gelap' : 'Terang';
+                }
+                const settingsForm = document.getElementById('settings-form');
+                settingsForm?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Logika penyimpanan pengaturan
+                    showToast('Pengaturan telah disimpan! (Demo)', 'success');
+                });
+            }
+
+
+            // --------------------------------------------------------------------------
+            // 8. EVENT LISTENERS UTAMA & GLOBAL
+            // --------------------------------------------------------------------------
+            function setupGlobalEventListeners() {
+                window.addEventListener('hashchange', handleHashChange);
+                window.addEventListener('load', () => {
+                    handleHashChange(); // Panggil juga saat halaman pertama kali dimuat
+                    // Hapus loader utama dari body setelah pemuatan awal selesai
+                    const bodyLoader = document.querySelector('.app-initial-body-loader');
+                    if (bodyLoader) bodyLoader.remove();
+                });
+
+                // Debounce scroll listener untuk performa
+                window.addEventListener('scroll', debounce(() => {
+                    handleScrollToTopButton();
+                    updateHeaderLayout(); // Update tinggi header jika ada perubahan (misal: saat scroll dan header mengecil)
+                }, 100));
+
+                window.addEventListener('resize', debounce(updateHeaderLayout, 150));
+
+                // Event delegation untuk link internal SPA di body (menangani klik pada link #route)
+                DOMElements.appBody.addEventListener('click', (e) => {
+                    const link = e.target.closest('a');
+                    if (link && (link.getAttribute('href') || '').startsWith('#')) {
+                        const href = link.getAttribute('href');
+                        if (href.length > 1 && href !== window.location.hash) { // Bukan hanya '#' dan bukan hash saat ini
+                            // Biarkan default behavior (hashchange akan terpicu)
+                            // Jika offcanvas terbuka, tutup dulu
+                            if (appState.offcanvasOpen && link.closest('#offcanvas-panel')) {
+                                toggleOffcanvas(false);
+                            }
+                        } else if (href === '#') {
+                            e.preventDefault(); // Mencegah scroll ke atas jika link hanya '#'
+                        }
+                    }
+                });
+
+                // Tombol-tombol UI global
+                DOMElements.alertConfirmBtn?.addEventListener('click', () => closeAlert(true));
+                DOMElements.alertCancelBtn?.addEventListener('click', () => closeAlert(false));
+                DOMElements.alertCloseBtn?.addEventListener('click', () => closeAlert(false));
+                DOMElements.alertOverlay?.addEventListener('click', (e) => {
+                    if (e.target === DOMElements.alertOverlay) closeAlert(false); // Klik di luar modal
+                });
+
+                DOMElements.offcanvasToggleBtn?.addEventListener('click', () => toggleOffcanvas());
+                DOMElements.offcanvasCloseBtn?.addEventListener('click', () => toggleOffcanvas(false));
+                DOMElements.offcanvasOverlay?.addEventListener('click', () => toggleOffcanvas(false));
+
+                DOMElements.themeToggleBtn?.addEventListener('click', () => {
+                    applyTheme(appState.theme === 'light' ? 'dark' : 'light');
+                });
+
+                DOMElements.scrollToTopBtn?.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                // Tombol login/logout dummy
+                document.getElementById('app-login-btn')?.addEventListener('click', () => {
+                    showAlert('Fitur Dalam Pengembangan', 'Fitur masuk/login akan segera hadir. Terima kasih atas kesabaran Anda.', 'info');
+                });
+                document.getElementById('app-logout-btn')?.addEventListener('click', async () => {
+                    if (appState.offcanvasOpen) toggleOffcanvas(false); // Tutup offcanvas
+                    const confirmed = await showAlert('Konfirmasi Keluar', 'Apakah Anda yakin ingin keluar dari sesi ini?', 'confirm');
+                    if (confirmed) {
+                        showToast('Anda telah berhasil keluar. (Ini hanya demo)', 'success');
+                        // Logika logout sebenarnya (hapus sesi, redirect ke #home, dll.)
+                        window.location.hash = '#home';
+                    }
+                });
+
+                // Menangani tombol Escape untuk menutup modal atau offcanvas
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (appState.modalOpen) {
+                            closeAlert(false);
+                        } else if (appState.offcanvasOpen) {
+                            toggleOffcanvas(false);
+                        }
+                    }
+                });
+            }
+
+            // --------------------------------------------------------------------------
+            // 9. FUNGSI INISIALISASI APLIKASI
+            // --------------------------------------------------------------------------
+            function initializeApp() {
+                // console.log('Aplikasi SPA Canggih sedang diinisialisasi...');
+
+                cacheDOMElements(); // Penting: Cache elemen setelah DOM siap
+                applyTheme(appState.theme); // Terapkan tema yang tersimpan atau default
+                updateCopyrightYear();
+                updateHeaderLayout(); // Hitung tinggi header awal dan atur variabel CSS
+                setupGlobalEventListeners(); // Siapkan semua event listener global
+
+                // Panggil handleHashChange secara implisit melalui event listener 'load'
+                // yang sudah disetup di setupGlobalEventListeners.
+
+                // Tampilkan flash message selamat datang saat pertama kali
+                setTimeout(() => {
+                    showFlashMessage('Selamat datang di Aplikasi SPA Canggih! Nikmati pengalaman baru.', 'info', 5000);
+                }, 1000); // Tunda sedikit agar tidak terlalu cepat muncul
+
+                // console.log('Aplikasi berhasil diinisialisasi dan siap digunakan.');
+            }
+
+            // --------------------------------------------------------------------------
+            // 10. EKSEKUSI INISIALISASI APLIKASI
+            // --------------------------------------------------------------------------
+            // Pastikan DOM sudah sepenuhnya dimuat sebelum menjalankan inisialisasi
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeApp);
+            } else {
+                initializeApp(); // Langsung jalankan jika DOM sudah siap
+            }
+
+        })(); // Akhir dari scope utama
+
+    </script>
 </body>
 
 </html>
