@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Modern photo gallery showcasing premium apartment rentals" />
+    <meta name="theme-color" content="#f8fafc" />
+    <title>Apartment Gallery | Premium Rentals</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+
+    <style>
+        :root {
+            --color-primary: #2d3436;
+            --color-secondary: #0984e3;
+            --color-background: #f5f6fa;
+            --color-surface: #ffffff;
+            --color-text: #2d3436;
+            --color-text-light: #636e72;
+            --color-overlay: rgba(0, 0, 0, 0.8);
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 15px rgba(0, 0, 0, 0.15);
+
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 2rem;
+
+            --border-radius: 0.5rem;
+            --transition: all 0.3s ease;
+
+            --font-family: 'Poppins', sans-serif;
+            --container-max-width: 1200px;
+            --font-size-base: 1rem;
+            --line-height-base: 1.5;
+        }
+
+        /* Reset & Base Styles */
+        *,
+        *::before,
+        *::after,
+        * a {
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-base);
+        }
+
+        /* Navigasi */
+        .navbar {
+            background-color: var(--color-surface);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 1.25rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--color-text);
+            margin: 4px 0;
+            transition: var(--transition);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: var(--spacing-md);
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: color 0.28s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-secondary);
+        }
+
+        /* Kontainer Aplikasi */
+        .app-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: var(--spacing-md);
+        }
+
+        /* CARD */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-normal);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:focus-within,
+        .card:focus-visible {
+            outline: 2px solid #005fcc;
+            outline-offset: 4px;
+        }
+
+        /* Hover & focus feedback */
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Gallery Card */
+        .gallery-card {
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) auto;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        /* Header Galeri */
+        .gallery-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .gallery-title {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .gallery-description {
+            color: var(--color-text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid Galeri */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .gallery-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--spacing-md);
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-overlay);
+            z-index: 1000;
+            padding: var(--spacing-lg);
+            box-sizing: border-box;
+            transition: var(--transition);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -30px;
+            right: -12.8px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: var(--spacing-sm);
+        }
+
+        /* Responsif */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                background: var(--color-surface);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                padding: var(--spacing-md);
+                box-shadow: var(--shadow-md);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .gallery-card {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                padding: var(--spacing-sm);
+                margin: var(--spacing-sm);
+            }
+
+            .gallery-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-card {
+                max-width: 100vw;
+                height: auto;
+                display: block;
+                padding: var(--spacing-sm);
+                gap: var(--spacing-sm);
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <header class="navbar" role="banner">
+        <div class="app-container">
+            <nav class="d-flex justify-content-between align-items-center" aria-label="Main navigation">
+                <a href="/" class="nav-brand text-decoration-none" aria-label="Home">Green Valley</a>
+                <button class="nav-toggle d-md-none" aria-controls="nav-menu" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul class="nav-menu list-unstyled mb-0 d-md-flex" id="nav-menu" role="menubar">
+                    <li role="none"><a class="nav-link" href="/" role="menuitem" aria-current="page">Home</a></li>
+                    <li role="none"><a class="nav-link" href="index_copy.html" target="_blank" rel="noopener noreferrer"
+                            role="menuitem">Gallery</a></li>
+                    <li role="none"><a class="nav-link" href="index_copy.html" target="_blank" rel="noopener noreferrer"
+                            role="menuitem">About</a></li>
+                    <li role="none"><a class="nav-link" href="index_copy.html" target="_blank" rel="noopener noreferrer"
+                            role="menuitem">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header> -->
+
+    <main class="container" style="margin-top:2rem;">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Demo User Interface Website</h1>
+            <!-- <p class="gallery-description">
+                Jelajahi koleksi karya User Interface buatan kami.<br>untuk Website terbaik milik anda
+            </p> -->
+        </div>
+
+        <!-- <div class="gallery-grid">
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5"
+                    class="gallery-img" alt="Abstract Art Piece - Vibrant colors flowing across canvas"
+                    loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Abstract Harmony</h3>
+                    <p>A mesmerizing blend of colors and emotions</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5"
+                    class="gallery-img" alt="Modern Sculpture - Geometric shapes in metal" loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Geometric Dreams</h3>
+                    <p>Contemporary sculpture exploring form and space</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5"
+                    class="gallery-img" alt="Digital Art Installation - Interactive light display" loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Digital Horizons</h3>
+                    <p>Where technology meets artistic expression</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1515405295579-ba7b45403062"
+                    class="gallery-img" alt="Minimalist Photography - Urban architecture" loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Urban Minimalism</h3>
+                    <p>Finding beauty in simplicity</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1515405295579-ba7b45403062"
+                    class="gallery-img" alt="Nature Photography - Dramatic landscape" loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Natural Wonder</h3>
+                    <p>Capturing Earth's breathtaking moments</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img decoding="async" src="https://images.unsplash.com/photo-1501472312651-726afe119ff1"
+                    class="gallery-img" alt="Portrait Photography - Artistic human expression" loading="eager" />
+                <div class="gallery-caption">
+                    <h3>Human Canvas</h3>
+                    <p>Exploring identity through portraiture</p>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Lightbox -->
+        <!-- <div class="lightbox" id="lightbox">
+            <div class="lightbox-content">
+                <button class="lightbox-close" aria-label="Close lightbox">×</button>
+                <img decoding="async" src="" class="lightbox-img" alt="" />
+            </div>
+        </div> -->
+    </main>
+
+    <!-- Additional Dashboard Section -->
+    <div class="d-flex justify-content-center align-items-center flex-wrap" style="margin-top:2rem;">
+        <!-- Repeat this block for each dashboard item -->
+        <main class="app-container">
+            <h1>Dashboard Admin / Akses Kontrol</h1>
+            <div class="card gallery-card">
+                <figure>
+                    <img decoding="async" loading="eager" src="./img/thumbnail (12).png" alt="Deskripsi Gambar"
+                        style="width:100%; height:auto;" />
+                    <figcaption style="margin-top: 18px;  text-align: center;">Kumpulan
+                        Dashboard Admin / Akses
+                        Kontrol.
+                        <strong><i>Demo</i></strong>
+                    </figcaption>
+                </figure>
+                <details>
+                    <summary>Detail Informasi <code style="font-size: var(--spacing-lg);">&blacktriangledown;</code>
+                    </summary>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><b>Nama Dashboard Admin / Akses Kontrol</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- BARIS UNTUK FILE-FILE BUNGA -->
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Acacia.html"
+                                        class="list__link" id="acacia">Acacia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Angelica.html"
+                                        class="list__link" id="angelica">Angelica
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/Anggrek_Bulan.html" class="list__link"
+                                        id="anggrek_bulan">Anggrek Bulan
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/Anggrek_Hitam.html" class="list__link"
+                                        id="anggrek_hitam">Anggrek Hitam
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/Anggrek_Larat.html" class="list__link"
+                                        id="anggrek_larat">Anggrek Larat
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/Anggrek_Macan.html" class="list__link"
+                                        id="anggrek_macan">Anggrek Macan
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Anggrek_Tebu.html"
+                                        class="list__link" id="anggrek_tebu">Anggrek Tebu
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Anggrek.html"
+                                        class="list__link" id="anggrek">Anggrek
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Aquilegia.html"
+                                        class="list__link" id="aquilegia">Aquilegia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Aster.html"
+                                        class="list__link" id="aster">Aster
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/B_Kamboja.html"
+                                        class="list__link" id="b_kamboja">B Kamboja
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/B_Matahari.html"
+                                        class="list__link" id="b_matahari">B Matahari
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Bluebell.html"
+                                        class="list__link" id="bluebell">Bluebell
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Boronia.html"
+                                        class="list__link" id="boronia">Boronia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/Bougainvillea.html" class="list__link"
+                                        id="bougainvillea">Bougainvillea
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Cattleya.html"
+                                        class="list__link" id="cattleya">Cattleya
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Cendana.html"
+                                        class="list__link" id="cendana">Cendana
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Cestrum.html"
+                                        class="list__link" id="cestrum">Cestrum
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Clematis.html"
+                                        class="list__link" id="clematis">Clematis
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Convallaria.html"
+                                        class="list__link" id="convallaria">Convallaria
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Crocus.html"
+                                        class="list__link" id="crocus">Crocus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Dahlia.html"
+                                        class="list__link" id="dahlia">Dahlia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Dendrobium.html"
+                                        class="list__link" id="dendrobium">Dendrobium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/_Doc_Heliotropium copy.html" class="list__link"
+                                        id="doc_heliotropium">Doc Heliotropium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer"
+                                        href="../1.dashboard/_doc_Heliotropium.html" class="list__link"
+                                        id="doc_heliotropium">doc Heliotropium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Ficus.html"
+                                        class="list__link" id="ficus">Ficus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Freesia.html"
+                                        class="list__link" id="freesia">Freesia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Hibiscus.html"
+                                        class="list__link" id="hibiscus">Hibiscus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Jasminum.html"
+                                        class="list__link" id="jasminum">Jasminum
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/_Lavandula.html"
+                                        class="list__link" id="lavandula">Lavandula
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Lavender.html"
+                                        class="list__link" id="lavender">Lavender
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/_Lilac.html"
+                                        class="list__link" id="lilac">Lilac
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Lilium.html"
+                                        class="list__link" id="lilium">Lilium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/_Magnolia.html"
+                                        class="list__link" id="magnolia">Magnolia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Melati_Putih.html"
+                                        class="list__link" id="melati_putih">Melati Putih
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Mimosa.html"
+                                        class="list__link" id="mimosa">Mimosa
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Mirabilis.html"
+                                        class="list__link" id="mirabilis">Mirabilis
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Nicotiana.html"
+                                        class="list__link" id="nicotiana">Nicotiana
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Orchis.html"
+                                        class="list__link" id="orchis">Orchis
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Origanum.html"
+                                        class="list__link" id="origanum">Origanum
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Padma.html"
+                                        class="list__link" id="padma">Padma
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Paeonia.html"
+                                        class="list__link" id="paeonia">Paeonia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Platanus.html"
+                                        class="list__link" id="platanus">Platanus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Puspa_Bangsa.html"
+                                        class="list__link" id="puspa_bangsa">Puspa Bangsa
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/_Raflesia.html"
+                                        class="list__link" id="raflesia">Raflesia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Rosa.html"
+                                        class="list__link" id="rosa">Rosa
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Stephanotis.html"
+                                        class="list__link" id="stephanotis">Stephanotis
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Teratai.html"
+                                        class="list__link" id="teratai">Teratai
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Tulip.html"
+                                        class="list__link" id="tulip">Tulip
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/Vanda.html"
+                                        class="list__link" id="vanda">Vanda
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" rel="noopener noreferrer" href="../1.dashboard/_Viola.html"
+                                        class="list__link" id="viola">Viola
+                                    </a></td>
+                            </tr>
+                            <!-- AKHIR BARIS UNTUK FILE-FILE BUNGA -->
+                        </tbody>
+                    </table>
+                </details>
+            </div>
+            <h1>Landing Page / Halaman Awal</h1>
+            <div class="card gallery-card">
+                <figure>
+                    <img decoding="async" loading="eager" src="./img/thumbnail (6).png" alt="Deskripsi Gambar"
+                        style="width:100%; height:auto;" />
+                    <figcaption style="margin-top: 18px;  text-align: center;">Gambar Landing Page / Halaman Awal.
+                        <strong><i>Demo</i></strong>
+                    </figcaption>
+                </figure>
+                <details>
+                    <summary>Detail Informasi <code style=" font-size: var(--spacing-lg);">&blacktriangledown;</code>
+                    </summary>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><b>Landing Page / Halaman Awal</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="../2.landing/_-_Columbine.html" class="list__link" target="_blank"
+                                        id="link-columbine" rel="noopener noreferrer">
+                                        Columbine
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Foxglove.html" class="list__link" target="_blank"
+                                        id="link-foxglove" rel="noopener noreferrer">
+                                        Foxglove
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Adenium.html" class="list__link" target="_blank"
+                                        id="link-adenium" rel="noopener noreferrer">
+                                        Adenium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Cempaka.html" class="list__link" target="_blank"
+                                        id="link-cempaka" rel="noopener noreferrer">
+                                        Cempaka
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Hortensia.html" class="list__link" target="_blank"
+                                        id="link-hortensia" rel="noopener noreferrer">
+                                        Hortensia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Lobelia.html" class="list__link" target="_blank"
+                                        id="link-lobelia" rel="noopener noreferrer">
+                                        Lobelia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Seroja.html" class="list__link" target="_blank"
+                                        id="link-seroja" rel="noopener noreferrer">
+                                        Seroja
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_-_Dadap.html" class="list__link" target="_blank"
+                                        id="link-dadap" rel="noopener noreferrer">
+                                        Dadap
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Mawar.html" class="list__link" target="_blank"
+                                        id="link-mawar" rel="noopener noreferrer">
+                                        Mawar
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Aglaonema.html" class="list__link" target="_blank"
+                                        id="link-aglaonema" rel="noopener noreferrer">
+                                        Aglaonema
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Cosmos.html" class="list__link" target="_blank"
+                                        id="link-cosmos" rel="noopener noreferrer">
+                                        Cosmos
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Kaktus.html" class="list__link" target="_blank"
+                                        id="link-kaktus" rel="noopener noreferrer">
+                                        Kaktus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Lotus.html" class="list__link" target="_blank" id="link-lotus"
+                                        rel="noopener noreferrer">
+                                        Lotus
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Sweetpea.html" class="list__link" target="_blank"
+                                        id="link-sweetpea" rel="noopener noreferrer">
+                                        Sweetpea
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_-_Windflower.html" class="list__link" target="_blank"
+                                        id="link-windflower" rel="noopener noreferrer">
+                                        Windflower
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_news_24.html" class="list__link" target="_blank"
+                                        id="link-news_24" rel="noopener noreferrer">
+                                        news_24
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Alamanda.html" class="list__link" target="_blank"
+                                        id="link-alamanda" rel="noopener noreferrer">
+                                        Alamanda
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Daffodil.html" class="list__link" target="_blank"
+                                        id="link-daffodil" rel="noopener noreferrer">
+                                        Daffodil
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Kamboja.html" class="list__link" target="_blank"
+                                        id="link-kamboja" rel="noopener noreferrer">
+                                        Kamboja
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Marigold.html" class="list__link" target="_blank"
+                                        id="link-marigold" rel="noopener noreferrer">
+                                        Marigold
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Trillium.html" class="list__link" target="_blank"
+                                        id="link-trillium" rel="noopener noreferrer">
+                                        Trillium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_-_Yarrow.html" class="list__link" target="_blank"
+                                        id="link-yarrow" rel="noopener noreferrer">
+                                        Yarrow
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Primrose.html" class="list__link" target="_blank"
+                                        id="link-primrose" rel="noopener noreferrer">
+                                        Primrose
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Anturium.html" class="list__link" target="_blank"
+                                        id="link-anturium" rel="noopener noreferrer">
+                                        Anturium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Edelweis.html" class="list__link" target="_blank"
+                                        id="link-edelweis" rel="noopener noreferrer">
+                                        Edelweis
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Krisan.html" class="list__link" target="_blank"
+                                        id="link-krisan" rel="noopener noreferrer">
+                                        Krisan
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Melati.html" class="list__link" target="_blank"
+                                        id="link-melati" rel="noopener noreferrer">
+                                        Melati
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/tuberosa.html" class="list__link" target="_blank"
+                                        id="link-tuberosa" rel="noopener noreferrer">
+                                        tuberosa
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Anggrek.html" class="list__link" target="_blank"
+                                        id="link-anggrek" rel="noopener noreferrer">
+                                        Anggrek
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Snowdrop.html" class="list__link" target="_blank"
+                                        id="link-snowdrop" rel="noopener noreferrer">
+                                        Snowdrop
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Anyelir.html" class="list__link" target="_blank"
+                                        id="link-anyelir" rel="noopener noreferrer">
+                                        Anyelir
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Flamboyan.html" class="list__link" target="_blank"
+                                        id="link-flamboyan" rel="noopener noreferrer">
+                                        Flamboyan
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Krokot.html" class="list__link" target="_blank"
+                                        id="link-krokot" rel="noopener noreferrer">
+                                        Krokot
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Peony.html" class="list__link" target="_blank" id="link-peony"
+                                        rel="noopener noreferrer">
+                                        Peony
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Tuberose.html" class="list__link" target="_blank"
+                                        id="link-tuberose" rel="noopener noreferrer">
+                                        Tuberose
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_blm_res_Kenanga.html" class="list__link" target="_blank"
+                                        id="link-kenanga" rel="noopener noreferrer">
+                                        Kenanga
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Tulip.html" class="list__link" target="_blank"
+                                        id="link-tulip" rel="noopener noreferrer">
+                                        Tulip
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Asoka.html" class="list__link" target="_blank" id="link-asoka"
+                                        rel="noopener noreferrer">
+                                        Asoka
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Geranium.html" class="list__link" target="_blank"
+                                        id="link-geranium" rel="noopener noreferrer">
+                                        Geranium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/langinds.html" class="list__link" target="_blank"
+                                        id="link-langinds" rel="noopener noreferrer">
+                                        langinds
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Petunia.html" class="list__link" target="_blank"
+                                        id="link-petunia" rel="noopener noreferrer">
+                                        Petunia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Wisteria.html" class="list__link" target="_blank"
+                                        id="link-wisteria" rel="noopener noreferrer">
+                                        Wisteria
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Buttercup.html" class="list__link" target="_blank"
+                                        id="link-buttercup" rel="noopener noreferrer">
+                                        Buttercup
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_Violet.html" class="list__link" target="_blank"
+                                        id="link-violet" rel="noopener noreferrer">
+                                        Violet
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Bakung.html" class="list__link" target="_blank"
+                                        id="link-bakung" rel="noopener noreferrer">
+                                        Bakung
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Gladiol.html" class="list__link" target="_blank"
+                                        id="link-gladiol" rel="noopener noreferrer">
+                                        Gladiol
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Lavender.html" class="list__link" target="_blank"
+                                        id="link-lavender" rel="noopener noreferrer">
+                                        Lavender
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Raflesia.html" class="list__link" target="_blank"
+                                        id="link-raflesia" rel="noopener noreferrer">
+                                        Raflesia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Zinnia.html" class="list__link" target="_blank"
+                                        id="link-zinnia" rel="noopener noreferrer">
+                                        Zinnia
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/_first copy 13.html" class="list__link" target="_blank"
+                                        id="link-first-copy-13" rel="noopener noreferrer">
+                                        first copy 13
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Aconite.html" class="list__link" target="_blank"
+                                        id="link-aconite" rel="noopener noreferrer">
+                                        Aconite
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Caladium.html" class="list__link" target="_blank"
+                                        id="link-caladium" rel="noopener noreferrer">
+                                        Caladium
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Goldenrod.html" class="list__link" target="_blank"
+                                        id="link-goldenrod" rel="noopener noreferrer">
+                                        Goldenrod
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Lily.html" class="list__link" target="_blank" id="link-lily"
+                                        rel="noopener noreferrer">
+                                        Lily
+                                    </a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../2.landing/Sakura.html" class="list__link" target="_blank"
+                                        id="link-sakura" rel="noopener noreferrer">
+                                        Sakura
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </details>
+            </div>
+            <h1>404 Page / Halaman Error </h1>
+            <div class="card gallery-card">
+                <figure>
+                    <img decoding="async" loading="eager" src="./img/thumbnail (2).png" alt="Deskripsi Gambar"
+                        style="width:100%; height:auto;" />
+                    <figcaption style="margin-top: 18px;  text-align: center;">tentang gambar 404 Page / Halaman Error.
+                    </figcaption>
+                </figure>
+                <details>
+                    <summary>Detail Informasi <code style="font-size: var(--spacing-lg);">&blacktriangledown;</code>
+                    </summary>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th><b>Nama 404 Page / Halaman Error </b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="../404/Ageratum.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-ageratum" class="list__link">Ageratum</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Dendrobium.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-dendrobium" class="list__link">Dendrobium</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Kasturi.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-kasturi" class="list__link">Kasturi</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/mimba.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-mimba" class="list__link">Mimba</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Petunia.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-petunia" class="list__link">Petunia</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Sambiloto.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-sambiloto" class="list__link">Sambiloto</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/telang.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-telang" class="list__link">Telang</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Amaranthus.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-amaranthus" class="list__link">Amaranthus</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Gerbera.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-gerbera" class="list__link">Gerbera</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Kecombrang.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-kecombrang" class="list__link">Kecombrang</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Nemesia.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-nemesia" class="list__link">Nemesia</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Poppy.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-poppy" class="list__link">Poppy</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Seruni.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-seruni" class="list__link">Seruni</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Tembelekan.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-tembelekan" class="list__link">Tembelekan</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Bugang.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-bugang" class="list__link">Bugang</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Gincu.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-gincu" class="list__link">Gincu</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Korejat.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-korejat" class="list__link">Korejat</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Oleander.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-oleander" class="list__link">Oleander</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Rosela.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-rosela" class="list__link">Rosela</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Soka.html" target="_blank" rel="noopener noreferrer" id="link-soka"
+                                        class="list__link">Soka</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Zinnia.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-zinnia" class="list__link">Zinnia</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Canna.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-canna" class="list__link">Canna</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Hoya.html" target="_blank" rel="noopener noreferrer" id="link-hoya"
+                                        class="list__link">Hoya</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Melur.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-melur" class="list__link">Melur</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/pakis.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-pakis" class="list__link">Pakis</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Salvia.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-salvia" class="list__link">Salvia</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="../404/Tanjung.html" target="_blank" rel="noopener noreferrer"
+                                        id="link-tanjung" class="list__link">Tanjung</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </details>
+            </div>
+        </main>
+        <!-- Repeat for other dashboard items as needed -->
+        <!-- For brevity, only one block is shown, duplicate as needed -->
+    </div>
+
+    <!-- Rekomendasi UI -->
+    <!-- <main class="app-container" style="margin-top:2rem;">
+        <div class="card gallery-card">
+            <h1 class="h3 mb-4">Rekomendasi UI (<b>User Interface</b>)</h1>
+            <p class="lead text-muted mb-4">Temukan koleksi <b>UI</b> yang tersedia untuk digunakan.</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="gallery-img-wrapper">
+                        <a href="index_copy.html" class="d-block" target="_blank" rel="noopener noreferrer"
+                            aria-label="View Apartment 1 details">
+                            <img decoding="async" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb"
+                                class="gallery-img" alt="Luxurious interior of Apartment 1" loading="eager" width="400"
+                                height="240" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="gallery-img-wrapper">
+                        <a href="index_copy.html" class="d-block" target="_blank" rel="noopener noreferrer"
+                            aria-label="View Apartment 2 details">
+                            <img decoding="async" src="https://images.unsplash.com/photo-1464983953574-0892a716854b"
+                                class="gallery-img" alt="Modern design of Apartment 2" loading="eager" width="400"
+                                height="240" />
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="gallery-img-wrapper">
+                        <a href="index_copy.html" class="d-block" target="_blank" rel="noopener noreferrer"
+                            aria-label="View Apartment 3 details">
+                            <img decoding="async" src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd"
+                                class="gallery-img" alt="Spacious living area of Apartment 3" loading="eager"
+                                width="400" height="240" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main> -->
+
+    <script>
+        class GalleryManager {
+            constructor() {
+                this.lightbox = document.getElementById('lightbox');
+                this.lightboxImg = this.lightbox.querySelector('.lightbox-img');
+                this.galleryItems = document.querySelectorAll('.gallery-item');
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.galleryItems.forEach(item => {
+                    item.addEventListener('click', () => this.openLightbox(item));
+                });
+                this.lightbox.addEventListener('click', (e) => {
+                    if (e.target === this.lightbox || e.target.classList.contains('lightbox-close')) {
+                        this.closeLightbox();
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.closeLightbox();
+                });
+            }
+
+            openLightbox(item) {
+                const img = item.querySelector('.gallery-img');
+                this.lightboxImg.src = img.src;
+                this.lightboxImg.alt = img.alt;
+                this.lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            closeLightbox() {
+                this.lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new GalleryManager();
+
+            // Navigation toggle
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.getElementById('nav-menu');
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navToggle.setAttribute('aria-expanded', String(!expanded));
+                    navMenu.classList.toggle('active');
+                });
+            }
+
+            // Close menu on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.nav-toggle') && !e.target.closest('#nav-menu')) {
+                    if (navToggle && navMenu) {
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navMenu.classList.remove('active');
+                    }
+                }
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
