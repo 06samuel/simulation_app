@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Valley - Temukan Apartemen Sempurna Anda</title>
+    <meta name="description"
+        content="Telusuri ribuan daftar sewa terverifikasi dengan fasilitas lengkap, tur virtual, dan ulasan tepercaya." />
+    <meta name="author" content="Green Valley" />
+    <style>
+        /* Gaya Dasar & Variabel */
+        :root {
+            --primary: #4361EE;
+            --primary-dark: #3A56D4;
+            --primary-light: #829DF5;
+            --secondary: #F0F4FE;
+            --foreground: #333333;
+            --background: #FFFFFF;
+            --muted: #F1F5F9;
+            --muted-foreground: #64748B;
+            --border: #E2E8F0;
+            --input: #E2E8F0;
+            --radius: 0.5rem;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Reset & Gaya Dasar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--foreground);
+            background-color: var(--background);
+            line-height: 1.5;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            /* Transisi halus untuk perubahan body */
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--primary);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:active {
+            transform: scale(0.98);
+            /* Efek tekan tombol */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Utilitas */
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        /* Utilitas untuk menyembunyikan elemen */
+
+        /* Gaya Tombol */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--foreground);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--muted);
+        }
+
+        .btn-outline.active {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            border: none;
+        }
+
+        .btn-ghost:hover {
+            background-color: var(--muted);
+        }
+
+        .btn-lg {
+            padding: 0.75rem 2rem;
+            font-size: 1.05rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-block {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            /* Z-index lebih tinggi untuk navbar */
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 0.25rem;
+        }
+
+        .navbar-search {
+            display: flex;
+            flex: 1;
+            max-width: 36rem;
+            margin: 0 2.5rem;
+            border-radius: 9999px;
+            background-color: var(--secondary);
+            padding: 0.5rem 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.875rem;
+        }
+
+        .search-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            height: 2.25rem;
+            width: 2.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+        }
+
+        .search-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .map-view-btn {
+            display: none;
+        }
+
+        /* Default disembunyikan, diatur oleh JS atau media query */
+        .user-btn {
+            height: 2.5rem;
+            width: 2.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, var(--secondary), var(--background));
+            padding: 4rem 1rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 48rem;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--muted-foreground);
+            margin-bottom: 2rem;
+        }
+
+        .search-card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+            max-width: 64rem;
+            margin: 0 auto;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .search-label {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        .search-value {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .search-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        /* Tabs Section */
+        .tabs-section {
+            padding: 2rem 1rem;
+        }
+
+        .tabs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: inline-flex;
+            height: 2.5rem;
+            background-color: var(--muted);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.75rem;
+            height: 100%;
+            border: none;
+            background-color: transparent;
+            border-radius: calc(var(--radius) - 0.25rem);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            transition: all 0.2s;
+            gap: 0.5rem;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: var(--foreground);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .results-count {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Listings Grid Layout */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            display: none;
+            /* Default tersembunyi di mobile */
+        }
+
+        .filter-container {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            position: sticky;
+            top: calc(var(--navbar-height, 65px) + 1rem);
+            /* Sesuaikan dengan tinggi navbar */
+            max-height: calc(100vh - var(--navbar-height, 65px) - 2rem);
+            overflow-y: auto;
+        }
+
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group-title {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .range-slider-container {
+            position: relative;
+            height: 0.25rem;
+            background-color: var(--muted);
+            border-radius: var(--radius);
+            margin: 1.5rem 0.5rem;
+        }
+
+        .slider-track {
+            position: absolute;
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: var(--radius);
+            left: 0%;
+            right: 0%;
+            /* Akan diupdate oleh JS */
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 0.25rem;
+            background: transparent;
+            outline: none;
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            margin-top: -0.375rem;
+            /* (thumb height - track height) / 2 */
+            box-shadow: var(--shadow);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        .range-inputs {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .input-group {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .range-input {
+            width: 100%;
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .checkbox-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.25rem 0;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: var(--primary);
+        }
+
+        /* Styling checkbox modern */
+        .checkbox-text {
+            font-size: 0.875rem;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Property List */
+        .property-list-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .property-list-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: white;
+            min-width: 200px;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .property-image-container {
+            position: relative;
+            height: 13rem;
+            background-color: var(--muted);
+        }
+
+        /* Placeholder bg */
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-tags {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .property-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            /* Lebih kontras */
+            backdrop-filter: blur(4px);
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .property-content {
+            padding: 1rem;
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+        }
+
+        .property-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-right: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .property-rating .fa-star {
+            color: #FFCA28;
+            margin-right: 0.25rem;
+        }
+
+        .rating-count {
+            color: var(--muted-foreground);
+            margin-left: 0.25rem;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .property-amenities {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .price-period {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--muted-foreground);
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+        }
+
+        /* Map View */
+        .map-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .map-view {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .map-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .map-title {
+            font-weight: 600;
+        }
+
+        .map-area {
+            height: 450px;
+            background-color: #f0f7ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .map-area::before {
+            content: "📍";
+            font-size: 3rem;
+        }
+
+        .map-area::after {
+            content: "Peta Interaktif (Placeholder)";
+            position: absolute;
+            top: 60%;
+            font-weight: 500;
+        }
+
+        .map-footer {
+            padding: 0.75rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--muted);
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 9999px;
+            border: none;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            color: var(--primary);
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--muted-foreground);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 0.75rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: var(--radius) 0 0 var(--radius);
+            outline-color: var(--primary);
+        }
+
+        .newsletter-form .btn {
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-legal a {
+            color: var(--muted-foreground);
+        }
+
+        .footer-legal a:hover {
+            color: var(--primary);
+        }
+
+        /* Gaya Halaman Detail Properti (diterapkan saat body memiliki kelas .property-detail-page-active) */
+        body.property-detail-page-active #main-content {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .property-detail-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .property-detail-back-btn {
+            margin-bottom: 1.5rem;
+        }
+
+        .property-detail {
+            background-color: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+        }
+
+        .property-detail-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .property-detail-header {
+                flex-direction: row;
+            }
+        }
+
+        .property-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .property-detail-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-detail-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        .property-detail-gallery {
+            margin-bottom: 2rem;
+        }
+
+        .property-detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .property-detail-thumbnails {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 75px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary);
+        }
+
+        .thumbnail.placeholder {
+            background-color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .placeholder-content {
+            font-size: 2rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-detail-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .property-detail-layout {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .property-detail-main {}
+
+        .property-detail-sidebar {}
+
+        .property-detail-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background-color: var(--secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 150px;
+        }
+
+        .feature i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .feature-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .feature-label {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .property-detail-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .property-detail-description p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--muted-foreground);
+        }
+
+        .property-detail-amenities {
+            margin: 2rem 0;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--secondary);
+            border-radius: var(--radius);
+        }
+
+        .amenity-item i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .detail-map-container {
+            height: 300px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .detail-map-placeholder {
+            height: 100%;
+            background-color: #e9f5fe;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-pin {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .reviews-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .reviews-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .rating-stars i {
+            color: #FFCA28;
+        }
+
+        .reviews-count {
+            color: var(--muted-foreground);
+        }
+
+        .review-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .review-item {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .reviewer-name {
+            font-weight: 500;
+        }
+
+        .review-date {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .review-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .review-rating i {
+            color: #FFCA28;
+        }
+
+        .review-content {
+            line-height: 1.6;
+            color: var(--muted-foreground);
+        }
+
+        .booking-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: calc(var(--navbar-height, 65px) + 1rem);
+        }
+
+        .booking-card-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .booking-card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .booking-card-body {
+            padding: 1.25rem;
+        }
+
+        .booking-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .booking-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: white;
+        }
+
+        .booking-option.active {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .date-picker-field {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+
+        .date-picker-field i {
+            margin-right: 0.5rem;
+            color: var(--muted-foreground);
+        }
+
+        .date-picker-field input {
+            border: none;
+            background: transparent;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .time-slot {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: white;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .time-slot:hover,
+        .time-slot.active {
+            background-color: var(--secondary);
+            border-color: var(--primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .booking-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .agent-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .agent-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .agent-name {
+            font-weight: 600;
+        }
+
+        .agent-title {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Responsive Styles */
+        @media (min-width: 640px) {
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .search-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .map-view-btn {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .listings-grid {
+                grid-template-columns: 280px 1fr;
+            }
+
+            .map-container {
+                grid-template-columns: 1fr 280px;
+                /* Peta lebih besar, filter di kanan */
+            }
+
+            .map-container .filter-sidebar {
+                order: 1;
+            }
+
+            /* Pindahkan filter ke kanan */
+            .filter-sidebar {
+                display: block;
+            }
+
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            /* Default 2 kolom di desktop */
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .property-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            /* 3 kolom untuk layar lebih besar */
+        }
+
+        @media (min-width: 1440px) {
+
+            /* Penyesuaian untuk layar sangat lebar */
+            .property-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- Navbar akan di-render oleh JS -->
+        <header id="navbar-container" class="navbar">
+            <!-- Konten Navbar akan diisi oleh JavaScript -->
+        </header>
+
+        <!-- Konten Utama -->
+        <main id="main-content">
+            <!-- Konten akan di-render oleh JavaScript berdasarkan route -->
+        </main>
+
+        <!-- Footer akan di-render oleh JS -->
+        <footer id="footer-container" class="footer">
+            <!-- Konten Footer akan diisi oleh JavaScript -->
+        </footer>
+    </div>
+
+    <!-- Template untuk kartu properti -->
+    <template id="property-card-template">
+        <div class="property-card">
+            <div class="property-image-container">
+                <img class="property-image" src="" alt="Gambar Properti">
+                <div class="property-tags">
+                    <!-- Tag akan ditambahkan secara dinamis -->
+                </div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <h3 class="property-title">Judul Properti</h3>
+                    <div class="property-rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">0.0</span>
+                        <span class="rating-count">(0)</span>
+                    </div>
+                </div>
+                <div class="property-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="location-text">Lokasi Properti</span>
+                </div>
+                <div class="property-details">
+                    <div class="property-amenities">
+                        <span class="beds">0 ktd</span>
+                        <span class="baths">0 km</span>
+                        <span class="area">0 m²</span>
+                    </div>
+                    <div class="property-price">
+                        <span class="price-value">$0</span>
+                        <span class="price-period">/bulan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template untuk Navbar -->
+    <template id="navbar-template">
+        <div class="container">
+            <div class="navbar-logo">
+                <a href="#/" class="logo">
+                    <span class="logo-icon">⌂</span>
+                    Green Valley
+                </a>
+            </div>
+            <div class="navbar-search">
+                <input type="text" placeholder="Cari apartemen, lokasi..." class="search-input"
+                    id="navbar-search-input" />
+                <button class="search-button" id="navbar-search-button" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="navbar-actions">
+                <button class="btn btn-outline map-view-btn" id="map-view-toggle-btn">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Lihat Peta</span>
+                </button>
+                <button class="btn btn-ghost user-btn" aria-label="Profil Pengguna">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template untuk Halaman Utama (Beranda) -->
+    <template id="home-page-template">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        Temukan <span class="text-primary">Apartemen</span> Sempurna Anda
+                    </h1>
+                    <p class="hero-description">
+                        Telusuri ribuan daftar sewa terverifikasi dengan fasilitas lengkap, tur virtual, dan ulasan
+                        tepercaya.
+                    </p>
+                    <div class="search-card">
+                        <div class="search-grid">
+                            <div class="search-item">
+                                <i class="fas fa-map-marker-alt text-primary"></i>
+                                <div>
+                                    <p class="search-label">Lokasi</p>
+                                    <p class="search-value" id="hero-search-location">New York, AS</p>
+                                </div>
+                            </div>
+                            <div class="search-item">
+                                <i class="fas fa-calendar text-primary"></i>
+                                <div>
+                                    <p class="search-label">Tanggal</p>
+                                    <p class="search-value" id="hero-search-date">15 Jun - 30 Jun</p>
+                                </div>
+                            </div>
+                            <div class="search-item">
+                                <i class="fas fa-filter text-primary"></i>
+                                <div>
+                                    <p class="search-label">Rentang Harga</p>
+                                    <p class="search-value" id="hero-search-price">$1,000 - $3,000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-actions">
+                            <button class="btn btn-primary btn-lg" id="hero-search-button">
+                                Cari Properti
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="container tabs-section">
+            <div class="tabs-header">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="listings">
+                        <i class="fas fa-list-ul"></i> <!-- Ikon diubah -->
+                        Daftar
+                    </button>
+                    <button class="tab-btn" data-tab="map">
+                        <i class="fas fa-map-marked-alt"></i> <!-- Ikon diubah -->
+                        Peta
+                    </button>
+                </div>
+                <div class="results-count">
+                    Menampilkan <span class="font-semibold">0</span> hasil
+                </div>
+            </div>
+            <div class="tabs-content">
+                <div class="tab-panel active" id="listings-panel">
+                    <div class="listings-grid">
+                        <aside class="filter-sidebar" id="filter-sidebar-listings">
+                            <!-- Konten filter akan diisi oleh JS -->
+                        </aside>
+                        <div class="property-list-container">
+                            <div class="property-list-header">
+                                <h2 class="section-title">Properti Unggulan</h2>
+                                <div class="sort-dropdown">
+                                    <select class="sort-select" id="sort-properties">
+                                        <option value="recommended">Urutkan: Rekomendasi</option>
+                                        <option value="priceLowToHigh">Harga: Rendah ke Tinggi</option>
+                                        <option value="priceHighToLow">Harga: Tinggi ke Rendah</option>
+                                        <option value="highestRated">Rating Tertinggi</option>
+                                        <option value="newest">Terbaru</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="property-grid" id="properties-container">
+                                <!-- Kartu properti akan dimasukkan di sini secara dinamis -->
+                            </div>
+                            <div id="no-results-message" class="no-results d-none">
+                                <i class="fas fa-search fa-2x" style="margin-bottom: 1rem;"></i><br>
+                                Tidak ada properti yang cocok dengan filter Anda.
+                            </div>
+                            <div class="load-more">
+                                <button class="btn btn-outline load-more-btn" id="load-more-properties">
+                                    Muat Lebih Banyak
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-panel" id="map-panel">
+                    <div class="map-container">
+                        <div class="map-view">
+                            <div class="map-header">
+                                <h3 class="map-title">Lokasi Properti</h3>
+                            </div>
+                            <div id="map" class="map-area"></div>
+                            <div class="map-footer">
+                                <p>Perbesar/perkecil dan klik pin untuk melihat detail properti (Fitur Peta Interaktif
+                                    akan datang).</p>
+                            </div>
+                        </div>
+                        <aside class="filter-sidebar" id="filter-sidebar-map">
+                            <!-- Konten filter akan diisi oleh JS (kloningan) -->
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Template untuk Filter Sidebar -->
+    <template id="filter-sidebar-template">
+        <div class="filter-container">
+            <h3 class="filter-title">Filter</h3>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Rentang Harga</h4>
+                <div class="range-slider-container">
+                    <div class="slider-track"></div>
+                    <input type="range" min="500" max="5000" value="1000" class="range-slider" id="filter-min-price"
+                        data-target-input="min-price-input">
+                    <input type="range" min="500" max="5000" value="3000" class="range-slider" id="filter-max-price"
+                        data-target-input="max-price-input">
+                </div>
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <span class="input-prefix">$</span>
+                        <input type="number" value="1000" placeholder="Min" class="range-input" id="min-price-input"
+                            data-target-slider="filter-min-price">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-prefix">$</span>
+                        <input type="number" value="3000" placeholder="Max" class="range-input" id="max-price-input"
+                            data-target-slider="filter-max-price">
+                    </div>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Tipe Properti</h4>
+                <div class="checkbox-group" id="filter-property-type">
+                    <label class="checkbox-label"><input type="checkbox" name="property-type" value="apartment"> <span
+                            class="checkbox-text">Apartemen</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="property-type" value="studio"> <span
+                            class="checkbox-text">Studio</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="property-type" value="condo"> <span
+                            class="checkbox-text">Kondominium</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="property-type" value="house"> <span
+                            class="checkbox-text">Rumah</span></label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Kamar Tidur</h4>
+                <div class="button-group" id="filter-bedrooms">
+                    <button class="btn btn-small btn-outline active" data-value="any">Semua</button>
+                    <button class="btn btn-small btn-outline" data-value="0">Studio</button>
+                    <button class="btn btn-small btn-outline" data-value="1">1</button>
+                    <button class="btn btn-small btn-outline" data-value="2">2</button>
+                    <button class="btn btn-small btn-outline" data-value="3">3</button>
+                    <button class="btn btn-small btn-outline" data-value="4+">4+</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Kamar Mandi</h4>
+                <div class="button-group" id="filter-bathrooms">
+                    <button class="btn btn-small btn-outline active" data-value="any">Semua</button>
+                    <button class="btn btn-small btn-outline" data-value="1">1</button>
+                    <button class="btn btn-small btn-outline" data-value="1.5">1.5</button>
+                    <button class="btn btn-small btn-outline" data-value="2">2</button>
+                    <button class="btn btn-small btn-outline" data-value="2.5+">2.5+</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Fasilitas</h4>
+                <div class="checkbox-group" id="filter-amenities">
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="air-conditioning"> <span
+                            class="checkbox-text">AC</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="washer-dryer"> <span
+                            class="checkbox-text">Mesin Cuci/Pengering</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="parking"> <span
+                            class="checkbox-text">Parkir</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="gym"> <span
+                            class="checkbox-text">Gym</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="pool"> <span
+                            class="checkbox-text">Kolam Renang</span></label>
+                    <label class="checkbox-label"><input type="checkbox" name="amenity" value="pets-allowed"> <span
+                            class="checkbox-text">Boleh Bawa Hewan</span></label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Tanggal Ketersediaan</h4>
+                <button class="btn btn-outline btn-block date-picker-btn" id="filter-availability-date">
+                    <span>Pilih tanggal</span>
+                    <i class="fas fa-calendar"></i>
+                </button>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-outline" id="reset-filters-btn">Reset</button>
+                <button class="btn btn-primary" id="apply-filters-btn">Terapkan</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template untuk Halaman Detail Properti -->
+    <template id="property-detail-page-template">
+        <div class="property-detail-container">
+            <button class="btn btn-outline property-detail-back-btn" id="back-to-listings-btn">
+                <i class="fas fa-arrow-left"></i>
+                Kembali ke Daftar
+            </button>
+            <article class="property-detail">
+                <header class="property-detail-header">
+                    <div>
+                        <h1 class="property-detail-title" data-field="title"></h1>
+                        <p class="property-detail-location" data-field="location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span data-field="locationText"></span>
+                        </p>
+                    </div>
+                    <div class="property-detail-price">
+                        <span data-field="price"></span><span class="price-period">/bulan</span>
+                    </div>
+                </header>
+                <section class="property-detail-gallery">
+                    <img src="" alt="" class="property-detail-image" data-field="mainImage">
+                    <div class="property-detail-thumbnails" data-field="thumbnails">
+                        <!-- Thumbnails akan diisi JS -->
+                    </div>
+                </section>
+                <div class="property-detail-layout">
+                    <section class="property-detail-main">
+                        <div class="property-detail-features">
+                            <div class="feature">
+                                <i class="fas fa-bed"></i>
+                                <div>
+                                    <span class="feature-value" data-field="beds"></span>
+                                    <span class="feature-label">Kamar Tidur</span>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-bath"></i>
+                                <div>
+                                    <span class="feature-value" data-field="baths"></span>
+                                    <span class="feature-label">Kamar Mandi</span>
+                                </div>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-vector-square"></i>
+                                <div>
+                                    <span class="feature-value" data-field="sqft"></span>
+                                    <span class="feature-label">m²</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="property-detail-description">
+                            <h2 class="property-detail-section-title">Deskripsi</h2>
+                            <p data-field="description">Deskripsi properti akan muncul di sini. Penjelasan lengkap
+                                mengenai unit, lingkungan sekitar, dan keunggulan lainnya.</p>
+                        </div>
+                        <div class="property-detail-amenities">
+                            <h2 class="property-detail-section-title">Fasilitas</h2>
+                            <div class="amenities-grid" data-field="amenitiesList">
+                                <!-- Daftar fasilitas akan diisi JS -->
+                            </div>
+                        </div>
+                        <div class="property-detail-map">
+                            <h2 class="property-detail-section-title">Lokasi di Peta</h2>
+                            <div class="detail-map-container">
+                                <div class="detail-map-placeholder">
+                                    <i class="fas fa-map-marker-alt map-pin"></i>
+                                    <div class="map-label" data-field="mapLocationLabel"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="property-detail-reviews">
+                            <div class="reviews-header">
+                                <h2 class="property-detail-section-title">Ulasan</h2>
+                                <div class="reviews-rating">
+                                    <span class="rating-stars">
+                                        <i class="fas fa-star"></i>
+                                        <span data-field="avgRating"></span>
+                                    </span>
+                                    <span class="reviews-count" data-field="reviewCountText"></span>
+                                </div>
+                            </div>
+                            <div class="review-list" data-field="reviewList">
+                                <!-- Ulasan akan diisi JS -->
+                            </div>
+                            <button class="btn btn-outline view-all-reviews-btn" data-field="viewAllReviewsBtn">
+                                Lihat Semua Ulasan
+                            </button>
+                        </div>
+                    </section>
+                    <aside class="property-detail-sidebar">
+                        <div class="booking-card">
+                            <div class="booking-card-header">
+                                <h3>Jadwalkan Tur</h3>
+                            </div>
+                            <div class="booking-card-body">
+                                <div class="booking-options">
+                                    <button class="booking-option active" data-type="in-person">
+                                        <i class="fas fa-home"></i>
+                                        <span>Langsung</span>
+                                    </button>
+                                    <button class="booking-option" data-type="video">
+                                        <i class="fas fa-video"></i>
+                                        <span>Video Call</span>
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tour-date">Pilih Tanggal</label>
+                                    <div class="date-picker-field">
+                                        <i class="fas fa-calendar"></i>
+                                        <input type="text" id="tour-date" placeholder="BB/HH/TTTT" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Pilih Waktu</label>
+                                    <div class="time-slots" id="tour-time-slots">
+                                        <button class="time-slot">10:00</button>
+                                        <button class="time-slot">12:30</button>
+                                        <button class="time-slot active">15:00</button>
+                                        <button class="time-slot">17:30</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tour-name">Informasi Anda</label>
+                                    <input type="text" id="tour-name" placeholder="Nama Lengkap" class="form-input">
+                                    <input type="email" id="tour-email" placeholder="Alamat Email" class="form-input">
+                                    <input type="tel" id="tour-phone" placeholder="Nomor Telepon" class="form-input">
+                                </div>
+                                <button class="btn btn-primary btn-block schedule-btn" id="schedule-tour-btn">
+                                    Jadwalkan Tur
+                                </button>
+                                <div class="booking-footer">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Informasi Anda aman dan tidak akan dibagikan.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-info">
+                                <div class="agent-avatar">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto Agen"
+                                        data-field="agentAvatar">
+                                </div>
+                                <div class="agent-details">
+                                    <div class="agent-name" data-field="agentName">Sarah Johnson</div>
+                                    <div class="agent-title">Agen Penyewaan</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline btn-block contact-btn" id="contact-agent-btn">
+                                <i class="fas fa-comment-alt"></i>
+                                Hubungi Agen
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            </article>
+        </div>
+    </template>
+
+    <!-- Template untuk Footer -->
+    <template id="footer-template">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <span class="logo-icon">⌂</span>
+                        Green Valley
+                    </h3>
+                    <p class="footer-text">
+                        Menemukan apartemen sewaan sempurna Anda tidak pernah semudah ini.
+                    </p>
+                    <div class="social-icons">
+                        <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Tautan Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="#/">Beranda</a></li>
+                        <li><a href="#/search">Pencarian</a></li>
+                        <li><a href="#/map">Lihat Peta</a></li>
+                        <li><a href="#/featured">Properti Unggulan</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Dukungan</h4>
+                    <ul class="footer-links">
+                        <li><a href="#/help">Pusat Bantuan</a></li>
+                        <li><a href="#/safety">Pusat Keamanan</a></li>
+                        <li><a href="#/cancellation">Opsi Pembatalan</a></li>
+                        <li><a href="#/contact">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Buletin</h4>
+                    <p class="footer-text">
+                        Berlangganan untuk mendapatkan pembaruan tentang daftar dan fitur baru.
+                    </p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Email Anda" class="newsletter-input" id="newsletter-email"
+                            required>
+                        <button type="submit" class="btn btn-primary">Langganan</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">
+                    © 2025 Green Valley. Hak cipta dilindungi.
+                </p>
+                <div class="footer-legal">
+                    <a href="#/privacy">Kebijakan Privasi</a>
+                    <a href="#/terms">Ketentuan Layanan</a>
+                    <a href="#/cookies">Cookie</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // Data Properti Awal (contoh)
+        // Tambahkan ID unik dan properti `type` untuk filter tipe properti, serta `amenities` array
+        const initialPropertyData = [
+            { id: "prop1", title: "Apartemen Modern Pusat Kota", location: "Manhattan, New York", price: 2800, rating: 4.8, reviewCount: 128, imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 2, baths: 2, sqft: 950, tags: ["Mewah", "Baru"], type: "apartment", amenities: ["air-conditioning", "parking", "gym"], dateAdded: "2024-07-15" },
+            { id: "prop2", title: "Studio Nyaman di Brooklyn", location: "Brooklyn, New York", price: 1600, rating: 4.5, reviewCount: 96, imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 0, baths: 1, sqft: 450, tags: ["Studio", "Nyaman"], type: "studio", amenities: ["air-conditioning", "pets-allowed"], dateAdded: "2024-07-10" },
+            { id: "prop3", title: "Kondo Mewah Pemandangan Kota", location: "Midtown, New York", price: 3500, rating: 4.9, reviewCount: 215, imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 3, baths: 2, sqft: 1200, tags: ["Mewah", "Pemandangan"], type: "condo", amenities: ["air-conditioning", "washer-dryer", "pool", "gym"], dateAdded: "2024-06-20" },
+            { id: "prop4", title: "Apartemen Brownstone Menawan", location: "Upper West Side, New York", price: 2200, rating: 4.7, reviewCount: 153, imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 1, baths: 1, sqft: 700, tags: ["Historis", "Berperabot"], type: "apartment", amenities: ["washer-dryer", "pets-allowed"], dateAdded: "2024-07-01" },
+            { id: "prop5", title: "Loft Modern di Tribeca", location: "Tribeca, New York", price: 4200, rating: 4.9, reviewCount: 87, imageUrl: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 2, baths: 2.5, sqft: 1500, tags: ["Loft", "Mewah"], type: "apartment", amenities: ["air-conditioning", "parking", "gym", "washer-dryer"], dateAdded: "2024-05-15" },
+            { id: "prop6", title: "Apartemen Pra-Perang Direnovasi", location: "Upper East Side, New York", price: 2600, rating: 4.6, reviewCount: 112, imageUrl: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 1, baths: 1, sqft: 850, tags: ["Direnovasi", "Doorman"], type: "apartment", amenities: ["air-conditioning", "pets-allowed"], dateAdded: "2024-06-01" },
+            { id: "prop7", title: "Studio Kontemporer Gedung Tinggi", location: "Financial District, New York", price: 3000, rating: 4.8, reviewCount: 65, imageUrl: "https://images.unsplash.com/photo-1626178793926-22b28830aa30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 0, baths: 1, sqft: 550, tags: ["Studio", "Gedung Tinggi"], type: "studio", amenities: ["air-conditioning", "gym", "pool"], dateAdded: "2024-07-20" },
+            { id: "prop8", title: "Apartemen Keluarga Luas", location: "Chelsea, New York", price: 4500, rating: 4.7, reviewCount: 178, imageUrl: "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 3, baths: 2, sqft: 1400, tags: ["Keluarga", "Luas"], type: "apartment", amenities: ["air-conditioning", "washer-dryer", "parking", "pets-allowed"], dateAdded: "2024-05-25" },
+            // Tambahkan lebih banyak data untuk simulasi "load more"
+            { id: "prop9", title: "Rumah Kota Artistik", location: "Greenwich Village, New York", price: 3800, rating: 4.9, reviewCount: 92, imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 2, baths: 2, sqft: 1100, tags: ["Artistik", "Unik"], type: "house", amenities: ["washer-dryer", "pets-allowed"], dateAdded: "2024-07-18" },
+            { id: "prop10", title: "Penthouse dengan Teras Atap", location: "SoHo, New York", price: 7500, rating: 5.0, reviewCount: 55, imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60", beds: 4, baths: 3.5, sqft: 2200, tags: ["Penthouse", "Mewah", "Teras"], type: "apartment", amenities: ["air-conditioning", "gym", "pool", "parking"], dateAdded: "2024-06-10" },
+        ];
+
+        // State Aplikasi
+        const appState = {
+            allProperties: [...initialPropertyData],
+            displayedProperties: [],
+            propertiesPerPage: 6, // Jumlah properti per halaman/load
+            currentPageNum: 1,
+            filters: {
+                searchTerm: "",
+                priceMin: 500,
+                priceMax: 5000,
+                propertyTypes: [],
+                bedrooms: "any", // string atau number
+                bathrooms: "any", // string atau number
+                amenities: [],
+            },
+            sortBy: "recommended",
+            currentRoute: { path: '/', params: {} },
+            navbarHeight: 65, // Default, akan diupdate
+        };
+
+        // === UTILITIES ===
+        const Utils = {
+            getElement: (selector, parent = document) => parent.querySelector(selector),
+            getElements: (selector, parent = document) => parent.querySelectorAll(selector),
+            // Fungsi untuk debounce, menunda eksekusi fungsi hingga ada jeda input
+            debounce: (func, delay) => {
+                let timeout;
+                return function (...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), delay);
+                };
+            },
+            // Mengisi template dengan data
+            populateTemplate: (templateId, data) => {
+                const template = Utils.getElement(`#${templateId}`);
+                if (!template) return null;
+                const clone = template.content.cloneNode(true);
+
+                // Loop sederhana untuk mengisi elemen dengan atribut data-field
+                // Ini bisa diperluas sesuai kebutuhan
+                Object.keys(data).forEach(key => {
+                    const elements = Utils.getElements(`[data-field="${key}"]`, clone);
+                    elements.forEach(el => {
+                        if (el.tagName === 'IMG') el.src = data[key];
+                        else if (el.tagName === 'A') el.href = data[key];
+                        else el.textContent = data[key];
+                    });
+                });
+                return clone;
+            },
+            formatCurrency: (amount, currency = 'USD') => {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+            }
+        };
+
+        // === LOGIKA APLIKASI INTI ===
+        function initApp() {
+            // Render komponen statis
+            renderNavbar();
+            renderFooter();
+
+            // Dapatkan tinggi navbar aktual dan simpan di variabel CSS
+            const navbarEl = Utils.getElement('#navbar-container');
+            if (navbarEl) {
+                appState.navbarHeight = navbarEl.offsetHeight;
+                document.documentElement.style.setProperty('--navbar-height', `${appState.navbarHeight}px`);
+            }
+
+            // Setup routing
+            window.addEventListener('hashchange', handleRouteChange);
+            handleRouteChange(); // Panggil untuk rute awal
+
+            // Event listener global lainnya (misalnya untuk pencarian di navbar)
+            const searchInput = Utils.getElement('#navbar-search-input', navbarEl);
+            const searchButton = Utils.getElement('#navbar-search-button', navbarEl);
+            if (searchInput && searchButton) {
+                const performSearch = () => {
+                    appState.filters.searchTerm = searchInput.value.trim().toLowerCase();
+                    console.log(`Pencarian untuk: ${appState.filters.searchTerm}`);
+                    if (appState.currentRoute.path === '/' || appState.currentRoute.path === '/search') {
+                        applyFiltersAndSort();
+                    } else {
+                        // Jika di halaman lain, navigasi ke halaman pencarian dengan query
+                        Utils.navigateTo(`#/search?q=${encodeURIComponent(appState.filters.searchTerm)}`);
+                    }
+                };
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') performSearch();
+                });
+                searchButton.addEventListener('click', performSearch);
+            }
+        }
+
+        // === ROUTING ===
+        function handleRouteChange() {
+            const mainContent = Utils.getElement('#main-content');
+            const hash = window.location.hash || '#/';
+            const [path, queryString] = hash.substring(1).split('?');
+            const params = new URLSearchParams(queryString || '');
+
+            appState.currentRoute = { path, params: Object.fromEntries(params) };
+            mainContent.innerHTML = ''; // Kosongkan konten lama
+            document.body.classList.remove('property-detail-page-active'); // Hapus kelas khusus jika ada
+
+            // Tentukan halaman mana yang akan dirender
+            if (path.startsWith('/property/')) {
+                const propertyId = path.split('/')[2];
+                renderPropertyDetailPage(propertyId);
+            } else if (path === '/' || path === '/search' || path === '/map' || path === '/featured') {
+                renderHomePage(); // Untuk kesederhanaan, semua ini mengarah ke HomePage dengan state tab yang berbeda
+                // Penyesuaian tab aktif berdasarkan path (jika diperlukan)
+                if (path === '/map' && Utils.getElement('.tab-btn[data-tab="map"]')) {
+                    handleTabSwitch(Utils.getElement('.tab-btn[data-tab="map"]'));
+                } else if (Utils.getElement('.tab-btn[data-tab="listings"]')) {
+                    handleTabSwitch(Utils.getElement('.tab-btn[data-tab="listings"]'));
+                }
+            } else {
+                // Halaman tidak ditemukan, bisa render halaman 404 atau redirect ke beranda
+                mainContent.innerHTML = `<div class="container" style="padding: 4rem 1rem; text-align: center;"><h2>404 - Halaman Tidak Ditemukan</h2><p>Maaf, halaman yang Anda cari tidak ada.</p><a href="#/" class="btn btn-primary" style="margin-top:1rem;">Kembali ke Beranda</a></div>`;
+            }
+            window.scrollTo(0, 0); // Selalu scroll ke atas saat ganti halaman
+        }
+
+        function navigateTo(hash) {
+            window.location.hash = hash;
+        }
+
+        // === RENDER KOMPONEN UTAMA ===
+        function renderNavbar() {
+            const navbarContainer = Utils.getElement('#navbar-container');
+            const template = Utils.getElement('#navbar-template');
+            if (navbarContainer && template) {
+                navbarContainer.appendChild(template.content.cloneNode(true));
+                // Event listener untuk tombol lihat peta di navbar
+                const mapViewToggleBtn = Utils.getElement('#map-view-toggle-btn', navbarContainer);
+                if (mapViewToggleBtn) {
+                    mapViewToggleBtn.addEventListener('click', () => {
+                        const mapTabBtn = Utils.getElement('.tab-btn[data-tab="map"]');
+                        if (mapTabBtn) {
+                            handleTabSwitch(mapTabBtn);
+                            // Pastikan kita berada di halaman utama untuk melihat efek tab
+                            if (appState.currentRoute.path !== '/') navigateTo('#/');
+                        }
+                    });
+                }
+            }
+        }
+
+        function renderFooter() {
+            const footerContainer = Utils.getElement('#footer-container');
+            const template = Utils.getElement('#footer-template');
+            if (footerContainer && template) {
+                footerContainer.appendChild(template.content.cloneNode(true));
+                const newsletterForm = Utils.getElement('#newsletter-form', footerContainer);
+                if (newsletterForm) {
+                    newsletterForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const emailInput = Utils.getElement('#newsletter-email', newsletterForm);
+                        if (emailInput && emailInput.value) {
+                            console.log(`Email berlangganan: ${emailInput.value}`);
+                            alert(`Terima kasih telah berlangganan dengan email: ${emailInput.value}`);
+                            emailInput.value = '';
+                        }
+                    });
+                }
+            }
+        }
+
+        // === RENDER HALAMAN ===
+        function renderHomePage() {
+            const mainContent = Utils.getElement('#main-content');
+            const template = Utils.getElement('#home-page-template');
+            if (mainContent && template) {
+                mainContent.appendChild(template.content.cloneNode(true));
+
+                // Inisialisasi filter sidebar
+                renderFilterSidebar('filter-sidebar-listings');
+                cloneAndSetupFilterSidebar('filter-sidebar-listings', 'filter-sidebar-map');
+
+                // Setup tab
+                setupTabs();
+
+                // Setup interaksi filter dan sortir
+                setupFilterInteractions('filter-sidebar-listings'); // Setup untuk filter utama
+                // Filter kloningan akan di-setup di cloneAndSetupFilterSidebar
+
+                Utils.getElement('#sort-properties').addEventListener('change', (e) => {
+                    appState.sortBy = e.target.value;
+                    applyFiltersAndSort();
+                });
+
+                Utils.getElement('#load-more-properties').addEventListener('click', loadMoreProperties);
+                Utils.getElement('#hero-search-button').addEventListener('click', () => {
+                    console.log("Tombol pencarian hero diklik. Idealnya, ini akan mengisi filter dan menerapkan.");
+                    // Contoh: Ambil nilai dari hero search card dan set ke appState.filters
+                    // lalu panggil applyFiltersAndSort() atau navigasi ke #/search dengan parameter
+                });
+
+                // Render properti awal
+                appState.currentPageNum = 1; // Reset halaman saat render ulang home
+                applyFiltersAndSort(); // Tampilkan properti berdasarkan filter & sortir default
+            }
+        }
+
+        function renderFilterSidebar(containerId) {
+            const sidebarContainer = Utils.getElement(`#${containerId}`);
+            const template = Utils.getElement('#filter-sidebar-template');
+            if (sidebarContainer && template) {
+                sidebarContainer.innerHTML = ''; // Bersihkan dulu jika ada konten lama
+                sidebarContainer.appendChild(template.content.cloneNode(true));
+                // Setelah render, setup slider untuk container ini
+                setupRangeSliders(sidebarContainer);
+            }
+        }
+
+        function cloneAndSetupFilterSidebar(sourceContainerId, targetContainerId) {
+            const sourceSidebarContent = Utils.getElement(`#${sourceContainerId} .filter-container`);
+            const targetSidebarContainer = Utils.getElement(`#${targetContainerId}`);
+
+            if (sourceSidebarContent && targetSidebarContainer) {
+                targetSidebarContainer.innerHTML = ''; // Kosongkan target
+                const clonedContent = sourceSidebarContent.cloneNode(true);
+
+                // ID pada elemen input range dan text harus unik. Kita beri prefix.
+                // Ini penting agar slider dan input di filter kedua bekerja independen.
+                const newIdPrefix = 'map-filter-';
+                clonedContent.querySelectorAll('[id]').forEach(el => {
+                    const oldId = el.id;
+                    el.id = newIdPrefix + oldId;
+                    // Update juga atribut 'data-target-input' dan 'data-target-slider'
+                    if (el.dataset.targetInput) el.dataset.targetInput = newIdPrefix + el.dataset.targetInput;
+                    if (el.dataset.targetSlider) el.dataset.targetSlider = newIdPrefix + el.dataset.targetSlider;
+                });
+
+                targetSidebarContainer.appendChild(clonedContent);
+                // Setup interaksi untuk filter yang dikloning
+                setupRangeSliders(targetSidebarContainer); // Setup slider untuk filter kloningan
+                setupFilterInteractions(targetContainerId); // Setup event listener lain untuk filter kloningan
+            }
+        }
+
+
+        function renderPropertyDetailPage(propertyId) {
+            const mainContent = Utils.getElement('#main-content');
+            const template = Utils.getElement('#property-detail-page-template');
+            const property = appState.allProperties.find(p => p.id === propertyId);
+
+            if (mainContent && template && property) {
+                document.body.classList.add('property-detail-page-active');
+                const pageContent = template.content.cloneNode(true);
+
+                // Mengisi data properti ke template
+                Utils.getElement('[data-field="title"]', pageContent).textContent = property.title;
+                Utils.getElement('[data-field="locationText"]', pageContent).textContent = property.location;
+                Utils.getElement('[data-field="price"]', pageContent).textContent = Utils.formatCurrency(property.price);
+                Utils.getElement('[data-field="mainImage"]', pageContent).src = property.imageUrl;
+                Utils.getElement('[data-field="mainImage"]', pageContent).alt = property.title;
+
+                const bedsText = property.beds === 0 ? 'Studio' : `${property.beds}`;
+                Utils.getElement('[data-field="beds"]', pageContent).textContent = bedsText;
+                Utils.getElement('[data-field="baths"]', pageContent).textContent = property.baths;
+                Utils.getElement('[data-field="sqft"]', pageContent).textContent = property.sqft;
+
+                // Placeholder deskripsi (bisa diambil dari data properti jika ada)
+                Utils.getElement('[data-field="description"]', pageContent).textContent = `Ini adalah ${property.title.toLowerCase()} yang indah terletak di ${property.location}. Menawarkan ${property.beds === 0 ? 'ruang studio yang efisien' : `${property.beds} kamar tidur`} dan ${property.baths} kamar mandi dalam ${property.sqft} m² ruang tinggal yang nyaman. Fasilitas modern dan lokasi prima menjadikannya pilihan ideal.`;
+
+                // Fasilitas (contoh)
+                const amenitiesContainer = Utils.getElement('[data-field="amenitiesList"]', pageContent);
+                amenitiesContainer.innerHTML = ''; // Kosongkan dulu
+                const allPossibleAmenities = { // Mapping untuk ikon dan nama
+                    "air-conditioning": { name: "AC", icon: "fa-snowflake" },
+                    "washer-dryer": { name: "Mesin Cuci/Pengering", icon: "fa-tshirt" },
+                    "parking": { name: "Parkir", icon: "fa-parking" },
+                    "gym": { name: "Gym", icon: "fa-dumbbell" },
+                    "pool": { name: "Kolam Renang", icon: "fa-swimmer" },
+                    "pets-allowed": { name: "Boleh Bawa Hewan", icon: "fa-paw" }
+                };
+                (property.amenities || []).forEach(amenityKey => {
+                    const amenityInfo = allPossibleAmenities[amenityKey];
+                    if (amenityInfo) {
+                        const amenityEl = document.createElement('div');
+                        amenityEl.className = 'amenity-item';
+                        amenityEl.innerHTML = `<i class="fas ${amenityInfo.icon}"></i> <span>${amenityInfo.name}</span>`;
+                        amenitiesContainer.appendChild(amenityEl);
+                    }
+                });
+                if (amenitiesContainer.children.length === 0) {
+                    amenitiesContainer.innerHTML = '<p>Tidak ada informasi fasilitas spesifik.</p>';
+                }
+
+
+                Utils.getElement('[data-field="mapLocationLabel"]', pageContent).textContent = property.location;
+                Utils.getElement('[data-field="avgRating"]', pageContent).textContent = property.rating.toFixed(1);
+                Utils.getElement('[data-field="reviewCountText"]', pageContent).textContent = `(${property.reviewCount} ulasan)`;
+
+                // Review (contoh statis)
+                const reviewListContainer = Utils.getElement('[data-field="reviewList"]', pageContent);
+                reviewListContainer.innerHTML = `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer"><div class="reviewer-avatar">JD</div><div><div class="reviewer-name">John D.</div><div class="review-date">April 2025</div></div></div>
+                        <div class="review-rating"><i class="fas fa-star"></i> 4.9</div>
+                    </div>
+                    <div class="review-content">Apartemen luar biasa dengan pemandangan dan fasilitas hebat. Lokasi sempurna!</div>
+                </div>`;
+
+                mainContent.appendChild(pageContent);
+                setupPropertyDetailInteractions(property);
+
+            } else {
+                mainContent.innerHTML = `<div class="container" style="padding: 4rem 1rem; text-align: center;"><h2>Properti Tidak Ditemukan</h2><p>Maaf, detail untuk properti ini tidak tersedia.</p><a href="#/" class="btn btn-primary" style="margin-top:1rem;">Kembali ke Daftar</a></div>`;
+            }
+        }
+
+        // === RENDER KARTU PROPERTI ===
+        function renderPropertyCards() {
+            const container = Utils.getElement('#properties-container');
+            const template = Utils.getElement('#property-card-template');
+            const noResultsMsg = Utils.getElement('#no-results-message');
+            const loadMoreBtn = Utils.getElement('#load-more-properties');
+
+            if (!container || !template) return;
+
+            // Tampilkan hanya sejumlah properti (paginasi sederhana)
+            const propertiesToDisplayNow = appState.displayedProperties.slice(0, appState.currentPageNum * appState.propertiesPerPage);
+
+            container.innerHTML = ''; // Kosongkan kontainer sebelum render ulang
+
+            if (propertiesToDisplayNow.length === 0) {
+                noResultsMsg.classList.remove('d-none');
+            } else {
+                noResultsMsg.classList.add('d-none');
+                propertiesToDisplayNow.forEach(property => {
+                    const cardClone = template.content.cloneNode(true);
+                    const cardElement = cardClone.querySelector('.property-card');
+
+                    cardElement.setAttribute('data-id', property.id);
+                    cardElement.addEventListener('click', () => navigateTo(`#/property/${property.id}`));
+
+                    Utils.getElement('.property-image', cardClone).src = property.imageUrl;
+                    Utils.getElement('.property-image', cardClone).alt = property.title;
+                    Utils.getElement('.property-title', cardClone).textContent = property.title;
+                    Utils.getElement('.rating-value', cardClone).textContent = property.rating.toFixed(1);
+                    Utils.getElement('.rating-count', cardClone).textContent = `(${property.reviewCount})`;
+                    Utils.getElement('.location-text', cardClone).textContent = property.location;
+
+                    const bedsText = property.beds === 0 ? 'Studio' : `${property.beds} ktd`;
+                    Utils.getElement('.beds', cardClone).textContent = bedsText;
+                    Utils.getElement('.baths', cardClone).textContent = `${property.baths} km`;
+                    Utils.getElement('.area', cardClone).textContent = `${property.sqft} m²`;
+                    Utils.getElement('.price-value', cardClone).textContent = Utils.formatCurrency(property.price);
+
+                    const tagsContainer = Utils.getElement('.property-tags', cardClone);
+                    tagsContainer.innerHTML = ''; // Bersihkan tag lama
+                    property.tags.slice(0, 2).forEach(tagText => { // Batasi 2 tag
+                        const tagEl = document.createElement('span');
+                        tagEl.className = 'property-tag';
+                        tagEl.textContent = tagText;
+                        tagsContainer.appendChild(tagEl);
+                    });
+                    container.appendChild(cardClone);
+                });
+            }
+
+            // Update tombol "Muat Lebih Banyak"
+            if (loadMoreBtn) {
+                if (propertiesToDisplayNow.length < appState.displayedProperties.length) {
+                    loadMoreBtn.classList.remove('d-none');
+                } else {
+                    loadMoreBtn.classList.add('d-none');
+                }
+            }
+            updateResultsCount();
+        }
+
+        function updateResultsCount() {
+            const resultsCountEl = Utils.getElement('.results-count span.font-semibold');
+            if (resultsCountEl) {
+                resultsCountEl.textContent = appState.displayedProperties.length;
+            }
+            const tabHeaderResults = Utils.getElement('.tabs-header .results-count');
+            if (tabHeaderResults) {
+                tabHeaderResults.innerHTML = `Menampilkan <span class="font-semibold">${appState.displayedProperties.length}</span> hasil`;
+            }
+        }
+
+        function loadMoreProperties() {
+            appState.currentPageNum++;
+            renderPropertyCards(); // Render ulang dengan lebih banyak item
+        }
+
+        // === LOGIKA FILTER & SORTIR ===
+        function applyFiltersAndSort() {
+            let filtered = [...appState.allProperties];
+
+            // Filter berdasarkan searchTerm
+            if (appState.filters.searchTerm) {
+                filtered = filtered.filter(p =>
+                    p.title.toLowerCase().includes(appState.filters.searchTerm) ||
+                    p.location.toLowerCase().includes(appState.filters.searchTerm)
+                );
+            }
+
+            // Filter harga
+            filtered = filtered.filter(p => p.price >= appState.filters.priceMin && p.price <= appState.filters.priceMax);
+
+            // Filter tipe properti
+            if (appState.filters.propertyTypes.length > 0) {
+                filtered = filtered.filter(p => appState.filters.propertyTypes.includes(p.type));
+            }
+
+            // Filter kamar tidur
+            if (appState.filters.bedrooms !== "any") {
+                const bedNum = parseInt(appState.filters.bedrooms);
+                if (appState.filters.bedrooms === "0") { // Studio
+                    filtered = filtered.filter(p => p.beds === 0);
+                } else if (appState.filters.bedrooms.endsWith("+")) {
+                    filtered = filtered.filter(p => p.beds >= bedNum);
+                } else {
+                    filtered = filtered.filter(p => p.beds === bedNum);
+                }
+            }
+
+            // Filter kamar mandi
+            if (appState.filters.bathrooms !== "any") {
+                const bathNum = parseFloat(appState.filters.bathrooms);
+                if (appState.filters.bathrooms.endsWith("+")) {
+                    filtered = filtered.filter(p => p.baths >= bathNum);
+                } else {
+                    filtered = filtered.filter(p => p.baths === bathNum);
+                }
+            }
+
+            // Filter fasilitas
+            if (appState.filters.amenities.length > 0) {
+                filtered = filtered.filter(p =>
+                    appState.filters.amenities.every(amenity => (p.amenities || []).includes(amenity))
+                );
+            }
+
+            // Sortir
+            switch (appState.sortBy) {
+                case 'priceLowToHigh': filtered.sort((a, b) => a.price - b.price); break;
+                case 'priceHighToLow': filtered.sort((a, b) => b.price - a.price); break;
+                case 'highestRated': filtered.sort((a, b) => b.rating - a.rating); break;
+                case 'newest': filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)); break;
+                // Default 'recommended' bisa jadi kombinasi atau tanpa sortir eksplisit
+            }
+
+            appState.displayedProperties = filtered;
+            appState.currentPageNum = 1; // Reset ke halaman pertama setiap kali filter/sortir berubah
+            renderPropertyCards();
+        }
+
+        function resetFilters(filterContainer) {
+            // Reset state filter
+            appState.filters = {
+                searchTerm: "", priceMin: 500, priceMax: 5000,
+                propertyTypes: [], bedrooms: "any", bathrooms: "any", amenities: []
+            };
+            appState.sortBy = "recommended"; // Reset juga sortiran
+
+            // Reset UI filter di container yang aktif
+            if (filterContainer) {
+                // Harga
+                const minPriceSlider = Utils.getElement('#filter-min-price', filterContainer) || Utils.getElement('#map-filter-filter-min-price', filterContainer);
+                const maxPriceSlider = Utils.getElement('#filter-max-price', filterContainer) || Utils.getElement('#map-filter-filter-max-price', filterContainer);
+                const minPriceInput = Utils.getElement('#min-price-input', filterContainer) || Utils.getElement('#map-filter-min-price-input', filterContainer);
+                const maxPriceInput = Utils.getElement('#max-price-input', filterContainer) || Utils.getElement('#map-filter-max-price-input', filterContainer);
+
+                if (minPriceSlider) minPriceSlider.value = 500;
+                if (maxPriceSlider) maxPriceSlider.value = 5000;
+                if (minPriceInput) minPriceInput.value = 500;
+                if (maxPriceInput) maxPriceInput.value = 5000;
+                updateSliderTrack(filterContainer);
+
+
+                // Tipe properti
+                Utils.getElements('#filter-property-type input[type="checkbox"]', filterContainer).forEach(cb => cb.checked = false);
+                Utils.getElements('#map-filter-filter-property-type input[type="checkbox"]', filterContainer).forEach(cb => cb.checked = false);
+
+
+                // Kamar tidur & mandi
+                ['#filter-bedrooms', '#filter-bathrooms', '#map-filter-filter-bedrooms', '#map-filter-filter-bathrooms'].forEach(selector => {
+                    const group = Utils.getElement(selector, filterContainer);
+                    if (group) {
+                        Utils.getElements('button', group).forEach(btn => btn.classList.remove('active'));
+                        const anyBtn = Utils.getElement('button[data-value="any"]', group);
+                        if (anyBtn) anyBtn.classList.add('active');
+                    }
+                });
+
+
+                // Fasilitas
+                Utils.getElements('#filter-amenities input[type="checkbox"]', filterContainer).forEach(cb => cb.checked = false);
+                Utils.getElements('#map-filter-filter-amenities input[type="checkbox"]', filterContainer).forEach(cb => cb.checked = false);
+            }
+
+            const sortSelect = Utils.getElement('#sort-properties');
+            if (sortSelect) sortSelect.value = "recommended";
+
+            applyFiltersAndSort();
+        }
+
+
+        // === SETUP INTERAKSI UI ===
+        function setupTabs() {
+            const tabButtons = Utils.getElements('.tab-btn');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => handleTabSwitch(button));
+            });
+        }
+
+        function handleTabSwitch(clickedButton) {
+            const tabValue = clickedButton.dataset.tab;
+            Utils.getElements('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            clickedButton.classList.add('active');
+
+            Utils.getElements('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            const activePanel = Utils.getElement(`#${tabValue}-panel`);
+            if (activePanel) activePanel.classList.add('active');
+        }
+
+        function setupRangeSliders(containerElement) {
+            const sliders = Utils.getElements('.range-slider', containerElement);
+            sliders.forEach(slider => {
+                slider.addEventListener('input', () => {
+                    const targetInputId = slider.dataset.targetInput;
+                    const targetInput = Utils.getElement(`#${targetInputId}`, containerElement);
+                    if (targetInput) targetInput.value = slider.value;
+                    updateSliderValues(containerElement);
+                    updateSliderTrack(containerElement); // Update visual track
+                });
+            });
+
+            const inputs = Utils.getElements('.range-input', containerElement);
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const targetSliderId = input.dataset.targetSlider;
+                    const targetSlider = Utils.getElement(`#${targetSliderId}`, containerElement);
+                    if (targetSlider) {
+                        let value = parseInt(input.value);
+                        const min = parseInt(targetSlider.min);
+                        const max = parseInt(targetSlider.max);
+                        if (value < min) value = min;
+                        if (value > max) value = max;
+                        targetSlider.value = value;
+                        input.value = value; // Koreksi jika value di luar range
+                    }
+                    updateSliderValues(containerElement);
+                    updateSliderTrack(containerElement); // Update visual track
+                });
+            });
+            updateSliderTrack(containerElement); // Panggil sekali saat inisialisasi
+        }
+
+        function updateSliderValues(containerElement) {
+            // Fungsi ini untuk memastikan slider min tidak melebihi max, dst.
+            const minSlider = Utils.getElement('[id*="filter-min-price"]', containerElement);
+            const maxSlider = Utils.getElement('[id*="filter-max-price"]', containerElement);
+            const minInput = Utils.getElement('[id*="min-price-input"]', containerElement);
+            const maxInput = Utils.getElement('[id*="max-price-input"]', containerElement);
+
+            if (!minSlider || !maxSlider || !minInput || !maxInput) return;
+
+            let minVal = parseInt(minSlider.value);
+            let maxVal = parseInt(maxSlider.value);
+
+            if (minVal >= maxVal) {
+                if (event.target === minSlider || event.target === minInput) {
+                    minVal = maxVal - 100 < parseInt(minSlider.min) ? parseInt(minSlider.min) : maxVal - 100; // Pastikan tidak kurang dari min global
+                    minSlider.value = minVal;
+                    minInput.value = minVal;
+                } else { // Targetnya maxSlider atau maxInput
+                    maxVal = minVal + 100 > parseInt(maxSlider.max) ? parseInt(maxSlider.max) : minVal + 100; // Pastikan tidak lebih dari max global
+                    maxSlider.value = maxVal;
+                    maxInput.value = maxVal;
+                }
+            }
+            // Update state filter jika ini filter utama (bukan kloningan untuk map)
+            if (containerElement.id.includes('listings')) { // Cek apakah ini filter utama
+                appState.filters.priceMin = parseInt(minSlider.value);
+                appState.filters.priceMax = parseInt(maxSlider.value);
+            } else if (containerElement.id.includes('map')) { // Cek apakah ini filter di tab peta
+                // Logika jika perlu update state dari filter peta, atau biarkan applyFiltersBtn yang handle
+            }
+        }
+
+        function updateSliderTrack(containerElement) {
+            const minSlider = Utils.getElement('[id*="filter-min-price"]', containerElement);
+            const maxSlider = Utils.getElement('[id*="filter-max-price"]', containerElement);
+            const track = Utils.getElement('.slider-track', containerElement);
+
+            if (!minSlider || !maxSlider || !track) return;
+
+            const min = parseInt(minSlider.min);
+            const max = parseInt(minSlider.max); // asumsikan max sama untuk kedua slider
+
+            const fromValue = parseInt(minSlider.value);
+            const toValue = parseInt(maxSlider.value);
+
+            const fromPercent = ((fromValue - min) / (max - min)) * 100;
+            const toPercent = ((toValue - min) / (max - min)) * 100;
+
+            track.style.left = `${fromPercent}%`;
+            track.style.right = `${100 - toPercent}%`;
+        }
+
+
+        function setupFilterInteractions(containerId) {
+            const containerElement = Utils.getElement(`#${containerId}`);
+            if (!containerElement) return;
+
+            // Tipe Properti (Checkbox)
+            const propertyTypeCheckboxes = Utils.getElements('[id*="filter-property-type"] input[type="checkbox"]', containerElement);
+            propertyTypeCheckboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    appState.filters.propertyTypes = Array.from(propertyTypeCheckboxes)
+                        .filter(i => i.checked)
+                        .map(i => i.value);
+                    // applyFiltersAndSort(); // Bisa langsung apply atau tunggu tombol "Terapkan"
+                });
+            });
+
+            // Kamar Tidur & Kamar Mandi (Button Group)
+            ['filter-bedrooms', 'filter-bathrooms'].forEach(groupId => {
+                const group = Utils.getElement(`[id*="${groupId}"]`, containerElement); // Pakai * untuk ID kloningan
+                if (group) {
+                    group.addEventListener('click', (e) => {
+                        if (e.target.tagName === 'BUTTON') {
+                            Utils.getElements('button', group).forEach(btn => btn.classList.remove('active'));
+                            e.target.classList.add('active');
+                            if (groupId.includes('bedrooms')) appState.filters.bedrooms = e.target.dataset.value;
+                            if (groupId.includes('bathrooms')) appState.filters.bathrooms = e.target.dataset.value;
+                            // applyFiltersAndSort();
+                        }
+                    });
+                }
+            });
+
+            // Fasilitas (Checkbox)
+            const amenityCheckboxes = Utils.getElements('[id*="filter-amenities"] input[type="checkbox"]', containerElement);
+            amenityCheckboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    appState.filters.amenities = Array.from(amenityCheckboxes)
+                        .filter(i => i.checked)
+                        .map(i => i.value);
+                    // applyFiltersAndSort();
+                });
+            });
+
+            // Tanggal Ketersediaan
+            const datePickerBtn = Utils.getElement('[id*="filter-availability-date"]', containerElement);
+            if (datePickerBtn) {
+                datePickerBtn.addEventListener('click', () => {
+                    console.log("Tombol pilih tanggal diklik. Implementasi date picker kustom diperlukan.");
+                    alert("Fitur pilih tanggal akan segera hadir!");
+                });
+            }
+
+            // Tombol Terapkan & Reset
+            const applyBtn = Utils.getElement('[id*="apply-filters-btn"]', containerElement);
+            const resetBtn = Utils.getElement('[id*="reset-filters-btn"]', containerElement);
+
+            if (applyBtn) {
+                applyBtn.addEventListener('click', () => {
+                    // Pastikan state filter diperbarui dari UI sebelum apply
+                    // (terutama untuk slider harga jika tidak diupdate on-input)
+                    const minPriceInput = Utils.getElement('[id*="min-price-input"]', containerElement);
+                    const maxPriceInput = Utils.getElement('[id*="max-price-input"]', containerElement);
+                    if (minPriceInput) appState.filters.priceMin = parseInt(minPriceInput.value);
+                    if (maxPriceInput) appState.filters.priceMax = parseInt(maxPriceInput.value);
+                    applyFiltersAndSort();
+                    console.log("Filter diterapkan!");
+                });
+            }
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    resetFilters(containerElement); // Kirim container element untuk reset UI-nya
+                    console.log("Filter direset!");
+                });
+            }
+        }
+
+        function setupPropertyDetailInteractions(property) {
+            const backBtn = Utils.getElement('#back-to-listings-btn');
+            if (backBtn) backBtn.addEventListener('click', () => navigateTo(window.history.length > 2 ? -1 : '#/')); //Kembali atau ke home
+
+            const scheduleBtn = Utils.getElement('#schedule-tour-btn');
+            if (scheduleBtn) scheduleBtn.addEventListener('click', () => {
+                const name = Utils.getElement('#tour-name').value;
+                const email = Utils.getElement('#tour-email').value;
+                if (name && email) {
+                    console.log(`Jadwalkan tur untuk ${property.title} oleh ${name} (${email})`);
+                    alert(`Tur untuk "${property.title}" telah dijadwalkan! (Simulasi)`);
+                } else {
+                    alert("Mohon isi nama dan email Anda.");
+                }
+            });
+
+            const contactAgentBtn = Utils.getElement('#contact-agent-btn');
+            if (contactAgentBtn) contactAgentBtn.addEventListener('click', () => {
+                console.log(`Hubungi agen untuk ${property.title}`);
+                alert("Formulir kontak agen akan muncul di sini. (Simulasi)");
+            });
+
+            // Booking options
+            Utils.getElements('.booking-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    Utils.getElements('.booking-option').forEach(el => el.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                });
+            });
+            // Time slots
+            Utils.getElements('.time-slot').forEach(slot => {
+                slot.addEventListener('click', (e) => {
+                    Utils.getElements('.time-slot').forEach(el => el.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                });
+            });
+            // Date picker field (placeholder)
+            const datePickerInput = Utils.getElement('#tour-date');
+            if (datePickerInput) datePickerInput.parentElement.addEventListener('click', () => {
+                alert("Kalender pilih tanggal akan muncul di sini. (Simulasi)");
+            });
+
+        }
+
+        // === INISIALISASI APLIKASI ===
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+
+</html>
