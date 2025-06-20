@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Valley - Temukan Apartemen Sempurna Anda</title>
+    <meta name="description"
+        content="Telusuri ribuan daftar sewa terverifikasi dengan fasilitas lengkap, tur virtual, dan ulasan tepercaya." />
+    <meta name="author" content="Green Valley" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* ==========================================================================
+        1. SETTINGS - Variabel Global & Konfigurasi
+        ========================================================================== */
+        :root {
+            --primary: #4361EE;
+            --primary-dark: #3A56D4;
+            --primary-light: #829DF5;
+            --secondary: #F0F4FE;
+            --foreground: #333333;
+            --background: #FFFFFF;
+            --muted: #F1F5F9;
+            --muted-foreground: #64748B;
+            --border: #E2E8F0;
+            --input: #E2E8F0;
+            --radius: 0.5rem;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-focus: 0 0 0 2px var(--background), 0 0 0 4px var(--primary-light);
+            --navbar-height: 65px;
+            --success: #22C55E;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        /* ==========================================================================
+        2. BASE - Reset & Gaya Dasar Elemen HTML
+        ========================================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--foreground);
+            background-color: var(--background);
+            line-height: 1.5;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover,
+        a:focus-visible {
+            color: var(--primary);
+            outline: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+            box-shadow: var(--shadow-focus);
+            border-radius: var(--radius);
+        }
+
+        /* ==========================================================================
+        3. UTILITIES - Kelas Bantuan & Helper
+        ========================================================================== */
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ==========================================================================
+        4. COMPONENTS - Blok UI yang Dapat Digunakan Kembali
+        ========================================================================== */
+
+        /* --- 4.0 Komponen Baru (Modal, Toast, Alert) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            font-size: 1.5rem;
+            color: var(--muted-foreground);
+            line-height: 1;
+        }
+
+        .modal-body {
+            color: var(--muted-foreground);
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 1rem 1.25rem;
+            border-left: 4px solid var(--primary);
+            min-width: 300px;
+            opacity: 0;
+            transform: translateX(100%);
+            animation: slideInAndOut 4s ease-in-out forwards;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--error);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--error);
+        }
+
+        @keyframes slideInAndOut {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            10%,
+            90% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            border: 1px solid transparent;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .alert-success {
+            background-color: #F0FDF4;
+            border-color: #A7F3D0;
+            color: #15803D;
+        }
+
+        .alert-error {
+            background-color: #FEF2F2;
+            border-color: #FECACA;
+            color: #B91C1C;
+        }
+
+        .alert-info {
+            background-color: #EFF6FF;
+            border-color: #BFDBFE;
+            color: #1E40AF;
+        }
+
+        .alert-icon {
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        /* --- 4.1 Tombol (Button) --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus-visible {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--foreground);
+        }
+
+        .btn-outline:hover,
+        .btn-outline:focus-visible {
+            background-color: var(--muted);
+            color: var(--foreground);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+        }
+
+        .btn-ghost:hover,
+        .btn-ghost:focus-visible {
+            background-color: var(--muted);
+        }
+
+        .btn-lg {
+            padding: 0.75rem 2rem;
+            font-size: 1.05rem;
+        }
+
+        .btn-block {
+            display: flex;
+            width: 100%;
+        }
+
+        /* --- 4.2 Navbar --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--background);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 0.75rem 0;
+            height: var(--navbar-height);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .navbar-logo .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .navbar-logo .logo-icon {
+            font-size: 1.5rem;
+            margin-right: 0.25rem;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .navbar-search-wrapper {
+            flex: 1;
+            margin: 0 1.5rem;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .navbar-search-wrapper .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+        }
+
+        #navbar-search-input {
+            width: 100%;
+            height: 40px;
+            border-radius: 999px;
+            background-color: var(--muted);
+            border: 1px solid var(--muted);
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            transition: all 0.2s ease;
+        }
+
+        #navbar-search-input:focus {
+            background-color: var(--background);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-focus);
+        }
+
+        /* --- 4.3 Form Pencarian Hero --- */
+        .search-card {
+            background-color: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            display: flex;
+            align-items: stretch;
+            gap: 1rem;
+        }
+
+        .search-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-item:focus-within,
+        .search-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-focus);
+        }
+
+        .search-item i.fa-solid {
+            color: var(--primary);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .search-label {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            font-weight: 500;
+            margin: 0 0 0.2rem 0;
+            display: block;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0;
+            color: var(--foreground);
+        }
+
+        .search-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            min-width: 120px;
+            gap: 0.5rem;
+        }
+
+        .search-button:hover,
+        .search-button:focus-visible {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        /* --- 4.4 Kartu Properti --- */
+        .property-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover,
+        .property-card:focus-visible {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            outline: none;
+        }
+
+        .property-image-container {
+            position: relative;
+            padding-top: 60%;
+            background-color: var(--muted);
+        }
+
+        .property-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-tags {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .property-tag {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            backdrop-filter: blur(4px);
+            padding: 0.25rem 0.625rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .property-content {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+            gap: 0.5rem;
+        }
+
+        .property-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .property-rating {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .property-rating .fa-star {
+            color: #FFCA28;
+            margin-right: 0.25rem;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+
+        .property-amenities {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .price-period {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--muted-foreground);
+        }
+
+        /* --- 4.5 Filter Sidebar --- */
+        .filter-sidebar {
+            display: none;
+        }
+
+        .filter-container {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            position: sticky;
+            top: calc(var(--navbar-height) + 1rem);
+            max-height: calc(100vh - var(--navbar-height) - 2rem);
+            overflow-y: auto;
+        }
+
+        .filter-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group-title {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .filter-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .range-slider-container {
+            position: relative;
+            height: 0.25rem;
+            background-color: var(--muted);
+            border-radius: var(--radius);
+            margin: 1.5rem 0.5rem;
+        }
+
+        .slider-track {
+            position: absolute;
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: var(--radius);
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 0.25rem;
+            background: transparent;
+            outline: none;
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            margin-top: -0.375rem;
+            box-shadow: var(--shadow);
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 1rem;
+            height: 1rem;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: auto;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .range-inputs {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .input-group {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .range-input {
+            width: 100%;
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        /* --- 4.6 Footer --- */
+        .footer {
+            background-color: var(--muted);
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            padding: 3rem 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .footer-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 9999px;
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover,
+        .social-btn:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            color: var(--primary);
+        }
+
+        .footer-subtitle {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--muted-foreground);
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus-visible {
+            color: var(--primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 0.75rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-right: none;
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+
+        .newsletter-input:focus-visible {
+            outline-color: var(--primary);
+            z-index: 1;
+            position: relative;
+        }
+
+        .newsletter-form .btn {
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .copyright {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .footer-legal a {
+            color: var(--muted-foreground);
+        }
+
+        /* ==========================================================================
+        5. LAYOUT - Struktur Utama Halaman
+        ========================================================================== */
+        .main-content {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            min-height: calc(100vh - var(--navbar-height) - 250px);
+        }
+
+        .property-list-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sort-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: white;
+            min-width: 200px;
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: var(--muted);
+            border-radius: var(--radius);
+            color: var(--muted-foreground);
+            font-size: 1.1rem;
+        }
+
+        /* ==========================================================================
+        6. PAGES - Gaya Khusus Halaman
+        ========================================================================== */
+        /* --- 6.1 Halaman Detail Properti --- */
+        .property-detail-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .property-detail-back-btn {
+            margin-bottom: 1rem;
+        }
+
+        .property-detail {
+            background-color: var(--background);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+        }
+
+        .property-detail-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .property-detail-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .property-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .property-detail-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--muted-foreground);
+        }
+
+        .property-detail-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 0.5rem;
+        }
+
+        .property-detail-gallery {
+            margin-bottom: 2rem;
+        }
+
+        .property-detail-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .property-detail-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .property-detail-description p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: var(--muted-foreground);
+        }
+
+        .property-detail-amenities {
+            margin: 2rem 0;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background-color: var(--secondary);
+            border-radius: var(--radius);
+        }
+
+        .amenity-item i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .booking-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: calc(var(--navbar-height) + 1rem);
+        }
+
+        .booking-card-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .booking-card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .booking-card-body {
+            padding: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-focus);
+            outline: none;
+        }
+
+        .agent-card {
+            background-color: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .agent-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 0.5rem;
+        }
+
+        .agent-name {
+            font-weight: 600;
+        }
+
+        .agent-title {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* --- 6.2 Halaman Auth (Login/Register) --- */
+        .auth-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .auth-card {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .auth-subtitle {
+            color: var(--muted-foreground);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* --- 6.3 Halaman Pembayaran --- */
+        .payment-page {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .payment-method {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .payment-method-header {
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .payment-method-header:hover {
+            background-color: var(--muted);
+        }
+
+        .payment-method-header h4 {
+            font-weight: 600;
+        }
+
+        .payment-method-body {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .payment-method.active .payment-method-body {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .payment-method-header .arrow {
+            transition: transform 0.2s;
+        }
+
+        .payment-method.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .qris-image {
+            max-width: 250px;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        /* --- 6.4 Halaman Konfirmasi --- */
+        .confirmation-page {
+            text-align: center;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation-page p {
+            margin-bottom: 1.5rem;
+            color: var(--muted-foreground);
+        }
+
+        /* ==========================================================================
+        7. RESPONSIVE - Media Queries
+        ========================================================================== */
+        @media (max-width: 899px) {
+            .search-card {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+                padding: 0.75rem 1rem;
+                font-size: 1.1rem;
+            }
+
+            .navbar-search-wrapper {
+                display: none;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .property-list-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .property-detail-header {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .listings-grid {
+                grid-template-columns: 280px 1fr;
+            }
+
+            .filter-sidebar {
+                display: block;
+            }
+
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .property-detail-layout {
+                grid-template-columns: 2fr 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: minmax(250px, 1.5fr) 1fr 1fr 1.5fr;
+                gap: 2.5rem;
+            }
+
+            .navbar-search-wrapper {
+                display: block;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .property-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="modal-container"></div>
+        <div id="toast-container" class="toast-container"></div>
+
+        <header id="navbar-container" class="navbar"></header>
+
+        <main id="main-content" class="main-content"></main>
+
+        <footer id="footer-container" class="footer"></footer>
+    </div>
+
+    <!-- =============== TEMPLATES =============== -->
+
+    <!-- Template Navbar -->
+    <template id="navbar-template">
+        <div class="container">
+            <a href="#/" class="navbar-logo logo">
+                <span class="logo-icon">⌂</span> Green Valley
+            </a>
+            <div class="navbar-search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Cari berdasarkan nama atau lokasi..." class="search-input"
+                    id="navbar-search-input" aria-label="Cari Properti" />
+            </div>
+            <div id="navbar-actions-container" class="navbar-actions">
+                <!-- Tombol dinamis (Login/Logout) akan di-render di sini -->
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Utama (Beranda) -->
+    <template id="home-page-template">
+        <section class="hero" style="background:var(--secondary); padding: 3rem 0;">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title" style="font-size: 2.5rem; text-align:center; margin-bottom: 0.5rem;">
+                        Temukan <span class="text-primary">Apartemen</span> Sempurna Anda
+                    </h1>
+                    <p class="hero-description"
+                        style="text-align:center; color: var(--muted-foreground); max-width: 600px; margin: 0 auto 2rem auto;">
+                        Telusuri ribuan daftar sewa terverifikasi dengan fasilitas lengkap, tur virtual, dan ulasan
+                        tepercaya.
+                    </p>
+                    <form class="search-card" id="hero-search-form">
+                        <div class="search-item">
+                            <i class="fa-solid fa-map-marker-alt"></i>
+                            <div class="search-input-wrapper">
+                                <label for="lokasi" class="search-label">Lokasi</label>
+                                <input type="text" id="lokasi" class="search-input" placeholder="e.g. Jakarta Selatan">
+                            </div>
+                        </div>
+                        <div class="search-item">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            <div class="search-input-wrapper">
+                                <label for="tanggal-checkin" class="search-label">Check-in</label>
+                                <input type="date" id="tanggal-checkin" class="search-input" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="search-button">
+                            <i class="fa-solid fa-search"></i>
+                            <span class="button-text">Cari</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="container tabs-section">
+            <div class="property-list-header">
+                <h2 class="section-title">Rekomendasi Untuk Anda</h2>
+                <div class="sort-dropdown">
+                    <select class="sort-select" id="sort-properties" aria-label="Urutkan properti">
+                        <option value="recommended">Urutkan: Rekomendasi</option>
+                        <option value="priceLowToHigh">Harga: Rendah ke Tinggi</option>
+                        <option value="priceHighToLow">Harga: Tinggi ke Rendah</option>
+                        <option value="highestRated">Rating Tertinggi</option>
+                        <option value="newest">Terbaru</option>
+                    </select>
+                </div>
+            </div>
+            <div class="listings-grid">
+                <aside class="filter-sidebar" id="filter-sidebar-listings"></aside>
+                <div class="property-list-container">
+                    <div class="property-grid" id="properties-container"></div>
+                    <div id="no-results-message" class="no-results d-none">
+                        <i class="fas fa-search fa-3x" style="margin-bottom: 1rem; color: #cbd5e1;"></i><br>
+                        Tidak ada properti yang cocok dengan kriteria Anda.
+                    </div>
+                    <div class="load-more">
+                        <button class="btn btn-outline load-more-btn d-none" id="load-more-properties">
+                            Muat Lebih Banyak
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Template Kartu Properti -->
+    <template id="property-card-template">
+        <article class="property-card" tabindex="0">
+            <div class="property-image-container">
+                <img class="property-image" src="" alt="Gambar Properti" loading="lazy">
+                <div class="property-tags"></div>
+            </div>
+            <div class="property-content">
+                <div class="property-header">
+                    <h3 class="property-title">Judul Properti</h3>
+                    <div class="property-rating">
+                        <i class="fas fa-star"></i>
+                        <span class="rating-value">0.0</span>
+                    </div>
+                </div>
+                <div class="property-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="location-text">Lokasi Properti</span>
+                </div>
+                <div class="property-details">
+                    <div class="property-amenities">
+                        <span class="beds" title="Kamar Tidur"><i class="fas fa-bed"></i> 0</span>
+                        <span class="baths" title="Kamar Mandi"><i class="fas fa-bath"></i> 0</span>
+                        <span class="area" title="Luas"><i class="fas fa-vector-square"></i> 0 m²</span>
+                    </div>
+                    <div class="property-price">
+                        <span class="price-value">$0</span>
+                        <span class="price-period">/bln</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <!-- Template Filter Sidebar -->
+    <template id="filter-sidebar-template">
+        <div class="filter-container">
+            <h3 class="filter-title">Filter</h3>
+            <div class="filter-group">
+                <h4 class="filter-group-title">Rentang Harga (per bulan)</h4>
+                <div class="range-slider-container">
+                    <div class="slider-track"></div>
+                    <input type="range" min="1000000" max="20000000" value="1000000" step="500000" class="range-slider"
+                        id="filter-min-price">
+                    <input type="range" min="1000000" max="20000000" value="20000000" step="500000" class="range-slider"
+                        id="filter-max-price">
+                </div>
+                <div class="range-inputs">
+                    <div class="input-group">
+                        <span class="input-prefix">Rp</span>
+                        <input type="text" placeholder="Min" class="range-input" id="min-price-input">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-prefix">Rp</span>
+                        <input type="text" placeholder="Max" class="range-input" id="max-price-input">
+                    </div>
+                </div>
+            </div>
+            <!-- Bisa ditambahkan grup filter lain di sini -->
+            <div class="filter-actions">
+                <button class="btn btn-outline" id="reset-filters-btn">Reset</button>
+                <button class="btn btn-primary" id="apply-filters-btn">Terapkan</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Detail Properti -->
+    <template id="property-detail-page-template">
+        <div class="property-detail-container">
+            <button class="btn btn-outline property-detail-back-btn" id="back-to-listings-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            <div class="property-detail">
+                <div class="property-detail-layout">
+                    <main class="property-detail-main">
+                        <header class="property-detail-header">
+                            <div>
+                                <h1 class="property-detail-title" data-field="title"></h1>
+                                <p class="property-detail-location" data-field="location"></p>
+                            </div>
+                        </header>
+                        <section class="property-detail-gallery">
+                            <img src="" alt="" class="property-detail-image" data-field="mainImage">
+                        </section>
+                        <section class="property-detail-description">
+                            <h2 class="property-detail-section-title">Deskripsi</h2>
+                            <p data-field="description"></p>
+                        </section>
+                        <section class="property-detail-amenities">
+                            <h2 class="property-detail-section-title">Fasilitas</h2>
+                            <div class="amenities-grid" data-field="amenitiesList"></div>
+                        </section>
+                    </main>
+                    <aside class="property-detail-sidebar">
+                        <div class="booking-card">
+                            <div class="booking-card-header">
+                                <h3 class="property-detail-price" data-field="price"></h3>
+                            </div>
+                            <div class="booking-card-body">
+                                <p class="font-semibold">Sewa properti ini sekarang!</p>
+                                <p class="text-sm"
+                                    style="font-size: 0.875rem; color: var(--muted-foreground); margin-bottom: 1.5rem;">
+                                    Masuk atau daftar untuk melanjutkan ke proses pembayaran.</p>
+                                <button class="btn btn-primary btn-block btn-lg" id="rent-now-btn">Sewa
+                                    Sekarang</button>
+                            </div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-info">
+                                <div class="agent-avatar"><img src="" alt="Foto Agen" data-field="agentAvatar"></div>
+                                <div class="agent-details">
+                                    <div class="agent-name" data-field="agentName"></div>
+                                    <div class="agent-title">Agen Properti</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline btn-block" id="contact-agent-btn">
+                                <i class="fas fa-comment-alt"></i> Hubungi Agen
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Login -->
+    <template id="login-page-template">
+        <div class="auth-page">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 class="auth-title">Selamat Datang Kembali</h2>
+                    <p class="auth-subtitle">Masuk untuk melanjutkan.</p>
+                </div>
+                <form id="login-form">
+                    <div id="login-alert-container"></div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-input" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-input" required
+                            autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+                </form>
+                <div class="auth-footer">
+                    Belum punya akun? <a href="#/register">Daftar di sini</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Register -->
+    <template id="register-page-template">
+        <div class="auth-page">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2 class="auth-title">Buat Akun Baru</h2>
+                    <p class="auth-subtitle">Bergabunglah dengan Green Valley.</p>
+                </div>
+                <form id="register-form">
+                    <div id="register-alert-container"></div>
+                    <div class="form-group">
+                        <label for="name">Nama Lengkap</label>
+                        <input type="text" id="name" class="form-input" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-input" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password (min. 6 karakter)</label>
+                        <input type="password" id="password" class="form-input" required minlength="6"
+                            autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Daftar</button>
+                </form>
+                <div class="auth-footer">
+                    Sudah punya akun? <a href="#/login">Masuk di sini</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Pembayaran -->
+    <template id="payment-page-template">
+        <div class="container payment-page">
+            <div class="payment-header">
+                <h1 class="section-title">Pembayaran</h1>
+                <p class="text-muted-foreground">Pilih metode pembayaran yang Anda inginkan.</p>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle alert-icon"></i>
+                <div>
+                    <h4 class="alert-title">Ringkasan Pesanan</h4>
+                    Anda akan menyewa <strong data-field="propertyName">Nama Properti</strong> dengan total tagihan
+                    <strong data-field="propertyPrice">Rp 0</strong>.
+                </div>
+            </div>
+
+            <div class="payment-methods-container">
+                <div class="payment-method">
+                    <div class="payment-method-header" data-payment-toggle>
+                        <h4><i class="fa-solid fa-wallet"></i> E-Wallet</h4>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="payment-method-body">
+                        <p>Bayar dengan mudah menggunakan e-wallet pilihan Anda (GoPay, OVO, Dana, dll).</p>
+                        <button class="btn btn-primary" data-payment-type="E-Wallet">Bayar dengan E-Wallet</button>
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <div class="payment-method-header" data-payment-toggle>
+                        <h4><i class="fa-solid fa-qrcode"></i> QRIS</h4>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="payment-method-body">
+                        <p>Pindai kode QR di bawah ini menggunakan aplikasi pembayaran Anda.</p>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=PAYMENT-SIMULATION-GREEN-VALLEY"
+                            alt="Kode QRIS" class="qris-image">
+                        <button class="btn btn-primary" data-payment-type="QRIS">Saya Sudah Bayar</button>
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <div class="payment-method-header" data-payment-toggle>
+                        <h4><i class="fa-solid fa-building-columns"></i> Transfer Bank</h4>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="payment-method-body">
+                        <p>Silakan transfer ke nomor rekening virtual account berikut:</p>
+                        <p><strong>Bank Mandiri:</strong> 8808 1234 5678 9012</p>
+                        <p><strong>BCA:</strong> 3901 1234 5678 9012</p>
+                        <button class="btn btn-primary" data-payment-type="Transfer Bank">Saya Sudah Transfer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Halaman Konfirmasi -->
+    <template id="confirmation-page-template">
+        <div class="container confirmation-page">
+            <i class="fas fa-check-circle confirmation-icon"></i>
+            <h1 class="section-title">Pembayaran Berhasil!</h1>
+            <p>Terima kasih! Pesanan sewa Anda untuk <strong data-field="propertyName"></strong> telah kami konfirmasi.
+                Tim kami akan segera menghubungi Anda untuk proses selanjutnya.</p>
+            <a href="#/" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
+        </div>
+    </template>
+
+    <!-- Template Modal -->
+    <template id="modal-template">
+        <div class="modal-overlay">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title-ph">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modal-title-ph"></h3>
+                    <button class="modal-close-btn btn btn-ghost" aria-label="Tutup"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body" id="modal-body-ph"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template Toast -->
+    <template id="toast-template">
+        <div class="toast">
+            <i class="toast-icon"></i>
+            <p class="toast-message"></p>
+        </div>
+    </template>
+
+    <!-- Template Footer -->
+    <template id="footer-template">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3 class="footer-title"><span class="logo-icon">⌂</span> Green Valley</h3>
+                    <p class="footer-text">Menemukan apartemen sewaan sempurna Anda tidak pernah semudah ini.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Tautan Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="#/">Beranda</a></li>
+                        <li><a href="#/search">Pencarian</a></li>
+                        <li><a href="#/featured">Properti Unggulan</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Dukungan</h4>
+                    <ul class="footer-links">
+                        <li><a href="#/help">Pusat Bantuan</a></li>
+                        <li><a href="#/contact">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Buletin</h4>
+                    <p class="footer-text">Dapatkan info properti terbaru dari kami.</p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Email Anda" class="newsletter-input" required>
+                        <button type="submit" class="btn btn-primary">Langganan</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">© 2025 Green Valley. Hak cipta dilindungi.</p>
+                <div class="footer-legal">
+                    <a href="#/privacy">Kebijakan Privasi</a>
+                    <a href="#/terms">Ketentuan Layanan</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // =========================================================================
+            // [1] DATA LAYER - Penyimpanan & State Aplikasi (Single Source of Truth)
+            // =========================================================================
+            const DataLayer = {
+                state: {
+                    allProperties: [],
+                    displayedProperties: [],
+                    propertiesPerPage: 6,
+                    currentPageNum: 1,
+                    filters: {
+                        searchTerm: "",
+                        priceMin: 1000000,
+                        priceMax: 20000000,
+                    },
+                    sortBy: "recommended",
+                    currentRoute: { path: '/', params: {} },
+                    currentUser: null, // null jika logout, object jika login
+                    rentalTarget: null, // Menyimpan properti yang akan disewa
+                },
+                mockUsers: [
+                    { id: 1, name: "User Demo", email: "user@demo.com", password: "password123" }
+                ],
+                initData: function () {
+                    this.state.allProperties = [
+                        { id: "prop1", title: "Apartemen Modern di SCBD", location: "Jakarta Selatan", price: 15000000, rating: 4.8, imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500", beds: 2, baths: 2, sqft: 95, tags: ["Mewah", "Baru"], amenities: ["ac", "parking", "gym"], dateAdded: "2024-07-15", agent: { name: "Budi Santoso", avatar: "https://randomuser.me/api/portraits/men/32.jpg" } },
+                        { id: "prop2", title: "Studio Nyaman di Thamrin", location: "Jakarta Pusat", price: 8000000, rating: 4.5, imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=500", beds: 1, baths: 1, sqft: 45, tags: ["Studio"], amenities: ["ac", "pool"], dateAdded: "2024-07-10", agent: { name: "Citra Lestari", avatar: "https://randomuser.me/api/portraits/women/44.jpg" } },
+                        { id: "prop3", title: "Kondo Mewah di Pakuwon", location: "Surabaya Timur", price: 12000000, rating: 4.9, imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500", beds: 3, baths: 2, sqft: 120, tags: ["Pemandangan"], amenities: ["ac", "pool", "gym"], dateAdded: "2024-06-20", agent: { name: "Rina Wijaya", avatar: "https://randomuser.me/api/portraits/women/68.jpg" } },
+                        { id: "prop4", title: "Apartemen Klasik Menteng", location: "Jakarta Pusat", price: 18000000, rating: 4.7, imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500", beds: 3, baths: 3, sqft: 150, tags: ["Klasik", "Luas"], amenities: ["ac", "parking"], dateAdded: "2024-07-01", agent: { name: "Ahmad Dahlan", avatar: "https://randomuser.me/api/portraits/men/46.jpg" } },
+                        { id: "prop5", title: "Unit Keluarga Pondok Indah", location: "Jakarta Selatan", price: 20000000, rating: 4.9, imageUrl: "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=500", beds: 4, baths: 3, sqft: 200, tags: ["Keluarga"], amenities: ["ac", "pool", "gym", "parking"], dateAdded: "2024-05-15", agent: { name: "Dewi Anggraini", avatar: "https://randomuser.me/api/portraits/women/33.jpg" } },
+                        { id: "prop6", title: "Loft Modern Surabaya Barat", location: "Surabaya", price: 9500000, rating: 4.6, imageUrl: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=500", beds: 2, baths: 2, sqft: 110, tags: ["Loft"], amenities: ["ac", "gym"], dateAdded: "2024-06-01", agent: { name: "Joko Susilo", avatar: "https://randomuser.me/api/portraits/men/55.jpg" } },
+                        ...Array.from({ length: 12 }, (_, i) => ({ id: `prop${i + 7}`, title: `Apartemen Tipe A${i + 1} di Jakarta`, location: "Jakarta Pusat", price: 7500000 + i * 500000, rating: 4.2 + i * 0.1, imageUrl: `https://plus.unsplash.com/premium_photo-1686090449192-4ab1d0621405?w=500&q=${80 + i}`, beds: 2, baths: 1, sqft: 60 + i * 2, tags: ["Terjangkau"], amenities: ["ac"], dateAdded: `2024-05-${10 + i}`, agent: { name: "Agen Otomatis", avatar: `https://randomuser.me/api/portraits/men/${i + 10}.jpg` } }))
+                    ];
+                    const savedUser = localStorage.getItem('greenValleyUser');
+                    if (savedUser) {
+                        try {
+                            this.state.currentUser = JSON.parse(savedUser);
+                        } catch (e) {
+                            console.error("Gagal memuat sesi user:", e);
+                            localStorage.removeItem('greenValleyUser');
+                        }
+                    }
+                },
+                getPropertyById: (id) => DataLayer.state.allProperties.find(p => p.id === id),
+                findUserByEmail: (email) => DataLayer.mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase()),
+                addUser: function (user) {
+                    if (this.findUserByEmail(user.email)) return null;
+                    const newId = this.mockUsers.length > 0 ? Math.max(...this.mockUsers.map(u => u.id)) + 1 : 1;
+                    const newUser = { id: newId, ...user };
+                    this.mockUsers.push(newUser);
+                    return newUser;
+                },
+                loginUser: function (user) {
+                    this.state.currentUser = { id: user.id, name: user.name, email: user.email };
+                    localStorage.setItem('greenValleyUser', JSON.stringify(this.state.currentUser));
+                },
+                logoutUser: function () {
+                    this.state.currentUser = null;
+                    localStorage.removeItem('greenValleyUser');
+                },
+            };
+
+            // =========================================================================
+            // [2] SERVICE / UTILITY LAYER - Fungsi Bantuan & Perkakas
+            // =========================================================================
+            const Utils = {
+                $: (selector, parent = document) => parent.querySelector(selector),
+                $$: (selector, parent = document) => parent.querySelectorAll(selector),
+                getTemplate: (id) => Utils.$(`#${id}-template`).content.cloneNode(true),
+                debounce: (func, delay) => {
+                    let timeout;
+                    return function (...args) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func.apply(this, args), delay);
+                    };
+                },
+                formatCurrency: (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount),
+                formatNumber: (number) => new Intl.NumberFormat('id-ID').format(number),
+                sanitizeHTML: (str) => {
+                    const temp = document.createElement('div');
+                    temp.textContent = str;
+                    return temp.innerHTML;
+                },
+                navigateTo: (hash) => { window.location.hash = hash; },
+            };
+
+            // =========================================================================
+            // [3] UI LAYER - Render & Manipulasi DOM
+            // =========================================================================
+            const UILayer = {
+                mainContent: Utils.$('#main-content'),
+
+                renderPage: function (pageTemplateId, setupFunction, ...args) {
+                    this.mainContent.innerHTML = '';
+                    try {
+                        const template = Utils.getTemplate(pageTemplateId);
+                        this.mainContent.appendChild(template);
+                        if (setupFunction) setupFunction(...args);
+                    } catch (error) {
+                        console.error(`Gagal merender template: ${pageTemplateId}`, error);
+                        this.mainContent.innerHTML = `<div class="container no-results">Terjadi kesalahan saat memuat halaman. Coba lagi nanti.</div>`;
+                    }
+                },
+                renderNavbar: function () {
+                    const container = Utils.$('#navbar-container');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    container.appendChild(Utils.getTemplate('navbar'));
+                    const actionsContainer = Utils.$('#navbar-actions-container');
+                    const user = DataLayer.state.currentUser;
+                    if (user) {
+                        const userName = user.name.split(' ')[0];
+                        actionsContainer.innerHTML = `
+                        <span class="font-semibold" style="color: var(--muted-foreground);">Halo, ${Utils.sanitizeHTML(userName)}</span>
+                        <button class="btn btn-outline" id="logout-btn">Logout</button>
+                    `;
+                        Utils.$('#logout-btn').addEventListener('click', LogicLayer.handleLogout);
+                    } else {
+                        actionsContainer.innerHTML = `
+                        <a href="#/login" class="btn btn-outline">Masuk</a>
+                        <a href="#/register" class="btn btn-primary">Daftar</a>
+                    `;
+                    }
+                    Utils.$('#navbar-search-input').addEventListener('input', Utils.debounce(LogicLayer.handleNavbarSearch, 300));
+                },
+                renderFooter: function () {
+                    const container = Utils.$('#footer-container');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    container.appendChild(Utils.getTemplate('footer'));
+                    Utils.$('#newsletter-form').addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        if (Utils.$('.newsletter-input', e.target).value) {
+                            this.showToast('Terima kasih telah berlangganan!', 'success');
+                            e.target.reset();
+                        }
+                    });
+                },
+                setupHomePage: function () {
+                    this.renderFilterSidebar('filter-sidebar-listings');
+                    this.setupFilterInteractions('filter-sidebar-listings');
+                    Utils.$('#hero-search-form').addEventListener('submit', LogicLayer.handleHeroSearch);
+                    Utils.$('#sort-properties').addEventListener('change', (e) => LogicLayer.handleSortChange(e.target.value));
+                    Utils.$('#load-more-properties').addEventListener('click', LogicLayer.loadMoreProperties);
+                    LogicLayer.applyFiltersAndSort();
+                },
+                setupPropertyDetailPage: function (property) {
+                    if (!property) {
+                        this.mainContent.innerHTML = `<div class="container no-results">Properti tidak ditemukan. Mungkin telah dihapus atau tautan salah.</div>`;
+                        return;
+                    }
+                    const page = this.mainContent;
+                    Utils.$('[data-field="title"]', page).textContent = property.title;
+                    Utils.$('[data-field="location"]', page).textContent = property.location;
+                    Utils.$('[data-field="price"]', page).textContent = `${Utils.formatCurrency(property.price)}/bulan`;
+                    Utils.$('[data-field="mainImage"]', page).src = property.imageUrl;
+                    Utils.$('[data-field="mainImage"]', page).alt = `Gambar ${property.title}`;
+                    Utils.$('[data-field="description"]', page).textContent = `Deskripsi lengkap untuk ${property.title}. Apartemen ini menawarkan pemandangan menakjubkan dan akses mudah ke fasilitas kota. Dengan ${property.beds} kamar tidur dan ${property.baths} kamar mandi, unit seluas ${property.sqft} m² ini cocok untuk profesional maupun keluarga kecil.`;
+                    Utils.$('[data-field="agentAvatar"]', page).src = property.agent.avatar;
+                    Utils.$('[data-field="agentName"]', page).textContent = property.agent.name;
+                    const amenitiesContainer = Utils.$('[data-field="amenitiesList"]', page);
+                    amenitiesContainer.innerHTML = '';
+                    const amenityMap = { ac: 'AC', parking: 'Parkir', gym: 'Gym', pool: 'Kolam Renang' };
+                    const iconMap = { ac: 'fa-snowflake', parking: 'fa-car', gym: 'fa-dumbbell', pool: 'fa-swimmer' };
+                    property.amenities.forEach(key => {
+                        const amenityEl = document.createElement('div');
+                        amenityEl.className = 'amenity-item';
+                        amenityEl.innerHTML = `<i class="fas ${iconMap[key]}"></i> <span>${amenityMap[key]}</span>`;
+                        amenitiesContainer.appendChild(amenityEl);
+                    });
+                    Utils.$('#back-to-listings-btn').addEventListener('click', () => window.history.back());
+                    Utils.$('#rent-now-btn').addEventListener('click', () => LogicLayer.handleRentNow(property));
+                    Utils.$('#contact-agent-btn').addEventListener('click', () => this.showContactAgentModal(property.agent));
+                },
+                setupLoginPage: function () {
+                    Utils.$('#login-form').addEventListener('submit', LogicLayer.handleLogin);
+                },
+                setupRegisterPage: function () {
+                    Utils.$('#register-form').addEventListener('submit', LogicLayer.handleRegister);
+                },
+                setupPaymentPage: function (property) {
+                    if (!property) {
+                        this.mainContent.innerHTML = `<div class="container no-results">Informasi properti untuk pembayaran tidak valid.</div>`;
+                        return;
+                    }
+                    Utils.$('[data-field="propertyName"]', this.mainContent).textContent = property.title;
+                    Utils.$('[data-field="propertyPrice"]', this.mainContent).textContent = Utils.formatCurrency(property.price);
+                    Utils.$$('[data-payment-toggle]').forEach(header => {
+                        header.addEventListener('click', (e) => {
+                            const method = e.currentTarget.closest('.payment-method');
+                            method.classList.toggle('active');
+                        });
+                    });
+                    Utils.$$('[data-payment-type]').forEach(btn => {
+                        btn.addEventListener('click', (e) => LogicLayer.handlePayment(e.currentTarget.dataset.paymentType));
+                    });
+                },
+                setupConfirmationPage: function (property) {
+                    if (!property) return;
+                    Utils.$('[data-field="propertyName"]', this.mainContent).textContent = property.title;
+                },
+                renderPropertyCards: function () {
+                    const container = Utils.$('#properties-container');
+                    const loadMoreBtn = Utils.$('#load-more-properties');
+                    const noResultsMsg = Utils.$('#no-results-message');
+                    if (!container || !loadMoreBtn || !noResultsMsg) return;
+
+                    const startIndex = (DataLayer.state.currentPageNum - 1) * DataLayer.state.propertiesPerPage;
+                    const endIndex = startIndex + DataLayer.state.propertiesPerPage;
+                    const propertiesToRender = DataLayer.state.displayedProperties.slice(startIndex, endIndex);
+
+                    if (DataLayer.state.currentPageNum === 1) container.innerHTML = '';
+
+                    propertiesToRender.forEach(property => {
+                        const cardClone = Utils.getTemplate('property-card');
+                        const cardElement = Utils.$('.property-card', cardClone);
+                        cardElement.dataset.id = property.id;
+                        cardElement.addEventListener('click', () => Utils.navigateTo(`#/property/${property.id}`));
+                        cardElement.addEventListener('keydown', (e) => { if (e.key === 'Enter') Utils.navigateTo(`#/property/${property.id}`); });
+                        Utils.$('.property-image', cardClone).src = property.imageUrl;
+                        Utils.$('.property-image', cardClone).alt = `Gambar ${property.title}`;
+                        Utils.$('.property-title', cardClone).textContent = property.title;
+                        Utils.$('.rating-value', cardClone).textContent = property.rating.toFixed(1);
+                        Utils.$('.location-text', cardClone).textContent = property.location;
+                        Utils.$('.beds', cardClone).innerHTML = `<i class="fas fa-bed"></i> ${property.beds}`;
+                        Utils.$('.baths', cardClone).innerHTML = `<i class="fas fa-bath"></i> ${property.baths}`;
+                        Utils.$('.area', cardClone).innerHTML = `<i class="fas fa-vector-square"></i> ${property.sqft} m²`;
+                        Utils.$('.price-value', cardClone).textContent = Utils.formatCurrency(property.price);
+                        const tagsContainer = Utils.$('.property-tags', cardClone);
+                        property.tags.slice(0, 2).forEach(tagText => {
+                            const tagEl = document.createElement('span');
+                            tagEl.className = 'property-tag';
+                            tagEl.textContent = tagText;
+                            tagsContainer.appendChild(tagEl);
+                        });
+                        container.appendChild(cardClone);
+                    });
+
+                    loadMoreBtn.classList.toggle('d-none', endIndex >= DataLayer.state.displayedProperties.length);
+                    noResultsMsg.classList.toggle('d-none', DataLayer.state.displayedProperties.length > 0);
+                },
+                renderFilterSidebar: function (containerId) {
+                    const sidebarContainer = Utils.$(`#${containerId}`);
+                    if (!sidebarContainer) return;
+                    sidebarContainer.innerHTML = '';
+                    sidebarContainer.appendChild(Utils.getTemplate('filter-sidebar'));
+                    this.setupRangeSliders(sidebarContainer);
+                },
+                setupFilterInteractions: function (containerId) {
+                    const container = Utils.$(`#${containerId}`);
+                    if (!container) return;
+                    Utils.$('#apply-filters-btn', container)?.addEventListener('click', LogicLayer.applyFiltersAndSort);
+                    Utils.$('#reset-filters-btn', container)?.addEventListener('click', () => LogicLayer.resetFilters(container));
+                },
+                setupRangeSliders: function (container) {
+                    const minSlider = Utils.$('#filter-min-price', container);
+                    const maxSlider = Utils.$('#filter-max-price', container);
+                    const minInput = Utils.$('#min-price-input', container);
+                    const maxInput = Utils.$('#max-price-input', container);
+                    const minGap = 500000;
+
+                    const updateUI = (e) => {
+                        let minVal = parseInt(minSlider.value);
+                        let maxVal = parseInt(maxSlider.value);
+                        if (maxVal - minVal < minGap) {
+                            if (e && (e.target === minSlider || e.target === minInput)) {
+                                minSlider.value = maxVal - minGap;
+                            } else {
+                                maxSlider.value = minVal + minGap;
+                            }
+                        }
+                        minInput.value = Utils.formatNumber(parseInt(minSlider.value));
+                        maxInput.value = Utils.formatNumber(parseInt(maxSlider.value));
+                        this.updateSliderTrack(container);
+                    };
+
+                    [minSlider, maxSlider].forEach(slider => slider.addEventListener('input', updateUI));
+                    [minInput, maxInput].forEach(input => input.addEventListener('change', (e) => {
+                        const slider = (e.target.id.includes('min')) ? minSlider : maxSlider;
+                        slider.value = e.target.value.replace(/\D/g, '');
+                        updateUI();
+                    }));
+                    updateUI(); // Initial call
+                },
+                updateSliderTrack: function (container) {
+                    const track = Utils.$('.slider-track', container);
+                    const minSlider = Utils.$('#filter-min-price', container);
+                    const maxSlider = Utils.$('#filter-max-price', container);
+                    const min = parseInt(minSlider.min);
+                    const max = parseInt(minSlider.max);
+                    const fromPercent = ((minSlider.value - min) / (max - min)) * 100;
+                    const toPercent = ((maxSlider.value - min) / (max - min)) * 100;
+                    track.style.left = `${fromPercent}%`;
+                    track.style.right = `${100 - toPercent}%`;
+                },
+                showToast: function (message, type = 'info') {
+                    const container = Utils.$('#toast-container');
+                    const toastClone = Utils.getTemplate('toast');
+                    const toastEl = Utils.$('.toast', toastClone);
+                    const iconMap = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+                    toastEl.classList.add(type);
+                    Utils.$('.toast-icon', toastEl).className = `toast-icon fas ${iconMap[type]}`;
+                    Utils.$('.toast-message', toastEl).textContent = message;
+                    container.appendChild(toastClone);
+                    setTimeout(() => { toastEl.remove(); }, 4000);
+                },
+                showAlert: function (containerId, message, type = 'error') {
+                    const container = Utils.$(`#${containerId}`);
+                    if (!container) return;
+                    const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+                    container.innerHTML = `<div class="alert alert-${type}"><i class="fas ${iconMap[type]} alert-icon"></i><p>${message}</p></div>`;
+                },
+                showModal: function (title, content) {
+                    const container = Utils.$('#modal-container');
+                    container.innerHTML = '';
+                    const modalClone = Utils.getTemplate('modal');
+                    const overlay = Utils.$('.modal-overlay', modalClone);
+                    Utils.$('#modal-title-ph', modalClone).textContent = title;
+                    Utils.$('#modal-body-ph', modalClone).innerHTML = content;
+                    container.appendChild(modalClone);
+                    setTimeout(() => overlay.classList.add('active'), 10);
+                    const closeModal = () => {
+                        overlay.classList.remove('active');
+                        setTimeout(() => container.innerHTML = '', 300);
+                    };
+                    Utils.$('.modal-close-btn', container).addEventListener('click', closeModal);
+                    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+                },
+                showContactAgentModal: function (agent) {
+                    const title = `Hubungi ${agent.name}`;
+                    const content = `
+                    <p>Anda dapat menghubungi agen properti ini melalui informasi di bawah:</p>
+                    <ul style="list-style: none; padding: 1rem 0; display: grid; gap: 0.5rem;">
+                        <li><strong><i class="fas fa-envelope"></i> Email:</strong> <a href="mailto:agen@demo.com">agen@demo.com</a></li>
+                        <li><strong><i class="fas fa-phone"></i> Telepon:</strong> <a href="tel:+6281234567890">+62 812-3456-7890</a></li>
+                    </ul>
+                    <p class="text-sm" style="font-size: 0.875rem; color:var(--muted-foreground)">Ini adalah data simulasi.</p>`;
+                    this.showModal(title, content);
+                }
+            };
+
+            // =========================================================================
+            // [4] LOGIC LAYER - Otak Aplikasi & Alur Bisnis
+            // =========================================================================
+            const LogicLayer = {
+                initApp: function () {
+                    DataLayer.initData();
+                    UILayer.renderNavbar();
+                    UILayer.renderFooter();
+                    window.addEventListener('hashchange', RoutingLayer.handleRouteChange);
+                    RoutingLayer.handleRouteChange(); // Initial route
+                },
+                handleHeroSearch: function (e) {
+                    e.preventDefault();
+                    DataLayer.state.filters.searchTerm = Utils.$('#lokasi').value;
+                    UILayer.showToast('Pencarian diterapkan!', 'info');
+                    LogicLayer.applyFiltersAndSort();
+                },
+                handleNavbarSearch: (e) => {
+                    DataLayer.state.filters.searchTerm = e.target.value;
+                    if (DataLayer.state.currentRoute.path === '/') {
+                        LogicLayer.applyFiltersAndSort();
+                    } else {
+                        Utils.navigateTo('/');
+                    }
+                },
+                applyFiltersAndSort: function () {
+                    const sidebar = Utils.$('#filter-sidebar-listings .filter-container');
+                    if (sidebar) {
+                        DataLayer.state.filters.priceMin = parseInt(Utils.$('#min-price-input', sidebar).value.replace(/\D/g, '')) || DataLayer.state.allProperties.reduce((min, p) => p.price < min ? p.price : min, Infinity);
+                        DataLayer.state.filters.priceMax = parseInt(Utils.$('#max-price-input', sidebar).value.replace(/\D/g, '')) || DataLayer.state.allProperties.reduce((max, p) => p.price > max ? p.price : max, 0);
+                    }
+
+                    let filtered = [...DataLayer.state.allProperties];
+                    const term = DataLayer.state.filters.searchTerm.trim().toLowerCase();
+                    if (term) {
+                        filtered = filtered.filter(p => p.title.toLowerCase().includes(term) || p.location.toLowerCase().includes(term));
+                    }
+
+                    filtered = filtered.filter(p => p.price >= DataLayer.state.filters.priceMin && p.price <= DataLayer.state.filters.priceMax);
+
+                    switch (DataLayer.state.sortBy) {
+                        case 'priceLowToHigh': filtered.sort((a, b) => a.price - b.price); break;
+                        case 'priceHighToLow': filtered.sort((a, b) => b.price - a.price); break;
+                        case 'highestRated': filtered.sort((a, b) => b.rating - a.rating); break;
+                        case 'newest': filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)); break;
+                    }
+                    DataLayer.state.displayedProperties = filtered;
+                    DataLayer.state.currentPageNum = 1;
+                    UILayer.renderPropertyCards();
+                },
+                resetFilters: function (container) {
+                    DataLayer.state.filters.priceMin = 1000000;
+                    DataLayer.state.filters.priceMax = 20000000;
+                    Utils.$('#filter-min-price', container).value = DataLayer.state.filters.priceMin;
+                    Utils.$('#filter-max-price', container).value = DataLayer.state.filters.priceMax;
+                    UILayer.setupRangeSliders(container);
+                    this.applyFiltersAndSort();
+                    UILayer.showToast('Filter direset', 'info');
+                },
+                handleSortChange: function (value) {
+                    DataLayer.state.sortBy = value;
+                    this.applyFiltersAndSort();
+                },
+                loadMoreProperties: function () {
+                    DataLayer.state.currentPageNum++;
+                    UILayer.renderPropertyCards();
+                },
+                handleLogin: function (e) {
+                    e.preventDefault();
+                    const email = Utils.$('#email').value;
+                    const password = Utils.$('#password').value;
+                    const user = DataLayer.findUserByEmail(email);
+                    if (user && user.password === password) {
+                        DataLayer.loginUser(user);
+                        UILayer.showToast('Login berhasil!', 'success');
+                        UILayer.renderNavbar();
+                        const targetUrl = DataLayer.state.rentalTarget ? `#/rent/${DataLayer.state.rentalTarget.id}` : '#/';
+                        DataLayer.state.rentalTarget = null; // Clear target after use
+                        Utils.navigateTo(targetUrl);
+                    } else {
+                        UILayer.showAlert('login-alert-container', 'Email atau password salah.');
+                    }
+                },
+                handleRegister: function (e) {
+                    e.preventDefault();
+                    const name = Utils.$('#name').value;
+                    const email = Utils.$('#email').value;
+                    const password = Utils.$('#password').value;
+                    if (DataLayer.findUserByEmail(email)) {
+                        UILayer.showAlert('register-alert-container', 'Email sudah terdaftar. Silakan gunakan email lain.');
+                        return;
+                    }
+                    const newUser = DataLayer.addUser({ name, email, password });
+                    DataLayer.loginUser(newUser);
+                    UILayer.showToast('Pendaftaran berhasil! Selamat datang.', 'success');
+                    UILayer.renderNavbar();
+                    Utils.navigateTo('#/');
+                },
+                handleLogout: function () {
+                    DataLayer.logoutUser();
+                    UILayer.showToast('Anda telah logout.', 'info');
+                    UILayer.renderNavbar();
+                    Utils.navigateTo('#/');
+                },
+                handleRentNow: function (property) {
+                    DataLayer.state.rentalTarget = property;
+                    if (DataLayer.state.currentUser) {
+                        Utils.navigateTo(`#/rent/${property.id}`);
+                    } else {
+                        UILayer.showToast('Silakan login untuk melanjutkan penyewaan', 'info');
+                        Utils.navigateTo('#/login');
+                    }
+                },
+                handlePayment: function (type) {
+                    UILayer.showToast(`Memproses pembayaran via ${type}...`, 'info');
+                    setTimeout(() => {
+                        if (DataLayer.state.rentalTarget) {
+                            Utils.navigateTo(`#/confirmation/${DataLayer.state.rentalTarget.id}`);
+                        } else {
+                            UILayer.showToast('Sesi pembayaran kadaluarsa, silakan ulangi.', 'error');
+                            Utils.navigateTo('#/');
+                        }
+                    }, 1500);
+                }
+            };
+
+            // =========================================================================
+            // [5] ROUTING LAYER - Navigasi Aplikasi
+            // =========================================================================
+            const RoutingLayer = {
+                handleRouteChange: function () {
+                    const hash = window.location.hash || '#/';
+                    const path = hash.substring(1).split('?')[0];
+                    DataLayer.state.currentRoute = { path };
+                    window.scrollTo(0, 0);
+
+                    if (path.startsWith('/property/')) {
+                        const propertyId = path.split('/')[2];
+                        const property = DataLayer.getPropertyById(propertyId);
+                        UILayer.renderPage('property-detail-page', UILayer.setupPropertyDetailPage.bind(UILayer), property);
+                    } else if (path.startsWith('/rent/')) {
+                        if (!DataLayer.state.currentUser) { Utils.navigateTo('#/login'); return; }
+                        const propertyId = path.split('/')[2];
+                        const property = DataLayer.getPropertyById(propertyId);
+                        DataLayer.state.rentalTarget = property;
+                        UILayer.renderPage('payment-page', UILayer.setupPaymentPage.bind(UILayer), property);
+                    } else if (path.startsWith('/confirmation/')) {
+                        if (!DataLayer.state.currentUser) { Utils.navigateTo('#/login'); return; }
+                        const propertyId = path.split('/')[2];
+                        const property = DataLayer.getPropertyById(propertyId);
+                        UILayer.renderPage('confirmation-page', UILayer.setupConfirmationPage.bind(UILayer), property);
+                    } else {
+                        switch (path) {
+                            case '/login':
+                                UILayer.renderPage('login-page', UILayer.setupLoginPage.bind(UILayer));
+                                break;
+                            case '/register':
+                                UILayer.renderPage('register-page', UILayer.setupRegisterPage.bind(UILayer));
+                                break;
+                            case '/':
+                            case '/search':
+                            case '/featured':
+                                UILayer.renderPage('home-page', UILayer.setupHomePage.bind(UILayer));
+                                break;
+                            default:
+                                UILayer.mainContent.innerHTML = `<div class="container no-results"><h2>404 - Halaman Tidak Ditemukan</h2><p>Halaman yang Anda cari tidak ada. <a href="#/">Kembali ke beranda</a>.</p></div>`;
+                        }
+                    }
+                }
+            };
+
+            // =========================================================================
+            // INISIALISASI APLIKASI
+            // =========================================================================
+            LogicLayer.initApp();
+        });
+    </script>
+</body>
+
+</html>
