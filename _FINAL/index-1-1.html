@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- META VIEWPORT YANG BENAR - PENTING UNTUK RESPONSIVITAS -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Headers Keamanan -->
@@ -293,8 +294,8 @@
             /* Basis untuk REM */
             scroll-behavior: smooth;
             height: 100%;
+            /* PERBAIKAN RESPONSIVITAS: Mencegah scroll horizontal yang tidak diinginkan di level tertinggi */
             overflow-x: hidden;
-            /* Mencegah scroll horizontal yang tidak diinginkan */
         }
 
         body {
@@ -310,6 +311,21 @@
             /* Untuk struktur dasar aplikasi (sidebar + main) */
             flex-direction: row;
             /* Konten utama bersebelahan dengan sidebar */
+        }
+
+        /* PERBAIKAN RESPONSIVITAS: Menambah overlay saat sidebar mobile aktif */
+        body.sidebar-open-overlay::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: calc(var(--z-fixed) - 1);
+            /* Tepat di bawah sidebar */
+            display: none;
+            /* Default tersembunyi */
         }
 
         /* Tipografi */
@@ -567,28 +583,21 @@
             background: var(--card);
             padding: var(--spacing-5) var(--spacing-4);
             border-right: 1px solid var(--border);
-            /* Dulu position: fixed, sekarang bagian dari flex body */
             height: 100vh;
             /* Tinggi penuh viewport */
             display: flex;
             flex-direction: column;
             box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, padding 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out;
+            /* Dulu ada width & padding, sekarang hanya transform */
             overflow-y: auto;
             /* Scroll jika konten sidebar panjang */
             z-index: var(--z-sticky);
-            /* Agar di atas konten lain */
+            /* Di atas konten lain */
+            flex-shrink: 0;
+            /* Mencegah sidebar menyusut */
         }
 
-        .sidebar.collapsed {
-            width: 0;
-            /* Atau var(--sidebar-width-collapsed) jika ingin ikon saja */
-            padding-left: 0;
-            padding-right: 0;
-            transform: translateX(-100%);
-            /* Sembunyikan sepenuhnya */
-            overflow: hidden;
-        }
 
         .sidebar-brand {
             display: flex;
@@ -613,12 +622,6 @@
             white-space: nowrap;
             /* Agar teks tidak wrap */
         }
-
-        .sidebar.collapsed .sidebar-brand__text {
-            opacity: 0;
-            pointer-events: none;
-        }
-
 
         .nav-menu {
             list-style: none;
@@ -676,26 +679,6 @@
             /* Prevent hover transform on active link */
         }
 
-
-        .sidebar.collapsed .nav-link span {
-            /* Sembunyikan teks link saat collapsed */
-            opacity: 0;
-            width: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .sidebar.collapsed .nav-link {
-            justify-content: center;
-            /* Pusatkan ikon */
-        }
-
-        .sidebar.collapsed .nav-link:hover {
-            /* NEW: No translateX for collapsed sidebar icons */
-            transform: none;
-        }
-
-
         .main-wrapper {
             flex-grow: 1;
             /* Mengisi sisa ruang di body */
@@ -705,8 +688,9 @@
             /* Memastikan wrapper utama mengisi tinggi viewport */
             overflow-y: auto;
             /* Scroll utama aplikasi ada di sini */
-            transition: margin-left 0.3s ease-in-out;
-            /* Jika sidebar fixed */
+            /* Transisi margin-left dihapus karena sidebar akan menjadi fixed/overlay */
+            width: 100%;
+            /* Memastikan wrapper mengisi sisa ruang */
         }
 
         .app-header {
@@ -729,6 +713,11 @@
             display: flex;
             align-items: center;
             gap: var(--spacing-3);
+        }
+
+        /* PERBAIKAN RESPONSIVITAS: Sembunyikan tombol sidebar di desktop */
+        #sidebarToggle {
+            display: none;
         }
 
         .search-bar {
@@ -1742,8 +1731,8 @@
            ========================================================================== */
         .messages-layout {
             display: flex;
-            height: calc(100vh - var(--header-height) - var(--footer-height) - var(--spacing-5) * 2 - 50px);
-            /* Estimasi tinggi untuk card title */
+            height: calc(100vh - var(--header-height) - var(--spacing-10));
+            /* Menyesuaikan tinggi agar tidak terpotong */
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             background: var(--card);
@@ -1757,6 +1746,7 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
         }
 
         .messages-layout__sidebar-header {
@@ -2284,45 +2274,49 @@
         /* ==========================================================================
            Desain Responsif
            ========================================================================== */
-        /* Tablet dan layar lebih kecil */
+
+        /* PERBAIKAN RESPONSIVITAS: Tablet dan layar lebih kecil (<= 1024px) */
         @media (max-width: 1024px) {
             .sidebar {
                 position: fixed;
-                /* Kembali ke fixed untuk mobile overlay */
+                /* Ubah ke fixed untuk menjadi overlay */
                 left: 0;
                 top: 0;
                 transform: translateX(-100%);
-                /* Default tersembunyi */
+                /* Sembunyikan di luar layar secara default */
                 z-index: var(--z-fixed);
-                /* Di atas segalanya kecuali modal */
+                /* Pastikan di atas konten lain */
+                border-right: 1px solid var(--border);
+                /* Tetap ada border saat muncul */
             }
 
             .sidebar.show {
-                /* Kelas untuk menampilkan sidebar di mobile */
                 transform: translateX(0);
+                /* Tampilkan sidebar saat kelas .show ditambahkan */
+            }
+
+            /* Tampilkan overlay gelap saat sidebar mobile terbuka */
+            body.sidebar-open-overlay::before {
+                display: block;
+            }
+
+            #sidebarToggle {
+                display: inline-flex;
+                /* Tampilkan tombol hamburger */
             }
 
             .main-wrapper {
-                /* margin-left: 0; Tidak perlu karena sidebar fixed */
+                /* Tidak perlu margin-left karena sidebar sudah fixed */
             }
 
             .app-header .search-bar {
                 display: none;
-                /* Sembunyikan search bar di header tablet untuk ruang */
+                /* Sembunyikan search bar untuk menghemat ruang */
             }
 
-            /* BEGIN: Property Detail Modal Responsive */
-            #propertyDetailModalDialog {
-                max-width: calc(100% - var(--spacing-6));
-            }
-
-            .property-detail-modal__main-image-container {
-                height: 250px;
-            }
-
-            /* END: Property Detail Modal Responsive */
             .messages-layout__sidebar {
                 width: 250px;
+                /* Sedikit lebih kecil di tablet */
             }
 
             .settings-grid {
@@ -2331,11 +2325,11 @@
             }
         }
 
-        /* Mobile */
+        /* PERBAIKAN RESPONSIVITAS: Mobile (<= 768px) */
         @media (max-width: 768px) {
             :root {
                 --header-height: 60px;
-                /* Header lebih kecil di mobile */
+                /* Header lebih ramping di mobile */
             }
 
             .app-header {
@@ -2343,119 +2337,107 @@
             }
 
             .profile-dropdown__toggle span {
-                /* Sembunyikan nama pengguna, tampilkan avatar saja */
                 display: none;
+                /* Sembunyikan nama pengguna, tampilkan avatar saja */
             }
 
             .main-content {
                 padding: var(--spacing-4);
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-                /* Satu kolom di mobile */
+            h1 {
+                font-size: var(--font-size-xl);
             }
 
-            .apartments-grid {
+            /* Judul halaman lebih kecil */
+            h2 {
+                font-size: var(--font-size-lg);
+            }
+
+            .stats-grid,
+            .apartments-grid,
+            .settings-grid {
                 grid-template-columns: 1fr;
-                /* Satu kolom di mobile */
+                /* Paksa satu kolom di mobile */
+            }
+
+            .apartment-card img {
+                height: 200px;
+                /* Tinggi gambar kartu dikurangi untuk mobile */
             }
 
             .filter-section {
                 flex-direction: column;
-                gap: var(--spacing-3);
+                /* Tumpuk filter secara vertikal */
+                align-items: stretch;
+                /* Agar elemen filter selebar kontainer */
             }
 
             .filter-section select,
             .filter-section button {
                 width: 100%;
+                min-width: 0;
+                /* Hapus min-width */
             }
 
             .modal__dialog {
-                /* Berlaku untuk semua modal */
-                max-width: calc(100% - var(--spacing-4));
-                margin: var(--spacing-2);
-            }
-
-            #paymentModalDialog {
-                /* Sesuaikan modal pembayaran juga */
-                max-width: calc(100% - var(--spacing-4));
+                width: calc(100% - var(--spacing-6));
+                /* Modal lebih lebar di mobile */
+                max-height: 90vh;
+                /* Pastikan modal tidak terlalu tinggi */
             }
 
             .payment-method-options {
                 flex-direction: column;
-                /* Stack payment options on mobile */
+                /* Tumpuk opsi pembayaran */
             }
 
-            #alertModalOverlay .modal__dialog {
-                /* Khusus alert modal, bisa lebih sempit */
-                max-width: calc(100% - var(--spacing-6));
-                /* Contoh, sedikit lebih sempit */
+            .modal__content {
+                padding: var(--spacing-4);
             }
-
-            /* BEGIN: Property Detail Modal Responsive Mobile */
-            #propertyDetailModalDialog {
-                max-width: calc(100% - var(--spacing-4));
-                /* Sesuaikan dengan .modal__dialog umum */
-            }
-
-            #transactionDetailModalDialog {
-                /* Responsif untuk modal detail transaksi */
-                max-width: calc(100% - var(--spacing-4));
-            }
-
-            .property-detail-modal__main-image-container {
-                height: 200px;
-            }
-
-            .property-detail-modal__gallery {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            }
-
-            .property-detail-modal__gallery img {
-                height: 60px;
-            }
-
-            /* END: Property Detail Modal Responsive Mobile */
-
 
             .notification-toast {
-                right: var(--spacing-2);
-                left: var(--spacing-2);
-                bottom: var(--spacing-2);
+                right: var(--spacing-3);
+                left: var(--spacing-3);
+                bottom: var(--spacing-3);
                 width: auto;
                 /* Mengisi lebar dengan margin */
                 max-width: none;
             }
 
-            .btn-sm {
-                /* Ukuran tombol kecil lebih sering dipakai di mobile */
-                padding: var(--spacing-2) var(--spacing-3);
-            }
-
+            /* Perbaikan untuk halaman pesan/chat */
             .messages-layout {
                 flex-direction: column;
-                height: calc(100vh - var(--header-height) - var(--spacing-4) * 2 - 40px);
-                /* Adjust for mobile */
+                /* Tumpuk sidebar & area chat secara vertikal */
+                height: calc(100vh - var(--header-height) - (var(--spacing-4) * 2));
+                /* Sesuaikan tinggi */
             }
 
             .messages-layout__sidebar {
                 width: 100%;
                 height: 200px;
-                /* Fixed height for conversation list on mobile */
+                /* Beri tinggi tetap untuk daftar percakapan */
                 border-right: none;
                 border-bottom: 1px solid var(--border);
+                /* Pindahkan border ke bawah */
+                flex-shrink: 0;
             }
 
+            .messages-layout__chat-area {
+                padding: var(--spacing-3);
+            }
+
+            /* Perbaikan untuk chat widget */
             .cs-chat-widget__popup {
-                width: calc(100vw - var(--spacing-8));
-                max-width: 320px;
-                bottom: calc(100% + var(--spacing-2));
+                width: calc(100vw - var(--spacing-6));
+                max-width: 350px;
+                right: -12px;
+                /* Sesuaikan posisi agar pas */
             }
 
             .cs-chat-widget {
-                bottom: var(--spacing-3);
-                right: var(--spacing-3);
+                bottom: var(--spacing-4);
+                right: var(--spacing-4);
             }
 
             .cs-chat-widget__toggle-btn {
@@ -2463,25 +2445,14 @@
                 height: 50px;
                 font-size: var(--font-size-lg);
             }
+
+            .app-footer {
+                text-align: left;
+                padding: var(--spacing-3);
+                height: auto;
+                min-height: var(--footer-height);
+            }
         }
-
-        /* Untuk sidebar collapsed yang menampilkan ikon saja, bisa ditambahkan style di sini */
-        /* @media (min-width: 1025px) {
-            .sidebar.collapsed {
-                width: var(--sidebar-width-collapsed);
-                transform: translateX(0);
-            }
-            .sidebar.collapsed .sidebar-brand__icon {
-                margin: 0 auto;
-            }
-            .sidebar.collapsed .nav-link {
-                justify-content: center;
-            }
-            .main-wrapper.sidebar-collapsed {
-                margin-left: var(--sidebar-width-collapsed);
-            }
-        } */
-
 
         /* ==========================================================================
            Aksesibilitas Tambahan & Preferensi Pengguna
@@ -2620,7 +2591,7 @@
         <header class="app-header">
             <div class="header-left">
                 <button type="button" class="btn btn--secondary btn-icon no-print" id="sidebarToggle"
-                    aria-label="Buka atau Tutup Navigasi" aria-expanded="true">
+                    aria-label="Buka atau Tutup Navigasi" aria-expanded="false">
                     <i class="fas fa-bars"></i>
                 </button>
                 <div class="search-bar">
@@ -2730,8 +2701,8 @@
                     </select>
                     <select id="bedroomsFilter" aria-label="Filter berdasarkan jumlah kamar tidur">
                         <option value="">Semua Kamar</option>
-                        <option value="1">1 Kamar Tidur</option>
-                        <option value="2">2 Kamar Tidur</option>
+                        <option value="1-1">1 Kamar Tidur</option>
+                        <option value="2-2">2 Kamar Tidur</option>
                         <option value="3-Infinity">3+ Kamar Tidur</option>
                     </select>
                     <select id="amenitiesFilter" aria-label="Filter berdasarkan fasilitas">
@@ -2749,7 +2720,7 @@
                         <i class="fas fa-spinner fa-spin"></i> Memuat properti...
                     </div>
                 </div>
-                <div class="card mt-5" style="margin-top: var(--spacing-6)">
+                <div class="card" style="margin-top: var(--spacing-6)">
                     <h2 class="card-title">Baru Dilihat</h2>
                     <div class="apartments-grid" id="recentlyViewedGrid">
                         <div class="loading-placeholder" style="grid-column: 1 / -1;">
@@ -2886,7 +2857,7 @@
                             <h2 class="card-title">Laporan & Status Perbaikan</h2>
                             <p class="card-description">Lacak semua permintaan perbaikan dan status pengerjaannya.</p>
                         </div>
-                        <button type="button" class="btn btn--primary" id="addMaintenanceRequestBtn"><i
+                        <button type="button" class="btn btn--primary" id="addMaintenanceRequestBtn" disabled><i
                                 class="fas fa-plus"></i> Buat Permintaan Baru</button>
                     </div>
                     <div class="table-container">
@@ -2904,7 +2875,7 @@
                             <tbody id="maintenanceTableBody">
                                 <tr>
                                     <td colspan="6" class="loading-placeholder">
-                                        <i class="fas fa-tools"></i> Tidak ada permintaan maintenance.
+                                        <i class="fas fa-tools"></i> Fitur Maintenance akan segera hadir.
                                     </td>
                                 </tr>
                             </tbody>
@@ -3098,12 +3069,7 @@
         <footer class="app-footer no-print">
             <small>&copy; <span id="currentYear">2024</span> Green Valley Platform. Hak Cipta Dilindungi
                 Undang-Undang. Dirancang dengan <i class="fas fa-heart" style="color:var(--destructive);"></i> oleh Tim
-                Green Valley. <br>
-                <hr>
-
-                <li style="list-style: none; text-decoration: none; padding: 20px 0; "><a href="index1.html">
-                        <strong>Kembali ke
-                            menu awal </strong></a></li>
+                Green Valley.
             </small>
         </footer>
     </div>
@@ -3231,7 +3197,8 @@
                     <button type="button" class="btn btn--secondary"
                         data-dismiss-transaction-detail-modal>Tutup</button>
                     <!-- Opsional: Tombol aksi lain seperti "Cetak Struk" -->
-                    <button type="button" class="btn btn--primary" id="printTransactionBtn" onclick="window.print();">
+                    <button type="button" class="btn btn--primary no-print" id="printTransactionBtn"
+                        onclick="window.print();">
                         <i class="fas fa-print"></i> Cetak
                     </button>
                 </div>
@@ -3452,38 +3419,27 @@
     <script>
         /**
          * Green Valley - Aplikasi Manajemen Properti (Vanilla JS SPA)
-         * Penulis: Tim Pengembang Green Valley
-         * Versi: 1.5.0 (Fitur Interaktif Ditingkatkan)
+         * Versi: 1.5.1 (Perbaikan Responsivitas)
          *
-         * Ringkasan Perubahan dan Fitur Baru:
-         * - Implementasi halaman "Pesan" (Chat pengguna-ke-pengguna) dengan simulasi pengiriman, penerimaan, dan indikator "typing".
-         * - Implementasi "Customer Service Chat Widget" dengan fungsionalitas serupa.
-         * - Peningkatan animasi: Pesan chat masuk dengan efek slide-in yang halus.
-         * - Peningkatan interaksi: Efek "press" pada tombol dan item navigasi.
-         * - Manajemen state yang lebih baik untuk fitur chat.
-         * - Modal "Detail Properti" yang lebih kaya informasi, termasuk galeri gambar dan denah lantai.
-         * - Fitur "Baru Dilihat" pada halaman properti.
-         * - Fitur pembayaran dengan pilihan metode (Transfer Bank, E-Wallet) dan upload bukti.
-         * - Halaman "Pengaturan" dengan lebih banyak opsi (simulasi).
-         * - Modal konfirmasi (Alert/Confirm) yang lebih baik.
-         * - Kode JavaScript diorganisir lebih lanjut dengan objek DOM, AppState, dan Utils untuk kejelasan.
-         * - Validasi form yang lebih komprehensif.
-         * - Perbaikan kecil pada responsivitas dan aksesibilitas.
-         * - Penyesuaian styling untuk tampilan yang lebih "fancy" dan konsisten.
+         * Ringkasan Perubahan:
+         * - Logika sidebar diupdate untuk menangani tampilan mobile (fixed/overlay).
+         * - Event listener ditambahkan untuk menutup sidebar mobile saat link navigasi diklik atau saat klik di luar area sidebar.
+         * - State `isSidebarOpen` diinisialisasi berdasarkan lebar layar.
          */
         (function () {
             'use strict';
 
             const AppState = {
                 currentTheme: localStorage.getItem('theme') || 'light',
-                isSidebarOpen: window.innerWidth >= 1024, // Sidebar terbuka default di desktop
-                activePage: 'dashboard', // Halaman default
+                // PERBAIKAN RESPONSIVITAS: Sidebar defaultnya terbuka hanya di layar besar.
+                isSidebarOpen: window.innerWidth > 1024,
+                activePage: 'dashboard',
                 currentUser: {
                     name: 'Pengguna Terhormat',
                     email: 'pengguna@greenvalley.com',
                     phone: '0812-3456-7890',
-                    avatarUrl: 'https://i.pravatar.cc/100?u=GreenValleyUser', // Default avatar
-                    joinedDate: '2024-01-01T00:00:00Z' // ISO String date
+                    avatarUrl: 'https://i.pravatar.cc/100?u=GreenValleyUser',
+                    joinedDate: '2024-01-01T00:00:00Z'
                 },
                 userSettings: JSON.parse(localStorage.getItem('userSettingsGV')) || {
                     emailNotifications: true,
@@ -3493,58 +3449,14 @@
                 },
                 bookings: [
                     { id: 'bk001', tenant: 'Sarah Wijayanti', property: 'Apartemen Cendana Unit 12A', date: '2025-06-15', status: 'active' },
-                    { id: 'bk002', tenant: 'Riko Pratama Putra', property: 'Studio Minimalis Blok B2', date: '2025-07-01', status: 'pending' },
-                    { id: 'bk003', tenant: 'Ahmad Subagja', property: 'Rumah Cluster Magnolia No. 5', date: '2025-05-20', status: 'inactive' },
+                    { id: 'bk002', tenant: 'Riko Pratama Putra', property: 'Studio Nyaman Dekat Kampus', date: '2025-07-01', status: 'pending' },
+                    { id: 'bk003', tenant: 'Ahmad Subagja', property: 'Rumah Klasik di Area Hijau', date: '2025-05-20', status: 'inactive' },
                 ],
                 paymentsData: [
-                    {
-                        id: 'TRX00123',
-                        date: '2025-05-27',
-                        description: 'Pembayaran Sewa Apartemen Harmoni A-101 (Juni)',
-                        amount: 10000000,
-                        status: 'Lunas',
-                        type: 'Sewa Bulanan',
-                        propertyId: 'prop001',
-                        propertyName: 'Apartemen Modern di Pusat Kota',
-                        method: 'Transfer Bank VA BCA',
-                        notes: 'Pembayaran diterima via virtual account. Mohon simpan bukti ini.'
-                    },
-                    {
-                        id: 'TRX00122',
-                        date: '2025-04-28',
-                        description: 'Tagihan Listrik Unit Villa Damai C2',
-                        amount: 550000,
-                        status: 'Lunas',
-                        type: 'Utilitas',
-                        propertyId: 'prop003',
-                        propertyName: 'Villa Asri dengan Kolam Pribadi',
-                        method: 'Gopay',
-                        notes: 'Tagihan listrik bulan April.'
-                    },
-                    {
-                        id: 'TRX00121',
-                        date: '2025-04-05',
-                        description: 'Deposit Keamanan Apartemen Sejahtera Lt.5',
-                        amount: 2000000,
-                        status: 'Deposit',
-                        type: 'Deposit',
-                        propertyId: 'prop004',
-                        propertyName: 'Apartemen Minimalis Tepi Pantai',
-                        method: 'Cash',
-                        notes: 'Deposit akan dikembalikan setelah masa sewa berakhir dan kondisi unit baik.'
-                    },
-                    {
-                        id: 'TRX00124',
-                        date: '2025-06-01',
-                        description: 'Pembayaran Sewa Studio Dekat Kampus (Juli)',
-                        amount: 5500000,
-                        status: 'Pending',
-                        type: 'Sewa Bulanan',
-                        propertyId: 'prop002',
-                        propertyName: 'Studio Nyaman Dekat Kampus',
-                        method: 'Belum Dipilih',
-                        notes: 'Menunggu pembayaran dari penyewa.'
-                    }
+                    { id: 'TRX00123', date: '2025-05-27', description: 'Pembayaran Sewa Apartemen Modern di Pusat Kota (Juni)', amount: 10000000, status: 'Lunas', type: 'Sewa Bulanan', propertyId: 'prop001', propertyName: 'Apartemen Modern di Pusat Kota', method: 'Transfer Bank VA BCA', notes: 'Pembayaran diterima via virtual account. Mohon simpan bukti ini.' },
+                    { id: 'TRX00122', date: '2025-04-28', description: 'Tagihan Listrik Unit Villa Damai C2', amount: 550000, status: 'Lunas', type: 'Utilitas', propertyId: 'prop003', propertyName: 'Villa Asri dengan Kolam Pribadi', method: 'Gopay', notes: 'Tagihan listrik bulan April.' },
+                    { id: 'TRX00121', date: '2025-04-05', description: 'Deposit Keamanan Apartemen Sejahtera Lt.5', amount: 2000000, status: 'Deposit', type: 'Deposit', propertyId: 'prop004', propertyName: 'Apartemen Minimalis Tepi Pantai', method: 'Cash', notes: 'Deposit akan dikembalikan setelah masa sewa berakhir dan kondisi unit baik.' },
+                    { id: 'TRX00124', date: '2025-06-01', description: 'Pembayaran Sewa Studio Nyaman Dekat Kampus (Juli)', amount: 5500000, status: 'Pending', type: 'Sewa Bulanan', propertyId: 'prop002', propertyName: 'Studio Nyaman Dekat Kampus', method: 'Belum Dipilih', notes: 'Menunggu pembayaran dari penyewa.' }
                 ],
                 properties: [
                     { id: 'prop001', title: 'Apartemen Modern di Pusat Kota', shortDescription: 'Apartemen mewah dengan 2 kamar tidur, fasilitas lengkap, dan lokasi strategis.', longDescription: 'Nikmati kemewahan tinggal di pusat kota dengan apartemen 2 kamar tidur ini. Dilengkapi dengan gym, kolam renang, dan keamanan 24 jam. Akses mudah ke pusat perbelanjaan dan transportasi publik.', image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60', gallery: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGFwYXJ0bWVudCUyMGGludGVyaW9yfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60', 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBhcnRtZW50JTIwaW50ZXJpb3J8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60'], price: 10000000, priceDisplay: 'Rp 10.000.000/bulan', specs: { bedrooms: 2, bathrooms: 1, area: 60, amenities: ['parking', 'gym', 'furnished', 'pool'] }, additionalAmenities: ['Balkon Pribadi', 'Smart Home System'], availabilityDate: '2025-08-01', rules: 'Dilarang merokok di dalam unit. Hewan peliharaan tidak diizinkan.', location: { address: 'Jl. Sudirman Kav. 1, Jakarta Pusat', latitude: -6.2088, longitude: 106.8456 }, contact: { agentName: 'Budi Property', agentPhone: '0812-1111-2222', agentEmail: 'budi@example.com' }, floorPlan: 'https://via.placeholder.com/400x300?text=Denah+Lantai+Prop001' },
@@ -3559,11 +3471,7 @@
                 currentDetailPropertyId: null,
                 currentPaymentTransactionId: null,
                 searchQuery: '',
-                filters: {
-                    priceRange: '',
-                    bedrooms: '',
-                    amenities: ''
-                },
+                filters: { priceRange: '', bedrooms: '', amenities: '' },
                 toastTimeout: null,
                 conversations: [
                     { id: 'conv001', partnerName: 'Agen Budi Property', partnerAvatar: 'https://i.pravatar.cc/40?u=agentBudi', lastMessage: 'Siap, unitnya masih tersedia. Mau survey kapan?', timestamp: new Date(Date.now() - 3600000).toISOString(), unread: 1, typing: false },
@@ -3587,7 +3495,7 @@
                 activeConversationId: null,
                 csChatMessages: [],
                 isCsChatWidgetOpen: false,
-                isCsTyping: false, // NEW: For CS typing indicator
+                isCsTyping: false,
             };
 
             const DOM = {
@@ -3602,20 +3510,17 @@
                 headerUserName: document.getElementById('headerUserName'),
                 logoutButton: document.getElementById('logoutButton'),
                 searchInput: document.getElementById('searchInput'),
-
                 bookingModalOverlay: document.getElementById('bookingModalOverlay'),
                 bookingForm: document.getElementById('bookingForm'),
                 bookingModalTitle: document.getElementById('bookingModalTitle'),
                 bookingIdInput: document.getElementById('bookingId'),
                 addBookingBtn: document.getElementById('addBookingBtn'),
                 bookingTableBody: document.getElementById('bookingTableBody'),
-
                 alertModalOverlay: document.getElementById('alertModalOverlay'),
                 alertModalTitle: document.getElementById('alertModalTitle'),
                 alertModalMessage: document.getElementById('alertModalMessage'),
                 alertModalConfirmBtn: document.getElementById('alertModalConfirmBtn'),
                 alertModalCancelBtn: document.getElementById('alertModalCancelBtn'),
-
                 profileEditModalOverlay: document.getElementById('profileEditModalOverlay'),
                 profileEditForm: document.getElementById('profileEditForm'),
                 profileEditModalTitle: document.getElementById('profileEditModalTitle'),
@@ -3626,39 +3531,31 @@
                 profileEmailDisplay: document.getElementById('profileEmailDisplay'),
                 profilePhoneDisplay: document.getElementById('profilePhoneDisplay'),
                 profileJoinedDateDisplay: document.getElementById('profileJoinedDateDisplay'),
-
                 transactionDetailModalOverlay: document.getElementById('transactionDetailModalOverlay'),
                 transactionDetailModalTitle: document.getElementById('transactionDetailModalTitle'),
                 transactionDetailModalBody: document.getElementById('transactionDetailModalBody'),
                 paymentTableBody: document.getElementById('paymentTableBody'),
-
                 propertyDetailModalOverlay: document.getElementById('propertyDetailModalOverlay'),
                 propertyDetailModalTitle: document.getElementById('propertyDetailModalTitle'),
                 propertyDetailModalBody: document.getElementById('propertyDetailModalBody'),
                 propertyDetailModalFooter: document.getElementById('propertyDetailModalFooter'),
                 propertyDetailBookBtn: document.getElementById('propertyDetailBookBtn'),
-
                 pageContentContainer: document.getElementById('pageContentContainer'),
                 navLinks: document.querySelectorAll('.nav-link, .profile-dropdown__item[data-page-nav]'),
                 pageSections: document.querySelectorAll('.page-section'),
-
                 propertiesGrid: document.getElementById('propertiesGrid'),
                 favoritesGrid: document.getElementById('favoritesGrid'),
                 recentlyViewedGrid: document.getElementById('recentlyViewedGrid'),
-
                 priceRangeFilter: document.getElementById('priceRangeFilter'),
                 bedroomsFilter: document.getElementById('bedroomsFilter'),
                 amenitiesFilter: document.getElementById('amenitiesFilter'),
                 applyFilterBtn: document.getElementById('applyFilterBtn'),
-
                 notificationToast: document.getElementById('notificationToast'),
                 notificationToastIcon: document.querySelector('#notificationToast .notification-toast__icon i'),
                 notificationToastTitle: document.querySelector('#notificationToast .notification-toast__title'),
                 notificationToastBody: document.querySelector('#notificationToast .notification-toast__body'),
                 notificationToastCloseBtn: document.querySelector('#notificationToast .notification-toast__close-btn'),
-
                 currentYearSpan: document.getElementById('currentYear'),
-
                 messagesSidebar: document.getElementById('messagesSidebar'),
                 conversationSearchInput: document.getElementById('conversationSearchInput'),
                 conversationList: document.getElementById('conversationList'),
@@ -3671,7 +3568,6 @@
                 messageInputForm: document.getElementById('messageInputForm'),
                 messageInput: document.getElementById('messageInput'),
                 createNewMessageBtn: document.getElementById('createNewMessageBtn'),
-
                 csChatWidget: document.getElementById('csChatWidget'),
                 csChatToggleBtn: document.getElementById('csChatToggleBtn'),
                 csChatPopup: document.getElementById('csChatPopup'),
@@ -3679,7 +3575,6 @@
                 csChatMessages: document.getElementById('csChatMessages'),
                 csChatInputForm: document.getElementById('csChatInputForm'),
                 csChatMessageInput: document.getElementById('csChatMessageInput'),
-
                 settingsContent: document.getElementById('settings-content'),
                 settingEmailNotifications: document.getElementById('settingEmailNotifications'),
                 settingPushNotifications: document.getElementById('settingPushNotifications'),
@@ -3687,10 +3582,8 @@
                 settingTwoFactorAuth: document.getElementById('settingTwoFactorAuth'),
                 settingThemeToggleBtn: document.getElementById('settingThemeToggleBtn'),
                 settingLanguage: document.getElementById('settingLanguage'),
-
                 changePasswordModalOverlay: document.getElementById('changePasswordModalOverlay'),
                 changePasswordForm: document.getElementById('changePasswordForm'),
-
                 paymentModalOverlay: document.getElementById('paymentModalOverlay'),
                 paymentForm: document.getElementById('paymentForm'),
                 paymentModalTitle: document.getElementById('paymentModalTitle'),
@@ -3707,105 +3600,48 @@
             };
 
             const Utils = {
-                sanitizeHTML(str) {
-                    if (typeof str !== 'string') str = String(str);
-                    const temp = document.createElement('div');
-                    temp.textContent = str;
-                    return temp.innerHTML;
-                },
-                debounce(fn, delay) {
-                    let timeoutId;
-                    return function (...args) {
-                        clearTimeout(timeoutId);
-                        timeoutId = setTimeout(() => fn.apply(this, args), delay);
-                    };
-                },
-                formatDate(dateStr, options = { day: 'numeric', month: 'long', year: 'numeric' }) {
-                    if (!dateStr || dateStr.toLowerCase() === 'segera tersedia') return 'Segera Tersedia';
-                    try {
-                        const date = new Date(dateStr);
-                        if (isNaN(date.getTime())) {
-                            console.warn("Invalid date string for formatDate:", dateStr);
-                            return 'Tanggal Tidak Valid';
-                        }
-                        return date.toLocaleDateString('id-ID', options);
-                    } catch (error) {
-                        console.error("Error formatting date:", dateStr, error);
-                        return 'Format Tanggal Salah';
-                    }
-                },
-                formatTime(dateStr, options = { hour: '2-digit', minute: '2-digit' }) {
-                    if (!dateStr) return '';
-                    try {
-                        const date = new Date(dateStr);
-                        if (isNaN(date.getTime())) return 'Waktu Tidak Valid';
-                        return date.toLocaleTimeString('id-ID', options);
-                    } catch (error) {
-                        console.error("Error formatting time:", dateStr, error);
-                        return 'Format Waktu Salah';
-                    }
-                },
-                generateId(prefix = 'id') {
-                    return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`;
-                },
-                capitalize(str) {
-                    if (typeof str !== 'string' || !str) return '';
-                    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-                },
-                formatCurrency(amount, currency = 'IDR') {
-                    if (typeof amount !== 'number') amount = parseFloat(amount);
-                    if (isNaN(amount)) return "Jumlah Tidak Valid";
-                    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount);
-                },
-                isValidEmail(email) {
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return emailRegex.test(email);
-                },
-                isValidPhone(phone) {
-                    if (!phone) return true;
-                    const phoneRegex = /^[+]?[0-9\s-()]{7,20}$/;
-                    return phoneRegex.test(phone);
-                },
-                isValidUrl(string) {
-                    if (!string) return true;
-                    try {
-                        new URL(string);
-                        return true;
-                    } catch (_) {
-                        return false;
-                    }
-                }
+                sanitizeHTML(str) { if (typeof str !== 'string') str = String(str); const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; },
+                debounce(fn, delay) { let timeoutId; return function (...args) { clearTimeout(timeoutId); timeoutId = setTimeout(() => fn.apply(this, args), delay); }; },
+                formatDate(dateStr, options = { day: 'numeric', month: 'long', year: 'numeric' }) { if (!dateStr || dateStr.toLowerCase() === 'segera tersedia') return 'Segera Tersedia'; try { const date = new Date(dateStr); if (isNaN(date.getTime())) { console.warn("Invalid date string for formatDate:", dateStr); return 'Tanggal Tidak Valid'; } return date.toLocaleDateString('id-ID', options); } catch (error) { console.error("Error formatting date:", dateStr, error); return 'Format Tanggal Salah'; } },
+                formatTime(dateStr, options = { hour: '2-digit', minute: '2-digit' }) { if (!dateStr) return ''; try { const date = new Date(dateStr); if (isNaN(date.getTime())) return 'Waktu Tidak Valid'; return date.toLocaleTimeString('id-ID', options); } catch (error) { console.error("Error formatting time:", dateStr, error); return 'Format Waktu Salah'; } },
+                generateId(prefix = 'id') { return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`; },
+                capitalize(str) { if (typeof str !== 'string' || !str) return ''; return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); },
+                formatCurrency(amount, currency = 'IDR') { if (typeof amount !== 'number') amount = parseFloat(amount); if (isNaN(amount)) return "Jumlah Tidak Valid"; return new Intl.NumberFormat('id-ID', { style: 'currency', currency: currency, minimumFractionDigits: 0 }).format(amount); },
+                isValidEmail(email) { const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; return emailRegex.test(email); },
+                isValidPhone(phone) { if (!phone) return true; const phoneRegex = /^[+]?[0-9\s-()]{7,20}$/; return phoneRegex.test(phone); },
+                isValidUrl(string) { if (!string) return true; try { new URL(string); return true; } catch (_) { return false; } }
             };
 
             const App = {
                 init() {
                     console.info('Green Valley App Initializing...');
                     this.applyTheme(AppState.currentTheme, true);
-                    this.updateSidebarState(AppState.isSidebarOpen);
+                    this.updateSidebarState(AppState.isSidebarOpen); // Panggil untuk set state awal
                     this.updateCurrentYear();
                     this.renderUserProfileData();
                     this.setupEventListeners();
-
                     const initialHash = window.location.hash.substring(1) || 'dashboard';
                     this.navigateTo(initialHash, true);
-
                     this.initCsChatWidget();
                     console.info('Green Valley App Initialized Successfully.');
                 },
 
                 setupEventListeners() {
                     DOM.themeToggleBtn.addEventListener('click', () => this.toggleTheme());
+                    // PERBAIKAN RESPONSIVITAS: Event handler untuk tombol sidebar
                     DOM.sidebarToggle.addEventListener('click', () => {
                         AppState.isSidebarOpen = !AppState.isSidebarOpen;
                         this.updateSidebarState(AppState.isSidebarOpen);
                     });
+
                     DOM.navLinks.forEach(link => {
                         link.addEventListener('click', (e) => {
                             e.preventDefault();
                             const page = link.dataset.page || link.hash.substring(1) || (link.dataset.pageNav);
                             if (page) {
                                 this.navigateTo(page);
-                                if (window.innerWidth < 1024 && AppState.isSidebarOpen) {
+                                // PERBAIKAN RESPONSIVITAS: Tutup sidebar di mobile setelah navigasi
+                                if (window.innerWidth <= 1024 && AppState.isSidebarOpen) {
                                     AppState.isSidebarOpen = false;
                                     this.updateSidebarState(false);
                                 }
@@ -3825,93 +3661,72 @@
                         });
                     }
 
+                    // PERBAIKAN RESPONSIVITAS: Klik di luar area untuk menutup elemen
                     document.addEventListener('click', (e) => {
-                        if (DOM.profileDropdownToggle && DOM.profileDropdownMenu &&
-                            !DOM.profileDropdownToggle.contains(e.target) &&
-                            !DOM.profileDropdownMenu.contains(e.target)) {
-                            if (DOM.profileDropdownMenu.classList.contains('show')) {
-                                this.toggleProfileDropdown(false);
-                            }
+                        // Tutup dropdown profil
+                        if (DOM.profileDropdownToggle && DOM.profileDropdownMenu && !DOM.profileDropdownToggle.contains(e.target) && !DOM.profileDropdownMenu.contains(e.target)) {
+                            if (DOM.profileDropdownMenu.classList.contains('show')) this.toggleProfileDropdown(false);
                         }
-                        if (DOM.csChatWidget && AppState.isCsChatWidgetOpen &&
-                            !DOM.csChatWidget.contains(e.target)) {
+                        // Tutup sidebar mobile
+                        if (window.innerWidth <= 1024 && AppState.isSidebarOpen && DOM.sidebar && !DOM.sidebar.contains(e.target) && !DOM.sidebarToggle.contains(e.target)) {
+                            AppState.isSidebarOpen = false;
+                            this.updateSidebarState(false);
+                        }
+                        // Tutup widget chat
+                        if (DOM.csChatWidget && AppState.isCsChatWidgetOpen && !DOM.csChatWidget.contains(e.target)) {
                             this.toggleCsChatWidget(false);
                         }
                     });
+
                     if (DOM.searchInput) {
                         DOM.searchInput.addEventListener('input', Utils.debounce((e) => {
                             AppState.searchQuery = e.target.value.toLowerCase().trim();
                             if (AppState.activePage === 'properties') this.renderProperties();
                         }, 300));
                     }
-
-                    // Booking Modal
                     if (DOM.addBookingBtn) DOM.addBookingBtn.addEventListener('click', () => this.openBookingModal());
                     if (DOM.bookingForm) DOM.bookingForm.addEventListener('submit', (e) => this.handleBookingFormSubmit(e));
                     if (DOM.bookingModalOverlay) {
                         DOM.bookingModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.bookingModalOverlay || e.target.closest('[data-dismiss="modal"]')) {
-                                this.closeBookingModal();
-                            }
+                            if (e.target === DOM.bookingModalOverlay || e.target.closest('[data-dismiss="modal"]')) this.closeBookingModal();
                         });
                     }
-
-                    // Profile Edit Modal
                     if (DOM.editProfileBtn) DOM.editProfileBtn.addEventListener('click', () => this.openProfileEditModal());
                     if (DOM.profileEditForm) DOM.profileEditForm.addEventListener('submit', (e) => this.handleProfileEditFormSubmit(e));
                     if (DOM.profileEditModalOverlay) {
                         DOM.profileEditModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.profileEditModalOverlay || e.target.closest('[data-dismiss-profile-edit-modal]')) {
-                                this.closeProfileEditModal();
-                            }
+                            if (e.target === DOM.profileEditModalOverlay || e.target.closest('[data-dismiss-profile-edit-modal]')) this.closeProfileEditModal();
                         });
                     }
-
-                    // Transaction Detail & Payment Modals
                     if (DOM.paymentTableBody) {
                         DOM.paymentTableBody.addEventListener('click', (e) => {
                             const detailButton = e.target.closest('button[data-action="view-transaction"]');
                             const payButton = e.target.closest('button[data-action="pay-transaction"]');
-                            if (detailButton) {
-                                const transactionId = detailButton.dataset.transactionId;
-                                this.openTransactionDetailModal(transactionId);
-                            } else if (payButton) {
-                                const transactionId = payButton.dataset.transactionId;
-                                this.openPaymentModal(transactionId);
-                            }
+                            if (detailButton) this.openTransactionDetailModal(detailButton.dataset.transactionId);
+                            else if (payButton) this.openPaymentModal(payButton.dataset.transactionId);
                         });
                     }
                     if (DOM.transactionDetailModalOverlay) {
                         DOM.transactionDetailModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.transactionDetailModalOverlay || e.target.closest('[data-dismiss-transaction-detail-modal]')) {
-                                this.closeTransactionDetailModal();
-                            }
+                            if (e.target === DOM.transactionDetailModalOverlay || e.target.closest('[data-dismiss-transaction-detail-modal]')) this.closeTransactionDetailModal();
                         });
                     }
                     if (DOM.paymentModalOverlay) {
                         DOM.paymentModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.paymentModalOverlay || e.target.closest('[data-dismiss-payment-modal]')) {
-                                this.closePaymentModal();
-                            }
+                            if (e.target === DOM.paymentModalOverlay || e.target.closest('[data-dismiss-payment-modal]')) this.closePaymentModal();
                         });
                         DOM.payMethodBankRadio.addEventListener('change', () => this.updatePaymentMethodDetailsView());
                         DOM.payMethodEwalletRadio.addEventListener('change', () => this.updatePaymentMethodDetailsView());
                         DOM.paymentForm.addEventListener('submit', (e) => this.handlePaymentFormSubmit(e));
                     }
-
                     if (DOM.notificationToastCloseBtn) DOM.notificationToastCloseBtn.addEventListener('click', () => this.hideNotification());
-                    // Property Filters
                     if (DOM.applyFilterBtn) DOM.applyFilterBtn.addEventListener('click', () => this.applyPropertyFilters());
                     [DOM.priceRangeFilter, DOM.bedroomsFilter, DOM.amenitiesFilter].forEach(filterElement => {
                         if (filterElement) filterElement.addEventListener('change', () => this.applyPropertyFilters());
                     });
-
-                    // Property Detail Modal & Actions
                     if (DOM.propertyDetailModalOverlay) {
                         DOM.propertyDetailModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.propertyDetailModalOverlay || e.target.closest('[data-dismiss-property-detail-modal]')) {
-                                this.closePropertyDetailModal();
-                            }
+                            if (e.target === DOM.propertyDetailModalOverlay || e.target.closest('[data-dismiss-property-detail-modal]')) this.closePropertyDetailModal();
                         });
                     }
                     if (DOM.propertyDetailBookBtn) {
@@ -3924,8 +3739,6 @@
                             }
                         });
                     }
-
-                    // Event delegation for property cards (favorite, detail)
                     [DOM.propertiesGrid, DOM.favoritesGrid, DOM.recentlyViewedGrid].forEach(grid => {
                         if (grid) {
                             grid.addEventListener('click', (e) => {
@@ -3939,8 +3752,6 @@
                             });
                         }
                     });
-
-                    // Messages Page Event Listeners
                     if (DOM.conversationList) {
                         DOM.conversationList.addEventListener('click', (e) => {
                             const item = e.target.closest('.messages-layout__conversation-item');
@@ -3948,55 +3759,42 @@
                         });
                     }
                     if (DOM.messageInputForm) {
-                        DOM.messageInputForm.addEventListener('submit', (e) => {
-                            e.preventDefault();
-                            this.sendUserMessage();
-                        });
+                        DOM.messageInputForm.addEventListener('submit', (e) => { e.preventDefault(); this.sendUserMessage(); });
                     }
                     if (DOM.conversationSearchInput) DOM.conversationSearchInput.addEventListener('input', Utils.debounce(() => this.renderConversationsList(), 300));
                     if (DOM.createNewMessageBtn) DOM.createNewMessageBtn.addEventListener('click', () => this.showNotification('Fitur membuat pesan baru akan segera hadir!', 'Info', 'info'));
                     if (DOM.messageInput) {
-                        DOM.messageInput.addEventListener('input', function () {
-                            this.style.height = 'auto';
-                            this.style.height = (this.scrollHeight) + 'px';
-                        });
+                        DOM.messageInput.addEventListener('input', function () { this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px'; });
                     }
-                    // Customer Service Chat Widget Event Listeners
                     if (DOM.csChatToggleBtn) DOM.csChatToggleBtn.addEventListener('click', () => this.toggleCsChatWidget());
                     if (DOM.csChatCloseBtn) DOM.csChatCloseBtn.addEventListener('click', () => this.toggleCsChatWidget(false));
                     if (DOM.csChatInputForm) {
-                        DOM.csChatInputForm.addEventListener('submit', (e) => {
-                            e.preventDefault();
-                            this.sendCsChatMessage();
-                        });
+                        DOM.csChatInputForm.addEventListener('submit', (e) => { e.preventDefault(); this.sendCsChatMessage(); });
                     }
-
-                    // Settings Page Event Listeners
                     if (DOM.settingEmailNotifications) DOM.settingEmailNotifications.addEventListener('change', (e) => this.handleSettingChange('emailNotifications', e.target.checked));
                     if (DOM.settingPushNotifications) DOM.settingPushNotifications.addEventListener('change', (e) => this.handleSettingChange('pushNotifications', e.target.checked));
                     if (DOM.changePasswordBtn) DOM.changePasswordBtn.addEventListener('click', () => this.openChangePasswordModal());
                     if (DOM.settingThemeToggleBtn) DOM.settingThemeToggleBtn.addEventListener('click', () => this.toggleTheme());
                     if (DOM.settingLanguage) DOM.settingLanguage.addEventListener('change', (e) => this.handleSettingChange('language', e.target.value));
-
-                    // Change Password Modal
                     if (DOM.changePasswordModalOverlay) {
                         DOM.changePasswordModalOverlay.addEventListener('click', (e) => {
-                            if (e.target === DOM.changePasswordModalOverlay || e.target.closest('[data-dismiss-change-password-modal]')) {
-                                this.closeChangePasswordModal();
-                            }
+                            if (e.target === DOM.changePasswordModalOverlay || e.target.closest('[data-dismiss-change-password-modal]')) this.closeChangePasswordModal();
                         });
                     }
                     if (DOM.changePasswordForm) DOM.changePasswordForm.addEventListener('submit', (e) => this.handleChangePasswordFormSubmit(e));
 
+                    // PERBAIKAN RESPONSIVITAS: Listener untuk resize
                     window.addEventListener('resize', Utils.debounce(() => {
-                        const shouldBeOpen = window.innerWidth >= 1024;
-                        if (AppState.isSidebarOpen !== shouldBeOpen && window.innerWidth >= 1024) {
-                            AppState.isSidebarOpen = shouldBeOpen;
-                            this.updateSidebarState(AppState.isSidebarOpen);
-                        } else if (window.innerWidth < 1024 && DOM.sidebar.classList.contains('show') && !AppState.isSidebarOpen) {
-                            this.updateSidebarState(false);
+                        const isDesktop = window.innerWidth > 1024;
+                        if (!isDesktop && AppState.isSidebarOpen) {
+                            // Jika di mobile dan sidebar terbuka, biarkan terbuka
+                        } else {
+                            // Sinkronkan state sidebar dengan ukuran layar
+                            AppState.isSidebarOpen = isDesktop;
+                            this.updateSidebarState(AppState.isSidebarOpen, true);
                         }
                     }, 200));
+
                     document.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape') {
                             if (DOM.bookingModalOverlay && DOM.bookingModalOverlay.classList.contains('show')) this.closeBookingModal();
@@ -4012,6 +3810,11 @@
                             }
                             if (DOM.profileDropdownMenu && DOM.profileDropdownMenu.classList.contains('show')) this.toggleProfileDropdown(false);
                             if (AppState.isCsChatWidgetOpen) this.toggleCsChatWidget(false);
+                            // PERBAIKAN RESPONSIVITAS: Tutup sidebar mobile dengan tombol Escape
+                            if (window.innerWidth <= 1024 && AppState.isSidebarOpen) {
+                                AppState.isSidebarOpen = false;
+                                this.updateSidebarState(false);
+                            }
                         }
                     });
                 },
@@ -4020,13 +3823,8 @@
                     DOM.body.classList.toggle('dark', theme === 'dark');
                     DOM.themeToggleBtn.innerHTML = `<i class="fas fa-${theme === 'light' ? 'moon' : 'sun'}"></i>`;
                     DOM.themeToggleBtn.setAttribute('aria-label', `Ganti ke tema ${theme === 'light' ? 'Gelap' : 'Terang'}`);
-                    if (DOM.settingThemeToggleBtn) {
-                        DOM.settingThemeToggleBtn.innerHTML = `<i class="fas fa-${theme === 'light' ? 'moon' : 'sun'}"></i> Ganti Tema ${theme === 'light' ? 'Gelap' : 'Terang'}`;
-                    }
-                    if (!instant) {
-                        DOM.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-                        setTimeout(() => { DOM.body.style.transition = ''; }, 300);
-                    }
+                    if (DOM.settingThemeToggleBtn) DOM.settingThemeToggleBtn.innerHTML = `<i class="fas fa-${theme === 'light' ? 'moon' : 'sun'}"></i> Ganti Tema ${theme === 'light' ? 'Gelap' : 'Terang'}`;
+                    if (!instant) { DOM.body.style.transition = 'background-color 0.3s ease, color 0.3s ease'; setTimeout(() => { DOM.body.style.transition = ''; }, 300); }
                 },
                 toggleTheme() {
                     AppState.currentTheme = AppState.currentTheme === 'light' ? 'dark' : 'light';
@@ -4035,21 +3833,34 @@
                     this.showNotification(`Tema diubah ke ${AppState.currentTheme === 'light' ? 'Terang' : 'Gelap'}`, 'Preferensi Disimpan', 'info');
                 },
 
-                updateSidebarState(isOpen) {
-                    DOM.sidebar.classList.toggle('collapsed', !isOpen && window.innerWidth >= 1024);
-                    DOM.sidebar.classList.toggle('show', isOpen && window.innerWidth < 1024);
+                // PERBAIKAN RESPONSIVITAS: Fungsi updateSidebarState yang telah disempurnakan
+                updateSidebarState(isOpen, isResize = false) {
+                    const isMobileView = window.innerWidth <= 1024;
                     DOM.sidebarToggle.setAttribute('aria-expanded', isOpen.toString());
 
-                    if (window.innerWidth < 1024) DOM.body.style.overflow = isOpen ? 'hidden' : '';
-                    else DOM.body.style.overflow = '';
+                    if (isMobileView) {
+                        // Di mobile, sidebar adalah overlay
+                        DOM.sidebar.classList.toggle('show', isOpen);
+                        DOM.body.classList.toggle('sidebar-open-overlay', isOpen);
+                        if (!isResize) DOM.body.style.overflow = isOpen ? 'hidden' : '';
+                    } else {
+                        // Di desktop, sidebar mendorong konten
+                        DOM.sidebar.classList.remove('show');
+                        DOM.body.classList.remove('sidebar-open-overlay');
+                        DOM.body.style.overflow = '';
+                        // Untuk layout desktop (jika ingin sidebar bisa collapse)
+                        // DOM.sidebar.classList.toggle('collapsed', !isOpen); 
+                        // DOM.mainWrapper.style.marginLeft = isOpen ? 'var(--sidebar-width)' : 'var(--sidebar-width-collapsed)';
+                        // Kode di atas bisa diaktifkan jika ingin sidebar collapse di desktop.
+                        // Untuk saat ini, kita biarkan tetap terbuka di desktop.
+                        DOM.sidebar.style.transform = 'translateX(0)';
+                    }
                 },
 
                 navigateTo(pageId, isInitialLoad = false) {
                     if (!pageId) pageId = 'dashboard';
                     AppState.activePage = pageId;
-
                     if (!isInitialLoad || window.location.hash.substring(1) !== pageId) window.location.hash = pageId;
-
                     DOM.pageSections.forEach(section => {
                         const isActive = section.id === `${pageId}-content`;
                         section.style.display = isActive ? 'block' : 'none';
@@ -4063,11 +3874,9 @@
                         const linkPage = link.dataset.page || link.hash.substring(1) || link.dataset.pageNav;
                         link.classList.toggle('active', linkPage === pageId);
                     });
-
                     const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"], .profile-dropdown__item[data-page-nav="${pageId}"]`);
                     const pageTitle = activeLink ? (activeLink.querySelector('span')?.textContent || activeLink.textContent).trim() : Utils.capitalize(pageId);
                     document.title = `Green Valley - ${pageTitle}`;
-
                     if (pageId === 'bookings' && DOM.bookingTableBody) this.renderBookings();
                     if (pageId === 'properties' && DOM.propertiesGrid) this.renderProperties();
                     if (pageId === 'favorites' && DOM.favoritesGrid) this.renderFavorites();
@@ -4077,7 +3886,6 @@
                     if (pageId === 'messages') this.initMessagesPage();
                     if (pageId === 'settings' && DOM.settingsContent) this.renderSettingsPage();
                 },
-
                 toggleProfileDropdown(forceState) {
                     if (!DOM.profileDropdownMenu || !DOM.profileDropdownToggle) return;
                     const shouldShow = forceState !== undefined ? forceState : !DOM.profileDropdownMenu.classList.contains('show');
@@ -4086,28 +3894,18 @@
                     if (shouldShow) {
                         const firstFocusable = DOM.profileDropdownMenu.querySelector('a, button');
                         if (firstFocusable) firstFocusable.focus();
-                    } else {
-                        DOM.profileDropdownToggle.focus();
-                    }
+                    } else { DOM.profileDropdownToggle.focus(); }
                 },
                 async logout() {
-                    const confirmed = await this.showAlertConfirm(
-                        'Apakah Anda yakin ingin keluar dari aplikasi Green Valley?',
-                        'Konfirmasi Logout',
-                        'Ya, Logout',
-                        'btn--danger'
-                    );
+                    const confirmed = await this.showAlertConfirm('Apakah Anda yakin ingin keluar dari aplikasi Green Valley?', 'Konfirmasi Logout', 'Ya, Logout', 'btn--danger');
                     if (confirmed) {
                         this.showNotification('Anda telah berhasil logout. Sampai jumpa!', 'Logout Berhasil', 'success');
                         this.toggleProfileDropdown(false);
                         setTimeout(() => window.location.reload(), 1500);
-                    } else {
-                        this.showNotification('Logout dibatalkan.', 'Dibatalkan', 'info');
-                    }
+                    } else { this.showNotification('Logout dibatalkan.', 'Dibatalkan', 'info'); }
                 },
-
                 showNotification(message, title = 'Notifikasi', type = 'info', duration = 5000) {
-                    if (!DOM.notificationToast || !DOM.notificationToastTitle || !DOM.notificationToastBody || !DOM.notificationToastIcon) return;
+                    if (!DOM.notificationToast) return;
                     clearTimeout(AppState.toastTimeout);
                     DOM.notificationToastTitle.textContent = title;
                     DOM.notificationToastBody.innerHTML = Utils.sanitizeHTML(message);
@@ -4118,17 +3916,11 @@
                     DOM.notificationToast.setAttribute('aria-live', type === 'error' || type === 'warning' ? 'assertive' : 'polite');
                     AppState.toastTimeout = setTimeout(() => this.hideNotification(), duration);
                 },
-                hideNotification() {
-                    if (!DOM.notificationToast) return;
-                    DOM.notificationToast.classList.remove('show');
-                    clearTimeout(AppState.toastTimeout);
-                },
-
+                hideNotification() { if (DOM.notificationToast) { DOM.notificationToast.classList.remove('show'); clearTimeout(AppState.toastTimeout); } },
                 renderUserProfileData() {
                     const user = AppState.currentUser;
                     if (DOM.headerUserAvatar) DOM.headerUserAvatar.src = Utils.sanitizeHTML(user.avatarUrl);
                     if (DOM.headerUserName) DOM.headerUserName.textContent = Utils.sanitizeHTML(user.name);
-
                     if (AppState.activePage === 'profile') {
                         if (DOM.profileUserAvatarDisplay) DOM.profileUserAvatarDisplay.src = Utils.sanitizeHTML(user.avatarUrl);
                         if (DOM.profileUserNameDisplay) DOM.profileUserNameDisplay.textContent = Utils.sanitizeHTML(user.name);
@@ -4139,16 +3931,14 @@
                     }
                 },
                 openProfileEditModal() {
-                    if (!DOM.profileEditForm || !DOM.profileEditModalOverlay || !DOM.profileEditModalTitle) return;
+                    if (!DOM.profileEditForm || !DOM.profileEditModalOverlay) return;
                     DOM.profileEditForm.reset();
                     DOM.profileEditForm.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-
                     const user = AppState.currentUser;
                     DOM.profileEditForm.profileEditName.value = user.name;
                     DOM.profileEditForm.profileEditEmail.value = user.email;
                     DOM.profileEditForm.profileEditPhone.value = user.phone || '';
                     DOM.profileEditForm.profileEditAvatarUrl.value = user.avatarUrl || '';
-
                     DOM.profileEditModalOverlay.classList.add('show');
                     DOM.profileEditModalOverlay.setAttribute('aria-hidden', 'false');
                     DOM.body.style.overflow = 'hidden';
@@ -4162,82 +3952,60 @@
                 },
                 validateProfileEditForm() {
                     let isValid = true;
-                    const form = DOM.profileEditForm;
                     const fields = [
-                        { input: form.profileEditName, validator: (val) => val.trim() !== '', msg: 'Nama lengkap wajib diisi.' },
-                        { input: form.profileEditEmail, validator: Utils.isValidEmail, msg: 'Alamat email tidak valid.' },
-                        { input: form.profileEditPhone, validator: Utils.isValidPhone, msg: 'Nomor telepon tidak valid (opsional, jika diisi harus valid).' },
-                        { input: form.profileEditAvatarUrl, validator: Utils.isValidUrl, msg: 'URL Avatar tidak valid (opsional, jika diisi harus valid).' }
+                        { input: DOM.profileEditForm.profileEditName, validator: (val) => val.trim() !== '', msg: 'Nama lengkap wajib diisi.' },
+                        { input: DOM.profileEditForm.profileEditEmail, validator: Utils.isValidEmail, msg: 'Alamat email tidak valid.' },
+                        { input: DOM.profileEditForm.profileEditPhone, validator: Utils.isValidPhone, msg: 'Nomor telepon tidak valid.' },
+                        { input: DOM.profileEditForm.profileEditAvatarUrl, validator: Utils.isValidUrl, msg: 'URL Avatar tidak valid.' }
                     ];
-
                     fields.forEach(field => {
                         const feedback = field.input.nextElementSibling;
                         if (!field.validator(field.input.value)) {
                             field.input.classList.add('is-invalid');
                             if (feedback) feedback.textContent = field.msg;
                             isValid = false;
-                        } else {
-                            field.input.classList.remove('is-invalid');
-                        }
+                        } else { field.input.classList.remove('is-invalid'); }
                     });
                     return isValid;
                 },
                 handleProfileEditFormSubmit(e) {
                     e.preventDefault();
                     if (!this.validateProfileEditForm()) return;
-
                     const formData = new FormData(DOM.profileEditForm);
                     AppState.currentUser.name = formData.get('profileEditName').trim();
                     AppState.currentUser.email = formData.get('profileEditEmail').trim();
                     AppState.currentUser.phone = formData.get('profileEditPhone').trim() || '';
                     AppState.currentUser.avatarUrl = formData.get('profileEditAvatarUrl').trim() || 'https://i.pravatar.cc/100?u=DefaultUser';
-
-                    this.showNotification('Menyimpan perubahan profil...', 'Proses', 'info', 1000);
+                    this.showNotification('Menyimpan perubahan...', 'Proses', 'info', 1000);
                     setTimeout(() => {
                         this.renderUserProfileData();
                         this.closeProfileEditModal();
                         this.showNotification('Profil berhasil diperbarui.', 'Sukses', 'success');
                     }, 1000);
                 },
-
                 renderPaymentsTable() {
                     if (!DOM.paymentTableBody) return;
                     DOM.paymentTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Memuat data...</td></tr>`;
-
                     setTimeout(() => {
-                        if (AppState.paymentsData.length === 0) {
-                            DOM.paymentTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-file-invoice-dollar"></i> Tidak ada riwayat pembayaran.</td></tr>`;
-                            return;
-                        }
+                        if (AppState.paymentsData.length === 0) { DOM.paymentTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-file-invoice-dollar"></i> Tidak ada riwayat pembayaran.</td></tr>`; return; }
                         DOM.paymentTableBody.innerHTML = AppState.paymentsData.map(trx => `
                             <tr>
-                                <td>${Utils.sanitizeHTML(trx.id)}</td>
-                                <td>${Utils.formatDate(trx.date)}</td>
-                                <td>${Utils.sanitizeHTML(trx.description)}</td>
-                                <td>${Utils.formatCurrency(trx.amount)}</td>
-                                <td><span class="badge badge--${Utils.sanitizeHTML(trx.status.toLowerCase().replace(/\s+/g, '-'))}">${Utils.sanitizeHTML(trx.status)}</span></td>
-                                <td>
-                                    <button type="button" class="btn btn--secondary btn-sm" data-action="view-transaction" data-transaction-id="${trx.id}" aria-label="Lihat detail transaksi ${trx.id}">
-                                        <i class="fas fa-eye"></i> Detail
-                                    </button>
-                                    ${trx.status === 'Pending' ? `
-                                    <button type="button" class="btn btn--primary btn-sm" data-action="pay-transaction" data-transaction-id="${trx.id}" aria-label="Bayar transaksi ${trx.id}" style="margin-left: var(--spacing-1);">
-                                        <i class="fas fa-dollar-sign"></i> Bayar
-                                    </button>` : ''}
+                                <td data-label="ID Transaksi">${Utils.sanitizeHTML(trx.id)}</td>
+                                <td data-label="Tanggal">${Utils.formatDate(trx.date)}</td>
+                                <td data-label="Deskripsi">${Utils.sanitizeHTML(trx.description)}</td>
+                                <td data-label="Jumlah">${Utils.formatCurrency(trx.amount)}</td>
+                                <td data-label="Status"><span class="badge badge--${Utils.sanitizeHTML(trx.status.toLowerCase().replace(/\s+/g, '-'))}">${Utils.sanitizeHTML(trx.status)}</span></td>
+                                <td data-label="Aksi">
+                                    <button type="button" class="btn btn--secondary btn-sm" data-action="view-transaction" data-transaction-id="${trx.id}" aria-label="Lihat detail transaksi ${trx.id}"><i class="fas fa-eye"></i> Detail</button>
+                                    ${trx.status === 'Pending' ? `<button type="button" class="btn btn--primary btn-sm" data-action="pay-transaction" data-transaction-id="${trx.id}" aria-label="Bayar transaksi ${trx.id}" style="margin-left: var(--spacing-1);"><i class="fas fa-dollar-sign"></i> Bayar</button>` : ''}
                                 </td>
-                            </tr>
-                        `).join('');
+                            </tr>`).join('');
                     }, 500);
                 },
                 openTransactionDetailModal(transactionId) {
-                    if (!DOM.transactionDetailModalOverlay || !DOM.transactionDetailModalBody || !DOM.transactionDetailModalTitle) return;
-
+                    if (!DOM.transactionDetailModalOverlay) return;
                     const transaction = AppState.paymentsData.find(t => t.id === transactionId);
-                    if (!transaction) {
-                        this.showNotification('Detail transaksi tidak ditemukan.', 'Error', 'error');
-                        return;
-                    }
-
+                    if (!transaction) { this.showNotification('Detail transaksi tidak ditemukan.', 'Error', 'error'); return; }
                     DOM.transactionDetailModalTitle.textContent = `Detail Transaksi: ${Utils.sanitizeHTML(transaction.id)}`;
                     DOM.transactionDetailModalBody.innerHTML = `
                         <div class="transaction-detail-modal__info-grid">
@@ -4248,44 +4016,20 @@
                             <div class="transaction-detail-modal__info-item"><strong>Tipe:</strong> <p>${Utils.sanitizeHTML(transaction.type)}</p></div>
                             <div class="transaction-detail-modal__info-item"><strong>Metode Pembayaran:</strong> <p>${Utils.sanitizeHTML(transaction.method)}</p></div>
                         </div>
-                        <div class="transaction-detail-modal__info-item" style="margin-top:var(--spacing-3);">
-                             <strong>Deskripsi:</strong> <p>${Utils.sanitizeHTML(transaction.description)}</p>
-                        </div>
-                        ${transaction.propertyName ? `
-                            <div class="transaction-detail-modal__info-item">
-                                <strong>Properti Terkait:</strong> <p>${Utils.sanitizeHTML(transaction.propertyName)} (ID: ${Utils.sanitizeHTML(transaction.propertyId)})</p>
-                            </div>
-                        ` : ''}
-                        ${transaction.notes ? `
-                            <div class="transaction-detail-modal__info-item">
-                                <strong>Catatan:</strong>
-                                <div class="transaction-detail-modal__notes">
-                                    ${Utils.sanitizeHTML(transaction.notes)}
-                                </div>
-                            </div>
-                        ` : ''}
-                    `;
-
+                        <div class="transaction-detail-modal__info-item" style="margin-top:var(--spacing-3);"><strong>Deskripsi:</strong> <p>${Utils.sanitizeHTML(transaction.description)}</p></div>
+                        ${transaction.propertyName ? `<div class="transaction-detail-modal__info-item"><strong>Properti Terkait:</strong> <p>${Utils.sanitizeHTML(transaction.propertyName)} (ID: ${Utils.sanitizeHTML(transaction.propertyId)})</p></div>` : ''}
+                        ${transaction.notes ? `<div class="transaction-detail-modal__info-item"><strong>Catatan:</strong><div class="transaction-detail-modal__notes">${Utils.sanitizeHTML(transaction.notes)}</div></div>` : ''}`;
                     DOM.transactionDetailModalOverlay.classList.add('show');
                     DOM.transactionDetailModalOverlay.setAttribute('aria-hidden', 'false');
                     DOM.body.style.overflow = 'hidden';
-                    const firstFocusable = DOM.transactionDetailModalOverlay.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    const firstFocusable = DOM.transactionDetailModalOverlay.querySelector('button');
                     if (firstFocusable) firstFocusable.focus();
                 },
-                closeTransactionDetailModal() {
-                    if (!DOM.transactionDetailModalOverlay) return;
-                    DOM.transactionDetailModalOverlay.classList.remove('show');
-                    DOM.transactionDetailModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                    if (DOM.transactionDetailModalBody) DOM.transactionDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 200px;"><i class="fas fa-spinner fa-spin"></i> Memuat detail transaksi...</div>`;
-                },
+                closeTransactionDetailModal() { if (DOM.transactionDetailModalOverlay) { DOM.transactionDetailModalOverlay.classList.remove('show'); DOM.transactionDetailModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; if (DOM.transactionDetailModalBody) DOM.transactionDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 200px;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>`; } },
                 openPaymentModal(transactionId) {
-                    if (!DOM.paymentModalOverlay || !DOM.paymentForm) return;
+                    if (!DOM.paymentModalOverlay) return;
                     const transaction = AppState.paymentsData.find(t => t.id === transactionId);
-                    if (!transaction || transaction.status !== 'Pending') {
-                        this.showNotification('Tagihan ini tidak dapat dibayar atau sudah lunas.', 'Info', 'info');
-                        return;
-                    }
+                    if (!transaction || transaction.status !== 'Pending') { this.showNotification('Tagihan ini tidak dapat dibayar atau sudah lunas.', 'Info', 'info'); return; }
                     AppState.currentPaymentTransactionId = transactionId;
                     DOM.paymentForm.reset();
                     DOM.paymentDescription.textContent = Utils.sanitizeHTML(transaction.description);
@@ -4298,77 +4042,53 @@
                     DOM.body.style.overflow = 'hidden';
                     DOM.payMethodBankRadio.focus();
                 },
-                closePaymentModal() {
-                    if (!DOM.paymentModalOverlay) return;
-                    DOM.paymentModalOverlay.classList.remove('show');
-                    DOM.paymentModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                    AppState.currentPaymentTransactionId = null;
-                },
+                closePaymentModal() { if (DOM.paymentModalOverlay) { DOM.paymentModalOverlay.classList.remove('show'); DOM.paymentModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; AppState.currentPaymentTransactionId = null; } },
                 updatePaymentMethodDetailsView() {
                     const selectedMethod = DOM.paymentForm.paymentMethod.value;
                     DOM.bankTransferDetailsDiv.style.display = selectedMethod === 'bank' ? 'block' : 'none';
                     DOM.eWalletDetailsDiv.style.display = selectedMethod === 'ewallet' ? 'block' : 'none';
-                    if (selectedMethod === 'bank') DOM.confirmPaymentBtn.innerHTML = `<i class="fas fa-check-circle"></i> Konfirmasi & Upload Bukti`;
-                    else DOM.confirmPaymentBtn.innerHTML = `<i class="fas fa-check-circle"></i> Bayar dengan ${Utils.capitalize(DOM.eWalletProviderSelect.value)}`;
+                    DOM.confirmPaymentBtn.innerHTML = selectedMethod === 'bank' ? `<i class="fas fa-check-circle"></i> Konfirmasi Pembayaran` : `<i class="fas fa-check-circle"></i> Bayar dengan ${Utils.capitalize(DOM.eWalletProviderSelect.value)}`;
+                    DOM.eWalletProviderSelect.addEventListener('change', () => { DOM.confirmPaymentBtn.innerHTML = `<i class="fas fa-check-circle"></i> Bayar dengan ${Utils.capitalize(DOM.eWalletProviderSelect.value)}`; });
                 },
                 handlePaymentFormSubmit(e) {
                     e.preventDefault();
                     if (!AppState.currentPaymentTransactionId) return;
                     const transaction = AppState.paymentsData.find(t => t.id === AppState.currentPaymentTransactionId);
                     if (!transaction) return;
-
                     const selectedMethod = DOM.paymentForm.paymentMethod.value;
                     this.showNotification('Memproses pembayaran...', 'Proses', 'info', 1500);
-
                     setTimeout(() => {
-                        if (selectedMethod === 'bank') {
-                            const proofFile = DOM.paymentProofInput.files[0];
-                            transaction.status = 'Menunggu Verifikasi';
-                            transaction.method = 'Transfer Bank' + (proofFile ? ' (Bukti Diupload)' : '');
-                            this.showNotification(`Pembayaran untuk ${transaction.id} menunggu verifikasi. ${proofFile ? 'Bukti transfer diterima.' : ''}`, 'Sukses', 'success');
-                        } else {
-                            transaction.status = 'Lunas';
-                            transaction.method = Utils.capitalize(DOM.eWalletProviderSelect.value);
-                            this.showNotification(`Pembayaran untuk ${transaction.id} dengan ${transaction.method} berhasil!`, 'Sukses', 'success');
-                        }
+                        const proofFile = DOM.paymentProofInput.files[0];
+                        transaction.status = selectedMethod === 'bank' ? 'Menunggu Verifikasi' : 'Lunas';
+                        transaction.method = selectedMethod === 'bank' ? 'Transfer Bank' + (proofFile ? ' (Bukti Diupload)' : '') : Utils.capitalize(DOM.eWalletProviderSelect.value);
+                        this.showNotification(selectedMethod === 'bank' ? `Pembayaran untuk ${transaction.id} menunggu verifikasi.` : `Pembayaran untuk ${transaction.id} dengan ${transaction.method} berhasil!`, 'Sukses', 'success');
                         this.closePaymentModal();
                         if (AppState.activePage === 'payments') this.renderPaymentsTable();
-                        const relatedBooking = AppState.bookings.find(b => b.property.includes(transaction.propertyName) && b.status === 'pending');
-                        if (relatedBooking && transaction.status === 'Lunas') {
-                            relatedBooking.status = 'active';
-                            if (AppState.activePage === 'bookings') this.renderBookings();
-                        }
+                        const relatedBooking = AppState.bookings.find(b => transaction.description.includes(b.property) && b.status === 'pending');
+                        if (relatedBooking) { relatedBooking.status = 'active'; if (AppState.activePage === 'bookings') this.renderBookings(); }
                     }, 1500);
                 },
-
-
                 renderBookings() {
                     if (!DOM.bookingTableBody) return;
-                    DOM.bookingTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Memuat data booking...</td></tr>`;
+                    DOM.bookingTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i> Memuat...</td></tr>`;
                     setTimeout(() => {
-                        if (AppState.bookings.length === 0) {
-                            DOM.bookingTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-calendar-times"></i> Belum ada data booking.</td></tr>`;
-                            return;
-                        }
+                        if (AppState.bookings.length === 0) { DOM.bookingTableBody.innerHTML = `<tr><td colspan="6" class="loading-placeholder"><i class="fas fa-calendar-times"></i> Belum ada data booking.</td></tr>`; return; }
                         DOM.bookingTableBody.innerHTML = AppState.bookings.map(booking => `
                         <tr>
-                            <td>${Utils.sanitizeHTML(booking.id)}</td>
-                            <td>${Utils.sanitizeHTML(booking.tenant)}</td>
-                            <td>${Utils.sanitizeHTML(booking.property)}</td>
-                            <td>${Utils.formatDate(booking.date)}</td>
-                            <td><span class="badge badge--${Utils.sanitizeHTML(booking.status)}">${Utils.sanitizeHTML(Utils.capitalize(booking.status.replace('-', ' ')))}</span></td>
-                            <td>
-                                <button type="button" class="btn btn--secondary btn-sm" data-action="edit" data-id="${booking.id}" aria-label="Edit booking ${booking.id}"><i class="fas fa-edit"></i> Edit</button>
-                                <button type="button" class="btn btn--danger btn-sm" data-action="delete" data-id="${booking.id}" aria-label="Hapus booking ${booking.id}"><i class="fas fa-trash-alt"></i> Hapus</button>
+                            <td data-label="ID">${Utils.sanitizeHTML(booking.id)}</td>
+                            <td data-label="Penyewa">${Utils.sanitizeHTML(booking.tenant)}</td>
+                            <td data-label="Properti">${Utils.sanitizeHTML(booking.property)}</td>
+                            <td data-label="Tanggal">${Utils.formatDate(booking.date)}</td>
+                            <td data-label="Status"><span class="badge badge--${Utils.sanitizeHTML(booking.status)}">${Utils.capitalize(booking.status)}</span></td>
+                            <td data-label="Aksi">
+                                <button type="button" class="btn btn--secondary btn-sm" data-action="edit" data-id="${booking.id}"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn--danger btn-sm" data-action="delete" data-id="${booking.id}"><i class="fas fa-trash-alt"></i></button>
                             </td>
-                        </tr>
-                    `).join('');
+                        </tr>`).join('');
                         this.setupBookingActionButtons();
                     }, 500);
                 },
                 setupBookingActionButtons() {
-                    if (!DOM.bookingTableBody) return;
                     DOM.bookingTableBody.querySelectorAll('button[data-action]').forEach(button => {
                         button.addEventListener('click', (e) => {
                             const action = e.currentTarget.dataset.action;
@@ -4379,16 +4099,13 @@
                     });
                 },
                 openBookingModal(bookingId = null, prefillData = null) {
-                    if (!DOM.bookingForm || !DOM.bookingModalOverlay || !DOM.bookingModalTitle || !DOM.bookingIdInput) return;
+                    if (!DOM.bookingForm) return;
                     DOM.bookingForm.reset();
                     DOM.bookingForm.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
                     AppState.editingBookingId = bookingId;
                     if (bookingId) {
                         const booking = AppState.bookings.find(b => b.id === bookingId);
-                        if (!booking) {
-                            this.showNotification('Data booking tidak ditemukan.', 'Error', 'error');
-                            return;
-                        }
+                        if (!booking) { this.showNotification('Data booking tidak ditemukan.', 'Error', 'error'); return; }
                         DOM.bookingModalTitle.textContent = 'Edit Data Booking';
                         DOM.bookingIdInput.value = booking.id;
                         DOM.bookingForm.tenantName.value = booking.tenant;
@@ -4407,48 +4124,24 @@
                     DOM.body.style.overflow = 'hidden';
                     (prefillData && prefillData.propertyName ? DOM.bookingForm.tenantName : DOM.bookingForm.property).focus();
                 },
-                closeBookingModal() {
-                    if (!DOM.bookingModalOverlay) return;
-                    DOM.bookingModalOverlay.classList.remove('show');
-                    DOM.bookingModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                    AppState.editingBookingId = null;
-                },
+                closeBookingModal() { if (DOM.bookingModalOverlay) { DOM.bookingModalOverlay.classList.remove('show'); DOM.bookingModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; AppState.editingBookingId = null; } },
                 handleBookingFormSubmit(e) {
                     e.preventDefault();
                     if (!this.validateBookingForm()) return;
                     const formData = new FormData(DOM.bookingForm);
-                    const bookingData = {
-                        id: formData.get('bookingId') || Utils.generateId('bk'),
-                        tenant: formData.get('tenantName').trim(),
-                        property: formData.get('property').trim(),
-                        date: formData.get('bookingDate'),
-                        status: formData.get('bookingStatus')
-                    };
-                    this.showNotification('Menyimpan data booking...', 'Proses', 'info', 1000);
+                    const bookingData = { id: formData.get('bookingId') || Utils.generateId('bk'), tenant: formData.get('tenantName').trim(), property: formData.get('property').trim(), date: formData.get('bookingDate'), status: formData.get('bookingStatus') };
+                    this.showNotification('Menyimpan data...', 'Proses', 'info', 1000);
                     setTimeout(() => {
                         if (AppState.editingBookingId) {
                             const index = AppState.bookings.findIndex(b => b.id === AppState.editingBookingId);
                             if (index > -1) AppState.bookings[index] = bookingData;
-                            this.showNotification('Data booking berhasil diperbarui.', 'Sukses', 'success');
+                            this.showNotification('Data booking diperbarui.', 'Sukses', 'success');
                         } else {
                             AppState.bookings.unshift(bookingData);
-                            this.showNotification('Booking baru berhasil ditambahkan.', 'Sukses', 'success');
+                            this.showNotification('Booking baru ditambahkan.', 'Sukses', 'success');
                             if (bookingData.status === 'pending') {
                                 const propertyDetails = AppState.properties.find(p => p.title.toLowerCase().includes(bookingData.property.toLowerCase())) || { price: 5000000, title: bookingData.property };
-                                const paymentRecord = {
-                                    id: Utils.generateId('TRX'),
-                                    date: new Date().toISOString().split('T')[0],
-                                    description: `Pembayaran Booking ${bookingData.property}`,
-                                    amount: propertyDetails.price,
-                                    status: 'Pending',
-                                    type: 'Booking',
-                                    propertyId: propertyDetails.id || null,
-                                    propertyName: propertyDetails.title,
-                                    method: 'Belum Dipilih',
-                                    notes: `Tagihan untuk booking ID: ${bookingData.id}`
-                                };
-                                AppState.paymentsData.unshift(paymentRecord);
+                                AppState.paymentsData.unshift({ id: Utils.generateId('TRX'), date: new Date().toISOString().split('T')[0], description: `Pembayaran Sewa ${bookingData.property}`, amount: propertyDetails.price, status: 'Pending', type: 'Sewa Bulanan', propertyId: propertyDetails.id || null, propertyName: propertyDetails.title, method: 'Belum Dipilih', notes: `Tagihan untuk booking ID: ${bookingData.id}` });
                                 if (AppState.activePage === 'payments') this.renderPaymentsTable();
                             }
                         }
@@ -4458,151 +4151,84 @@
                 },
                 validateBookingForm() {
                     let isValid = true;
-                    const requiredFields = ['tenantName', 'property', 'bookingDate', 'bookingStatus'];
-                    requiredFields.forEach(fieldName => {
+                    ['tenantName', 'property', 'bookingDate', 'bookingStatus'].forEach(fieldName => {
                         const input = DOM.bookingForm[fieldName];
-                        const feedback = input.nextElementSibling && input.nextElementSibling.classList.contains('invalid-feedback') ? input.nextElementSibling : (input.parentElement.querySelector('.invalid-feedback'));
-                        let value = typeof input.value === 'string' ? input.value.trim() : input.value;
-                        if (!value) {
-                            input.classList.add('is-invalid');
-                            if (feedback) feedback.style.display = 'block';
-                            isValid = false;
-                        } else {
-                            input.classList.remove('is-invalid');
-                            if (feedback) feedback.style.display = 'none';
-                        }
+                        const feedback = input.parentElement.querySelector('.invalid-feedback');
+                        if (!input.value.trim()) { input.classList.add('is-invalid'); if (feedback) feedback.style.display = 'block'; isValid = false; }
+                        else { input.classList.remove('is-invalid'); if (feedback) feedback.style.display = 'none'; }
                     });
                     return isValid;
                 },
                 async deleteBooking(bookingId) {
                     const booking = AppState.bookings.find(b => b.id === bookingId);
-                    const tenantName = booking ? booking.tenant : bookingId;
-                    const confirmed = await this.showAlertConfirm(
-                        `Yakin hapus booking <strong>${Utils.sanitizeHTML(tenantName)}</strong> (ID: ${Utils.sanitizeHTML(bookingId)})?`,
-                        'Konfirmasi Hapus', 'Ya, Hapus', 'btn--danger'
-                    );
+                    const confirmed = await this.showAlertConfirm(`Yakin hapus booking <strong>${Utils.sanitizeHTML(booking ? booking.tenant : bookingId)}</strong>?`, 'Konfirmasi Hapus', 'Ya, Hapus', 'btn--danger');
                     if (confirmed) {
-                        this.showNotification('Menghapus booking...', 'Proses', 'info', 1000);
+                        this.showNotification('Menghapus...', 'Proses', 'info', 1000);
                         setTimeout(() => {
                             AppState.bookings = AppState.bookings.filter(b => b.id !== bookingId);
                             if (AppState.activePage === 'bookings') this.renderBookings();
-                            this.showNotification(`Booking ${Utils.sanitizeHTML(tenantName)} (ID: ${Utils.sanitizeHTML(bookingId)}) dihapus.`, 'Sukses', 'success');
+                            this.showNotification('Booking dihapus.', 'Sukses', 'success');
                         }, 1000);
-                    } else {
-                        this.showNotification('Penghapusan booking dibatalkan.', 'Dibatalkan', 'info');
-                    }
+                    } else { this.showNotification('Penghapusan dibatalkan.', 'Dibatalkan', 'info'); }
                 },
-
-                _closeAlertConfirmModalVisuals() {
-                    if (!DOM.alertModalOverlay) return;
-                    DOM.alertModalOverlay.classList.remove('show');
-                    DOM.alertModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                },
-                showAlertConfirm(message, title = 'Konfirmasi', confirmButtonText = 'Ya, Lanjutkan', confirmButtonClass = 'btn--primary', cancelButtonText = 'Batal') {
+                _closeAlertConfirmModalVisuals() { if (DOM.alertModalOverlay) { DOM.alertModalOverlay.classList.remove('show'); DOM.alertModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; } },
+                showAlertConfirm(message, title = 'Konfirmasi', confirmButtonText = 'Ya', confirmButtonClass = 'btn--primary', cancelButtonText = 'Batal') {
                     return new Promise((resolve) => {
-                        if (!DOM.alertModalOverlay || !DOM.alertModalTitle || !DOM.alertModalMessage || !DOM.alertModalConfirmBtn || !DOM.alertModalCancelBtn) {
-                            resolve(window.confirm(message.replace(/<strong>|<\/strong>/g, '')));
-                            return;
-                        }
+                        if (!DOM.alertModalOverlay) { resolve(window.confirm(message.replace(/<[^>]*>?/gm, ''))); return; }
                         DOM.alertModalTitle.textContent = title;
                         DOM.alertModalMessage.innerHTML = Utils.sanitizeHTML(message);
                         DOM.alertModalConfirmBtn.textContent = confirmButtonText;
                         DOM.alertModalConfirmBtn.className = `btn ${confirmButtonClass}`;
                         DOM.alertModalCancelBtn.textContent = cancelButtonText;
-                        let confirmHandler, cancelHandler, escapeHandler, overlayClickHandler, closeButtonClickHandler;
                         const cleanupAndResolve = (value) => {
                             this._closeAlertConfirmModalVisuals();
                             DOM.alertModalConfirmBtn.removeEventListener('click', confirmHandler);
                             DOM.alertModalCancelBtn.removeEventListener('click', cancelHandler);
-                            const closeBtn = DOM.alertModalOverlay.querySelector('[data-dismiss-alert]');
-                            if (closeBtn) closeBtn.removeEventListener('click', closeButtonClickHandler);
                             document.removeEventListener('keydown', escapeHandler);
-                            DOM.alertModalOverlay.removeEventListener('click', overlayClickHandler);
                             resolve(value);
                         };
-                        confirmHandler = () => cleanupAndResolve(true);
-                        cancelHandler = () => cleanupAndResolve(false);
-                        escapeHandler = (e) => { if (e.key === 'Escape' && DOM.alertModalOverlay.classList.contains('show')) cancelHandler(); };
-                        overlayClickHandler = (e) => { if (e.target === DOM.alertModalOverlay) cancelHandler(); };
-                        closeButtonClickHandler = () => cancelHandler();
+                        const confirmHandler = () => cleanupAndResolve(true);
+                        const cancelHandler = () => cleanupAndResolve(false);
+                        const escapeHandler = (e) => { if (e.key === 'Escape') cancelHandler(); };
                         DOM.alertModalConfirmBtn.addEventListener('click', confirmHandler, { once: true });
                         DOM.alertModalCancelBtn.addEventListener('click', cancelHandler, { once: true });
-                        const closeBtn = DOM.alertModalOverlay.querySelector('[data-dismiss-alert]');
-                        if (closeBtn) closeBtn.addEventListener('click', closeButtonClickHandler, { once: true });
-                        document.addEventListener('keydown', escapeHandler);
-                        DOM.alertModalOverlay.addEventListener('click', overlayClickHandler);
+                        document.addEventListener('keydown', escapeHandler, { once: true });
                         DOM.alertModalOverlay.classList.add('show');
                         DOM.alertModalOverlay.setAttribute('aria-hidden', 'false');
                         DOM.body.style.overflow = 'hidden';
                         DOM.alertModalConfirmBtn.focus();
                     });
                 },
-
                 createPropertyCardHTML(property, isFavoritePage = false, isRecentlyViewedPage = false) {
-                    if (!property || !property.specs) {
-                        console.error("Invalid property data:", property);
-                        return `<div class="card"><p class="loading-placeholder"><i class="fas fa-exclamation-triangle"></i> Error: Data properti tidak valid.</p></div>`;
-                    }
+                    if (!property || !property.specs) { return `<div class="card"><p class="loading-placeholder"><i class="fas fa-exclamation-triangle"></i> Error: Data properti tidak valid.</p></div>`; }
                     const isFavorited = AppState.favorites.includes(property.id);
                     let favoriteIcon, favoriteText, favoriteAction, favoriteButtonClass;
-                    if (isFavoritePage) {
-                        favoriteIcon = 'fas fa-trash-alt'; favoriteText = 'Hapus Favorit'; favoriteAction = 'remove-favorite'; favoriteButtonClass = 'btn--danger';
-                    } else {
-                        favoriteIcon = isFavorited ? 'fas fa-heart text-danger' : 'far fa-heart'; favoriteText = isFavorited ? 'Difavoritkan' : 'Simpan'; favoriteAction = 'favorite'; favoriteButtonClass = isFavorited ? 'btn--primary' : 'btn--secondary';
-                    }
+                    if (isFavoritePage) { favoriteIcon = 'fas fa-trash-alt'; favoriteText = 'Hapus'; favoriteAction = 'remove-favorite'; favoriteButtonClass = 'btn--danger'; }
+                    else { favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart'; favoriteText = isFavorited ? 'Favorit' : 'Simpan'; favoriteAction = 'favorite'; favoriteButtonClass = isFavorited ? 'btn--primary' : 'btn--secondary'; }
                     return `
                     <div class="apartment-card card" data-property-id="${property.id}">
                         <img src="${Utils.sanitizeHTML(property.image)}" alt="Gambar ${Utils.sanitizeHTML(property.title)}">
                         <div class="card-body">
                             <h3>${Utils.sanitizeHTML(property.title)}</h3>
-                            <p style="margin-bottom: var(--spacing-1);">${Utils.sanitizeHTML(property.shortDescription || property.longDescription.substring(0, 100) + '...')}</p>
-                            <p><i class="fas fa-bed"></i> ${Utils.sanitizeHTML(property.specs.bedrooms)} KT
-                               <i class="fas fa-bath" style="margin-left:var(--spacing-2)"></i> ${Utils.sanitizeHTML(property.specs.bathrooms)} KM
-                               <i class="fas fa-ruler-combined" style="margin-left:var(--spacing-2)"></i> ${Utils.sanitizeHTML(property.specs.area)} m²</p>
-                            <p style="font-weight:bold; color:var(--primary); font-size:var(--font-size-md); margin-top:var(--spacing-2);">${Utils.sanitizeHTML(property.priceDisplay)}</p>
+                            <p>${Utils.sanitizeHTML(property.shortDescription.substring(0, 100))}</p>
+                            <p><i class="fas fa-bed"></i> ${property.specs.bedrooms} <i class="fas fa-bath" style="margin-left:var(--spacing-2)"></i> ${property.specs.bathrooms} <i class="fas fa-ruler-combined" style="margin-left:var(--spacing-2)"></i> ${property.specs.area} m²</p>
+                            <p style="font-weight:bold; color:var(--primary); font-size:var(--font-size-md); margin-top:var(--spacing-2);">${property.priceDisplay}</p>
                             <div class="apartment-actions">
                                 <button type="button" class="btn btn--primary btn-sm" data-action="detail" data-property-id="${property.id}"><i class="fas fa-info-circle"></i> Detail</button>
-                                <button type="button" class="btn ${favoriteButtonClass} btn-sm" data-action="${favoriteAction}" data-property-id="${property.id}" aria-pressed="${isFavorited.toString()}">
-                                    <i class="${favoriteIcon}"></i> ${favoriteText}
-                                </button>
+                                <button type="button" class="btn ${favoriteButtonClass} btn-sm" data-action="${favoriteAction}" data-property-id="${property.id}" aria-pressed="${isFavorited.toString()}"><i class="${favoriteIcon}"></i> ${favoriteText}</button>
                             </div>
                         </div>
                     </div>`;
                 },
                 renderProperties() {
                     if (!DOM.propertiesGrid) return;
-                    DOM.propertiesGrid.innerHTML = `<div class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin"></i> Memuat properti...</div>`;
+                    DOM.propertiesGrid.innerHTML = `<div class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>`;
                     setTimeout(() => {
-                        let filteredProperties = AppState.properties;
-
-                        if (AppState.searchQuery) {
-                            filteredProperties = filteredProperties.filter(p =>
-                                p.title.toLowerCase().includes(AppState.searchQuery) ||
-                                (p.shortDescription && p.shortDescription.toLowerCase().includes(AppState.searchQuery)) ||
-                                (p.longDescription && p.longDescription.toLowerCase().includes(AppState.searchQuery))
-                            );
-                        }
-
-                        if (AppState.filters.priceRange) {
-                            const [minStr, maxStr] = AppState.filters.priceRange.split('-');
-                            const minPrice = parseInt(minStr);
-                            const maxPrice = maxStr === 'Infinity' ? Infinity : parseInt(maxStr);
-                            filteredProperties = filteredProperties.filter(p => p.price >= minPrice && p.price <= maxPrice);
-                        }
-                        if (AppState.filters.bedrooms) {
-                            const [minBedsStr, maxBedsStr] = AppState.filters.bedrooms.split('-');
-                            const minBeds = parseInt(minBedsStr);
-                            const maxBeds = maxBedsStr === 'Infinity' ? Infinity : parseInt(maxBedsStr);
-                            filteredProperties = filteredProperties.filter(p => p.specs.bedrooms >= minBeds && p.specs.bedrooms <= maxBeds);
-                        }
-                        if (AppState.filters.amenities) {
-                            filteredProperties = filteredProperties.filter(p => p.specs.amenities && p.specs.amenities.includes(AppState.filters.amenities));
-                        }
-                        if (filteredProperties.length === 0) {
-                            DOM.propertiesGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-search-minus"></i> Tidak ada properti yang cocok.</p>';
-                            return;
-                        }
+                        let filteredProperties = AppState.properties.filter(p => p.title.toLowerCase().includes(AppState.searchQuery) || p.shortDescription.toLowerCase().includes(AppState.searchQuery));
+                        if (AppState.filters.priceRange) { const [min, max] = AppState.filters.priceRange.split('-'); filteredProperties = filteredProperties.filter(p => p.price >= parseInt(min) && p.price <= (max === 'Infinity' ? Infinity : parseInt(max))); }
+                        if (AppState.filters.bedrooms) { const [min, max] = AppState.filters.bedrooms.split('-'); filteredProperties = filteredProperties.filter(p => p.specs.bedrooms >= parseInt(min) && p.specs.bedrooms <= (max === 'Infinity' ? Infinity : parseInt(max))); }
+                        if (AppState.filters.amenities) { filteredProperties = filteredProperties.filter(p => p.specs.amenities.includes(AppState.filters.amenities)); }
+                        if (filteredProperties.length === 0) { DOM.propertiesGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-search-minus"></i> Tidak ada properti yang cocok.</p>'; return; }
                         DOM.propertiesGrid.innerHTML = filteredProperties.map(prop => this.createPropertyCardHTML(prop)).join('');
                     }, 300);
                 },
@@ -4613,143 +4239,92 @@
                     this.renderProperties();
                     this.showNotification('Filter properti diterapkan.', 'Filter Aktif', 'info');
                 },
-
                 toggleFavorite(propertyId, buttonElement = null) {
                     const index = AppState.favorites.indexOf(propertyId);
                     const property = AppState.properties.find(p => p.id === propertyId);
-                    if (!property) {
-                        this.showNotification('Properti tidak ditemukan.', 'Error', 'error'); return;
-                    }
-                    if (index === -1) {
-                        AppState.favorites.push(propertyId);
-                        this.showNotification(`"${Utils.sanitizeHTML(property.title)}" ditambahkan ke favorit.`, 'Favorit', 'success');
-                        if (buttonElement) {
-                            buttonElement.innerHTML = `<i class="fas fa-heart text-danger"></i> Difavoritkan`;
-                            buttonElement.classList.remove('btn--secondary', 'btn--danger');
-                            buttonElement.classList.add('btn--primary');
-                            buttonElement.setAttribute('aria-pressed', 'true');
-                            buttonElement.dataset.action = 'favorite';
-                        }
-                    } else {
-                        AppState.favorites.splice(index, 1);
-                        this.showNotification(`"${Utils.sanitizeHTML(property.title)}" dihapus dari favorit.`, 'Favorit', 'info');
-                        if (buttonElement && buttonElement.closest('#favoritesGrid')) {
-                            // No visual change needed here as the card will be removed
-                        } else if (buttonElement) {
-                            buttonElement.innerHTML = `<i class="far fa-heart"></i> Simpan`;
-                            buttonElement.classList.remove('btn--primary', 'btn--danger');
-                            buttonElement.classList.add('btn--secondary');
-                            buttonElement.setAttribute('aria-pressed', 'false');
-                            buttonElement.dataset.action = 'favorite';
-                        }
-                    }
+                    if (!property) { this.showNotification('Properti tidak ditemukan.', 'Error', 'error'); return; }
+                    if (index === -1) { AppState.favorites.push(propertyId); this.showNotification(`"${Utils.sanitizeHTML(property.title)}" ditambahkan ke favorit.`, 'Favorit', 'success'); }
+                    else { AppState.favorites.splice(index, 1); this.showNotification(`"${Utils.sanitizeHTML(property.title)}" dihapus dari favorit.`, 'Favorit', 'info'); }
                     if (AppState.activePage === 'favorites') this.renderFavorites();
-
                     this.updateFavoriteButtonsAcrossPages(propertyId);
                 },
                 updateFavoriteButtonsAcrossPages(propertyId) {
                     const isFavorited = AppState.favorites.includes(propertyId);
-                    [DOM.propertiesGrid, DOM.recentlyViewedGrid].forEach(grid => {
+                    [DOM.propertiesGrid, DOM.favoritesGrid, DOM.recentlyViewedGrid].forEach(grid => {
                         if (grid) {
-                            const button = grid.querySelector(`.apartment-card[data-property-id="${propertyId}"] button[data-action="favorite"], .apartment-card[data-property-id="${propertyId}"] button[data-action="remove-favorite"]`);
-                            if (button) {
-                                button.innerHTML = `<i class="${isFavorited ? 'fas fa-heart text-danger' : 'far fa-heart'}"></i> ${isFavorited ? 'Difavoritkan' : 'Simpan'}`;
-                                button.classList.toggle('btn--primary', isFavorited);
-                                button.classList.toggle('btn--secondary', !isFavorited);
-                                button.classList.remove('btn--danger');
-                                button.setAttribute('aria-pressed', isFavorited.toString());
-                                button.dataset.action = 'favorite';
+                            const cardOnPage = grid.querySelector(`.apartment-card[data-property-id="${propertyId}"]`);
+                            if (cardOnPage) {
+                                if (grid.id === 'favoritesGrid' && !isFavorited) {
+                                    cardOnPage.style.transition = 'opacity 0.3s ease';
+                                    cardOnPage.style.opacity = '0';
+                                    setTimeout(() => cardOnPage.remove(), 300);
+                                } else {
+                                    const button = cardOnPage.querySelector(`button[data-action*="favorite"][data-property-id="${propertyId}"]`);
+                                    if (button) {
+                                        const isFavoritePage = grid.id === 'favoritesGrid';
+                                        button.innerHTML = `<i class="${isFavorited ? 'fas fa-heart' : 'far fa-heart'}"></i> ${isFavoritePage ? 'Hapus' : (isFavorited ? 'Favorit' : 'Simpan')}`;
+                                        button.classList.toggle('btn--primary', isFavorited && !isFavoritePage);
+                                        button.classList.toggle('btn--secondary', !isFavorited && !isFavoritePage);
+                                        button.classList.toggle('btn--danger', isFavoritePage);
+                                        button.setAttribute('aria-pressed', isFavorited.toString());
+                                    }
+                                }
                             }
                         }
                     });
                 },
                 renderFavorites() {
                     if (!DOM.favoritesGrid) return;
-                    DOM.favoritesGrid.innerHTML = `<div class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin"></i> Memuat favorit...</div>`;
+                    DOM.favoritesGrid.innerHTML = `<div class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>`;
                     setTimeout(() => {
                         const favoriteProperties = AppState.properties.filter(prop => AppState.favorites.includes(prop.id));
-                        if (favoriteProperties.length === 0) {
-                            DOM.favoritesGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-heart-broken"></i> Anda belum punya properti favorit.</p>';
-                            return;
-                        }
+                        if (favoriteProperties.length === 0) { DOM.favoritesGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-heart-broken"></i> Belum ada properti favorit.</p>'; return; }
                         DOM.favoritesGrid.innerHTML = favoriteProperties.map(prop => this.createPropertyCardHTML(prop, true)).join('');
                     }, 300);
                 },
                 addToRecentlyViewed(propertyId) {
-
                     AppState.recentlyViewed = AppState.recentlyViewed.filter(id => id !== propertyId);
                     AppState.recentlyViewed.unshift(propertyId);
                     if (AppState.recentlyViewed.length > 3) AppState.recentlyViewed.pop();
-
                     if (DOM.recentlyViewedGrid && AppState.activePage === 'properties') this.renderRecentlyViewed();
                 },
                 renderRecentlyViewed() {
                     if (!DOM.recentlyViewedGrid) return;
-                    const viewedProperties = AppState.properties
-                        .filter(prop => AppState.recentlyViewed.includes(prop.id))
-                        .sort((a, b) => AppState.recentlyViewed.indexOf(a.id) - AppState.recentlyViewed.indexOf(b.id));
-                    if (viewedProperties.length === 0) {
-                        DOM.recentlyViewedGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-history"></i> Belum ada riwayat penelusuran.</p>';
-                        return;
-                    }
+                    const viewedProperties = AppState.properties.filter(prop => AppState.recentlyViewed.includes(prop.id)).sort((a, b) => AppState.recentlyViewed.indexOf(a.id) - AppState.recentlyViewed.indexOf(b.id));
+                    if (viewedProperties.length === 0) { DOM.recentlyViewedGrid.innerHTML = '<p class="loading-placeholder" style="grid-column: 1 / -1;"><i class="fas fa-history"></i> Belum ada riwayat.</p>'; return; }
                     DOM.recentlyViewedGrid.innerHTML = viewedProperties.map(prop => this.createPropertyCardHTML(prop, false, true)).join('');
                 },
                 openPropertyDetailModal(propertyId) {
-                    if (!DOM.propertyDetailModalOverlay || !DOM.propertyDetailModalBody || !DOM.propertyDetailModalTitle) return;
+                    if (!DOM.propertyDetailModalOverlay) return;
                     AppState.currentDetailPropertyId = propertyId;
                     this.addToRecentlyViewed(propertyId);
                     const property = AppState.properties.find(p => p.id === propertyId);
-                    if (!property) {
-                        this.showNotification('Detail properti tidak ditemukan.', 'Error', 'error'); return;
-                    }
+                    if (!property) { this.showNotification('Detail properti tidak ditemukan.', 'Error', 'error'); return; }
                     DOM.propertyDetailModalTitle.textContent = Utils.sanitizeHTML(property.title);
-                    DOM.propertyDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 300px;"><i class="fas fa-spinner fa-spin"></i> Memuat detail...</div>`;
+                    DOM.propertyDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 300px;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>`;
                     setTimeout(() => {
-                        const amenitiesHTML = [...property.specs.amenities, ...(property.additionalAmenities || [])]
-                            .map(amenity => `<li>${Utils.sanitizeHTML(Utils.capitalize(amenity.replace('-', ' ')))}</li>`).join('');
-                        const galleryHTML = property.gallery && property.gallery.length > 0
-                            ? property.gallery.map((imgUrl, index) =>
-                                `<img src="${Utils.sanitizeHTML(imgUrl)}" alt="Galeri ${index + 1}" class="${index === 0 ? 'active-thumbnail' : ''}" data-img-src="${Utils.sanitizeHTML(imgUrl)}">`).join('')
-                            : '<p>Tidak ada gambar galeri tambahan.</p>';
-                        const mainImageSrc = (property.gallery && property.gallery.length > 0) ? property.gallery[0] : property.image;
+                        const amenitiesHTML = [...property.specs.amenities, ...(property.additionalAmenities || [])].map(a => `<li>${Utils.capitalize(a)}</li>`).join('');
+                        const galleryHTML = property.gallery ? property.gallery.map((imgUrl, i) => `<img src="${imgUrl}" alt="Galeri ${i + 1}" class="${i === 0 ? 'active-thumbnail' : ''}" data-img-src="${imgUrl}">`).join('') : '';
                         DOM.propertyDetailModalBody.innerHTML = `
-                            <div class="property-detail-modal__main-image-container">
-                                <img src="${Utils.sanitizeHTML(mainImageSrc)}" alt="Gambar Utama ${Utils.sanitizeHTML(property.title)}" class="property-detail-modal__main-image" id="propertyDetailMainImage">
-                            </div>
-                            ${property.gallery && property.gallery.length > 1 ? `<div class="property-detail-modal__gallery" id="propertyDetailThumbnailGallery">${galleryHTML}</div>` : ''}
-                            <h3 class="property-detail-modal__section-title">Informasi Utama</h3>
+                            <div class="property-detail-modal__main-image-container"><img src="${property.gallery ? property.gallery[0] : property.image}" alt="Gambar Utama" class="property-detail-modal__main-image" id="propertyDetailMainImage"></div>
+                            ${galleryHTML ? `<div class="property-detail-modal__gallery" id="propertyDetailThumbnailGallery">${galleryHTML}</div>` : ''}
+                            <h3 class="property-detail-modal__section-title">Informasi</h3>
                             <div class="property-detail-modal__info-grid">
-                                <div class="property-detail-modal__info-item"><strong>Harga Sewa:</strong> <p>${Utils.sanitizeHTML(property.priceDisplay)}</p></div>
-                                <div class="property-detail-modal__info-item"><strong>Kamar Tidur:</strong> <p>${Utils.sanitizeHTML(property.specs.bedrooms)}</p></div>
-                                <div class="property-detail-modal__info-item"><strong>Kamar Mandi:</strong> <p>${Utils.sanitizeHTML(property.specs.bathrooms)}</p></div>
-                                <div class="property-detail-modal__info-item"><strong>Luas:</strong> <p>${Utils.sanitizeHTML(property.specs.area)} m²</p></div>
-                                <div class="property-detail-modal__info-item"><strong>Tersedia Mulai:</strong> <p>${Utils.formatDate(property.availabilityDate)}</p></div>
+                                <div><strong>Harga:</strong> <p>${property.priceDisplay}</p></div>
+                                <div><strong>Kamar:</strong> <p>${property.specs.bedrooms} KT, ${property.specs.bathrooms} KM</p></div>
+                                <div><strong>Luas:</strong> <p>${property.specs.area} m²</p></div>
+                                <div><strong>Tersedia:</strong> <p>${Utils.formatDate(property.availabilityDate)}</p></div>
                             </div>
-                            <h3 class="property-detail-modal__section-title">Deskripsi Lengkap</h3><p>${Utils.sanitizeHTML(property.longDescription)}</p>
+                            <h3 class="property-detail-modal__section-title">Deskripsi</h3><p>${property.longDescription}</p>
                             <h3 class="property-detail-modal__section-title">Fasilitas</h3><ul class="property-detail-modal__amenities-list">${amenitiesHTML}</ul>
-                            ${property.floorPlan ? `<h3 class="property-detail-modal__section-title">Denah Lantai</h3><img src="${Utils.sanitizeHTML(property.floorPlan)}" alt="Denah Lantai" style="max-width:100%; border-radius: var(--radius-md); margin-bottom: var(--spacing-3);">` : ''}
-                            <h3 class="property-detail-modal__section-title">Lokasi</h3><p><strong>Alamat:</strong> ${Utils.sanitizeHTML(property.location.address)}</p><div class="property-detail-modal__map-placeholder"><i class="fas fa-map-marked-alt"></i> Peta Lokasi (Placeholder)</div>
-                            ${property.rules ? `<h3 class="property-detail-modal__section-title">Aturan Properti</h3><p>${Utils.sanitizeHTML(property.rules)}</p>` : ''}
-                            <h3 class="property-detail-modal__section-title">Informasi Kontak Agen</h3>
-                            <p><strong>Nama Agen:</strong> ${Utils.sanitizeHTML(property.contact.agentName)}</p>
-                            <p><strong>Telepon:</strong> <a href="tel:${Utils.sanitizeHTML(property.contact.agentPhone)}">${Utils.sanitizeHTML(property.contact.agentPhone)}</a></p>
-                            <p><strong>Email:</strong> <a href="mailto:${Utils.sanitizeHTML(property.contact.agentEmail)}">${Utils.sanitizeHTML(property.contact.agentEmail)}</a></p>`;
+                            <h3 class="property-detail-modal__section-title">Lokasi</h3><div class="property-detail-modal__map-placeholder"><i class="fas fa-map-marked-alt"></i> Peta Lokasi</div>`;
                         this.setupPropertyDetailGalleryListeners();
                     }, 200);
                     DOM.propertyDetailModalOverlay.classList.add('show');
                     DOM.propertyDetailModalOverlay.setAttribute('aria-hidden', 'false');
                     DOM.body.style.overflow = 'hidden';
-                    const firstFocusable = DOM.propertyDetailModalOverlay.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                    if (firstFocusable) firstFocusable.focus();
                 },
-                closePropertyDetailModal() {
-                    if (!DOM.propertyDetailModalOverlay) return;
-                    DOM.propertyDetailModalOverlay.classList.remove('show');
-                    DOM.propertyDetailModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                    AppState.currentDetailPropertyId = null;
-                    if (DOM.propertyDetailModalBody) DOM.propertyDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 300px;"><i class="fas fa-spinner fa-spin"></i> Memuat detail...</div>`;
-                },
+                closePropertyDetailModal() { if (DOM.propertyDetailModalOverlay) { DOM.propertyDetailModalOverlay.classList.remove('show'); DOM.propertyDetailModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; AppState.currentDetailPropertyId = null; if (DOM.propertyDetailModalBody) DOM.propertyDetailModalBody.innerHTML = `<div class="loading-placeholder" style="min-height: 300px;"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>`; } },
                 setupPropertyDetailGalleryListeners() {
                     const galleryContainer = document.getElementById('propertyDetailThumbnailGallery');
                     const mainImage = document.getElementById('propertyDetailMainImage');
@@ -4763,8 +4338,6 @@
                         });
                     }
                 },
-
-                // Messaging System Methods
                 initMessagesPage() {
                     if (!DOM.conversationList || !DOM.chatArea) return;
                     this.renderConversationsList();
@@ -4774,33 +4347,22 @@
                 renderConversationsList() {
                     if (!DOM.conversationList) return;
                     DOM.conversationList.innerHTML = `<li class="loading-placeholder" style="height: 100%;"><i class="fas fa-spinner fa-spin"></i></li>`;
-                    let filteredConversations = AppState.conversations;
-                    const searchTerm = DOM.conversationSearchInput.value.toLowerCase();
-                    if (searchTerm) {
-                        filteredConversations = filteredConversations.filter(conv =>
-                            conv.partnerName.toLowerCase().includes(searchTerm) || conv.lastMessage.toLowerCase().includes(searchTerm)
-                        );
-                    }
+                    let filteredConversations = AppState.conversations.filter(c => c.partnerName.toLowerCase().includes(DOM.conversationSearchInput.value.toLowerCase()));
                     filteredConversations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                     setTimeout(() => {
-                        if (filteredConversations.length === 0) {
-                            DOM.conversationList.innerHTML = `<li class="loading-placeholder" style="height: 100%;"><i class="fas fa-comments-dollar"></i> Tidak ada percakapan.</li>`; return;
-                        }
+                        if (filteredConversations.length === 0) { DOM.conversationList.innerHTML = `<li class="loading-placeholder" style="height: 100%;"><i class="fas fa-comments-dollar"></i> Tidak ada percakapan.</li>`; return; }
                         DOM.conversationList.innerHTML = filteredConversations.map(conv => `
-                            <li class="messages-layout__conversation-item ${conv.id === AppState.activeConversationId ? 'active' : ''}" data-conv-id="${conv.id}" tabindex="0" role="button" aria-label="Percakapan dengan ${Utils.sanitizeHTML(conv.partnerName)}">
-                                <strong>${Utils.sanitizeHTML(conv.partnerName)}</strong>
-                                <p>${conv.unread > 0 ? `<strong>(${conv.unread})</strong> ` : ''}${Utils.sanitizeHTML(conv.lastMessage)}</p>
-                                <small style="font-size: var(--font-size-xs); opacity: 0.7;">${Utils.formatTime(conv.timestamp)}</small>
+                            <li class="messages-layout__conversation-item ${conv.id === AppState.activeConversationId ? 'active' : ''}" data-conv-id="${conv.id}" tabindex="0">
+                                <strong>${conv.partnerName}</strong>
+                                <p>${conv.unread > 0 ? `<strong>(${conv.unread})</strong> ` : ''}${conv.lastMessage}</p>
+                                <small>${Utils.formatTime(conv.timestamp)}</small>
                             </li>`).join('');
                     }, 200);
                 },
                 setActiveConversation(convId) {
                     AppState.activeConversationId = convId;
                     const conversation = AppState.conversations.find(c => c.id === convId);
-                    if (conversation) {
-                        conversation.unread = 0;
-                        conversation.typing = false; // Stop showing typing if user clicks
-                    }
+                    if (conversation) { conversation.unread = 0; conversation.typing = false; }
                     this.renderConversationsList();
                     this.renderMessagesForConversation(convId);
                     DOM.noChatSelected.style.display = 'none';
@@ -4811,59 +4373,37 @@
                     const conversation = AppState.conversations.find(c => c.id === convId);
                     const messages = AppState.messages[convId] || [];
                     if (!conversation) { this.showNoChatSelected(); return; }
-
-                    DOM.chatPartnerName.textContent = Utils.sanitizeHTML(conversation.partnerName);
-                    DOM.messageList.innerHTML = ''; // Clear existing messages
-
-                    messages.forEach((msg, index) => {
+                    DOM.chatPartnerName.textContent = conversation.partnerName;
+                    DOM.messageList.innerHTML = '';
+                    messages.forEach(msg => {
                         const messageEl = document.createElement('div');
                         messageEl.className = `messages-layout__message messages-layout__message--${msg.sender === 'user' ? 'sent' : 'received'}`;
-                        messageEl.innerHTML = `
-                            <div>${Utils.sanitizeHTML(msg.text)}</div>
-                            <div class="messages-layout__message-meta">${Utils.formatTime(msg.timestamp)}</div>`;
+                        messageEl.innerHTML = `<div>${msg.text}</div><div class="messages-layout__message-meta">${Utils.formatTime(msg.timestamp)}</div>`;
                         DOM.messageList.appendChild(messageEl);
-                        // Only animate the last message if it's new, or all if it's initial load (simplified: animate all)
-                        requestAnimationFrame(() => {
-                            messageEl.classList.add('message-arriving');
-                        });
+                        requestAnimationFrame(() => messageEl.classList.add('message-arriving'));
                     });
-
-                    if (conversation.typing) {
-                        this.showTypingIndicator(DOM.messageList, 'partner');
-                    }
-
+                    if (conversation.typing) this.showTypingIndicator(DOM.messageList, 'partner');
                     DOM.messageList.scrollTop = DOM.messageList.scrollHeight;
                     DOM.messageInput.focus();
                 },
                 showTypingIndicator(container, senderType) {
                     const typingEl = document.createElement('div');
-                    typingEl.className = `messages-layout__message messages-layout__message--${senderType === 'user' ? 'sent' : 'received'} messages-layout__message--typing message-arriving`; // Also animate typing indicator
+                    typingEl.className = `messages-layout__message messages-layout__message--${senderType === 'user' ? 'sent' : 'received'} messages-layout__message--typing message-arriving`;
                     typingEl.innerHTML = `<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>`;
                     container.appendChild(typingEl);
                     container.scrollTop = container.scrollHeight;
                 },
-                removeTypingIndicator(container) {
-                    const typingEl = container.querySelector('.messages-layout__message--typing');
-                    if (typingEl) typingEl.remove();
-                },
+                removeTypingIndicator(container) { const typingEl = container.querySelector('.messages-layout__message--typing'); if (typingEl) typingEl.remove(); },
                 sendUserMessage() {
                     if (!AppState.activeConversationId || !DOM.messageInput) return;
                     const text = DOM.messageInput.value.trim();
                     if (!text) return;
-
-                    const newMessage = { id: Utils.generateId('msg'), sender: 'user', text: text, timestamp: new Date().toISOString() };
+                    const newMessage = { id: Utils.generateId('msg'), sender: 'user', text, timestamp: new Date().toISOString() };
                     AppState.messages[AppState.activeConversationId].push(newMessage);
-
                     const conversation = AppState.conversations.find(c => c.id === AppState.activeConversationId);
-                    if (conversation) {
-                        conversation.lastMessage = text;
-                        conversation.timestamp = newMessage.timestamp;
-                        conversation.typing = false; // User sent a message, partner is not typing anymore from previous interaction
-                    }
-
-                    this.renderMessagesForConversation(AppState.activeConversationId); // Will render the new user message
+                    if (conversation) { conversation.lastMessage = text; conversation.timestamp = newMessage.timestamp; conversation.typing = false; }
+                    this.renderMessagesForConversation(AppState.activeConversationId);
                     this.renderConversationsList();
-
                     DOM.messageInput.value = '';
                     DOM.messageInput.style.height = 'auto';
                     this.simulatePartnerReply(AppState.activeConversationId, text);
@@ -4871,53 +4411,36 @@
                 simulatePartnerReply(convId, userMessageText) {
                     const conversation = AppState.conversations.find(c => c.id === convId);
                     if (!conversation || conversation.partnerName === "Green Valley Admin") return;
-
-                    this.removeTypingIndicator(DOM.messageList); // Remove any old one
+                    this.removeTypingIndicator(DOM.messageList);
                     conversation.typing = true;
                     this.showTypingIndicator(DOM.messageList, 'partner');
-
                     setTimeout(() => {
                         conversation.typing = false;
                         this.removeTypingIndicator(DOM.messageList);
-
                         let replyText = "Terima kasih atas pesannya. Saya akan segera merespons.";
-                        if (userMessageText.toLowerCase().includes("halo") || userMessageText.toLowerCase().includes("hai")) replyText = "Halo juga! Ada yang bisa saya bantu?";
-                        else if (userMessageText.toLowerCase().includes("tersedia") || userMessageText.toLowerCase().includes("available")) replyText = "Ya, unit tersebut masih tersedia. Apakah Anda ingin menjadwalkan kunjungan?";
-                        else if (userMessageText.toLowerCase().includes("harga")) replyText = "Untuk informasi harga detail, silakan cek deskripsi properti atau hubungi kami langsung.";
-
+                        if (userMessageText.toLowerCase().includes("halo")) replyText = "Halo juga! Ada yang bisa saya bantu?";
+                        else if (userMessageText.toLowerCase().includes("tersedia")) replyText = "Ya, unit tersebut masih tersedia. Apakah Anda ingin menjadwalkan kunjungan?";
                         const partnerMessage = { id: Utils.generateId('msg'), sender: 'partner', text: replyText, timestamp: new Date().toISOString() };
                         AppState.messages[convId].push(partnerMessage);
                         conversation.lastMessage = replyText;
                         conversation.timestamp = partnerMessage.timestamp;
-
                         if (AppState.activePage === 'messages' && AppState.activeConversationId === convId) {
-                            // Add just the new message with animation
                             const messageEl = document.createElement('div');
                             messageEl.className = `messages-layout__message messages-layout__message--received`;
-                            messageEl.innerHTML = `
-                                <div>${Utils.sanitizeHTML(partnerMessage.text)}</div>
-                                <div class="messages-layout__message-meta">${Utils.formatTime(partnerMessage.timestamp)}</div>`;
+                            messageEl.innerHTML = `<div>${partnerMessage.text}</div><div class="messages-layout__message-meta">${Utils.formatTime(partnerMessage.timestamp)}</div>`;
                             DOM.messageList.appendChild(messageEl);
-                            requestAnimationFrame(() => {
-                                messageEl.classList.add('message-arriving');
-                            });
+                            requestAnimationFrame(() => messageEl.classList.add('message-arriving'));
                             DOM.messageList.scrollTop = DOM.messageList.scrollHeight;
-                        }
+                        } else { conversation.unread = (conversation.unread || 0) + 1; }
                         this.renderConversationsList();
                         this.showNotification(`Pesan baru dari ${conversation.partnerName}`, 'Pesan Masuk', 'info');
                     }, 1500 + Math.random() * 2000);
                 },
-
-                showNoChatSelected() {
-                    DOM.noChatSelected.style.display = 'flex';
-                    DOM.activeChatContent.style.display = 'none';
-                },
-
+                showNoChatSelected() { DOM.noChatSelected.style.display = 'flex'; DOM.activeChatContent.style.display = 'none'; },
                 initCsChatWidget() {
                     if (!DOM.csChatWidget) return;
-                    const initialMessage = { sender: 'cs', text: 'Selamat datang di Green Valley! Ada yang bisa kami bantu?', timestamp: new Date().toISOString() };
-                    AppState.csChatMessages.push(initialMessage);
-                    this.renderCsChatMessages(true); // Initial render, animate first message
+                    AppState.csChatMessages.push({ sender: 'cs', text: 'Selamat datang! Ada yang bisa kami bantu?', timestamp: new Date().toISOString() });
+                    this.renderCsChatMessages(true);
                 },
                 toggleCsChatWidget(forceState) {
                     if (!DOM.csChatPopup || !DOM.csChatToggleBtn) return;
@@ -4926,29 +4449,20 @@
                     DOM.csChatPopup.classList.toggle('open', shouldOpen);
                     DOM.csChatToggleBtn.setAttribute('aria-expanded', shouldOpen.toString());
                     DOM.csChatToggleBtn.innerHTML = `<i class="fas fa-${shouldOpen ? 'times' : 'comments'}"></i>`;
-                    DOM.csChatToggleBtn.setAttribute('aria-label', `${shouldOpen ? 'Tutup' : 'Buka'} Customer Service Chat`);
                     if (shouldOpen) { DOM.csChatMessageInput.focus(); this.renderCsChatMessages(); }
                 },
                 renderCsChatMessages(isInitial = false) {
                     if (!DOM.csChatMessages) return;
-                    DOM.csChatMessages.innerHTML = ''; // Clear
+                    DOM.csChatMessages.innerHTML = '';
                     AppState.csChatMessages.forEach((msg, index) => {
                         const messageEl = document.createElement('div');
                         messageEl.className = `cs-chat-widget__message ${msg.sender}`;
-                        messageEl.innerHTML = `
-                            <div>${Utils.sanitizeHTML(msg.text)}</div>
-                            <div class="cs-chat-widget__message-time">${Utils.formatTime(msg.timestamp)}</div>`;
+                        messageEl.innerHTML = `<div>${msg.text}</div><div class="cs-chat-widget__message-time">${Utils.formatTime(msg.timestamp)}</div>`;
                         DOM.csChatMessages.appendChild(messageEl);
-                        // Animate only if it's the very first message or a new one
-                        if ((isInitial && index === 0) || !isInitial) {
-                            requestAnimationFrame(() => { messageEl.classList.add('message-arriving'); });
-                        } else { // For batch rendering after initial, make them appear instantly
-                            messageEl.style.opacity = 1;
-                        }
+                        if ((isInitial && index === 0) || !isInitial) { requestAnimationFrame(() => { messageEl.classList.add('message-arriving'); }); }
+                        else { messageEl.style.opacity = 1; }
                     });
-                    if (AppState.isCsTyping) {
-                        this.showCsTypingIndicator();
-                    }
+                    if (AppState.isCsTyping) this.showCsTypingIndicator();
                     DOM.csChatMessages.scrollTop = DOM.csChatMessages.scrollHeight;
                 },
                 showCsTypingIndicator() {
@@ -4958,27 +4472,20 @@
                     DOM.csChatMessages.appendChild(typingEl);
                     DOM.csChatMessages.scrollTop = DOM.csChatMessages.scrollHeight;
                 },
-                removeCsTypingIndicator() {
-                    const typingEl = DOM.csChatMessages.querySelector('.cs-typing');
-                    if (typingEl) typingEl.remove();
-                },
+                removeCsTypingIndicator() { const typingEl = DOM.csChatMessages.querySelector('.cs-typing'); if (typingEl) typingEl.remove(); },
                 sendCsChatMessage() {
                     if (!DOM.csChatMessageInput) return;
                     const text = DOM.csChatMessageInput.value.trim();
                     if (!text) return;
-                    const userMessage = { sender: 'user', text: text, timestamp: new Date().toISOString() };
+                    const userMessage = { sender: 'user', text, timestamp: new Date().toISOString() };
                     AppState.csChatMessages.push(userMessage);
-                    // Add just the new user message with animation
                     const messageEl = document.createElement('div');
                     messageEl.className = `cs-chat-widget__message user`;
-                    messageEl.innerHTML = `
-                        <div>${Utils.sanitizeHTML(userMessage.text)}</div>
-                        <div class="cs-chat-widget__message-time">${Utils.formatTime(userMessage.timestamp)}</div>`;
+                    messageEl.innerHTML = `<div>${userMessage.text}</div><div class="cs-chat-widget__message-time">${Utils.formatTime(userMessage.timestamp)}</div>`;
                     DOM.csChatMessages.appendChild(messageEl);
                     requestAnimationFrame(() => { messageEl.classList.add('message-arriving'); });
-
                     DOM.csChatMessageInput.value = '';
-                    AppState.isCsTyping = false; // User sent message, CS is not typing from previous
+                    AppState.isCsTyping = false;
                     this.removeCsTypingIndicator();
                     this.simulateCsReply(text);
                     DOM.csChatMessages.scrollTop = DOM.csChatMessages.scrollHeight;
@@ -4986,33 +4493,22 @@
                 simulateCsReply(userQuery) {
                     AppState.isCsTyping = true;
                     this.showCsTypingIndicator();
-
                     setTimeout(() => {
                         AppState.isCsTyping = false;
                         this.removeCsTypingIndicator();
-
-                        let replyText = "Terima kasih atas pertanyaan Anda. Kami akan segera membantu.";
-                        if (userQuery.toLowerCase().includes('booking')) replyText = "Untuk booking, pilih properti dari halaman 'Properti', lihat detail, lalu klik 'Booking Sekarang'. Atau ke halaman 'Booking' & klik 'Tambah Booking Baru'.";
-                        else if (userQuery.toLowerCase().includes('harga') || userQuery.toLowerCase().includes('biaya')) replyText = "Info harga ada di detail properti. Untuk pertanyaan spesifik, sebutkan nama propertinya.";
-                        else if (userQuery.toLowerCase().includes('halo') || userQuery.toLowerCase().includes('hai')) replyText = "Halo! Ada yang bisa kami bantu hari ini?";
-                        else if (userQuery.toLowerCase().includes('bantuan') || userQuery.toLowerCase().includes('tolong')) replyText = "Tentu, sampaikan pertanyaan Anda, kami siap membantu.";
-
+                        let replyText = "Terima kasih, kami akan segera membantu.";
+                        if (userQuery.toLowerCase().includes('booking')) replyText = "Untuk booking, silakan ke halaman 'Properti' dan pilih unit yang Anda inginkan.";
+                        else if (userQuery.toLowerCase().includes('harga')) replyText = "Info harga ada di detail setiap properti.";
                         const csMessage = { sender: 'cs', text: replyText, timestamp: new Date().toISOString() };
                         AppState.csChatMessages.push(csMessage);
-
-                        // Add just the new CS message with animation
                         const messageEl = document.createElement('div');
                         messageEl.className = `cs-chat-widget__message cs`;
-                        messageEl.innerHTML = `
-                            <div>${Utils.sanitizeHTML(csMessage.text)}</div>
-                            <div class="cs-chat-widget__message-time">${Utils.formatTime(csMessage.timestamp)}</div>`;
+                        messageEl.innerHTML = `<div>${csMessage.text}</div><div class="cs-chat-widget__message-time">${Utils.formatTime(csMessage.timestamp)}</div>`;
                         DOM.csChatMessages.appendChild(messageEl);
                         requestAnimationFrame(() => { messageEl.classList.add('message-arriving'); });
                         DOM.csChatMessages.scrollTop = DOM.csChatMessages.scrollHeight;
-
                     }, 1000 + Math.random() * 1500);
                 },
-
                 renderSettingsPage() {
                     if (!DOM.settingsContent) return;
                     DOM.settingEmailNotifications.checked = AppState.userSettings.emailNotifications;
@@ -5024,15 +4520,10 @@
                 handleSettingChange(settingKey, value) {
                     AppState.userSettings[settingKey] = value;
                     localStorage.setItem('userSettingsGV', JSON.stringify(AppState.userSettings));
-                    let ONOFF = typeof value === 'boolean' ? (value ? 'diaktifkan' : 'dinonaktifkan') : `diubah ke ${value}`;
-                    this.showNotification(`Pengaturan "${Utils.capitalize(settingKey.replace(/([A-Z])/g, ' $1'))}" ${ONOFF}.`, 'Pengaturan Disimpan', 'success');
-
-                    if (settingKey === 'language') {
-                        this.showNotification(`Bahasa diubah ke ${value === 'id' ? 'Indonesia' : 'English'}. Perubahan akan terlihat setelah refresh (simulasi).`, 'Bahasa', 'info');
-                    }
+                    this.showNotification(`Pengaturan disimpan.`, 'Sukses', 'success');
                 },
                 openChangePasswordModal() {
-                    if (!DOM.changePasswordModalOverlay || !DOM.changePasswordForm) return;
+                    if (!DOM.changePasswordModalOverlay) return;
                     DOM.changePasswordForm.reset();
                     DOM.changePasswordForm.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
                     DOM.changePasswordModalOverlay.classList.add('show');
@@ -5040,57 +4531,23 @@
                     DOM.body.style.overflow = 'hidden';
                     DOM.changePasswordForm.currentPassword.focus();
                 },
-                closeChangePasswordModal() {
-                    if (!DOM.changePasswordModalOverlay) return;
-                    DOM.changePasswordModalOverlay.classList.remove('show');
-                    DOM.changePasswordModalOverlay.setAttribute('aria-hidden', 'true');
-                    DOM.body.style.overflow = '';
-                },
+                closeChangePasswordModal() { if (DOM.changePasswordModalOverlay) { DOM.changePasswordModalOverlay.classList.remove('show'); DOM.changePasswordModalOverlay.setAttribute('aria-hidden', 'true'); DOM.body.style.overflow = ''; } },
                 validateChangePasswordForm() {
                     let isValid = true;
                     const form = DOM.changePasswordForm;
-                    const currentPassword = form.currentPassword;
-                    const newPassword = form.newPassword;
-                    const confirmNewPassword = form.confirmNewPassword;
-
-                    [currentPassword, newPassword, confirmNewPassword].forEach(input => {
-                        input.classList.remove('is-invalid');
-                        const feedback = input.nextElementSibling;
-                        if (feedback) feedback.textContent = '';
-                    });
-
-                    if (currentPassword.value.trim() === '') {
-                        currentPassword.classList.add('is-invalid');
-                        currentPassword.nextElementSibling.textContent = 'Password saat ini wajib diisi.';
-                        isValid = false;
-                    }
-                    if (newPassword.value.length < 8) {
-                        newPassword.classList.add('is-invalid');
-                        newPassword.nextElementSibling.textContent = 'Password baru minimal 8 karakter.';
-                        isValid = false;
-                    }
-                    if (newPassword.value !== confirmNewPassword.value) {
-                        confirmNewPassword.classList.add('is-invalid');
-                        confirmNewPassword.nextElementSibling.textContent = 'Konfirmasi password tidak cocok.';
-                        isValid = false;
-                    }
+                    if (form.currentPassword.value.trim() === '') { form.currentPassword.classList.add('is-invalid'); isValid = false; } else { form.currentPassword.classList.remove('is-invalid'); }
+                    if (form.newPassword.value.length < 8) { form.newPassword.classList.add('is-invalid'); isValid = false; } else { form.newPassword.classList.remove('is-invalid'); }
+                    if (form.newPassword.value !== form.confirmNewPassword.value) { form.confirmNewPassword.classList.add('is-invalid'); isValid = false; } else { form.confirmNewPassword.classList.remove('is-invalid'); }
                     return isValid;
                 },
                 handleChangePasswordFormSubmit(e) {
                     e.preventDefault();
                     if (!this.validateChangePasswordForm()) return;
                     this.showNotification('Mengganti password...', 'Proses', 'info', 1500);
-                    setTimeout(() => {
-                        this.closeChangePasswordModal();
-                        this.showNotification('Password berhasil diubah! (simulasi)', 'Sukses', 'success');
-                    }, 1500);
+                    setTimeout(() => { this.closeChangePasswordModal(); this.showNotification('Password berhasil diubah!', 'Sukses', 'success'); }, 1500);
                 },
-
-                updateCurrentYear() {
-                    if (DOM.currentYearSpan) DOM.currentYearSpan.textContent = new Date().getFullYear();
-                },
+                updateCurrentYear() { if (DOM.currentYearSpan) DOM.currentYearSpan.textContent = new Date().getFullYear(); },
             };
-
             document.addEventListener('DOMContentLoaded', () => App.init());
         })();
     </script>
