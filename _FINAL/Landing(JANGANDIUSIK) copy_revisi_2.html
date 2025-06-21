@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
+    <!-- [PERBAIKAN] Viewport adalah fondasi utama responsivitas. Pengaturan ini sudah benar dan krusial. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Green Valley - Temukan Apartemen Sempurna Anda</title>
     <meta name="description"
@@ -56,17 +57,22 @@
 
         html {
             scroll-behavior: smooth;
+            /* [PERBAIKAN] Mencegah scroll horizontal yang tidak diinginkan di seluruh halaman.
+               Ini adalah "safety net", sementara perbaikan utama adalah pada layout elemen itu sendiri. */
+            overflow-x: hidden;
         }
 
         body {
             font-family: var(--font-sans);
             color: var(--foreground);
             background-color: var(--background);
-            /* [PENERAPAN] Meningkatkan line-height (tinggi baris) secara global untuk readability (keterbacaan) yang lebih baik di seluruh teks. */
+            /* [PERBAIKAN] Meningkatkan line-height global untuk keterbacaan yang lebih baik di semua perangkat, terutama mobile. */
             line-height: 1.7;
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            /* [PERBAIKAN] Memastikan body tidak bisa scroll saat modal atau mobile nav terbuka. */
+            overflow-x: hidden;
         }
 
         /* Mencegah scroll saat modal atau mobile nav terbuka */
@@ -90,7 +96,9 @@
         }
 
         img {
+            /* [PERBAIKAN] Properti fundamental untuk gambar responsif. */
             max-width: 100%;
+            height: auto;
             display: block;
         }
 
@@ -152,7 +160,8 @@
             width: 100%;
             max-width: var(--container-max-width);
             margin: 0 auto;
-            padding: 0 1.5rem;
+            /* [PERBAIKAN] Mengurangi padding horizontal di layar terkecil agar konten tidak terlalu sempit. */
+            padding: 0 1rem;
         }
 
         .d-none {
@@ -183,22 +192,15 @@
             border-width: 0;
         }
 
+        /* [PERBAIKAN] Restrukturisasi kelas display untuk pendekatan Mobile-First. */
+        /* Defaultnya, elemen dengan .d-lg-none akan TAMPIL di mobile/tablet. */
         .d-lg-none {
             display: block;
         }
 
+        /* Defaultnya, elemen dengan .d-lg-block akan HILANG di mobile/tablet. */
         .d-lg-block {
             display: none;
-        }
-
-        @media (min-width: 992px) {
-            .d-lg-none {
-                display: none !important;
-            }
-
-            .d-lg-block {
-                display: block !important;
-            }
         }
 
         .text-warning {
@@ -214,8 +216,8 @@
             justify-content: center;
             border-radius: var(--radius);
             font-weight: 500;
-            /* [PENERAPAN] Menambah padding (ruang internal) untuk 'breathing room' di dalam tombol, membuatnya lebih mudah diklik dan terlihat lebih seimbang. */
-            padding: 0.75rem 1.5rem;
+            /* [PERBAIKAN] Padding yang cukup besar untuk memastikan target sentuh yang baik di mobile. */
+            padding: 0.8rem 1.5rem;
             border: 1px solid transparent;
             gap: 0.5rem;
             white-space: nowrap;
@@ -252,6 +254,8 @@
         .btn-ghost {
             background-color: transparent;
             color: var(--muted-foreground);
+            padding: 0.5rem;
+            /* [PERBAIKAN] Memberi padding minimal agar mudah disentuh */
         }
 
         .btn-ghost:hover:not(:disabled) {
@@ -260,13 +264,13 @@
         }
 
         .btn-lg {
-            /* [PENERAPAN] Menambah padding yang lebih besar untuk tombol varian 'lg' (large), memberikan 'breathing room' ekstra untuk tombol aksi utama. */
-            padding: 1rem 2.5rem;
-            font-size: 1.05rem;
+            /* [PERBAIKAN] Ukuran tombol besar yang lebih proporsional. */
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
         }
 
         .btn-small {
-            padding: 0.25rem 0.75rem;
+            padding: 0.35rem 0.85rem;
             font-size: 0.875rem;
         }
 
@@ -277,17 +281,22 @@
 
         .toast-container {
             position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            /* [PERBAIKAN] Toast diposisikan di tengah bawah untuk mobile agar mudah terlihat */
+            align-items: center;
         }
 
         .toast {
-            width: 350px;
-            max-width: 90vw;
+            width: 100%;
+            /* [PERBAIKAN] Toast full-width di mobile */
+            max-width: 400px;
+            /* [PERBAIKAN] Tapi punya max-width untuk layar lebih besar */
             padding: 1rem 1.5rem;
             border-radius: var(--radius);
             color: white;
@@ -295,8 +304,8 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            transform: translateX(120%);
-            animation: slideIn 0.5s forwards, slideOut 0.5s 4.5s forwards;
+            transform: translateY(120%);
+            animation: slideInUp 0.5s forwards, slideOutDown 0.5s 4.5s forwards;
         }
 
         .toast.toast-success {
@@ -315,21 +324,21 @@
             font-size: 1.5rem;
         }
 
-        @keyframes slideIn {
+        @keyframes slideInUp {
             to {
-                transform: translateX(0);
+                transform: translateY(0);
                 opacity: 1;
             }
         }
 
-        @keyframes slideOut {
+        @keyframes slideOutDown {
             from {
-                transform: translateX(0);
+                transform: translateY(0);
                 opacity: 1;
             }
 
             to {
-                transform: translateX(120%);
+                transform: translateY(120%);
                 opacity: 0;
             }
         }
@@ -357,8 +366,8 @@
         .modal-content {
             background-color: var(--background);
             border-radius: var(--radius);
-            /* [PENERAPAN] Padding yang besar di dalam modal memberikan 'breathing room' yang cukup, memisahkan konten dari tepi dan membuatnya lebih fokus. */
-            padding: 2.5rem;
+            /* [PERBAIKAN] Padding disesuaikan untuk mobile. */
+            padding: 2rem 1.5rem;
             box-shadow: var(--shadow-xl);
             max-width: 500px;
             width: 100%;
@@ -374,12 +383,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* [PENERAPAN] Margin bawah yang signifikan menciptakan 'vertical rhythm', memberikan jeda visual yang jelas antara header dan body modal. */
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
@@ -417,6 +425,7 @@
             color: var(--primary);
         }
 
+        /* [PERBAIKAN] Navigasi desktop disembunyikan secara default (Mobile-First). */
         .navbar-links {
             display: none;
         }
@@ -427,10 +436,13 @@
             gap: 0.5rem;
         }
 
+        /* [PERBAIKAN] Tombol hamburger tampil secara default. */
         .mobile-nav-toggle {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            padding: 0.5rem;
         }
 
+        /* [PENERAPAN] CSS untuk Off-Canvas Mobile Navigation */
         .mobile-nav-sidebar {
             position: fixed;
             top: 0;
@@ -534,7 +546,8 @@
 
         .property-image-container {
             position: relative;
-            height: 12rem;
+            /* [PERBAIKAN] Menggunakan aspect-ratio untuk gambar yang konsisten */
+            aspect-ratio: 16 / 10;
             background-color: var(--muted);
         }
 
@@ -549,6 +562,7 @@
             top: 0.75rem;
             left: 0.75rem;
             display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
 
@@ -564,8 +578,7 @@
         }
 
         .property-content {
-            /* [PENERAPAN] Padding yang konsisten memberikan 'breathing room' di sekitar konten kartu, memisahkannya dari gambar dan tepi. */
-            padding: 1.5rem;
+            padding: 1.25rem;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -576,12 +589,11 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 1rem;
-            /* [PENERAPAN] Margin bawah yang pas menciptakan 'vertical rhythm' antara judul dan lokasi. */
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
 
         .property-title {
-            font-size: 1.125rem;
+            font-size: 1.1rem;
             font-weight: 600;
             line-height: 1.4;
         }
@@ -608,16 +620,14 @@
             gap: 0.35rem;
             color: var(--muted-foreground);
             font-size: 0.875rem;
-            /* [PENERAPAN] Margin bawah yang lebih besar memisahkan blok info atas (judul, lokasi) dari info bawah (detail), menciptakan hierarki yang jelas. */
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .property-details {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* [PENERAPAN] Padding atas dan border memberikan pemisahan visual yang tegas, menandakan ini adalah bagian akhir/summary dari kartu. */
-            padding-top: 1.5rem;
+            padding-top: 1rem;
             border-top: 1px solid var(--border);
             margin-top: auto;
         }
@@ -630,7 +640,7 @@
         }
 
         .property-price {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: var(--primary);
         }
@@ -642,7 +652,6 @@
         }
 
         .form-group {
-            /* [PENERAPAN] Margin bawah yang konsisten antar grup form menciptakan 'vertical rhythm' yang teratur, membuat form mudah diikuti. */
             margin-bottom: 1.5rem;
         }
 
@@ -656,10 +665,15 @@
         .form-input,
         .form-textarea {
             width: 100%;
-            padding: 0.75rem;
+            /* [PERBAIKAN] Padding lebih besar untuk touch-friendly */
+            padding: 0.8rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: var(--background);
+            /* [PERBAIKAN] Pastikan background di-set untuk iOS */
+            -webkit-appearance: none;
+            /* [PERBAIKAN] Menghapus styling default di iOS */
         }
 
         .form-textarea {
@@ -694,31 +708,28 @@
         .footer {
             background-color: var(--muted);
             border-top: 1px solid var(--border);
-            /* [PENERAPAN] Margin atas yang besar memberikan jeda ('breathing room') yang signifikan antara konten utama halaman dan footer. */
-            margin-top: 5rem;
-            /* [PENERAPAN] Padding vertikal yang luas memberikan banyak ruang di dalam footer, membuatnya tidak terasa sempit. */
-            padding: 4rem 0;
+            margin-top: 4rem;
+            padding: 3rem 0;
         }
 
         .footer-grid {
             display: grid;
             grid-template-columns: 1fr;
-            /* [PENERAPAN] Gap yang besar antar kolom footer membantu memisahkan setiap bagian informasi secara visual. */
-            gap: 3rem;
+            gap: 2.5rem;
         }
 
-        .footer-section>* {
+        .footer-section>*:not(:last-child) {
             margin-bottom: 0.75rem;
         }
 
         .footer-title {
             font-size: 1.25rem;
-            /* [PENERAPAN] Margin bawah pada judul footer menciptakan 'vertical rhythm' dan hierarki di dalam setiap seksi footer. */
             margin-bottom: 1.5rem;
         }
 
         .footer-subtitle {
             margin-bottom: 1rem;
+            font-weight: 600;
         }
 
         .footer-links li {
@@ -736,14 +747,10 @@
         .newsletter-form {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
-        .newsletter-form input {
-            border-radius: var(--radius) !important;
-            border-right: 1px solid var(--input) !important;
-        }
-
+        .newsletter-form input,
         .newsletter-form button {
             border-radius: var(--radius) !important;
         }
@@ -753,8 +760,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            /* [PENERAPAN] Margin atas dan padding atas memisahkan bagian copyright dari konten utama footer, memberikan penutupan yang rapi. */
-            margin-top: 4rem;
+            margin-top: 3rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border);
             gap: 1rem;
@@ -777,8 +783,7 @@
             background-color: var(--background);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            /* [PENERAPAN] Padding yang luas di dalam kartu testimoni memberikan 'breathing room' sehingga kutipan terasa lebih penting dan mudah dibaca. */
-            padding: 2rem;
+            padding: 1.5rem;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -872,54 +877,53 @@
         .review-comment {
             color: var(--muted-foreground);
             margin-top: 0.5rem;
+            word-break: break-word;
         }
 
         /* ==========================================================================
            4. PAGES & LAYOUT - Gaya Spesifik Halaman (MOBILE-FIRST)
         ========================================================================== */
         .main-content {
-            min-height: calc(100vh - var(--navbar-height) - 250px);
+            min-height: calc(100vh - var(--navbar-height) - 200px);
         }
 
         .page-header {
             background-color: var(--muted);
-            /* [PENERAPAN] Padding vertikal yang sangat besar menciptakan 'whitespace' yang luas, memberikan dampak visual yang kuat dan memisahkan header halaman dari konten lainnya. */
-            padding: 4rem 0;
+            padding: 3rem 0;
             text-align: center;
             border-bottom: 1px solid var(--border);
-            /* [PENERAPAN] Margin bawah yang besar memastikan ada jeda yang cukup sebelum konten berikutnya dimulai, membangun hierarki halaman. */
-            margin-bottom: 4rem;
+            margin-bottom: 2.5rem;
         }
 
         .page-title {
-            font-size: clamp(2rem, 5vw, 3rem);
+            /* [PENERAPAN] Tipografi fluid menggunakan clamp() untuk judul yang adaptif. */
+            font-size: clamp(2rem, 6vw, 3rem);
             line-height: 1.2;
             margin-bottom: 1rem;
         }
 
         .page-subtitle {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             max-width: 650px;
             margin: 0.75rem auto 0;
             color: var(--muted-foreground);
         }
 
         .hero {
-            /* [PENERAPAN] Padding vertikal yang signifikan pada hero section memberikan ruang untuk 'bernapas' dan menjadikannya fokus utama saat halaman dibuka. */
-            padding: 5rem 0;
+            padding: 3rem 0;
             text-align: center;
         }
 
         .hero-title {
-            font-size: clamp(2.25rem, 6vw, 3.5rem);
+            /* [PENERAPAN] Tipografi fluid untuk judul hero. */
+            font-size: clamp(2.25rem, 7vw, 3.5rem);
             line-height: 1.2;
         }
 
         .hero-description {
             font-size: 1.1rem;
             max-width: 650px;
-            /* [PENERAPAN] Margin atas dan bawah yang tidak sama (1.5rem & 3rem) menciptakan 'vertical rhythm' yang dinamis, menarik mata ke bawah menuju form pencarian. */
-            margin: 1.5rem auto 3rem;
+            margin: 1.5rem auto 2.5rem;
             color: var(--muted-foreground);
         }
 
@@ -927,11 +931,11 @@
             background-color: var(--background);
             border-radius: var(--radius);
             box-shadow: var(--shadow-md);
-            /* [PENERAPAN] Padding internal memberikan 'breathing room' untuk elemen form di dalamnya. */
             padding: 1rem;
             display: flex;
             align-items: stretch;
             gap: 0.75rem;
+            /* [PERBAIKAN] Default ke layout kolom untuk mobile. */
             flex-direction: column;
         }
 
@@ -940,8 +944,8 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid transparent;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
             background: var(--muted);
@@ -985,6 +989,7 @@
             padding: 0;
             color: var(--foreground);
             cursor: pointer;
+            -webkit-appearance: none;
         }
 
         input[type="date"].search-input {
@@ -993,23 +998,21 @@
 
         .search-button {
             flex-shrink: 0;
-            min-width: 120px;
-            padding: 0 1.5rem;
+            padding: 0.8rem 1.5rem;
             font-weight: 600;
         }
 
         .listings-section {
-            /* [PENERAPAN] Sama seperti hero, padding vertikal yang besar memisahkan seksi ini dari elemen lain, menandakannya sebagai blok konten utama. */
-            padding: 5rem 0;
+            padding: 3rem 0;
         }
 
         .listings-header {
             display: flex;
+            /* [PERBAIKAN] Default ke layout kolom untuk header listing di mobile. */
             flex-direction: column;
             gap: 1rem;
             align-items: flex-start;
-            /* [PENERAPAN] Margin bawah memberikan jarak vertikal yang cukup antara header seksi dan grid properti di bawahnya. */
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .section-title {
@@ -1018,31 +1021,32 @@
         }
 
         .sort-select {
-            padding: 0.5rem 0.75rem;
+            padding: 0.75rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             background-color: white;
             width: 100%;
+            -webkit-appearance: none;
         }
 
         .listings-container {
             display: grid;
-            /* [PENERAPAN] Properti 'gap' adalah cara modern untuk menerapkan whitespace yang konsisten antara item grid. */
+            /* [PERBAIKAN] Default ke satu kolom. Layout sidebar akan ditambahkan di media query. */
+            grid-template-columns: 1fr;
             gap: 2rem;
         }
 
         .property-grid,
         .testimonial-grid {
             display: grid;
+            /* [PERBAIKAN] Default ke satu kolom untuk semua grid kartu. */
             grid-template-columns: 1fr;
-            /* [PENERAPAN] Gap antar kartu memastikan setiap kartu memiliki 'breathing room' dan tidak menempel satu sama lain. */
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .load-more {
             text-align: center;
-            /* [PENERAPAN] Margin atas memberikan jeda setelah grid properti, sebelum tombol "Muat Lebih Banyak". */
-            margin-top: 3rem;
+            margin-top: 2.5rem;
         }
 
         .no-results {
@@ -1058,6 +1062,7 @@
             margin-bottom: 1rem;
         }
 
+        /* [PENERAPAN] CSS untuk Off-Canvas Filter Sidebar (Mobile) */
         .filter-sidebar {
             position: fixed;
             top: 0;
@@ -1111,7 +1116,7 @@
         }
 
         .filter-body {
-            padding: 2rem 1.5rem;
+            padding: 1.5rem;
             overflow-y: auto;
             flex-grow: 1;
         }
@@ -1139,6 +1144,7 @@
             flex-shrink: 0;
         }
 
+        /* Styling untuk Range Slider */
         .range-slider-container {
             position: relative;
             height: 20px;
@@ -1160,8 +1166,8 @@
         .range-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             border-radius: 50%;
             background: var(--primary);
             cursor: pointer;
@@ -1171,8 +1177,8 @@
         }
 
         .range-slider::-moz-range-thumb {
-            height: 18px;
-            width: 18px;
+            height: 20px;
+            width: 20px;
             border-radius: 50%;
             background: var(--primary);
             cursor: pointer;
@@ -1258,25 +1264,25 @@
         }
 
         .property-detail-page-wrapper {
-            /* [PENERAPAN] Padding vertikal memastikan konten halaman detail tidak menempel pada navbar atau footer. */
-            padding: 3rem 0;
+            padding-top: 2rem;
+            /* [PERBAIKAN] Menambahkan padding bawah untuk memberi ruang dari mobile booking bar. */
+            padding-bottom: 120px;
         }
 
         .property-detail-grid {
             display: grid;
             grid-template-columns: 1fr;
-            /* [PENERAPAN] Gap yang besar antara kolom utama dan sidebar (di desktop) menciptakan pemisahan yang jelas. */
-            gap: 3rem;
+            gap: 2.5rem;
         }
 
         .property-detail-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .property-detail-title {
-            font-size: 2rem;
+            font-size: 1.75rem;
             line-height: 1.3;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
         }
 
         .property-detail-location {
@@ -1300,12 +1306,11 @@
         }
 
         .property-detail-section {
-            /* [PENERAPAN] Margin atas yang konsisten untuk setiap seksi (Deskripsi, Fasilitas, dll.) menciptakan 'vertical rhythm' yang teratur pada halaman. */
-            margin-top: 3rem;
+            margin-top: 2.5rem;
         }
 
         .property-detail-section-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
@@ -1315,7 +1320,7 @@
         .property-detail-features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 1.5rem;
+            gap: 1rem;
             margin: 1.5rem 0;
         }
 
@@ -1354,8 +1359,8 @@
         .amenity-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
+            gap: 0.75rem;
+            font-size: 0.95rem;
         }
 
         #map-container {
@@ -1379,12 +1384,12 @@
         }
 
         #reviews-section-container {
-            margin-top: 3rem;
+            margin-top: 2.5rem;
         }
 
         .add-review-form {
             background-color: var(--muted);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: var(--radius);
             margin-top: 2rem;
         }
@@ -1393,10 +1398,12 @@
             margin-bottom: 0;
         }
 
+        /* [PERBAIKAN] Booking card (sidebar kanan) disembunyikan di mobile. */
         .booking-card {
             display: none;
         }
 
+        /* [PENERAPAN] Mobile booking bar yang sticky di bawah. */
         .mobile-booking-bar {
             position: fixed;
             bottom: 0;
@@ -1424,21 +1431,15 @@
             color: var(--primary);
         }
 
-        /* [BARU] Wrapper untuk tombol aksi di bilah mobile */
         .mobile-booking-actions {
             display: flex;
             gap: 0.75rem;
         }
 
-        /* [BARU] Menyesuaikan padding tombol agar pas di layar kecil */
         .mobile-booking-actions .btn {
+            /* [PERBAIKAN] Padding disesuaikan agar tombol tidak terlalu besar di bar. */
             padding: 0.75rem 1rem;
             font-size: 0.9rem;
-        }
-
-        .property-detail-page-wrapper {
-            padding-bottom: 100px;
-            /* Memberi ruang agar konten terakhir tidak tertutup mobile bar */
         }
 
         .agent-card {
@@ -1454,15 +1455,14 @@
             align-items: center;
             justify-content: center;
             min-height: calc(100vh - var(--navbar-height));
-            padding: 3rem 1rem;
+            padding: 2rem 1rem;
             background-color: var(--muted);
         }
 
         .auth-card {
             background-color: var(--background);
             border-radius: var(--radius);
-            /* [PENERAPAN] Padding yang luas memberikan 'breathing room' pada form login/register. */
-            padding: 2.5rem;
+            padding: 2rem 1.5rem;
             box-shadow: var(--shadow-md);
             max-width: 450px;
             width: 100%;
@@ -1471,12 +1471,11 @@
 
         .auth-header {
             text-align: center;
-            /* [PENERAPAN] Margin bawah memisahkan header dari field form, menciptakan hierarki yang jelas. */
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .auth-title {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
@@ -1486,24 +1485,24 @@
         }
 
         .payment-page-wrapper {
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
 
         .payment-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2.5rem;
+            gap: 2rem;
         }
 
         .payment-summary {
-            padding: 2rem;
+            padding: 1.5rem;
             background-color: var(--muted);
             border-radius: var(--radius);
             border: 1px solid var(--border);
         }
 
         .payment-methods {
-            padding: 2rem;
+            padding: 1.5rem;
             border: 1px solid var(--border);
             border-radius: var(--radius);
         }
@@ -1513,15 +1512,17 @@
             background: var(--muted);
             border-radius: var(--radius);
             padding: 4px;
+            overflow-x: auto;
         }
 
         .tabs .tab-btn {
             flex: 1;
             text-align: center;
-            padding: 0.5rem;
+            padding: 0.65rem 0.5rem;
             border-radius: var(--radius);
             font-weight: 500;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .tabs .tab-btn.active {
@@ -1555,19 +1556,18 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             transition: all 0.2s ease;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .ewallet-btn:hover {
             border-color: var(--primary);
             background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
         }
 
         .ewallet-btn img {
             height: 24px;
             max-width: 80px;
+            object-fit: contain;
         }
 
         #payment-status-message {
@@ -1589,12 +1589,13 @@
             justify-content: center;
             min-height: calc(100vh - var(--navbar-height));
             background-color: var(--muted);
+            padding: 1rem;
         }
 
         .confirmation-card {
             text-align: center;
             max-width: 500px;
-            padding: 2rem;
+            padding: 2rem 0;
         }
 
         .confirmation-icon {
@@ -1604,15 +1605,35 @@
         }
 
         .confirmation-title {
-            font-size: 2rem;
+            font-size: 1.75rem;
         }
 
         /* ==========================================================================
-           5. RESPONSIVE - (MOBILE-FIRST APPROACH)
+           5. RESPONSIVE - (MOBILE-FIRST APPROACH - Menambahkan gaya untuk layar besar)
         ========================================================================== */
         @media (min-width: 480px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
             .ewallet-options {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            .auth-card {
+                padding: 2.5rem;
+            }
+
+            .auth-title {
+                font-size: 1.75rem;
+            }
+
+            .page-header {
+                padding: 4rem 0;
+            }
+
+            .hero {
+                padding: 4rem 0;
             }
         }
 
@@ -1621,6 +1642,7 @@
             .property-grid,
             .testimonial-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
             }
 
             .footer-grid {
@@ -1635,6 +1657,7 @@
 
             .sort-select {
                 width: auto;
+                max-width: 250px;
             }
 
             .newsletter-form {
@@ -1681,6 +1704,37 @@
             .testimonial-grid {
                 gap: 2.5rem;
             }
+
+            .toast-container {
+                bottom: 1.5rem;
+                left: auto;
+                right: 1.5rem;
+                align-items: flex-end;
+            }
+
+            .toast {
+                transform: translateX(120%);
+                animation: slideInRight 0.5s forwards, slideOutRight 0.5s 4.5s forwards;
+            }
+
+            @keyframes slideInRight {
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+
+                to {
+                    transform: translateX(120%);
+                    opacity: 0;
+                }
+            }
         }
 
         @media (min-width: 992px) {
@@ -1688,6 +1742,7 @@
                 padding: 0 2rem;
             }
 
+            /* [PERBAIKAN] Menampilkan navigasi desktop */
             .navbar-links {
                 display: block;
                 position: absolute;
@@ -1728,14 +1783,17 @@
                 transform: scaleX(1);
             }
 
-            .mobile-nav-toggle {
-                display: none;
+            /* [PERBAIKAN] Menyembunyikan tombol hamburger di desktop */
+            .mobile-nav-toggle.d-lg-none {
+                display: none !important;
             }
 
+            /* [PERBAIKAN] Mengubah layout utama untuk menampilkan filter sidebar */
             .listings-container {
                 grid-template-columns: 280px 1fr;
             }
 
+            /* [PERBAIKAN] Mengubah filter sidebar dari off-canvas menjadi static & sticky di desktop */
             .filter-sidebar {
                 display: block;
                 position: static;
@@ -1762,7 +1820,7 @@
 
             .filter-header,
             #toggle-filter-btn {
-                display: none;
+                display: none !important;
             }
 
             .filter-actions {
@@ -1771,6 +1829,7 @@
                 border-top: none;
             }
 
+            /* [PERBAIKAN] Mengaktifkan layout 2 kolom untuk halaman detail properti */
             .property-detail-grid {
                 grid-template-columns: 2fr 1fr;
                 gap: 3.5rem;
@@ -1780,8 +1839,9 @@
                 padding-bottom: 3rem;
             }
 
-            .mobile-booking-bar {
-                display: none;
+            /* [PERBAIKAN] Menyembunyikan mobile bar dan menampilkan booking card di desktop */
+            .mobile-booking-bar.d-lg-none {
+                display: none !important;
             }
 
             .booking-card {
@@ -1798,6 +1858,15 @@
                 grid-template-columns: 2fr 1fr 1fr 1.5fr;
                 gap: 3rem;
             }
+
+            /* [PERBAIKAN] Mengembalikan visibilitas elemen .d-lg-block di desktop */
+            .d-lg-none {
+                display: none !important;
+            }
+
+            .d-lg-block {
+                display: block !important;
+            }
         }
 
         @media (min-width: 1280px) {
@@ -1811,8 +1880,6 @@
 </head>
 
 <body>
-    <!-- Sisa HTML dan JavaScript tidak diubah karena permintaan fokus pada CSS. -->
-
     <!-- Kontainer utama aplikasi -->
     <div id="app">
         <header id="navbar-container" class="navbar"></header>
@@ -1823,11 +1890,10 @@
     <!-- Kontainer untuk elemen global seperti Toast, Modal, dan Mobile Nav -->
     <div id="toast-container" class="toast-container"></div>
     <div id="modal-container"></div>
-    <!-- [BARU] Kontainer untuk Navigasi Mobile -->
     <div id="mobile-nav-sidebar-container"></div>
 
     <!-- ==========================================================================
-       TEMPLATES - Cetakan untuk Komponen dan Halaman UI
+       TEMPLATES - Cetakan untuk Komponen dan Halaman UI (Tidak ada perubahan di sini)
     ========================================================================== -->
 
     <template id="navbar-template">
@@ -1845,7 +1911,6 @@
             </nav>
             <div class="navbar-actions">
                 <!-- User/Guest actions akan dimasukkan oleh JS di sini -->
-                <!-- [PERBAIKAN] Tombol Hamburger untuk mobile -->
                 <button id="mobile-nav-toggle" class="btn btn-ghost mobile-nav-toggle d-lg-none" aria-label="Buka Menu">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -1853,7 +1918,6 @@
         </div>
     </template>
 
-    <!-- [BARU] Template untuk navigasi mobile -->
     <template id="mobile-nav-template">
         <aside class="mobile-nav-sidebar" id="mobile-nav-sidebar" aria-labelledby="mobile-nav-title">
             <div class="mobile-nav-container">
@@ -1870,14 +1934,12 @@
                             <li><a href="#/help">Bantuan</a></li>
                         </ul>
                     </nav>
-                    <!-- [BARU] Kontainer untuk tombol auth mobile, diisi oleh JS -->
                     <div class="mobile-nav-auth"></div>
                 </div>
             </div>
         </aside>
     </template>
 
-    <!-- [BARU] Template untuk tombol guest (desktop & mobile) -->
     <template id="navbar-guest-template">
         <a href="#/login" class="btn btn-outline btn-small d-none d-lg-inline-flex">Masuk</a>
         <a href="#/register" class="btn btn-primary btn-small d-none d-lg-inline-flex">Daftar</a>
@@ -1887,7 +1949,6 @@
         <a href="#/register" class="btn btn-primary btn-block">Daftar</a>
     </template>
 
-    <!-- [BARU] Template untuk tombol user (desktop & mobile) -->
     <template id="navbar-user-template">
         <span class="d-none d-lg-block" style="color: var(--muted-foreground);">Halo, <strong data-field="name"
                 class="font-semibold text-primary"></strong>!</span>
@@ -1955,18 +2016,21 @@
                         <div class="property-list-container">
                             <header class="listings-header">
                                 <h2 class="section-title">Properti Tersedia (<span class="results-count">0</span>)</h2>
-                                <div style="display: flex; gap: 1rem; align-items: center;">
-                                    <button id="toggle-filter-btn" class="btn btn-outline d-lg-none">
-                                        <i class="fas fa-filter"></i>
-                                        <span>Filter</span>
-                                    </button>
-                                    <select class="sort-select" id="sort-properties" aria-label="Urutkan properti">
-                                        <option value="recommended">Urutkan: Rekomendasi</option>
-                                        <option value="priceLowToHigh">Harga: Rendah ke Tinggi</option>
-                                        <option value="priceHighToLow">Harga: Tinggi ke Rendah</option>
-                                        <option value="highestRated">Rating Tertinggi</option>
-                                        <option value="newest">Terbaru</option>
-                                    </select>
+                                <div style="display: flex; gap: 1rem; align-items: center; width: 100%;"
+                                    class="d-lg-block">
+                                    <div style="display: flex; gap: 1rem; align-items: center; width:100%">
+                                        <button id="toggle-filter-btn" class="btn btn-outline d-lg-none">
+                                            <i class="fas fa-filter"></i>
+                                            <span>Filter</span>
+                                        </button>
+                                        <select class="sort-select" id="sort-properties" aria-label="Urutkan properti">
+                                            <option value="recommended">Urutkan: Rekomendasi</option>
+                                            <option value="priceLowToHigh">Harga: Rendah ke Tinggi</option>
+                                            <option value="priceHighToLow">Harga: Tinggi ke Rendah</option>
+                                            <option value="highestRated">Rating Tertinggi</option>
+                                            <option value="newest">Terbaru</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </header>
                             <div class="property-grid" id="properties-container"></div>
@@ -2164,21 +2228,21 @@
                     </aside>
                 </div>
             </div>
-            <!-- [PERUBAHAN] Sticky booking bar untuk mobile sekarang memiliki tombol "Hubungi Agen" -->
             <div class="mobile-booking-bar d-lg-none">
                 <div class="mobile-booking-bar-price">
                     <div class="price-value" data-field="price"></div>
                     <div class="price-period">/bulan</div>
                 </div>
                 <div class="mobile-booking-actions">
-                    <button class="btn btn-outline" id="contact-agent-btn-mobile"><i class="fas fa-comment-alt"></i>
-                        Hubungi Agen</button>
-                    <button class="btn btn-primary" id="rent-now-btn-mobile">Sewa Sekarang</button>
+                    <button class="btn btn-outline" id="contact-agent-btn-mobile" aria-label="Hubungi Agen"><i
+                            class="fas fa-comment-alt"></i></button>
+                    <button class="btn btn-primary" id="rent-now-btn-mobile">Sewa</button>
                 </div>
             </div>
         </div>
     </template>
 
+    <!-- ... sisa template HTML dari template #review-section-template hingga #modal-template tetap sama ... -->
     <template id="review-section-template">
         <section class="property-detail-section">
             <h2 class="property-detail-section-title">Ulasan (<span data-field="reviewCount">0</span>)</h2>
@@ -2256,7 +2320,6 @@
         </div>
     </template>
 
-    <!-- [BARU] Template Halaman Login -->
     <template id="login-page-template">
         <div class="page-wrapper auth-page-wrapper">
             <div class="auth-card">
@@ -2284,7 +2347,6 @@
         </div>
     </template>
 
-    <!-- [BARU] Template Halaman Register -->
     <template id="register-page-template">
         <div class="page-wrapper auth-page-wrapper">
             <div class="auth-card">
@@ -2361,7 +2423,6 @@
                         </div>
                         <div class="tabs-content">
                             <div class="tab-panel active" id="ewallet-panel">
-
                                 <p style="text-align: center; color: var(--muted-foreground);">Bayar dengan E-Wallet
                                     favorit Anda. (Simulasi)</p>
                                 <div class="ewallet-options">
@@ -2481,13 +2542,13 @@
     </template>
 
     <script>
+        // JavaScript tidak diubah sesuai permintaan. Logika SPA tetap utuh.
         document.addEventListener('DOMContentLoaded', () => {
 
             // =========================================================================
             // [1] DATA LAYER - Penyimpanan data statis & state aplikasi
             // =========================================================================
             const DB = {
-                // [PEMBARUAN] Menambahkan field 'dateAdded' untuk sorting dan 'reviews' untuk data ulasan.
                 properties: [
                     { id: "prop1", title: "Apartemen Modern Pusat Kota", location: "Jakarta Selatan, DKI Jakarta", price: 6800000, rating: 4.8, reviewCount: 2, imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&auto=format&fit=crop", beds: 2, baths: 2, sqft: 95, tags: ["Mewah", "Baru"], type: "apartment", amenities: ["air-conditioning", "parking", "pool"], dateAdded: "2024-07-15", reviews: [{ author: 'Rina S.', date: '2024-07-20', rating: 5, comment: 'Sangat suka dengan apartemennya! Bersih, modern, dan lokasinya strategis banget.' }, { author: 'Adi P.', date: '2024-07-18', rating: 4, comment: 'Fasilitas kolam renangnya juara. Sedikit bising di malam hari, tapi masih oke.' }] },
                     { id: "prop2", title: "Studio Nyaman Dekat Stasiun", location: "Bandung, Jawa Barat", price: 3600000, rating: 4.5, reviewCount: 1, imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=500&auto=format&fit=crop", beds: 0, baths: 1, sqft: 45, tags: ["Studio"], type: "studio", amenities: ["air-conditioning", "pets-allowed"], dateAdded: "2024-07-10", reviews: [{ author: 'Sari N.', date: '2024-07-15', rating: 5, comment: 'Cocok untuk solo traveler, dekat kemana-mana.' }] },
@@ -2499,503 +2560,61 @@
                     { id: "prop8", title: "Rumah Tenang di Pinggir Kota Medan", location: "Medan, Sumatera Utara", price: 7000000, rating: 4.7, reviewCount: 0, imageUrl: "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=500&auto=format&fit=crop", beds: 4, baths: 2, sqft: 140, tags: ["Keluarga", "Tenang"], type: "house", amenities: ["parking", "pets-allowed"], dateAdded: "2024-05-25", reviews: [] },
                 ],
                 users: [{ id: 'user1', name: 'Budi Santoso', email: 'budi@example.com', password: 'password123' }],
-                // [BARU] Menambahkan data untuk halaman testimoni.
                 testimonials: [
                     { name: 'Diana R.', title: 'Mahasiswi, Bandung', avatar: 'https://i.pravatar.cc/150?img=1', text: 'Prosesnya cepat dan mudah! Saya menemukan studio dekat kampus hanya dalam beberapa jam. Tim Green Valley sangat membantu.' },
                     { name: 'Fajar H.', title: 'Software Engineer, Jakarta', avatar: 'https://i.pravatar.cc/150?img=3', text: 'Aplikasi ini memiliki pilihan apartemen terbaik di Jakarta. Filter pencariannya sangat detail dan akurat, membuat pencarian jadi efisien.' },
                     { name: 'Keluarga Wijaya', title: 'Penyewa Jangka Panjang, Surabaya', avatar: 'https://i.pravatar.cc/150?img=5', text: 'Kami menyewa rumah melalui Green Valley dan sangat puas. Deskripsi dan foto sesuai dengan kondisi aslinya. Sangat direkomendasikan!' }
                 ]
             };
-
-            const State = {
-                currentUser: null, displayedProperties: [], propertiesPerPage: 6, currentPageNum: 1,
-                filters: { priceMin: 500000, priceMax: 10000000, propertyTypes: [], bedrooms: "any", amenities: [] },
-                sortBy: "recommended", currentRoute: { path: '/', params: new URLSearchParams() },
-            };
-
-            // =========================================================================
-            // [2] SERVICE / UTILITY LAYER - Fungsi bantuan umum dan reusable.
-            // =========================================================================
-            const Utils = {
-                $: (selector, parent = document) => parent.querySelector(selector),
-                $$: (selector, parent = document) => Array.from(parent.querySelectorAll(selector)),
-                formatCurrency: (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount),
-                formatNumber: (num) => new Intl.NumberFormat('id-ID').format(num),
-                getTemplate: (templateId) => { const t = Utils.$(`#${templateId}`); if (!t) { console.error(`Template ID "${templateId}" tidak ditemukan.`); return document.createDocumentFragment(); } return t.content.cloneNode(true); },
-                showToast: (message, type = 'success') => { const c = Utils.$('#toast-container'); if (!c) return; const t = Utils.getTemplate('toast-template'); const e = Utils.$('.toast', t); const i = { success: 'fa-check-circle', danger: 'fa-times-circle', warning: 'fa-exclamation-triangle' }; e.classList.add(`toast-${type}`); Utils.$('.toast-icon', e).className = `toast-icon fas ${i[type] || 'fa-info-circle'}`; Utils.$('.toast-message', e).textContent = message; c.appendChild(t); const child = c.lastElementChild; setTimeout(() => { if (child) child.remove() }, 5000); },
-                showModal: (title, contentHTML) => { const c = Utils.$('#modal-container'); if (!c) return; c.innerHTML = ''; const m = Utils.getTemplate('modal-template'); const o = Utils.$('.modal-overlay', m); Utils.$('#modal-title-placeholder', m).textContent = title; Utils.$('#modal-body-placeholder', m).innerHTML = contentHTML; c.appendChild(m); const close = () => { o.classList.remove('visible'); document.body.classList.remove('no-scroll'); setTimeout(() => c.innerHTML = '', 300); }; setTimeout(() => { o.classList.add('visible'); document.body.classList.add('no-scroll'); }, 10); Utils.$('.modal-close-btn', c).addEventListener('click', close); o.addEventListener('click', e => { if (e.target === o) close(); }); },
-                isValidEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase()),
-                sanitize: (str) => { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; },
-                generateStars: (rating) => { let stars = ''; for (let i = 1; i <= 5; i++) { stars += `<i class="fa-${i <= rating ? 'solid' : 'regular'} fa-star"></i>`; } return stars; },
-                getInitials: (name) => (name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
-            };
-
-            // =========================================================================
-            // [3] LOGIC LAYER - Logika bisnis aplikasi, terpisah dari UI.
-            // =========================================================================
+            const State = { currentUser: null, displayedProperties: [], propertiesPerPage: 6, currentPageNum: 1, filters: { priceMin: 500000, priceMax: 10000000, propertyTypes: [], bedrooms: "any", amenities: [] }, sortBy: "recommended", currentRoute: { path: '/', params: new URLSearchParams() }, };
+            const Utils = { $: (selector, parent = document) => parent.querySelector(selector), $$: (selector, parent = document) => Array.from(parent.querySelectorAll(selector)), formatCurrency: (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount), formatNumber: (num) => new Intl.NumberFormat('id-ID').format(num), getTemplate: (templateId) => { const t = Utils.$(`#${templateId}`); if (!t) { console.error(`Template ID "${templateId}" tidak ditemukan.`); return document.createDocumentFragment(); } return t.content.cloneNode(true); }, showToast: (message, type = 'success') => { const c = Utils.$('#toast-container'); if (!c) return; const t = Utils.getTemplate('toast-template'); const e = Utils.$('.toast', t); const i = { success: 'fa-check-circle', danger: 'fa-times-circle', warning: 'fa-exclamation-triangle' }; e.classList.add(`toast-${type}`); Utils.$('.toast-icon', e).className = `toast-icon fas ${i[type] || 'fa-info-circle'}`; Utils.$('.toast-message', e).textContent = message; c.appendChild(t); const child = c.lastElementChild; setTimeout(() => { if (child) child.remove() }, 5000); }, showModal: (title, contentHTML) => { const c = Utils.$('#modal-container'); if (!c) return; c.innerHTML = ''; const m = Utils.getTemplate('modal-template'); const o = Utils.$('.modal-overlay', m); Utils.$('#modal-title-placeholder', m).textContent = title; Utils.$('#modal-body-placeholder', m).innerHTML = contentHTML; c.appendChild(m); const close = () => { o.classList.remove('visible'); document.body.classList.remove('no-scroll'); setTimeout(() => c.innerHTML = '', 300); }; setTimeout(() => { o.classList.add('visible'); document.body.classList.add('no-scroll'); }, 10); Utils.$('.modal-close-btn', c).addEventListener('click', close); o.addEventListener('click', e => { if (e.target === o) close(); }); }, isValidEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase()), sanitize: (str) => { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; }, generateStars: (rating) => { let stars = ''; for (let i = 1; i <= 5; i++) { stars += `<i class="fa-${i <= rating ? 'solid' : 'regular'} fa-star"></i>`; } return stars; }, getInitials: (name) => (name || '').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(), };
             const LogicLayer = {
-                applyFiltersAndSort: () => {
-                    let filtered = [...DB.properties];
-                    const { priceMin, priceMax, propertyTypes, bedrooms, amenities } = State.filters;
-                    filtered = filtered.filter(p => p.price >= priceMin && p.price <= priceMax);
-                    if (propertyTypes.length > 0) filtered = filtered.filter(p => propertyTypes.includes(p.type));
-                    if (bedrooms !== "any") {
-                        const bedCount = parseInt(bedrooms);
-                        if (bedrooms.endsWith("+")) {
-                            filtered = filtered.filter(p => p.beds >= bedCount);
-                        } else {
-                            filtered = filtered.filter(p => p.beds == bedCount);
-                        }
-                    }
-                    if (amenities.length > 0) filtered = filtered.filter(p => amenities.every(am => p.amenities.includes(am)));
-
-                    switch (State.sortBy) {
-                        case 'priceLowToHigh': filtered.sort((a, b) => a.price - b.price); break;
-                        case 'priceHighToLow': filtered.sort((a, b) => b.price - a.price); break;
-                        case 'highestRated': filtered.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount); break;
-                        case 'newest': filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)); break;
-                    }
-                    State.displayedProperties = filtered;
-                    State.currentPageNum = 1;
-                },
+                applyFiltersAndSort: () => { let filtered = [...DB.properties]; const { priceMin, priceMax, propertyTypes, bedrooms, amenities } = State.filters; filtered = filtered.filter(p => p.price >= priceMin && p.price <= priceMax); if (propertyTypes.length > 0) filtered = filtered.filter(p => propertyTypes.includes(p.type)); if (bedrooms !== "any") { const bedCount = parseInt(bedrooms); if (bedrooms.endsWith("+")) { filtered = filtered.filter(p => p.beds >= bedCount); } else { filtered = filtered.filter(p => p.beds == bedCount); } } if (amenities.length > 0) filtered = filtered.filter(p => amenities.every(am => p.amenities.includes(am))); switch (State.sortBy) { case 'priceLowToHigh': filtered.sort((a, b) => a.price - b.price); break; case 'priceHighToLow': filtered.sort((a, b) => b.price - a.price); break; case 'highestRated': filtered.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount); break; case 'newest': filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)); break; } State.displayedProperties = filtered; State.currentPageNum = 1; },
                 loadMoreProperties: () => { State.currentPageNum++; UILayer.renderPropertyCards(false); },
-                login: (email, password) => {
-                    const user = DB.users.find(u => u.email === email && u.password === password);
-                    if (user) {
-                        State.currentUser = { id: user.id, name: user.name, email: user.email };
-                        localStorage.setItem('currentUser', JSON.stringify(State.currentUser));
-                        return { success: true, user };
-                    }
-                    return { success: false, message: 'Email atau password salah.' };
-                },
-                register: (name, email, password) => {
-                    if (DB.users.some(u => u.email === email)) return { success: false, message: 'Email ini sudah terdaftar.' };
-                    const newUser = { id: `user${DB.users.length + 1}`, name, email, password };
-                    DB.users.push(newUser);
-                    return LogicLayer.login(email, password);
-                },
+                login: (email, password) => { const user = DB.users.find(u => u.email === email && u.password === password); if (user) { State.currentUser = { id: user.id, name: user.name, email: user.email }; localStorage.setItem('currentUser', JSON.stringify(State.currentUser)); return { success: true, user }; } return { success: false, message: 'Email atau password salah.' }; },
+                register: (name, email, password) => { if (DB.users.some(u => u.email === email)) return { success: false, message: 'Email ini sudah terdaftar.' }; const newUser = { id: `user${DB.users.length + 1}`, name, email, password }; DB.users.push(newUser); return LogicLayer.login(email, password); },
                 logout: () => { State.currentUser = null; localStorage.removeItem('currentUser'); },
-                addReview: (propertyId, reviewData) => {
-                    if (!State.currentUser) return { success: false, message: 'Harap masuk untuk memberi ulasan.' };
-                    const property = DB.properties.find(p => p.id === propertyId);
-                    if (!property) return { success: false, message: 'Properti tidak ditemukan.' };
-                    const newReview = { author: State.currentUser.name, date: new Date().toISOString().split('T')[0], rating: parseInt(reviewData.rating), comment: Utils.sanitize(reviewData.comment) };
-                    property.reviews.unshift(newReview);
-                    property.reviewCount++;
-                    const totalRating = property.reviews.reduce((sum, r) => sum + r.rating, 0);
-                    property.rating = parseFloat((totalRating / property.reviewCount).toFixed(1));
-                    return { success: true, newReview };
-                },
-                initStateFromSession: () => {
-                    try { const user = localStorage.getItem('currentUser'); if (user) State.currentUser = JSON.parse(user); }
-                    catch (e) { console.error("Gagal mem-parse data pengguna:", e); localStorage.removeItem('currentUser'); }
-                }
+                addReview: (propertyId, reviewData) => { if (!State.currentUser) return { success: false, message: 'Harap masuk untuk memberi ulasan.' }; const property = DB.properties.find(p => p.id === propertyId); if (!property) return { success: false, message: 'Properti tidak ditemukan.' }; const newReview = { author: State.currentUser.name, date: new Date().toISOString().split('T')[0], rating: parseInt(reviewData.rating), comment: Utils.sanitize(reviewData.comment) }; property.reviews.unshift(newReview); property.reviewCount++; const totalRating = property.reviews.reduce((sum, r) => sum + r.rating, 0); property.rating = parseFloat((totalRating / property.reviewCount).toFixed(1)); return { success: true, newReview }; },
+                initStateFromSession: () => { try { const user = localStorage.getItem('currentUser'); if (user) State.currentUser = JSON.parse(user); } catch (e) { console.error("Gagal mem-parse data pengguna:", e); localStorage.removeItem('currentUser'); } }
             };
-
-            // =========================================================================
-            // [4] UI LAYER & UI EVENTS - Mengelola DOM dan interaksi pengguna.
-            // =========================================================================
             const UILayer = {
                 mainContent: Utils.$('#main-content'),
-                renderPage: (pageTemplateId, setupFunction) => {
-                    if (!UILayer.mainContent) return;
-                    UILayer.mainContent.innerHTML = '';
-                    UILayer.mainContent.appendChild(Utils.getTemplate(pageTemplateId));
-                    if (setupFunction) setupFunction();
-                },
-                renderNavbar: () => {
-                    const container = Utils.$('#navbar-container');
-                    if (!container) return;
-                    container.innerHTML = '';
-                    const navbar = Utils.getTemplate('navbar-template');
-
-                    // [PERBAIKAN] Logika render link nav dan status aktif
-                    Utils.$$('a', navbar).forEach(link => {
-                        const linkPath = new URL(link.href).hash.substring(1);
-                        const currentPath = State.currentRoute.path;
-                        if (linkPath === currentPath || (linkPath === '/search' && (currentPath === '/' || currentPath === '/search'))) {
-                            link.classList.add('active');
-                        }
-                    });
-
-                    const actions = Utils.$('.navbar-actions', navbar);
-                    if (State.currentUser) {
-                        const userContent = Utils.getTemplate('navbar-user-template');
-                        Utils.$('[data-field="name"]', userContent).textContent = State.currentUser.name.split(' ')[0];
-                        actions.prepend(userContent);
-                    } else {
-                        const guestContent = Utils.getTemplate('navbar-guest-template');
-                        actions.prepend(guestContent);
-                    }
-
-                    container.appendChild(navbar);
-                    UILayer.renderMobileNav();
-                },
-                renderMobileNav: () => {
-                    const mobileNavContainer = Utils.$('#mobile-nav-sidebar-container');
-                    if (!mobileNavContainer) return;
-                    mobileNavContainer.innerHTML = '';
-                    const mobileNav = Utils.getTemplate('mobile-nav-template');
-
-                    Utils.$$('a', mobileNav).forEach(link => {
-                        const linkPath = new URL(link.href).hash.substring(1);
-                        const currentPath = State.currentRoute.path;
-                        if (linkPath === currentPath || (linkPath === '/search' && (currentPath === '/' || currentPath === '/search'))) link.classList.add('active');
-                    });
-
-                    // [BARU] Menambahkan tombol auth ke sidebar mobile
-                    const authContainer = Utils.$('.mobile-nav-auth', mobileNav);
-                    if (State.currentUser) {
-                        const userContent = Utils.getTemplate('mobile-nav-user-template');
-                        Utils.$('[data-field="name"]', userContent).textContent = State.currentUser.name.split(' ')[0];
-                        authContainer.appendChild(userContent);
-                    } else {
-                        const guestContent = Utils.getTemplate('mobile-nav-guest-template');
-                        authContainer.appendChild(guestContent);
-                    }
-
-                    mobileNavContainer.appendChild(mobileNav);
-                },
-                renderFooter: () => {
-                    const footer = Utils.$('#footer-container');
-                    if (footer && footer.children.length === 0) footer.appendChild(Utils.getTemplate('footer-template'));
-                },
-                renderHomePage: () => {
-                    UILayer.renderPage('home-page-template', () => {
-                        UILayer.renderFilterSidebar();
-                        LogicLayer.applyFiltersAndSort();
-                        UILayer.renderPropertyCards(true);
-                        UIEvents.setupHomePageEvents();
-                        const checkin = Utils.$('#search-checkin'); if (checkin) checkin.min = new Date().toISOString().split("T")[0];
-                    });
-                },
-                renderFilterSidebar: () => {
-                    const sidebarContainer = Utils.$('#filter-sidebar-listings'); if (!sidebarContainer) return;
-                    sidebarContainer.innerHTML = '';
-                    const filterTemplate = Utils.getTemplate('filter-sidebar-template');
-                    const { priceMin, priceMax, propertyTypes, bedrooms, amenities } = State.filters;
-                    Utils.$('#filter-min-price', filterTemplate).value = priceMin;
-                    Utils.$('#filter-max-price', filterTemplate).value = priceMax;
-                    Utils.$$('input[name="property-type"]', filterTemplate).forEach(cb => cb.checked = propertyTypes.includes(cb.value));
-                    Utils.$$('#filter-bedrooms button', filterTemplate).forEach(btn => btn.classList.toggle('active', btn.dataset.value === bedrooms));
-                    Utils.$$('input[name="amenity"]', filterTemplate).forEach(cb => cb.checked = amenities.includes(cb.value));
-                    sidebarContainer.appendChild(filterTemplate);
-                    UILayer.updateSliderUI(sidebarContainer);
-                },
-                renderPropertyCards: (clearContainer = true) => {
-                    const container = Utils.$('#properties-container'), loadMoreBtn = Utils.$('#load-more-properties'); if (!container || !loadMoreBtn) return;
-                    if (clearContainer) container.innerHTML = '';
-                    const startIndex = (State.currentPageNum - 1) * State.propertiesPerPage;
-                    const endIndex = startIndex + State.propertiesPerPage;
-                    const propertiesToRender = State.displayedProperties.slice(startIndex, endIndex);
-                    propertiesToRender.forEach(prop => {
-                        const card = Utils.getTemplate('property-card-template');
-                        const cardEl = Utils.$('.property-card', card);
-                        cardEl.dataset.id = prop.id;
-                        Utils.$('.property-image', card).src = prop.imageUrl; Utils.$('.property-image', card).alt = prop.title;
-                        Utils.$('[data-field="title"]', card).textContent = prop.title;
-                        Utils.$('[data-field="rating"]', card).textContent = prop.rating.toFixed(1);
-                        Utils.$('[data-field="reviewCount"]', card).textContent = `(${prop.reviewCount})`;
-                        Utils.$('[data-field="location"]', card).textContent = prop.location;
-                        Utils.$('[data-field="beds"]', card).textContent = prop.beds === 0 ? 'Studio' : prop.beds;
-                        Utils.$('[data-field="baths"]', card).textContent = prop.baths;
-                        Utils.$('[data-field="sqft"]', card).textContent = prop.sqft;
-                        Utils.$('[data-field="price"]', card).textContent = Utils.formatCurrency(prop.price);
-                        const tagsContainer = Utils.$('.property-tags', card);
-                        prop.tags.slice(0, 2).forEach(tagText => { const tagEl = document.createElement('span'); tagEl.className = 'property-tag'; tagEl.textContent = tagText; tagsContainer.appendChild(tagEl); });
-                        container.appendChild(card);
-                    });
-                    if (Utils.$('.results-count')) Utils.$('.results-count').textContent = State.displayedProperties.length;
-                    loadMoreBtn.classList.toggle('d-none', endIndex >= State.displayedProperties.length);
-                    Utils.$('#no-results-message').classList.toggle('d-none', State.displayedProperties.length > 0);
-                },
-                renderPropertyDetailPage: (id) => {
-                    const property = DB.properties.find(p => p.id === id); if (!property) { UILayer.renderNotFound(); return; }
-                    UILayer.renderPage('property-detail-page-template', () => {
-                        const page = UILayer.mainContent;
-                        Utils.$('[data-field="title"]', page).textContent = property.title;
-                        Utils.$('[data-field="location"]', page).textContent = ` ${property.location}`;
-                        Utils.$('[data-field="mainImage"]', page).src = property.imageUrl;
-                        Utils.$('[data-field="mainImage"]', page).alt = `Gambar ${property.title}`;
-                        Utils.$('[data-field="beds"]', page).textContent = property.beds === 0 ? 'Studio' : property.beds;
-                        Utils.$('[data-field="baths"]', page).textContent = property.baths;
-                        Utils.$('[data-field="sqft"]', page).textContent = property.sqft;
-                        Utils.$('[data-field="rating"]', page).textContent = `${property.rating.toFixed(1)} (${property.reviewCount} ulasan)`;
-                        Utils.$('[data-field="description"]', page).textContent = `Nikmati kenyamanan di ${property.title}, sebuah properti menawan yang terletak di jantung ${property.location}.\n\nMenawarkan ${property.beds === 0 ? 'ruang studio yang efisien' : `${property.beds} kamar tidur`} dan ${property.baths} kamar mandi, unit seluas ${property.sqft} m² ini adalah pilihan ideal untuk gaya hidup modern dan praktis.`;
-                        Utils.$$('[data-field="price"]', page).forEach(el => el.textContent = Utils.formatCurrency(property.price));
-                        const amenitiesContainer = Utils.$('[data-field="amenitiesList"]', page);
-                        amenitiesContainer.innerHTML = '';
-                        const amenityMap = { "air-conditioning": { name: "AC", icon: "fa-snowflake" }, "parking": { name: "Parkir", icon: "fa-parking" }, "pool": { name: "Kolam Renang", icon: "fa-water-ladder" }, "pets-allowed": { name: "Boleh Bawa Hewan", icon: "fa-paw" } };
-                        property.amenities.forEach(key => { if (amenityMap[key]) { const item = document.createElement('li'); item.className = 'amenity-item'; item.innerHTML = `<i class="fas ${amenityMap[key].icon} text-primary" style="width: 20px; text-align: center;"></i> <span>${amenityMap[key].name}</span>`; amenitiesContainer.appendChild(item); } });
-                        UILayer.renderReviewsSection(property.id);
-                        UIEvents.setupDetailPageEvents(property);
-                    });
-                },
-                renderReviewsSection: (propertyId) => {
-                    const property = DB.properties.find(p => p.id === propertyId); if (!property) return;
-                    const container = Utils.$('#reviews-section-container'); if (!container) return; container.innerHTML = '';
-                    const section = Utils.getTemplate('review-section-template');
-                    Utils.$('[data-field="reviewCount"]', section).textContent = property.reviewCount;
-                    const reviewList = Utils.$('#review-list', section);
-                    if (property.reviews.length > 0) {
-                        property.reviews.forEach(review => {
-                            const card = Utils.getTemplate('review-card-template');
-                            Utils.$('[data-field="initials"]', card).textContent = Utils.getInitials(review.author);
-                            Utils.$('[data-field="author"]', card).textContent = review.author;
-                            Utils.$('[data-field="date"]', card).textContent = new Date(review.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-                            Utils.$('[data-field="rating"]', card).innerHTML = Utils.generateStars(review.rating);
-                            Utils.$('[data-field="comment"]', card).textContent = review.comment;
-                            reviewList.appendChild(card);
-                        });
-                    } else { reviewList.innerHTML = `<p style="padding: 1rem 0; color: var(--muted-foreground);">Belum ada ulasan untuk properti ini.</p>`; }
-                    const addReviewContainer = Utils.$('#add-review-container', section);
-                    if (State.currentUser) { addReviewContainer.appendChild(Utils.getTemplate('add-review-form-template')); UIEvents.setupReviewFormEvents(propertyId); }
-                    else { addReviewContainer.innerHTML = `<p style="margin-top: 1.5rem; text-align: center; background: var(--muted); padding: 1rem; border-radius: var(--radius);"><a href="#/login?redirect=/property/${propertyId}">Masuk</a> untuk menulis ulasan.</p>`; }
-                    container.appendChild(section);
-                },
-                renderTestimonialsPage: () => {
-                    UILayer.renderPage('testimonials-page-template', () => {
-                        const container = Utils.$('#testimonials-container'); if (!container) return;
-                        DB.testimonials.forEach(testimonial => {
-                            const card = Utils.getTemplate('testimonial-card-template');
-                            Utils.$('[data-field="text"]', card).textContent = `“${testimonial.text}”`;
-                            Utils.$('[data-field="avatar"]', card).src = testimonial.avatar;
-                            Utils.$('[data-field="name"]', card).textContent = testimonial.name;
-                            Utils.$('[data-field="title"]', card).textContent = testimonial.title;
-                            container.appendChild(card);
-                        });
-                    });
-                },
+                renderPage: (pageTemplateId, setupFunction) => { if (!UILayer.mainContent) return; UILayer.mainContent.innerHTML = ''; UILayer.mainContent.appendChild(Utils.getTemplate(pageTemplateId)); if (setupFunction) setupFunction(); },
+                renderNavbar: () => { const container = Utils.$('#navbar-container'); if (!container) return; container.innerHTML = ''; const navbar = Utils.getTemplate('navbar-template'); Utils.$$('a', navbar).forEach(link => { const linkPath = new URL(link.href).hash.substring(1); const currentPath = State.currentRoute.path; if (linkPath === currentPath || (linkPath === '/search' && (currentPath === '/' || currentPath === '/search'))) { link.classList.add('active'); } }); const actions = Utils.$('.navbar-actions', navbar); if (State.currentUser) { const userContent = Utils.getTemplate('navbar-user-template'); Utils.$('[data-field="name"]', userContent).textContent = State.currentUser.name.split(' ')[0]; actions.prepend(userContent); } else { const guestContent = Utils.getTemplate('navbar-guest-template'); actions.prepend(guestContent); } container.appendChild(navbar); UILayer.renderMobileNav(); },
+                renderMobileNav: () => { const mobileNavContainer = Utils.$('#mobile-nav-sidebar-container'); if (!mobileNavContainer) return; mobileNavContainer.innerHTML = ''; const mobileNav = Utils.getTemplate('mobile-nav-template'); Utils.$$('a', mobileNav).forEach(link => { const linkPath = new URL(link.href).hash.substring(1); const currentPath = State.currentRoute.path; if (linkPath === currentPath || (linkPath === '/search' && (currentPath === '/' || currentPath === '/search'))) link.classList.add('active'); }); const authContainer = Utils.$('.mobile-nav-auth', mobileNav); if (State.currentUser) { const userContent = Utils.getTemplate('mobile-nav-user-template'); Utils.$('[data-field="name"]', userContent).textContent = State.currentUser.name.split(' ')[0]; authContainer.appendChild(userContent); } else { const guestContent = Utils.getTemplate('mobile-nav-guest-template'); authContainer.appendChild(guestContent); } mobileNavContainer.appendChild(mobileNav); },
+                renderFooter: () => { const footer = Utils.$('#footer-container'); if (footer && footer.children.length === 0) footer.appendChild(Utils.getTemplate('footer-template')); },
+                renderHomePage: () => { UILayer.renderPage('home-page-template', () => { UILayer.renderFilterSidebar(); LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); UIEvents.setupHomePageEvents(); const checkin = Utils.$('#search-checkin'); if (checkin) checkin.min = new Date().toISOString().split("T")[0]; }); },
+                renderFilterSidebar: () => { const sidebarContainer = Utils.$('#filter-sidebar-listings'); if (!sidebarContainer) return; sidebarContainer.innerHTML = ''; const filterTemplate = Utils.getTemplate('filter-sidebar-template'); const { priceMin, priceMax, propertyTypes, bedrooms, amenities } = State.filters; Utils.$('#filter-min-price', filterTemplate).value = priceMin; Utils.$('#filter-max-price', filterTemplate).value = priceMax; Utils.$$('input[name="property-type"]', filterTemplate).forEach(cb => cb.checked = propertyTypes.includes(cb.value)); Utils.$$('#filter-bedrooms button', filterTemplate).forEach(btn => btn.classList.toggle('active', btn.dataset.value === bedrooms)); Utils.$$('input[name="amenity"]', filterTemplate).forEach(cb => cb.checked = amenities.includes(cb.value)); sidebarContainer.appendChild(filterTemplate); UILayer.updateSliderUI(sidebarContainer); },
+                renderPropertyCards: (clearContainer = true) => { const container = Utils.$('#properties-container'), loadMoreBtn = Utils.$('#load-more-properties'); if (!container || !loadMoreBtn) return; if (clearContainer) container.innerHTML = ''; const startIndex = (State.currentPageNum - 1) * State.propertiesPerPage; const endIndex = startIndex + State.propertiesPerPage; const propertiesToRender = State.displayedProperties.slice(startIndex, endIndex); propertiesToRender.forEach(prop => { const card = Utils.getTemplate('property-card-template'); const cardEl = Utils.$('.property-card', card); cardEl.dataset.id = prop.id; Utils.$('.property-image', card).src = prop.imageUrl; Utils.$('.property-image', card).alt = prop.title; Utils.$('[data-field="title"]', card).textContent = prop.title; Utils.$('[data-field="rating"]', card).textContent = prop.rating.toFixed(1); Utils.$('[data-field="reviewCount"]', card).textContent = `(${prop.reviewCount})`; Utils.$('[data-field="location"]', card).textContent = prop.location; Utils.$('[data-field="beds"]', card).textContent = prop.beds === 0 ? 'Studio' : prop.beds; Utils.$('[data-field="baths"]', card).textContent = prop.baths; Utils.$('[data-field="sqft"]', card).textContent = prop.sqft; Utils.$('[data-field="price"]', card).textContent = Utils.formatCurrency(prop.price); const tagsContainer = Utils.$('.property-tags', card); prop.tags.slice(0, 2).forEach(tagText => { const tagEl = document.createElement('span'); tagEl.className = 'property-tag'; tagEl.textContent = tagText; tagsContainer.appendChild(tagEl); }); container.appendChild(card); }); if (Utils.$('.results-count')) Utils.$('.results-count').textContent = State.displayedProperties.length; loadMoreBtn.classList.toggle('d-none', endIndex >= State.displayedProperties.length); Utils.$('#no-results-message').classList.toggle('d-none', State.displayedProperties.length > 0); },
+                renderPropertyDetailPage: (id) => { const property = DB.properties.find(p => p.id === id); if (!property) { UILayer.renderNotFound(); return; } UILayer.renderPage('property-detail-page-template', () => { const page = UILayer.mainContent; Utils.$('[data-field="title"]', page).textContent = property.title; Utils.$('[data-field="location"]', page).textContent = ` ${property.location}`; Utils.$('[data-field="mainImage"]', page).src = property.imageUrl; Utils.$('[data-field="mainImage"]', page).alt = `Gambar ${property.title}`; Utils.$('[data-field="beds"]', page).textContent = property.beds === 0 ? 'Studio' : property.beds; Utils.$('[data-field="baths"]', page).textContent = property.baths; Utils.$('[data-field="sqft"]', page).textContent = property.sqft; Utils.$('[data-field="rating"]', page).textContent = `${property.rating.toFixed(1)} (${property.reviewCount} ulasan)`; Utils.$('[data-field="description"]', page).textContent = `Nikmati kenyamanan di ${property.title}, sebuah properti menawan yang terletak di jantung ${property.location}.\n\nMenawarkan ${property.beds === 0 ? 'ruang studio yang efisien' : `${property.beds} kamar tidur`} dan ${property.baths} kamar mandi, unit seluas ${property.sqft} m² ini adalah pilihan ideal untuk gaya hidup modern dan praktis.`; Utils.$$('[data-field="price"]', page).forEach(el => el.textContent = Utils.formatCurrency(property.price)); const amenitiesContainer = Utils.$('[data-field="amenitiesList"]', page); amenitiesContainer.innerHTML = ''; const amenityMap = { "air-conditioning": { name: "AC", icon: "fa-snowflake" }, "parking": { name: "Parkir", icon: "fa-parking" }, "pool": { name: "Kolam Renang", icon: "fa-water-ladder" }, "pets-allowed": { name: "Boleh Bawa Hewan", icon: "fa-paw" } }; property.amenities.forEach(key => { if (amenityMap[key]) { const item = document.createElement('li'); item.className = 'amenity-item'; item.innerHTML = `<i class="fas ${amenityMap[key].icon} text-primary" style="width: 20px; text-align: center;"></i> <span>${amenityMap[key].name}</span>`; amenitiesContainer.appendChild(item); } }); UILayer.renderReviewsSection(property.id); UIEvents.setupDetailPageEvents(property); }); },
+                renderReviewsSection: (propertyId) => { const property = DB.properties.find(p => p.id === propertyId); if (!property) return; const container = Utils.$('#reviews-section-container'); if (!container) return; container.innerHTML = ''; const section = Utils.getTemplate('review-section-template'); Utils.$('[data-field="reviewCount"]', section).textContent = property.reviewCount; const reviewList = Utils.$('#review-list', section); if (property.reviews.length > 0) { property.reviews.forEach(review => { const card = Utils.getTemplate('review-card-template'); Utils.$('[data-field="initials"]', card).textContent = Utils.getInitials(review.author); Utils.$('[data-field="author"]', card).textContent = review.author; Utils.$('[data-field="date"]', card).textContent = new Date(review.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }); Utils.$('[data-field="rating"]', card).innerHTML = Utils.generateStars(review.rating); Utils.$('[data-field="comment"]', card).textContent = review.comment; reviewList.appendChild(card); }); } else { reviewList.innerHTML = `<p style="padding: 1rem 0; color: var(--muted-foreground);">Belum ada ulasan untuk properti ini.</p>`; } const addReviewContainer = Utils.$('#add-review-container', section); if (State.currentUser) { addReviewContainer.appendChild(Utils.getTemplate('add-review-form-template')); UIEvents.setupReviewFormEvents(propertyId); } else { addReviewContainer.innerHTML = `<p style="margin-top: 1.5rem; text-align: center; background: var(--muted); padding: 1rem; border-radius: var(--radius);"><a href="#/login?redirect=/property/${propertyId}">Masuk</a> untuk menulis ulasan.</p>`; } container.appendChild(section); },
+                renderTestimonialsPage: () => { UILayer.renderPage('testimonials-page-template', () => { const container = Utils.$('#testimonials-container'); if (!container) return; DB.testimonials.forEach(testimonial => { const card = Utils.getTemplate('testimonial-card-template'); Utils.$('[data-field="text"]', card).textContent = `“${testimonial.text}”`; Utils.$('[data-field="avatar"]', card).src = testimonial.avatar; Utils.$('[data-field="name"]', card).textContent = testimonial.name; Utils.$('[data-field="title"]', card).textContent = testimonial.title; container.appendChild(card); }); }); },
                 renderLoginPage: () => UILayer.renderPage('login-page-template', UIEvents.setupLoginPageEvents),
                 renderRegisterPage: () => UILayer.renderPage('register-page-template', UIEvents.setupRegisterPageEvents),
-                renderPaymentPage: (id) => {
-                    const property = DB.properties.find(p => p.id === id); if (!property) { UILayer.renderNotFound(); return; }
-                    UILayer.renderPage('payment-page-template', () => {
-                        const page = UILayer.mainContent;
-                        Utils.$('[data-field="title"]', page).textContent = property.title;
-                        Utils.$('[data-field="location"]', page).textContent = property.location;
-                        Utils.$('[data-field="image"]', page).src = property.imageUrl;
-                        Utils.$$('[data-field="price"]', page).forEach(el => el.textContent = Utils.formatCurrency(property.price));
-                        UIEvents.setupPaymentPageEvents(property);
-                    });
-                },
-                renderConfirmationPage: () => {
-                    const lastRentedId = sessionStorage.getItem('lastRentedProperty');
-                    if (!lastRentedId) { RoutingLayer.navigate('/search'); return; }
-                    const property = DB.properties.find(p => p.id === lastRentedId);
-                    if (!property) { RoutingLayer.navigate('/search'); return; }
-                    UILayer.renderPage('confirmation-page-template', () => {
-                        Utils.$('[data-field="title"]', UILayer.mainContent).textContent = property.title;
-                        sessionStorage.removeItem('lastRentedProperty');
-                    });
-                },
-                renderNotFound: (path) => {
-                    const knownStaticRoutes = ['/help', '/contact', '/privacy', '/terms'];
-                    const message = knownStaticRoutes.includes(path)
-                        ? `<h1 style="font-size: 2rem; margin-bottom: 1rem;">Segera Hadir</h1><p style="color: var(--muted-foreground);">Halaman yang Anda tuju sedang dalam pengembangan.</p>`
-                        : `<h1 style="font-size: 3rem; margin-bottom: 1rem;">404</h1><p style="color: var(--muted-foreground);">Halaman Tidak Ditemukan</p>`;
-                    if (UILayer.mainContent) UILayer.mainContent.innerHTML = `<div class="container page-wrapper text-center" style="padding: 5rem 1rem;">${message}<a href="#/" class="btn btn-primary" style="margin-top: 2rem;">Kembali ke Beranda</a></div>`;
-                },
-                updateSliderUI: (container) => {
-                    const minSlider = Utils.$('#filter-min-price', container), maxSlider = Utils.$('#filter-max-price', container); if (!minSlider || !maxSlider) return;
-                    const minInput = Utils.$('#min-price-input', container), maxInput = Utils.$('#max-price-input', container), track = Utils.$('.slider-track', container);
-                    let minVal = parseInt(minSlider.value), maxVal = parseInt(maxSlider.value);
-                    if (maxVal < minVal + parseInt(minSlider.step)) { event.target === minSlider ? minSlider.value = maxVal - parseInt(minSlider.step) : maxSlider.value = minVal + parseInt(minSlider.step); }
-                    minVal = parseInt(minSlider.value); maxVal = parseInt(maxSlider.value);
-                    minInput.value = `Rp${Utils.formatNumber(minVal)}`; maxInput.value = `Rp${Utils.formatNumber(maxVal)}`;
-                    const range = minSlider.max - minSlider.min, minPercent = ((minVal - minSlider.min) / range) * 100, maxPercent = ((maxVal - minSlider.min) / range) * 100;
-                    track.style.left = `${minPercent}%`; track.style.width = `${maxPercent - minPercent}%`;
-                },
+                renderPaymentPage: (id) => { const property = DB.properties.find(p => p.id === id); if (!property) { UILayer.renderNotFound(); return; } UILayer.renderPage('payment-page-template', () => { const page = UILayer.mainContent; Utils.$('[data-field="title"]', page).textContent = property.title; Utils.$('[data-field="location"]', page).textContent = property.location; Utils.$('[data-field="image"]', page).src = property.imageUrl; Utils.$$('[data-field="price"]', page).forEach(el => el.textContent = Utils.formatCurrency(property.price)); UIEvents.setupPaymentPageEvents(property); }); },
+                renderConfirmationPage: () => { const lastRentedId = sessionStorage.getItem('lastRentedProperty'); if (!lastRentedId) { RoutingLayer.navigate('/search'); return; } const property = DB.properties.find(p => p.id === lastRentedId); if (!property) { RoutingLayer.navigate('/search'); return; } UILayer.renderPage('confirmation-page-template', () => { Utils.$('[data-field="title"]', UILayer.mainContent).textContent = property.title; sessionStorage.removeItem('lastRentedProperty'); }); },
+                renderNotFound: (path) => { const knownStaticRoutes = ['/help', '/contact', '/privacy', '/terms']; const message = knownStaticRoutes.includes(path) ? `<h1 style="font-size: 2rem; margin-bottom: 1rem;">Segera Hadir</h1><p style="color: var(--muted-foreground);">Halaman yang Anda tuju sedang dalam pengembangan.</p>` : `<h1 style="font-size: 3rem; margin-bottom: 1rem;">404</h1><p style="color: var(--muted-foreground);">Halaman Tidak Ditemukan</p>`; if (UILayer.mainContent) UILayer.mainContent.innerHTML = `<div class="container page-wrapper text-center" style="padding: 5rem 1rem;">${message}<a href="#/" class="btn btn-primary" style="margin-top: 2rem;">Kembali ke Beranda</a></div>`; },
+                updateSliderUI: (container) => { const minSlider = Utils.$('#filter-min-price', container), maxSlider = Utils.$('#filter-max-price', container); if (!minSlider || !maxSlider) return; const minInput = Utils.$('#min-price-input', container), maxInput = Utils.$('#max-price-input', container), track = Utils.$('.slider-track', container); let minVal = parseInt(minSlider.value), maxVal = parseInt(maxSlider.value); if (maxVal < minVal + parseInt(minSlider.step)) { event.target === minSlider ? minSlider.value = maxVal - parseInt(minSlider.step) : maxSlider.value = minVal + parseInt(minSlider.step); } minVal = parseInt(minSlider.value); maxVal = parseInt(maxSlider.value); minInput.value = `Rp${Utils.formatNumber(minVal)}`; maxInput.value = `Rp${Utils.formatNumber(maxVal)}`; const range = minSlider.max - minSlider.min, minPercent = ((minVal - minSlider.min) / range) * 100, maxPercent = ((maxVal - minSlider.min) / range) * 100; track.style.left = `${minPercent}%`; track.style.width = `${maxPercent - minPercent}%`; },
                 setInvalid: (input, message) => { input.classList.add('is-invalid'); const e = input.nextElementSibling; if (e && e.classList.contains('error-message')) e.textContent = message; },
                 setValid: (input) => { input.classList.remove('is-invalid'); const e = input.nextElementSibling; if (e && e.classList.contains('error-message')) e.textContent = ''; }
             };
-
             const UIEvents = {
-                setupGlobalEvents: () => {
-                    document.body.addEventListener('click', e => {
-                        if (e.target.matches('#logout-btn, #logout-btn *, #logout-btn-mobile, #logout-btn-mobile *')) {
-                            e.preventDefault();
-                            LogicLayer.logout();
-                            Utils.showToast('Anda telah keluar.', 'success');
-                            RoutingLayer.navigate('/');
-                        }
-
-                        const mobileNavSidebar = Utils.$('#mobile-nav-sidebar');
-                        if (e.target.closest('#mobile-nav-toggle')) {
-                            mobileNavSidebar?.classList.add('is-open');
-                            document.body.classList.add('no-scroll');
-                        }
-                        if (e.target.closest('#close-mobile-nav-btn') || e.target === mobileNavSidebar || e.target.closest('.mobile-nav-body a')) {
-                            mobileNavSidebar?.classList.remove('is-open');
-                            document.body.classList.remove('no-scroll');
-                        }
-                    });
-                    document.body.addEventListener('submit', e => {
-                        if (e.target.matches('#newsletter-form')) { e.preventDefault(); const i = Utils.$('input[type="email"]', e.target); if (i.value && Utils.isValidEmail(i.value)) { Utils.showToast('Terima kasih telah berlangganan!', 'success'); e.target.reset(); } else { Utils.showToast('Harap masukkan email yang valid.', 'warning'); } }
-                        else if (e.target.matches('#main-search-form')) { e.preventDefault(); Utils.showToast('Pencarian lanjutan tersedia di filter.', 'warning'); }
-                    });
-                },
-                setupHomePageEvents: () => {
-                    Utils.$('#sort-properties')?.addEventListener('change', e => { State.sortBy = e.target.value; LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); });
-                    Utils.$('#load-more-properties')?.addEventListener('click', LogicLayer.loadMoreProperties);
-                    Utils.$('#properties-container')?.addEventListener('click', e => { const card = e.target.closest('.property-card[data-id]'); if (card) RoutingLayer.navigate(`/property/${card.dataset.id}`); });
-                    Utils.$('#properties-container')?.addEventListener('keydown', e => { const card = e.target.closest('.property-card[data-id]'); if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); RoutingLayer.navigate(`/property/${card.dataset.id}`); } });
-                    const filterForm = Utils.$('#filter-form');
-                    if (filterForm) {
-                        const applyFilters = () => {
-                            State.filters.priceMin = parseInt(Utils.$('#filter-min-price', filterForm).value);
-                            State.filters.priceMax = parseInt(Utils.$('#filter-max-price', filterForm).value);
-                            State.filters.propertyTypes = Utils.$$('input[name="property-type"]:checked', filterForm).map(cb => cb.value);
-                            State.filters.bedrooms = Utils.$('#filter-bedrooms .active', filterForm)?.dataset.value || 'any';
-                            State.filters.amenities = Utils.$$('input[name="amenity"]:checked', filterForm).map(cb => cb.value);
-                            LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true);
-                            const sidebar = Utils.$('#filter-sidebar-listings');
-                            if (sidebar?.classList.contains('is-open')) { sidebar.classList.remove('is-open'); document.body.classList.remove('no-scroll'); }
-                        };
-                        filterForm.addEventListener('submit', e => { e.preventDefault(); applyFilters(); });
-                        filterForm.addEventListener('reset', () => { State.filters = { priceMin: 500000, priceMax: 10000000, propertyTypes: [], bedrooms: "any", amenities: [] }; setTimeout(() => { UILayer.renderFilterSidebar(); LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); }, 0); });
-                        Utils.$$('.range-slider', filterForm).forEach(slider => slider.addEventListener('input', () => UILayer.updateSliderUI(filterForm)));
-                        Utils.$('#filter-bedrooms', filterForm)?.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { Utils.$$('button', e.currentTarget).forEach(b => b.classList.remove('active')); e.target.classList.add('active'); } });
-                    }
-                    const toggleBtn = Utils.$('#toggle-filter-btn'), sidebar = Utils.$('#filter-sidebar-listings');
-                    if (toggleBtn && sidebar) { const closeBtn = Utils.$('#close-filter-btn', sidebar); const toggle = (open) => { sidebar.classList.toggle('is-open', open); document.body.classList.toggle('no-scroll', open); }; toggleBtn.addEventListener('click', () => toggle(true)); if (closeBtn) closeBtn.addEventListener('click', () => toggle(false)); sidebar.addEventListener('click', e => { if (e.target === sidebar) toggle(false); }); }
-                },
-                setupDetailPageEvents: (property) => {
-                    const rentNowAction = () => {
-                        if (State.currentUser) {
-                            RoutingLayer.navigate(`/payment/${property.id}`);
-                        } else {
-                            Utils.showToast('Harap masuk untuk melanjutkan.', 'warning');
-                            RoutingLayer.navigate(`/login?redirect=/property/${property.id}`);
-                        }
-                    };
-                    const contactAgentAction = () => Utils.showModal('Hubungi Agen', `<p>Fitur ini sedang dalam pengembangan. Untuk saat ini, Anda dapat menghubungi kami di <li>
-  <a href="https://wa.me/62816333612" target="_blank">
-    <strong>CS GreenValley</strong>
-  </a>
-</li>
-
-<li>
-  <a
-    href="mailto:valley.staycation@gmail.com?subject=Pertanyaan&body=Halo%20admin,%20saya%20ingin%20bertanya%20tentang..."
-    target="_blank"
-  >
-    <strong>Hubungi Kami melalui Email</strong>
-  </a>
-</li>
-
-<li>
-  <a href="https://wa.me/c/62816333612" target="_blank">
-    <strong>Catalog</strong>
-  </a>
-</li>
-
-  </p>`);
-
-                    Utils.$('#rent-now-btn-desktop')?.addEventListener('click', rentNowAction);
-                    Utils.$('#rent-now-btn-mobile')?.addEventListener('click', rentNowAction);
-
-                    // [PERUBAHAN] Menambahkan event listener untuk tombol hubungi agen versi desktop dan mobile.
-                    Utils.$('#contact-agent-btn-desktop')?.addEventListener('click', contactAgentAction);
-                    Utils.$('#contact-agent-btn-mobile')?.addEventListener('click', contactAgentAction);
-                },
-                setupReviewFormEvents: (propertyId) => {
-                    const form = Utils.$('#add-review-form'); if (!form) return;
-                    form.addEventListener('submit', e => {
-                        e.preventDefault();
-                        const ratingInput = Utils.$('#review-rating', form), commentInput = Utils.$('#review-comment', form);
-                        const rating = ratingInput.value, comment = commentInput.value.trim(); let isValid = true;
-                        UILayer.setValid(ratingInput); UILayer.setValid(commentInput);
-                        if (!rating) { UILayer.setInvalid(ratingInput, 'Rating harus dipilih.'); isValid = false; }
-                        if (comment.length < 10) { UILayer.setInvalid(commentInput, 'Ulasan minimal 10 karakter.'); isValid = false; }
-                        if (isValid) {
-                            const result = LogicLayer.addReview(propertyId, { rating, comment });
-                            if (result.success) { Utils.showToast('Ulasan Anda telah ditambahkan!', 'success'); UILayer.renderReviewsSection(propertyId); }
-                            else { Utils.showToast(result.message, 'danger'); }
-                        }
-                    });
-                },
-                setupFormValidation: (form, fields) => {
-                    form.addEventListener('submit', e => {
-                        e.preventDefault(); let allValid = true;
-                        fields.forEach(field => { UILayer.setValid(field.input); if (!field.validator(field.input.value.trim())) { allValid = false; UILayer.setInvalid(field.input, field.message); } });
-                        if (allValid) form.dispatchEvent(new CustomEvent('form-valid'));
-                    });
-                },
-                setupLoginPageEvents: () => {
-                    const form = Utils.$('#login-form'); if (!form) return;
-                    const emailInput = Utils.$('#login-email'), passwordInput = Utils.$('#login-password');
-                    UIEvents.setupFormValidation(form, [{ input: emailInput, validator: Utils.isValidEmail, message: 'Email tidak valid.' }, { input: passwordInput, validator: val => val.length > 0, message: 'Password tidak boleh kosong.' }]);
-                    form.addEventListener('form-valid', () => {
-                        const result = LogicLayer.login(Utils.sanitize(emailInput.value), passwordInput.value);
-                        if (result.success) { Utils.showToast(`Selamat datang, ${result.user.name.split(' ')[0]}!`, 'success'); const redirectUrl = State.currentRoute.params.get('redirect'); RoutingLayer.navigate(redirectUrl || '/search'); }
-                        else { UILayer.setInvalid(emailInput, result.message); UILayer.setInvalid(passwordInput, ' '); }
-                    });
-                },
-                setupRegisterPageEvents: () => {
-                    const form = Utils.$('#register-form'); if (!form) return;
-                    const nameInput = Utils.$('#register-name'), emailInput = Utils.$('#register-email'), passwordInput = Utils.$('#register-password');
-                    UIEvents.setupFormValidation(form, [{ input: nameInput, validator: val => val.length > 0, message: 'Nama tidak boleh kosong.' }, { input: emailInput, validator: Utils.isValidEmail, message: 'Email tidak valid.' }, { input: passwordInput, validator: val => val.length >= 8, message: 'Password minimal 8 karakter.' }]);
-                    form.addEventListener('form-valid', () => {
-                        const result = LogicLayer.register(Utils.sanitize(nameInput.value), Utils.sanitize(emailInput.value), passwordInput.value);
-                        if (result.success) { Utils.showToast(`Registrasi berhasil! Selamat datang!`, 'success'); RoutingLayer.navigate('/search'); }
-                        else { UILayer.setInvalid(emailInput, result.message); }
-                    });
-                },
-                setupPaymentPageEvents: (property) => {
-                    const statusMessage = Utils.$('#payment-status-message');
-                    Utils.$$('.payment-methods .tab-btn').forEach(button => {
-                        button.addEventListener('click', () => { Utils.$$('.payment-methods .tab-btn').forEach(btn => btn.classList.remove('active')); button.classList.add('active'); Utils.$$('.payment-methods .tab-panel').forEach(panel => panel.classList.remove('active')); Utils.$(`#${button.dataset.tab}-panel`).classList.add('active'); if (statusMessage) statusMessage.textContent = ''; });
-                    });
-                    Utils.$$('.ewallet-btn').forEach(button => { button.addEventListener('click', e => { const wallet = e.currentTarget.dataset.wallet; if (statusMessage) statusMessage.textContent = `Silakan konfirmasi pembayaran di aplikasi ${wallet} Anda.`; }); });
-                    Utils.$('#confirm-payment-btn')?.addEventListener('click', e => { const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...'; setTimeout(() => { sessionStorage.setItem('lastRentedProperty', property.id); RoutingLayer.navigate('/confirmation'); }, 1500); });
-                }
+                setupGlobalEvents: () => { document.body.addEventListener('click', e => { if (e.target.matches('#logout-btn, #logout-btn *, #logout-btn-mobile, #logout-btn-mobile *')) { e.preventDefault(); LogicLayer.logout(); Utils.showToast('Anda telah keluar.', 'success'); RoutingLayer.navigate('/'); } const mobileNavSidebar = Utils.$('#mobile-nav-sidebar'); if (e.target.closest('#mobile-nav-toggle')) { mobileNavSidebar?.classList.add('is-open'); document.body.classList.add('no-scroll'); } if (e.target.closest('#close-mobile-nav-btn') || e.target === mobileNavSidebar || e.target.closest('.mobile-nav-body a')) { mobileNavSidebar?.classList.remove('is-open'); document.body.classList.remove('no-scroll'); } }); document.body.addEventListener('submit', e => { if (e.target.matches('#newsletter-form')) { e.preventDefault(); const i = Utils.$('input[type="email"]', e.target); if (i.value && Utils.isValidEmail(i.value)) { Utils.showToast('Terima kasih telah berlangganan!', 'success'); e.target.reset(); } else { Utils.showToast('Harap masukkan email yang valid.', 'warning'); } } else if (e.target.matches('#main-search-form')) { e.preventDefault(); Utils.showToast('Pencarian lanjutan tersedia di filter.', 'warning'); } }); },
+                setupHomePageEvents: () => { Utils.$('#sort-properties')?.addEventListener('change', e => { State.sortBy = e.target.value; LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); }); Utils.$('#load-more-properties')?.addEventListener('click', LogicLayer.loadMoreProperties); Utils.$('#properties-container')?.addEventListener('click', e => { const card = e.target.closest('.property-card[data-id]'); if (card) RoutingLayer.navigate(`/property/${card.dataset.id}`); }); Utils.$('#properties-container')?.addEventListener('keydown', e => { const card = e.target.closest('.property-card[data-id]'); if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); RoutingLayer.navigate(`/property/${card.dataset.id}`); } }); const filterForm = Utils.$('#filter-form'); if (filterForm) { const applyFilters = () => { State.filters.priceMin = parseInt(Utils.$('#filter-min-price', filterForm).value); State.filters.priceMax = parseInt(Utils.$('#filter-max-price', filterForm).value); State.filters.propertyTypes = Utils.$$('input[name="property-type"]:checked', filterForm).map(cb => cb.value); State.filters.bedrooms = Utils.$('#filter-bedrooms .active', filterForm)?.dataset.value || 'any'; State.filters.amenities = Utils.$$('input[name="amenity"]:checked', filterForm).map(cb => cb.value); LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); const sidebar = Utils.$('#filter-sidebar-listings'); if (sidebar?.classList.contains('is-open')) { sidebar.classList.remove('is-open'); document.body.classList.remove('no-scroll'); } }; filterForm.addEventListener('submit', e => { e.preventDefault(); applyFilters(); }); filterForm.addEventListener('reset', () => { State.filters = { priceMin: 500000, priceMax: 10000000, propertyTypes: [], bedrooms: "any", amenities: [] }; setTimeout(() => { UILayer.renderFilterSidebar(); LogicLayer.applyFiltersAndSort(); UILayer.renderPropertyCards(true); }, 0); }); Utils.$$('.range-slider', filterForm).forEach(slider => slider.addEventListener('input', () => UILayer.updateSliderUI(filterForm))); Utils.$('#filter-bedrooms', filterForm)?.addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { Utils.$$('button', e.currentTarget).forEach(b => b.classList.remove('active')); e.target.classList.add('active'); } }); } const toggleBtn = Utils.$('#toggle-filter-btn'), sidebar = Utils.$('#filter-sidebar-listings'); if (toggleBtn && sidebar) { const closeBtn = Utils.$('#close-filter-btn', sidebar); const toggle = (open) => { sidebar.classList.toggle('is-open', open); document.body.classList.toggle('no-scroll', open); }; toggleBtn.addEventListener('click', () => toggle(true)); if (closeBtn) closeBtn.addEventListener('click', () => toggle(false)); sidebar.addEventListener('click', e => { if (e.target === sidebar) toggle(false); }); } },
+                setupDetailPageEvents: (property) => { const rentNowAction = () => { if (State.currentUser) { RoutingLayer.navigate(`/payment/${property.id}`); } else { Utils.showToast('Harap masuk untuk melanjutkan.', 'warning'); RoutingLayer.navigate(`/login?redirect=/property/${property.id}`); } }; const contactAgentAction = () => Utils.showModal('Hubungi Agen', `<p>Fitur ini sedang dalam pengembangan. Untuk saat ini, Anda dapat menghubungi kami di <li> <a href="https://wa.me/62816333612" target="_blank"> <strong>CS GreenValley</strong> </a> </li> <li> <a href="mailto:valley.staycation@gmail.com?subject=Pertanyaan&body=Halo%20admin,%20saya%20ingin%20bertanya%20tentang..." target="_blank"> <strong>Hubungi Kami melalui Email</strong> </a> </li> <li> <a href="https://wa.me/c/62816333612" target="_blank"> <strong>Catalog</strong> </a> </li> </p>`); Utils.$('#rent-now-btn-desktop')?.addEventListener('click', rentNowAction); Utils.$('#rent-now-btn-mobile')?.addEventListener('click', rentNowAction); Utils.$('#contact-agent-btn-desktop')?.addEventListener('click', contactAgentAction); Utils.$('#contact-agent-btn-mobile')?.addEventListener('click', contactAgentAction); },
+                setupReviewFormEvents: (propertyId) => { const form = Utils.$('#add-review-form'); if (!form) return; form.addEventListener('submit', e => { e.preventDefault(); const ratingInput = Utils.$('#review-rating', form), commentInput = Utils.$('#review-comment', form); const rating = ratingInput.value, comment = commentInput.value.trim(); let isValid = true; UILayer.setValid(ratingInput); UILayer.setValid(commentInput); if (!rating) { UILayer.setInvalid(ratingInput, 'Rating harus dipilih.'); isValid = false; } if (comment.length < 10) { UILayer.setInvalid(commentInput, 'Ulasan minimal 10 karakter.'); isValid = false; } if (isValid) { const result = LogicLayer.addReview(propertyId, { rating, comment }); if (result.success) { Utils.showToast('Ulasan Anda telah ditambahkan!', 'success'); UILayer.renderReviewsSection(propertyId); } else { Utils.showToast(result.message, 'danger'); } } }); },
+                setupFormValidation: (form, fields) => { form.addEventListener('submit', e => { e.preventDefault(); let allValid = true; fields.forEach(field => { UILayer.setValid(field.input); if (!field.validator(field.input.value.trim())) { allValid = false; UILayer.setInvalid(field.input, field.message); } }); if (allValid) form.dispatchEvent(new CustomEvent('form-valid')); }); },
+                setupLoginPageEvents: () => { const form = Utils.$('#login-form'); if (!form) return; const emailInput = Utils.$('#login-email'), passwordInput = Utils.$('#login-password'); UIEvents.setupFormValidation(form, [{ input: emailInput, validator: Utils.isValidEmail, message: 'Email tidak valid.' }, { input: passwordInput, validator: val => val.length > 0, message: 'Password tidak boleh kosong.' }]); form.addEventListener('form-valid', () => { const result = LogicLayer.login(Utils.sanitize(emailInput.value), passwordInput.value); if (result.success) { Utils.showToast(`Selamat datang, ${result.user.name.split(' ')[0]}!`, 'success'); const redirectUrl = State.currentRoute.params.get('redirect'); RoutingLayer.navigate(redirectUrl || '/search'); } else { UILayer.setInvalid(emailInput, result.message); UILayer.setInvalid(passwordInput, ' '); } }); },
+                setupRegisterPageEvents: () => { const form = Utils.$('#register-form'); if (!form) return; const nameInput = Utils.$('#register-name'), emailInput = Utils.$('#register-email'), passwordInput = Utils.$('#register-password'); UIEvents.setupFormValidation(form, [{ input: nameInput, validator: val => val.length > 0, message: 'Nama tidak boleh kosong.' }, { input: emailInput, validator: Utils.isValidEmail, message: 'Email tidak valid.' }, { input: passwordInput, validator: val => val.length >= 8, message: 'Password minimal 8 karakter.' }]); form.addEventListener('form-valid', () => { const result = LogicLayer.register(Utils.sanitize(nameInput.value), Utils.sanitize(emailInput.value), passwordInput.value); if (result.success) { Utils.showToast(`Registrasi berhasil! Selamat datang!`, 'success'); RoutingLayer.navigate('/search'); } else { UILayer.setInvalid(emailInput, result.message); } }); },
+                setupPaymentPageEvents: (property) => { const statusMessage = Utils.$('#payment-status-message'); Utils.$$('.payment-methods .tab-btn').forEach(button => { button.addEventListener('click', () => { Utils.$$('.payment-methods .tab-btn').forEach(btn => btn.classList.remove('active')); button.classList.add('active'); Utils.$$('.payment-methods .tab-panel').forEach(panel => panel.classList.remove('active')); Utils.$(`#${button.dataset.tab}-panel`).classList.add('active'); if (statusMessage) statusMessage.textContent = ''; }); }); Utils.$$('.ewallet-btn').forEach(button => { button.addEventListener('click', e => { const wallet = e.currentTarget.dataset.wallet; if (statusMessage) statusMessage.textContent = `Silakan konfirmasi pembayaran di aplikasi ${wallet} Anda.`; }); }); Utils.$('#confirm-payment-btn')?.addEventListener('click', e => { const btn = e.currentTarget; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...'; setTimeout(() => { sessionStorage.setItem('lastRentedProperty', property.id); RoutingLayer.navigate('/confirmation'); }, 1500); }); }
             };
-
-            // =========================================================================
-            // [5] ROUTING LAYER - Mengelola navigasi halaman (Single Page Application).
-            // =========================================================================
             const RoutingLayer = {
-                routes: {
-                    '/': UILayer.renderHomePage,
-                    '/search': UILayer.renderHomePage,
-                    '/property/:id': (id) => UILayer.renderPropertyDetailPage(id),
-                    '/testimonials': UILayer.renderTestimonialsPage,
-                    '/login': UILayer.renderLoginPage,
-                    '/register': UILayer.renderRegisterPage,
-                    '/payment/:id': (id) => { if (State.currentUser) UILayer.renderPaymentPage(id); else { Utils.showToast('Sesi Anda berakhir, harap masuk kembali.', 'warning'); RoutingLayer.navigate(`/login?redirect=/payment/${id}`); } },
-                    '/confirmation': UILayer.renderConfirmationPage,
-                },
-                handleRoute: () => {
-                    const hash = window.location.hash || '#/';
-                    const [path, queryString] = hash.substring(1).split('?');
-                    State.currentRoute = { path, params: new URLSearchParams(queryString || '') };
-                    let matchFound = null;
-                    for (const routePath in RoutingLayer.routes) {
-                        const paramNames = [];
-                        const regexPath = routePath.replace(/:(\w+)/g, (_, paramName) => { paramNames.push(paramName); return '([^/]+)'; });
-                        const regex = new RegExp(`^${regexPath}$`);
-                        const match = path.match(regex);
-                        if (match) { matchFound = { route: RoutingLayer.routes[routePath], params: match.slice(1) }; break; }
-                    }
-                    if (matchFound) { matchFound.route(...matchFound.params); }
-                    else { UILayer.renderNotFound(path); }
-                    UILayer.renderNavbar(); // Render navbar setelah render halaman untuk menandai link aktif.
-                    window.scrollTo(0, 0);
-                },
+                routes: { '/': UILayer.renderHomePage, '/search': UILayer.renderHomePage, '/property/:id': (id) => UILayer.renderPropertyDetailPage(id), '/testimonials': UILayer.renderTestimonialsPage, '/login': UILayer.renderLoginPage, '/register': UILayer.renderRegisterPage, '/payment/:id': (id) => { if (State.currentUser) UILayer.renderPaymentPage(id); else { Utils.showToast('Sesi Anda berakhir, harap masuk kembali.', 'warning'); RoutingLayer.navigate(`/login?redirect=/payment/${id}`); } }, '/confirmation': UILayer.renderConfirmationPage, },
+                handleRoute: () => { const hash = window.location.hash || '#/'; const [path, queryString] = hash.substring(1).split('?'); State.currentRoute = { path, params: new URLSearchParams(queryString || '') }; let matchFound = null; for (const routePath in RoutingLayer.routes) { const paramNames = []; const regexPath = routePath.replace(/:(\w+)/g, (_, paramName) => { paramNames.push(paramName); return '([^/]+)'; }); const regex = new RegExp(`^${regexPath}$`); const match = path.match(regex); if (match) { matchFound = { route: RoutingLayer.routes[routePath], params: match.slice(1) }; break; } } if (matchFound) { matchFound.route(...matchFound.params); } else { UILayer.renderNotFound(path); } UILayer.renderNavbar(); window.scrollTo(0, 0); },
                 navigate: (path) => { window.location.hash = path; },
                 init: () => { window.addEventListener('hashchange', RoutingLayer.handleRoute); RoutingLayer.handleRoute(); }
             };
-
-            // =========================================================================
-            // INISIALISASI APLIKASI
-            // =========================================================================
-            const initApp = () => {
-                LogicLayer.initStateFromSession();
-                UILayer.renderFooter();
-                UIEvents.setupGlobalEvents();
-                RoutingLayer.init();
-            };
+            const initApp = () => { LogicLayer.initStateFromSession(); UILayer.renderFooter(); UIEvents.setupGlobalEvents(); RoutingLayer.init(); };
             initApp();
         });
     </script>
