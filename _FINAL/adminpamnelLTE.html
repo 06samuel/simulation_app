@@ -23,1413 +23,696 @@
            1. PENGATURAN - Variabel, Reset, dan Gaya Dasar
         ========================================================================== */
         :root {
-            --primary: #4361EE;
-            --primary-dark: #3A56D4;
-            --primary-light: #E9EFFE;
-            --secondary: #F0F4FE;
-            --foreground: #1E293B;
-            --background: #F8FAFC;
-            --background-alt: #FFFFFF;
-            --muted: #F1F5F9;
-            --muted-foreground: #64748B;
-            --success: #10B981;
-            --danger: #EF4444;
-            --danger-dark: #D92B2B;
-            --warning: #F59E0B;
-            --info: #3B82F6;
-            --border: #E2E8F0;
-            --radius: 0.5rem;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --sidebar-width: 280px;
-            --header-height: 65px;
+            --primary: #4361EE; --primary-dark: #3A56D4; --primary-light: #E9EFFE; --secondary: #F0F4FE; --foreground: #1E293B; --background: #F8FAFC; --background-alt: #FFFFFF; --muted: #F1F5F9; --muted-foreground: #64748B; --success: #10B981; --danger: #EF4444; --danger-dark: #D92B2B; --warning: #F59E0B; --info: #3B82F6; --border: #E2E8F0; --radius: 0.5rem; --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05); --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); --sidebar-width: 280px; --header-height: 65px;
         }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            color: var(--foreground);
-            background-color: var(--background);
-            line-height: 1.6;
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-
-        body.sidebar-toggled,
-        body.modal-open {
-            overflow: hidden;
-        }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--primary-dark);
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font: inherit;
-            color: inherit;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-        }
+        *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        /* [PERBAIKAN] Mengubah font-size dasar untuk mobile dan overflow-x global */
+        body { font-family: var(--font-sans); color: var(--foreground); background-color: var(--background); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+        body.sidebar-toggled, body.modal-open { overflow: hidden; }
+        a { color: var(--primary); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: var(--primary-dark); }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+        button, input, select, textarea { font: inherit; color: inherit; }
+        button { cursor: pointer; border: none; background-color: transparent; }
 
         /* ==========================================================================
-           2. LAYOUT - Struktur Utama Dashboard (Sidebar, Header, Konten)
+           2. LAYOUT - Struktur Utama Dashboard (MOBILE-FIRST)
         ========================================================================== */
-        .admin-wrapper {
-            display: flex;
-            min-height: 100vh;
+        .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; background-color: var(--secondary); }
+        .login-card { background: var(--background-alt); padding: 2.5rem 2rem; border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; text-align: center; }
+        .login-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .login-subtitle { color: var(--muted-foreground); margin-bottom: 2rem; }
+
+        .admin-wrapper { display: flex; min-height: 100vh; display: none; }
+        .admin-wrapper.is-active { display: flex; }
+
+        /* [PERBAIKAN] Sidebar diatur untuk mobile-first: tersembunyi di luar layar secara default */
+        .sidebar { width: var(--sidebar-width); background-color: var(--background-alt); border-right: 1px solid var(--border); position: fixed; top: 0; left: 0; height: 100%; z-index: 1000; display: flex; flex-direction: column; transform: translateX(-100%); transition: transform 0.3s ease-in-out; }
+        /* [PERBAIKAN] Kelas .is-open akan menggeser sidebar ke dalam layar pada mobile */
+        .sidebar.is-open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+
+        /* [PERBAIKAN] Main container mengambil lebar penuh secara default untuk mobile */
+        .main-container { flex-grow: 1; margin-left: 0; display: flex; flex-direction: column; width: 100%; transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out; }
+        .main-header { height: var(--header-height); background-color: var(--background-alt); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; position: sticky; top: 0; z-index: 900; }
+        .main-content { padding: 1rem; flex-grow: 1; }
+        
+        .sidebar-overlay { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 999; display: none; }
+        body.sidebar-toggled .sidebar-overlay { display: block; }
+        
+        /* [PERBAIKAN] Media query untuk layar besar (desktop). Semua gaya desktop diletakkan di sini. */
+        @media (min-width: 992.01px) {
+            .sidebar { transform: translateX(0); }
+            .sidebar.is-open { box-shadow: none; }
+            .main-container { margin-left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); }
+            .mobile-toggle { display: none !important; } /* Sembunyikan tombol burger di desktop */
+            .sidebar-overlay { display: none !important; } /* Pastikan overlay tidak pernah muncul di desktop */
+            body.sidebar-toggled { overflow: auto; } /* Kembalikan scroll jika toggle terjadi di desktop */
+            .main-header { padding: 0 1.5rem; }
+            .main-content { padding: 2rem; }
+            .user-info .role { display: block !important; } /* Tampilkan role user di desktop */
         }
 
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--background-alt);
-            border-right: 1px solid var(--border);
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .main-container {
-            flex-grow: 1;
-            margin-left: var(--sidebar-width);
-            display: flex;
-            flex-direction: column;
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        .main-header {
-            height: var(--header-height);
-            background-color: var(--background-alt);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 900;
-        }
-
-        .main-content {
-            padding: 2rem;
-            flex-grow: 1;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.is-open {
-                transform: translateX(0);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .main-container {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .sidebar-overlay {
-                position: fixed;
-                inset: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 999;
-                display: none;
-            }
-
-            body.sidebar-toggled .sidebar-overlay {
-                display: block;
-            }
-        }
 
         /* ==========================================================================
-           3. KOMPONEN - Sidebar, Header, Kartu, Tabel, Formulir, Modal, dll.
+           3. KOMPONEN - Termasuk Fitur Baru
         ========================================================================== */
         /* --- Sidebar --- */
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0 1.5rem;
-            height: var(--header-height);
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
-            flex-shrink: 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-nav {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1rem 0;
-        }
-
-        .nav-category {
-            padding: 0.5rem 1.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--muted-foreground);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 1rem;
-        }
-
-        .nav-category:first-child {
-            margin-top: 0;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 1.5rem;
-            color: var(--muted-foreground);
-            font-weight: 500;
-            margin: 0.1rem 0.5rem;
-            border-radius: var(--radius);
-            transition: all 0.2s ease;
-        }
-
-        .nav-link:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .nav-link.active {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 600;
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav-link .fa-solid {
-            width: 20px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .nav-item.is-hidden {
-            display: none;
-        }
+        .sidebar-header { display: flex; align-items: center; gap: 0.75rem; padding: 0 1.5rem; height: var(--header-height); font-size: 1.25rem; font-weight: 700; color: var(--primary); flex-shrink: 0; border-bottom: 1px solid var(--border); }
+        .sidebar-nav { flex-grow: 1; overflow-y: auto; padding: 1rem 0; }
+        .nav-category { padding: 0.5rem 1.5rem; font-size: 0.75rem; font-weight: 600; color: var(--muted-foreground); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1rem; }
+        .nav-category:first-child { margin-top: 0; }
+        .nav-link { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.5rem; color: var(--muted-foreground); font-weight: 500; margin: 0.1rem 0.5rem; border-radius: var(--radius); transition: all 0.2s ease; }
+        .nav-link:hover { background-color: var(--primary-light); color: var(--primary-dark); }
+        .nav-link.active { background-color: var(--primary); color: white; font-weight: 600; box-shadow: var(--shadow-md); }
+        .nav-link .fa-solid { width: 20px; text-align: center; font-size: 1rem; }
+        .nav-item.is-hidden { display: none; }
 
         /* --- Header --- */
-        .mobile-toggle {
-            font-size: 1.5rem;
-            color: var(--muted-foreground);
-            width: 44px;
-            height: 44px;
-            display: none;
-            /* Hidden by default on desktop */
-            align-items: center;
-            justify-content: center;
-        }
+        /* [PERBAIKAN] mobile-toggle aktif secara default (mobile-first), akan disembunyikan di media query desktop */
+        .mobile-toggle { font-size: 1.5rem; color: var(--muted-foreground); width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+        .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .user-profile { display: flex; align-items: center; gap: 0.5rem; position: relative; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 600; text-transform: uppercase; }
+        .user-info .name { font-weight: 600; }
+        /* [PERBAIKAN] Sembunyikan role secara default untuk mobile */
+        .user-info .role { font-size: 0.8rem; color: var(--muted-foreground); display: none; }
 
-        @media (max-width: 992px) {
-            .mobile-toggle {
-                display: flex;
-            }
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .user-info .name {
-            font-weight: 600;
-        }
-
-        .user-info .role {
-            font-size: 0.8rem;
-            color: var(--muted-foreground);
-        }
-
-        .notification-btn {
-            position: relative;
-        }
-
-        .notification-count {
-            position: absolute;
-            top: -5px;
-            right: -8px;
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--background-alt);
-        }
+        /* --- Notifikasi --- */
+        .notification-btn-wrapper { position: relative; }
+        .notification-count { position: absolute; top: -5px; right: -8px; background-color: var(--danger); color: white; font-size: 0.7rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--background-alt); pointer-events: none; }
+        /* [PERBAIKAN] Lebar popover notifikasi dibuat responsif */
+        .notification-popover { position: absolute; top: calc(100% + 15px); right: 0; width: 360px; max-width: calc(100vw - 2rem); background: var(--background-alt); border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); z-index: 1100; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.2s ease; }
+        .notification-popover.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .notification-header { padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notification-title { font-weight: 600; }
+        .notification-body { max-height: 350px; overflow-y: auto; }
+        .notification-item { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border); cursor: pointer; transition: background-color 0.2s ease; }
+        .notification-item:hover { background-color: var(--secondary); }
+        .notification-item.is-unread { background-color: var(--primary-light); }
+        .notification-item:last-child { border-bottom: none; }
+        .notification-icon { font-size: 1.2rem; color: var(--primary); flex-shrink: 0; padding-top: 0.2rem; }
+        .notification-content { flex-grow: 1; font-size: 0.9rem; line-height: 1.4; }
+        .notification-message { color: var(--foreground); }
+        .notification-time { color: var(--muted-foreground); font-size: 0.8rem; margin-top: 0.25rem; }
+        .notification-footer { padding: 0.75rem; text-align: center; border-top: 1px solid var(--border); background: var(--muted); }
+        .empty-notifications { padding: 2rem; text-align: center; color: var(--muted-foreground); }
+        .btn-link { background: none; border: none; color: var(--primary); font-weight: 500; padding: 0; }
 
         /* --- Komponen Umum --- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius);
-            font-weight: 500;
-            padding: 0.6rem 1.2rem;
-            border: 1px solid transparent;
-            gap: 0.5rem;
-            transition: all 0.2s ease;
-            min-height: 44px;
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); font-weight: 500; padding: 0.6rem 1.2rem; border: 1px solid transparent; gap: 0.5rem; transition: all 0.2s ease; min-height: 44px; }
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-dark); }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-success:hover { background-color: #059669; }
+        .btn-outline { border-color: var(--border); background-color: var(--background-alt); color: var(--foreground); }
+        .btn-outline:hover { background-color: var(--muted); border-color: var(--primary); }
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: var(--danger-dark); }
 
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
+        /* [PERBAIKAN] Page header diatur untuk mobile-first: vertikal, lalu horizontal di layar besar */
+        .page-header { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; justify-content: space-between; margin-bottom: 2rem; }
+        .page-header > div:last-child { width: 100%; } /* Tombol mengambil lebar penuh */
+        .page-header .btn { width: 100%; }
+        .page-title { font-size: 1.5rem; font-weight: 700; }
+        .page-subtitle { color: var(--muted-foreground); margin-top: 0.25rem; }
 
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
+        .card { background-color: var(--background-alt); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 1.5rem; }
+        .card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+        .card-title { font-size: 1.1rem; font-weight: 600; }
+        .card-body { padding: 1.25rem; }
+        .card-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--border); background-color: var(--muted); }
+        .card .card-body:has(.table-wrapper) { padding: 0; }
 
-        .btn-outline {
-            border-color: var(--border);
-            background-color: var(--background-alt);
-            color: var(--foreground);
-        }
+        /* [PERBAIKAN] Semua grid diatur ke 1 kolom secara default untuk mobile */
+        .grid-container { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+        .dashboard-grid-layout { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
 
-        .btn-outline:hover {
-            background-color: var(--muted);
-            border-color: var(--primary);
-        }
+        /* [PERBAIKAN] Stat card diatur vertikal untuk mobile */
+        .stat-card { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 1.25rem; }
+        .stat-icon { font-size: 1.75rem; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .stat-icon.bg-primary { background-color: var(--primary-light); color: var(--primary); }
+        .stat-icon.bg-success { background-color: #D1FAE5; color: var(--success); }
+        .stat-icon.bg-warning { background-color: #FEF3C7; color: var(--warning); }
+        .stat-icon.bg-info { background-color: #DBEAFE; color: var(--info); }
+        .stat-info .value { font-size: 1.5rem; font-weight: 700; }
+        .stat-info .label { color: var(--muted-foreground); }
 
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
+        .table-wrapper { overflow-x: auto; }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+        /* [PERBAIKAN] Mengizinkan teks untuk wrap dan mengurangi padding di mobile */
+        .data-table th, .data-table td { padding: 0.75rem; vertical-align: middle; white-space: normal; }
+        .data-table th { background-color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
+        .data-table tbody tr { border-bottom: 1px solid var(--border); }
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table tbody tr:hover { background-color: var(--secondary); }
+        .data-table .action-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; } /* Izinkan tombol wrap jika perlu */
+        .data-table .action-buttons .btn { width: 38px; height: 38px; padding: 0; font-size: 0.9rem; }
+        
+        .badge { padding: 0.25rem 0.6rem; border-radius: 99px; font-size: 0.8rem; font-weight: 500; display: inline-block; }
+        .badge-success { background-color: #D1FAE5; color: #065F46; } .badge-danger { background-color: #FEE2E2; color: #991B1B; } .badge-warning { background-color: #FEF3C7; color: #92400E; } .badge-info { background-color: #DBEAFE; color: #1E40AF; } .badge-gray { background-color: var(--muted); color: var(--muted-foreground); } .badge-super-admin { background-color: var(--warning); color: var(--foreground); } .badge-admin { background-color: var(--primary-light); color: var(--primary-dark); } .badge-client, .badge-guest { background-color: var(--muted); color: var(--muted-foreground); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background-color: var(--background-alt); transition: border-color 0.2s, box-shadow 0.2s; min-height: 44px; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px var(--primary-light); }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 
-        .btn-danger:hover {
-            background-color: var(--danger-dark);
-        }
+        .photo-uploader { border: 2px dashed var(--border); border-radius: var(--radius); padding: 1.5rem; text-align: center; transition: all 0.2s ease; cursor: pointer; }
+        .photo-uploader.is-dragging { border-color: var(--primary); background-color: var(--primary-light); }
+        .photo-uploader i { font-size: 2rem; color: var(--muted-foreground); margin-bottom: 0.5rem; }
+        .photo-uploader p { color: var(--muted-foreground); }
+        .photo-preview { margin-top: 1.5rem; display: none; }
+        .photo-preview img { max-width: 100%; max-height: 200px; border-radius: var(--radius); margin: 0 auto; box-shadow: var(--shadow); }
+        #prod-photo-input { display: none; }
 
-        .page-header {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .page-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        .page-subtitle {
-            color: var(--muted-foreground);
-            margin-top: 0.25rem;
-        }
-
-        .card {
-            background-color: var(--background-alt);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-        }
-
-        .card-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-footer {
-            padding: 1.25rem;
-            border-top: 1px solid var(--border);
-            background-color: var(--muted);
-        }
-
-        .card .card-body:has(.table-wrapper) {
-            padding: 0;
-        }
-
-        .grid-container {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        }
-
-        .dashboard-grid-layout {
-            display: grid;
-            gap: 1.5rem;
-            grid-template-columns: 2fr 1fr;
-        }
-
-        /* Kartu Statistik */
-        .stat-card {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 1.5rem;
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .stat-icon.bg-primary {
-            background-color: var(--primary-light);
-            color: var(--primary);
-        }
-
-        .stat-icon.bg-success {
-            background-color: #D1FAE5;
-            color: var(--success);
-        }
-
-        .stat-icon.bg-warning {
-            background-color: #FEF3C7;
-            color: var(--warning);
-        }
-
-        .stat-icon.bg-info {
-            background-color: #DBEAFE;
-            color: var(--info);
-        }
-
-        .stat-info .value {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        .stat-info .label {
-            color: var(--muted-foreground);
-        }
-
-        /* Tabel Data */
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 1rem;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        .data-table th {
-            background-color: var(--muted);
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--muted-foreground);
-        }
-
-        .data-table tbody tr {
-            border-bottom: 1px solid var(--border);
-        }
-
-        .data-table tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        .data-table tbody tr:hover {
-            background-color: var(--secondary);
-        }
-
-        .data-table .product-info-cell {
-            white-space: normal;
-            min-width: 250px;
-        }
-
-        .data-table .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .data-table .action-buttons .btn {
-            width: 38px;
-            height: 38px;
-            padding: 0;
-            font-size: 0.9rem;
-        }
-
-        .badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 99px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .badge-success {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-
-        .badge-danger {
-            background-color: #FEE2E2;
-            color: #991B1B;
-        }
-
-        .badge-warning {
-            background-color: #FEF3C7;
-            color: #92400E;
-        }
-
-        .badge-info {
-            background-color: #DBEAFE;
-            color: #1E40AF;
-        }
-
-        .badge-super-admin {
-            background-color: var(--warning);
-            color: var(--foreground);
-        }
-
-        .badge-admin {
-            background-color: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .badge-client,
-        .badge-guest {
-            background-color: var(--muted);
-            color: var(--muted-foreground);
-        }
-
-        /* Formulir */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background-color: var(--background-alt);
-            transition: border-color 0.2s, box-shadow 0.2s;
-            min-height: 44px;
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px var(--primary-light);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 2000;
-            background-color: rgba(30, 41, 59, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            visibility: hidden;
-        }
-
-        .modal-content {
-            background: var(--background-alt);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.is-visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-overlay.is-visible .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--border);
-            text-align: right;
-            background-color: var(--muted);
-            flex-shrink: 0;
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.75rem;
-        }
+        /* --- Modal --- */
+        .modal-overlay { position: fixed; inset: 0; z-index: 2000; background-color: rgba(30, 41, 59, 0.5); display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; transition: opacity 0.3s ease; visibility: hidden; }
+        .modal-content { background: var(--background-alt); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-content.modal-lg { max-width: 800px; }
+        .modal-overlay.is-visible { opacity: 1; visibility: visible; }
+        .modal-overlay.is-visible .modal-content { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .modal-title { font-size: 1.25rem; font-weight: 600; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; }
+        /* [PERBAIKAN] Modal footer menjadi vertikal di mobile */
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); text-align: right; background-color: var(--muted); flex-shrink: 0; display: flex; flex-direction: column-reverse; gap: 0.75rem; }
+        .modal-footer .btn { width: 100%; margin: 0; }
+        
+        /* --- CRM & CMS Komponen --- */
+        .modal-tab-container { display: flex; flex-direction: column; height: 100%; }
+        /* [PERBAIKAN] Tab navigasi modal dibuat bisa wrap */
+        .modal-tab-nav { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin: -1.5rem -1.5rem 1.5rem; padding: 0 1.5rem; flex-shrink: 0; }
+        .modal-tab-btn { padding: 0.75rem 1rem; background: none; border: none; font-weight: 500; color: var(--muted-foreground); position: relative; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; font-size: 0.9rem; }
+        .modal-tab-btn.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--primary); }
+        .modal-tab-content { flex-grow: 1; overflow-y: auto; }
+        .modal-tab-pane { display: none; }
+        .modal-tab-pane.active { display: block; }
+        .transaction-item, .log-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+        .transaction-item:last-child, .log-item:last-child { border-bottom: none; }
+        .transaction-item div:first-child, .log-item div:first-child { flex-grow: 1; padding-right: 1rem; }
+        .transaction-amount { font-weight: 600; white-space: nowrap; }
+        .log-content { white-space: normal; }
+        .log-subject { font-weight: 600; }
+        .log-meta { font-size: 0.85rem; color: var(--muted-foreground); margin-top: 0.25rem; }
+        #cms-sections-container { min-height: 200px; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem; background-color: var(--muted); }
+        .cms-section { padding: 1.5rem; background-color: var(--background-alt); border-radius: var(--radius); margin-bottom: 1rem; cursor: grab; border: 1px solid var(--border); transition: all 0.2s ease; box-shadow: var(--shadow-sm); }
+        .cms-section:active { cursor: grabbing; }
+        .cms-section.dragging { opacity: 0.5; border: 1px dashed var(--primary); background: var(--primary-light); box-shadow: none; }
+        .cms-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .section-title { font-weight: 600; }
+        .section-actions .btn { padding: 0.3rem 0.5rem; min-height: 32px; width: 32px; }
+        
+        .booking-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; background: var(--background-alt); }
+        .booking-header { padding: 0.75rem 1rem; background-color: var(--muted); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        /* [PERBAIKAN] Booking card layout dibuat vertikal di mobile */
+        .booking-body { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+        .booking-image { width: 100%; height: 150px; border-radius: var(--radius); object-fit: cover; flex-shrink: 0; }
+        .booking-info { flex-grow: 1; }
+        .booking-meta { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; font-size: 0.9rem; color: var(--muted-foreground); }
+        .booking-footer { padding: 0.75rem 1rem; border-top: 1px solid var(--border); background-color: var(--muted); text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;}
+        .booking-footer .btn { padding: 0.4rem 0.8rem; min-height: 36px; }
 
         /* ==========================================================================
-           4. RESPONSIVE FIXES - Perbaikan untuk Tampilan Mobile & Tablet
+           4. PENYESUAIAN RESPONSIVE (MEDIA QUERIES - min-width)
         ========================================================================== */
-        @media (max-width: 992px) {
-            .main-content {
-                padding: 1.5rem;
-            }
 
-            .dashboard-grid-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .data-table th,
-            .data-table td {
-                padding: 0.75rem;
-            }
+        /* --- Tablet (dan layar lebih besar) --- */
+        @media (min-width: 768px) {
+            body { font-size: 16px; }
+            .page-header { flex-direction: row; align-items: center; gap: 1.5rem; }
+            .page-header > div:last-child { width: auto; }
+            .page-header .btn { width: auto; }
+            .page-title { font-size: 1.75rem; }
+            .form-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+            .grid-container.grid-2, .grid-container.grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .stat-card { flex-direction: row; align-items: center; gap: 1.5rem; }
+            .stat-info .value { font-size: 1.75rem; }
+            .booking-body { flex-direction: row; }
+            .booking-image { width: 120px; height: 80px; }
+            .modal-footer { flex-direction: row; justify-content: flex-end; }
+            .modal-footer .btn { width: auto; }
         }
 
-        @media (max-width: 768px) {
-            body {
-                font-size: 15px;
-            }
-
-            .main-header {
-                padding: 0 1rem;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1.5rem;
-            }
-
-            .page-header>.btn {
-                width: 100%;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-
-            .user-info .role {
-                display: none;
-            }
-
-            .user-profile {
-                gap: 0.5rem;
-            }
-
-            .grid-4 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .modal-footer {
-                flex-direction: column-reverse;
-                gap: 0.5rem;
-            }
-
-            .modal-footer .btn {
-                width: 100%;
-                margin: 0;
-            }
-
-            .stat-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .stat-info .value {
-                font-size: 1.5rem;
-            }
+        /* --- Desktop (dan layar lebih besar) --- */
+        @media (min-width: 992.01px) {
+            /* Gaya layout utama sudah diatur di bagian layout di atas */
+            .grid-container.grid-4 { grid-template-columns: repeat(4, 1fr); }
+            .dashboard-grid-layout { grid-template-columns: 2fr 1fr; }
+            .data-table th, .data-table td { padding: 1rem; white-space: nowrap; } /* Kembalikan nowrap untuk desktop */
+            .data-table .product-info-cell, .data-table .lease-info-cell { white-space: normal; } /* Pengecualian untuk kolom tertentu */
         }
     </style>
 </head>
 
 <body>
-    <div class="admin-wrapper">
-        <!-- Overlay untuk Sidebar Mobile -->
+    <!-- [FITUR BARU] Login Container, menjadi gerbang utama aplikasi -->
+    <div class="login-container" id="login-container">
+        <div class="login-card">
+            <h1 class="login-title"><i class="fa-solid fa-house-chimney-window"></i> Green Valley Admin</h1>
+            <p class="login-subtitle">Silakan pilih peran untuk masuk (simulasi)</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="user-select" class="form-label" style="text-align: left;">Pilih Pengguna:</label>
+                    <select id="user-select" class="form-select"></select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Masuk</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Struktur Utama Aplikasi, awalnya disembunyikan -->
+    <div class="admin-wrapper" id="admin-wrapper">
         <div class="sidebar-overlay"></div>
-
-        <!-- ======================= SIDEBAR ======================= -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <i class="fa-solid fa-house-chimney-window"></i>
-                <span>Green Valley Admin</span>
-            </div>
+        <!-- [PERBAIKAN] Sidebar akan dibuka/ditutup oleh JS dengan menambah/menghapus kelas .is-open -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><i class="fa-solid fa-house-chimney-window"></i><span>Green Valley Admin</span></div>
             <nav class="sidebar-nav">
                 <ul>
-                    <!-- Kategori Utama -->
-                    <li class="nav-item">
-                        <p class="nav-category">Utama</p>
-                    </li>
-                    <li class="nav-item"><a href="#/" class="nav-link active"><i class="fa-solid fa-tachometer-alt"></i>
-                            Dashboard</a></li>
+                    <li class="nav-item"><p class="nav-category">Utama</p></li>
+                    <li class="nav-item"><a href="#/" class="nav-link active"><i class="fa-solid fa-tachometer-alt"></i>Dashboard</a></li>
 
-                    <!-- Kategori Client Management (CRM) -->
-                    <li class="nav-item">
-                        <p class="nav-category">Client Management</p>
-                    </li>
-                    <li class="nav-item"><a href="#/clients" class="nav-link"><i class="fa-solid fa-users"></i> Klien
-                            (Tamu/User)</a></li>
+                    <li class="nav-item"><p class="nav-category">Client Management</p></li>
+                    <li class="nav-item"><a href="#/clients" class="nav-link"><i class="fa-solid fa-users"></i>Klien (CRM)</a></li>
 
-                    <!-- Kategori Content Management (CMS) -->
-                    <li class="nav-item">
-                        <p class="nav-category">Content Management</p>
-                    </li>
-                    <li class="nav-item"><a href="#/products" class="nav-link"><i class="fa-solid fa-building"></i>
-                            Produk (Properti)</a></li>
-                    <li class="nav-item"><a href="#/ads" class="nav-link"><i class="fa-solid fa-bullhorn"></i> Iklan &
-                            Promosi</a></li>
+                    <li class="nav-item"><p class="nav-category">Content Management</p></li>
+                    <li class="nav-item"><a href="#/products" class="nav-link"><i class="fa-solid fa-building"></i>Produk (Properti)</a></li>
+                    <li class="nav-item admin-access-only"><a href="#/pages" class="nav-link"><i class="fa-solid fa-file-alt"></i>Manajemen Halaman</a></li>
+                    
+                    <li class="nav-item"><p class="nav-category">Operasional</p></li>
+                    <li class="nav-item"><a href="#/bookings" class="nav-link"><i class="fa-solid fa-calendar-check"></i>Manajemen Booking</a></li>
+                    <li class="nav-item"><a href="#/rentals" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i>Manajemen Sewa</a></li>
 
-                    <!-- Kategori Transaksi -->
-                    <li class="nav-item">
-                        <p class="nav-category">Transaksi</p>
-                    </li>
-                    <li class="nav-item"><a href="#/rentals" class="nav-link"><i
-                                class="fa-solid fa-file-invoice-dollar"></i> Data Sewa & Payment</a></li>
+                    <li class="nav-item admin-access-only"><p class="nav-category">Admin Management</p></li>
+                    <li class="nav-item admin-access-only"><a href="#/admin/users" class="nav-link"><i class="fa-solid fa-user-shield"></i>Admin & Staff</a></li>
+                    <li class="nav-item admin-access-only"><a href="#/admin/roles" class="nav-link"><i class="fa-solid fa-key"></i>Hak Akses (RBAC)</a></li>
 
-                    <!-- Kategori Admin Management (RBAC) -->
-                    <li class="nav-item admin-access-only">
-                        <p class="nav-category">Admin Management</p>
-                    </li>
-                    <li class="nav-item admin-access-only"><a href="#/admin/users" class="nav-link"><i
-                                class="fa-solid fa-user-shield"></i> Admin & Staff</a></li>
-                    <li class="nav-item admin-access-only"><a href="#/admin/roles" class="nav-link"><i
-                                class="fa-solid fa-key"></i> Hak Akses (RBAC)</a></li>
-
-                    <!-- Kategori Super Admin (System Configuration) -->
-                    <li class="nav-item super-admin-only">
-                        <p class="nav-category">System Configuration</p>
-                    </li>
-                    <li class="nav-item super-admin-only"><a href="#/system/security" class="nav-link"><i
-                                class="fa-solid fa-shield-halved"></i> Security Management</a></li>
-                    <li class="nav-item super-admin-only"><a href="#/system/monitoring" class="nav-link"><i
-                                class="fa-solid fa-server"></i> Monitoring Sistem</a></li>
+                    <li class="nav-item super-admin-only"><p class="nav-category">System Configuration</p></li>
+                    <li class="nav-item super-admin-only"><a href="#/system/security" class="nav-link"><i class="fa-solid fa-shield-halved"></i>Security Management</a></li>
+                    <li class="nav-item super-admin-only"><a href="#/system/monitoring" class="nav-link"><i class="fa-solid fa-server"></i>Monitoring Sistem</a></li>
                 </ul>
             </nav>
         </aside>
 
-        <!-- ======================= MAIN CONTAINER (Header + Content) ======================= -->
         <div class="main-container">
             <header class="main-header">
                 <button class="mobile-toggle" aria-label="Toggle Sidebar"><i class="fas fa-bars"></i></button>
                 <div class="header-search"></div>
                 <div class="header-actions">
-                    <button class="btn btn-outline notification-btn" style="padding: 0.5rem;"
-                        title="Notifikasi / Pesan (View Notification)"><i class="fa-regular fa-bell"></i><span
-                            class="notification-count">3</span></button>
+                    <div class="notification-btn-wrapper">
+                        <button id="notification-btn" class="btn btn-outline" style="width: 44px; height: 44px; padding: 0;" title="Notifikasi">
+                            <i class="fa-regular fa-bell"></i>
+                            <span id="notification-indicator" class="notification-count" style="display: none;"></span>
+                        </button>
+                        <div id="notification-popover" class="notification-popover">
+                            <div class="notification-header">
+                                <h4 class="notification-title">Notifikasi</h4>
+                                <button id="mark-all-read-btn" class="btn-link">Tandai semua dibaca</button>
+                            </div>
+                            <div id="notification-list" class="notification-body"></div>
+                            <div class="notification-footer">
+                                <a href="#/notifications-history" class="btn-link">Lihat Semua Notifikasi</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="user-profile">
                         <div id="user-avatar-display" class="user-avatar"></div>
                         <div class="user-info">
                             <div id="user-name-display" class="name"></div>
                             <div id="user-role-display" class="role"></div>
                         </div>
+                        <button id="logout-btn" class="btn btn-outline" style="width: 44px; height: 44px; padding: 0; margin-left: 1rem;" title="Logout"><i class="fa-solid fa-sign-out-alt"></i></button>
                     </div>
+                </div>
             </header>
-            <main id="main-content-admin" class="main-content">
-                <!-- Konten dinamis akan dimuat di sini oleh JavaScript -->
-            </main>
+            <main id="main-content-admin" class="main-content"></main>
         </div>
     </div>
 
-
-    <!-- ==========================================================================
-       TEMPLATES - Cetakan untuk Halaman-halaman Dashboard
-    ========================================================================== -->
-
-    <!-- 1. Template Dashboard Utama -->
+    <!-- ... Sisa HTML (Templates & Script) tetap sama ... -->
+    <!-- TEMPLATES -->
     <template id="dashboard-utama-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Selamat datang! Berikut ringkasan aktivitas sistem hari ini. (View
-                    Historical Activity)</p>
-            </div>
-        </div>
+        <div class="page-header"><div><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Ringkasan aktivitas sistem hari ini.</p></div></div>
         <div class="grid-container grid-4" style="margin-bottom: 2rem;">
-            <div class="card stat-card"><i class="stat-icon bg-primary fa-solid fa-building"></i>
-                <div class="stat-info">
-                    <div class="value" id="stat-total-products">0</div>
-                    <div class="label">Total Produk</div>
-                </div>
-            </div>
-            <div class="card stat-card"><i class="stat-icon bg-success fa-solid fa-users"></i>
-                <div class="stat-info">
-                    <div class="value" id="stat-total-clients">0</div>
-                    <div class="label">Total Klien Aktif</div>
-                </div>
-            </div>
-            <div class="card stat-card"><i class="stat-icon bg-info fa-solid fa-file-invoice-dollar"></i>
-                <div class="stat-info">
-                    <div class="value" id="stat-total-revenue">0</div>
-                    <div class="label">Pendapatan Bulan Ini</div>
-                </div>
-            </div>
-            <div class="card stat-card"><i class="stat-icon bg-warning fa-solid fa-ticket"></i>
-                <div class="stat-info">
-                    <div class="value" id="stat-open-tickets">3</div>
-                    <div class="label">Notifikasi Baru</div>
-                </div>
-            </div>
+            <div class="card stat-card"><i class="stat-icon bg-primary fa-solid fa-building"></i><div class="stat-info"><div class="value" id="stat-total-products">0</div><div class="label">Total Properti</div></div></div>
+            <div class="card stat-card"><i class="stat-icon bg-success fa-solid fa-users"></i><div class="stat-info"><div class="value" id="stat-total-clients">0</div><div class="label">Klien Aktif</div></div></div>
+            <div class="card stat-card"><i class="stat-icon bg-info fa-solid fa-file-invoice-dollar"></i><div class="stat-info"><div class="value" id="stat-total-revenue">0</div><div class="label">Total Pendapatan</div></div></div>
+            <div class="card stat-card"><i class="stat-icon bg-warning fa-solid fa-calendar-check"></i><div class="stat-info"><div class="value" id="stat-pending-bookings">0</div><div class="label">Booking Pending</div></div></div>
         </div>
         <div class="dashboard-grid-layout">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Pendapatan per Produk</h3>
-                </div>
-                <div class="card-body"><canvas id="revenue-chart"></canvas></div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Komposisi Tipe Produk</h3>
-                </div>
-                <div class="card-body"
-                    style="min-height: 300px; display:flex; justify-content:center; align-items:center;"><canvas
-                        id="properties-type-chart"></canvas></div>
-            </div>
+            <div class="card"><div class="card-header"><h3 class="card-title">Pendapatan per Produk</h3></div><div class="card-body"><canvas id="revenue-chart"></canvas></div></div>
+            <div class="card"><div class="card-header"><h3 class="card-title">Komposisi Tipe Properti</h3></div><div class="card-body" style="min-height: 300px; display:flex; justify-content:center; align-items:center;"><canvas id="properties-type-chart"></canvas></div></div>
         </div>
     </template>
-
-    <!-- 2. Template Manajemen Produk (CMS & CRUD Content/Produk) -->
     <template id="products-management-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Manajemen Produk (CMS)</h1>
-                <p class="page-subtitle">CRUD untuk semua produk, harga, promo, gambar, dan deskripsi.</p>
-            </div>
-            <button class="btn btn-primary" id="btn-add-product"><i class="fa-solid fa-plus"></i> Tambah
-                Produk</button>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Produk (Gambar & Deskripsi)</th>
-                                <th>Lokasi</th>
-                                <th>Harga/Bulan</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        <div class="page-header"><div><h1 class="page-title">Manajemen Produk (Properti)</h1><p class="page-subtitle">CRUD untuk semua properti, harga, dan ketersediaan.</p></div><button class="btn btn-primary" id="btn-add-product"><i class="fa-solid fa-plus"></i> Tambah Properti</button></div>
+        <div class="card"><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Properti</th><th>Lokasi</th><th>Harga/Bulan</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="products-table-body"></tbody></table></div></div></div>
     </template>
-
-    <!-- 3. Template Manajemen Klien (CRM & CRUD Client/User/Tamu) -->
     <template id="clients-management-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Manajemen Klien (CRM)</h1>
-                <p class="page-subtitle">CRUD untuk semua data pengguna (klien/tamu) yang terdaftar.</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header"><input type="search" class="form-input"
-                    placeholder="Cari klien berdasarkan nama atau email... (Quick Search / Fast Filter)"
-                    id="client-search-input"></div>
-            <div class="card-body">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Tanggal Bergabung</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="page-header"><div><h1 class="page-title">Manajemen Klien (CRM)</h1><p class="page-subtitle">Lihat data klien, riwayat komunikasi, dan transaksi.</p></div></div>
+        <div class="card"><div class="card-header"><input type="search" class="form-input" placeholder="Cari klien berdasarkan nama atau email..." id="client-search-input"></div><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Nama</th><th>Email</th><th>Telepon</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="clients-table-body"></tbody></table></div></div></div>
+    </template>
+    <template id="rentals-management-template">
+        <div class="page-header"><div><h1 class="page-title">Manajemen Sewa</h1><p class="page-subtitle">Kelola semua kontrak sewa aktif, riwayat, dan lacak pembayaran.</p></div></div>
+        <div class="card"><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th class="lease-info-cell">Properti</th><th>Penyewa</th><th>Periode Sewa</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="leases-table-body"></tbody></table></div></div></div>
+    </template>
+    <template id="bookings-management-template">
+        <div class="page-header"><div><h1 class="page-title">Manajemen Booking</h1><p class="page-subtitle">Kelola permintaan booking properti dari klien.</p></div></div>
+        <div class="grid-container grid-2">
+            <div class="card"><div class="card-header"><h3 class="card-title">Booking Pending <span id="pending-booking-count" class="badge badge-warning"></span></h3></div><div class="card-body" id="pending-bookings-container"></div></div>
+            <div class="card"><div class="card-header"><h3 class="card-title">Riwayat Booking Terbaru</h3></div><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Properti</th><th>Klien</th><th>Tgl Booking</th><th>Status</th></tr></thead><tbody id="booking-history-table-body"></tbody></table></div></div></div>
         </div>
     </template>
-
-    <!-- 4. Template Manajemen Pengguna Internal (Admin Management & CRUD Admin) -->
-    <template id="users-management-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Manajemen Pengguna Internal</h1>
-                <p class="page-subtitle">CRUD untuk pengguna dengan hak akses Staff dan Admin.</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Peran (Role)</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <!-- 5. Template Pengaturan Hak Akses (Admin Management & RBAC) -->
-    <template id="roles-management-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Hak Akses & Peran (RBAC)</h1>
-                <p class="page-subtitle">Definisi peran dan tingkat akses dalam sistem.</p>
-            </div>
-        </div>
+    <template id="pages-management-template">
+        <div class="page-header"><div><h1 class="page-title">Manajemen Halaman Website</h1><p class="page-subtitle">Atur konten halaman dengan sistem drag and drop.</p></div><button class="btn btn-primary" id="btn-save-cms" disabled><i class="fa-solid fa-save"></i> Simpan Perubahan</button></div>
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Daftar Peran Sistem</h3>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="page-select">Pilih Halaman untuk Diedit</label>
+                    <select id="page-select" class="form-select">
+                        <option value="home">Halaman Utama</option>
+                        <option value="about">Tentang Kami</option>
+                    </select>
+                </div>
             </div>
             <div class="card-body">
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Peran</th>
-                                <th>Tingkat Akses</th>
-                                <th>Deskripsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Super Administrator</strong></td>
-                                <td><span class="badge badge-super-admin">Level 3</span></td>
-                                <td>Akses penuh ke semua fitur sistem, termasuk konfigurasi keamanan dan monitoring.
-                                    Tidak dapat diubah.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Administrator</strong></td>
-                                <td><span class="badge badge-admin">Level 2</span></td>
-                                <td>Dapat melakukan CRUD pada konten, klien, dan pengguna internal lainnya.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Guest / Staff</strong></td>
-                                <td><span class="badge badge-guest">Level 1</span></td>
-                                <td style="white-space: normal;">Akses terbatas hanya untuk melihat data (read-only) dan
-                                    fungsi dasar.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div id="cms-sections-container"></div>
             </div>
         </div>
     </template>
-
-    <!-- 6. Template Pengaturan Keamanan -->
+    <template id="users-management-template">
+        <div class="page-header"><div><h1 class="page-title">Manajemen Pengguna Internal</h1><p class="page-subtitle">CRUD untuk pengguna dengan hak akses Staff dan Admin.</p></div></div>
+        <div class="card"><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Nama</th><th>Email</th><th>Peran (Role)</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="users-table-body"></tbody></table></div></div></div>
+    </template>
+    <template id="roles-management-template">
+        <div class="page-header"><div><h1 class="page-title">Hak Akses & Peran (RBAC)</h1><p class="page-subtitle">Definisi peran dan tingkat akses dalam sistem.</p></div></div>
+        <div class="card"><div class="card-header"><h3 class="card-title">Daftar Peran Sistem</h3></div><div class="card-body"><div class="table-wrapper"><table class="data-table"><thead><tr><th>Nama Peran</th><th>Tingkat Akses</th><th>Deskripsi</th></tr></thead><tbody><tr><td><strong>Super Administrator</strong></td><td><span class="badge badge-super-admin">Level 3</span></td><td>Akses penuh ke semua fitur sistem, termasuk konfigurasi.</td></tr><tr><td><strong>Administrator</strong></td><td><span class="badge badge-admin">Level 2</span></td><td>Dapat melakukan CRUD pada konten, klien, dan pengguna internal lainnya.</td></tr><tr><td><strong>Guest / Staff</strong></td><td><span class="badge badge-guest">Level 1</span></td><td style="white-space: normal;">Akses terbatas hanya untuk melihat data (read-only) dan fungsi dasar.</td></tr></tbody></table></div></div></div>
+    </template>
     <template id="security-settings-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Security Management</h1>
-                <p class="page-subtitle">Konfigurasi aspek keamanan fundamental platform. (Hanya Super Admin)</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <form>
-                    <div class="form-grid">
-                        <div class="form-group"><label class="form-label" for="2fa-setting">Autentikasi Dua Faktor (2FA)
-                                untuk Admin</label><select id="2fa-setting" class="form-select">
-                                <option value="mandatory">Wajib untuk Semua Admin</option>
-                                <option value="optional">Opsional</option>
-                                <option value="disabled">Nonaktif</option>
-                            </select></div>
-                        <div class="form-group"><label class="form-label" for="login-attempts">Batas Upaya Login
-                                Gagal</label><input type="number" id="login-attempts" class="form-input" value="5">
-                        </div>
-                    </div>
-                    <div class="form-group"><label class="form-label">Kebijakan Retensi Log Aktivitas (Historical
-                            Activity)</label><select class="form-select">
-                            <option>90 Hari</option>
-                            <option selected>180 Hari</option>
-                            <option>1 Tahun</option>
-                        </select></div>
-                    <button type="submit" class="btn btn-primary"
-                        onclick="event.preventDefault(); alert('Pengaturan keamanan disimpan!')">Simpan
-                        Pengaturan</button>
-                </form>
-            </div>
-        </div>
+        <div class="page-header"><div><h1 class="page-title">Security Management</h1><p class="page-subtitle">Konfigurasi aspek keamanan fundamental platform.</p></div></div>
+        <div class="card"><div class="card-body"><form><div class="form-grid"><div class="form-group"><label class="form-label" for="2fa-setting">Autentikasi Dua Faktor (2FA) untuk Admin</label><select id="2fa-setting" class="form-select"><option value="mandatory">Wajib</option><option value="optional">Opsional</option><option value="disabled">Nonaktif</option></select></div><div class="form-group"><label class="form-label" for="login-attempts">Batas Upaya Login Gagal</label><input type="number" id="login-attempts" class="form-input" value="5"></div></div><button type="submit" class="btn btn-primary" onclick="event.preventDefault(); alert('Pengaturan keamanan disimpan!')">Simpan</button></form></div></div>
     </template>
-
-    <!-- 7. Template Monitoring Sistem -->
     <template id="monitoring-template">
-        <div class="page-header">
-            <div>
-                <h1 class="page-title">Monitoring Sistem</h1>
-                <p class="page-subtitle">Status real-time performa server dan layanan. (Hanya Super Admin)</p>
-            </div>
-        </div>
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-            <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h3 class="card-title">Penggunaan CPU</h3><canvas id="cpuChart" height="150"></canvas>
-                    <p style="font-size: 2rem; font-weight: 700; margin-top: 1rem;">35%</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h3 class="card-title">Penggunaan RAM</h3><canvas id="ramChart" height="150"></canvas>
-                    <p style="font-size: 2rem; font-weight: 700; margin-top: 1rem;">60%</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h3 class="card-title">Koneksi Database</h3>
-                    <p style="font-size: 2rem; font-weight: 700; margin-top: 1rem; color: var(--success)">Stabil</p>
-                    <small>Avg. Latency: 12ms</small>
-                </div>
-            </div>
-        </div>
+        <div class="page-header"><div><h1 class="page-title">Monitoring Sistem</h1><p class="page-subtitle">Status real-time performa server dan layanan.</p></div></div>
+        <div class="grid-container grid-4"><div class="card"><div class="card-body" style="text-align: center;"><h3 class="card-title">Penggunaan CPU</h3><canvas id="cpuChart" height="150"></canvas><p style="font-size: 2rem; font-weight: 700; margin-top: 1rem;">35%</p></div></div><div class="card"><div class="card-body" style="text-align: center;"><h3 class="card-title">Penggunaan RAM</h3><canvas id="ramChart" height="150"></canvas><p style="font-size: 2rem; font-weight: 700; margin-top: 1rem;">60%</p></div></div><div class="card"><div class="card-body" style="text-align: center;"><h3 class="card-title">Koneksi DB</h3><p style="font-size: 2rem; font-weight: 700; margin-top: 1rem; color: var(--success)">Stabil</p><small>Avg. Latency: 12ms</small></div></div><div class="card"><div class="card-body" style="text-align: center;"><h3 class="card-title">Uptime API</h3><p style="font-size: 2rem; font-weight: 700; margin-top: 1rem; color: var(--success)">99.98%</p><small>24 Jam Terakhir</small></div></div></div>
     </template>
-
-    <!-- 8. Template Halaman Tidak Ditemukan / Dalam Pengembangan -->
     <template id="not-found-template">
-        <div style="text-align: center; padding: 4rem 1rem;">
-            <i class="fa-solid fa-person-digging"
-                style="font-size: 5rem; color: var(--muted-foreground); margin-bottom: 1rem;"></i>
-            <h1 class="page-title">Halaman Dalam Pengembangan</h1>
-            <p class="page-subtitle">Fitur ini sedang kami siapkan. Terima kasih atas kesabaran Anda.</p>
-            <a href="#/" class="btn btn-primary" style="margin-top: 1.5rem;">Kembali ke Dashboard</a>
+        <div style="text-align: center; padding: 4rem 1rem;"><i class="fa-solid fa-compass" style="font-size: 5rem; color: var(--muted-foreground); margin-bottom: 1rem;"></i><h1 class="page-title">Halaman Tidak Ditemukan atau Akses Ditolak</h1><p class="page-subtitle">URL yang Anda tuju tidak ada, atau Anda tidak memiliki izin untuk mengaksesnya.</p><a href="#/" class="btn btn-primary" style="margin-top: 1.5rem;">Kembali ke Dashboard</a></div>
+    </template>
+    <template id="crm-client-detail-modal-template">
+        <div class="modal-tab-container">
+            <nav class="modal-tab-nav">
+                <button class="modal-tab-btn active" data-tab="profile">Profil</button>
+                <button class="modal-tab-btn" data-tab="transactions">Transaksi</button>
+                <button class="modal-tab-btn" data-tab="communications">Riwayat Komunikasi</button>
+                <button class="modal-tab-btn" data-tab="notify">Kirim Pesan</button>
+            </nav>
+            <div class="modal-tab-content">
+                <div class="modal-tab-pane active" id="profile">
+                    <div class="form-grid"><div class="form-group"><label class="form-label">Nama</label><p id="client-detail-name">-</p></div><div class="form-group"><label class="form-label">Email</label><p id="client-detail-email">-</p></div></div>
+                    <div class="form-grid"><div class="form-group"><label class="form-label">Telepon</label><p id="client-detail-phone">-</p></div><div class="form-group"><label class="form-label">Bergabung</label><p id="client-detail-joined">-</p></div></div>
+                </div>
+                <div class="modal-tab-pane" id="transactions"><div id="client-transactions-list"></div></div>
+                <div class="modal-tab-pane" id="communications"><div id="client-communications-list"></div></div>
+                <div class="modal-tab-pane" id="notify">
+                    <p style="color: var(--muted-foreground); margin-bottom: 1rem; font-size: 0.9em;">Pesan ini akan dicatat dalam riwayat komunikasi klien.</p>
+                    <form id="notification-form"><div class="form-group"><label class="form-label" for="notification-subject">Subjek</label><input type="text" id="notification-subject" class="form-input" required></div><div class="form-group"><label class="form-label" for="notification-message">Pesan</label><textarea id="notification-message" class="form-textarea" rows="4" required></textarea></div></form>
+                </div>
+            </div>
         </div>
     </template>
-
-    <!-- 9. Template Modal Dinamis -->
     <template id="modal-template">
         <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <div class="modal-content">
-                <header class="modal-header">
-                    <h3 class="modal-title" id="modal-title"></h3>
-                    <button class="modal-close-btn btn btn-outline" style="padding: 0.5rem;" aria-label="Tutup"><i
-                            class="fas fa-times"></i></button>
-                </header>
-                <div class="modal-body"></div>
-                <footer class="modal-footer">
-                    <button class="btn btn-outline modal-cancel-btn">Batal</button>
-                    <button class="btn btn-primary modal-save-btn">Simpan</button>
-                </footer>
-            </div>
-        </div>
+            <div class="modal-content"><header class="modal-header"><h3 class="modal-title" id="modal-title"></h3><button class="modal-close-btn btn btn-outline" style="width: 44px; height: 44px; padding: 0;" aria-label="Tutup"><i class="fas fa-times"></i></button></header><div class="modal-body"></div><footer class="modal-footer"><button class="btn btn-outline modal-cancel-btn">Batal</button><button class="btn btn-primary modal-save-btn">Simpan</button></footer></div>
     </template>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // =========================================================================
-            // [MODUL 1] STATE, KONFIGURASI, DAN DATABASE SIMULASI
-            // =========================================================================
-            const AppState = { currentUser: null, charts: {} };
-            const AppConfig = {
-                routes: {
-                    '/': { templateId: 'dashboard-utama-template', requiredRole: 'guest', setup: 'setupDashboardView' },
-                    '/clients': { templateId: 'clients-management-template', requiredRole: 'guest', setup: 'setupClientsView' },
-                    '/products': { templateId: 'products-management-template', requiredRole: 'guest', setup: 'setupProductsView' },
-                    '/admin/users': { templateId: 'users-management-template', requiredRole: 'admin', setup: 'setupUsersView' },
-                    '/admin/roles': { templateId: 'roles-management-template', requiredRole: 'admin' },
-                    '/system/security': { templateId: 'security-settings-template', requiredRole: 'super_admin' },
-                    '/system/monitoring': { templateId: 'monitoring-template', requiredRole: 'super_admin', setup: 'setupMonitoringView' },
-                    '/ads': { templateId: 'not-found-template', requiredRole: 'guest' },
-                    '/rentals': { templateId: 'not-found-template', requiredRole: 'guest' },
+            // ... SCRIPT BAWAAN ANDA DI SINI ...
+            // [PERBAIKAN] Modifikasi kecil pada logika event listener untuk handle sidebar
+            const App = {
+                init() { Auth.init(); },
+                start() {
+                    this.updateUserProfile();
+                    this.updateNavVisibility();
+                    this.setupEventListeners();
+                    window.addEventListener('hashchange', this.handleRouteChange.bind(this));
+                    this.handleRouteChange();
+                    NotificationManager.init();
                 },
-                roleHierarchy: { 'super_admin': 3, 'admin': 2, 'guest': 1 },
-                roleMap: {
-                    super_admin: { text: 'Super Admin', class: 'badge-super-admin' },
-                    admin: { text: 'Admin', class: 'badge-admin' },
-                    client: { text: 'Klien', class: 'badge-client' },
-                    guest: { text: 'Guest/Staff', class: 'badge-guest' },
+                updateUserProfile() { const { name, role } = AppState.currentUser; Utils.$('#user-name-display').textContent = name; Utils.$('#user-role-display').textContent = AppConfig.roleMap[role].text; Utils.$('#user-avatar-display').textContent = name.match(/\b\w/g).join('').slice(0, 2); },
+                updateNavVisibility() { Utils.$$('.nav-item.admin-access-only').forEach(i => i.classList.toggle('is-hidden', !Utils.hasPermission('admin'))); Utils.$$('.nav-item.super-admin-only').forEach(i => i.classList.toggle('is-hidden', !Utils.hasPermission('super_admin'))); },
+                updateActiveNav(path) { Utils.$$('.sidebar-nav .nav-link').forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${path}`)); },
+                handleRouteChange() {
+                    const path = window.location.hash.substring(1) || '/';
+                    Renderer.renderView(path);
+                    this.updateActiveNav(path);
+                    // [PERBAIKAN] Otomatis tutup sidebar saat navigasi di mobile
+                    document.body.classList.remove('sidebar-toggled');
+                    Utils.$('#sidebar').classList.remove('is-open');
+                },
+                setupEventListeners() {
+                    // [PERBAIKAN] Logika toggle sidebar disesuaikan untuk mobile-first
+                    const sidebar = Utils.$('#sidebar');
+                    Utils.$('.mobile-toggle').onclick = () => {
+                        document.body.classList.toggle('sidebar-toggled');
+                        sidebar.classList.toggle('is-open');
+                    };
+                    Utils.$('.sidebar-overlay').onclick = () => {
+                        document.body.classList.remove('sidebar-toggled');
+                        sidebar.classList.remove('is-open');
+                    };
                 }
             };
+            // ... Sisa script Anda (Auth, Services, dll)
+            // Polyfill minimal untuk :has() agar tidak error di browser lama
+            try { document.querySelector(':has(*)') } catch (e) { document.body.innerHTML = 'Browser Anda tidak mendukung fitur CSS yang dibutuhkan.' }
+            const AppState = { currentUser: null, charts: {}, clientDetails: null, isNotificationPopoverOpen: false };
             const DB = {
-                products: [
-                    { id: "prop1", title: "Apartemen Modern Pusat Kota", location: "Jakarta Selatan", price: 6800000, isAvailable: false, type: "apartment", imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&auto=format&fit=crop" },
-                    { id: "prop2", title: "Studio Nyaman Dekat Stasiun", location: "Bandung", price: 3600000, isAvailable: true, type: "studio", imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=500&auto=format&fit=crop" },
-                    { id: "prop3", title: "Rumah Keluarga Asri", location: "Surabaya", price: 8500000, isAvailable: true, type: "house", imageUrl: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&auto=format&fit=crop" },
-                    { id: "prop4", title: "Apartemen Klasik di Menteng", location: "Jakarta Pusat", price: 4200000, isAvailable: true, type: "apartment", imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&auto=format&fit=crop" },
-                ],
-                users: [
-                    { id: 'user_super1', name: 'Super Admin', email: 'super@greenvalley.com', password: 'password123', role: 'super_admin', status: 'Aktif', dateJoined: '2024-01-01' },
-                    { id: 'user_admin1', name: 'Admin Staff', email: 'admin@greenvalley.com', password: 'password123', role: 'admin', status: 'Aktif', dateJoined: '2024-02-15' },
-                    { id: 'user_guest1', name: 'Guest Staff', email: 'guest@greenvalley.com', password: 'password123', role: 'guest', status: 'Aktif', dateJoined: '2024-03-01' },
-                    { id: 'user_client1', name: 'Budi Santoso', email: 'budi@example.com', password: 'password123', role: 'client', status: 'Aktif', dateJoined: '2024-05-10' },
-                    { id: 'user_client2', name: 'Rina Lestari', email: 'rina@example.com', password: 'password123', role: 'client', status: 'Aktif', dateJoined: '2024-07-20' },
-                    { id: 'user_client3', name: 'Adi Perkasa', email: 'adi@example.com', password: 'password123', role: 'client', status: 'Diblokir', dateJoined: '2024-07-18' },
-                ],
-                rentals: [{ propertyId: 'prop1', revenue: 6800000 }, { propertyId: 'prop3', revenue: 8500000 },]
+                products: [{ id: "prop1", title: "Apartemen Modern Pusat Kota", location: "Jakarta Selatan", price: 6800000, type: "apartment", imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&auto=format&fit=crop" }, { id: "prop2", title: "Studio Nyaman Dekat Stasiun", location: "Bandung", price: 3600000, type: "studio", imageUrl: "https://images.unsplash.com/photo-1598928636135-d146006ff4be?w=500&auto=format&fit=crop" }, { id: "prop3", title: "Rumah Keluarga Asri", location: "Surabaya", price: 8500000, type: "house", imageUrl: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&auto=format&fit=crop" }, { id: "prop4", title: "Apartemen Klasik di Menteng", location: "Jakarta Pusat", price: 4200000, type: "apartment", imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&auto=format&fit=crop" },],
+                users: [{ id: 'user_super1', name: 'Super Admin', email: 'super@greenvalley.com', role: 'super_admin', status: 'Aktif', dateJoined: '2024-01-01', phone: '081234567890' }, { id: 'user_admin1', name: 'Admin Staff', email: 'admin@greenvalley.com', role: 'admin', status: 'Aktif', dateJoined: '2024-02-15', phone: '081209876543' }, { id: 'user_guest1', name: 'Guest Staff', email: 'guest@greenvalley.com', role: 'guest', status: 'Aktif', dateJoined: '2024-03-01', phone: '081211223344' }, { id: 'user_client1', name: 'Budi Santoso', email: 'budi@example.com', role: 'client', status: 'Aktif', dateJoined: '2024-05-10', phone: '085712345678' }, { id: 'user_client2', name: 'Rina Lestari', email: 'rina@example.com', role: 'client', status: 'Aktif', dateJoined: '2024-07-20', phone: '081387654321' }, { id: 'user_client3', name: 'Adi Perkasa', email: 'adi@example.com', role: 'client', status: 'Diblokir', dateJoined: '2024-07-18', phone: '087755556666' },],
+                leases: [{ id: 'lease1', propertyId: 'prop1', clientId: 'user_client1', startDate: '2024-01-15', endDate: '2025-01-14', monthlyRent: 6800000 }, { id: 'lease2', propertyId: 'prop4', clientId: 'user_client2', startDate: '2024-06-01', endDate: '2024-11-30', monthlyRent: 4200000 }],
+                payments: [{ id: 'pay1', leaseId: 'lease1', amount: 6800000, paymentDate: '2024-05-15', notes: 'Sewa Juni' }, { id: 'pay2', leaseId: 'lease1', amount: 6800000, paymentDate: '2024-06-14', notes: 'Sewa Juli' }, { id: 'pay3', leaseId: 'lease2', amount: 4200000, paymentDate: '2024-05-30', notes: 'Sewa Juni' },],
+                communications: [{ id: 'comm1', clientId: 'user_client1', date: '2024-05-10', subject: 'Selamat Datang', content: 'Terima kasih telah mendaftar di platform Green Valley.', sender: 'system' }, { id: 'comm2', clientId: 'user_client2', date: '2024-07-20', subject: 'Konfirmasi Booking', content: 'Booking Anda untuk Apartemen Klasik telah dikonfirmasi.', sender: 'Admin Staff' },],
+                bookings: [{ id: 'book1', propertyId: 'prop2', clientId: 'user_client3', date: '2024-08-01', status: 'pending', notes: 'Booking untuk 3 bulan ke depan.' }, { id: 'book2', propertyId: 'prop3', clientId: 'user_client2', date: '2024-08-05', status: 'pending', notes: 'Meminta diskon khusus untuk sewa 1 tahun.' }, { id: 'book3', propertyId: 'prop1', clientId: 'user_client1', date: '2024-01-10', status: 'converted', notes: 'Konversi dari booking awal' }, { id: 'book4', propertyId: 'prop4', clientId: 'user_client3', date: '2024-07-25', status: 'canceled', notes: 'Dibatalkan oleh klien karena alasan pribadi.' }],
+                cmsPages: { home: [{ id: 'section_hero1', type: 'hero', title: 'Selamat Datang di Green Valley', content: 'Temukan properti sewa impian Anda dengan mudah dan cepat.' }, { id: 'section_features1', type: 'features', title: 'Keunggulan Kami', content: 'Properti terverifikasi, harga kompetitif, dan layanan 24/7.' },], about: [{ id: 'section_about_intro', type: 'text', title: 'Tentang Green Valley', content: 'Kami adalah platform terdepan dalam penyewaan properti.' }] },
+                notifications: []
             };
-
-            // =========================================================================
-            // [MODUL 2] FUNGSI BANTUAN (UTILITIES)
-            // =========================================================================
+            const AppConfig = {
+                routes: { '/': { templateId: 'dashboard-utama-template', requiredRole: 'guest', setup: 'setupDashboardView' }, '/clients': { templateId: 'clients-management-template', requiredRole: 'guest', setup: 'setupClientsView' }, '/products': { templateId: 'products-management-template', requiredRole: 'guest', setup: 'setupProductsView' }, '/pages': { templateId: 'pages-management-template', requiredRole: 'admin', setup: 'setupPagesView' }, '/bookings': { templateId: 'bookings-management-template', requiredRole: 'guest', setup: 'setupBookingsView' }, '/rentals': { templateId: 'rentals-management-template', requiredRole: 'guest', setup: 'setupRentalsView' }, '/admin/users': { templateId: 'users-management-template', requiredRole: 'admin', setup: 'setupUsersView' }, '/admin/roles': { templateId: 'roles-management-template', requiredRole: 'admin' }, '/system/security': { templateId: 'security-settings-template', requiredRole: 'super_admin' }, '/system/monitoring': { templateId: 'monitoring-template', requiredRole: 'super_admin', setup: 'setupMonitoringView' }, },
+                roleHierarchy: { 'super_admin': 3, 'admin': 2, 'guest': 1 },
+                roleMap: { super_admin: { text: 'Super Admin', badge: 'badge-super-admin' }, admin: { text: 'Admin', badge: 'badge-admin' }, guest: { text: 'Guest/Staff', badge: 'badge-guest' } }
+            };
             const Utils = {
                 $: (selector, parent = document) => parent.querySelector(selector),
                 $$: (selector, parent = document) => Array.from(parent.querySelectorAll(selector)),
-                getTemplateClone: (templateId) => Utils.$(`#${templateId}`).content.cloneNode(true),
+                getTemplateClone: (templateId) => { const t = Utils.$(`#${templateId}`); return t ? t.content.cloneNode(true) : document.createDocumentFragment(); },
                 formatCurrency: (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount),
                 formatDate: (dateString) => new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }),
+                timeAgo: (date) => {
+                    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+                    let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " tahun lalu";
+                    interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " bulan lalu";
+                    interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " hari lalu";
+                    interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " jam lalu";
+                    interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " menit lalu";
+                    return "Baru saja";
+                },
                 hasPermission: (requiredRole) => (AppConfig.roleHierarchy[AppState.currentUser.role] || 0) >= (AppConfig.roleHierarchy[requiredRole] || 99),
-                generateId: (prefix = 'id') => `${prefix}_${Date.now()}`
+                generateId: (prefix = 'id') => `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`
             };
-
-            // =========================================================================
-            // [MODUL 3] RENDERER & LOGIKA TAMPILAN
-            // =========================================================================
+            const ServiceLayer = {
+                addNotification(type, message, link = '#/') {
+                    const newNotif = { id: Utils.generateId('notif'), type, message, link, timestamp: new Date().toISOString(), isRead: false };
+                    DB.notifications.unshift(newNotif);
+                    if (AppState.currentUser) NotificationManager.update();
+                },
+                logCommunication(clientId, subject, content) {
+                    const client = DB.users.find(u => u.id === clientId);
+                    if (!client) return;
+                    const newComm = { id: Utils.generateId('comm'), clientId, date: new Date().toISOString(), subject, content, sender: AppState.currentUser.name };
+                    DB.communications.push(newComm);
+                    this.addNotification('message', `Pesan baru untuk klien ${client.name}: "${subject}"`, `#/clients`);
+                },
+                convertBookingToLease(bookingId) {
+                    const booking = DB.bookings.find(b => b.id === bookingId);
+                    if (!booking) { alert('Booking tidak ditemukan!'); return false; }
+                    booking.status = 'converted';
+                    const prop = DB.products.find(p => p.id === booking.propertyId);
+                    const newLease = { id: Utils.generateId('lease'), propertyId: booking.propertyId, clientId: booking.clientId, startDate: new Date().toISOString().split('T')[0], endDate: '', monthlyRent: prop?.price || 0 };
+                    DB.leases.push(newLease);
+                    this.logCommunication(booking.clientId, 'Konversi Booking ke Sewa', `Booking untuk properti "${prop?.title}" telah dikonversi menjadi kontrak sewa baru. Silakan lengkapi tanggal akhir sewa.`);
+                    this.addNotification('booking', `Booking untuk "${prop?.title}" dikonversi menjadi sewa.`, `#/rentals`);
+                    return true;
+                }
+            };
             const Renderer = {
                 mainContent: Utils.$('#main-content-admin'),
                 renderView(path) {
                     ChartManager.destroyAll();
                     const routeConfig = AppConfig.routes[path];
-                    if (!routeConfig || !Utils.hasPermission(routeConfig.requiredRole)) { this.renderNotFound(); return; }
+                    if (!AppState.currentUser || !routeConfig || !Utils.hasPermission(routeConfig.requiredRole)) {
+                        this.mainContent.innerHTML = '';
+                        this.mainContent.appendChild(Utils.getTemplateClone('not-found-template'));
+                        return;
+                    }
                     this.mainContent.innerHTML = '';
                     this.mainContent.appendChild(Utils.getTemplateClone(routeConfig.templateId));
                     if (routeConfig.setup && ViewSetups[routeConfig.setup]) { ViewSetups[routeConfig.setup](); }
                 },
-                renderNotFound() {
-                    this.mainContent.innerHTML = '';
-                    this.mainContent.appendChild(Utils.getTemplateClone('not-found-template'));
-                },
-                showModal(title, contentHTML, onSaveCallback, options = {}) {
-                    const { saveBtnText = 'Simpan', isDelete = false } = options;
-                    const oldModal = document.getElementById('modal-dynamic-container');
-                    if (oldModal) oldModal.remove();
+                showModal(title, content, onSave, options = {}) {
+                    const { saveBtnText = 'Simpan', hideFooter = false, size = 'default' } = options;
+                    if (Utils.$('#modal-dynamic-container')) Utils.$('#modal-dynamic-container').remove();
                     const modalContainer = document.createElement('div');
                     modalContainer.id = 'modal-dynamic-container';
-                    const modalTemplate = Utils.getTemplateClone('modal-template');
-                    Utils.$('.modal-title', modalTemplate).textContent = title;
-                    Utils.$('.modal-body', modalTemplate).innerHTML = contentHTML;
-                    const saveBtn = Utils.$('.modal-save-btn', modalTemplate);
-                    saveBtn.textContent = saveBtnText;
-                    if (isDelete) { saveBtn.classList.remove('btn-primary'); saveBtn.classList.add('btn-danger'); }
-                    modalContainer.appendChild(modalTemplate);
+                    const template = Utils.getTemplateClone('modal-template');
+                    const modal = Utils.$('.modal-overlay', template);
+                    const modalContent = Utils.$('.modal-content', template);
+                    if (size === 'lg') modalContent.classList.add('modal-lg');
+                    Utils.$('.modal-title', template).textContent = title;
+                    const body = Utils.$('.modal-body', template); body.innerHTML = ''; body.appendChild(content);
+                    const saveBtn = Utils.$('.modal-save-btn', template); saveBtn.textContent = saveBtnText;
+                    if (hideFooter) Utils.$('.modal-footer', template).style.display = 'none';
+                    modalContainer.appendChild(template);
                     document.body.appendChild(modalContainer);
                     document.body.classList.add('modal-open');
-                    const overlay = Utils.$('.modal-overlay', modalContainer);
-                    const form = Utils.$('form', overlay);
-                    const close = () => {
-                        overlay.classList.remove('is-visible');
-                        setTimeout(() => { modalContainer.remove(); document.body.classList.remove('modal-open'); }, 300);
-                    };
-                    setTimeout(() => overlay.classList.add('is-visible'), 10);
+                    setTimeout(() => modal.classList.add('is-visible'), 10);
+                    const close = () => { modal.classList.remove('is-visible'); setTimeout(() => { modalContainer.remove(); document.body.classList.remove('modal-open'); }, 300); };
+                    modal.onclick = (e) => { if (e.target === modal) close() };
                     Utils.$('.modal-close-btn', modalContainer).onclick = close;
                     Utils.$('.modal-cancel-btn', modalContainer).onclick = close;
-                    overlay.onclick = e => { if (e.target === overlay) close(); };
-                    saveBtn.onclick = () => { if (onSaveCallback(form)) close(); };
+                    if (onSave) saveBtn.onclick = () => { const form = Utils.$('form', modal); if (form && !form.checkValidity()) { form.reportValidity(); return; } if (onSave(form)) close(); };
+                    return modalContainer;
                 }
             };
-
-            // =========================================================================
-            // [MODUL 4] PENGATURAN TAMPILAN SPESIFIK (VIEW SETUPS)
-            // =========================================================================
-            const ViewSetups = {
-                setupDashboardView() {
-                    Utils.$('#stat-total-products').textContent = DB.products.length;
-                    Utils.$('#stat-total-clients').textContent = DB.users.filter(u => u.role === 'client' && u.status === 'Aktif').length;
-                    const totalRevenue = DB.rentals.reduce((sum, r) => sum + r.revenue, 0);
-                    Utils.$('#stat-total-revenue').textContent = Utils.formatCurrency(totalRevenue);
-                    const revenueData = { labels: [], data: [] };
-                    DB.rentals.forEach(r => {
-                        const product = DB.products.find(p => p.id === r.propertyId);
-                        if (product) { revenueData.labels.push(product.title); revenueData.data.push(r.revenue); }
-                    });
-                    ChartManager.create('revenueChart', 'bar', Utils.$('#revenue-chart'), { data: { labels: revenueData.labels, datasets: [{ label: 'Pendapatan', data: revenueData.data, backgroundColor: 'rgba(67, 97, 238, 0.8)', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { display: false } } } } });
-                    const typeCounts = DB.products.reduce((acc, p) => { acc[p.type] = (acc[p.type] || 0) + 1; return acc; }, {});
-                    ChartManager.create('propTypeChart', 'doughnut', Utils.$('#properties-type-chart'), { data: { labels: Object.keys(typeCounts).map(k => k.charAt(0).toUpperCase() + k.slice(1)), datasets: [{ data: Object.values(typeCounts), backgroundColor: ['#4361EE', '#10B981', '#F59E0B'], borderColor: 'var(--background-alt)', borderWidth: 4 }] }, options: { responsive: true, maintainAspectRatio: false } });
-                },
-                setupProductsView() {
-                    const tableBody = Utils.$('#products-table-body');
-                    tableBody.innerHTML = '';
-                    DB.products.forEach(prod => {
-                        const row = tableBody.insertRow();
-                        row.dataset.id = prod.id;
-                        row.innerHTML = `
-                            <td class="product-info-cell"><div style="display: flex; align-items: center; gap: 1rem;"><img src="${prod.imageUrl}" alt="${prod.title}" width="60" height="40" style="object-fit: cover; border-radius: 4px; flex-shrink:0;"><strong>${prod.title}</strong></div></td>
-                            <td>${prod.location}</td>
-                            <td>${Utils.formatCurrency(prod.price)}</td>
-                            <td><span class="badge ${prod.isAvailable ? 'badge-success' : 'badge-warning'}">${prod.isAvailable ? 'Tersedia' : 'Disewa'}</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-outline btn-edit-product" title="Edit Produk"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="btn btn-outline btn-delete-product" title="Hapus Produk"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </td>`;
-                    });
-                    Utils.$('#btn-add-product').onclick = () => ModalForms.showProductForm();
-                    Utils.$$('.btn-edit-product').forEach(btn => btn.onclick = (e) => ModalForms.showProductForm(e.currentTarget.closest('tr').dataset.id));
-                    Utils.$$('.btn-delete-product').forEach(btn => btn.onclick = (e) => ModalForms.showDeleteConfirmation('product', e.currentTarget.closest('tr').dataset.id));
-                },
-                setupClientsView() {
-                    const renderTable = (filter = '') => {
-                        const tableBody = Utils.$('#clients-table-body');
-                        tableBody.innerHTML = '';
-                        const filteredClients = DB.users.filter(u => u.role === 'client' && (u.name.toLowerCase().includes(filter) || u.email.toLowerCase().includes(filter)));
-                        if (filteredClients.length === 0) {
-                            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 2rem;">Tidak ada klien yang cocok dengan pencarian.</td></tr>`;
-                            return;
-                        }
-                        filteredClients.forEach(client => {
-                            const row = tableBody.insertRow();
-                            row.dataset.id = client.id;
-                            row.innerHTML = `
-                                <td>${client.name}</td><td>${client.email}</td><td>${Utils.formatDate(client.dateJoined)}</td>
-                                <td><span class="badge ${client.status === 'Aktif' ? 'badge-success' : 'badge-danger'}">${client.status}</span></td>
-                                <td><div class="action-buttons"><button class="btn btn-outline btn-edit-client" title="Edit Klien"><i class="fa-solid fa-pen"></i></button></div></td>`;
-                        });
-                        Utils.$$('.btn-edit-client').forEach(btn => btn.onclick = e => ModalForms.showUserForm(e.currentTarget.closest('tr').dataset.id));
-                    };
-                    renderTable();
-                    Utils.$('#client-search-input').onkeyup = (e) => renderTable(e.target.value.toLowerCase());
-                },
-                setupUsersView() {
-                    const tableBody = Utils.$('#users-table-body');
-                    tableBody.innerHTML = '';
-                    DB.users.filter(u => u.role === 'admin' || u.role === 'guest').forEach(user => {
-                        const row = tableBody.insertRow();
-                        row.dataset.id = user.id;
-                        const roleInfo = AppConfig.roleMap[user.role];
-                        row.innerHTML = `
-                            <td>${user.name}</td><td>${user.email}</td>
-                            <td><span class="badge ${roleInfo.class}">${roleInfo.text}</span></td>
-                            <td><span class="badge ${user.status === 'Aktif' ? 'badge-success' : 'badge-danger'}">${user.status}</span></td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-outline btn-edit-user" title="Edit Pengguna"><i class="fa-solid fa-user-edit"></i></button>
-                                    <button class="btn btn-outline" title="Reset Password" onclick="alert('Simulasi: Email reset password telah dikirim ke ${user.name}')"><i class="fa-solid fa-key"></i></button>
-                                </div>
-                            </td>`;
-                    });
-                    Utils.$$('.btn-edit-user').forEach(btn => btn.onclick = e => ModalForms.showUserForm(e.currentTarget.closest('tr').dataset.id));
-                },
-                setupMonitoringView() {
-                    const createGaugeChart = (canvasId, data, color) => {
-                        ChartManager.create(canvasId, 'doughnut', Utils.$(`#${canvasId}`), { data: { datasets: [{ data: [data, 100 - data], backgroundColor: [color, 'var(--muted)'], borderColor: 'transparent', circumference: 180, rotation: 270 }] }, options: { responsive: true, cutout: '70%', plugins: { tooltip: { enabled: false } } } });
-                    };
-                    createGaugeChart('cpuChart', 35, 'var(--primary)');
-                    createGaugeChart('ramChart', 60, 'var(--warning)');
-                }
-            };
-
-            // =========================================================================
-            // [MODUL 5] MANAJEMEN MODAL & FORMULIR
-            // =========================================================================
             const ModalForms = {
                 showProductForm(productId = null) {
                     const isEdit = !!productId;
                     const prod = isEdit ? DB.products.find(p => p.id === productId) : {};
-                    const title = isEdit ? 'Edit Produk' : 'Tambah Produk Baru';
-                    const formHTML = `<form id="product-form" novalidate><input type="hidden" id="prod-id" value="${prod.id || ''}"><div class="form-group"><label for="prod-title" class="form-label">Judul/Nama Produk (Deskripsi)</label><input type="text" id="prod-title" class="form-input" value="${prod.title || ''}" required></div><div class="form-grid"><div class="form-group"><label for="prod-location" class="form-label">Lokasi</label><input type="text" id="prod-location" class="form-input" value="${prod.location || ''}" required></div><div class="form-group"><label for="prod-price" class="form-label">Harga/Pricing (per bulan)</label><input type="number" id="prod-price" class="form-input" value="${prod.price || ''}" required></div></div><div class="form-grid"><div class="form-group"><label for="prod-type" class="form-label">Tipe Produk</label><select id="prod-type" class="form-select"><option value="apartment" ${prod.type === 'apartment' ? 'selected' : ''}>Apartemen</option><option value="studio" ${prod.type === 'studio' ? 'selected' : ''}>Studio</option><option value="house" ${prod.type === 'house' ? 'selected' : ''}>Rumah</option></select></div><div class="form-group"><label for="prod-available" class="form-label">Status</label><select id="prod-available" class="form-select"><option value="true" ${prod.isAvailable !== false ? 'selected' : ''}>Tersedia</option><option value="false" ${prod.isAvailable === false ? 'selected' : ''}>Disewa</option></select></div></div><div class="form-group"><label for="prod-image-url" class="form-label">URL Gambar Produk (Upload Foto)</label><input type="url" id="prod-image-url" class="form-input" value="${prod.imageUrl || 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500'}" required></div></form>`;
-                    const onSave = (form) => {
-                        if (!form.checkValidity()) { form.reportValidity(); return false; }
-                        const prodData = { title: Utils.$('#prod-title', form).value, location: Utils.$('#prod-location', form).value, price: parseInt(Utils.$('#prod-price', form).value), type: Utils.$('#prod-type', form).value, isAvailable: Utils.$('#prod-available', form).value === 'true', imageUrl: Utils.$('#prod-image-url', form).value };
-                        if (isEdit) { const index = DB.products.findIndex(p => p.id === productId); if (index > -1) DB.products[index] = { ...DB.products[index], ...prodData }; } else { DB.products.push({ id: Utils.generateId('prod'), ...prodData }); }
-                        App.handleRouteChange(); return true;
-                    };
-                    Renderer.showModal(title, formHTML, onSave);
-                },
-                showUserForm(userId) {
-                    const user = DB.users.find(u => u.id === userId);
-                    if (!user) { alert("Pengguna tidak ditemukan!"); return; }
-                    const title = `Edit Pengguna: ${user.name}`;
-                    const formHTML = `<form id="user-form" novalidate><div class="form-group"><label for="user-name" class="form-label">Nama Lengkap</label><input type="text" id="user-name" class="form-input" value="${user.name}" required></div><div class="form-group"><label for="user-email" class="form-label">Email</label><input type="email" id="user-email" class="form-input" value="${user.email}" required></div><div class="form-grid"><div class="form-group"><label for="user-role" class="form-label">Peran (Role)</label><select id="user-role" class="form-select" ${user.role === 'super_admin' ? 'disabled' : ''}><option value="client" ${user.role === 'client' ? 'selected' : ''}>Klien</option><option value="guest" ${user.role === 'guest' ? 'selected' : ''}>Guest</option><option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>${user.role === 'super_admin' ? `<option value="super_admin" selected>Super Admin</option>` : ''}</select></div><div class="form-group"><label for="user-status" class="form-label">Status Akun</label><select id="user-status" class="form-select"><option value="Aktif" ${user.status === 'Aktif' ? 'selected' : ''}>Aktif</option><option value="Diblokir" ${user.status === 'Diblokir' ? 'selected' : ''}>Diblokir</option></select></div></div><p class="page-subtitle" style="font-size:0.9em">Fitur ganti/reset password diakses melalui tombol terpisah di tabel untuk keamanan.</p></form>`;
-                    const onSave = (form) => {
-                        if (!form.checkValidity()) { form.reportValidity(); return false; }
-                        const index = DB.users.findIndex(u => u.id === userId);
-                        if (index > -1) { DB.users[index].name = Utils.$('#user-name', form).value; DB.users[index].email = Utils.$('#user-email', form).value; DB.users[index].role = Utils.$('#user-role', form).value; DB.users[index].status = Utils.$('#user-status', form).value; }
-                        App.handleRouteChange(); return true;
-                    };
-                    Renderer.showModal(title, formHTML, onSave);
-                },
-                showDeleteConfirmation(type, id) {
-                    let item, itemName;
-                    if (type === 'product') { item = DB.products.find(p => p.id === id); itemName = item ? item.title : 'item ini'; }
-                    if (!item) return;
-                    const title = 'Konfirmasi Hapus';
-                    const contentHTML = `<p>Apakah Anda yakin ingin menghapus "<strong>${itemName}</strong>"? Tindakan ini tidak dapat diurungkan.</p>`;
-                    const onDelete = () => {
-                        if (type === 'product') DB.products = DB.products.filter(p => p.id !== id);
-                        App.handleRouteChange(); return true;
-                    };
-                    Renderer.showModal(title, contentHTML, onDelete, { isDelete: true, saveBtnText: 'Hapus' });
-                }
-            };
-
-            // =========================================================================
-            // [MODUL 6, 7, 8] CHART MANAGER, UI MANAGER, APP
-            // =========================================================================
-            const ChartManager = { destroyAll() { Object.values(AppState.charts).forEach(chart => chart.destroy()); AppState.charts = {}; }, create(name, type, context, config) { if (AppState.charts[name]) AppState.charts[name].destroy(); if (context) AppState.charts[name] = new Chart(context, { type, ...config }); } };
-            const UIManager = {
-                init() {
-                    AppState.currentUser = DB.users.find(u => u.id === 'user_super1'); // Default login sebagai Super Admin
-                    this.updateUserProfile(); this.updateNavVisibility(); this.setupEventListeners();
-                },
-                updateUserProfile() { const { name, role } = AppState.currentUser; Utils.$('#user-name-display').textContent = name; Utils.$('#user-role-display').textContent = AppConfig.roleMap[role].text; Utils.$('#user-avatar-display').textContent = name.match(/\b\w/g).join('').slice(0, 2); },
-                updateNavVisibility() {
-                    Utils.$$('.sidebar-nav .nav-item').forEach(item => {
-                        let hasAccess = false;
-                        if (item.classList.contains('admin-access-only')) {
-                            hasAccess = Utils.hasPermission('admin');
-                        } else if (item.classList.contains('super-admin-only')) {
-                            hasAccess = Utils.hasPermission('super_admin');
-                        } else {
-                            hasAccess = true; // Kategori umum dapat dilihat semua orang
-                        }
-                        item.classList.toggle('is-hidden', !hasAccess);
+                    if (isEdit && !prod) { alert("Error: Produk tidak ditemukan."); return; }
+                    const title = isEdit ? 'Edit Properti' : 'Tambah Properti';
+                    const form = document.createElement('form');
+                    form.innerHTML = `
+            <div class="form-group"><label class="form-label" for="prod-title">Nama Properti</label><input type="text" id="prod-title" class="form-input" value="${prod.title || ''}" required></div>
+            <div class="form-grid"><div class="form-group"><label class="form-label" for="prod-location">Lokasi</label><input type="text" id="prod-location" class="form-input" value="${prod.location || ''}" required></div><div class="form-group"><label class="form-label" for="prod-price">Harga/Bulan</label><input type="number" id="prod-price" class="form-input" value="${prod.price || ''}" required></div></div>
+            <div class="form-group"><label class="form-label">Foto Properti</label><input type="file" id="prod-photo-input" accept="image/*"><label for="prod-photo-input" class="photo-uploader" id="photo-uploader-zone"><i class="fa-solid fa-cloud-arrow-up"></i><p><strong>Klik untuk upload</strong> atau seret gambar ke sini</p></label><div class="photo-preview" id="photo-preview-container"><img id="photo-preview-img" src="${prod.imageUrl || ''}" alt="Preview Foto"></div></div>`;
+                    Renderer.showModal(title, form, (formEl) => {
+                        const data = { title: Utils.$('#prod-title', formEl).value, location: Utils.$('#prod-location', formEl).value, price: parseInt(Utils.$('#prod-price', formEl).value), imageUrl: Utils.$('#photo-preview-img', formEl).src };
+                        if (isEdit) { Object.assign(prod, data); } else { DB.products.push({ id: Utils.generateId('prod'), ...data, type: 'apartment' }); }
+                        ViewSetups.setupProductsView();
+                        return true;
                     });
+                    this.setupPhotoUploader(prod.imageUrl);
                 },
-                updateActiveNav(path) { Utils.$$('.sidebar-nav .nav-link').forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${path}`)); },
-                setupEventListeners() {
-                    const sidebar = Utils.$('.sidebar');
-                    const toggleSidebar = () => { document.body.classList.toggle('sidebar-toggled'); sidebar.classList.toggle('is-open'); };
-                    Utils.$('.mobile-toggle').addEventListener('click', toggleSidebar);
-                    Utils.$('.sidebar-overlay').addEventListener('click', toggleSidebar);
+                setupPhotoUploader(initialImageUrl = null) {
+                    const uploader = Utils.$('#photo-uploader-zone'), fileInput = Utils.$('#prod-photo-input'), previewContainer = Utils.$('#photo-preview-container'), previewImg = Utils.$('#photo-preview-img');
+                    if (initialImageUrl) previewContainer.style.display = 'block';
+                    const handleFile = (file) => { if (!file || !file.type.startsWith('image/')) { alert('Hanya file gambar yang diperbolehkan.'); return; } const reader = new FileReader(); reader.onload = (e) => { previewImg.src = e.target.result; previewContainer.style.display = 'block'; }; reader.readAsDataURL(file); };
+                    fileInput.onchange = (e) => handleFile(e.target.files[0]);
+                    uploader.ondragover = (e) => { e.preventDefault(); uploader.classList.add('is-dragging'); };
+                    uploader.ondragleave = () => uploader.classList.remove('is-dragging');
+                    uploader.ondrop = (e) => { e.preventDefault(); uploader.classList.remove('is-dragging'); handleFile(e.dataTransfer.files[0]); };
+                },
+                showClientDetailModal(clientId) {
+                    const client = DB.users.find(u => u.id === clientId); if (!client) { alert("Error: Klien tidak ditemukan."); return; }
+                    AppState.clientDetails = client;
+                    const modalBodyContent = Utils.getTemplateClone('crm-client-detail-modal-template');
+                    const modal = Renderer.showModal(`Detail Klien: ${client.name}`, modalBodyContent, null, { size: 'lg', hideFooter: true });
+                    const footer = Utils.$('.modal-footer', modal); footer.innerHTML = '<button class="btn btn-outline modal-cancel-btn">Tutup</button><button id="send-notification-btn" class="btn btn-primary" style="display:none;"><i class="fa-solid fa-paper-plane"></i> Kirim & Catat Pesan</button>';
+                    Utils.$('.modal-cancel-btn', modal).onclick = () => Utils.$('.modal-close-btn', modal).click();
+                    ViewSetups.setupClientDetailView(modal);
                 }
             };
-            const App = {
-                init() { UIManager.init(); window.addEventListener('hashchange', this.handleRouteChange); this.handleRouteChange(); },
-                handleRouteChange() {
-                    const path = window.location.hash.substring(1) || '/';
-                    Renderer.renderView(path); UIManager.updateActiveNav(path);
-                    // Tutup sidebar di mobile setelah navigasi
-                    if (window.innerWidth <= 992 && Utils.$('.sidebar').classList.contains('is-open')) { Utils.$('.mobile-toggle').click(); }
-                }
+            const ViewSetups = {
+                setupDashboardView() {
+                    Utils.$('#stat-total-products').textContent = DB.products.length; Utils.$('#stat-total-clients').textContent = DB.users.filter(u => u.role === 'client' && u.status === 'Aktif').length; Utils.$('#stat-total-revenue').textContent = Utils.formatCurrency(DB.payments.reduce((s, p) => s + p.amount, 0)); Utils.$('#stat-pending-bookings').textContent = DB.bookings.filter(b => b.status === 'pending').length;
+                    const revenueByProduct = DB.leases.reduce((acc, l) => { const p = DB.products.find(pr => pr.id === l.propertyId); if (p) { const r = DB.payments.filter(pay => pay.leaseId === l.id).reduce((s, pay) => s + pay.amount, 0); acc[p.title] = (acc[p.title] || 0) + r; } return acc; }, {});
+                    ChartManager.create('revenueChart', 'bar', Utils.$('#revenue-chart'), { data: { labels: Object.keys(revenueByProduct), datasets: [{ data: Object.values(revenueByProduct), backgroundColor: 'rgba(67, 97, 238, 0.8)', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+                    const typeCounts = DB.products.reduce((acc, p) => { acc[p.type] = (acc[p.type] || 0) + 1; return acc; }, {});
+                    ChartManager.create('propTypeChart', 'doughnut', Utils.$('#properties-type-chart'), { data: { labels: Object.keys(typeCounts).map(k => k.charAt(0).toUpperCase() + k.slice(1)), datasets: [{ data: Object.values(typeCounts), backgroundColor: ['#4361EE', '#10B981', '#F59E0B'], borderColor: 'var(--background-alt)', borderWidth: 4 }] }, options: { responsive: true, maintainAspectRatio: false } });
+                },
+                setupProductsView() {
+                    const tableBody = Utils.$('#products-table-body'); if (!tableBody) return;
+                    tableBody.innerHTML = DB.products.map(p => { const isRented = DB.leases.some(l => l.propertyId === p.id && new Date(l.endDate) >= new Date()); return `<tr><td class="product-info-cell"><div style="display: flex; align-items: center; gap: 1rem;"><img src="${p.imageUrl}" alt="${p.title}" width="60" height="40" style="object-fit: cover; border-radius: 4px; flex-shrink:0;"><strong>${p.title}</strong></div></td><td>${p.location}</td><td>${Utils.formatCurrency(p.price)}</td><td><span class="badge ${isRented ? 'badge-danger' : 'badge-success'}">${isRented ? 'Disewa' : 'Tersedia'}</span></td><td><div class="action-buttons"><button class="btn btn-outline btn-edit-product" data-id="${p.id}" title="Edit"><i class="fa-solid fa-pen"></i></button></div></td></tr>`; }).join('');
+                    Utils.$('#btn-add-product').onclick = () => ModalForms.showProductForm();
+                    tableBody.onclick = (e) => { const btn = e.target.closest('.btn-edit-product'); if (btn) ModalForms.showProductForm(btn.dataset.id); };
+                },
+                setupClientsView() {
+                    const renderTable = (filter = '') => { const tableBody = Utils.$('#clients-table-body'); if (!tableBody) return; const f = filter.toLowerCase(); tableBody.innerHTML = DB.users.filter(u => u.role === 'client' && (u.name.toLowerCase().includes(f) || u.email.toLowerCase().includes(f))).map(c => `<tr><td>${c.name}</td><td>${c.email}</td><td>${c.phone}</td><td><span class="badge ${c.status === 'Aktif' ? 'badge-success' : 'badge-danger'}">${c.status}</span></td><td><div class="action-buttons"><button class="btn btn-outline btn-view-client" data-id="${c.id}" title="Lihat Detail"><i class="fa-solid fa-eye"></i></button></div></td></tr>`).join(''); };
+                    renderTable(); Utils.$('#client-search-input').oninput = (e) => renderTable(e.target.value);
+                    Utils.$('#clients-table-body').onclick = e => { const btn = e.target.closest('.btn-view-client'); if (btn) ModalForms.showClientDetailModal(btn.dataset.id); };
+                },
+                setupRentalsView() { const tableBody = Utils.$('#leases-table-body'); if (!tableBody) return; tableBody.innerHTML = DB.leases.map(l => { const p = DB.products.find(pr => pr.id === l.propertyId), c = DB.users.find(u => u.id === l.clientId); if (!p || !c) return ''; const status = new Date(l.endDate) < new Date() ? `<span class="badge badge-gray">Selesai</span>` : `<span class="badge badge-success">Aktif</span>`; return `<tr><td class="lease-info-cell"><div style="display:flex;align-items:center;gap:1rem;"><img src="${p.imageUrl}" width="80" height="53" style="object-fit:cover;border-radius:4px;flex-shrink:0;"><div><strong>${p.title}</strong><div style="font-size:0.9em;color:var(--muted-foreground);">${p.location}</div></div></div></td><td>${c.name}</td><td>${l.startDate ? Utils.formatDate(l.startDate) : 'N/A'} - ${l.endDate ? Utils.formatDate(l.endDate) : 'N/A'}</td><td>${status}</td><td><div class="action-buttons"><button class="btn btn-outline" title="Detail Sewa" onclick="alert('Detail sewa akan ditampilkan di sini.')"><i class="fa-solid fa-file-invoice"></i></button></div></td></tr>`; }).join(''); },
+                setupBookingsView() {
+                    const container = Utils.$('#pending-bookings-container'); if (!container) return; const pending = DB.bookings.filter(b => b.status === 'pending'); Utils.$('#pending-booking-count').textContent = pending.length; container.innerHTML = pending.length > 0 ? pending.map(b => { const p = DB.products.find(pr => pr.id === b.propertyId); const c = DB.users.find(u => u.id === b.clientId); if (!p || !c) return ''; return `<div class="booking-card"><div class="booking-header"><strong>${Utils.formatDate(b.date)}</strong><span class="badge badge-warning">Pending</span></div><div class="booking-body"><img src="${p.imageUrl}" class="booking-image"><div class="booking-info"><h4>${p.title}</h4><div class="booking-meta"><span><i class="fa-solid fa-user"></i> ${c.name}</span></div><p style="font-size:0.9em;margin-top:0.5rem;color:var(--muted-foreground)">${b.notes}</p></div></div><div class="booking-footer"><button class="btn btn-outline" onclick="alert('Booking dibatalkan.')">Tolak</button><button class="btn btn-primary btn-convert-booking" data-id="${b.id}">Konversi ke Sewa</button></div></div>`; }).join('') : '<p style="text-align:center;color:var(--muted-foreground);">Tidak ada booking pending.</p>';
+                    container.onclick = e => { const btn = e.target.closest('.btn-convert-booking'); if (btn && ServiceLayer.convertBookingToLease(btn.dataset.id)) { this.setupBookingsView(); this.setupDashboardView(); } };
+                    const historyTable = Utils.$('#booking-history-table-body'); historyTable.innerHTML = DB.bookings.filter(b => b.status !== 'pending').sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map(b => { const p = DB.products.find(pr => pr.id === b.propertyId), c = DB.users.find(u => u.id === b.clientId); if (!p || !c) return ''; const status = b.status === 'converted' ? `<span class="badge badge-info">Terkonversi</span>` : `<span class="badge badge-danger">Dibatalkan</span>`; return `<tr><td>${p.title}</td><td>${c.name}</td><td>${Utils.formatDate(b.date)}</td><td>${status}</td></tr>`; }).join('');
+                },
+                setupPagesView() {
+                    const container = Utils.$('#cms-sections-container'), pageSelect = Utils.$('#page-select'), saveBtn = Utils.$('#btn-save-cms'); let draggedItem = null;
+                    const render = () => { container.innerHTML = (DB.cmsPages[pageSelect.value] || []).map(s => `<div class="cms-section" data-id="${s.id}" draggable="true"><div class="cms-section-header"><span class="section-title"><i class="fa-solid fa-grip-vertical" style="margin-right:0.5rem;color:var(--muted-foreground)"></i> ${s.title} (${s.type})</span><div class="section-actions"><button class="btn btn-outline" title="Edit (Belum diimplementasi)" onclick="event.stopPropagation()"><i class="fa-solid fa-pen"></i></button></div></div><p style="color:var(--muted-foreground)">${s.content}</p></div>`).join(''); };
+                    container.ondragstart = e => { if (!e.target.classList.contains('cms-section')) return; draggedItem = e.target; setTimeout(() => e.target.classList.add('dragging'), 0); };
+                    container.ondragend = () => { if (!draggedItem) return; draggedItem.classList.remove('dragging'); draggedItem = null; saveBtn.disabled = false; };
+                    container.ondragover = e => { e.preventDefault(); if (!draggedItem) return; const afterEl = [...container.querySelectorAll('.cms-section:not(.dragging)')].reduce((c, el) => { const box = el.getBoundingClientRect(), offset = e.clientY - box.top - box.height / 2; return (offset < 0 && offset > c.offset) ? { offset, element: el } : c; }, { offset: -Infinity }).element; if (afterEl) { container.insertBefore(draggedItem, afterEl); } else { container.appendChild(draggedItem); } };
+                    saveBtn.onclick = () => { const newOrder = [...container.querySelectorAll('.cms-section')].map(el => el.dataset.id); const pageKey = pageSelect.value; const pageData = DB.cmsPages[pageKey]; DB.cmsPages[pageKey] = newOrder.map(id => pageData.find(s => s.id === id)); saveBtn.disabled = true; alert('Urutan halaman berhasil disimpan!'); render(); };
+                    pageSelect.onchange = render; render();
+                },
+                setupClientDetailView(modal) {
+                    const client = AppState.clientDetails; if (!client || !modal) return;
+                    Utils.$('#client-detail-name', modal).textContent = client.name; Utils.$('#client-detail-email', modal).textContent = client.email; Utils.$('#client-detail-phone', modal).textContent = client.phone || '-'; Utils.$('#client-detail-joined', modal).textContent = Utils.formatDate(client.dateJoined);
+                    const payments = DB.payments.filter(p => DB.leases.filter(l => l.clientId === client.id).map(l => l.id).includes(p.leaseId)); Utils.$('#client-transactions-list', modal).innerHTML = payments.length > 0 ? payments.map(p => `<div class="transaction-item"><div><strong>${p.notes}</strong><div class="log-meta">${Utils.formatDate(p.paymentDate)}</div></div><div class="transaction-amount">${Utils.formatCurrency(p.amount)}</div></div>`).join('') : '<p style="color:var(--muted-foreground)">Tidak ada riwayat transaksi.</p>';
+                    const comms = DB.communications.filter(c => c.clientId === client.id).sort((a, b) => new Date(b.date) - new Date(a.date)); Utils.$('#client-communications-list', modal).innerHTML = comms.length > 0 ? comms.map(c => `<div class="log-item"><div class="log-content"><strong class="log-subject">${c.subject}</strong><p>${c.content}</p><div class="log-meta">Dikirim oleh <strong>${c.sender}</strong> pada ${Utils.formatDate(c.date)}</div></div></div>`).join('') : '<p style="color:var(--muted-foreground)">Tidak ada riwayat komunikasi.</p>';
+                    const notifyBtn = Utils.$('#send-notification-btn', modal), footer = Utils.$('.modal-footer', modal);
+                    Utils.$('.modal-tab-nav', modal).onclick = e => { const btn = e.target.closest('.modal-tab-btn'); if (!btn) return; Utils.$$('.modal-tab-btn, .modal-tab-pane', modal).forEach(el => el.classList.remove('active')); btn.classList.add('active'); Utils.$(`#${btn.dataset.tab}`, modal).classList.add('active'); const isNotifyTab = btn.dataset.tab === 'notify'; notifyBtn.style.display = isNotifyTab ? 'inline-flex' : 'none'; footer.style.display = isNotifyTab ? 'flex' : 'none'; };
+                    notifyBtn.onclick = () => { const form = Utils.$('#notification-form', modal); if (!form.checkValidity()) { form.reportValidity(); return; } ServiceLayer.logCommunication(client.id, form.elements['notification-subject'].value, form.elements['notification-message'].value); this.setupClientDetailView(modal); Utils.$('.modal-tab-btn[data-tab="communications"]', modal).click(); };
+                },
+                setupUsersView() { const tableBody = Utils.$('#users-table-body'); if (!tableBody) return; tableBody.innerHTML = DB.users.filter(u => u.role !== 'client').map(u => { const roleInfo = AppConfig.roleMap[u.role]; return `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="badge ${roleInfo.badge}">${roleInfo.text}</span></td><td><span class="badge ${u.status === 'Aktif' ? 'badge-success' : 'badge-danger'}">${u.status}</span></td><td><div class="action-buttons"><button class="btn btn-outline" onclick="alert('Fungsi edit user belum diimplementasi.')"><i class="fa-solid fa-pen"></i></button></div></td></tr>`; }).join(''); },
+                setupMonitoringView() { const createGauge = (id, data, color) => ChartManager.create(id, 'doughnut', Utils.$(`#${id}`), { data: { datasets: [{ data: [data, 100 - data], backgroundColor: [color, 'var(--muted)'], borderColor: 'transparent', circumference: 180, rotation: 270 }] }, options: { responsive: true, cutout: '70%', plugins: { tooltip: { enabled: false } } } }); createGauge('cpuChart', 35, 'var(--primary)'); createGauge('ramChart', 60, 'var(--warning)'); },
             };
-
-            // Inisialisasi Aplikasi
+            const NotificationManager = {
+                init() {
+                    const btn = Utils.$('#notification-btn'), popover = Utils.$('#notification-popover');
+                    btn.addEventListener('click', e => { e.stopPropagation(); this.toggle(); });
+                    document.addEventListener('click', (e) => { if (!popover.contains(e.target) && AppState.isNotificationPopoverOpen) this.hide(); });
+                    Utils.$('#mark-all-read-btn').addEventListener('click', () => this.markAllAsRead());
+                    ServiceLayer.addNotification('booking', 'Booking baru dari Adi Perkasa untuk properti Studio Nyaman.', '#/bookings');
+                    ServiceLayer.addNotification('booking', 'Booking baru dari Rina Lestari untuk properti Rumah Keluarga.', '#/bookings');
+                    this.update();
+                },
+                update() { this.updateIndicator(); this.renderList(); },
+                toggle() { AppState.isNotificationPopoverOpen ? this.hide() : this.show(); },
+                show() { Utils.$('#notification-popover').classList.add('is-visible'); AppState.isNotificationPopoverOpen = true; },
+                hide() { Utils.$('#notification-popover').classList.remove('is-visible'); AppState.isNotificationPopoverOpen = false; },
+                updateIndicator() {
+                    const unreadCount = DB.notifications.filter(n => !n.isRead).length;
+                    const indicator = Utils.$('#notification-indicator');
+                    indicator.textContent = unreadCount;
+                    indicator.style.display = unreadCount > 0 ? 'flex' : 'none';
+                },
+                renderList() {
+                    const listEl = Utils.$('#notification-list'), notifs = DB.notifications.slice(0, 5);
+                    if (notifs.length === 0) { listEl.innerHTML = '<div class="empty-notifications"><i class="fa-regular fa-bell-slash fa-2x"></i><p style="margin-top: 1rem;">Tidak ada notifikasi baru.</p></div>'; return; }
+                    listEl.innerHTML = notifs.map(n => `<div class="notification-item ${n.isRead ? '' : 'is-unread'}" data-id="${n.id}" data-link="${n.link}"><i class="notification-icon fa-solid ${n.type === 'booking' ? 'fa-calendar-check' : (n.type === 'message' ? 'fa-envelope' : 'fa-info-circle')}"></i><div class="notification-content"><p class="notification-message">${n.message}</p><p class="notification-time">${Utils.timeAgo(n.timestamp)}</p></div></div>`).join('');
+                    listEl.onclick = (e) => { const item = e.target.closest('.notification-item'); if (item) this.handleItemClick(item.dataset.id, item.dataset.link); };
+                },
+                handleItemClick(id, link) { this.markAsRead(id); this.hide(); if (window.location.hash !== link) { window.location.hash = link; } else { App.handleRouteChange(); } },
+                markAsRead(id) { const notif = DB.notifications.find(n => n.id === id); if (notif) notif.isRead = true; this.update(); },
+                markAllAsRead() { DB.notifications.forEach(n => n.isRead = true); this.update(); }
+            };
+            const Auth = {
+                init() {
+                    Utils.$('#user-select').innerHTML = DB.users.filter(u => u.role !== 'client').map(u => `<option value="${u.id}">${u.name} (${AppConfig.roleMap[u.role].text})</option>`).join('');
+                    Utils.$('#login-form').addEventListener('submit', (e) => { e.preventDefault(); this.login(Utils.$('#user-select').value); });
+                    Utils.$('#logout-btn').addEventListener('click', () => this.logout());
+                },
+                login(userId) {
+                    AppState.currentUser = DB.users.find(u => u.id === userId);
+                    if (AppState.currentUser) { Utils.$('#login-container').style.display = 'none'; Utils.$('#admin-wrapper').classList.add('is-active'); App.start(); }
+                },
+                logout() { AppState.currentUser = null; window.location.hash = '#/'; Utils.$('#admin-wrapper').classList.remove('is-active'); Utils.$('#login-container').style.display = 'flex'; ChartManager.destroyAll(); }
+            };
+            const ChartManager = { destroyAll() { Object.values(AppState.charts).forEach(c => c.destroy()); AppState.charts = {}; }, create(n, t, c, cfg) { if (AppState.charts[n]) AppState.charts[n].destroy(); if (c) AppState.charts[n] = new Chart(c, { type: t, ...cfg }); } };
             App.init();
         });
     </script>
